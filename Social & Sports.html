@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Social & Sports Mastery 50</title>
+    <style>
+        body { font-family: 'Helvetica Neue', Arial, sans-serif; text-align: center; background: #fff5f5; padding: 20px; color: #333; }
+        .container { max-width: 650px; margin: auto; }
+        .card { background: white; border-radius: 20px; padding: 30px 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); margin: 15px auto; min-height: 140px; display: flex; flex-direction: column; justify-content: center; cursor: pointer; border-bottom: 8px solid #e63946; }
+        .card:active { transform: scale(0.98); background: #fffafb; }
+        .category { font-size: 11px; color: #e63946; font-weight: bold; text-transform: uppercase; margin-bottom: 8px; }
+        .main-text { font-size: 20px; font-weight: bold; margin-bottom: 12px; color: #1d3557; }
+        .sub-text { font-size: 17px; color: #457b9d; font-weight: bold; opacity: 0; transition: 0.2s; }
+        .sub-text.show { opacity: 1; }
+        .panel { background: #fff; padding: 15px; border-radius: 15px; margin-bottom: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .mode-badge { display: inline-block; padding: 4px 10px; border-radius: 15px; background: #f1faee; color: #1d3557; font-size: 11px; margin: 2px; font-weight: bold; border: 1px solid #a8dadc; }
+        button { background: #e63946; color: white; border: none; padding: 10px 20px; border-radius: 50px; cursor: pointer; font-size: 14px; margin: 4px; font-weight: bold; }
+        button.secondary { background: #5f6368; }
+        button.toggle-on { background: #34a853; }
+        .progress { font-size: 13px; color: #666; margin-bottom: 5px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h3>Social & Sports: Real Talk 50</h3>
+    
+    <div id="mode-label" class="mode-badge">英 → 日</div>
+    <div id="order-label" class="mode-badge">順番通り</div>
+    <div class="progress"><span id="current-num">1</span> / 50</div>
+
+    <div class="card" onclick="toggleAnswer()">
+        <div id="cat" class="category">Category</div>
+        <div id="display-text" class="main-text">Loading...</div>
+        <div id="answer-text" class="sub-text">意味を表示</div>
+    </div>
+
+    <div class="panel">
+        <label style="font-size:12px;">音声速度: <span id="speed-val">1.0</span>x</label> 
+        <input type="range" id="speed-range" min="0.5" max="1.5" step="0.1" value="1.0" oninput="updateSpeed()" style="width:60%; vertical-align:middle;">
+        <br>
+        <button id="random-btn" class="secondary" onclick="toggleRandom()">🔀 ランダム：OFF</button>
+    </div>
+
+    <div>
+        <button onclick="speak()">🔊 音声を聴く</button>
+        <button onclick="next()">次へ →</button><br>
+        <button class="secondary" onclick="switchMode()" style="margin-top:10px;">🔄 モード切替</button>
+    </div>
+</div>
+
+<script>
+    const phrases = [
+        // --- サッカー (Soccer / Football) ---
+        {cat: "Sports / Soccer", en: "I've been playing soccer for years.", jp: "サッカーを何年もやってるんだ。"},
+        {cat: "Sports / Soccer", en: "What's your favorite soccer team?", jp: "好きなサッカーチームはどこ？"},
+        {cat: "Sports / Soccer", en: "Can I join your soccer game after school?", jp: "放課後のサッカーに混ざってもいい？"},
+        {cat: "Sports / Soccer", en: "Nice pass! / Great goal!", jp: "ナイスパス！ / ナイスシュート！"},
+        {cat: "Sports / Soccer", en: "Which position do you play?", jp: "ポジションはどこやってるの？"},
+        {cat: "Sports / Soccer", en: "I usually play as a midfielder.", jp: "普段はミッドフィールダーをやってるよ。"},
+        {cat: "Sports / Soccer", en: "Do you want to play soccer this weekend?", jp: "今週末、サッカーしない？"},
+        {cat: "Sports / Soccer", en: "Who is your favorite player?", jp: "好きな選手は誰？"},
+        {cat: "Sports / Soccer", en: "I'm a big fan of Messi.", jp: "メッシの大ファンなんだ。"},
+        {cat: "Sports / Soccer", en: "Let's practice shooting together.", jp: "一緒にシュート練習しようぜ。"},
+
+        // --- 水泳 (Swimming) ---
+        {cat: "Sports / Swimming", en: "I can swim all four strokes.", jp: "4種目全部泳げるよ。"},
+        {cat: "Sports / Swimming", en: "My best stroke is butterfly.", jp: "得意なのはバタフライなんだ。"},
+        {cat: "Sports / Swimming", en: "Does this school have a swimming team?", jp: "この学校に水泳部（チーム）はある？"},
+        {cat: "Sports / Swimming", en: "How fast can you swim 50 meters?", jp: "50メートル何秒で泳げる？"},
+        {cat: "Sports / Swimming", en: "I used to go to a swimming club in Japan.", jp: "日本でスイミングスクールに通ってたんだ。"},
+
+        // --- 友達・遊び (Friends & Social) ---
+        {cat: "Social / Friends", en: "What do you usually do in your free time?", jp: "暇な時、普段何してるの？"},
+        {cat: "Social / Friends", en: "Do you play any video games?", jp: "ゲームとかする？"},
+        {cat: "Social / Friends", en: "Add me on Discord / Instagram.", jp: "ディスコード（インスタ）送ってよ（追加して）。"},
+        {cat: "Social / Friends", en: "Wait for me! Let's go together.", jp: "待って！一緒に行こう。"},
+        {cat: "Social / Friends", en: "Are you hungry? Let's get some snacks.", jp: "お腹空いた？売店で何か買おう。"},
+        {cat: "Social / Friends", en: "That's sick! / That's insane!", jp: "それヤバいね！（めちゃくちゃカッコいい時）"},
+        {cat: "Social / Friends", en: "I'm bored. Let's do something.", jp: "退屈だな。何かやろうよ。"},
+        {cat: "Social / Friends", en: "What are you watching on YouTube lately?", jp: "最近YouTubeで何見てる？"},
+        {cat: "Social / Friends", en: "I'm into Japanese anime. Do you know Naruto?", jp: "日本のアニメにハマってるんだ。ナルト知ってる？"},
+        {cat: "Social / Friends", en: "Can you teach me how to say this in English?", jp: "これ英語でなんて言うか教えてくれる？"},
+
+        // --- EAL仲間・助け合い (EAL Life) ---
+        {cat: "EAL / Peer Help", en: "Is it okay if I use Google Translate?", jp: "Google翻訳使ってもいいかな？"},
+        {cat: "EAL / Peer Help", en: "Your English is so good, I'm jealous!", jp: "英語上手だね、羨ましいよ！"},
+        {cat: "EAL / Peer Help", en: "Let's help each other with the project.", jp: "プロジェクト、お互い助け合おう。"},
+        {cat: "EAL / Peer Help", en: "I'll try my best to explain.", jp: "頑張って説明してみるね。"},
+        {cat: "EAL / Peer Help", en: "Sorry, my English isn't perfect yet.", jp: "ごめん、僕の英語まだ完璧じゃないんだ。"},
+
+        // --- 意思表示・交渉 (Negotiation) ---
+        {cat: "Opinion / Talk", en: "I agree with you.", jp: "賛成だよ（同感だよ）。"},
+        {cat: "Opinion / Talk", en: "I don't think that's a good idea.", jp: "それはあまり良くないと思うな。"},
+        {cat: "Opinion / Talk", en: "Actually, I have a different plan.", jp: "実は、別の案があるんだ。"},
+        {cat: "Opinion / Talk", en: "Why don't we try this way?", jp: "このやり方でやってみない？"},
+        {cat: "Opinion / Talk", en: "It's your turn.", jp: "君の番だよ。"},
+        {cat: "Opinion / Talk", en: "Can we do it later?", jp: "後でやってもいい？"},
+
+        // --- 放課後・週末 (After School) ---
+        {cat: "Outdoors", en: "Which mall should we go to?", jp: "どのモールに行く？"},
+        {cat: "Outdoors", en: "Let's go to the hawker center.", jp: "ホーカー（屋台街）に行こうよ。"},
+        {cat: "Outdoors", en: "Is it far from here?", jp: "ここから遠い？"},
+        {cat: "Outdoors", en: "How much does it cost?", jp: "いくらするの？"},
+        {cat: "Outdoors", en: "See you at the bus stop.", jp: "バス停で会おうね。"},
+
+        // --- 感情・リアクション (Reaction) ---
+        {cat: "Reaction", en: "No way! / Seriously?", jp: "まさか！ / マジで？"},
+        {cat: "Reaction", en: "I'm so tired today.", jp: "今日はマジで疲れた。"},
+        {cat: "Reaction", en: "I'm so excited for the school trip!", jp: "修学旅行、めっちゃ楽しみ！"},
+        {cat: "Reaction", en: "Good luck with your test.", jp: "テスト頑張ってね。"},
+        {cat: "Reaction", en: "Don't worry about it.", jp: "気にしないでいいよ。"},
+        {cat: "Reaction", en: "That's funny!", jp: "それ面白いね！"},
+        {cat: "Reaction", en: "I'm confused.", jp: "混乱してる（よくわからない）。"},
+        {cat: "Reaction", en: "Let me think for a moment.", jp: "ちょっと考えさせて。"},
+        {cat: "Reaction", en: "I'm glad we are in the same class.", jp: "同じクラスになれて良かったよ。"}
+    ];
+
+    let currentIndex = 0;
+    let isEnToJp = true;
+    let currentSpeed = 1.0;
+    let isRandom = false;
+
+    function update() {
+        const item = phrases[currentIndex];
+        document.getElementById('current-num').innerText = currentIndex + 1;
+        document.getElementById('cat').innerText = item.cat;
+        document.getElementById('answer-text').classList.remove('show');
+
+        if (isEnToJp) {
+            document.getElementById('display-text').innerText = item.en;
+            document.getElementById('answer-text').innerText = item.jp;
+        } else {
+            document.getElementById('display-text').innerText = item.jp;
+            document.getElementById('answer-text').innerText = item.en;
+        }
+    }
+
+    function toggleAnswer() { document.getElementById('answer-text').classList.add('show'); }
+
+    function next() {
+        if (isRandom) {
+            currentIndex = Math.floor(Math.random() * phrases.length);
+        } else {
+            currentIndex = (currentIndex + 1) % phrases.length;
+        }
+        update();
+    }
+
+    function toggleRandom() {
+        isRandom = !isRandom;
+        const btn = document.getElementById('random-btn');
+        btn.innerText = isRandom ? "🔀 ランダム：ON" : "🔀 ランダム：OFF";
+        btn.classList.toggle('toggle-on', isRandom);
+    }
+
+    function switchMode() { isEnToJp = !isEnToJp; update(); }
+    function updateSpeed() {
+        currentSpeed = document.getElementById('speed-range').value;
+        document.getElementById('speed-val').innerText = currentSpeed;
+    }
+
+    function speak() {
+        window.speechSynthesis.cancel();
+        const uttr = new SpeechSynthesisUtterance(phrases[currentIndex].en);
+        uttr.lang = 'en-US';
+        uttr.rate = currentSpeed;
+        window.speechSynthesis.speak(uttr);
+    }
+
+    update();
+</script>
+</body>
+</html>

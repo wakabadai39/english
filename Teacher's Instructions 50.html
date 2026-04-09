@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher's Instructions 50</title>
+    <style>
+        body { font-family: 'Helvetica Neue', Arial, sans-serif; text-align: center; background: #fdf6f0; padding: 20px; color: #333; }
+        .container { max-width: 600px; margin: auto; }
+        .card { background: white; border-radius: 20px; padding: 35px 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); margin: 15px auto; min-height: 160px; display: flex; flex-direction: column; justify-content: center; cursor: pointer; border: 2px solid #e2bc9d; }
+        .card:active { transform: scale(0.98); background: #fff8f3; }
+        .category { font-size: 12px; color: #d67d3e; font-weight: bold; text-transform: uppercase; margin-bottom: 10px; }
+        .main-text { font-size: 20px; font-weight: bold; margin-bottom: 15px; line-height: 1.4; color: #444; }
+        .sub-text { font-size: 16px; color: #2a9d8f; font-weight: bold; opacity: 0; transition: 0.2s; }
+        .sub-text.show { opacity: 1; }
+        
+        .panel { background: #fff; padding: 15px; border-radius: 15px; margin-bottom: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .mode-badge { display: inline-block; padding: 4px 10px; border-radius: 15px; background: #fdf2e9; color: #d67d3e; font-size: 11px; margin: 2px; font-weight: bold; border: 1px solid #e2bc9d; }
+        button { background: #d67d3e; color: white; border: none; padding: 10px 20px; border-radius: 50px; cursor: pointer; font-size: 15px; margin: 4px; font-weight: bold; }
+        button.secondary { background: #5f6368; }
+        button.toggle-on { background: #2a9d8f; }
+        .progress { font-size: 14px; margin-top: 10px; color: #666; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h3>Teacher's Instructions 50</h3>
+    
+    <div id="mode-label" class="mode-badge">先生の言葉(英) → 意味(日)</div>
+    <div id="order-label" class="mode-badge">順番通り</div>
+    <div class="progress">フレーズ: <span id="current-num">1</span> / 50</div>
+
+    <div class="card" onclick="toggleAnswer()">
+        <div id="cat" class="category">Category</div>
+        <div id="display-text" class="main-text">Loading...</div>
+        <div id="answer-text" class="sub-text">意味を表示</div>
+    </div>
+
+    <div class="panel">
+        <label style="font-size:12px;">再生速度: <span id="speed-val">1.0</span>x</label><br>
+        <input type="range" id="speed-range" min="0.5" max="2.0" step="0.1" value="1.0" oninput="updateSpeed()" style="width:80%">
+        <br>
+        <button id="random-btn" class="secondary" onclick="toggleRandom()">🔀 ランダム：OFF</button>
+    </div>
+
+    <div>
+        <button onclick="speak()">🔊 音声を聴く</button>
+        <button onclick="next()">次へ →</button><br>
+        <button class="secondary" onclick="switchMode()" style="margin-top:10px;">🔄 モード切替</button>
+    </div>
+</div>
+
+<script>
+    const phrases = [
+        // 1. 授業開始
+        {cat: "Beginning", en: "Settle down everyone, let's get started.", jp: "皆さん静かに。始めましょう。"},
+        {cat: "Beginning", en: "Open your laptops and go to Google Classroom.", jp: "PCを開いて、Google Classroomを開いて。"},
+        {cat: "Beginning", en: "Eyes on me, please.", jp: "こっち（先生の方）を見てください。"},
+        {cat: "Beginning", en: "Take out your materials from the last lesson.", jp: "前回の授業の教材を出して。"},
+        {cat: "Beginning", en: "Does everyone have the handout?", jp: "プリントは全員持っていますか？"},
+        {cat: "Beginning", en: "I'll take the attendance now.", jp: "出席を取ります。"},
+        {cat: "Beginning", en: "Who is absent today?", jp: "今日、欠席している人は誰？"},
+        {cat: "Beginning", en: "We are going to cover Chapter 3 today.", jp: "今日は第3章を扱います。"},
+        {cat: "Beginning", en: "Today's learning objective is...", jp: "今日の学習目標は……。"},
+        {cat: "Beginning", en: "Check your email for the link.", jp: "メールでリンクを確認してください。"},
+
+        // 2. 指示・作業
+        {cat: "Instruction", en: "Work on your own for 10 minutes.", jp: "10分間、個人ワークをしてください。"},
+        {cat: "Instruction", en: "Discuss this with your shoulder partner.", jp: "隣の人とこれについて話し合って。"},
+        {cat: "Instruction", en: "Get into groups of four.", jp: "4人1組になって。"},
+        {cat: "Instruction", en: "Brainstorm some ideas in your notebook.", jp: "ノートにアイデアを書き出して。"},
+        {cat: "Instruction", en: "Make sure to cite your sources.", jp: "必ず出典を明記してください。"},
+        {cat: "Instruction", en: "Don't forget to save your work.", jp: "作業内容を保存するのを忘れないで。"},
+        {cat: "Instruction", en: "Follow the instructions on the screen.", jp: "画面上の指示に従ってください。"},
+        {cat: "Instruction", en: "Scroll down to the bottom of the page.", jp: "ページの一番下までスクロールして。"},
+        {cat: "Instruction", en: "Highlight the key terms in the text.", jp: "テキストの重要用語にハイライトを引いて。"},
+        {cat: "Instruction", en: "Turn to page 45, please.", jp: "45ページを開いて。"},
+
+        // 3. 質問・やりとり
+        {cat: "Q&A", en: "Does that make sense to you?", jp: "理解できましたか？"},
+        {cat: "Q&A", en: "Any questions so far?", jp: "ここまでのところで質問は？"},
+        {cat: "Q&A", en: "Raise your hand if you need help.", jp: "助けが必要なら手を挙げて。"},
+        {cat: "Q&A", en: "Who wants to share their thoughts?", jp: "考えを発表したい人は？"},
+        {cat: "Q&A", en: "What's your take on this?", jp: "これについて、あなたはどう思う？"},
+        {cat: "Q&A", en: "Give it a try, even if you're not sure.", jp: "自信がなくても、やってみて。"},
+        {cat: "Q&A", en: "Could you speak up a little, please?", jp: "もう少し大きな声で話して。"},
+        {cat: "Q&A", en: "Let's hear from someone else.", jp: "他の人の意見も聞こう。"},
+        {cat: "Q&A", en: "Come to the front and show us.", jp: "前へ来て、私たちに見せて。"},
+        {cat: "Q&A", en: "I'll give you a hint.", jp: "ヒントをあげましょう。"},
+
+        // 4. 課題・評価
+        {cat: "Assessment", en: "The deadline is this Friday at 4 PM.", jp: "締め切りは今週金曜の午後4時です。"},
+        {cat: "Assessment", en: "This will be graded.", jp: "これは成績（評価）に入ります。"},
+        {cat: "Assessment", en: "Submit your assignment via ManageBac.", jp: "ManageBac経由で課題を提出して。"},
+        {cat: "Assessment", en: "Check the rubric before you start.", jp: "始める前に評価基準(ルーブリック)を確認して。"},
+        {cat: "Assessment", en: "You have 5 minutes left.", jp: "残り5分です。"},
+        {cat: "Assessment", en: "Time is up. Pens down.", jp: "時間終了。ペンを置いて。"},
+        {cat: "Assessment", en: "Pass your papers to the front.", jp: "答案用紙を前へ回して。"},
+        {cat: "Assessment", en: "This is a formative assessment.", jp: "これは練習用の小テスト（評価対象外）です。"},
+        {cat: "Assessment", en: "Your final project is due next month.", jp: "最終プロジェクトは来月提出です。"},
+        {cat: "Assessment", en: "I'll give you some feedback later.", jp: "後でフィードバックをします。"},
+
+        // 5. 管理・マナー
+        {cat: "Management", en: "Please stop talking and listen.", jp: "喋るのをやめて聞いてください。"},
+        {cat: "Management", en: "Put your phones in your bags.", jp: "スマホはカバンにしまって。"},
+        {cat: "Management", en: "Pack up your things.", jp: "片付けをしてください。"},
+        {cat: "Management", en: "No food or drinks in the lab.", jp: "ラボ内は飲食禁止です。"},
+        {cat: "Management", en: "Make sure to tidy up your desk.", jp: "机の上を整理しておいて。"},
+        {cat: "Management", en: "You may go to your next class now.", jp: "次の授業に行っていいですよ。"},
+        {cat: "Management", en: "Don't be late for the next lesson.", jp: "次の授業に遅れないように。"},
+        {cat: "Management", en: "Wait for the bell to ring.", jp: "チャイムが鳴るまで待って。"},
+        {cat: "Management", en: "Listen carefully to the announcement.", jp: "放送をよく聞いて。"},
+        {cat: "Management", en: "Have a great lunch break!", jp: "楽しいランチ休憩を！"}
+    ];
+
+    let currentIndex = 0;
+    let isEnToJp = true;
+    let currentSpeed = 1.0;
+    let isRandom = false;
+
+    function update() {
+        const item = phrases[currentIndex];
+        const display = document.getElementById('display-text');
+        const answer = document.getElementById('answer-text');
+        const modeLabel = document.getElementById('mode-label');
+        
+        document.getElementById('current-num').innerText = currentIndex + 1;
+        document.getElementById('cat').innerText = item.cat;
+        answer.classList.remove('show');
+
+        if (isEnToJp) {
+            modeLabel.innerText = "先生の言葉(英) → 意味(日)";
+            display.innerText = item.en;
+            answer.innerText = item.jp;
+        } else {
+            modeLabel.innerText = "意味(日) → 先生の言葉(英)";
+            display.innerText = item.jp;
+            answer.innerText = item.en;
+        }
+    }
+
+    function toggleAnswer() { document.getElementById('answer-text').classList.add('show'); }
+
+    function next() {
+        if (isRandom) {
+            currentIndex = Math.floor(Math.random() * phrases.length);
+        } else {
+            currentIndex = (currentIndex + 1) % phrases.length;
+        }
+        update();
+    }
+
+    function toggleRandom() {
+        isRandom = !isRandom;
+        const btn = document.getElementById('random-btn');
+        const label = document.getElementById('order-label');
+        btn.innerText = isRandom ? "🔀 ランダム：ON" : "🔀 ランダム：OFF";
+        btn.classList.toggle('toggle-on', isRandom);
+        label.innerText = isRandom ? "ランダム表示中" : "順番通り";
+    }
+
+    function switchMode() { isEnToJp = !isEnToJp; update(); }
+    function updateSpeed() {
+        currentSpeed = document.getElementById('speed-range').value;
+        document.getElementById('speed-val').innerText = currentSpeed;
+    }
+
+    function speak() {
+        window.speechSynthesis.cancel();
+        const uttr = new SpeechSynthesisUtterance(phrases[currentIndex].en);
+        uttr.lang = 'en-US';
+        uttr.rate = currentSpeed;
+        window.speechSynthesis.speak(uttr);
+    }
+
+    update();
+</script>
+</body>
+</html>

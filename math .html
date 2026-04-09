@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math & Science Mastery 100</title>
+    <style>
+        body { font-family: 'Helvetica Neue', Arial, sans-serif; text-align: center; background: #f4f4f9; padding: 20px; color: #333; }
+        .container { max-width: 650px; margin: auto; }
+        .card { background: white; border-radius: 20px; padding: 30px 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); margin: 15px auto; min-height: 140px; display: flex; flex-direction: column; justify-content: center; cursor: pointer; border-left: 10px solid #1a73e8; }
+        .card:active { background: #f8f9fa; }
+        .category { font-size: 11px; color: #1a73e8; font-weight: bold; text-transform: uppercase; margin-bottom: 8px; }
+        .main-text { font-size: 20px; font-weight: bold; margin-bottom: 12px; color: #202124; }
+        .sub-text { font-size: 16px; color: #d93025; font-weight: bold; opacity: 0; transition: 0.2s; }
+        .sub-text.show { opacity: 1; }
+        .panel { background: #fff; padding: 15px; border-radius: 15px; margin-bottom: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .mode-badge { display: inline-block; padding: 4px 10px; border-radius: 15px; background: #e8f0fe; color: #1a73e8; font-size: 11px; margin: 2px; font-weight: bold; }
+        button { background: #1a73e8; color: white; border: none; padding: 10px 20px; border-radius: 50px; cursor: pointer; font-size: 14px; margin: 4px; font-weight: bold; }
+        button.secondary { background: #5f6368; }
+        button.toggle-on { background: #34a853; }
+        .progress { font-size: 13px; color: #666; margin-bottom: 5px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h3>Math & Science Mastery 100</h3>
+    
+    <div id="mode-label" class="mode-badge">英 → 日</div>
+    <div id="order-label" class="mode-badge">順番通り</div>
+    <div class="progress"><span id="current-num">1</span> / 100</div>
+
+    <div class="card" onclick="toggleAnswer()">
+        <div id="cat" class="category">Category</div>
+        <div id="display-text" class="main-text">Loading...</div>
+        <div id="answer-text" class="sub-text">意味を表示</div>
+    </div>
+
+    <div class="panel">
+        <label style="font-size:12px;">音声速度: <span id="speed-val">1.0</span>x</label> 
+        <input type="range" id="speed-range" min="0.5" max="1.5" step="0.1" value="1.0" oninput="updateSpeed()" style="width:60%; vertical-align:middle;">
+        <br>
+        <button id="random-btn" class="secondary" onclick="toggleRandom()">🔀 ランダム：OFF</button>
+    </div>
+
+    <div>
+        <button onclick="speak()">🔊 音声を聴く</button>
+        <button onclick="next()">次へ →</button><br>
+        <button class="secondary" onclick="switchMode()" style="margin-top:10px;">🔄 英日/日英 切替</button>
+    </div>
+</div>
+
+<script>
+    const phrases = [
+        // --- 数学：基本演算 (Math: Arithmetic) ---
+        {cat: "Math / Basic", en: "One plus five equals six.", jp: "1足す5は6です。"},
+        {cat: "Math / Basic", en: "Ten minus three equals seven.", jp: "10引く3は7です。"},
+        {cat: "Math / Basic", en: "Four times two is eight.", jp: "4掛ける2は8です。"},
+        {cat: "Math / Basic", en: "Twelve divided by four is three.", jp: "12割る4は3です。"},
+        {cat: "Math / Basic", en: "What is the remainder?", jp: "余りはいくつですか？"},
+        {cat: "Math / Basic", en: "Two to the power of three is eight.", jp: "2の3乗は8です。"},
+        {cat: "Math / Basic", en: "The square root of nine is three.", jp: "9の平方根（ルート）は3です。"},
+        {cat: "Math / Basic", en: "Zero point five.", jp: "0.5 (ぜろ・ぽいんと・ふぁいぶ)"},
+        {cat: "Math / Basic", en: "Two-thirds.", jp: "3分の2 (つー・さーず)"},
+
+        // --- 数学：図形と角度 (Math: Geometry) ---
+        {cat: "Math / Geometry", en: "The sum of the interior angles of a triangle is 180 degrees.", jp: "三角形の内角の和は180度です。"},
+        {cat: "Math / Geometry", en: "Prove that these two triangles are congruent.", jp: "これら2つの三角形が合同であることを証明せよ。"},
+        {cat: "Math / Geometry", en: "A right-angled triangle.", jp: "直角三角形"},
+        {cat: "Math / Geometry", en: "The hypotenuse is the longest side.", jp: "斜辺（直角の向かいの辺）が一番長い辺です。"},
+        {cat: "Math / Geometry", en: "Parallel lines never meet.", jp: "平行線は決して交わりません。"},
+        {cat: "Math / Geometry", en: "Calculate the area of the circle.", jp: "円の面積を計算しなさい。"},
+        {cat: "Math / Geometry", en: "Pi is approximately 3.14.", jp: "円周率は約3.14です。"},
+
+        // --- 数学：代数と関数 (Math: Algebra) ---
+        {cat: "Math / Algebra", en: "Solve for x in this equation.", jp: "この方程式のxを解きなさい。"},
+        {cat: "Math / Algebra", en: "Simplify the following expression.", jp: "次の式を簡略化（整理）しなさい。"},
+        {cat: "Math / Algebra", en: "Factorize the quadratic equation.", jp: "二次方程式を因数分解しなさい。"},
+        {cat: "Math / Algebra", en: "The x-axis and the y-axis.", jp: "x軸とy軸"},
+        {cat: "Math / Algebra", en: "Find the coordinates of point A.", jp: "点Aの座標を求めなさい。"},
+        {cat: "Math / Algebra", en: "The gradient of the line is two.", jp: "直線の傾きは2です。"},
+
+        // --- 理科：実験と方法 (Science: Method) ---
+        {cat: "Science / Method", en: "Conduct an experiment to test the hypothesis.", jp: "仮説を検証するために実験を行う。"},
+        {cat: "Science / Method", en: "What is the independent variable?", jp: "独立変数（変える条件）は何ですか？"},
+        {cat: "Science / Method", en: "Keep the control variables constant.", jp: "制御変数（変えない条件）を一定に保つ。"},
+        {cat: "Science / Method", en: "Record your observations in the table.", jp: "観察結果を表に記録しなさい。"},
+        {cat: "Science / Method", en: "The results support our hypothesis.", jp: "結果は私たちの仮説を支持している。"},
+        {cat: "Science / Method", en: "Identify the error in this measurement.", jp: "この測定の誤差を特定しなさい。"},
+
+        // --- 理科：物理 (Science / Physics) ---
+        {cat: "Science / Physics", en: "Force equals mass times acceleration.", jp: "力＝質量×加速度。"},
+        {cat: "Science / Physics", en: "Potential energy and kinetic energy.", jp: "位置エネルギーと運動エネルギー。"},
+        {cat: "Science / Physics", en: "Friction slows down the object.", jp: "摩擦が物体の動きを遅くする。"},
+        {cat: "Science / Physics", en: "The law of conservation of energy.", jp: "エネルギー保存の法則。"},
+
+        // --- 理科：化学 (Science / Chemistry) ---
+        {cat: "Science / Chemistry", en: "The periodic table of elements.", jp: "元素の周期表。"},
+        {cat: "Science / Chemistry", en: "Atoms consist of protons, neutrons, and electrons.", jp: "原子は陽子、中性子、電子で構成される。"},
+        {cat: "Science / Chemistry", en: "Chemical bonds hold molecules together.", jp: "化学結合が分子を結びつけている。"},
+        {cat: "Science / Chemistry", en: "Acids and bases.", jp: "酸と塩基。"},
+        {cat: "Science / Chemistry", en: "The pH level of this solution.", jp: "この溶液のpH値。"},
+
+        // --- 理科：生物 (Science / Biology) ---
+        {cat: "Science / Biology", en: "Plants use photosynthesis to make food.", jp: "植物は食物を作るために光合成を行う。"},
+        {cat: "Science / Biology", en: "The structure of a cell.", jp: "細胞の構造。"},
+        {cat: "Science / Biology", en: "DNA carries genetic information.", jp: "DNAは遺伝情報を運ぶ。"},
+        {cat: "Science / Biology", en: "Natural selection leads to evolution.", jp: "自然選択が進化を導く。"},
+
+        // --- まだまだ続きます（50語では足りないため随時追加が必要な概念） ---
+        {cat: "Math / Logic", en: "Therefore, the statement is true.", jp: "したがって、その声明（命題）は真である。"},
+        {cat: "Math / Logic", en: "Let x be the number of apples.", jp: "xをリンゴの数とする。"},
+        {cat: "Math / Geometry", en: "A line segment.", jp: "線分"},
+        {cat: "Math / Geometry", en: "The area of a trapezoid.", jp: "台形の面積"},
+        {cat: "Science / Data", en: "Draw a line of best fit.", jp: "（グラフに）近似値を表す線を引きなさい。"},
+        {cat: "Science / Physics", en: "Gravity pulls objects toward the Earth.", jp: "重力は物体を地球の方へ引き寄せる。"},
+        {cat: "Science / Chem", en: "A chemical reaction occurs.", jp: "化学反応が起こる。"},
+        {cat: "Science / Bio", en: "The ecosystem is fragile.", jp: "生態系は脆い。"},
+        {cat: "Science / Lab", en: "Wear safety goggles in the lab.", jp: "実験室では保護メガネを着用すること。"}
+    ];
+
+    let currentIndex = 0;
+    let isEnToJp = true;
+    let currentSpeed = 1.0;
+    let isRandom = false;
+
+    function update() {
+        const item = phrases[currentIndex];
+        document.getElementById('current-num').innerText = currentIndex + 1;
+        document.getElementById('cat').innerText = item.cat;
+        document.getElementById('answer-text').classList.remove('show');
+
+        if (isEnToJp) {
+            document.getElementById('display-text').innerText = item.en;
+            document.getElementById('answer-text').innerText = item.jp;
+        } else {
+            document.getElementById('display-text').innerText = item.jp;
+            document.getElementById('answer-text').innerText = item.en;
+        }
+    }
+
+    function toggleAnswer() { document.getElementById('answer-text').classList.add('show'); }
+
+    function next() {
+        if (isRandom) {
+            currentIndex = Math.floor(Math.random() * phrases.length);
+        } else {
+            currentIndex = (currentIndex + 1) % phrases.length;
+        }
+        update();
+    }
+
+    function toggleRandom() {
+        isRandom = !isRandom;
+        const btn = document.getElementById('random-btn');
+        btn.innerText = isRandom ? "🔀 ランダム：ON" : "🔀 ランダム：OFF";
+        btn.classList.toggle('toggle-on', isRandom);
+    }
+
+    function switchMode() { isEnToJp = !isEnToJp; update(); }
+    function updateSpeed() {
+        currentSpeed = document.getElementById('speed-range').value;
+        document.getElementById('speed-val').innerText = currentSpeed;
+    }
+
+    function speak() {
+        window.speechSynthesis.cancel();
+        const uttr = new SpeechSynthesisUtterance(phrases[currentIndex].en);
+        uttr.lang = 'en-US';
+        uttr.rate = currentSpeed;
+        window.speechSynthesis.speak(uttr);
+    }
+
+    update();
+</script>
+</body>
+</html>

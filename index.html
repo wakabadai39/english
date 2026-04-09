@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grade 9 Singapore Survival 50</title>
+    <style>
+        body { font-family: 'Helvetica Neue', Arial, sans-serif; text-align: center; background: #eef2f7; padding: 20px; color: #333; }
+        .container { max-width: 600px; margin: auto; }
+        .card { background: white; border-radius: 20px; padding: 35px 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); margin: 15px auto; min-height: 160px; display: flex; flex-direction: column; justify-content: center; cursor: pointer; border: 2px solid transparent; }
+        .card:active { transform: scale(0.98); border-color: #1a73e8; }
+        .category { font-size: 12px; color: #1a73e8; font-weight: bold; text-transform: uppercase; margin-bottom: 10px; }
+        .main-text { font-size: 22px; font-weight: bold; margin-bottom: 15px; line-height: 1.4; }
+        .sub-text { font-size: 17px; color: #d93025; font-weight: bold; opacity: 0; transition: 0.2s; }
+        .sub-text.show { opacity: 1; }
+        
+        .panel { background: #fff; padding: 15px; border-radius: 15px; margin-bottom: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .mode-badge { display: inline-block; padding: 4px 10px; border-radius: 15px; background: #e8f0fe; color: #1a73e8; font-size: 11px; margin: 2px; font-weight: bold; }
+        button { background: #1a73e8; color: white; border: none; padding: 10px 20px; border-radius: 50px; cursor: pointer; font-size: 15px; margin: 4px; font-weight: bold; }
+        button.secondary { background: #5f6368; }
+        button.toggle-on { background: #34a853; }
+        .progress { font-size: 14px; margin-top: 10px; color: #666; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h3>Singapore Prep: Essential 50</h3>
+    
+    <div id="mode-label" class="mode-badge">英 → 日</div>
+    <div id="order-label" class="mode-badge">順番通り</div>
+    <div class="progress">フレーズ: <span id="current-num">1</span> / 50</div>
+
+    <div class="card" onclick="toggleAnswer()">
+        <div id="cat" class="category">Category</div>
+        <div id="display-text" class="main-text">Loading...</div>
+        <div id="answer-text" class="sub-text">Answer</div>
+    </div>
+
+    <div class="panel">
+        <label style="font-size:12px;">再生速度: <span id="speed-val">1.0</span>x</label><br>
+        <input type="range" id="speed-range" min="0.5" max="2.0" step="0.1" value="1.0" oninput="updateSpeed()" style="width:80%">
+        <br>
+        <button id="random-btn" class="secondary" onclick="toggleRandom()">🔀 ランダム：OFF</button>
+    </div>
+
+    <div>
+        <button onclick="speak()">🔊 音声を聴く</button>
+        <button onclick="next()">次へ →</button><br>
+        <button class="secondary" onclick="switchMode()" style="margin-top:10px;">🔄 モード切替</button>
+    </div>
+</div>
+
+<script>
+    const phrases = [
+        // 1. 授業中の必須フレーズ
+        {cat: "Classroom", en: "Could you say that again, please?", jp: "もう一度言ってください。"},
+        {cat: "Classroom", en: "What does this word mean?", jp: "この単語はどういう意味ですか？"},
+        {cat: "Classroom", en: "How do you spell that?", jp: "スペルはどう書きますか？"},
+        {cat: "Classroom", en: "I'm sorry, I didn't catch that.", jp: "すみません、聞き取れませんでした。"},
+        {cat: "Classroom", en: "Which page are we on?", jp: "いま何ページですか？"},
+        {cat: "Classroom", en: "Could you write it on the board?", jp: "それを黒板に書いてもらえますか？"},
+        {cat: "Classroom", en: "What should I do next?", jp: "次に何をすればいいですか？"},
+        {cat: "Classroom", en: "Is this part of the homework?", jp: "これは宿題の一部ですか？"},
+        {cat: "Classroom", en: "When is the deadline for this?", jp: "これの締め切りはいつですか？"},
+        {cat: "Classroom", en: "Can I use my laptop for this?", jp: "これにノートパソコンを使ってもいいですか？"},
+        {cat: "Classroom", en: "I need a little more time, please.", jp: "もう少し時間をください。"},
+        {cat: "Classroom", en: "Could you explain that one more time?", jp: "もう一度説明していただけますか？"},
+        {cat: "Classroom", en: "I'm not sure what to do.", jp: "何をすればいいのか分かりません。"},
+        {cat: "Classroom", en: "I've finished my task. What's next?", jp: "終わりました。次は何ですか？"},
+        
+        // 2. 友人関係・休み時間
+        {cat: "Friends", en: "I'm from Japan. Nice to meet you!", jp: "日本から来ました。よろしく！"},
+        {cat: "Friends", en: "What's your name again? Sorry.", jp: "名前をもう一度聞いてもいい？ごめんね。"},
+        {cat: "Friends", en: "Do you have Instagram?", jp: "インスタやってる？"},
+        {cat: "Friends", en: "Can I join you guys?", jp: "（グループに）混ざってもいい？"},
+        {cat: "Friends", en: "What are you doing after school?", jp: "放課後、何するの？"},
+        {cat: "Friends", en: "Which CCA are you in?", jp: "部活(CCA)は何に入ってるの？"},
+        {cat: "Friends", en: "Do you want to grab lunch together?", jp: "一緒にランチ食べない？"},
+        {cat: "Friends", en: "That's cool!", jp: "それいいね！"},
+        {cat: "Friends", en: "Wait, I'm coming with you.", jp: "待って、僕も行くよ。"},
+        {cat: "Friends", en: "Can you help me with this?", jp: "これ手伝ってくれる？"},
+        {cat: "Friends", en: "What's the Wi-Fi password?", jp: "Wi-Fiのパスワードは何？"},
+        
+        // 3. パソコン・IT操作
+        {cat: "Tech", en: "Where can I charge my laptop?", jp: "どこで充電できますか？"},
+        {cat: "Tech", en: "My internet is not working.", jp: "ネットが繋がりません。"},
+        {cat: "Tech", en: "How do I submit this file?", jp: "どうやってこのファイルを提出しますか？"},
+        {cat: "Tech", en: "Can you share the link with me?", jp: "リンクを共有してくれますか？"},
+        {cat: "Tech", en: "I can't log in to my account.", jp: "アカウントにログインできません。"},
+
+        // 4. 許可・体調
+        {cat: "Permission", en: "May I go to the bathroom?", jp: "トイレに行ってもいいですか？"},
+        {cat: "Permission", en: "Can I go to the locker?", jp: "ロッカーに行ってもいいですか？"},
+        {cat: "Permission", en: "I'm not feeling well. Can I go to the clinic?", jp: "気分が悪いです。保健室へ行っていいですか？"},
+        {cat: "Permission", en: "Can I borrow your eraser?", jp: "消しゴムを借りてもいい？"},
+
+        // 5. 反論・意志表示（重要）
+        {cat: "Response", en: "I'm not sure, but let me try.", jp: "自信はないですが、やってみます。"},
+        {cat: "Response", en: "I think so, too.", jp: "僕もそう思う。"},
+        {cat: "Response", en: "I have a different opinion.", jp: "違う意見があります。"},
+        {cat: "Response", en: "Could you speak a bit slower?", jp: "もう少しゆっくり話してくれますか？"},
+        {cat: "Response", en: "Sorry, I'm late.", jp: "遅れてすみません。"},
+        {cat: "Response", en: "Wait a second, please.", jp: "ちょっと待ってください。"},
+        
+        // 6. シンガポール・学校生活
+        {cat: "School Life", en: "Where is the cafeteria?", jp: "食堂はどこですか？"},
+        {cat: "School Life", en: "What time does the next class start?", jp: "次の授業は何時に始まりますか？"},
+        {cat: "School Life", en: "Is this seat taken?", jp: "この席は空いていますか？"},
+        {cat: "School Life", en: "I forgot my textbook.", jp: "教科書を忘れました。"},
+        {cat: "School Life", en: "Which house are you in?", jp: "どのハウス（寮/チーム）なの？"},
+        {cat: "School Life", en: "Do we have a test today?", jp: "今日、テストある？"},
+        {cat: "School Life", en: "See you tomorrow!", jp: "また明日ね！"},
+        {cat: "School Life", en: "Have a good weekend!", jp: "良い週末を！"},
+        {cat: "School Life", en: "I'll try my best.", jp: "精一杯頑張ります。"},
+        {cat: "School Life", en: "Thanks for your help.", jp: "助けてくれてありがとう。"}
+    ];
+
+    let currentIndex = 0;
+    let isEnToJp = true;
+    let currentSpeed = 1.0;
+    let isRandom = false;
+
+    function update() {
+        const item = phrases[currentIndex];
+        const display = document.getElementById('display-text');
+        const answer = document.getElementById('answer-text');
+        const modeLabel = document.getElementById('mode-label');
+        
+        document.getElementById('current-num').innerText = currentIndex + 1;
+        document.getElementById('cat').innerText = item.cat;
+        answer.classList.remove('show');
+
+        if (isEnToJp) {
+            modeLabel.innerText = "英 → 日";
+            display.innerText = item.en;
+            answer.innerText = item.jp;
+        } else {
+            modeLabel.innerText = "日 → 英";
+            display.innerText = item.jp;
+            answer.innerText = item.en;
+        }
+    }
+
+    function toggleAnswer() { document.getElementById('answer-text').classList.add('show'); }
+
+    function next() {
+        if (isRandom) {
+            currentIndex = Math.floor(Math.random() * phrases.length);
+        } else {
+            currentIndex = (currentIndex + 1) % phrases.length;
+        }
+        update();
+    }
+
+    function toggleRandom() {
+        isRandom = !isRandom;
+        const btn = document.getElementById('random-btn');
+        const label = document.getElementById('order-label');
+        btn.innerText = isRandom ? "🔀 ランダム：ON" : "🔀 ランダム：OFF";
+        btn.classList.toggle('toggle-on', isRandom);
+        label.innerText = isRandom ? "ランダム表示中" : "順番通り";
+    }
+
+    function switchMode() { isEnToJp = !isEnToJp; update(); }
+    function updateSpeed() {
+        currentSpeed = document.getElementById('speed-range').value;
+        document.getElementById('speed-val').innerText = currentSpeed;
+    }
+
+    function speak() {
+        window.speechSynthesis.cancel();
+        const uttr = new SpeechSynthesisUtterance(phrases[currentIndex].en);
+        uttr.lang = 'en-US';
+        uttr.rate = currentSpeed;
+        window.speechSynthesis.speak(uttr);
+    }
+
+    update();
+</script>
+</body>
+</html>

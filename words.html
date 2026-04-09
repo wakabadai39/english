@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math & Science Mastery 100+</title>
+    <style>
+        body { font-family: sans-serif; text-align: center; background: #f0f4f8; padding: 20px; margin: 0; touch-action: manipulation; }
+        .card { background: white; border-radius: 20px; padding: 30px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); margin: 20px auto; max-width: 450px; min-height: 200px; display: flex; flex-direction: column; justify-content: center; cursor: pointer; border-bottom: 8px solid #1a73e8; }
+        .category { font-size: 11px; color: #1a73e8; font-weight: bold; margin-bottom: 10px; }
+        .main-text { font-size: 24px; font-weight: bold; color: #202124; margin-bottom: 20px; }
+        .sub-text { font-size: 18px; color: #d93025; font-weight: bold; visibility: hidden; }
+        .sub-text.show { visibility: visible; }
+        button { background: #1a73e8; color: white; border: none; padding: 15px; border-radius: 12px; cursor: pointer; font-size: 16px; font-weight: bold; width: 100px; }
+        .mode-btn { width: 100%; max-width: 450px; margin: 15px 0; background: #fff; color: #1a73e8; border: 2px solid #1a73e8; padding: 10px; border-radius: 10px; }
+    </style>
+</head>
+<body>
+<div id="counter" style="font-size: 14px; color: #666;">---</div>
+<div class="card" onclick="handleCard()">
+    <div id="cat" class="category">---</div>
+    <div id="q" class="main-text">loading...</div>
+    <div id="a" class="sub-text">---</div>
+</div>
+<div style="display:flex; justify-content:center; gap:10px;">
+    <button onclick="prev()">←</button>
+    <button onclick="speak()">🔊</button>
+    <button onclick="next()" style="background:#34a853">NEXT</button>
+</div>
+<button class="mode-btn" onclick="m()">英⇔日 モード切替</button>
+<label><input type="checkbox" id="r"> ランダム</label>
+
+<script>
+    const d = [
+        // --- 数学 (Math) ---
+        {c:"math",e:"remainder",j:"余り"},{c:"math",e:"quotient",j:"商"},{c:"math",e:"decimal",j:"小数"},{c:"math",e:"fraction",j:"分数"},{c:"math",e:"numerator",j:"分子"},{c:"math",e:"denominator",j:"分母"},{c:"math",e:"improper fraction",j:"仮分数"},{c:"math",e:"mixed number",j:"帯分数"},{c:"math",e:"square root",j:"平方根"},{c:"math",e:"to the power of",j:"〜乗"},
+        {c:"math",e:"equation",j:"方程式"},{c:"math",e:"inequality",j:"不等式"},{c:"math",e:"coefficient",j:"係数"},{c:"math",e:"constant",j:"定数"},{c:"math",e:"simplify",j:"簡略化"},{c:"math",e:"factorize",j:"因数分解"},{c:"math",e:"quadratic equation",j:"二次方程式"},{c:"math",e:"coordinates",j:"座標"},{c:"math",e:"gradient",j:"傾き"},{c:"math",e:"intercept",j:"切片"},
+        {c:"math",e:"congruent",j:"合同"},{c:"math",e:"similar",j:"相似"},{c:"math",e:"hypotenuse",j:"斜辺"},{c:"math",e:"interior angle",j:"内角"},{c:"math",e:"exterior angle",j:"外角"},{c:"math",e:"parallel",j:"平行"},{c:"math",e:"perpendicular",j:"垂直"},{c:"math",e:"diameter",j:"直径"},{c:"math",e:"circumference",j:"円周"},{c:"math",e:"probability",j:"確率"},
+        {c:"math",e:"substitution",j:"代入"},{c:"math",e:"variable",j:"変数"},{c:"math",e:"vertex",j:"頂点"},{c:"math",e:"isosceles",j:"二等辺"},{c:"math",e:"equilateral",j:"正三角形"},{c:"math",e:"trapezoid",j:"台形"},{c:"math",e:"parallelogram",j:"平行四辺形"},{c:"math",e:"pythagorean theorem",j:"三平方の定理"},{c:"math",e:"statement",j:"命題"},{c:"math",e:"volume",j:"体積"},
+        {c:"math",e:"surface area",j:"表面積"},{c:"math",e:"radius",j:"半径"},{c:"math",e:"arc",j:"弧"},{c:"math",e:"sector",j:"扇形"},{c:"math",e:"ratio",j:"比"},{c:"math",e:"percentage",j:"割合"},{c:"math",e:"expansion",j:"展開"},{c:"math",e:"prime number",j:"素数"},{c:"math",e:"integer",j:"整数"},{c:"math",e:"calculation",j:"計算"},
+        {c:"math",e:"formula",j:"公式"},{c:"math",e:"theorem",j:"定理"},{c:"math",e:"proof",j:"証明"},{c:"math",e:"evaluate",j:"値を求める"},{c:"math",e:"solve for x",j:"xを解く"},{c:"math",e:"descending order",j:"降順"},{c:"math",e:"ascending order",j:"昇順"},{c:"math",e:"x-axis",j:"x軸"},{c:"math",e:"y-axis",j:"y軸"},{c:"math",e:"origin",j:"原点"},
+        // --- 理科 (Science) ---
+        {c:"science",e:"hypothesis",j:"仮説"},{c:"science",e:"observation",j:"観察"},{c:"science",e:"inference",j:"推論"},{c:"science",e:"conclusion",j:"結論"},{c:"science",e:"independent variable",j:"独立変数"},{c:"science",e:"dependent variable",j:"従属変数"},{c:"science",e:"control variable",j:"制御変数"},{c:"science",e:"reliability",j:"信頼性"},{c:"science",e:"measurement error",j:"測定誤差"},{c:"science",e:"method",j:"方法"},
+        {c:"science",e:"photosynthesis",j:"光合成"},{c:"science",e:"chlorophyll",j:"葉緑素"},{c:"science",e:"respiration",j:"呼吸"},{c:"science",e:"transpiration",j:"蒸散"},{c:"science",e:"digestion",j:"消化"},{c:"science",e:"evolution",j:"進化"},{c:"science",e:"adaptation",j:"適応"},{c:"science",e:"ecosystem",j:"生態系"},{c:"science",e:"habitat",j:"生息地"},{c:"science",e:"organism",j:"生物"},
+        {c:"science",e:"atom",j:"原子"},{c:"science",e:"molecule",j:"分子"},{c:"science",e:"element",j:"元素"},{c:"science",e:"compound",j:"化合物"},{c:"science",e:"proton",j:"陽子"},{c:"science",e:"neutron",j:"中性子"},{c:"science",e:"electron",j:"電子"},{c:"science",e:"nucleus",j:"原子核"},{c:"science",e:"periodic table",j:"周期表"},{c:"science",e:"reaction",j:"反応"},
+        {c:"science",e:"acceleration",j:"加速度"},{c:"science",e:"velocity",j:"速度"},{c:"science",e:"friction",j:"摩擦"},{c:"science",e:"gravity",j:"重力"},{c:"science",e:"kinetic energy",j:"運動エネルギー"},{c:"science",e:"potential energy",j:"位置エネルギー"},{c:"science",e:"evaporation",j:"蒸発"},{c:"science",e:"condensation",j:"凝縮"},{c:"science",e:"solidification",j:"凝固"},{c:"science",e:"melting",j:"融解"},
+        {c:"science",e:"conduction",j:"伝導"},{c:"science",e:"convection",j:"対流"},{c:"science",e:"radiation",j:"放射"},{c:"science",e:"density",j:"密度"},{c:"science",e:"mass",j:"質量"},{c:"science",e:"force",j:"力"},{c:"science",e:"pressure",j:"圧力"},{c:"science",e:"vacuum",j:"真空"},{c:"science",e:"magnetism",j:"磁気"},{c:"science",e:"electricity",j:"電気"},
+        {c:"science",e:"current",j:"電流"},{c:"science",e:"voltage",j:"電圧"},{c:"science",e:"resistance",j:"抵抗"},{c:"science",e:"safety goggles",j:"保護メガネ"},{c:"science",e:"beaker",j:"ビーカー"},{c:"science",e:"test tube",j:"試験管"},{c:"science",e:"bunsen burner",j:"バーナー"},{c:"science",e:"experiment",j:"実験"},{c:"science",e:"result",j:"結果"},{c:"science",e:"data",j:"データ"}
+    ];
+
+    let i = 0, en = true, ans = false;
+    function rdr() {
+        const item = d[i];
+        document.getElementById('counter').innerText = (i + 1) + " / " + d.length;
+        document.getElementById('cat').innerText = item.c.toUpperCase();
+        ans = false;
+        document.getElementById('a').classList.remove('show');
+        document.getElementById('q').innerText = en ? item.e : item.j;
+        document.getElementById('a').innerText = en ? item.j : item.e;
+    }
+    function handleCard() { if(!ans){ ans=true; document.getElementById('a').classList.add('show'); } else { next(); } }
+    function next() { if(document.getElementById('r').checked) i = Math.floor(Math.random()*d.length); else i = (i+1)%d.length; rdr(); }
+    function prev() { i = (i-1+d.length)%d.length; rdr(); }
+    function m() { en = !en; rdr(); }
+    function speak() { window.speechSynthesis.cancel(); const m = new SpeechSynthesisUtterance(d[i].e); m.lang = 'en-US'; window.speechSynthesis.speak(m); }
+    window.onload = rdr;
+</script>
+</body>
+</html>
