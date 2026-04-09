@@ -4,174 +4,847 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Math & Science Mastery 100</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Helvetica Neue', Arial, sans-serif; text-align: center; background: #f4f4f9; padding: 20px; color: #333; }
-        .container { max-width: 650px; margin: auto; }
-        .card { background: white; border-radius: 20px; padding: 30px 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); margin: 15px auto; min-height: 140px; display: flex; flex-direction: column; justify-content: center; cursor: pointer; border-left: 10px solid #1a73e8; }
-        .card:active { background: #f8f9fa; }
-        .category { font-size: 11px; color: #1a73e8; font-weight: bold; text-transform: uppercase; margin-bottom: 8px; }
-        .main-text { font-size: 20px; font-weight: bold; margin-bottom: 12px; color: #202124; }
-        .sub-text { font-size: 16px; color: #d93025; font-weight: bold; opacity: 0; transition: 0.2s; }
-        .sub-text.show { opacity: 1; }
-        .panel { background: #fff; padding: 15px; border-radius: 15px; margin-bottom: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-        .mode-badge { display: inline-block; padding: 4px 10px; border-radius: 15px; background: #e8f0fe; color: #1a73e8; font-size: 11px; margin: 2px; font-weight: bold; }
-        button { background: #1a73e8; color: white; border: none; padding: 10px 20px; border-radius: 50px; cursor: pointer; font-size: 14px; margin: 4px; font-weight: bold; }
-        button.secondary { background: #5f6368; }
-        button.toggle-on { background: #34a853; }
-        .progress { font-size: 13px; color: #666; margin-bottom: 5px; }
+        :root {
+            --bg: #f0f4ff;
+            --surface: #ffffff;
+            --primary: #2563eb;
+            --primary-light: #dbeafe;
+            --accent: #e11d48;
+            --green: #16a34a;
+            --green-light: #dcfce7;
+            --amber: #d97706;
+            --amber-light: #fef3c7;
+            --text: #1e293b;
+            --muted: #64748b;
+            --border: #e2e8f0;
+            --shadow: 0 4px 24px rgba(37,99,235,0.08);
+            --radius: 18px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            background: var(--bg);
+            min-height: 100vh;
+            padding: 16px 12px 40px;
+            color: var(--text);
+        }
+
+        .container { max-width: 560px; margin: auto; }
+
+        /* ─── Header ─── */
+        .header {
+            text-align: center;
+            margin-bottom: 14px;
+        }
+        .header h2 {
+            font-size: 18px;
+            font-weight: 900;
+            letter-spacing: 0.02em;
+            color: var(--primary);
+        }
+        .header p { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+        /* ─── Badges row ─── */
+        .badges {
+            display: flex;
+            gap: 6px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
+        }
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 12px;
+            border-radius: 99px;
+            font-size: 11px;
+            font-weight: 700;
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+        .badge.green { background: var(--green-light); color: var(--green); }
+        .badge.amber { background: var(--amber-light); color: var(--amber); }
+
+        /* ─── Progress bar ─── */
+        .progress-wrap {
+            background: var(--border);
+            border-radius: 99px;
+            height: 6px;
+            margin-bottom: 14px;
+            overflow: hidden;
+        }
+        .progress-bar {
+            height: 100%;
+            background: var(--primary);
+            border-radius: 99px;
+            transition: width 0.4s ease;
+        }
+        .progress-label {
+            text-align: center;
+            font-size: 12px;
+            color: var(--muted);
+            margin-bottom: 10px;
+        }
+
+        /* ─── Main card ─── */
+        .card {
+            background: var(--surface);
+            border-radius: var(--radius);
+            padding: 30px 22px 22px;
+            box-shadow: var(--shadow);
+            margin-bottom: 14px;
+            position: relative;
+            border: 2px solid transparent;
+            transition: border-color 0.2s;
+            min-height: 160px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            cursor: pointer;
+            user-select: none;
+        }
+        .card.tappable:active { transform: scale(0.985); border-color: var(--primary); }
+        .card.no-tap { cursor: default; }
+
+        .cat-label {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+        .main-text {
+            font-size: clamp(18px, 4.5vw, 22px);
+            font-weight: 700;
+            line-height: 1.5;
+            margin-bottom: 14px;
+        }
+        .answer-text {
+            font-size: clamp(15px, 4vw, 18px);
+            font-weight: 700;
+            color: var(--accent);
+            opacity: 0;
+            transition: opacity 0.25s;
+        }
+        .answer-text.show { opacity: 1; }
+
+        /* master checkbox inside card */
+        .master-wrap {
+            position: absolute;
+            top: 12px;
+            right: 14px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 11px;
+            color: var(--muted);
+        }
+        .master-wrap input[type="checkbox"] {
+            width: 17px;
+            height: 17px;
+            accent-color: var(--green);
+            cursor: pointer;
+        }
+        .master-wrap.disabled { opacity: 0.3; pointer-events: none; }
+        .master-badge {
+            background: var(--green-light);
+            color: var(--green);
+            padding: 2px 8px;
+            border-radius: 99px;
+            font-size: 10px;
+            font-weight: 700;
+            display: none;
+        }
+        .master-badge.show { display: inline-block; }
+
+        /* tap hint */
+        .tap-hint {
+            font-size: 11px;
+            color: var(--muted);
+            margin-bottom: 6px;
+            text-align: center;
+        }
+
+        /* ─── Auto-play instruction panel ─── */
+        .auto-panel {
+            background: var(--surface);
+            border-radius: var(--radius);
+            padding: 16px 18px;
+            box-shadow: var(--shadow);
+            margin-bottom: 14px;
+            display: none;
+            border-left: 4px solid var(--primary);
+        }
+        .auto-panel.show { display: block; }
+        .auto-step-title {
+            font-size: 13px;
+            font-weight: 900;
+            color: var(--primary);
+            margin-bottom: 4px;
+        }
+        .auto-instruction {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text);
+            line-height: 1.5;
+        }
+        .auto-count {
+            font-family: 'DM Mono', monospace;
+            font-size: 13px;
+            color: var(--muted);
+            margin-top: 6px;
+        }
+
+        /* ─── Control panels ─── */
+        .panel {
+            background: var(--surface);
+            border-radius: var(--radius);
+            padding: 14px 16px;
+            box-shadow: var(--shadow);
+            margin-bottom: 12px;
+        }
+        .panel-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .panel label { font-size: 12px; color: var(--muted); }
+        input[type="range"] { flex: 1; min-width: 100px; accent-color: var(--primary); }
+        .speed-val {
+            font-family: 'DM Mono', monospace;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--primary);
+            min-width: 32px;
+        }
+
+        /* ─── Buttons ─── */
+        .btn-row {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+        .btn {
+            border: none;
+            border-radius: 99px;
+            padding: 10px 20px;
+            font-size: 14px;
+            font-weight: 700;
+            font-family: 'Noto Sans JP', sans-serif;
+            cursor: pointer;
+            transition: opacity 0.15s, transform 0.1s;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .btn:active { transform: scale(0.95); opacity: 0.85; }
+        .btn-primary { background: var(--primary); color: #fff; }
+        .btn-secondary { background: #e2e8f0; color: var(--text); }
+        .btn-green { background: var(--green); color: #fff; }
+        .btn-red { background: var(--accent); color: #fff; }
+        .btn-amber { background: var(--amber); color: #fff; }
+        .btn-toggle-on { background: var(--green); color: #fff; }
+
+        /* ─── Master list summary ─── */
+        .master-summary {
+            background: var(--green-light);
+            border-radius: 12px;
+            padding: 10px 14px;
+            font-size: 12px;
+            color: var(--green);
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 10px;
+            display: none;
+            cursor: pointer;
+            user-select: none;
+        }
+        .master-summary.show { display: block; }
+
+        /* ─── No active phrases warning ─── */
+        .no-active {
+            background: var(--amber-light);
+            border-radius: 12px;
+            padding: 16px;
+            text-align: center;
+            font-size: 14px;
+            color: var(--amber);
+            font-weight: 700;
+            display: none;
+        }
+        .no-active.show { display: block; }
     </style>
 </head>
 <body>
-
 <div class="container">
-    <h3>Math & Science Mastery 100</h3>
-    
-    <div id="mode-label" class="mode-badge">英 → 日</div>
-    <div id="order-label" class="mode-badge">順番通り</div>
-    <div class="progress"><span id="current-num">1</span> / 100</div>
 
-    <div class="card" onclick="toggleAnswer()">
-        <div id="cat" class="category">Category</div>
-        <div id="display-text" class="main-text">Loading...</div>
-        <div id="answer-text" class="sub-text">意味を表示</div>
+    <div class="header">
+        <h2>🔢 Math &amp; Science Mastery 100</h2>
+        <p>数学・理科 英語フレーズ練習</p>
     </div>
 
+    <div class="badges">
+        <div class="badge" id="mode-label">英 → 日</div>
+        <div class="badge" id="order-label">順番通り</div>
+        <div class="badge green" id="master-count-badge">マスター: 0 / 50</div>
+    </div>
+
+    <div class="progress-wrap">
+        <div class="progress-bar" id="progress-bar" style="width:2%"></div>
+    </div>
+    <div class="progress-label">フレーズ: <span id="current-num">1</span> / <span id="total-num">50</span></div>
+
+    <div class="no-active" id="no-active-msg">
+        ✅ すべてのフレーズをマスターしました！<br>
+        <span style="font-weight:400;font-size:12px;margin-top:4px;display:block;">チェックを外してリセットしてください。</span>
+    </div>
+
+    <!-- Auto-play instruction panel -->
+    <div class="auto-panel" id="auto-panel">
+        <div class="auto-step-title" id="auto-step-title">STEP 1</div>
+        <div class="auto-instruction" id="auto-instruction">音声を2回聴いてください。発話はしません。</div>
+        <div class="auto-count" id="auto-count"></div>
+    </div>
+
+    <div class="tap-hint" id="tap-hint">👆 カードをタップして答えを表示</div>
+
+    <div class="card tappable" id="main-card" onclick="handleCardTap()">
+        <div class="master-wrap" id="master-wrap">
+            <span>マスター</span>
+            <input type="checkbox" id="master-checkbox" onchange="toggleMaster(event)" onclick="event.stopPropagation()">
+        </div>
+        <div class="cat-label" id="cat">Category</div>
+        <div class="main-text" id="display-text">Loading...</div>
+        <div class="answer-text" id="answer-text">Answer</div>
+        <div class="master-badge" id="master-badge">✔ マスター済</div>
+    </div>
+
+    <div class="master-summary" id="master-summary" onclick="toggleMasterList()"></div>
+
+    <!-- マスター済み一覧 -->
+    <div id="master-list-wrap" style="display:none; margin-bottom:12px;">
+        <div style="background:#fff; border-radius:16px; padding:14px 16px; box-shadow:var(--shadow);">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                <span style="font-size:13px; font-weight:900; color:var(--green);">✅ マスター済みリスト</span>
+                <button class="btn btn-secondary" style="padding:4px 12px; font-size:11px;" onclick="clearAllMaster()">全解除</button>
+            </div>
+            <div id="master-list"></div>
+        </div>
+    </div>
+
+    <!-- Speed control -->
     <div class="panel">
-        <label style="font-size:12px;">音声速度: <span id="speed-val">1.0</span>x</label> 
-        <input type="range" id="speed-range" min="0.5" max="1.5" step="0.1" value="1.0" oninput="updateSpeed()" style="width:60%; vertical-align:middle;">
-        <br>
-        <button id="random-btn" class="secondary" onclick="toggleRandom()">🔀 ランダム：OFF</button>
+        <div class="panel-row">
+            <label>🔊 再生速度</label>
+            <input type="range" id="speed-range" min="0.5" max="2.0" step="0.1" value="1.0" oninput="updateSpeed()">
+            <span class="speed-val"><span id="speed-val">1.0</span>x</span>
+        </div>
     </div>
 
-    <div>
-        <button onclick="speak()">🔊 音声を聴く</button>
-        <button onclick="next()">次へ →</button><br>
-        <button class="secondary" onclick="switchMode()" style="margin-top:10px;">🔄 英日/日英 切替</button>
+    <!-- Normal mode controls -->
+    <div id="normal-controls">
+        <div class="btn-row">
+            <button class="btn btn-primary" onclick="speak()">🔊 音声を聴く</button>
+            <button class="btn btn-secondary" onclick="next()">次へ →</button>
+        </div>
+        <div class="btn-row">
+            <button class="btn btn-secondary" id="random-btn" onclick="toggleRandom()">🔀 ランダム: OFF</button>
+            <button class="btn btn-secondary" onclick="switchMode()">🔄 モード切替</button>
+        </div>
+        <div class="btn-row">
+            <button class="btn btn-amber" onclick="startAutoPlay()">▶ 自動再生</button>
+        </div>
     </div>
+
+    <!-- Auto-play controls (hidden by default) -->
+    <div id="auto-controls" style="display:none;">
+        <div class="btn-row">
+            <button class="btn btn-red" onclick="stopAutoPlay()">⏹ 自動再生を停止</button>
+        </div>
+    </div>
+
 </div>
 
 <script>
-    const phrases = [
-        // --- 数学：基本演算 (Math: Arithmetic) ---
-        {cat: "Math / Basic", en: "One plus five equals six.", jp: "1足す5は6です。"},
-        {cat: "Math / Basic", en: "Ten minus three equals seven.", jp: "10引く3は7です。"},
-        {cat: "Math / Basic", en: "Four times two is eight.", jp: "4掛ける2は8です。"},
-        {cat: "Math / Basic", en: "Twelve divided by four is three.", jp: "12割る4は3です。"},
-        {cat: "Math / Basic", en: "What is the remainder?", jp: "余りはいくつですか？"},
-        {cat: "Math / Basic", en: "Two to the power of three is eight.", jp: "2の3乗は8です。"},
-        {cat: "Math / Basic", en: "The square root of nine is three.", jp: "9の平方根（ルート）は3です。"},
-        {cat: "Math / Basic", en: "Zero point five.", jp: "0.5 (ぜろ・ぽいんと・ふぁいぶ)"},
-        {cat: "Math / Basic", en: "Two-thirds.", jp: "3分の2 (つー・さーず)"},
+const phrases = [
+    // --- 数学：基本演算 (Math: Arithmetic) ---
+    {cat: "Math / Basic", en: "One plus five equals six.", jp: "1足す5は6です。"},
+    {cat: "Math / Basic", en: "Ten minus three equals seven.", jp: "10引く3は7です。"},
+    {cat: "Math / Basic", en: "Four times two is eight.", jp: "4掛ける2は8です。"},
+    {cat: "Math / Basic", en: "Twelve divided by four is three.", jp: "12割る4は3です。"},
+    {cat: "Math / Basic", en: "What is the remainder?", jp: "余りはいくつですか？"},
+    {cat: "Math / Basic", en: "Two to the power of three is eight.", jp: "2の3乗は8です。"},
+    {cat: "Math / Basic", en: "The square root of nine is three.", jp: "9の平方根（ルート）は3です。"},
+    {cat: "Math / Basic", en: "Zero point five.", jp: "0.5 (ぜろ・ぽいんと・ふぁいぶ)"},
+    {cat: "Math / Basic", en: "Two-thirds.", jp: "3分の2 (つー・さーず)"},
 
-        // --- 数学：図形と角度 (Math: Geometry) ---
-        {cat: "Math / Geometry", en: "The sum of the interior angles of a triangle is 180 degrees.", jp: "三角形の内角の和は180度です。"},
-        {cat: "Math / Geometry", en: "Prove that these two triangles are congruent.", jp: "これら2つの三角形が合同であることを証明せよ。"},
-        {cat: "Math / Geometry", en: "A right-angled triangle.", jp: "直角三角形"},
-        {cat: "Math / Geometry", en: "The hypotenuse is the longest side.", jp: "斜辺（直角の向かいの辺）が一番長い辺です。"},
-        {cat: "Math / Geometry", en: "Parallel lines never meet.", jp: "平行線は決して交わりません。"},
-        {cat: "Math / Geometry", en: "Calculate the area of the circle.", jp: "円の面積を計算しなさい。"},
-        {cat: "Math / Geometry", en: "Pi is approximately 3.14.", jp: "円周率は約3.14です。"},
+    // --- 数学：図形と角度 (Math: Geometry) ---
+    {cat: "Math / Geometry", en: "The sum of the interior angles of a triangle is 180 degrees.", jp: "三角形の内角の和は180度です。"},
+    {cat: "Math / Geometry", en: "Prove that these two triangles are congruent.", jp: "これら2つの三角形が合同であることを証明せよ。"},
+    {cat: "Math / Geometry", en: "A right-angled triangle.", jp: "直角三角形"},
+    {cat: "Math / Geometry", en: "The hypotenuse is the longest side.", jp: "斜辺（直角の向かいの辺）が一番長い辺です。"},
+    {cat: "Math / Geometry", en: "Parallel lines never meet.", jp: "平行線は決して交わりません。"},
+    {cat: "Math / Geometry", en: "Calculate the area of the circle.", jp: "円の面積を計算しなさい。"},
+    {cat: "Math / Geometry", en: "Pi is approximately 3.14.", jp: "円周率は約3.14です。"},
 
-        // --- 数学：代数と関数 (Math: Algebra) ---
-        {cat: "Math / Algebra", en: "Solve for x in this equation.", jp: "この方程式のxを解きなさい。"},
-        {cat: "Math / Algebra", en: "Simplify the following expression.", jp: "次の式を簡略化（整理）しなさい。"},
-        {cat: "Math / Algebra", en: "Factorize the quadratic equation.", jp: "二次方程式を因数分解しなさい。"},
-        {cat: "Math / Algebra", en: "The x-axis and the y-axis.", jp: "x軸とy軸"},
-        {cat: "Math / Algebra", en: "Find the coordinates of point A.", jp: "点Aの座標を求めなさい。"},
-        {cat: "Math / Algebra", en: "The gradient of the line is two.", jp: "直線の傾きは2です。"},
+    // --- 数学：代数と関数 (Math: Algebra) ---
+    {cat: "Math / Algebra", en: "Solve for x in this equation.", jp: "この方程式のxを解きなさい。"},
+    {cat: "Math / Algebra", en: "Simplify the following expression.", jp: "次の式を簡略化（整理）しなさい。"},
+    {cat: "Math / Algebra", en: "Factorize the quadratic equation.", jp: "二次方程式を因数分解しなさい。"},
+    {cat: "Math / Algebra", en: "The x-axis and the y-axis.", jp: "x軸とy軸"},
+    {cat: "Math / Algebra", en: "Find the coordinates of point A.", jp: "点Aの座標を求めなさい。"},
+    {cat: "Math / Algebra", en: "The gradient of the line is two.", jp: "直線の傾きは2です。"},
 
-        // --- 理科：実験と方法 (Science: Method) ---
-        {cat: "Science / Method", en: "Conduct an experiment to test the hypothesis.", jp: "仮説を検証するために実験を行う。"},
-        {cat: "Science / Method", en: "What is the independent variable?", jp: "独立変数（変える条件）は何ですか？"},
-        {cat: "Science / Method", en: "Keep the control variables constant.", jp: "制御変数（変えない条件）を一定に保つ。"},
-        {cat: "Science / Method", en: "Record your observations in the table.", jp: "観察結果を表に記録しなさい。"},
-        {cat: "Science / Method", en: "The results support our hypothesis.", jp: "結果は私たちの仮説を支持している。"},
-        {cat: "Science / Method", en: "Identify the error in this measurement.", jp: "この測定の誤差を特定しなさい。"},
+    // --- 理科：実験と方法 (Science: Method) ---
+    {cat: "Science / Method", en: "Conduct an experiment to test the hypothesis.", jp: "仮説を検証するために実験を行う。"},
+    {cat: "Science / Method", en: "What is the independent variable?", jp: "独立変数（変える条件）は何ですか？"},
+    {cat: "Science / Method", en: "Keep the control variables constant.", jp: "制御変数（変えない条件）を一定に保つ。"},
+    {cat: "Science / Method", en: "Record your observations in the table.", jp: "観察結果を表に記録しなさい。"},
+    {cat: "Science / Method", en: "The results support our hypothesis.", jp: "結果は私たちの仮説を支持している。"},
+    {cat: "Science / Method", en: "Identify the error in this measurement.", jp: "この測定の誤差を特定しなさい。"},
 
-        // --- 理科：物理 (Science / Physics) ---
-        {cat: "Science / Physics", en: "Force equals mass times acceleration.", jp: "力＝質量×加速度。"},
-        {cat: "Science / Physics", en: "Potential energy and kinetic energy.", jp: "位置エネルギーと運動エネルギー。"},
-        {cat: "Science / Physics", en: "Friction slows down the object.", jp: "摩擦が物体の動きを遅くする。"},
-        {cat: "Science / Physics", en: "The law of conservation of energy.", jp: "エネルギー保存の法則。"},
+    // --- 理科：物理 (Science / Physics) ---
+    {cat: "Science / Physics", en: "Force equals mass times acceleration.", jp: "力＝質量×加速度。"},
+    {cat: "Science / Physics", en: "Potential energy and kinetic energy.", jp: "位置エネルギーと運動エネルギー。"},
+    {cat: "Science / Physics", en: "Friction slows down the object.", jp: "摩擦が物体の動きを遅くする。"},
+    {cat: "Science / Physics", en: "The law of conservation of energy.", jp: "エネルギー保存の法則。"},
 
-        // --- 理科：化学 (Science / Chemistry) ---
-        {cat: "Science / Chemistry", en: "The periodic table of elements.", jp: "元素の周期表。"},
-        {cat: "Science / Chemistry", en: "Atoms consist of protons, neutrons, and electrons.", jp: "原子は陽子、中性子、電子で構成される。"},
-        {cat: "Science / Chemistry", en: "Chemical bonds hold molecules together.", jp: "化学結合が分子を結びつけている。"},
-        {cat: "Science / Chemistry", en: "Acids and bases.", jp: "酸と塩基。"},
-        {cat: "Science / Chemistry", en: "The pH level of this solution.", jp: "この溶液のpH値。"},
+    // --- 理科：化学 (Science / Chemistry) ---
+    {cat: "Science / Chemistry", en: "The periodic table of elements.", jp: "元素の周期表。"},
+    {cat: "Science / Chemistry", en: "Atoms consist of protons, neutrons, and electrons.", jp: "原子は陽子、中性子、電子で構成される。"},
+    {cat: "Science / Chemistry", en: "Chemical bonds hold molecules together.", jp: "化学結合が分子を結びつけている。"},
+    {cat: "Science / Chemistry", en: "Acids and bases.", jp: "酸と塩基。"},
+    {cat: "Science / Chemistry", en: "The pH level of this solution.", jp: "この溶液のpH値。"},
 
-        // --- 理科：生物 (Science / Biology) ---
-        {cat: "Science / Biology", en: "Plants use photosynthesis to make food.", jp: "植物は食物を作るために光合成を行う。"},
-        {cat: "Science / Biology", en: "The structure of a cell.", jp: "細胞の構造。"},
-        {cat: "Science / Biology", en: "DNA carries genetic information.", jp: "DNAは遺伝情報を運ぶ。"},
-        {cat: "Science / Biology", en: "Natural selection leads to evolution.", jp: "自然選択が進化を導く。"},
+    // --- 理科：生物 (Science / Biology) ---
+    {cat: "Science / Biology", en: "Plants use photosynthesis to make food.", jp: "植物は食物を作るために光合成を行う。"},
+    {cat: "Science / Biology", en: "The structure of a cell.", jp: "細胞の構造。"},
+    {cat: "Science / Biology", en: "DNA carries genetic information.", jp: "DNAは遺伝情報を運ぶ。"},
+    {cat: "Science / Biology", en: "Natural selection leads to evolution.", jp: "自然選択が進化を導く。"},
 
-        // --- まだまだ続きます（50語では足りないため随時追加が必要な概念） ---
-        {cat: "Math / Logic", en: "Therefore, the statement is true.", jp: "したがって、その声明（命題）は真である。"},
-        {cat: "Math / Logic", en: "Let x be the number of apples.", jp: "xをリンゴの数とする。"},
-        {cat: "Math / Geometry", en: "A line segment.", jp: "線分"},
-        {cat: "Math / Geometry", en: "The area of a trapezoid.", jp: "台形の面積"},
-        {cat: "Science / Data", en: "Draw a line of best fit.", jp: "（グラフに）近似値を表す線を引きなさい。"},
-        {cat: "Science / Physics", en: "Gravity pulls objects toward the Earth.", jp: "重力は物体を地球の方へ引き寄せる。"},
-        {cat: "Science / Chem", en: "A chemical reaction occurs.", jp: "化学反応が起こる。"},
-        {cat: "Science / Bio", en: "The ecosystem is fragile.", jp: "生態系は脆い。"},
-        {cat: "Science / Lab", en: "Wear safety goggles in the lab.", jp: "実験室では保護メガネを着用すること。"}
-    ];
+    // --- 追加フレーズ ---
+    {cat: "Math / Logic", en: "Therefore, the statement is true.", jp: "したがって、その声明（命題）は真である。"},
+    {cat: "Math / Logic", en: "Let x be the number of apples.", jp: "xをリンゴの数とする。"},
+    {cat: "Math / Geometry", en: "A line segment.", jp: "線分"},
+    {cat: "Math / Geometry", en: "The area of a trapezoid.", jp: "台形の面積"},
+    {cat: "Science / Data", en: "Draw a line of best fit.", jp: "（グラフに）近似値を表す線を引きなさい。"},
+    {cat: "Science / Physics", en: "Gravity pulls objects toward the Earth.", jp: "重力は物体を地球の方へ引き寄せる。"},
+    {cat: "Science / Chemistry", en: "A chemical reaction occurs.", jp: "化学反応が起こる。"},
+    {cat: "Science / Biology", en: "The ecosystem is fragile.", jp: "生態系は脆い。"},
+    {cat: "Science / Lab", en: "Wear safety goggles in the lab.", jp: "実験室では保護メガネを着用すること。"}
+];
 
-    let currentIndex = 0;
-    let isEnToJp = true;
-    let currentSpeed = 1.0;
-    let isRandom = false;
+// ── State ──
+let currentIndex = 0;
+let isEnToJp = true;
+let currentSpeed = 1.0;
+let isRandom = false;
+let isAutoPlaying = false;
+let autoStopped = false;
+let masterSet = new Set(JSON.parse(localStorage.getItem('math100_master') || '[]'));
 
-    function update() {
-        const item = phrases[currentIndex];
-        document.getElementById('current-num').innerText = currentIndex + 1;
-        document.getElementById('cat').innerText = item.cat;
-        document.getElementById('answer-text').classList.remove('show');
+// auto-play scheduler
+let autoTimeout = null;
 
-        if (isEnToJp) {
-            document.getElementById('display-text').innerText = item.en;
-            document.getElementById('answer-text').innerText = item.jp;
-        } else {
-            document.getElementById('display-text').innerText = item.jp;
-            document.getElementById('answer-text').innerText = item.en;
-        }
+// ── Helpers ──
+function saveMaster() {
+    localStorage.setItem('math100_master', JSON.stringify([...masterSet]));
+}
+
+function getActivePhrases() {
+    return phrases.map((p,i)=>({...p, idx:i})).filter(p => !masterSet.has(p.idx));
+}
+
+function update() {
+    const active = getActivePhrases();
+    const noActiveEl = document.getElementById('no-active-msg');
+
+    if (active.length === 0) {
+        noActiveEl.classList.add('show');
+        document.getElementById('main-card').style.display = 'none';
+        document.getElementById('tap-hint').style.display = 'none';
+        updateMasterUI();
+        return;
+    }
+    noActiveEl.classList.remove('show');
+    document.getElementById('main-card').style.display = '';
+    document.getElementById('tap-hint').style.display = '';
+
+    // clamp currentIndex to active list
+    if (currentIndex >= active.length) currentIndex = 0;
+
+    const item = active[currentIndex];
+    const globalIdx = item.idx;
+
+    document.getElementById('current-num').textContent = currentIndex + 1;
+    document.getElementById('total-num').textContent = active.length;
+    document.getElementById('progress-bar').style.width = ((currentIndex + 1) / active.length * 100) + '%';
+    document.getElementById('cat').textContent = item.cat;
+
+    document.getElementById('answer-text').classList.remove('show');
+
+    const modeLabel = document.getElementById('mode-label');
+    if (isEnToJp) {
+        modeLabel.textContent = '英 → 日';
+        document.getElementById('display-text').textContent = item.en;
+        document.getElementById('answer-text').textContent = item.jp;
+    } else {
+        modeLabel.textContent = '日 → 英';
+        document.getElementById('display-text').textContent = item.jp;
+        document.getElementById('answer-text').textContent = item.en;
     }
 
-    function toggleAnswer() { document.getElementById('answer-text').classList.add('show'); }
+    // master checkbox
+    const cb = document.getElementById('master-checkbox');
+    cb.checked = masterSet.has(globalIdx);
+    const badge = document.getElementById('master-badge');
+    badge.classList.toggle('show', masterSet.has(globalIdx));
 
-    function next() {
-        if (isRandom) {
-            currentIndex = Math.floor(Math.random() * phrases.length);
-        } else {
-            currentIndex = (currentIndex + 1) % phrases.length;
-        }
-        update();
+    updateMasterUI();
+}
+
+function updateMasterUI() {
+    const count = masterSet.size;
+    document.getElementById('master-count-badge').textContent = `マスター: ${count} / ${phrases.length}`;
+    const summary = document.getElementById('master-summary');
+    const listWrap = document.getElementById('master-list-wrap');
+    if (count > 0) {
+        summary.classList.add('show');
+        summary.textContent = `✅ ${count}フレーズをマスター済 — タップして一覧を表示 / 解除`;
+        // rebuild list
+        const listEl = document.getElementById('master-list');
+        listEl.innerHTML = '';
+        [...masterSet].sort((a,b)=>a-b).forEach(idx => {
+            const p = phrases[idx];
+            const row = document.createElement('div');
+            row.style.cssText = 'display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--border);font-size:12px;';
+            row.innerHTML = `
+                <span style="flex:1;line-height:1.4;"><span style="color:var(--primary);font-weight:700;">${p.cat}</span><br>${p.en}</span>
+                <button onclick="removeMaster(${idx})" style="border:none;background:var(--accent);color:#fff;border-radius:99px;padding:3px 10px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;">解除</button>
+            `;
+            listEl.appendChild(row);
+        });
+    } else {
+        summary.classList.remove('show');
+        listWrap.style.display = 'none';
     }
+}
 
-    function toggleRandom() {
-        isRandom = !isRandom;
-        const btn = document.getElementById('random-btn');
-        btn.innerText = isRandom ? "🔀 ランダム：ON" : "🔀 ランダム：OFF";
-        btn.classList.toggle('toggle-on', isRandom);
+function toggleMasterList() {
+    if (masterSet.size === 0) return;
+    const wrap = document.getElementById('master-list-wrap');
+    wrap.style.display = wrap.style.display === 'none' ? '' : 'none';
+}
+
+function removeMaster(idx) {
+    masterSet.delete(idx);
+    saveMaster();
+    if (masterSet.size === 0) {
+        document.getElementById('master-list-wrap').style.display = 'none';
     }
+    update();
+}
 
-    function switchMode() { isEnToJp = !isEnToJp; update(); }
-    function updateSpeed() {
-        currentSpeed = document.getElementById('speed-range').value;
-        document.getElementById('speed-val').innerText = currentSpeed;
+function clearAllMaster() {
+    if (!confirm(`マスター済み${masterSet.size}フレーズを全て解除しますか？`)) return;
+    masterSet.clear();
+    saveMaster();
+    document.getElementById('master-list-wrap').style.display = 'none';
+    update();
+}
+
+function handleCardTap() {
+    if (isAutoPlaying) return;
+    document.getElementById('answer-text').classList.add('show');
+}
+
+function toggleMaster(e) {
+    if (isAutoPlaying) return;
+    const active = getActivePhrases();
+    if (active.length === 0) return;
+    const item = active[currentIndex];
+    if (e.target.checked) {
+        masterSet.add(item.idx);
+    } else {
+        masterSet.delete(item.idx);
     }
+    saveMaster();
+    update();
+}
 
-    function speak() {
+function next() {
+    if (isAutoPlaying) return;
+    const active = getActivePhrases();
+    if (active.length === 0) return;
+    if (isRandom) {
+        currentIndex = Math.floor(Math.random() * active.length);
+    } else {
+        currentIndex = (currentIndex + 1) % active.length;
+    }
+    update();
+}
+
+function speak(onEnd) {
+    window.speechSynthesis.cancel();
+    const active = getActivePhrases();
+    if (active.length === 0) { if (onEnd) onEnd(); return; }
+    const item = active[currentIndex];
+    const uttr = new SpeechSynthesisUtterance(item.en);
+    uttr.lang = 'en-US';
+    uttr.rate = parseFloat(currentSpeed);
+    if (onEnd) uttr.onend = onEnd;
+    window.speechSynthesis.speak(uttr);
+}
+
+function toggleRandom() {
+    isRandom = !isRandom;
+    const btn = document.getElementById('random-btn');
+    btn.textContent = isRandom ? '🔀 ランダム: ON' : '🔀 ランダム: OFF';
+    btn.className = isRandom ? 'btn btn-toggle-on' : 'btn btn-secondary';
+    document.getElementById('order-label').textContent = isRandom ? 'ランダム表示中' : '順番通り';
+}
+
+function switchMode() {
+    if (isAutoPlaying) return;
+    isEnToJp = !isEnToJp;
+    update();
+}
+
+function updateSpeed() {
+    currentSpeed = document.getElementById('speed-range').value;
+    document.getElementById('speed-val').textContent = parseFloat(currentSpeed).toFixed(1);
+}
+
+// ─────────────────────────────────────────────
+//  AUTO-PLAY ENGINE
+// ─────────────────────────────────────────────
+/*
+  Per phrase, 4 steps:
+  Step 1: 「発話せずに2回お聞き下さい」 → play audio ×2 (英文のみ表示、答え非表示)
+  Step 2: 「音声に合わせて2回シャドウイングしてください」 → play audio ×2
+  Step 3: 「英文と訳文を見ながら2回シャドウイングしてください」 → show both, play ×2
+  Step 4: 「英文を見ずに2回シャドウイングしてください」 → hide both, play ×2
+  Then advance to next phrase.
+*/
+
+function setAutoPanel(stepTitle, instruction, countText) {
+    document.getElementById('auto-step-title').textContent = stepTitle;
+    document.getElementById('auto-instruction').textContent = instruction;
+    document.getElementById('auto-count').textContent = countText;
+}
+
+function delayP(ms) {
+    return new Promise(resolve => {
+        if (autoStopped) { resolve(); return; }
+        autoTimeout = setTimeout(resolve, ms);
+    });
+}
+
+function speakP() {
+    return new Promise(resolve => {
+        if (autoStopped) { resolve(); return; }
         window.speechSynthesis.cancel();
-        const uttr = new SpeechSynthesisUtterance(phrases[currentIndex].en);
+        const active = getActivePhrases();
+        if (active.length === 0) { resolve(); return; }
+        const item = active[currentIndex];
+        const uttr = new SpeechSynthesisUtterance(item.en);
         uttr.lang = 'en-US';
-        uttr.rate = currentSpeed;
+        uttr.rate = parseFloat(currentSpeed);
+        uttr.onend = resolve;
+        uttr.onerror = resolve;
         window.speechSynthesis.speak(uttr);
+    });
+}
+
+function showCardState(showAnswer, hideAll) {
+    const display = document.getElementById('display-text');
+    const answer = document.getElementById('answer-text');
+    const active = getActivePhrases();
+    if (active.length === 0) return;
+    const item = active[currentIndex];
+
+    if (hideAll) {
+        display.textContent = '？？？';
+        document.getElementById('cat').textContent = '？';
+        answer.classList.remove('show');
+    } else {
+        display.textContent = item.en;
+        document.getElementById('cat').textContent = item.cat;
+        if (showAnswer) {
+            answer.textContent = item.jp;
+            answer.classList.add('show');
+        } else {
+            answer.classList.remove('show');
+        }
     }
+}
+
+async function runAutoPlay() {
+    const active = getActivePhrases();
+    if (active.length === 0) { stopAutoPlay(); return; }
+
+    let startIdx = currentIndex;
+
+    for (let i = 0; i < active.length; i++) {
+        if (autoStopped) break;
+
+        currentIndex = (startIdx + i) % active.length;
+        update();
+
+        const phraseNum = i + 1;
+        const totalPhrases = active.length;
+
+        // ── STEP 1: Listen ×2, no speaking ──
+        showCardState(false, true);
+        setAutoPanel(
+            `フレーズ ${phraseNum} / ${totalPhrases} — STEP 1`,
+            '👂 発話せずに2回お聞き下さい。',
+            '再生 1/2回目…'
+        );
+        await speakP();
+        if (autoStopped) break;
+
+        await delayP(600);
+        if (autoStopped) break;
+
+        setAutoPanel(
+            `フレーズ ${phraseNum} / ${totalPhrases} — STEP 1`,
+            '👂 発話せずに2回お聞き下さい。',
+            '再生 2/2回目…'
+        );
+        await speakP();
+        if (autoStopped) break;
+        await delayP(800);
+
+        // ── STEP 2: Shadow ×2 (英文・訳文ともに隠す) ──
+        if (autoStopped) break;
+        showCardState(false, true);
+        setAutoPanel(
+            `フレーズ ${phraseNum} / ${totalPhrases} — STEP 2`,
+            '🗣️ 音声に合わせて2回シャドウイングしてください。',
+            '再生 1/2回目…'
+        );
+        await speakP();
+        if (autoStopped) break;
+        await delayP(600);
+
+        setAutoPanel(
+            `フレーズ ${phraseNum} / ${totalPhrases} — STEP 2`,
+            '🗣️ 音声に合わせて2回シャドウイングしてください。',
+            '再生 2/2回目…'
+        );
+        await speakP();
+        if (autoStopped) break;
+        await delayP(800);
+
+        // ── STEP 3: Shadow ×2 with English + Japanese ──
+        if (autoStopped) break;
+        showCardState(true, false);
+        setAutoPanel(
+            `フレーズ ${phraseNum} / ${totalPhrases} — STEP 3`,
+            '📖 英文と訳文を見ながら2回シャドウイングしてください。',
+            '再生 1/2回目…'
+        );
+        await speakP();
+        if (autoStopped) break;
+        await delayP(600);
+
+        setAutoPanel(
+            `フレーズ ${phraseNum} / ${totalPhrases} — STEP 3`,
+            '📖 英文と訳文を見ながら2回シャドウイングしてください。',
+            '再生 2/2回目…'
+        );
+        await speakP();
+        if (autoStopped) break;
+        await delayP(800);
+
+        // ── STEP 4: Shadow ×2 without looking ──
+        if (autoStopped) break;
+        showCardState(false, true);
+        setAutoPanel(
+            `フレーズ ${phraseNum} / ${totalPhrases} — STEP 4`,
+            '🙈 英文を見ずに2回シャドウイングしてください。',
+            '再生 1/2回目…'
+        );
+        await speakP();
+        if (autoStopped) break;
+        await delayP(600);
+
+        setAutoPanel(
+            `フレーズ ${phraseNum} / ${totalPhrases} — STEP 4`,
+            '🙈 英文を見ずに2回シャドウイングしてください。',
+            '再生 2/2回目…'
+        );
+        await speakP();
+        if (autoStopped) break;
+        await delayP(1200);
+    }
+
+    if (!autoStopped) {
+        setAutoPanel('完了！', `🎉 すべての${active.length}フレーズが完了しました！`, '');
+        showCardState(false, false);
+        await delayP(2000);
+        stopAutoPlay();
+    }
+}
+
+function startAutoPlay() {
+    const active = getActivePhrases();
+    if (active.length === 0) {
+        alert('出題できるフレーズがありません。マスターのチェックを外してください。');
+        return;
+    }
+
+    isAutoPlaying = true;
+    autoStopped = false;
+
+    document.getElementById('normal-controls').style.display = 'none';
+    document.getElementById('auto-controls').style.display = '';
+    document.getElementById('auto-panel').classList.add('show');
+    document.getElementById('tap-hint').style.display = 'none';
+
+    document.getElementById('master-wrap').classList.add('disabled');
+
+    const card = document.getElementById('main-card');
+    card.classList.remove('tappable');
+    card.classList.add('no-tap');
+
+    runAutoPlay();
+}
+
+function stopAutoPlay() {
+    autoStopped = true;
+    isAutoPlaying = false;
+    window.speechSynthesis.cancel();
+    if (autoTimeout) { clearTimeout(autoTimeout); autoTimeout = null; }
+
+    document.getElementById('normal-controls').style.display = '';
+    document.getElementById('auto-controls').style.display = 'none';
+    document.getElementById('auto-panel').classList.remove('show');
+    document.getElementById('tap-hint').style.display = '';
+
+    document.getElementById('master-wrap').classList.remove('disabled');
+
+    const card = document.getElementById('main-card');
+    card.classList.add('tappable');
+    card.classList.remove('no-tap');
 
     update();
+}
+
+// ── Init ──
+update();
 </script>
 </body>
 </html>
