@@ -132,6 +132,131 @@
             text-align: center; font-size: 14px; color: var(--amber); font-weight: 700; display: none;
         }
         .no-active.show { display: block; }
+
+        /* ─── カテゴリフィルター ─── */
+        .filter-panel {
+            background: var(--surface);
+            border-radius: var(--radius);
+            padding: 14px 16px;
+            box-shadow: var(--shadow);
+            margin-bottom: 12px;
+        }
+        .filter-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            cursor: pointer;
+            user-select: none;
+        }
+        .filter-header-left {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .filter-toggle-icon {
+            font-size: 12px;
+            color: var(--muted);
+            transition: transform 0.2s;
+        }
+        .filter-toggle-icon.open { transform: rotate(180deg); }
+
+        .filter-current {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--primary);
+            background: var(--primary-light);
+            padding: 3px 10px;
+            border-radius: 99px;
+            border: 1px solid var(--border);
+            white-space: nowrap;
+            max-width: 200px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .filter-chips-wrap {
+            display: none;
+            margin-top: 2px;
+        }
+        .filter-chips-wrap.open { display: block; }
+
+        /* すべてボタン */
+        .chip-all {
+            display: block;
+            width: 100%;
+            padding: 8px 14px;
+            margin-bottom: 8px;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            border: 2px solid var(--border);
+            background: #fff;
+            color: var(--muted);
+            text-align: left;
+            font-family: 'Noto Sans JP', sans-serif;
+            transition: all 0.15s;
+        }
+        .chip-all.active {
+            background: var(--primary-light);
+            color: var(--primary);
+            border-color: var(--primary);
+        }
+
+        /* カテゴリ行 */
+        .cat-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 7px 10px;
+            border-radius: 10px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            background: #fff;
+            margin-bottom: 5px;
+            transition: all 0.15s;
+            user-select: none;
+        }
+        .cat-row:hover { background: #f8f5ff; }
+        .cat-row.active {
+            background: var(--primary-light);
+            border-color: var(--primary);
+        }
+        .cat-row-name {
+            flex: 1;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text);
+            font-family: 'Noto Sans JP', sans-serif;
+        }
+        .cat-row.active .cat-row-name { color: var(--primary); }
+        .cat-row-count {
+            font-family: 'DM Mono', monospace;
+            font-size: 11px;
+            color: var(--muted);
+            background: #f1f5f9;
+            padding: 2px 8px;
+            border-radius: 99px;
+            font-weight: 600;
+        }
+        .cat-row.active .cat-row-count {
+            background: #fff;
+            color: var(--primary);
+        }
+        .cat-master-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #e2e8f0;
+            flex-shrink: 0;
+        }
+        .cat-master-dot.done { background: var(--green); }
     </style>
 </head>
 <body>
@@ -186,6 +311,23 @@
                 <button class="btn btn-secondary" style="padding:4px 12px; font-size:11px;" onclick="clearAllMaster()">全解除</button>
             </div>
             <div id="master-list"></div>
+        </div>
+    </div>
+
+    <!-- ─── カテゴリフィルター ─── -->
+    <div class="filter-panel">
+        <div class="filter-header" onclick="toggleFilterPanel()">
+            <div class="filter-header-left">
+                📂 項目を選ぶ
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;">
+                <div class="filter-current" id="filter-current-label">すべて（200）</div>
+                <span class="filter-toggle-icon" id="filter-toggle-icon">▼</span>
+            </div>
+        </div>
+        <div class="filter-chips-wrap" id="filter-chips-wrap">
+            <button class="chip-all active" id="chip-all" onclick="selectCategory('すべて')">🎯 すべて表示（200フレーズ）</button>
+            <div id="cat-rows"></div>
         </div>
     </div>
 
@@ -347,7 +489,7 @@ const phrases = [
     {cat:"⑧ 先生とのやりとり", en:"When is the test?", jp:"テストはいつですか。"},
     {cat:"⑧ 先生とのやりとり", en:"What should I study?", jp:"何を勉強すればいいですか。"},
 
-    // ⑨ プロジェクト・グループワーク
+    // ⑨ グループワーク
     {cat:"⑨ グループワーク", en:"What's our topic?", jp:"テーマは何？"},
     {cat:"⑨ グループワーク", en:"How should we divide the work?", jp:"どう分担する？"},
     {cat:"⑨ グループワーク", en:"I can do the research.", jp:"調べ物は私がやるよ。"},
@@ -454,42 +596,117 @@ const phrases = [
     {cat:"⑯ 緊急・安全", en:"Please stay with me.", jp:"一緒にいて。"},
 ];
 
-let currentIndex = 0;
-let isEnToJp = true;
-let currentSpeed = 1.0;
-let isRandom = false;
+// ── State ──
+let currentIndex  = 0;
+let isEnToJp      = true;
+let currentSpeed  = 1.0;
+let isRandom      = false;
 let isAutoPlaying = false;
-let autoStopped = false;
-let masterSet = new Set(JSON.parse(localStorage.getItem('elem5_200_master') || '[]'));
-let autoTimeout = null;
+let autoStopped   = false;
+let masterSet     = new Set(JSON.parse(localStorage.getItem('elem5_200_master') || '[]'));
+let activeCategory = 'すべて';
+let autoTimeout   = null;
+let filterOpen    = false;
 
+// ── カテゴリ一覧生成 ──
+const allCategories = [...new Set(phrases.map(p => p.cat))];
+
+function getCatCount(cat) {
+    return phrases.filter(p => p.cat === cat).length;
+}
+function getCatMasterCount(cat) {
+    return phrases.map((p,i)=>({...p,idx:i})).filter(p => p.cat === cat && masterSet.has(p.idx)).length;
+}
+
+function buildCatRows() {
+    const wrap = document.getElementById('cat-rows');
+    wrap.innerHTML = '';
+    allCategories.forEach(cat => {
+        const total   = getCatCount(cat);
+        const mastered = getCatMasterCount(cat);
+        const isDone  = total > 0 && mastered === total;
+        const row = document.createElement('div');
+        row.className = 'cat-row' + (cat === activeCategory ? ' active' : '');
+        row.innerHTML = `
+            <div class="cat-master-dot ${isDone ? 'done' : ''}"></div>
+            <div class="cat-row-name">${cat}</div>
+            <div class="cat-row-count">${mastered === 0 ? total : `${total - mastered}残 / ${total}`}</div>
+        `;
+        row.onclick = () => selectCategory(cat);
+        wrap.appendChild(row);
+    });
+
+    // 「すべて」ボタンの状態更新
+    document.getElementById('chip-all').className = 'chip-all' + (activeCategory === 'すべて' ? ' active' : '');
+}
+
+function toggleFilterPanel() {
+    filterOpen = !filterOpen;
+    document.getElementById('filter-chips-wrap').className = 'filter-chips-wrap' + (filterOpen ? ' open' : '');
+    document.getElementById('filter-toggle-icon').className = 'filter-toggle-icon' + (filterOpen ? ' open' : '');
+}
+
+function updateFilterLabel() {
+    const label = document.getElementById('filter-current-label');
+    if (activeCategory === 'すべて') {
+        const active = getActivePhrases();
+        label.textContent = `すべて（${active.length}）`;
+    } else {
+        const active = getActivePhrases();
+        label.textContent = `${activeCategory}（${active.length}）`;
+    }
+}
+
+function selectCategory(cat) {
+    if (isAutoPlaying) return;
+    activeCategory = cat;
+    currentIndex = 0;
+    buildCatRows();
+    updateFilterLabel();
+    // 選んだらパネルを閉じる
+    filterOpen = false;
+    document.getElementById('filter-chips-wrap').className = 'filter-chips-wrap';
+    document.getElementById('filter-toggle-icon').className = 'filter-toggle-icon';
+    update();
+}
+
+// ── Helpers ──
 function saveMaster() {
     localStorage.setItem('elem5_200_master', JSON.stringify([...masterSet]));
 }
 
 function getActivePhrases() {
-    return phrases.map((p,i) => ({...p, idx:i})).filter(p => !masterSet.has(p.idx));
+    return phrases
+        .map((p, i) => ({...p, idx: i}))
+        .filter(p => !masterSet.has(p.idx) && (activeCategory === 'すべて' || p.cat === activeCategory));
 }
 
 function update() {
     const active = getActivePhrases();
     const noActiveEl = document.getElementById('no-active-msg');
+
     if (active.length === 0) {
         noActiveEl.classList.add('show');
         document.getElementById('main-card').style.display = 'none';
         document.getElementById('tap-hint').style.display = 'none';
-        updateMasterUI(); return;
+        updateMasterUI();
+        updateFilterLabel();
+        buildCatRows();
+        return;
     }
     noActiveEl.classList.remove('show');
     document.getElementById('main-card').style.display = '';
     document.getElementById('tap-hint').style.display = '';
+
     if (currentIndex >= active.length) currentIndex = 0;
     const item = active[currentIndex];
+
     document.getElementById('current-num').textContent = currentIndex + 1;
     document.getElementById('total-num').textContent = active.length;
     document.getElementById('progress-bar').style.width = ((currentIndex + 1) / active.length * 100) + '%';
     document.getElementById('cat').textContent = item.cat;
     document.getElementById('answer-text').classList.remove('show');
+
     const modeLabel = document.getElementById('mode-label');
     if (isEnToJp) {
         modeLabel.textContent = '英 → 日';
@@ -500,9 +717,12 @@ function update() {
         document.getElementById('display-text').textContent = item.jp;
         document.getElementById('answer-text').textContent = item.en;
     }
+
     document.getElementById('master-checkbox').checked = masterSet.has(item.idx);
     document.getElementById('master-badge').classList.toggle('show', masterSet.has(item.idx));
     updateMasterUI();
+    updateFilterLabel();
+    buildCatRows();
 }
 
 function updateMasterUI() {
@@ -713,6 +933,9 @@ function stopAutoPlay() {
     update();
 }
 
+// ── Init ──
+buildCatRows();
+updateFilterLabel();
 update();
 </script>
 </body>

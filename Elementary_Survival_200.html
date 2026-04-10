@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Elementary Survival English 200</title>
+    <title>小学校サバイバル英語 200</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -22,9 +22,7 @@
             --shadow: 0 4px 24px rgba(22,163,74,0.10);
             --radius: 18px;
         }
-
         * { box-sizing: border-box; margin: 0; padding: 0; }
-
         body {
             font-family: 'Noto Sans JP', sans-serif;
             background: var(--bg);
@@ -32,12 +30,91 @@
             padding: 16px 12px 40px;
             color: var(--text);
         }
-
         .container { max-width: 560px; margin: auto; }
 
+        /* ─── Header ─── */
         .header { text-align: center; margin-bottom: 14px; }
-        .header h2 { font-size: 18px; font-weight: 900; letter-spacing: 0.02em; color: var(--primary); }
+        .header h2 { font-size: 18px; font-weight: 900; color: var(--primary); }
         .header p { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+        /* ─── Category Select Screen ─── */
+        #cat-screen { display: block; }
+        #study-screen { display: none; }
+
+        .cat-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+        .cat-btn {
+            background: var(--surface);
+            border: 2px solid var(--border);
+            border-radius: 14px;
+            padding: 12px 10px;
+            cursor: pointer;
+            text-align: left;
+            box-shadow: var(--shadow);
+            transition: border-color 0.15s, transform 0.1s;
+            position: relative;
+        }
+        .cat-btn:active { transform: scale(0.97); border-color: var(--primary); }
+        .cat-btn.selected { border-color: var(--primary); background: var(--primary-light); }
+        .cat-btn-name { font-size: 12px; font-weight: 900; color: var(--primary); line-height: 1.4; }
+        .cat-btn-count { font-size: 11px; color: var(--muted); margin-top: 3px; }
+        .cat-btn-master { font-size: 10px; color: var(--green); font-weight: 700; margin-top: 2px; }
+        .cat-check {
+            position: absolute; top: 8px; right: 10px;
+            font-size: 15px; display: none;
+        }
+        .cat-btn.selected .cat-check { display: block; }
+
+        .all-btn {
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            border-radius: 14px;
+            padding: 12px;
+            cursor: pointer;
+            text-align: center;
+            font-size: 13px;
+            font-weight: 900;
+            font-family: 'Noto Sans JP', sans-serif;
+            width: 100%;
+            margin-bottom: 10px;
+            box-shadow: var(--shadow);
+            transition: opacity 0.15s;
+        }
+        .all-btn:active { opacity: 0.8; }
+
+        .start-row { display: flex; gap: 8px; margin-bottom: 6px; }
+        .start-btn {
+            flex: 1; border: none; border-radius: 99px;
+            padding: 13px; font-size: 15px; font-weight: 900;
+            font-family: 'Noto Sans JP', sans-serif;
+            cursor: pointer; transition: opacity 0.15s, transform 0.1s;
+        }
+        .start-btn:active { transform: scale(0.97); opacity: 0.85; }
+        .start-btn.primary { background: var(--primary); color: #fff; }
+        .start-btn.amber { background: var(--amber); color: #fff; }
+        .start-btn:disabled { background: #d1d5db; color: #9ca3af; cursor: not-allowed; }
+
+        .select-hint { font-size: 11px; color: var(--muted); text-align: center; margin-bottom: 14px; }
+
+        /* ─── Study Screen ─── */
+        .back-btn {
+            display: inline-flex; align-items: center; gap: 5px;
+            background: #e2e8f0; border: none; border-radius: 99px;
+            padding: 7px 14px; font-size: 12px; font-weight: 700;
+            font-family: 'Noto Sans JP', sans-serif;
+            cursor: pointer; margin-bottom: 12px;
+        }
+        .back-btn:active { opacity: 0.7; }
+
+        .study-title {
+            font-size: 13px; font-weight: 900; color: var(--primary);
+            text-align: center; margin-bottom: 10px;
+        }
 
         .badges { display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; margin-bottom: 10px; }
         .badge {
@@ -47,31 +124,24 @@
             border: 1px solid var(--border);
         }
         .badge.green { background: var(--green-light); color: var(--green); border-color: #86efac; }
-        .badge.amber { background: var(--amber-light); color: var(--amber); border-color: #fcd34d; }
 
         .progress-wrap { background: #d1fae5; border-radius: 99px; height: 6px; margin-bottom: 14px; overflow: hidden; }
         .progress-bar { height: 100%; background: var(--primary); border-radius: 99px; transition: width 0.4s ease; }
         .progress-label { text-align: center; font-size: 12px; color: var(--muted); margin-bottom: 10px; }
 
         .card {
-            background: var(--surface);
-            border-radius: var(--radius);
-            padding: 30px 22px 22px;
-            box-shadow: var(--shadow);
-            margin-bottom: 14px;
-            position: relative;
+            background: var(--surface); border-radius: var(--radius);
+            padding: 30px 22px 22px; box-shadow: var(--shadow);
+            margin-bottom: 14px; position: relative;
             border: 2px solid var(--border);
-            transition: border-color 0.2s;
             min-height: 160px;
             display: flex; flex-direction: column; justify-content: center; align-items: center;
-            text-align: center;
-            cursor: pointer;
-            user-select: none;
+            text-align: center; cursor: pointer; user-select: none;
         }
         .card.tappable:active { transform: scale(0.985); background: #f0fff4; }
         .card.no-tap { cursor: default; }
 
-        .cat-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--primary); margin-bottom: 10px; }
+        .cat-label { font-size: 11px; font-weight: 700; letter-spacing: 0.08em; color: var(--primary); margin-bottom: 10px; }
         .main-text { font-size: clamp(18px, 4.5vw, 23px); font-weight: 700; line-height: 1.5; margin-bottom: 14px; }
         .answer-text { font-size: clamp(15px, 4vw, 18px); font-weight: 700; color: var(--accent); opacity: 0; transition: opacity 0.25s; }
         .answer-text.show { opacity: 1; }
@@ -144,82 +214,96 @@
         <p>Elementary School Survival English Phrases</p>
     </div>
 
-    <div class="badges">
-        <div class="badge" id="mode-label">英 → 日</div>
-        <div class="badge" id="order-label">順番通り</div>
-        <div class="badge green" id="master-count-badge">マスター: 0 / 200</div>
-    </div>
-
-    <div class="progress-wrap">
-        <div class="progress-bar" id="progress-bar" style="width:0.5%"></div>
-    </div>
-    <div class="progress-label">フレーズ: <span id="current-num">1</span> / <span id="total-num">200</span></div>
-
-    <div class="no-active" id="no-active-msg">
-        ✅ すべてのフレーズをマスターしました！<br>
-        <span style="font-weight:400;font-size:12px;margin-top:4px;display:block;">チェックを外してリセットしてください。</span>
-    </div>
-
-    <div class="auto-panel" id="auto-panel">
-        <div class="auto-step-title" id="auto-step-title">STEP 1</div>
-        <div class="auto-instruction" id="auto-instruction">音声を2回聴いてください。</div>
-        <div class="auto-count" id="auto-count"></div>
-    </div>
-
-    <div class="tap-hint" id="tap-hint">👆 カードをタップして答えを表示</div>
-
-    <div class="card tappable" id="main-card" onclick="handleCardTap()">
-        <div class="master-wrap" id="master-wrap">
-            <span>マスター</span>
-            <input type="checkbox" id="master-checkbox" onchange="toggleMaster(event)" onclick="event.stopPropagation()">
+    <!-- ══════════════ カテゴリ選択画面 ══════════════ -->
+    <div id="cat-screen">
+        <p class="select-hint">学びたいカテゴリを選んでください（複数選択可）</p>
+        <button class="all-btn" onclick="selectAll()">📚 全カテゴリ（200フレーズ）で学ぶ</button>
+        <div class="cat-grid" id="cat-grid"><!-- JSで生成 --></div>
+        <div class="start-row">
+            <button class="start-btn primary" id="start-normal-btn" onclick="startStudy(false)" disabled>▶ 通常モードで開始</button>
+            <button class="start-btn amber" id="start-auto-btn" onclick="startStudy(true)" disabled>▶ 自動再生で開始</button>
         </div>
-        <div class="cat-label" id="cat">Category</div>
-        <div class="main-text" id="display-text">Loading...</div>
-        <div class="answer-text" id="answer-text">Answer</div>
-        <div class="master-badge" id="master-badge">✔ マスター済</div>
+        <p class="select-hint" id="selected-count-label">カテゴリを選ぶと開始できます</p>
     </div>
 
-    <div class="master-summary" id="master-summary" onclick="toggleMasterList()"></div>
+    <!-- ══════════════ 学習画面 ══════════════ -->
+    <div id="study-screen">
+        <button class="back-btn" onclick="goBack()">← カテゴリ選択に戻る</button>
+        <div class="study-title" id="study-title">全カテゴリ</div>
 
-    <div id="master-list-wrap" style="display:none; margin-bottom:12px;">
-        <div style="background:#fff; border-radius:16px; padding:14px 16px; box-shadow:var(--shadow);">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-                <span style="font-size:13px; font-weight:900; color:var(--green);">✅ マスター済みリスト</span>
-                <button class="btn btn-secondary" style="padding:4px 12px; font-size:11px;" onclick="clearAllMaster()">全解除</button>
+        <div class="badges">
+            <div class="badge" id="mode-label">英 → 日</div>
+            <div class="badge" id="order-label">順番通り</div>
+            <div class="badge green" id="master-count-badge">マスター: 0 / 200</div>
+        </div>
+
+        <div class="progress-wrap">
+            <div class="progress-bar" id="progress-bar" style="width:0.5%"></div>
+        </div>
+        <div class="progress-label">フレーズ: <span id="current-num">1</span> / <span id="total-num">200</span></div>
+
+        <div class="no-active" id="no-active-msg">
+            ✅ このカテゴリのフレーズをすべてマスターしました！<br>
+            <span style="font-weight:400;font-size:12px;margin-top:4px;display:block;">チェックを外すか、別のカテゴリを選んでください。</span>
+        </div>
+
+        <div class="auto-panel" id="auto-panel">
+            <div class="auto-step-title" id="auto-step-title">STEP 1</div>
+            <div class="auto-instruction" id="auto-instruction">音声を2回聴いてください。</div>
+            <div class="auto-count" id="auto-count"></div>
+        </div>
+
+        <div class="tap-hint" id="tap-hint">👆 カードをタップして答えを表示</div>
+
+        <div class="card tappable" id="main-card" onclick="handleCardTap()">
+            <div class="master-wrap" id="master-wrap">
+                <span>マスター</span>
+                <input type="checkbox" id="master-checkbox" onchange="toggleMaster(event)" onclick="event.stopPropagation()">
             </div>
-            <div id="master-list"></div>
+            <div class="cat-label" id="cat">Category</div>
+            <div class="main-text" id="display-text">Loading...</div>
+            <div class="answer-text" id="answer-text">Answer</div>
+            <div class="master-badge" id="master-badge">✔ マスター済</div>
         </div>
-    </div>
 
-    <div class="panel">
-        <div class="panel-row">
-            <label>🔊 再生速度</label>
-            <input type="range" id="speed-range" min="0.5" max="2.0" step="0.1" value="1.0" oninput="updateSpeed()">
-            <span class="speed-val"><span id="speed-val">1.0</span>x</span>
+        <div class="master-summary" id="master-summary" onclick="toggleMasterList()"></div>
+        <div id="master-list-wrap" style="display:none; margin-bottom:12px;">
+            <div style="background:#fff; border-radius:16px; padding:14px 16px; box-shadow:var(--shadow);">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                    <span style="font-size:13px; font-weight:900; color:var(--green);">✅ マスター済みリスト</span>
+                    <button class="btn btn-secondary" style="padding:4px 12px; font-size:11px;" onclick="clearAllMaster()">全解除</button>
+                </div>
+                <div id="master-list"></div>
+            </div>
         </div>
-    </div>
 
-    <div id="normal-controls">
-        <div class="btn-row">
-            <button class="btn btn-primary" onclick="speak()">🔊 音声を聴く</button>
-            <button class="btn btn-secondary" onclick="next()">次へ →</button>
+        <div class="panel">
+            <div class="panel-row">
+                <label>🔊 再生速度</label>
+                <input type="range" id="speed-range" min="0.5" max="2.0" step="0.1" value="1.0" oninput="updateSpeed()">
+                <span class="speed-val"><span id="speed-val">1.0</span>x</span>
+            </div>
         </div>
-        <div class="btn-row">
-            <button class="btn btn-secondary" id="random-btn" onclick="toggleRandom()">🔀 ランダム: OFF</button>
-            <button class="btn btn-secondary" onclick="switchMode()">🔄 モード切替</button>
-        </div>
-        <div class="btn-row">
-            <button class="btn btn-amber" onclick="startAutoPlay()">▶ 自動再生</button>
-        </div>
-    </div>
 
-    <div id="auto-controls" style="display:none;">
-        <div class="btn-row">
-            <button class="btn btn-red" onclick="stopAutoPlay()">⏹ 自動再生を停止</button>
+        <div id="normal-controls">
+            <div class="btn-row">
+                <button class="btn btn-primary" onclick="speak()">🔊 音声を聴く</button>
+                <button class="btn btn-secondary" onclick="next()">次へ →</button>
+            </div>
+            <div class="btn-row">
+                <button class="btn btn-secondary" id="random-btn" onclick="toggleRandom()">🔀 ランダム: OFF</button>
+                <button class="btn btn-secondary" onclick="switchMode()">🔄 モード切替</button>
+            </div>
         </div>
-    </div>
 
-</div>
+        <div id="auto-controls" style="display:none;">
+            <div class="btn-row">
+                <button class="btn btn-red" onclick="stopAutoPlay()">⏹ 自動再生を停止</button>
+            </div>
+        </div>
+    </div><!-- /study-screen -->
+
+</div><!-- /container -->
 
 <script>
 const phrases = [
@@ -228,7 +312,7 @@ const phrases = [
     {cat:"① 登校・朝の支度", en:"Good morning.", jp:"おはようございます。"},
     {cat:"① 登校・朝の支度", en:"Good afternoon.", jp:"こんにちは。"},
     {cat:"① 登校・朝の支度", en:"Goodbye.", jp:"さようなら。"},
-    {cat:"① 登校・朝の支度", en:"My name is Kei.", jp:"私の名前は慶です。"},
+    {cat:"① 登校・朝の支度", en:"My name is ____.", jp:"私の名前は____です。"},
     {cat:"① 登校・朝の支度", en:"I am six years old.", jp:"私は6歳です。"},
     {cat:"① 登校・朝の支度", en:"I am from Japan.", jp:"日本から来ました。"},
     {cat:"① 登校・朝の支度", en:"Where is my classroom?", jp:"教室はどこですか。"},
@@ -239,7 +323,6 @@ const phrases = [
     {cat:"① 登校・朝の支度", en:"I forgot my hat.", jp:"帽子を忘れました。"},
     {cat:"① 登校・朝の支度", en:"I forgot my card.", jp:"カードを忘れました。"},
     {cat:"① 登校・朝の支度", en:"I need to go to the office.", jp:"事務室に行きたいです。"},
-
     // ② 授業
     {cat:"② 授業", en:"Please sit down.", jp:"座ってください。"},
     {cat:"② 授業", en:"Please stand up.", jp:"立ってください。"},
@@ -266,7 +349,6 @@ const phrases = [
     {cat:"② 授業", en:"I finished early.", jp:"早く終わりました。"},
     {cat:"② 授業", en:"What should I do next?", jp:"次は何をすればいいですか。"},
     {cat:"② 授業", en:"I need more time.", jp:"もっと時間が必要です。"},
-
     // ③ 文房具・作業
     {cat:"③ 文房具・作業", en:"I need a pencil.", jp:"鉛筆が必要です。"},
     {cat:"③ 文房具・作業", en:"I need scissors.", jp:"はさみが必要です。"},
@@ -283,7 +365,6 @@ const phrases = [
     {cat:"③ 文房具・作業", en:"I can't open this.", jp:"これを開けられません。"},
     {cat:"③ 文房具・作業", en:"I need a tissue.", jp:"ティッシュが必要です。"},
     {cat:"③ 文房具・作業", en:"I need a new mask.", jp:"新しいマスクが必要です。"},
-
     // ④ 質問・理解
     {cat:"④ 質問・理解", en:"Yes.", jp:"はい。"},
     {cat:"④ 質問・理解", en:"No.", jp:"いいえ。"},
@@ -305,7 +386,6 @@ const phrases = [
     {cat:"④ 質問・理解", en:"Can you check this?", jp:"これを確認してくれますか。"},
     {cat:"④ 質問・理解", en:"I don't know this word.", jp:"この単語がわかりません。"},
     {cat:"④ 質問・理解", en:"Can you help me read this?", jp:"これを読むのを手伝ってくれますか。"},
-
     // ⑤ トイレ・水分補給
     {cat:"⑤ トイレ・水分補給", en:"Where is the toilet?", jp:"トイレはどこですか。"},
     {cat:"⑤ トイレ・水分補給", en:"May I go to the toilet?", jp:"トイレに行ってもいいですか。"},
@@ -315,7 +395,6 @@ const phrases = [
     {cat:"⑤ トイレ・水分補給", en:"I am thirsty.", jp:"のどがかわきました。"},
     {cat:"⑤ トイレ・水分補給", en:"I forgot my bottle.", jp:"水筒を忘れました。"},
     {cat:"⑤ トイレ・水分補給", en:"I need more water.", jp:"水をもっと入れたいです。"},
-
     // ⑥ 休み時間・遊び
     {cat:"⑥ 休み時間・遊び", en:"Let's play.", jp:"遊ぼう。"},
     {cat:"⑥ 休み時間・遊び", en:"Do you want to play with me?", jp:"一緒に遊びたい？"},
@@ -340,7 +419,6 @@ const phrases = [
     {cat:"⑥ 休み時間・遊び", en:"I want to play something else.", jp:"別の遊びがしたいです。"},
     {cat:"⑥ 休み時間・遊び", en:"Let's be friends.", jp:"友達になろう。"},
     {cat:"⑥ 休み時間・遊び", en:"Thank you for playing with me.", jp:"一緒に遊んでくれてありがとう。"},
-
     // ⑦ ランチ
     {cat:"⑦ ランチ", en:"I am hungry.", jp:"お腹がすきました。"},
     {cat:"⑦ ランチ", en:"Can I sit here?", jp:"ここに座ってもいいですか。"},
@@ -351,7 +429,6 @@ const phrases = [
     {cat:"⑦ ランチ", en:"My clothes got wet.", jp:"服がぬれました。"},
     {cat:"⑦ ランチ", en:"I need to wash my hands.", jp:"手を洗いたいです。"},
     {cat:"⑦ ランチ", en:"This is fun.", jp:"楽しいね。"},
-
     // ⑧ 体調・けが
     {cat:"⑧ 体調・けが", en:"I feel sick.", jp:"気分が悪いです。"},
     {cat:"⑧ 体調・けが", en:"I don't feel well.", jp:"体調がよくありません。"},
@@ -372,7 +449,6 @@ const phrases = [
     {cat:"⑧ 体調・けが", en:"I need to rest.", jp:"休みたいです。"},
     {cat:"⑧ 体調・けが", en:"I need to sit down.", jp:"座りたいです。"},
     {cat:"⑧ 体調・けが", en:"I need to lie down.", jp:"横になりたいです。"},
-
     // ⑨ 先生とのやりとり
     {cat:"⑨ 先生とのやりとり", en:"Excuse me.", jp:"すみません。"},
     {cat:"⑨ 先生とのやりとり", en:"Sorry.", jp:"ごめんなさい。"},
@@ -390,14 +466,12 @@ const phrases = [
     {cat:"⑨ 先生とのやりとり", en:"I can't find my homework.", jp:"宿題が見つかりません。"},
     {cat:"⑨ 先生とのやりとり", en:"I don't have my book.", jp:"本を持っていません。"},
     {cat:"⑨ 先生とのやりとり", en:"I can't find my bag.", jp:"かばんが見つかりません。"},
-
     // ⑩ 下校
     {cat:"⑩ 下校", en:"I need to go now.", jp:"もう行かないといけません。"},
     {cat:"⑩ 下校", en:"Goodbye.", jp:"さようなら。"},
     {cat:"⑩ 下校", en:"See you tomorrow.", jp:"また明日。"},
     {cat:"⑩ 下校", en:"I can't find my friends.", jp:"友達が見つかりません。"},
     {cat:"⑩ 下校", en:"I lost my way.", jp:"道に迷いました。"},
-
     // ⑪ 自分の気持ち・状態
     {cat:"⑪ 自分の気持ち・状態", en:"I am thirsty.", jp:"のどがかわきました。"},
     {cat:"⑪ 自分の気持ち・状態", en:"I am hungry.", jp:"お腹がすきました。"},
@@ -414,7 +488,6 @@ const phrases = [
     {cat:"⑪ 自分の気持ち・状態", en:"That's yours.", jp:"それは君のだよ。"},
     {cat:"⑪ 自分の気持ち・状態", en:"I don't want to do that.", jp:"それはしたくないです。"},
     {cat:"⑪ 自分の気持ち・状態", en:"I want to try again.", jp:"もう一度やりたいです。"},
-
     // ⑫ その他の生活動作
     {cat:"⑫ その他の生活動作", en:"I spilled my water.", jp:"水をこぼしました。"},
     {cat:"⑫ その他の生活動作", en:"I spilled my food.", jp:"食べ物をこぼしました。"},
@@ -426,7 +499,6 @@ const phrases = [
     {cat:"⑫ その他の生活動作", en:"I can't find my class.", jp:"クラスが見つかりません。"},
     {cat:"⑫ その他の生活動作", en:"I can't find my friends.", jp:"友達が見つかりません。"},
     {cat:"⑫ その他の生活動作", en:"I need to wash my hands.", jp:"手を洗いたいです。"},
-
     // ⑬ 友達とのやりとり
     {cat:"⑬ 友達とのやりとり", en:"Let's sit together.", jp:"一緒に座ろう。"},
     {cat:"⑬ 友達とのやりとり", en:"Do you want to sit with me?", jp:"一緒に座る？"},
@@ -450,6 +522,12 @@ const phrases = [
     {cat:"⑬ 友達とのやりとり", en:"Please help my friend.", jp:"友達を助けてください。"},
 ];
 
+// ── カテゴリ一覧を生成 ──
+const allCats = [...new Set(phrases.map(p => p.cat))];
+
+// ── State ──
+let selectedCats = new Set();
+let activePhrasesBySelection = [];
 let currentIndex = 0;
 let isEnToJp = true;
 let currentSpeed = 1.0;
@@ -459,78 +537,154 @@ let autoStopped = false;
 let masterSet = new Set(JSON.parse(localStorage.getItem('elem200_master') || '[]'));
 let autoTimeout = null;
 
-function saveMaster() {
-    localStorage.setItem('elem200_master', JSON.stringify([...masterSet]));
+// ── カテゴリ選択画面の構築 ──
+function buildCatGrid() {
+    const grid = document.getElementById('cat-grid');
+    grid.innerHTML = '';
+    allCats.forEach(cat => {
+        const total = phrases.filter(p => p.cat === cat).length;
+        const mastered = phrases.filter((p,i) => p.cat === cat && masterSet.has(i)).length;
+        const btn = document.createElement('div');
+        btn.className = 'cat-btn';
+        btn.dataset.cat = cat;
+        btn.innerHTML = `
+            <span class="cat-check">✅</span>
+            <div class="cat-btn-name">${cat}</div>
+            <div class="cat-btn-count">${total}フレーズ</div>
+            ${mastered > 0 ? `<div class="cat-btn-master">✔ マスター済: ${mastered}</div>` : ''}
+        `;
+        btn.onclick = () => toggleCat(cat, btn);
+        grid.appendChild(btn);
+    });
+    updateStartBtns();
 }
 
+function toggleCat(cat, btn) {
+    if (selectedCats.has(cat)) {
+        selectedCats.delete(cat);
+        btn.classList.remove('selected');
+    } else {
+        selectedCats.add(cat);
+        btn.classList.add('selected');
+    }
+    updateStartBtns();
+}
+
+function selectAll() {
+    // 全カテゴリで即スタート
+    selectedCats = new Set(allCats);
+    startStudy(false);
+}
+
+function updateStartBtns() {
+    const count = [...selectedCats].reduce((s, c) => s + phrases.filter(p => p.cat === c).length, 0);
+    const hasAny = selectedCats.size > 0;
+    document.getElementById('start-normal-btn').disabled = !hasAny;
+    document.getElementById('start-auto-btn').disabled = !hasAny;
+    document.getElementById('selected-count-label').textContent = hasAny
+        ? `選択中: ${selectedCats.size}カテゴリ / ${count}フレーズ`
+        : 'カテゴリを選ぶと開始できます';
+}
+
+// ── 学習開始 ──
+function startStudy(autoPlay) {
+    if (selectedCats.size === 0) return;
+
+    // 選択カテゴリのフレーズを抽出（globalインデックスを保持）
+    activePhrasesBySelection = phrases
+        .map((p, i) => ({...p, idx: i}))
+        .filter(p => selectedCats.has(p.cat));
+
+    currentIndex = 0;
+    isRandom = false;
+    document.getElementById('random-btn').textContent = '🔀 ランダム: OFF';
+    document.getElementById('random-btn').className = 'btn btn-secondary';
+    document.getElementById('order-label').textContent = '順番通り';
+
+    const catNames = [...selectedCats].join('・');
+    document.getElementById('study-title').textContent =
+        selectedCats.size === allCats.length ? '📚 全カテゴリ（200フレーズ）' : `📂 ${catNames}`;
+
+    document.getElementById('cat-screen').style.display = 'none';
+    document.getElementById('study-screen').style.display = 'block';
+
+    update();
+
+    if (autoPlay) {
+        setTimeout(() => startAutoPlay(), 300);
+    }
+}
+
+function goBack() {
+    if (isAutoPlaying) stopAutoPlay();
+    document.getElementById('study-screen').style.display = 'none';
+    document.getElementById('cat-screen').style.display = 'block';
+    // グリッドのマスター状況を更新
+    buildCatGrid();
+    // 選択状態を維持（選択を復元）
+    document.querySelectorAll('.cat-btn').forEach(btn => {
+        if (selectedCats.has(btn.dataset.cat)) btn.classList.add('selected');
+    });
+    updateStartBtns();
+}
+
+// ── フレーズ取得（選択カテゴリ内でマスター除外） ──
 function getActivePhrases() {
-    return phrases.map((p,i) => ({...p, idx:i})).filter(p => !masterSet.has(p.idx));
+    return activePhrasesBySelection.filter(p => !masterSet.has(p.idx));
 }
 
+// ── 画面更新 ──
 function update() {
     const active = getActivePhrases();
     const noActiveEl = document.getElementById('no-active-msg');
-
     if (active.length === 0) {
         noActiveEl.classList.add('show');
         document.getElementById('main-card').style.display = 'none';
         document.getElementById('tap-hint').style.display = 'none';
-        updateMasterUI();
-        return;
+        updateMasterUI(); return;
     }
     noActiveEl.classList.remove('show');
     document.getElementById('main-card').style.display = '';
     document.getElementById('tap-hint').style.display = '';
-
     if (currentIndex >= active.length) currentIndex = 0;
 
     const item = active[currentIndex];
-    const globalIdx = item.idx;
-
     document.getElementById('current-num').textContent = currentIndex + 1;
     document.getElementById('total-num').textContent = active.length;
     document.getElementById('progress-bar').style.width = ((currentIndex + 1) / active.length * 100) + '%';
     document.getElementById('cat').textContent = item.cat;
     document.getElementById('answer-text').classList.remove('show');
 
-    const modeLabel = document.getElementById('mode-label');
     if (isEnToJp) {
-        modeLabel.textContent = '英 → 日';
+        document.getElementById('mode-label').textContent = '英 → 日';
         document.getElementById('display-text').textContent = item.en;
         document.getElementById('answer-text').textContent = item.jp;
     } else {
-        modeLabel.textContent = '日 → 英';
+        document.getElementById('mode-label').textContent = '日 → 英';
         document.getElementById('display-text').textContent = item.jp;
         document.getElementById('answer-text').textContent = item.en;
     }
-
-    const cb = document.getElementById('master-checkbox');
-    cb.checked = masterSet.has(globalIdx);
-    document.getElementById('master-badge').classList.toggle('show', masterSet.has(globalIdx));
-
+    document.getElementById('master-checkbox').checked = masterSet.has(item.idx);
+    document.getElementById('master-badge').classList.toggle('show', masterSet.has(item.idx));
     updateMasterUI();
 }
 
 function updateMasterUI() {
-    const count = masterSet.size;
-    document.getElementById('master-count-badge').textContent = `マスター: ${count} / ${phrases.length}`;
+    const totalMastered = masterSet.size;
+    document.getElementById('master-count-badge').textContent = `マスター: ${totalMastered} / ${phrases.length}`;
     const summary = document.getElementById('master-summary');
     const listWrap = document.getElementById('master-list-wrap');
-    if (count > 0) {
+    // 現在の選択カテゴリ内のマスター済みを表示
+    const catMastered = activePhrasesBySelection.filter(p => masterSet.has(p.idx));
+    if (catMastered.length > 0) {
         summary.classList.add('show');
-        summary.textContent = `✅ ${count}フレーズをマスター済 — タップして一覧を表示 / 解除`;
+        summary.textContent = `✅ ${catMastered.length}フレーズをマスター済 — タップして一覧を表示 / 解除`;
         const listEl = document.getElementById('master-list');
         listEl.innerHTML = '';
-        [...masterSet].sort((a,b) => a-b).forEach(idx => {
-            const p = phrases[idx];
+        catMastered.forEach(p => {
             const row = document.createElement('div');
             row.style.cssText = 'display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid #e2e8f0;font-size:12px;';
-            row.innerHTML = `
-                <span style="flex:1;line-height:1.4;">
-                    <span style="color:var(--primary);font-weight:700;">${p.cat}</span><br>${p.en}
-                </span>
-                <button onclick="removeMaster(${idx})" style="border:none;background:#e11d48;color:#fff;border-radius:99px;padding:3px 10px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;">解除</button>
-            `;
+            row.innerHTML = `<span style="flex:1;line-height:1.4;"><span style="color:var(--primary);font-weight:700;">${p.cat}</span><br>${p.en}</span><button onclick="removeMaster(${p.idx})" style="border:none;background:#e11d48;color:#fff;border-radius:99px;padding:3px 10px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;">解除</button>`;
             listEl.appendChild(row);
         });
     } else {
@@ -539,55 +693,43 @@ function updateMasterUI() {
     }
 }
 
+function saveMaster() { localStorage.setItem('elem200_master', JSON.stringify([...masterSet])); }
+
 function toggleMasterList() {
-    if (masterSet.size === 0) return;
     const wrap = document.getElementById('master-list-wrap');
     wrap.style.display = wrap.style.display === 'none' ? '' : 'none';
 }
 
 function removeMaster(idx) {
-    masterSet.delete(idx);
-    saveMaster();
-    if (masterSet.size === 0) document.getElementById('master-list-wrap').style.display = 'none';
+    masterSet.delete(idx); saveMaster();
     update();
 }
 
 function clearAllMaster() {
-    if (!confirm(`マスター済み${masterSet.size}フレーズを全て解除しますか？`)) return;
-    masterSet.clear();
+    const catMastered = activePhrasesBySelection.filter(p => masterSet.has(p.idx));
+    if (!confirm(`このカテゴリのマスター済み${catMastered.length}フレーズを全て解除しますか？`)) return;
+    catMastered.forEach(p => masterSet.delete(p.idx));
     saveMaster();
     document.getElementById('master-list-wrap').style.display = 'none';
     update();
 }
 
-function handleCardTap() {
-    if (isAutoPlaying) return;
-    document.getElementById('answer-text').classList.add('show');
-}
+function handleCardTap() { if (isAutoPlaying) return; document.getElementById('answer-text').classList.add('show'); }
 
 function toggleMaster(e) {
     if (isAutoPlaying) return;
     const active = getActivePhrases();
     if (active.length === 0) return;
     const item = active[currentIndex];
-    if (e.target.checked) {
-        masterSet.add(item.idx);
-    } else {
-        masterSet.delete(item.idx);
-    }
-    saveMaster();
-    update();
+    if (e.target.checked) { masterSet.add(item.idx); } else { masterSet.delete(item.idx); }
+    saveMaster(); update();
 }
 
 function next() {
     if (isAutoPlaying) return;
     const active = getActivePhrases();
     if (active.length === 0) return;
-    if (isRandom) {
-        currentIndex = Math.floor(Math.random() * active.length);
-    } else {
-        currentIndex = (currentIndex + 1) % active.length;
-    }
+    currentIndex = isRandom ? Math.floor(Math.random() * active.length) : (currentIndex + 1) % active.length;
     update();
 }
 
@@ -595,10 +737,8 @@ function speak() {
     window.speechSynthesis.cancel();
     const active = getActivePhrases();
     if (active.length === 0) return;
-    const item = active[currentIndex];
-    const uttr = new SpeechSynthesisUtterance(item.en);
-    uttr.lang = 'en-US';
-    uttr.rate = parseFloat(currentSpeed);
+    const uttr = new SpeechSynthesisUtterance(active[currentIndex].en);
+    uttr.lang = 'en-US'; uttr.rate = parseFloat(currentSpeed);
     window.speechSynthesis.speak(uttr);
 }
 
@@ -610,54 +750,40 @@ function toggleRandom() {
     document.getElementById('order-label').textContent = isRandom ? 'ランダム表示中' : '順番通り';
 }
 
-function switchMode() {
-    if (isAutoPlaying) return;
-    isEnToJp = !isEnToJp;
-    update();
-}
+function switchMode() { if (isAutoPlaying) return; isEnToJp = !isEnToJp; update(); }
 
 function updateSpeed() {
     currentSpeed = document.getElementById('speed-range').value;
     document.getElementById('speed-val').textContent = parseFloat(currentSpeed).toFixed(1);
 }
 
-// ── AUTO-PLAY ENGINE ──
-function setAutoPanel(stepTitle, instruction, countText) {
-    document.getElementById('auto-step-title').textContent = stepTitle;
-    document.getElementById('auto-instruction').textContent = instruction;
-    document.getElementById('auto-count').textContent = countText;
+// ── AUTO-PLAY ──
+function setAutoPanel(t, ins, c) {
+    document.getElementById('auto-step-title').textContent = t;
+    document.getElementById('auto-instruction').textContent = ins;
+    document.getElementById('auto-count').textContent = c;
 }
-
 function delayP(ms) {
-    return new Promise(resolve => {
-        if (autoStopped) { resolve(); return; }
-        autoTimeout = setTimeout(resolve, ms);
-    });
+    return new Promise(r => { if (autoStopped) { r(); return; } autoTimeout = setTimeout(r, ms); });
 }
-
 function speakP() {
     return new Promise(resolve => {
         if (autoStopped) { resolve(); return; }
         window.speechSynthesis.cancel();
         const active = getActivePhrases();
         if (active.length === 0) { resolve(); return; }
-        const item = active[currentIndex];
-        const uttr = new SpeechSynthesisUtterance(item.en);
-        uttr.lang = 'en-US';
-        uttr.rate = parseFloat(currentSpeed);
-        uttr.onend = resolve;
-        uttr.onerror = resolve;
+        const uttr = new SpeechSynthesisUtterance(active[currentIndex].en);
+        uttr.lang = 'en-US'; uttr.rate = parseFloat(currentSpeed);
+        uttr.onend = resolve; uttr.onerror = resolve;
         window.speechSynthesis.speak(uttr);
     });
 }
-
 function showCardState(showAnswer, hideAll) {
     const display = document.getElementById('display-text');
     const answer = document.getElementById('answer-text');
     const active = getActivePhrases();
     if (active.length === 0) return;
     const item = active[currentIndex];
-
     if (hideAll) {
         display.textContent = '？？？';
         document.getElementById('cat').textContent = '？';
@@ -665,72 +791,51 @@ function showCardState(showAnswer, hideAll) {
     } else {
         display.textContent = item.en;
         document.getElementById('cat').textContent = item.cat;
-        if (showAnswer) {
-            answer.textContent = item.jp;
-            answer.classList.add('show');
-        } else {
-            answer.classList.remove('show');
-        }
+        if (showAnswer) { answer.textContent = item.jp; answer.classList.add('show'); }
+        else { answer.classList.remove('show'); }
     }
 }
 
 async function runAutoPlay() {
     const active = getActivePhrases();
     if (active.length === 0) { stopAutoPlay(); return; }
-
-    let startIdx = currentIndex;
-
+    const startIdx = currentIndex;
     for (let i = 0; i < active.length; i++) {
         if (autoStopped) break;
-
         currentIndex = (startIdx + i) % active.length;
         update();
+        const n = i + 1, tot = active.length;
 
-        const phraseNum = i + 1;
-        const total = active.length;
-
-        // STEP 1: Listen ×2 (hidden)
         showCardState(false, true);
-        setAutoPanel(`フレーズ ${phraseNum} / ${total} — STEP 1`, '👂 発話せずに2回お聞き下さい。', '再生 1/2回目…');
+        setAutoPanel(`フレーズ ${n} / ${tot} — STEP 1`, '👂 発話せずに2回お聞き下さい。', '再生 1/2回目…');
         await speakP(); if (autoStopped) break;
         await delayP(600); if (autoStopped) break;
-        setAutoPanel(`フレーズ ${phraseNum} / ${total} — STEP 1`, '👂 発話せずに2回お聞き下さい。', '再生 2/2回目…');
-        await speakP(); if (autoStopped) break;
-        await delayP(800);
+        setAutoPanel(`フレーズ ${n} / ${tot} — STEP 1`, '👂 発話せずに2回お聞き下さい。', '再生 2/2回目…');
+        await speakP(); if (autoStopped) break; await delayP(800);
 
-        // STEP 2: Shadow ×2 (hidden)
         if (autoStopped) break;
         showCardState(false, true);
-        setAutoPanel(`フレーズ ${phraseNum} / ${total} — STEP 2`, '🗣️ 音声に合わせて2回シャドウイングしてください。', '再生 1/2回目…');
-        await speakP(); if (autoStopped) break;
-        await delayP(600);
-        setAutoPanel(`フレーズ ${phraseNum} / ${total} — STEP 2`, '🗣️ 音声に合わせて2回シャドウイングしてください。', '再生 2/2回目…');
-        await speakP(); if (autoStopped) break;
-        await delayP(800);
+        setAutoPanel(`フレーズ ${n} / ${tot} — STEP 2`, '🗣️ 音声に合わせて2回シャドウイングしてください。', '再生 1/2回目…');
+        await speakP(); if (autoStopped) break; await delayP(600);
+        setAutoPanel(`フレーズ ${n} / ${tot} — STEP 2`, '🗣️ 音声に合わせて2回シャドウイングしてください。', '再生 2/2回目…');
+        await speakP(); if (autoStopped) break; await delayP(800);
 
-        // STEP 3: Shadow ×2 with both texts
         if (autoStopped) break;
         showCardState(true, false);
-        setAutoPanel(`フレーズ ${phraseNum} / ${total} — STEP 3`, '📖 英文と訳文を見ながら2回シャドウイングしてください。', '再生 1/2回目…');
-        await speakP(); if (autoStopped) break;
-        await delayP(600);
-        setAutoPanel(`フレーズ ${phraseNum} / ${total} — STEP 3`, '📖 英文と訳文を見ながら2回シャドウイングしてください。', '再生 2/2回目…');
-        await speakP(); if (autoStopped) break;
-        await delayP(800);
+        setAutoPanel(`フレーズ ${n} / ${tot} — STEP 3`, '📖 英文と訳文を見ながら2回シャドウイングしてください。', '再生 1/2回目…');
+        await speakP(); if (autoStopped) break; await delayP(600);
+        setAutoPanel(`フレーズ ${n} / ${tot} — STEP 3`, '📖 英文と訳文を見ながら2回シャドウイングしてください。', '再生 2/2回目…');
+        await speakP(); if (autoStopped) break; await delayP(800);
 
-        // STEP 4: Shadow ×2 (hidden)
         if (autoStopped) break;
         showCardState(false, true);
-        setAutoPanel(`フレーズ ${phraseNum} / ${total} — STEP 4`, '🙈 英文を見ずに2回シャドウイングしてください。', '再生 1/2回目…');
-        await speakP(); if (autoStopped) break;
-        await delayP(600);
-        setAutoPanel(`フレーズ ${phraseNum} / ${total} — STEP 4`, '🙈 英文を見ずに2回シャドウイングしてください。', '再生 2/2回目…');
-        await speakP(); if (autoStopped) break;
-        await delayP(1200);
+        setAutoPanel(`フレーズ ${n} / ${tot} — STEP 4`, '🙈 英文を見ずに2回シャドウイングしてください。', '再生 1/2回目…');
+        await speakP(); if (autoStopped) break; await delayP(600);
+        setAutoPanel(`フレーズ ${n} / ${tot} — STEP 4`, '🙈 英文を見ずに2回シャドウイングしてください。', '再生 2/2回目…');
+        await speakP(); if (autoStopped) break; await delayP(1200);
     }
-
     if (!autoStopped) {
-        setAutoPanel('完了！', `🎉 すべての${active.length}フレーズが完了しました！`, '');
+        setAutoPanel('完了！', `🎉 ${getActivePhrases().length}フレーズ完了しました！`, '');
         showCardState(false, false);
         await delayP(2000);
         stopAutoPlay();
@@ -738,47 +843,34 @@ async function runAutoPlay() {
 }
 
 function startAutoPlay() {
-    const active = getActivePhrases();
-    if (active.length === 0) {
-        alert('出題できるフレーズがありません。マスターのチェックを外してください。');
-        return;
-    }
-    isAutoPlaying = true;
-    autoStopped = false;
-
+    if (getActivePhrases().length === 0) { alert('出題できるフレーズがありません。'); return; }
+    isAutoPlaying = true; autoStopped = false;
     document.getElementById('normal-controls').style.display = 'none';
     document.getElementById('auto-controls').style.display = '';
     document.getElementById('auto-panel').classList.add('show');
     document.getElementById('tap-hint').style.display = 'none';
     document.getElementById('master-wrap').classList.add('disabled');
-
     const card = document.getElementById('main-card');
-    card.classList.remove('tappable');
-    card.classList.add('no-tap');
-
+    card.classList.remove('tappable'); card.classList.add('no-tap');
     runAutoPlay();
 }
 
 function stopAutoPlay() {
-    autoStopped = true;
-    isAutoPlaying = false;
+    autoStopped = true; isAutoPlaying = false;
     window.speechSynthesis.cancel();
     if (autoTimeout) { clearTimeout(autoTimeout); autoTimeout = null; }
-
     document.getElementById('normal-controls').style.display = '';
     document.getElementById('auto-controls').style.display = 'none';
     document.getElementById('auto-panel').classList.remove('show');
     document.getElementById('tap-hint').style.display = '';
     document.getElementById('master-wrap').classList.remove('disabled');
-
     const card = document.getElementById('main-card');
-    card.classList.add('tappable');
-    card.classList.remove('no-tap');
-
+    card.classList.add('tappable'); card.classList.remove('no-tap');
     update();
 }
 
-update();
+// ── 初期化 ──
+buildCatGrid();
 </script>
 </body>
 </html>
