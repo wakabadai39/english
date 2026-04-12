@@ -551,10 +551,13 @@ function speak() {
     window.speechSynthesis.cancel();
     const active = getActivePhrases();
     if (active.length===0) return;
-    const uttr = new SpeechSynthesisUtterance(active[currentIndex].en);
-    uttr.lang = 'en-US'; uttr.rate = parseFloat(currentSpeed);
-    const v = getEnglishVoice(); if (v) uttr.voice = v;
-    window.speechSynthesis.speak(uttr);
+    // iPad/iOS: cancel() 直後に speak() すると二重読みになるため150ms待つ
+    setTimeout(() => {
+        const uttr = new SpeechSynthesisUtterance(active[currentIndex].en);
+        uttr.lang = 'en-US'; uttr.rate = parseFloat(currentSpeed);
+        const v = getEnglishVoice(); if (v) uttr.voice = v;
+        window.speechSynthesis.speak(uttr);
+    }, 150);
 }
 function toggleRandom() {
     isRandom = !isRandom;
@@ -584,11 +587,15 @@ function speakP() {
         window.speechSynthesis.cancel();
         const active = getActivePhrases();
         if (active.length===0) { resolve(); return; }
-        const uttr = new SpeechSynthesisUtterance(active[currentIndex].en);
-        uttr.lang = 'en-US'; uttr.rate = parseFloat(currentSpeed);
-        const v = getEnglishVoice(); if (v) uttr.voice = v;
-        uttr.onend = resolve; uttr.onerror = resolve;
-        window.speechSynthesis.speak(uttr);
+        // iPad/iOS: cancel() 直後に speak() すると二重読みになるため150ms待つ
+        setTimeout(() => {
+            if (autoStopped) { resolve(); return; }
+            const uttr = new SpeechSynthesisUtterance(active[currentIndex].en);
+            uttr.lang = 'en-US'; uttr.rate = parseFloat(currentSpeed);
+            const v = getEnglishVoice(); if (v) uttr.voice = v;
+            uttr.onend = resolve; uttr.onerror = resolve;
+            window.speechSynthesis.speak(uttr);
+        }, 150);
     });
 }
 function showCardState(showAnswer, hideAll) {
