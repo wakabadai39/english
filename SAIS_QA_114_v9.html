@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SAIS 保護者英会話 Q&A 114</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #f0f6ff;
+            --surface: #ffffff;
+            --primary: #1d4ed8;
+            --primary-light: #dbeafe;
+            --accent: #0891b2;
+            --green: #16a34a;
+            --green-light: #dcfce7;
+            --amber: #d97706;
+            --amber-light: #fef3c7;
+            --text: #1e293b;
+            --muted: #64748b;
+            --border: #93c5fd;
+            --shadow: 0 4px 24px rgba(29,78,216,0.10);
+            --radius: 18px;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            background: var(--bg);
+            min-height: 100vh;
+            padding: 16px 12px 40px;
+            color: var(--text);
+        }
+        .container { max-width: 560px; margin: auto; }
+
+        .header { text-align: center; margin-bottom: 14px; }
+        .header h2 { font-size: 18px; font-weight: 900; color: var(--primary); }
+        .header p { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+        .badges { display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; margin-bottom: 10px; }
+        .badge {
+            display: inline-flex; align-items: center; gap: 4px;
+            padding: 4px 12px; border-radius: 99px; font-size: 11px; font-weight: 700;
+            background: var(--primary-light); color: var(--primary);
+            border: 1px solid var(--border);
+        }
+        .badge.green { background: var(--green-light); color: var(--green); border-color: #86efac; }
+
+        .progress-wrap { background: #bfdbfe; border-radius: 99px; height: 6px; margin-bottom: 14px; overflow: hidden; }
+        .progress-bar { height: 100%; background: var(--primary); border-radius: 99px; transition: width 0.4s ease; }
+        .progress-label { text-align: center; font-size: 12px; color: var(--muted); margin-bottom: 10px; }
+
+        .card {
+            background: var(--surface); border-radius: var(--radius);
+            padding: 30px 22px 22px; box-shadow: var(--shadow);
+            margin-bottom: 14px; position: relative;
+            border: 2px solid var(--border);
+            min-height: 160px;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            text-align: center; cursor: pointer; user-select: none;
+        }
+        .card.tappable:active { transform: scale(0.985); background: #f0f6ff; }
+        .card.no-tap { cursor: default; }
+
+        .cat-label { font-size: 11px; font-weight: 700; letter-spacing: 0.06em; color: var(--primary); margin-bottom: 10px; }
+        .card-num {
+            position: absolute; top: 12px; left: 14px;
+            font-family: 'DM Mono', monospace; font-size: 10px; color: var(--muted);
+        }
+        .main-text { font-size: clamp(15px, 4vw, 19px); font-weight: 700; line-height: 1.6; margin-bottom: 14px; white-space: pre-line; }
+        .answer-text { font-size: clamp(13px, 3.5vw, 16px); font-weight: 700; color: var(--accent); opacity: 0; transition: opacity 0.25s; line-height: 1.6; white-space: pre-line; }
+        .answer-text.show { opacity: 1; }
+
+        .master-wrap {
+            position: absolute; top: 12px; right: 14px;
+            display: flex; align-items: center; gap: 5px;
+            font-size: 11px; color: var(--muted);
+        }
+        .master-wrap input[type="checkbox"] { width: 17px; height: 17px; accent-color: var(--green); cursor: pointer; }
+        .master-wrap.disabled { opacity: 0.3; pointer-events: none; }
+        .master-badge {
+            background: var(--green-light); color: var(--green);
+            padding: 2px 8px; border-radius: 99px; font-size: 10px; font-weight: 700; display: none;
+        }
+        .master-badge.show { display: inline-block; }
+
+        .tap-hint { font-size: 11px; color: var(--muted); margin-bottom: 6px; text-align: center; }
+
+        .auto-panel {
+            background: var(--surface); border-radius: var(--radius);
+            padding: 16px 18px; box-shadow: var(--shadow); margin-bottom: 14px;
+            display: none; border-left: 4px solid var(--primary);
+        }
+        .auto-panel.show { display: block; }
+        .auto-step-title { font-size: 13px; font-weight: 900; color: var(--primary); margin-bottom: 4px; }
+        .auto-instruction { font-size: 14px; font-weight: 700; color: var(--text); line-height: 1.5; }
+        .auto-count { font-family: 'DM Mono', monospace; font-size: 13px; color: var(--muted); margin-top: 6px; }
+
+        .filter-panel {
+            background: var(--surface); border-radius: var(--radius);
+            padding: 14px 16px; box-shadow: var(--shadow); margin-bottom: 12px;
+        }
+        .filter-header {
+            display: flex; align-items: center; justify-content: space-between;
+            cursor: pointer; user-select: none;
+        }
+        .filter-header-left { font-size: 12px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
+        .filter-toggle-icon { font-size: 12px; color: var(--muted); transition: transform 0.2s; }
+        .filter-toggle-icon.open { transform: rotate(180deg); }
+        .filter-current {
+            font-size: 12px; font-weight: 700; color: var(--primary);
+            background: var(--primary-light); padding: 3px 10px;
+            border-radius: 99px; border: 1px solid var(--border);
+            white-space: nowrap; max-width: 210px; overflow: hidden; text-overflow: ellipsis;
+        }
+        .filter-chips-wrap { display: none; margin-top: 10px; }
+        .filter-chips-wrap.open { display: block; }
+        .chip-all {
+            display: block; width: 100%; padding: 8px 14px; margin-bottom: 8px;
+            border-radius: 10px; font-size: 12px; font-weight: 700;
+            cursor: pointer; border: 2px solid var(--border);
+            background: #fff; color: var(--muted); text-align: left;
+            font-family: 'Noto Sans JP', sans-serif; transition: all 0.15s;
+        }
+        .chip-all.active { background: var(--primary-light); color: var(--primary); border-color: var(--primary); }
+        .cat-row {
+            display: flex; align-items: center; gap: 8px; padding: 8px 10px;
+            border-radius: 10px; cursor: pointer; border: 2px solid transparent;
+            background: #fff; margin-bottom: 5px; transition: all 0.15s; user-select: none;
+        }
+        .cat-row:active { background: #f0f6ff; }
+        .cat-row.active { background: var(--primary-light); border-color: var(--primary); }
+        .cat-row-name { flex: 1; font-size: 13px; font-weight: 700; color: var(--text); }
+        .cat-row.active .cat-row-name { color: var(--primary); }
+        .cat-row-count {
+            font-family: 'DM Mono', monospace; font-size: 11px; color: var(--muted);
+            background: #f1f5f9; padding: 2px 8px; border-radius: 99px; font-weight: 600;
+        }
+        .cat-row.active .cat-row-count { background: #fff; color: var(--primary); }
+        .cat-master-dot { width: 8px; height: 8px; border-radius: 50%; background: #e2e8f0; flex-shrink: 0; }
+        .cat-master-dot.done { background: var(--green); }
+
+        .panel { background: var(--surface); border-radius: var(--radius); padding: 14px 16px; box-shadow: var(--shadow); margin-bottom: 12px; }
+        .panel-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+        .panel label { font-size: 12px; color: var(--muted); }
+        input[type="range"] { flex: 1; min-width: 100px; accent-color: var(--primary); }
+        .speed-val { font-family: 'DM Mono', monospace; font-size: 13px; font-weight: 600; color: var(--primary); min-width: 32px; }
+
+        .btn-row { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin-bottom: 10px; }
+        .btn {
+            border: none; border-radius: 99px; padding: 10px 20px;
+            font-size: 14px; font-weight: 700; font-family: 'Noto Sans JP', sans-serif;
+            cursor: pointer; transition: opacity 0.15s, transform 0.1s;
+            display: inline-flex; align-items: center; gap: 5px;
+        }
+        .btn:active { transform: scale(0.95); opacity: 0.85; }
+        .btn-primary { background: var(--primary); color: #fff; }
+        .btn-secondary { background: #e2e8f0; color: var(--text); }
+        .btn-red { background: #e11d48; color: #fff; }
+        .btn-amber { background: var(--amber); color: #fff; }
+        .btn-toggle-on { background: var(--green); color: #fff; }
+
+        .master-summary {
+            background: var(--green-light); border-radius: 12px;
+            padding: 10px 14px; font-size: 12px; color: var(--green); font-weight: 700;
+            text-align: center; margin-bottom: 10px; display: none;
+            cursor: pointer; user-select: none;
+        }
+        .master-summary.show { display: block; }
+
+        .no-active {
+            background: var(--amber-light); border-radius: 12px; padding: 16px;
+            text-align: center; font-size: 14px; color: var(--amber); font-weight: 700; display: none;
+        }
+        .no-active.show { display: block; }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h2>🎓 SAIS 保護者英会話 Q&A 114</h2>
+        <p>School Life English — 114 Sets</p>
+    </div>
+
+    <div class="badges">
+        <div class="badge" id="mode-label">🔤 英語モード</div>
+        <div class="badge" id="order-label">順番通り</div>
+        <div class="badge green" id="master-count-badge">マスター: 0 / 114</div>
+    </div>
+
+    <div class="progress-wrap">
+        <div class="progress-bar" id="progress-bar" style="width:1%"></div>
+    </div>
+    <div class="progress-label">セット: <span id="current-num">1</span> / <span id="total-num">114</span></div>
+
+    <div class="no-active" id="no-active-msg">
+        ✅ このカテゴリのセットをすべてマスターしました！<br>
+        <span style="font-weight:400;font-size:12px;margin-top:4px;display:block;">チェックを外すか、別のカテゴリを選んでください。</span>
+    </div>
+
+    <div class="auto-panel" id="auto-panel">
+        <div class="auto-step-title" id="auto-step-title">STEP 1</div>
+        <div class="auto-instruction" id="auto-instruction">音声を2回聴いてください。</div>
+        <div class="auto-count" id="auto-count"></div>
+    </div>
+
+    <div class="tap-hint" id="tap-hint">👆 タップして日本語を表示</div>
+
+    <div class="card tappable" id="main-card" onclick="handleCardTap()">
+        <div class="card-num" id="card-num">#1</div>
+        <div class="master-wrap" id="master-wrap">
+            <span>マスター</span>
+            <input type="checkbox" id="master-checkbox" onchange="toggleMaster(event)" onclick="event.stopPropagation()">
+        </div>
+        <div class="cat-label" id="cat">Category</div>
+        <div class="main-text" id="display-text">Loading...</div>
+        <div class="answer-text" id="answer-text">Answer</div>
+        <div class="master-badge" id="master-badge">✔ マスター済</div>
+    </div>
+
+    <div class="master-summary" id="master-summary" onclick="toggleMasterList()"></div>
+    <div id="master-list-wrap" style="display:none; margin-bottom:12px;">
+        <div style="background:#fff; border-radius:16px; padding:14px 16px; box-shadow:var(--shadow);">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                <span style="font-size:13px; font-weight:900; color:var(--green);">✅ マスター済みリスト</span>
+                <button class="btn btn-secondary" style="padding:4px 12px; font-size:11px;" onclick="clearAllMaster()">全解除</button>
+            </div>
+            <div id="master-list"></div>
+        </div>
+    </div>
+
+    <div class="filter-panel">
+        <div class="filter-header" onclick="toggleFilterPanel()">
+            <div class="filter-header-left">📂 カテゴリを選ぶ</div>
+            <div style="display:flex;align-items:center;gap:8px;">
+                <div class="filter-current" id="filter-current-label">すべて（114）</div>
+                <span class="filter-toggle-icon" id="filter-toggle-icon">▼</span>
+            </div>
+        </div>
+        <div class="filter-chips-wrap" id="filter-chips-wrap">
+            <button class="chip-all active" id="chip-all" onclick="selectCategory('すべて')">🎯 すべて表示（114セット）</button>
+            <div id="cat-rows"></div>
+        </div>
+    </div>
+
+    <div class="panel">
+        <div class="panel-row">
+            <label>🔊 再生速度</label>
+            <input type="range" id="speed-range" min="0.5" max="2.0" step="0.1" value="1.0" oninput="updateSpeed()">
+            <span class="speed-val"><span id="speed-val">1.0</span>x</span>
+        </div>
+        <div style="font-size:11px;color:var(--muted);margin-top:8px;">
+            🎤 使用音声: <span id="voice-label">読み込み中…</span>
+        </div>
+    </div>
+
+    <div id="normal-controls">
+        <div class="btn-row">
+            <button class="btn btn-primary" onclick="speak()">🔊 音声を聴く</button>
+            <button class="btn btn-secondary" onclick="next()">次へ →</button>
+        </div>
+        <div class="btn-row">
+            <button class="btn btn-secondary" id="random-btn" onclick="toggleRandom()">🔀 ランダム: OFF</button>
+            <button class="btn btn-secondary" id="switch-mode-btn" onclick="switchMode()">🔄 日本語モードへ</button>
+        </div>
+        <div class="btn-row">
+            <button class="btn btn-secondary" id="audio-only-btn" onclick="toggleAudioOnly()">🔇 音声のみ: OFF</button>
+        </div>
+        <div class="btn-row">
+            <button class="btn btn-amber" onclick="startAutoPlay()">▶ 自動再生</button>
+        </div>
+    </div>
+
+    <div id="auto-controls" style="display:none;">
+        <div class="btn-row">
+            <button class="btn btn-red" onclick="stopAutoPlay()">⏹ 自動再生を停止</button>
+        </div>
+    </div>
+
+</div>
+<script>
+// en = 表面（英語Q＋英語A）、jp = 裏面（日本語Q＋日本語A）
+const phrases = [
+    // ① 学校・授業
+    {cat:"① 学校・授業", en:"Could you tell me about the school curriculum?\nWe follow an international curriculum focusing on English and math.", jp:"カリキュラムについて教えてください\n英語と算数中心の国際カリキュラムです"},
+    {cat:"① 学校・授業", en:"What time does school start and end?\nSchool starts at 8 a.m. and ends at 2 p.m.", jp:"学校は何時から何時までですか？\n8時開始、14時終了です"},
+    {cat:"① 学校・授業", en:"Does my child need to bring lunch?\nYes, or you can order from the school cafeteria.", jp:"お弁当は必要ですか？\n持参か学食注文です"},
+    {cat:"① 学校・授業", en:"How can I contact the teacher?\nYou can email or use the school app.", jp:"先生への連絡方法は？\nメールかアプリです"},
+    {cat:"① 学校・授業", en:"Are there after-school activities?\nYes, we have sports, music, and art clubs.", jp:"課外活動はありますか？\nスポーツ・音楽・美術があります"},
+    {cat:"① 学校・授業", en:"How is my child doing?\nYour child is doing well but needs to improve in reading.", jp:"子どもの様子は？\n順調ですが読解に課題があります"},
+    {cat:"① 学校・授業", en:"What should we prepare?\nPlease bring textbooks and stationery.", jp:"何を準備すればいいですか？\n教科書と文具です"},
+    {cat:"① 学校・授業", en:"What happens if my child is absent?\nPlease inform us and submit a medical note if needed.", jp:"欠席したら？\n連絡と診断書が必要です"},
+    {cat:"① 学校・授業", en:"Are there any school events?\nYes, we have a school festival next month.", jp:"行事はありますか？\n来月イベントがあります"},
+    {cat:"① 学校・授業", en:"Is extra English support available?\nYes, we offer additional classes.", jp:"英語補習はありますか？\n補習があります"},
+    {cat:"① 学校・授業", en:"Can you explain the grading system?\nWe use continuous assessment and participation.", jp:"評価方法は？\n継続評価と参加です"},
+    {cat:"① 学校・授業", en:"How big are the classes?\nAround twenty to twenty-five students.", jp:"クラス人数は？\n20〜25人です"},
+    {cat:"① 学校・授業", en:"Is English the main language?\nYes, all instruction is in English.", jp:"英語が主ですか？\nすべて英語です"},
+    {cat:"① 学校・授業", en:"Are there school trips?\nYes, we organize them regularly.", jp:"校外学習ありますか？\n定期的にあります"},
+    {cat:"① 学校・授業", en:"When is the next parent meeting?\nIt's scheduled at the end of the term.", jp:"次の面談は？\n学期末です"},
+
+    // ② 子どもの様子・学習サポート
+    {cat:"② 子どもの様子・学習", en:"Is my child keeping up with the class?\nMostly yes, but some improvement is needed.", jp:"授業についていけていますか？\n概ね大丈夫ですが改善必要です"},
+    {cat:"② 子どもの様子・学習", en:"What can we do at home?\nDaily reading helps a lot.", jp:"家庭で何を？\n毎日の読書です"},
+    {cat:"② 子どもの様子・学習", en:"Does my child participate in class?\nNot much yet, but improving.", jp:"授業で発言していますか？\nまだ少ないが改善中"},
+    {cat:"② 子どもの様子・学習", en:"Are there any behavioral issues?\nNothing serious.", jp:"問題行動は？\n問題ありません"},
+    {cat:"② 子どもの様子・学習", en:"Does my child get along with others?\nYes, very well.", jp:"友達関係は？\nとても良好です"},
+    {cat:"② 子どもの様子・学習", en:"What subjects does my child enjoy?\nScience and activities.", jp:"好きな科目は？\n理科や実験です"},
+    {cat:"② 子どもの様子・学習", en:"Can my child improve quickly?\nYes, with consistent effort.", jp:"上達できますか？\n継続すれば可能です"},
+    {cat:"② 子どもの様子・学習", en:"Should we consider extra classes?\nIt could help boost confidence.", jp:"補習必要ですか？\n自信につながります"},
+
+    // ③ 保護者・コミュニティ
+    {cat:"③ 保護者・コミュニティ", en:"How long have you lived here?\nAbout three years.", jp:"どのくらい住んでますか？\n約3年です"},
+    {cat:"③ 保護者・コミュニティ", en:"Do your kids like this school?\nYes, they enjoy it very much.", jp:"学校好きですか？\nとても好きです"},
+    {cat:"③ 保護者・コミュニティ", en:"Do you know any good tutors?\nYes, I can recommend one.", jp:"良い家庭教師いますか？\n紹介できます"},
+    {cat:"③ 保護者・コミュニティ", en:"Where do you shop for groceries?\nAt nearby supermarkets.", jp:"どこで買い物？\n近くのスーパーです"},
+    {cat:"③ 保護者・コミュニティ", en:"Are there good clinics nearby?\nYes, there's one nearby.", jp:"良い病院ありますか？\n近くにあります"},
+    {cat:"③ 保護者・コミュニティ", en:"What do you do on weekends?\nWe go to parks or malls.", jp:"週末何してますか？\n公園やモールです"},
+    {cat:"③ 保護者・コミュニティ", en:"Is this area convenient?\nYes, everything is close by.", jp:"便利ですか？\nとても便利です"},
+    {cat:"③ 保護者・コミュニティ", en:"How do your kids go to school?\nThey take the school bus.", jp:"通学方法は？\nバスです"},
+    {cat:"③ 保護者・コミュニティ", en:"Are there any playgroups?\nYes, several nearby.", jp:"遊びグループありますか？\nいくつかあります"},
+    {cat:"③ 保護者・コミュニティ", en:"Do you recommend this area?\nYes, it's family-friendly.", jp:"この地域おすすめ？\n子育て向きです"},
+    {cat:"③ 保護者・コミュニティ", en:"Do you find it expensive here?\nYes, especially housing.", jp:"物価高い？\n特に家賃が高い"},
+    {cat:"③ 保護者・コミュニティ", en:"Any tips for newcomers?\nDon't hesitate to ask questions.", jp:"アドバイスは？\n遠慮せず聞くこと"},
+    {cat:"③ 保護者・コミュニティ", en:"Is it easy to make friends?\nYes, people are friendly.", jp:"友達できやすい？\nフレンドリーです"},
+    {cat:"③ 保護者・コミュニティ", en:"Do kids adapt quickly?\nYes, very quickly.", jp:"子どもは慣れる？\nすぐ慣れます"},
+
+    // ④ 買い物・飲食・サービス
+    {cat:"④ 買い物・飲食・サービス", en:"How much is this?\nIt's twenty-eight dollars after discount.", jp:"これはいくらですか？\n割引後28ドルです"},
+    {cat:"④ 買い物・飲食・サービス", en:"Do you accept credit cards?\nYes, we accept all major cards.", jp:"カード使えますか？\n主要カードOKです"},
+    {cat:"④ 買い物・飲食・サービス", en:"Can I get a discount?\nSorry, that's the final price.", jp:"割引できますか？\nこれが最終価格です"},
+    {cat:"④ 買い物・飲食・サービス", en:"Do you have another size?\nLet me check in the back.", jp:"別サイズありますか？\n在庫確認します"},
+    {cat:"④ 買い物・飲食・サービス", en:"Is this on sale?\nYes, for members only.", jp:"セールですか？\n会員限定です"},
+    {cat:"④ 買い物・飲食・サービス", en:"Can I return this item?\nYes, within seven days.", jp:"返品できますか？\n7日以内なら可能です"},
+    {cat:"④ 買い物・飲食・サービス", en:"Where can I find vegetables?\nAisle three.", jp:"野菜はどこ？\n3番通路です"},
+    {cat:"④ 買い物・飲食・サービス", en:"Do you offer delivery?\nYes, we do.", jp:"配達ありますか？\nあります"},
+    {cat:"④ 買い物・飲食・サービス", en:"What time do you close?\nAt 10 p.m.", jp:"何時まで？\n22時です"},
+    {cat:"④ 買い物・飲食・サービス", en:"Can I get a receipt?\nSure.", jp:"レシートください\nはい"},
+    {cat:"④ 買い物・飲食・サービス", en:"Is it spicy?\nWe can make it mild.", jp:"辛いですか？\n調整できます"},
+    {cat:"④ 買い物・飲食・サービス", en:"What do you recommend?\nOur signature dish.", jp:"おすすめは？\n看板メニューです"},
+    {cat:"④ 買い物・飲食・サービス", en:"Can I take this to go?\nYes.", jp:"持ち帰りできますか？\nできます"},
+    {cat:"④ 買い物・飲食・サービス", en:"Is service charge included?\nYes, it is.", jp:"サービス料込み？\n含まれています"},
+    {cat:"④ 買い物・飲食・サービス", en:"Do you have Wi-Fi?\nYes, check the receipt.", jp:"Wi-Fiありますか？\nレシート参照です"},
+    {cat:"④ 買い物・飲食・サービス", en:"Where is the restroom?\nDown the hall.", jp:"トイレどこ？\n奥です"},
+    {cat:"④ 買い物・飲食・サービス", en:"Can we split the bill?\nYes.", jp:"別会計できますか？\n可能です"},
+    {cat:"④ 買い物・飲食・サービス", en:"Is parking available?\nLimited spaces only.", jp:"駐車場ありますか？\n少しだけあります"},
+    {cat:"④ 買い物・飲食・サービス", en:"Is this fresh?\nYes, delivered today.", jp:"新鮮ですか？\n今日入荷です"},
+    {cat:"④ 買い物・飲食・サービス", en:"Can I try this?\nSure, go ahead.", jp:"試せますか？\nどうぞ"},
+
+    // ⑤ 医療・健康
+    {cat:"⑤ 医療・健康", en:"My child has a fever.\nHow long has it lasted?", jp:"子どもが熱があります\nどれくらい続いていますか？"},
+    {cat:"⑤ 医療・健康", en:"Is it serious?\nIt doesn't seem serious.", jp:"重いですか？\n深刻ではありません"},
+    {cat:"⑤ 医療・健康", en:"Do we need medicine?\nI'll prescribe something.", jp:"薬必要ですか？\n処方します"},
+    {cat:"⑤ 医療・健康", en:"My child is coughing.\nLet me check.", jp:"咳が出ています\n診察します"},
+    {cat:"⑤ 医療・健康", en:"Should we go to the hospital?\nNot immediately.", jp:"病院行くべき？\nすぐではありません"},
+    {cat:"⑤ 医療・健康", en:"Is it contagious?\nPossibly.", jp:"うつりますか？\n可能性あり"},
+    {cat:"⑤ 医療・健康", en:"What should we do at home?\nRest and hydrate.", jp:"家では何を？\n休養と水分"},
+    {cat:"⑤ 医療・健康", en:"Can my child go to school?\nBetter stay home.", jp:"学校行けますか？\n休ませてください"},
+    {cat:"⑤ 医療・健康", en:"How long to recover?\nA few days.", jp:"どれくらいで治る？\n数日です"},
+    {cat:"⑤ 医療・健康", en:"Do we need follow-up?\nYes, just in case.", jp:"再診必要？\n念のため"},
+
+    // ⑥ 交通・移動・日常会話
+    {cat:"⑥ 交通・移動・日常会話", en:"How do I get there?\nTake the MRT and transfer.", jp:"どう行きますか？\n電車＋乗換"},
+    {cat:"⑥ 交通・移動・日常会話", en:"Is it far?\nAbout ten minutes.", jp:"遠いですか？\n10分です"},
+    {cat:"⑥ 交通・移動・日常会話", en:"Which bus should I take?\nBus number 10.", jp:"どのバス？\n10番です"},
+    {cat:"⑥ 交通・移動・日常会話", en:"How long does it take?\nTwenty minutes.", jp:"どれくらい？\n20分です"},
+    {cat:"⑥ 交通・移動・日常会話", en:"Can you repeat that?\nYou need to register online.", jp:"もう一度言って\nオンライン登録が必要です"},
+    {cat:"⑥ 交通・移動・日常会話", en:"Can you speak more slowly?\nOf course.", jp:"ゆっくり話して\nもちろん"},
+    {cat:"⑥ 交通・移動・日常会話", en:"Is it walking distance?\nYes, very close.", jp:"歩けますか？\n近いです"},
+    {cat:"⑥ 交通・移動・日常会話", en:"Where is the nearest station?\nAround the corner.", jp:"最寄り駅は？\nすぐそこです"},
+    {cat:"⑥ 交通・移動・日常会話", en:"Do I need a card?\nYes, for transport.", jp:"カード必要？\n必要です"},
+    {cat:"⑥ 交通・移動・日常会話", en:"Is it crowded?\nDuring peak hours.", jp:"混んでますか？\nラッシュ時は混みます"},
+
+    // ⑦ 住環境・安全・生活
+    {cat:"⑦ 住環境・安全・生活", en:"Is this area safe?\nYes, very safe.", jp:"安全ですか？\nとても安全です"},
+    {cat:"⑦ 住環境・安全・生活", en:"Where can I buy groceries?\nNearby supermarket.", jp:"食料品どこ？\n近くです"},
+    {cat:"⑦ 住環境・安全・生活", en:"Who do I contact in an emergency?\nCall emergency services.", jp:"緊急時は？\n緊急番号へ"},
+    {cat:"⑦ 住環境・安全・生活", en:"Is it hot all year?\nMostly yes.", jp:"一年中暑い？\nほぼそうです"},
+    {cat:"⑦ 住環境・安全・生活", en:"Is English enough here?\nYes, widely spoken.", jp:"英語だけで大丈夫？\n問題なし"},
+    {cat:"⑦ 住環境・安全・生活", en:"Are there parks nearby?\nYes, several.", jp:"公園ありますか？\nいくつかあります"},
+    {cat:"⑦ 住環境・安全・生活", en:"Is tap water safe?\nYes, it's safe.", jp:"水道水飲める？\n安全です"},
+    {cat:"⑦ 住環境・安全・生活", en:"Is the neighborhood quiet?\nMostly yes.", jp:"静かですか？\n基本静かです"},
+    {cat:"⑦ 住環境・安全・生活", en:"Are there many foreigners?\nYes, quite a lot.", jp:"外国人多い？\nかなり多いです"},
+    {cat:"⑦ 住環境・安全・生活", en:"Is public transport reliable?\nVery reliable.", jp:"交通は信頼できますか？\nとても正確です"},
+    {cat:"⑦ 住環境・安全・生活", en:"Is it easy to live here?\nYes, very convenient.", jp:"住みやすい？\nとても便利です"},
+    {cat:"⑦ 住環境・安全・生活", en:"Are there language barriers?\nNot much.", jp:"言葉の壁ありますか？\nあまりありません"},
+    {cat:"⑦ 住環境・安全・生活", en:"Is healthcare good?\nYes, very high quality.", jp:"医療は良い？\n非常に良いです"},
+    {cat:"⑦ 住環境・安全・生活", en:"Is schooling expensive?\nYes, especially international schools.", jp:"教育費高い？\n特にインターは高い"},
+    {cat:"⑦ 住環境・安全・生活", en:"Are there childcare services?\nYes, many options.", jp:"保育ありますか？\nたくさんあります"},
+    {cat:"⑦ 住環境・安全・生活", en:"Is it easy to get help?\nYes, people are helpful.", jp:"助けは得やすい？\n助けてくれます"},
+    {cat:"⑦ 住環境・安全・生活", en:"Is it safe at night?\nYes, generally safe.", jp:"夜は安全？\n基本安全です"},
+    {cat:"⑦ 住環境・安全・生活", en:"Are there community events?\nYes, quite often.", jp:"地域イベントありますか？\nよくあります"},
+    {cat:"⑦ 住環境・安全・生活", en:"How do I set up utilities like electricity and water?\nUsually, the landlord or agent will guide you through the setup process.", jp:"電気や水道はどうやって契約しますか？\n通常は大家やエージェントが手続きを案内してくれます"},
+    {cat:"⑦ 住環境・安全・生活", en:"Are utilities expensive?\nModerate.", jp:"光熱費高い？\n中程度です"},
+    {cat:"⑦ 住環境・安全・生活", en:"Is internet fast?\nYes, very fast.", jp:"ネット速い？\nかなり速いです"},
+    {cat:"⑦ 住環境・安全・生活", en:"Are there international communities?\nYes, many.", jp:"外国人コミュニティありますか？\nたくさんあります"},
+    {cat:"⑦ 住環境・安全・生活", en:"Do you like living here?\nYes, it's a great place to live.", jp:"ここ好きですか？\nとても住みやすいです"},
+
+    // ⑧ EAL 英語サポート面談
+    {cat:"⑧ EAL 英語サポート面談", en:"How is my child coping in the EAL program?\nThey're making steady progress, but it will take time to build confidence in speaking.", jp:"EALプログラムでうちの子は大丈夫ですか？\n順調ですが、話す自信には時間がかかります"},
+    {cat:"⑧ EAL 英語サポート面談", en:"How often does my child receive EAL support?\nIt depends on their level, but typically several sessions per week.", jp:"EALはどのくらい受けますか？\nレベルによりますが週に数回です"},
+    {cat:"⑧ EAL 英語サポート面談", en:"Will my child fall behind in other subjects?\nWe try to support both language and content learning simultaneously.", jp:"他の科目で遅れますか？\n英語と教科を同時にサポートします"},
+    {cat:"⑧ EAL 英語サポート面談", en:"My child is shy. Is that a problem?\nNot at all. Many children take time to adjust in a new environment.", jp:"うちの子は人見知りですが大丈夫ですか？\n問題ありません。慣れるのに時間がかかる子は多いです"},
+    {cat:"⑧ EAL 英語サポート面談", en:"How can I help my child make friends?\nEncourage playdates and participation in activities.", jp:"友達作りはどうすれば？\n遊びや活動参加を促してください"},
+    {cat:"⑧ EAL 英語サポート面談", en:"My child doesn't understand instructions yet.\nThat's very normal at this stage.", jp:"指示がまだ理解できません\nとても普通のことです"},
+    {cat:"⑧ EAL 英語サポート面談", en:"Is my child keeping up with academic expectations?\nThey are trying hard, but language is still a barrier in some subjects.", jp:"学習レベルについていけていますか？\n努力していますが英語が一部の障壁です"},
+    {cat:"⑧ EAL 英語サポート面談", en:"How can my child improve academic English?\nReading and writing regularly will make a big difference.", jp:"アカデミック英語はどう伸ばす？\n読解と作文の継続が重要です"},
+    {cat:"⑧ EAL 英語サポート面談", en:"I'm concerned about the jump to Grade 9, especially with the language barrier.\nThat's understandable. We will monitor closely and provide support where needed.", jp:"英語の壁がある中で9年生に上がるのが心配です\n当然の心配です。必要に応じてサポートします"},
+    {cat:"⑧ EAL 英語サポート面談", en:"Is it possible to adjust the workload if it becomes too overwhelming?\nYes, we can differentiate assignments based on language level.", jp:"負担が大きすぎる場合、課題の調整は可能ですか？\nはい、英語レベルに応じて調整できます"},
+    {cat:"⑧ EAL 英語サポート面談", en:"Will my child be assessed differently because of EAL?\nYes, we take language development into account when assessing.", jp:"EALのため評価は配慮されますか？\n英語力も考慮して評価します"},
+    {cat:"⑧ EAL 英語サポート面談", en:"What should we prioritize right now — language or academic performance?\nIn the beginning, language development should come first.", jp:"今は英語と学力どちらを優先すべきですか？\n最初は英語を優先すべきです"},
+];
+
+let currentIndex = 0;
+let isEnToJp = true;
+let currentSpeed = 1.0;
+let isRandom = false;
+let isAutoPlaying = false;
+let autoStopped = false;
+let isAudioOnly = false;
+let tapStage = 0;
+let masterSet = new Set(JSON.parse(localStorage.getItem('sais_qa114_master') || '[]'));
+let activeCategory = 'すべて';
+let autoTimeout = null;
+let filterOpen = false;
+let englishVoice = null; // 英語音声キャッシュ
+
+// ── 英語音声を取得（iPad対策）──
+function loadEnglishVoice() {
+    const voices = window.speechSynthesis.getVoices();
+    englishVoice =
+        voices.find(v => v.lang === 'en-US' && v.localService) ||
+        voices.find(v => v.lang === 'en-US') ||
+        voices.find(v => v.lang === 'en-GB') ||
+        voices.find(v => v.lang.startsWith('en')) ||
+        null;
+    const label = document.getElementById('voice-label');
+    if (label) {
+        label.textContent = englishVoice
+            ? `${englishVoice.name} (${englishVoice.lang})`
+            : '英語音声が見つかりません';
+        label.style.color = englishVoice ? 'var(--green)' : '#e11d48';
+    }
+}
+// 音声リストは非同期で読み込まれるためイベントで取得
+window.speechSynthesis.onvoiceschanged = loadEnglishVoice;
+loadEnglishVoice(); // 初回試行
+
+function makeUtterance(text) {
+    const uttr = new SpeechSynthesisUtterance(text);
+    uttr.lang = 'en-US';
+    uttr.rate = parseFloat(currentSpeed);
+    if (englishVoice) uttr.voice = englishVoice;
+    return uttr;
+}
+
+// iOS Safari 音声フリーズ対策：定期的にpause/resumeでウォッチドッグ
+let iOSKeepAlive = null;
+function startKeepAlive() {
+    stopKeepAlive();
+    iOSKeepAlive = setInterval(() => {
+        if (window.speechSynthesis.speaking) {
+            window.speechSynthesis.pause();
+            window.speechSynthesis.resume();
+        }
+    }, 10000);
+}
+function stopKeepAlive() {
+    if (iOSKeepAlive) { clearInterval(iOSKeepAlive); iOSKeepAlive = null; }
+}
+
+// ── 排他的に1つだけ再生する共通関数 ──
+let isSpeaking = false;
+function speakOne(text, onEnd) {
+    // 確実に止める
+    window.speechSynthesis.cancel();
+    isSpeaking = false;
+    clearTimeout(speakOne._timer);
+    speakOne._timer = setTimeout(() => {
+        if (isSpeaking) return; // 二重防止
+        isSpeaking = true;
+        const uttr = makeUtterance(text);
+        uttr.onstart = startKeepAlive;
+        uttr.onend = () => { isSpeaking = false; stopKeepAlive(); if (onEnd) onEnd(); };
+        uttr.onerror = () => { isSpeaking = false; stopKeepAlive(); if (onEnd) onEnd(); };
+        window.speechSynthesis.speak(uttr);
+    }, 200);
+}
+
+const allCategories = [...new Set(phrases.map(p => p.cat))];
+
+function getCatCount(cat) { return phrases.filter(p => p.cat === cat).length; }
+function getCatMasterCount(cat) { return phrases.map((p,i)=>({...p,idx:i})).filter(p => p.cat===cat && masterSet.has(p.idx)).length; }
+
+function buildCatRows() {
+    const wrap = document.getElementById('cat-rows');
+    wrap.innerHTML = '';
+    allCategories.forEach(cat => {
+        const total = getCatCount(cat);
+        const mastered = getCatMasterCount(cat);
+        const isDone = total > 0 && mastered === total;
+        const row = document.createElement('div');
+        row.className = 'cat-row' + (cat === activeCategory ? ' active' : '');
+        row.innerHTML = `<div class="cat-master-dot ${isDone?'done':''}"></div><div class="cat-row-name">${cat}</div><div class="cat-row-count">${mastered===0?total:`${total-mastered}残/${total}`}</div>`;
+        row.onclick = () => selectCategory(cat);
+        wrap.appendChild(row);
+    });
+    document.getElementById('chip-all').className = 'chip-all' + (activeCategory==='すべて' ? ' active' : '');
+}
+
+function toggleFilterPanel() {
+    filterOpen = !filterOpen;
+    document.getElementById('filter-chips-wrap').className = 'filter-chips-wrap' + (filterOpen ? ' open' : '');
+    document.getElementById('filter-toggle-icon').className = 'filter-toggle-icon' + (filterOpen ? ' open' : '');
+}
+
+function updateFilterLabel() {
+    const active = getActivePhrases();
+    document.getElementById('filter-current-label').textContent =
+        activeCategory === 'すべて' ? `すべて（${active.length}）` : `${activeCategory}（${active.length}）`;
+}
+
+function selectCategory(cat) {
+    if (isAutoPlaying) return;
+    activeCategory = cat; currentIndex = 0;
+    buildCatRows(); updateFilterLabel();
+    filterOpen = false;
+    document.getElementById('filter-chips-wrap').className = 'filter-chips-wrap';
+    document.getElementById('filter-toggle-icon').className = 'filter-toggle-icon';
+    update();
+}
+
+function saveMaster() { localStorage.setItem('sais_qa114_master', JSON.stringify([...masterSet])); }
+
+function getActivePhrases() {
+    return phrases.map((p,i) => ({...p, idx:i}))
+        .filter(p => !masterSet.has(p.idx) && (activeCategory==='すべて' || p.cat===activeCategory));
+}
+
+function update() {
+    const active = getActivePhrases();
+    const noActiveEl = document.getElementById('no-active-msg');
+    if (active.length === 0) {
+        noActiveEl.classList.add('show');
+        document.getElementById('main-card').style.display = 'none';
+        document.getElementById('tap-hint').style.display = 'none';
+        updateMasterUI(); updateFilterLabel(); buildCatRows(); return;
+    }
+    noActiveEl.classList.remove('show');
+    document.getElementById('main-card').style.display = '';
+    document.getElementById('tap-hint').style.display = '';
+    if (currentIndex >= active.length) currentIndex = 0;
+    const item = active[currentIndex];
+    document.getElementById('current-num').textContent = currentIndex + 1;
+    document.getElementById('total-num').textContent = active.length;
+    document.getElementById('progress-bar').style.width = ((currentIndex+1)/active.length*100)+'%';
+    document.getElementById('cat').textContent = item.cat;
+    document.getElementById('card-num').textContent = '#'+(item.idx+1);
+    tapStage = 0;
+    if (isEnToJp) {
+        // 英語モード：最初から英語表示、タップで日本語
+        document.getElementById('display-text').textContent = item.en;
+        document.getElementById('answer-text').textContent = '';
+        document.getElementById('answer-text').classList.remove('show');
+        if (!isAudioOnly) document.getElementById('tap-hint').textContent = '👆 タップして日本語を表示';
+    } else {
+        // 日本語モード：最初から日本語表示、タップで英語
+        document.getElementById('display-text').textContent = item.jp;
+        document.getElementById('answer-text').textContent = '';
+        document.getElementById('answer-text').classList.remove('show');
+        if (!isAudioOnly) document.getElementById('tap-hint').textContent = '👆 タップして英語を表示';
+    }
+    document.getElementById('mode-label').textContent = isEnToJp ? '🔤 英語モード' : '🇯🇵 日本語モード';
+    document.getElementById('master-checkbox').checked = masterSet.has(item.idx);
+    document.getElementById('master-badge').classList.toggle('show', masterSet.has(item.idx));
+    updateMasterUI(); updateFilterLabel(); buildCatRows();
+}
+
+function updateMasterUI() {
+    const count = masterSet.size;
+    document.getElementById('master-count-badge').textContent = `マスター: ${count} / ${phrases.length}`;
+    const summary = document.getElementById('master-summary');
+    const listWrap = document.getElementById('master-list-wrap');
+    if (count > 0) {
+        summary.classList.add('show');
+        summary.textContent = `✅ ${count}セットをマスター済 — タップして一覧を表示 / 解除`;
+        const listEl = document.getElementById('master-list');
+        listEl.innerHTML = '';
+        [...masterSet].sort((a,b)=>a-b).forEach(idx => {
+            const p = phrases[idx];
+            const row = document.createElement('div');
+            row.style.cssText = 'display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid #e2e8f0;font-size:12px;';
+            row.innerHTML = `<span style="flex:1;line-height:1.4;"><span style="color:var(--primary);font-weight:700;">#${idx+1} ${p.cat}</span><br>${p.en.split('\n')[0]}</span><button onclick="removeMaster(${idx})" style="border:none;background:#e11d48;color:#fff;border-radius:99px;padding:3px 10px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;">解除</button>`;
+            listEl.appendChild(row);
+        });
+    } else {
+        summary.classList.remove('show');
+        listWrap.style.display = 'none';
+    }
+}
+
+function toggleMasterList() {
+    if (masterSet.size===0) return;
+    const wrap = document.getElementById('master-list-wrap');
+    wrap.style.display = wrap.style.display==='none' ? '' : 'none';
+}
+function removeMaster(idx) { masterSet.delete(idx); saveMaster(); update(); }
+function clearAllMaster() {
+    if (!confirm(`マスター済み${masterSet.size}セットを全て解除しますか？`)) return;
+    masterSet.clear(); saveMaster();
+    document.getElementById('master-list-wrap').style.display = 'none';
+    update();
+}
+function handleCardTap() {
+    if (isAutoPlaying) return;
+    if (isAudioOnly) return;
+    const active = getActivePhrases();
+    if (active.length === 0) return;
+    const item = active[currentIndex];
+
+    if (isEnToJp) {
+        // 英語モード：英語表示中→タップで日本語トグル
+        tapStage = tapStage === 0 ? 1 : 0;
+        if (tapStage === 1) {
+            document.getElementById('answer-text').textContent = item.jp;
+            document.getElementById('answer-text').classList.add('show');
+        } else {
+            document.getElementById('answer-text').textContent = '';
+            document.getElementById('answer-text').classList.remove('show');
+        }
+    } else {
+        // 日本語モード：日本語表示中→タップで英語トグル
+        tapStage = tapStage === 0 ? 1 : 0;
+        if (tapStage === 1) {
+            document.getElementById('answer-text').textContent = item.en;
+            document.getElementById('answer-text').classList.add('show');
+        } else {
+            document.getElementById('answer-text').textContent = '';
+            document.getElementById('answer-text').classList.remove('show');
+        }
+    }
+}
+function toggleAudioOnly() {
+    isAudioOnly = !isAudioOnly;
+    const btn = document.getElementById('audio-only-btn');
+    btn.textContent = isAudioOnly ? '🔊 音声のみ: ON' : '🔇 音声のみ: OFF';
+    btn.className = isAudioOnly ? 'btn btn-toggle-on' : 'btn btn-secondary';
+    if (isAudioOnly) {
+        document.getElementById('tap-hint').textContent = '🔊 音声のみモード — タップしても表示されません';
+    } else {
+        document.getElementById('tap-hint').textContent = isEnToJp
+            ? '👆 タップして日本語を表示'
+            : '👆 タップして英語を表示';
+    }
+    update();
+}
+function toggleMaster(e) {
+    if (isAutoPlaying) return;
+    const active = getActivePhrases();
+    if (active.length===0) return;
+    const item = active[currentIndex];
+    if (e.target.checked){masterSet.add(item.idx);}else{masterSet.delete(item.idx);}
+    saveMaster(); update();
+}
+function next() {
+    if (isAutoPlaying) return;
+    const active = getActivePhrases();
+    if (active.length===0) return;
+    currentIndex = isRandom ? Math.floor(Math.random()*active.length) : (currentIndex+1)%active.length;
+    update();
+}
+function speak() {
+    const active = getActivePhrases();
+    if (active.length===0) return;
+    const text = active[currentIndex].en.replace('\n', '. ');
+    speakOne(text);
+}
+function toggleRandom() {
+    isRandom = !isRandom;
+    const btn = document.getElementById('random-btn');
+    btn.textContent = isRandom ? '🔀 ランダム: ON' : '🔀 ランダム: OFF';
+    btn.className = isRandom ? 'btn btn-toggle-on' : 'btn btn-secondary';
+    document.getElementById('order-label').textContent = isRandom ? 'ランダム表示中' : '順番通り';
+}
+function switchMode() {
+    if (isAutoPlaying) return;
+    isEnToJp = !isEnToJp;
+    const btn = document.getElementById('switch-mode-btn');
+    btn.textContent = isEnToJp ? '🔄 日本語モードへ' : '🔄 英語モードへ';
+    update();
+}
+function updateSpeed() {
+    currentSpeed = document.getElementById('speed-range').value;
+    document.getElementById('speed-val').textContent = parseFloat(currentSpeed).toFixed(1);
+}
+
+// ── AUTO-PLAY ──
+function setAutoPanel(t,ins,c) {
+    document.getElementById('auto-step-title').textContent=t;
+    document.getElementById('auto-instruction').textContent=ins;
+    document.getElementById('auto-count').textContent=c;
+}
+function delayP(ms) {
+    return new Promise(r=>{if(autoStopped){r();return;}autoTimeout=setTimeout(r,ms);});
+}
+function speakP() {
+    return new Promise(resolve => {
+        if (autoStopped) { resolve(); return; }
+        const active = getActivePhrases();
+        if (active.length===0) { resolve(); return; }
+        const text = active[currentIndex].en.replace('\n', '. ');
+        speakOne(text, resolve);
+    });
+}
+function showCardState(showAnswer, hideAll) {
+    const display=document.getElementById('display-text');
+    const answer=document.getElementById('answer-text');
+    const active=getActivePhrases();
+    if(active.length===0) return;
+    const item=active[currentIndex];
+    if(hideAll){
+        display.textContent='？？？';
+        document.getElementById('cat').textContent=item.cat;
+        answer.textContent='';
+        answer.classList.remove('show');
+    } else {
+        display.textContent=item.en;
+        document.getElementById('cat').textContent=item.cat;
+        if(showAnswer){answer.textContent=item.jp;answer.classList.add('show');}
+        else{answer.textContent='';answer.classList.remove('show');}
+    }
+}
+async function runAutoPlay() {
+    const active=getActivePhrases();
+    if(active.length===0){stopAutoPlay();return;}
+    const startIdx=currentIndex;
+    for(let i=0;i<active.length;i++){
+        if(autoStopped)break;
+        currentIndex=(startIdx+i)%active.length;
+        update();
+        const n=i+1,tot=active.length;
+
+        showCardState(false,true);
+        setAutoPanel(`セット ${n}/${tot} — STEP 1`,'👂 発話せずに2回お聞き下さい。','再生 1/2回目…');
+        await speakP();if(autoStopped)break;await delayP(700);if(autoStopped)break;
+        setAutoPanel(`セット ${n}/${tot} — STEP 1`,'👂 発話せずに2回お聞き下さい。','再生 2/2回目…');
+        await speakP();if(autoStopped)break;await delayP(900);
+
+        if(autoStopped)break;
+        showCardState(false,true);
+        setAutoPanel(`セット ${n}/${tot} — STEP 2`,'🗣️ 音声に合わせて2回シャドウイングしてください。','再生 1/2回目…');
+        await speakP();if(autoStopped)break;await delayP(700);
+        setAutoPanel(`セット ${n}/${tot} — STEP 2`,'🗣️ 音声に合わせて2回シャドウイングしてください。','再生 2/2回目…');
+        await speakP();if(autoStopped)break;await delayP(900);
+
+        if(autoStopped)break;
+        showCardState(true,false);
+        setAutoPanel(`セット ${n}/${tot} — STEP 3`,'📖 英文と訳文を見ながら2回シャドウイングしてください。','再生 1/2回目…');
+        await speakP();if(autoStopped)break;await delayP(700);
+        setAutoPanel(`セット ${n}/${tot} — STEP 3`,'📖 英文と訳文を見ながら2回シャドウイングしてください。','再生 2/2回目…');
+        await speakP();if(autoStopped)break;await delayP(900);
+
+        if(autoStopped)break;
+        showCardState(false,true);
+        setAutoPanel(`セット ${n}/${tot} — STEP 4`,'🙈 見ずに2回シャドウイングしてください。','再生 1/2回目…');
+        await speakP();if(autoStopped)break;await delayP(700);
+        setAutoPanel(`セット ${n}/${tot} — STEP 4`,'🙈 見ずに2回シャドウイングしてください。','再生 2/2回目…');
+        await speakP();if(autoStopped)break;await delayP(1400);
+    }
+    if(!autoStopped){
+        setAutoPanel('完了！',`🎉 ${getActivePhrases().length}セット完了しました！`,'');
+        showCardState(false,false);
+        await delayP(2000);
+        stopAutoPlay();
+    }
+}
+function startAutoPlay(){
+    if(getActivePhrases().length===0){alert('出題できるセットがありません。');return;}
+    isAutoPlaying=true;autoStopped=false;
+    document.getElementById('normal-controls').style.display='none';
+    document.getElementById('auto-controls').style.display='';
+    document.getElementById('auto-panel').classList.add('show');
+    document.getElementById('tap-hint').style.display='none';
+    document.getElementById('master-wrap').classList.add('disabled');
+    const card=document.getElementById('main-card');
+    card.classList.remove('tappable');card.classList.add('no-tap');
+    runAutoPlay();
+}
+function stopAutoPlay(){
+    autoStopped=true; isAutoPlaying=false;
+    window.speechSynthesis.cancel();
+    isSpeaking = false;
+    clearTimeout(speakOne._timer);
+    stopKeepAlive();
+    if(autoTimeout){clearTimeout(autoTimeout);autoTimeout=null;}
+    document.getElementById('normal-controls').style.display='';
+    document.getElementById('auto-controls').style.display='none';
+    document.getElementById('auto-panel').classList.remove('show');
+    document.getElementById('tap-hint').style.display='';
+    document.getElementById('master-wrap').classList.remove('disabled');
+    const card=document.getElementById('main-card');
+    card.classList.add('tappable');card.classList.remove('no-tap');
+    update();
+}
+
+buildCatRows();
+updateFilterLabel();
+update();
+</script>
+</body>
+</html>
