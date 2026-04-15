@@ -621,58 +621,64 @@ const CATS = {
 };
 
 const phrases = [
-  {cat:'整数・演算', en:'What is <mark>6,482 rounded to the nearest thousand</mark>? It rounds to <mark>6,000</mark>.', ja:'6,482 を千の位に四捨五入すると 6,000 です。', tip:'"round to the nearest thousand/hundred/ten" ＝ 千・百・十の位に四捨五入'},
-  {cat:'整数・演算', en:'Write <mark>forty-seven thousand, three hundred and six</mark> in numerals: <mark>47,306</mark>.', ja:'四万七千三百六を数字で書くと 47,306 です。', tip:'コンマは3桁ごと。英語での数の読み方は必須スキル'},
-  {cat:'整数・演算', en:'The <mark>product</mark> of 48 and 25 is <mark>1,200</mark>.', ja:'48 と 25 の積は 1,200 です。', tip:'"product" ＝ 積（かけ算の答え）'},
-  {cat:'整数・演算', en:'Divide <mark>2,736 by 12</mark>. The quotient is <mark>228</mark>.', ja:'2,736 ÷ 12 の商は 228 です。', tip:'long division（筆算の割り算）の手順を英語で言えるようにしよう'},
-  {cat:'整数・演算', en:'Find all <mark>factor pairs</mark> of 36: (1,36), (2,18), (3,12), (4,9), (6,6).', ja:'36 の約数のペアを全部求めましょう。', tip:'"factor pair" ＝ 積がその数になる 2 つの約数の組'},
-  {cat:'整数・演算', en:'Is 72 <mark>divisible by</mark> 9? Yes, because 72 ÷ 9 = 8 with no remainder.', ja:'72 は 9 で割り切れますか？ → はい、72 ÷ 9 = 8 であまりなし。', tip:'"divisible by" ＝ 〜で割り切れる'},
-  {cat:'整数・演算', en:'What is the <mark>value</mark> of the digit 7 in 376,512? It has a value of <mark>70,000</mark>.', ja:'376,512 の 7 の位の値は 70,000 です。', tip:'"place value" ＝ 位の値。各桁の値を英語で説明できるようにしよう'},
-  {cat:'整数・演算', en:'Calculate <mark>15²</mark>. Fifteen squared equals <mark>225</mark>.', ja:'15² を計算すると、15 の 2 乗は 225 です。', tip:'"squared" ＝ 2 乗。"cubed" ＝ 3 乗'},
-  {cat:'整数・演算', en:'List the first four <mark>square numbers</mark>: 1, 4, 9, 16.', ja:'最初の 4 つの平方数は 1, 4, 9, 16 です。', tip:'"square number" ＝ 平方数（整数の 2 乗）'},
-  {cat:'整数・演算', en:'Use <mark>BODMAS</mark> to calculate 5 + 3 × (8 − 2). Answer: 5 + 3 × 6 = 5 + 18 = <mark>23</mark>.', ja:'BODMAS の順序で計算すると: 5 + 3 × (8 − 2) = 23 です。', tip:'Brackets → Orders → Division → Multiplication → Addition → Subtraction の順'},
-  {cat:'分数・小数', en:'Write <mark>2 3/4</mark> as an <mark>improper fraction</mark>: <mark>11/4</mark>.', ja:'帯分数 2 と 3/4 を仮分数に直すと 11/4 です。', tip:'"mixed number" ＝ 帯分数、"improper fraction" ＝ 仮分数'},
-  {cat:'分数・小数', en:'Convert <mark>17/5</mark> to a <mark>mixed number</mark>: <mark>3 2/5</mark>.', ja:'仮分数 17/5 を帯分数に直すと 3 と 2/5 です。', tip:''},
-  {cat:'分数・小数', en:'Add <mark>2/3 + 1/4</mark>. Find a <mark>common denominator</mark>: 8/12 + 3/12 = <mark>11/12</mark>.', ja:'2/3 + 1/4 を計算。通分すると 8/12 + 3/12 = 11/12 です。', tip:'"common denominator" ＝ 共通の分母（通分）'},
-  {cat:'分数・小数', en:'Subtract <mark>3/5 − 1/3</mark>: 9/15 − 5/15 = <mark>4/15</mark>.', ja:'3/5 − 1/3 を通分して計算すると 4/15 です。', tip:''},
-  {cat:'分数・小数', en:'Multiply <mark>2/3 × 3/4</mark>. Multiply the numerators and denominators: <mark>6/12 = 1/2</mark>.', ja:'2/3 × 3/4 = 6/12 = 1/2 です。', tip:'分数のかけ算: 分子どうし・分母どうしをかける'},
-  {cat:'分数・小数', en:'What is <mark>3/4 of 40</mark>? Divide by 4, then multiply by 3: 10 × 3 = <mark>30</mark>.', ja:'40 の 3/4 は？ 40 ÷ 4 = 10、10 × 3 = 30 です。', tip:'"fraction of a quantity" ＝ 数量の何分の何'},
-  {cat:'分数・小数', en:'Round <mark>4.768</mark> to <mark>2 decimal places</mark>: <mark>4.77</mark>.', ja:'4.768 を小数第 2 位に四捨五入すると 4.77 です。', tip:'"decimal place" ＝ 小数の位。"1 d.p." と略されることも'},
-  {cat:'分数・小数', en:'Multiply <mark>3.6 × 0.4</mark>. Think of it as 36 × 4 = 144, then adjust: <mark>1.44</mark>.', ja:'3.6 × 0.4 = 1.44 です。', tip:'小数のかけ算は整数で計算してから小数点を動かす'},
-  {cat:'分数・小数', en:'Divide <mark>7.2 ÷ 0.9</mark>. Multiply both by 10: 72 ÷ 9 = <mark>8</mark>.', ja:'7.2 ÷ 0.9 = 72 ÷ 9 = 8 です。', tip:'小数の割り算は分母を整数にしてから計算'},
-  {cat:'分数・小数', en:'Order from smallest to largest: <mark>0.3, 1/4, 35%</mark>. Answer: 1/4 (0.25), 0.3, 35% (0.35).', ja:'小さい順: 1/4 (0.25)、0.3、35% (0.35) です。', tip:'分数・小数・パーセントを揃えて比較するのが Grade 5 の重要トピック'},
-  {cat:'図形・面積', en:'The <mark>area of a parallelogram</mark> = base × height. For base 9 cm and height 4 cm: <mark>36 cm²</mark>.', ja:'平行四辺形の面積 = 底辺 × 高さ。底辺 9cm・高さ 4cm → 36 cm²', tip:'"parallelogram" ＝ 平行四辺形'},
-  {cat:'図形・面積', en:'Area of a <mark>triangle</mark> = ½ × base × height. Base 6 cm, height 5 cm → area = <mark>15 cm²</mark>.', ja:'三角形の面積 = ½ × 底辺 × 高さ = ½ × 6 × 5 = 15 cm²', tip:''},
-  {cat:'図形・面積', en:'Find the <mark>perimeter</mark> of a regular hexagon with side 7 cm. 6 × 7 = <mark>42 cm</mark>.', ja:'1辺 7cm の正六角形の周の長さ = 6 × 7 = 42 cm です。', tip:'"regular" ＝ 正多角形（全辺等しい）。"hexagon" ＝ 六角形'},
-  {cat:'図形・面積', en:'A <mark>net</mark> is a flat shape that folds to make a 3D solid. This is the net of a <mark>cube</mark>.', ja:'展開図（net）は折りたたむと立体になる平面図形です。これは立方体の展開図です。', tip:'"net" ＝ 展開図。"3D solid" ＝ 立体図形'},
-  {cat:'図形・面積', en:'Name the <mark>properties</mark> of a rhombus: four equal sides, opposite angles are equal.', ja:'ひし形の性質: 4 辺が等しく、向かい合う角が等しい。', tip:'"properties" ＝ 性質・特徴。"rhombus" ＝ ひし形'},
-  {cat:'図形・面積', en:'The <mark>volume of a cuboid</mark> = length × width × height. 6 × 4 × 3 = <mark>72 cm³</mark>.', ja:'直方体の体積 = 縦 × 横 × 高さ。6 × 4 × 3 = 72 cm³', tip:'"volume" ＝ 体積。cm³ は "cubic centimetres"'},
-  {cat:'図形・面積', en:'Measure angle ABC using a <mark>protractor</mark>. The angle measures <mark>65°</mark>.', ja:'分度器を使って角 ABC を測ると 65° です。', tip:'"protractor" ＝ 分度器。"measure an angle" ＝ 角度を測る'},
-  {cat:'図形・面積', en:'This shape has <mark>rotational symmetry</mark> of <mark>order 4</mark>. It looks the same 4 times in one full turn.', ja:'この図形は回転対称の次数が 4 です。一回転で 4 回同じ形になります。', tip:'"rotational symmetry" ＝ 回転対称、"order" ＝ 次数'},
-  {cat:'図形・面積', en:'Draw a <mark>line of symmetry</mark> for this shape. It divides the shape into two <mark>congruent</mark> halves.', ja:'この図形の対称軸を描きましょう。合同な 2 つの半分に分けます。', tip:'"congruent" ＝ 合同（形も大きさも同じ）'},
-  {cat:'図形・面積', en:'Plot point A at coordinates <mark>(−2, 3)</mark> on the grid.', ja:'グリッドに点 A を座標 (−2, 3) にプロットしましょう。', tip:'Grade 5 では負の座標（negative coordinates）が登場する'},
-  {cat:'測定・単位', en:'Convert <mark>4.5 kg</mark> to grams: <mark>4,500 g</mark>.', ja:'4.5 kg をグラムに変換すると 4,500 g です。', tip:'1 kg = 1,000 g。"convert" ＝ 変換する'},
-  {cat:'測定・単位', en:'A tank holds <mark>3.6 litres</mark>. How many <mark>millilitres</mark> is that? <mark>3,600 ml</mark>.', ja:'3.6 リットルは何ミリリットル？ → 3,600 ml です。', tip:'1 L = 1,000 mL。小数との組み合わせに注意'},
-  {cat:'測定・単位', en:'A train departs at <mark>08:45</mark> and arrives at <mark>11:20</mark>. The journey takes <mark>2 hours 35 minutes</mark>.', ja:'8:45 発 → 11:20 着。所要時間は 2 時間 35 分です。', tip:'"departs / arrives" ＝ 出発・到着。24 時間表記も使われる'},
-  {cat:'測定・単位', en:'Convert <mark>250 cm</mark> to metres: <mark>2.5 m</mark>.', ja:'250 cm をメートルに変換すると 2.5 m です。', tip:'1 m = 100 cm。小数で表す練習をしよう'},
-  {cat:'測定・単位', en:'The <mark>area</mark> of the room is 24 m². How many <mark>square tiles</mark> of 0.5 m × 0.5 m are needed? <mark>96 tiles</mark>.', ja:'24 m² の部屋に 0.5m × 0.5m のタイル → 96 枚必要です。', tip:'面積と単位変換の複合問題。1 タイル = 0.25 m²'},
-  {cat:'測定・単位', en:'What is the <mark>temperature difference</mark> between −5°C and 18°C? The difference is <mark>23°C</mark>.', ja:'−5°C と 18°C の温度差は 23°C です。', tip:'"temperature" ＝ 温度。負の数との組み合わせ問題'},
-  {cat:'測定・単位', en:'Calculate the <mark>average speed</mark>: distance 180 km, time 3 hours. Speed = <mark>60 km/h</mark>.', ja:'距離 180 km・時間 3 時間 → 平均速度は 60 km/h です。', tip:'"average speed" ＝ 平均速度。Speed = Distance ÷ Time'},
-  {cat:'文章題', en:'A bag of rice weighs <mark>2.4 kg</mark>. How much do <mark>5 bags</mark> weigh? <mark>12 kg</mark>.', ja:'お米 1 袋が 2.4 kg → 5 袋の重さは 12 kg です。', tip:'"How much do … weigh?" ＝ 〜の重さはいくつ？'},
-  {cat:'文章題', en:'<mark>3/8 of the students</mark> walk to school. There are 56 students. How many walk? <mark>21 students</mark>.', ja:'生徒の 3/8 が徒歩通学。56 人中 → 21 人が徒歩です。', tip:'56 ÷ 8 × 3 = 21。"fraction of" 問題の典型'},
-  {cat:'文章題', en:'A shirt costs <mark>$35</mark>. There is a <mark>20% discount</mark>. What is the sale price? <mark>$28</mark>.', ja:'$35 のシャツが 20% 引き → セール価格は $28 です。', tip:'$35 × 0.8 = $28。"discount" ＝ 割引'},
-  {cat:'文章題', en:'Jack has <mark>$120</mark>. He spends <mark>3/5</mark> of it. How much does he have left? <mark>$48</mark>.', ja:'ジャックは $120 の 3/5 を使う → 残りは $48 です。', tip:'$120 × 3/5 = $72 使う → $120 − $72 = $48 残る'},
-  {cat:'文章題', en:'The <mark>ratio</mark> of red to blue marbles is <mark>3:5</mark>. There are 40 marbles in total. How many are red? <mark>15</mark>.', ja:'赤:青 = 3:5 で全部で 40 個 → 赤は 15 個です。', tip:'合計 8 部分。40 ÷ 8 × 3 = 15'},
-  {cat:'文章題', en:'A rectangle has <mark>area 48 cm²</mark> and <mark>length 8 cm</mark>. Find the <mark>width</mark>. Width = 48 ÷ 8 = <mark>6 cm</mark>.', ja:'面積 48 cm²・長さ 8 cm の長方形の幅 = 48 ÷ 8 = 6 cm', tip:'area = length × width を変形して width = area ÷ length'},
-  {cat:'文章題', en:'Mia earns <mark>$8.50 per hour</mark> and works <mark>6.5 hours</mark>. How much does she earn? <mark>$55.25</mark>.', ja:'ミアは 1 時間 $8.50 で 6.5 時間働く → 収入は $55.25 です。', tip:'"per hour" ＝ 1 時間あたり。小数のかけ算の文章題'},
-  {cat:'文章題', en:'A recipe uses <mark>2/3 cup of flour</mark> for 12 cookies. How much for <mark>30 cookies</mark>? <mark>5/3 = 1 2/3 cups</mark>.', ja:'12 枚のクッキーに 2/3 カップ → 30 枚には 1 と 2/3 カップ必要。', tip:'比例の文章題。2/3 ÷ 12 × 30 = 5/3'},
-  {cat:'授業表現', en:'I would like to <mark>check my answer</mark>. Is 3/8 + 1/4 equal to 5/8?', ja:'答えを確認したいのですが、3/8 + 1/4 は 5/8 で合っていますか？', tip:''},
-  {cat:'授業表現', en:'Please could you <mark>explain that step again</mark>? I understand up to here, but not the next part.', ja:'そのステップをもう一度説明していただけますか？ここまでは理解できましたが、次の部分がわかりません。', tip:''},
-  {cat:'授業表現', en:'My answer is <mark>different from</mark> the one on the board. I got 3.6, not 0.36.', ja:'黒板の答えと違います。私は 0.36 ではなく 3.6 になりました。', tip:'"different from" ＝ 〜と異なる'},
-  {cat:'授業表現', en:'Do we need to <mark>simplify</mark> the fraction in our answer?', ja:'答えの分数を約分する必要がありますか？', tip:'"simplify" ＝ 約分・簡単にする'},
-  {cat:'授業表現', en:'I used a <mark>different method</mark>. I multiplied first, then divided.', ja:'私は違う方法を使いました。最初にかけ算、それから割り算をしました。', tip:'Singapore の授業では alternative methods（別の解法）の共有がよくある'},
-  {cat:'授業表現', en:'<mark>Therefore</mark>, the area of the shaded region is 14 cm².', ja:'したがって、網かけ部分の面積は 14 cm² です。', tip:'"therefore" ＝ したがって。答えをまとめる定番表現'},
-  {cat:'授業表現', en:'<mark>Give your answer to the nearest whole number</mark>: 7.8 rounds to <mark>8</mark>.', ja:'答えを整数で答えなさい: 7.8 → 8 に四捨五入します。', tip:'"nearest whole number" ＝ 整数に四捨五入'},
+    {cat:'整数・演算', en:'<mark>BODMAS</mark> — the rule for the order of operations.<br>B = Brackets（括弧）<br>O = Orders（累乗・平方根）<br>D = Division（割り算）<br>M = Multiplication（掛け算）<br>A = Addition（足し算）<br>S = Subtraction（引き算）<br>※ A と S は同じ優先度 — 左から順に計算する', speech:'BODMAS is the rule for the order of operations. Always follow this rule when calculating.', ja:'BODMAS（ボドマス）は計算の順序を示すルールです。B＝括弧、O＝累乗・平方根、D＝割り算、M＝掛け算、A＝足し算、S＝引き算。この順番で計算します。A と S は同じ優先度で、左から順に計算します。', tip:'アメリカでは "PEMDAS" と言う。シンガポール・イギリスでは BODMAS が標準'},
+  {cat:'整数・演算', en:'<mark>B</mark> = <mark>Brackets</mark>. Calculate what is inside the brackets first. (3 + 5) × 2 → first 3 + 5 = 8, then 8 × 2 = 16.', speech:'B stands for Brackets. Calculate what is inside the brackets first. Open bracket 3 plus 5 close bracket, times 2. First 3 plus 5 equals 8, then 8 times 2 equals 16.', ja:'B＝Brackets（括弧）。まず括弧の中を計算します。例: (3+5)×2 → まず 3+5=8、次に 8×2=16', tip:'"brackets" ＝ 括弧。アメリカでは "parentheses（パレンシシーズ）" と言う'},
+  {cat:'整数・演算', en:'<mark>O</mark> = <mark>Orders</mark>. Calculate powers and square roots next. Example: 2² = 4.', speech:'O stands for Orders: powers and square roots. For example, 2 squared equals 4.', ja:'O＝Orders（累乗・平方根）。括弧の次は累乗と平方根を計算します。例: 2²=4', tip:'"orders" ＝ 累乗・平方根。"2 squared" ＝ 2の2乗、"square root" ＝ 平方根'},
+  {cat:'整数・演算', en:'<mark>D</mark> = <mark>Division</mark>. Divide before adding or subtracting. Example: 10 + 6 ÷ 2 → first 6 ÷ 2 = 3, then 10 + 3 = 13.', speech:'D stands for Division. Divide before adding or subtracting. Example: 10 plus 6 divided by 2. First 6 divided by 2 equals 3, then 10 plus 3 equals 13.', ja:'D＝Division（割り算）。足し算・引き算より先に割り算をします。例: 10+6÷2 → まず 6÷2=3、次に 10+3=13', tip:'D と M（掛け算）は同じ優先度。左から順に計算する'},
+  {cat:'整数・演算', en:'<mark>M</mark> = <mark>Multiplication</mark>. Multiply before adding or subtracting. Example: 2 + 3 × 4 → first 3 × 4 = 12, then 2 + 12 = 14.', speech:'M stands for Multiplication. Multiply before adding or subtracting. Example: 2 plus 3 times 4. First 3 times 4 equals 12, then 2 plus 12 equals 14.', ja:'M＝Multiplication（掛け算）。足し算・引き算より先に掛け算をします。例: 2+3×4 → まず 3×4=12、次に 2+12=14', tip:'M と D（割り算）は同じ優先度。左から順に計算する'},
+  {cat:'整数・演算', en:'<mark>A</mark> = <mark>Addition</mark> and <mark>S</mark> = <mark>Subtraction</mark> have the <mark>same priority</mark> — always calculate left to right. Example: 5 − 2 + 3 → left to right: 5 − 2 = 3, then 3 + 3 = 6.', speech:'A stands for Addition and S stands for Subtraction. They have the same priority. Always calculate left to right. Example: 5 minus 2 plus 3. Left to right: 5 minus 2 equals 3, then 3 plus 3 equals 6.', ja:'A＝Addition（足し算）、S＝Subtraction（引き算）は同じ優先度です。必ず左から右の順に計算します。例: 5−2+3 → 左から: 5−2=3、次に 3+3=6。足し算を先にすると間違いになります！', tip:'足し算・引き算は左から順に。"left to right" ＝ 左から右へ'},
+{cat:'整数・演算', en:'What is <mark>6,482 rounded to the nearest thousand</mark>? It rounds to <mark>6,000</mark>.', speech:'What is 6,482 rounded to the nearest thousand? It rounds to 6,000.', ja:'6,482 を千の位に四捨五入すると 6,000 です。', tip:'"round to the nearest thousand/hundred/ten" ＝ 千・百・十の位に四捨五入'},
+  {cat:'整数・演算', en:'Write <mark>forty-seven thousand, three hundred and six</mark> in numerals: <mark>47,306</mark>.', speech:'Write forty-seven thousand, three hundred and six in numerals: 47,306.', ja:'四万七千三百六を数字で書くと 47,306 です。', tip:'コンマは3桁ごと。英語での数の読み方は必須スキル'},
+  {cat:'整数・演算', en:'The <mark>product</mark> of 48 and 25 is <mark>1,200</mark>.', speech:'The product of 48 and 25 is 1,200.', ja:'48 と 25 の積は 1,200 です。', tip:'"product" ＝ 積（かけ算の答え）'},
+  {cat:'整数・演算', en:'Divide <mark>2,736 by 12</mark>. The quotient is <mark>228</mark>.', speech:'Divide 2,736 by 12. The quotient is 228.', ja:'2,736 ÷ 12 の商は 228 です。', tip:'long division（筆算の割り算）の手順を英語で言えるようにしよう'},
+  {cat:'整数・演算', en:'Find all <mark>factor pairs</mark> of 36: (1, 36), (2, 18), (3, 12), (4, 9), (6, 6).', speech:'Find all factor pairs of 36: 1 and 36, 2 and 18, 3 and 12, 4 and 9, 6 and 6.', ja:'36 の約数のペアを全部求めましょう。', tip:'"factor pair" ＝ 積がその数になる 2 つの約数の組'},
+  {cat:'整数・演算', en:'Is 72 <mark>divisible by</mark> 9? Yes, because 72 ÷ 9 = 8 with no remainder.', speech:'Is 72 divisible by 9? Yes, because 72 divided by 9 equals 8 with no remainder.', ja:'72 は 9 で割り切れますか？ → はい、72 ÷ 9 = 8 であまりなし。', tip:'"divisible by" ＝ 〜で割り切れる'},
+  {cat:'整数・演算', en:'What is the <mark>value</mark> of the digit 7 in 376,512? It has a value of <mark>70,000</mark>.', speech:'What is the value of the digit 7 in 376,512? It has a value of 70,000.', ja:'376,512 の 7 の位の値は 70,000 です。', tip:'"place value" ＝ 位の値'},
+  {cat:'整数・演算', en:'Calculate <mark>15²</mark>. Fifteen squared equals <mark>225</mark>.', speech:'Calculate 15 squared. Fifteen squared equals 225.', ja:'15² を計算すると 225 です。', tip:'"squared" ＝ 2 乗。"cubed" ＝ 3 乗'},
+  {cat:'整数・演算', en:'List the first four <mark>square numbers</mark>: 1, 4, 9, 16.', speech:'List the first four square numbers: 1, 4, 9, 16.', ja:'最初の 4 つの平方数は 1, 4, 9, 16 です。', tip:'"square number" ＝ 平方数（整数の 2 乗）'},
+  {cat:'整数・演算', en:'Use <mark>BODMAS</mark>: 5 + 3 × (8 − 2) = 5 + 3 × 6 = 5 + 18 = <mark>23</mark>.', speech:'Use BODMAS: 5 plus 3 times open bracket 8 minus 2 close bracket, equals 5 plus 3 times 6, equals 5 plus 18, equals 23.', ja:'BODMAS の順序で計算すると: 5 + 3 × (8 − 2) = 23 です。', tip:'Brackets → Orders → Division → Multiplication → Addition → Subtraction の順'},
+  {cat:'分数・小数', en:'Write <mark>2 3/4</mark> as an <mark>improper fraction</mark>: <mark>11/4</mark>.', speech:'Write 2 and 3 quarters as an improper fraction: 11 over 4.', ja:'帯分数 2 と 3/4 を仮分数に直すと 11/4 です。', tip:'"mixed number" ＝ 帯分数、"improper fraction" ＝ 仮分数'},
+  {cat:'分数・小数', en:'Convert <mark>17/5</mark> to a <mark>mixed number</mark>: <mark>3 2/5</mark>.', speech:'Convert 17 over 5 to a mixed number: 3 and 2 fifths.', ja:'仮分数 17/5 を帯分数に直すと 3 と 2/5 です。', tip:'"mixed number" ＝ 帯分数'},
+  {cat:'分数・小数', en:'Add <mark>2/3 + 1/4</mark>. Common denominator: 8/12 + 3/12 = <mark>11/12</mark>.', speech:'2 thirds plus 1 quarter. Using a common denominator: 8 twelfths plus 3 twelfths equals 11 twelfths.', ja:'2/3 + 1/4 を通分すると 8/12 + 3/12 = 11/12 です。', tip:'"common denominator" ＝ 共通の分母（通分）'},
+  {cat:'分数・小数', en:'Subtract <mark>3/5 − 1/3</mark>: 9/15 − 5/15 = <mark>4/15</mark>.', speech:'3 fifths minus 1 third: 9 fifteenths minus 5 fifteenths equals 4 fifteenths.', ja:'3/5 − 1/3 を通分して計算すると 4/15 です。', tip:'通分してから計算する'},
+  {cat:'分数・小数', en:'Multiply <mark>2/3 × 3/4</mark> = <mark>6/12 = 1/2</mark>.', speech:'2 thirds times 3 quarters equals 6 twelfths, which simplifies to 1 half.', ja:'2/3 × 3/4 = 6/12 = 1/2 です。', tip:'分数のかけ算: 分子どうし・分母どうしをかける'},
+  {cat:'分数・小数', en:'What is <mark>3/4 of 40</mark>? 40 ÷ 4 × 3 = <mark>30</mark>.', speech:'What is 3 quarters of 40? 40 divided by 4, times 3, equals 30.', ja:'40 の 3/4 は？ 40 ÷ 4 = 10、10 × 3 = 30 です。', tip:'"fraction of a quantity" ＝ 数量の何分の何'},
+  {cat:'分数・小数', en:'Round <mark>4.768</mark> to <mark>2 decimal places</mark>: <mark>4.77</mark>.', speech:'Round 4.768 to 2 decimal places: 4.77.', ja:'4.768 を小数第 2 位に四捨五入すると 4.77 です。', tip:'"decimal place" ＝ 小数の位。"1 d.p." と略されることも'},
+  {cat:'分数・小数', en:'Multiply <mark>3.6 × 0.4</mark> = <mark>1.44</mark>.', speech:'3.6 times 0.4 equals 1.44.', ja:'3.6 × 0.4 = 1.44 です。', tip:'小数のかけ算は整数で計算してから小数点を動かす'},
+  {cat:'分数・小数', en:'Divide <mark>7.2 ÷ 0.9</mark>. Multiply both by 10: 72 ÷ 9 = <mark>8</mark>.', speech:'7.2 divided by 0.9. Multiply both by 10: 72 divided by 9 equals 8.', ja:'7.2 ÷ 0.9 = 72 ÷ 9 = 8 です。', tip:'小数の割り算は分母を整数にしてから計算'},
+  {cat:'分数・小数', en:'Order: <mark>0.3, 1/4, 35%</mark>. Smallest to largest: 1/4 (0.25), 0.3, 35% (0.35).', speech:'Order from smallest to largest: 1 quarter equals 0.25, then 0.3, then 35 percent equals 0.35.', ja:'小さい順: 1/4 (0.25)、0.3、35% (0.35) です。', tip:'分数・小数・パーセントを揃えて比較するのが Grade 5 の重要トピック'},
+  {cat:'図形・面積', en:'Area of a <mark>parallelogram</mark> = base × height. Base 9 cm, height 4 cm → <mark>36 cm²</mark>.', speech:'Area of a parallelogram equals base times height. Base 9 centimetres, height 4 centimetres, area equals 36 centimetres squared.', ja:'平行四辺形の面積 = 底辺 × 高さ = 36 cm²', tip:'"parallelogram" ＝ 平行四辺形'},
+  {cat:'図形・面積', en:'Area of a <mark>triangle</mark> = ½ × base × height. Base 6 cm, height 5 cm → <mark>15 cm²</mark>.', speech:'Area of a triangle equals one half times base times height. Base 6 centimetres, height 5 centimetres, area equals 15 centimetres squared.', ja:'三角形の面積 = ½ × 6 × 5 = 15 cm²', tip:'"base" ＝ 底辺、"height" ＝ 高さ'},
+  {cat:'図形・面積', en:'Perimeter of a regular hexagon, side 7 cm: 6 × 7 = <mark>42 cm</mark>.', speech:'Perimeter of a regular hexagon with side 7 centimetres: 6 times 7 equals 42 centimetres.', ja:'1辺 7cm の正六角形の周の長さ = 6 × 7 = 42 cm', tip:'"regular" ＝ 正多角形。"hexagon" ＝ 六角形'},
+  {cat:'図形・面積', en:'A <mark>net</mark> is a flat shape that folds to make a 3D solid.', speech:'A net is a flat shape that folds to make a 3D solid. This is the net of a cube.', ja:'展開図（net）は折りたたむと立体になる平面図形です。', tip:'"net" ＝ 展開図。"3D solid" ＝ 立体図形'},
+  {cat:'図形・面積', en:'Properties of a <mark>rhombus</mark>: four equal sides, opposite angles equal.', speech:'Properties of a rhombus: four equal sides, opposite angles are equal.', ja:'ひし形の性質: 4 辺が等しく、向かい合う角が等しい。', tip:'"properties" ＝ 性質・特徴。"rhombus" ＝ ひし形'},
+  {cat:'図形・面積', en:'Volume of a <mark>cuboid</mark> = length × width × height. 6 × 4 × 3 = <mark>72 cm³</mark>.', speech:'Volume of a cuboid equals length times width times height. 6 times 4 times 3 equals 72 centimetres cubed.', ja:'直方体の体積 = 縦 × 横 × 高さ = 72 cm³', tip:'"volume" ＝ 体積。cm³ は "cubic centimetres"'},
+  {cat:'図形・面積', en:'Measure angle ABC using a <mark>protractor</mark>: <mark>65°</mark>.', speech:'Measure angle ABC using a protractor. The angle measures 65 degrees.', ja:'分度器で角 ABC を測ると 65° です。', tip:'"protractor" ＝ 分度器'},
+  {cat:'図形・面積', en:'This shape has <mark>rotational symmetry</mark> of <mark>order 4</mark>.', speech:'This shape has rotational symmetry of order 4. It looks the same 4 times in one full turn.', ja:'この図形は回転対称の次数が 4 です。', tip:'"rotational symmetry" ＝ 回転対称、"order" ＝ 次数'},
+  {cat:'図形・面積', en:'Line of symmetry divides the shape into two <mark>congruent</mark> halves.', speech:'Draw a line of symmetry. It divides the shape into two congruent halves.', ja:'この図形の対称軸を描きましょう。合同な 2 つの半分に分けます。', tip:'"congruent" ＝ 合同（形も大きさも同じ）'},
+  {cat:'図形・面積', en:'Plot point A at coordinates <mark>(−2, 3)</mark> on the grid.', speech:'Plot point A at coordinates negative 2, 3 on the grid.', ja:'グリッドに点 A を座標 (−2, 3) にプロットしましょう。', tip:'Grade 5 では負の座標（negative coordinates）が登場する'},
+  {cat:'測定・単位', en:'Convert <mark>4.5 kg</mark> to grams: <mark>4,500 g</mark>.', speech:'Convert 4.5 kilograms to grams: 4,500 grams.', ja:'4.5 kg をグラムに変換すると 4,500 g です。', tip:'1 kg = 1,000 g。"convert" ＝ 変換する'},
+  {cat:'測定・単位', en:'A tank holds <mark>3.6 litres</mark>. How many <mark>ml</mark>? <mark>3,600 ml</mark>.', speech:'A tank holds 3.6 litres. How many millilitres is that? 3,600 millilitres.', ja:'3.6 リットルは何ミリリットル？ → 3,600 ml です。', tip:'1 L = 1,000 mL'},
+  {cat:'測定・単位', en:'Train departs <mark>08:45</mark>, arrives <mark>11:20</mark>. Journey = <mark>2 hours 35 minutes</mark>.', speech:'A train departs at 8:45 and arrives at 11:20. The journey takes 2 hours 35 minutes.', ja:'8:45 発 → 11:20 着。所要時間は 2 時間 35 分です。', tip:'"departs / arrives" ＝ 出発・到着'},
+  {cat:'測定・単位', en:'Convert <mark>250 cm</mark> to metres: <mark>2.5 m</mark>.', speech:'Convert 250 centimetres to metres: 2.5 metres.', ja:'250 cm をメートルに変換すると 2.5 m です。', tip:'1 m = 100 cm'},
+  {cat:'測定・単位', en:'Room area: 24 m². Tiles 0.5 m × 0.5 m. How many tiles? <mark>96 tiles</mark>.', speech:'The area of the room is 24 metres squared. Tiles are 0.5 metres by 0.5 metres. You need 96 tiles.', ja:'24 m² の部屋に 0.5m × 0.5m のタイル → 96 枚必要です。', tip:'1 タイル = 0.25 m²'},
+  {cat:'測定・単位', en:'Temperature difference between −5°C and 18°C = <mark>23°C</mark>.', speech:'The temperature difference between negative 5 degrees Celsius and 18 degrees Celsius is 23 degrees.', ja:'−5°C と 18°C の温度差は 23°C です。', tip:'"temperature" ＝ 温度。負の数との組み合わせ問題'},
+  {cat:'測定・単位', en:'Average speed: 180 km in 3 hours = <mark>60 km/h</mark>.', speech:'Average speed: distance 180 kilometres, time 3 hours. Speed equals 60 kilometres per hour.', ja:'距離 180 km・時間 3 時間 → 平均速度は 60 km/h です。', tip:'Speed = Distance ÷ Time'},
+  {cat:'文章題', en:'A bag of rice weighs <mark>2.4 kg</mark>. 5 bags weigh <mark>12 kg</mark>.', speech:'A bag of rice weighs 2.4 kilograms. 5 bags weigh 12 kilograms.', ja:'お米 1 袋が 2.4 kg → 5 袋の重さは 12 kg です。', tip:'"How much do … weigh?" ＝ 〜の重さはいくつ？'},
+  {cat:'文章題', en:'<mark>3/8 of the students</mark> walk to school. 56 students → <mark>21 walk</mark>.', speech:'3 eighths of the students walk to school. There are 56 students, so 21 walk.', ja:'生徒の 3/8 が徒歩通学。56 人中 → 21 人が徒歩です。', tip:'56 ÷ 8 × 3 = 21'},
+  {cat:'文章題', en:'Shirt costs <mark>$35</mark>. <mark>20% discount</mark> → sale price <mark>$28</mark>.', speech:'A shirt costs 35 dollars. There is a 20 percent discount. The sale price is 28 dollars.', ja:'$35 のシャツが 20% 引き → セール価格は $28 です。', tip:'$35 × 0.8 = $28。"discount" ＝ 割引'},
+  {cat:'文章題', en:'Jack has <mark>$120</mark>. Spends <mark>3/5</mark>. Left: <mark>$48</mark>.', speech:'Jack has 120 dollars. He spends 3 fifths of it. He has 48 dollars left.', ja:'ジャックは $120 の 3/5 を使う → 残りは $48 です。', tip:'$120 × 3/5 = $72 使う → $120 − $72 = $48 残る'},
+  {cat:'文章題', en:'Ratio red:blue = <mark>3:5</mark>. Total 40 → red = <mark>15</mark>.', speech:'The ratio of red to blue is 3 to 5. There are 40 in total. 15 are red.', ja:'赤:青 = 3:5 で全部で 40 個 → 赤は 15 個です。', tip:'合計 8 部分。40 ÷ 8 × 3 = 15'},
+  {cat:'文章題', en:'Rectangle: area <mark>48 cm²</mark>, length <mark>8 cm</mark>. Width = <mark>6 cm</mark>.', speech:'A rectangle has area 48 centimetres squared and length 8 centimetres. Width equals 48 divided by 8, equals 6 centimetres.', ja:'面積 48 cm²・長さ 8 cm の長方形の幅 = 6 cm', tip:'width = area ÷ length'},
+  {cat:'文章題', en:'Mia earns <mark>$8.50/hour</mark>. Works <mark>6.5 hours</mark> → <mark>$55.25</mark>.', speech:'Mia earns 8 dollars 50 per hour. She works 6.5 hours. She earns 55 dollars 25.', ja:'ミアは 1 時間 $8.50 で 6.5 時間働く → 収入は $55.25 です。', tip:'"per hour" ＝ 1 時間あたり'},
+  {cat:'文章題', en:'Recipe: <mark>2/3 cup flour</mark> for 12 cookies. For 30 cookies: <mark>1 2/3 cups</mark>.', speech:'A recipe uses 2 thirds of a cup of flour for 12 cookies. For 30 cookies you need 1 and 2 thirds cups.', ja:'12 枚に 2/3 カップ → 30 枚には 1 と 2/3 カップ必要。', tip:'2/3 ÷ 12 × 30 = 5/3'},
+  {cat:'授業表現', en:'I would like to <mark>check my answer</mark>. Is 3/8 + 1/4 equal to 5/8?', speech:'I would like to check my answer. Is 3 eighths plus 1 quarter equal to 5 eighths?', ja:'答えを確認したいのですが、3/8 + 1/4 は 5/8 で合っていますか？', tip:'"check my answer" ＝ 答えを確認する'},
+  {cat:'授業表現', en:'Please could you <mark>explain that step again</mark>?', speech:'Please could you explain that step again? I understand up to here, but not the next part.', ja:'そのステップをもう一度説明していただけますか？', tip:''},
+  {cat:'授業表現', en:'My answer is <mark>different from</mark> the one on the board. I got 3.6, not 0.36.', speech:'My answer is different from the one on the board. I got 3.6, not 0.36.', ja:'黒板の答えと違います。私は 0.36 ではなく 3.6 になりました。', tip:'"different from" ＝ 〜と異なる'},
+  {cat:'授業表現', en:'Do we need to <mark>simplify</mark> the fraction in our answer?', speech:'Do we need to simplify the fraction in our answer?', ja:'答えの分数を約分する必要がありますか？', tip:'"simplify" ＝ 約分・簡単にする'},
+  {cat:'授業表現', en:'I used a <mark>different method</mark>. I multiplied first, then divided.', speech:'I used a different method. I multiplied first, then divided.', ja:'私は違う方法を使いました。最初にかけ算、それから割り算をしました。', tip:'Singapore の授業では alternative methods の共有がよくある'},
+  {cat:'授業表現', en:'<mark>Therefore</mark>, the area of the shaded region is 14 cm².', speech:'Therefore, the area of the shaded region is 14 centimetres squared.', ja:'したがって、網かけ部分の面積は 14 cm² です。', tip:'"therefore" ＝ したがって。答えをまとめる定番表現'},
+  {cat:'授業表現', en:'<mark>Give your answer to the nearest whole number</mark>: 7.8 rounds to <mark>8</mark>.', speech:'Give your answer to the nearest whole number. 7.8 rounds to 8.', ja:'答えを整数で答えなさい: 7.8 → 8 に四捨五入します。', tip:'"nearest whole number" ＝ 整数に四捨五入'},
 ];
 
 const TOTAL = phrases.length;
@@ -766,16 +772,22 @@ function speakOne(text, onEnd) {
 
 function stripTags(html) { return html.replace(/<[^>]+>/g,'').replace(/\s+/g,' ').trim(); }
 
+function getSpeechText(item) {
+  // speech: フィールドがあればそちらを優先、なければ en: のタグを除去して読む
+  if (item.speech) return item.speech;
+  return stripTags(item.en);
+}
+
 function speakCurrent() {
   const a = getActive(); if(!a.length) return;
-  speakOne(stripTags(a[currentIndex].en));
+  speakOne(getSpeechText(a[currentIndex]));
 }
 
 function speakP() {
   return new Promise(resolve => {
     if (autoStopped) { resolve(); return; }
     const a = getActive(); if(!a.length) { resolve(); return; }
-    speakOne(stripTags(a[currentIndex].en), resolve);
+    speakOne(getSpeechText(a[currentIndex]), resolve);
   });
 }
 
