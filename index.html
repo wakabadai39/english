@@ -405,7 +405,7 @@ body {
   <div style="background:#fff;border-radius:16px;padding:14px 16px;box-shadow:var(--shadow);">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
       <span style="font-size:13px;font-weight:900;color:var(--green);">✅ マスター済みリスト</span>
-      <button class="btn btn-secondary" style="padding:4px 12px;font-size:11px;" onclick="clearAllMaster()">全解除</button>
+      <button class="btn btn-secondary" id="clear-all-btn" style="padding:4px 12px;font-size:11px;" onclick="clearAllMasterStep1()">全解除</button>
     </div>
     <div id="master-list"></div>
   </div>
@@ -438,8 +438,8 @@ body {
   </div>
   <div class="panel-row">
     <label>速度</label>
-    <input type="range" id="rate-slider" min="0.5" max="1.5" step="0.1" value="0.9" oninput="updateRate()">
-    <span class="speed-val" id="rate-val">0.9×</span>
+    <input type="range" id="rate-slider" min="0.5" max="1.5" step="0.1" value="1.0" oninput="updateRate()">
+    <span class="speed-val" id="rate-val">1.0×</span>
   </div>
 </div>
 
@@ -949,12 +949,36 @@ function removeMaster(idx) {
   if (!masterSet.size) document.getElementById('master-list-wrap').style.display='none';
   update();
 }
-function clearAllMaster() {
-  if (!confirm(`マスター済み ${masterSet.size} 枚を全て解除しますか？`)) return;
+function clearAllMasterStep1() {
+  const btn = document.getElementById('clear-all-btn');
+  if (!btn) return;
+  btn.textContent = '本当に全解除？';
+  btn.style.background = '#e11d48';
+  btn.style.color = '#fff';
+  btn.onclick = clearAllMasterStep2;
+  // 3秒後に戻す
+  setTimeout(() => {
+    if (btn.textContent === '本当に全解除？') {
+      btn.textContent = '全解除';
+      btn.style.background = '';
+      btn.style.color = '';
+      btn.onclick = clearAllMasterStep1;
+    }
+  }, 3000);
+}
+function clearAllMasterStep2() {
   masterSet.clear(); saveMaster();
   document.getElementById('master-list-wrap').style.display = 'none';
+  const btn = document.getElementById('clear-all-btn');
+  if (btn) {
+    btn.textContent = '全解除';
+    btn.style.background = '';
+    btn.style.color = '';
+    btn.onclick = clearAllMasterStep1;
+  }
   update();
 }
+function clearAllMaster() { clearAllMasterStep1(); }
 function toggleMasterList() {
   if (!masterSet.size) return;
   const w = document.getElementById('master-list-wrap');
@@ -1117,27 +1141,34 @@ function startShadowing() {
 
 // ── Continuous play (英語連続再生・全表示) ────────────────────────
 async function runContinuous() {
-  const active = getActive();
-  if (!active.length) { stopAutoPlay(); return; }
-  const startIdx = currentIndex;
+  let loopCount = 0;
+  while (!autoStopped) {
+    const active = getActive();
+    if (!active.length) { stopAutoPlay(); return; }
+    loopCount++;
+    const startIdx = currentIndex;
 
-  for (let i = 0; i < active.length; i++) {
-    if (autoStopped) break;
-    currentIndex = (startIdx + i) % active.length;
-    update();
-    // 全部表示
-    document.getElementById('answer-wrap').classList.add('show');
-    document.getElementById('main-card').classList.add('revealed');
+    for (let i = 0; i < active.length; i++) {
+      if (autoStopped) break;
+      currentIndex = (startIdx + i) % active.length;
+      update();
+      // 全部表示
+      document.getElementById('answer-wrap').classList.add('show');
+      document.getElementById('main-card').classList.add('revealed');
 
-    const n = i+1, tot = active.length;
-    setAutoPanel(`連続再生 ${n}/${tot}`,'▶ 英語音声を再生中 — 全カード表示・マスター済みはスキップ','');
-    await speakP(); if(autoStopped) break;
-    await delayP(500);
-  }
-  if (!autoStopped) {
-    setAutoPanel('完了！', `🎉 連続再生が完了しました！`, '');
-    await delayP(2000);
-    stopAutoPlay();
+      const n = i+1, tot = active.length;
+      setAutoPanel(
+        `連続再生 ${n}/${tot}（${loopCount}周目）`,
+        '▶ 英語音声を再生中 — ⏹ 停止ボタンで終了',
+        ''
+      );
+      await speakP(); if(autoStopped) break;
+      await delayP(500);
+    }
+    // 一周したら先頭に戻してループ継続
+    if (!autoStopped) {
+      currentIndex = 0;
+    }
   }
 }
 
