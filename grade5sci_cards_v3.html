@@ -763,16 +763,22 @@ function speakOne(text, onEnd) {
 
 function stripTags(html) { return html.replace(/<[^>]+>/g,'').replace(/\s+/g,' ').trim(); }
 
+function getSpeechText(item) {
+  // speech: フィールドがあればそちらを優先、なければ en: のタグを除去して読む
+  if (item.speech) return item.speech;
+  return stripTags(item.en);
+}
+
 function speakCurrent() {
   const a = getActive(); if(!a.length) return;
-  speakOne(stripTags(a[currentIndex].en));
+  speakOne(getSpeechText(a[currentIndex]));
 }
 
 function speakP() {
   return new Promise(resolve => {
     if (autoStopped) { resolve(); return; }
     const a = getActive(); if(!a.length) { resolve(); return; }
-    speakOne(stripTags(a[currentIndex].en), resolve);
+    speakOne(getSpeechText(a[currentIndex]), resolve);
   });
 }
 
