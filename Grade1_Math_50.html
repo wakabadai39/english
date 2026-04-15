@@ -1,0 +1,1200 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>小学1年生 算数英語カード 50</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f0f9f4;
+  --surface: #ffffff;
+  --primary: #16a34a;
+  --primary-light: #dcfce7;
+  --accent: #0891b2;
+  --green: #16a34a;
+  --green-light: #dcfce7;
+  --amber: #d97706;
+  --amber-light: #fef3c7;
+  --red: #e11d48;
+  --text: #1e293b;
+  --muted: #64748b;
+  --border: #86efac;
+  --shadow: 0 4px 24px rgba(22,163,74,0.10);
+  --radius: 18px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+body {
+  font-family: 'Noto Sans JP', sans-serif;
+  background: var(--bg);
+  min-height: 100vh;
+  padding: 16px 12px 48px;
+  color: var(--text);
+}
+.container { max-width: 560px; margin: auto; }
+
+/* ── Header ── */
+.header { text-align: center; margin-bottom: 14px; }
+.header h2 { font-size: 18px; font-weight: 900; color: var(--primary); }
+.header p  { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+/* ── Badges ── */
+.badges { display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; margin-bottom: 10px; }
+.badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 4px 12px; border-radius: 99px; font-size: 11px; font-weight: 700;
+  background: var(--primary-light); color: var(--primary);
+  border: 1px solid var(--border);
+}
+.badge.green { background: var(--green-light); color: var(--green); border-color: #86efac; }
+.badge.amber { background: var(--amber-light); color: var(--amber); border-color: #fcd34d; }
+
+/* ── Progress ── */
+.progress-wrap { background: #bbf7d0; border-radius: 99px; height: 6px; margin-bottom: 4px; overflow: hidden; }
+.progress-bar  { height: 100%; background: var(--primary); border-radius: 99px; transition: width 0.4s ease; }
+.progress-label { text-align: center; font-size: 12px; color: var(--muted); margin-bottom: 10px; }
+
+/* ── Card ── */
+.tap-hint { font-size: 11px; color: var(--muted); margin-bottom: 6px; text-align: center; }
+
+.card {
+  background: var(--surface); border-radius: var(--radius);
+  padding: 28px 20px 20px; box-shadow: var(--shadow);
+  margin-bottom: 12px; position: relative;
+  border: 2px solid var(--border);
+  min-height: 160px;
+  cursor: pointer; user-select: none;
+  transition: transform .1s, border-color .2s;
+}
+.card.tappable:active { transform: scale(0.985); }
+.card.revealed { border-color: var(--primary); }
+.card.no-tap { cursor: default; }
+
+.card-top {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 10px;
+}
+.card-num { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--muted); }
+.cat-label {
+  font-size: 11px; font-weight: 700; letter-spacing: .06em;
+  color: var(--primary); text-align: center; flex: 1;
+}
+.master-wrap { display: flex; align-items: center; gap: 4px; font-size: 11px; color: var(--muted); }
+.master-wrap input[type=checkbox] { width: 17px; height: 17px; accent-color: var(--green); cursor: pointer; }
+.master-wrap.disabled { opacity: .3; pointer-events: none; }
+
+.main-text {
+  font-size: clamp(15px, 4vw, 19px); font-weight: 700;
+  line-height: 1.65; text-align: center; margin-bottom: 14px;
+}
+.main-text mark { background: none; color: var(--primary); font-weight: 900; }
+
+.answer-wrap {
+  opacity: 0; transform: translateY(5px);
+  transition: opacity .25s, transform .25s;
+  pointer-events: none;
+}
+.answer-wrap.show { opacity: 1; transform: translateY(0); pointer-events: auto; }
+
+.answer-ja {
+  font-size: clamp(13px, 3.5vw, 15px); font-weight: 700;
+  color: var(--accent); text-align: center; line-height: 1.6;
+  background: #f0f9ff; border-radius: 10px; padding: 10px 14px; margin-bottom: 8px;
+}
+.answer-tip {
+  font-size: 12px; font-weight: 600; color: var(--green);
+  text-align: left; padding: 0 4px; line-height: 1.6;
+}
+.answer-tip::before { content: '💡 '; }
+
+.master-badge {
+  display: none; text-align: center; margin-top: 8px;
+  background: var(--green-light); color: var(--green);
+  padding: 2px 10px; border-radius: 99px; font-size: 10px; font-weight: 700;
+}
+.master-badge.show { display: block; }
+
+/* ── No active ── */
+.no-active {
+  background: var(--amber-light); border-radius: 12px; padding: 16px;
+  text-align: center; font-size: 14px; color: var(--amber); font-weight: 700;
+  display: none; margin-bottom: 12px;
+}
+.no-active.show { display: block; }
+
+/* ── Auto panel ── */
+.auto-panel {
+  background: var(--surface); border-radius: var(--radius);
+  padding: 14px 18px; box-shadow: var(--shadow); margin-bottom: 12px;
+  display: none; border-left: 4px solid var(--primary);
+}
+.auto-panel.show { display: block; }
+.auto-step-title { font-size: 12px; font-weight: 900; color: var(--primary); margin-bottom: 4px; }
+.auto-instruction { font-size: 14px; font-weight: 700; color: var(--text); line-height: 1.5; }
+.auto-count { font-family: 'DM Mono', monospace; font-size: 12px; color: var(--muted); margin-top: 4px; }
+
+/* ── Filter panel ── */
+.filter-panel {
+  background: var(--surface); border-radius: var(--radius);
+  padding: 14px 16px; box-shadow: var(--shadow); margin-bottom: 12px;
+}
+.filter-header { display: flex; align-items: center; justify-content: space-between; cursor: pointer; user-select: none; }
+.filter-header-left { font-size: 12px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; }
+.filter-current {
+  font-size: 12px; font-weight: 700; color: var(--primary);
+  background: var(--primary-light); padding: 3px 10px; border-radius: 99px;
+  border: 1px solid var(--border); max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.filter-toggle-icon { font-size: 12px; color: var(--muted); transition: transform .2s; margin-left: 6px; }
+.filter-toggle-icon.open { transform: rotate(180deg); }
+.filter-chips-wrap { display: none; margin-top: 10px; }
+.filter-chips-wrap.open { display: block; }
+.chip-all {
+  display: block; width: 100%; padding: 8px 14px; margin-bottom: 8px;
+  border-radius: 10px; font-size: 12px; font-weight: 700; cursor: pointer;
+  border: 2px solid var(--border); background: #fff; color: var(--muted);
+  text-align: left; font-family: 'Noto Sans JP', sans-serif; transition: all .15s;
+}
+.chip-all.active { background: var(--primary-light); color: var(--primary); border-color: var(--primary); }
+.cat-row {
+  display: flex; align-items: center; gap: 8px; padding: 8px 10px;
+  border-radius: 10px; cursor: pointer; border: 2px solid transparent;
+  background: #fff; margin-bottom: 5px; transition: all .15s; user-select: none;
+}
+.cat-row.active { background: var(--primary-light); border-color: var(--primary); }
+.cat-row-name { flex: 1; font-size: 13px; font-weight: 700; color: var(--text); }
+.cat-row.active .cat-row-name { color: var(--primary); }
+.cat-row-count {
+  font-family: 'DM Mono', monospace; font-size: 11px; color: var(--muted);
+  background: #f1f5f9; padding: 2px 8px; border-radius: 99px; font-weight: 600;
+}
+.cat-row.active .cat-row-count { background: #fff; color: var(--primary); }
+.cat-dot { width: 8px; height: 8px; border-radius: 50%; background: #e2e8f0; flex-shrink: 0; }
+.cat-dot.done { background: var(--green); }
+
+/* ── Panel / controls ── */
+.panel {
+  background: var(--surface); border-radius: var(--radius);
+  padding: 14px 16px; box-shadow: var(--shadow); margin-bottom: 12px;
+}
+.panel-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.panel-row + .panel-row { margin-top: 8px; }
+.panel label { font-size: 12px; color: var(--muted); font-weight: 700; white-space: nowrap; }
+.panel select {
+  flex: 1; font-size: 12px; border: 1px solid var(--border);
+  border-radius: 8px; padding: 4px 8px; background: #fff;
+  color: var(--text); font-family: 'Noto Sans JP', sans-serif;
+}
+.panel input[type=range] { flex: 1; min-width: 80px; accent-color: var(--primary); }
+.speed-val { font-family: 'DM Mono', monospace; font-size: 13px; font-weight: 600; color: var(--primary); min-width: 32px; }
+
+/* ── Buttons ── */
+.btn-row { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin-bottom: 10px; }
+.btn {
+  border: none; border-radius: 99px; padding: 10px 18px;
+  font-size: 13px; font-weight: 700; font-family: 'Noto Sans JP', sans-serif;
+  cursor: pointer; transition: opacity .15s, transform .1s;
+  display: inline-flex; align-items: center; gap: 5px;
+}
+.btn:active { transform: scale(0.94); opacity: .85; }
+.btn-primary   { background: var(--primary); color: #fff; }
+.btn-secondary { background: #e2e8f0; color: var(--text); }
+.btn-green     { background: var(--green); color: #fff; }
+.btn-red       { background: var(--red); color: #fff; }
+.btn-amber     { background: var(--amber); color: #fff; }
+.btn-blue      { background: #2563eb; color: #fff; }
+.btn-on        { background: var(--green); color: #fff; }
+
+/* ── Master list ── */
+.master-summary {
+  background: var(--green-light); border-radius: 12px; padding: 10px 14px;
+  font-size: 12px; color: var(--green); font-weight: 700;
+  text-align: center; margin-bottom: 10px; display: none; cursor: pointer; user-select: none;
+}
+.master-summary.show { display: block; }
+
+/* ── Help button ── */
+.help-btn {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 5px 14px; border-radius: 99px;
+  border: 1px solid var(--border); background: var(--primary-light);
+  color: var(--primary); font-size: 12px; font-weight: 700;
+  cursor: pointer; margin-top: 8px;
+  font-family: 'Noto Sans JP', sans-serif;
+}
+
+/* ── Guide modal overlay ── */
+.guide-overlay {
+  display: none;
+  position: fixed; inset: 0; z-index: 100;
+  background: rgba(0,0,0,0.5);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.guide-overlay.show { display: block; }
+.guide-modal {
+  background: var(--bg);
+  max-width: 520px; margin: 0 auto;
+  min-height: 100vh;
+  padding: 0 0 60px;
+  position: relative;
+}
+.guide-modal-header {
+  position: sticky; top: 0; z-index: 10;
+  background: var(--primary);
+  color: #fff;
+  padding: 16px 20px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.guide-modal-header h2 { font-size: 16px; font-weight: 900; }
+.guide-close {
+  background: rgba(255,255,255,0.2); border: none; border-radius: 99px;
+  color: #fff; font-size: 13px; font-weight: 700; padding: 5px 14px;
+  cursor: pointer; font-family: 'Noto Sans JP', sans-serif;
+}
+.guide-body { padding: 14px 14px 20px; }
+
+/* guide sections */
+.g-section {
+  background: #fff; border-radius: 14px;
+  border: 1px solid #d1fae5;
+  margin-bottom: 10px; overflow: hidden;
+}
+.g-head {
+  padding: 11px 14px;
+  background: #f0fdf4;
+  border-bottom: 1px solid #d1fae5;
+  display: flex; align-items: center; gap: 8px;
+  font-size: 13px; font-weight: 700; color: var(--text);
+}
+.g-body { padding: 14px; }
+.g-text { font-size: 12px; color: var(--muted); line-height: 1.8; margin-bottom: 10px; }
+.g-text:last-child { margin-bottom: 0; }
+.g-text strong { color: var(--text); font-weight: 700; }
+
+/* guide step */
+.g-step { display: flex; gap: 9px; margin-bottom: 9px; align-items: flex-start; }
+.g-step:last-child { margin-bottom: 0; }
+.g-step-num {
+  min-width: 22px; height: 22px; border-radius: 50%;
+  background: var(--primary-light); color: var(--primary);
+  font-size: 11px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; margin-top: 2px;
+}
+.g-step-text { font-size: 12px; color: var(--muted); line-height: 1.8; }
+.g-step-text strong { color: var(--text); font-weight: 700; }
+
+/* guide method blocks */
+.g-method {
+  border-left: 3px solid var(--border);
+  padding: 8px 12px; margin-bottom: 9px;
+  border-radius: 0 8px 8px 0;
+  background: #f0fdf4;
+}
+.g-method:last-child { margin-bottom: 0; }
+.g-method-title { font-size: 12px; font-weight: 700; color: var(--primary); margin-bottom: 4px; }
+.g-method-body { font-size: 12px; color: var(--muted); line-height: 1.8; }
+.g-method-body strong { color: var(--text); font-weight: 700; }
+
+.g-amber { border-left-color: #fcd34d; background: #fffbeb; }
+.g-amber .g-method-title { color: #92400e; }
+.g-amber .g-method-body { color: #78350f; }
+.g-blue  { border-left-color: #93c5fd; background: #eff6ff; }
+.g-blue  .g-method-title { color: #1e40af; }
+.g-blue  .g-method-body  { color: #1e3a8a; }
+
+/* shadow steps inside guide */
+.g-shadow-steps { background: #f0fdf4; border-radius: 10px; padding: 10px 12px; margin-top: 8px; }
+.g-s-step { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 7px; }
+.g-s-step:last-child { margin-bottom: 0; }
+.g-s-badge {
+  min-width: 52px; padding: 2px 0; text-align: center;
+  border-radius: 99px; font-size: 10px; font-weight: 700;
+  flex-shrink: 0; margin-top: 2px;
+}
+.gsb-g { background: var(--primary-light); color: #166534; }
+.gsb-b { background: #dbeafe; color: #1e40af; }
+.g-s-text { font-size: 11px; color: var(--muted); line-height: 1.75; }
+.g-s-text strong { color: var(--text); font-weight: 700; }
+
+/* flow arrows */
+.g-flow { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin: 10px 0 6px; }
+.g-flow-tag {
+  padding: 4px 11px; border-radius: 99px;
+  font-size: 11px; font-weight: 700;
+}
+.gft-green { background: var(--primary-light); color: #166534; border: 1px solid #86efac; }
+.gft-amber { background: #fef3c7; color: #92400e; border: 1px solid #fcd34d; }
+.gft-blue  { background: #dbeafe; color: #1e40af; border: 1px solid #93c5fd; }
+.g-flow-arr { color: var(--muted); font-size: 13px; }
+
+/* btn demo in guide */
+.gbd { display:inline-flex;align-items:center;gap:4px;padding:5px 12px;border-radius:99px;font-size:11px;font-weight:700;border:none;margin:3px; }
+.gbd-sec  { background:#e2e8f0;color:#1e293b; }
+.gbd-pri  { background:#16a34a;color:#fff; }
+.gbd-amb  { background:#d97706;color:#fff; }
+.gbd-blue { background:#2563eb;color:#fff; }
+.gbd-mode { background:#e2e8f0;color:#1e293b; }
+
+.g-note {
+  background: #f0fdf4; border: 1px solid #86efac;
+  border-radius: 10px; padding: 10px 12px;
+  font-size: 12px; color: #166534; line-height: 1.8; margin-top: 10px;
+}
+.g-note strong { font-weight: 700; }
+
+/* tag inline */
+.gti { display:inline-block;padding:1px 7px;border-radius:99px;font-size:10px;font-weight:700;vertical-align:middle; }
+.gti-g { background:var(--primary-light);color:#166534; }
+.gti-a { background:#fef3c7;color:#92400e; }
+.gti-b { background:#dbeafe;color:#1e40af; }
+</style>
+</head>
+<body>
+<div class="container">
+
+<div class="header">
+  <h2>🔢 小学1年生 算数英語カード</h2>
+  <p>数の読み方・順序・足し算・引き算</p>
+  <button class="help-btn" onclick="openGuide()">❓ 使い方ガイド</button>
+</div>
+
+<div class="badges">
+  <div class="badge" id="mode-badge">📖 英 → 日</div>
+  <div class="badge" id="order-badge">順番通り</div>
+  <div class="badge green" id="master-badge">マスター: 0 / 43</div>
+</div>
+
+<div class="progress-wrap"><div class="progress-bar" id="progress-bar" style="width:2%"></div></div>
+<div class="progress-label">カード <span id="cur-num">1</span> / <span id="tot-num">43</span></div>
+
+<div class="no-active" id="no-active">
+  ✅ このカテゴリをすべてマスターしました！<br>
+  <span style="font-size:12px;font-weight:600;">チェックを外すか別のカテゴリを選んでください。</span>
+</div>
+
+<div class="auto-panel" id="auto-panel">
+  <div class="auto-step-title" id="auto-step-title">STEP 1</div>
+  <div class="auto-instruction" id="auto-instruction">音声を聴いてください。</div>
+  <div class="auto-count" id="auto-count"></div>
+</div>
+
+<div class="tap-hint" id="tap-hint">👆 カードをタップして日本語訳・解説を表示</div>
+
+<div class="card tappable" id="main-card" onclick="handleTap()">
+  <div class="card-top">
+    <div class="card-num" id="card-num">01</div>
+    <div class="cat-label" id="card-cat">生物・生態系</div>
+    <div class="master-wrap" id="master-wrap">
+      <span>マスター</span>
+      <input type="checkbox" id="master-cb" onchange="toggleMaster(event)" onclick="event.stopPropagation()">
+    </div>
+  </div>
+  <div class="main-text" id="main-text">Loading...</div>
+  <div class="answer-wrap" id="answer-wrap">
+    <div class="answer-ja" id="answer-ja"></div>
+    <div class="answer-tip" id="answer-tip" style="display:none"></div>
+  </div>
+  <div class="master-badge" id="mastered-badge">✔ マスター済</div>
+</div>
+
+<div class="master-summary" id="master-summary" onclick="toggleMasterList()"></div>
+<div id="master-list-wrap" style="display:none;margin-bottom:12px;">
+  <div style="background:#fff;border-radius:16px;padding:14px 16px;box-shadow:var(--shadow);">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+      <span style="font-size:13px;font-weight:900;color:var(--green);">✅ マスター済みリスト</span>
+      <button class="btn btn-secondary" id="clear-all-btn" style="padding:4px 12px;font-size:11px;" onclick="clearAllMasterStep1()">全解除</button>
+    </div>
+    <div id="master-list"></div>
+  </div>
+</div>
+
+<!-- Category filter -->
+<div class="filter-panel">
+  <div class="filter-header" onclick="toggleFilterPanel()">
+    <div class="filter-header-left">📂 カテゴリを選ぶ</div>
+    <div style="display:flex;align-items:center;gap:4px;">
+      <div class="filter-current" id="filter-current-label">すべて</div>
+      <span class="filter-toggle-icon" id="filter-toggle-icon">▼</span>
+    </div>
+  </div>
+  <div class="filter-chips-wrap" id="filter-chips-wrap">
+    <button class="chip-all active" id="chip-all" onclick="selectCategory('all')">🎯 すべて表示</button>
+    <div id="cat-rows"></div>
+  </div>
+</div>
+
+<!-- Voice / speed panel -->
+<div class="panel">
+  <div class="panel-row" style="margin-bottom:8px;">
+    <label>🔊 音声優先</label>
+    <select id="voice-pref" onchange="applyVoicePref()">
+      <option value="US">🇺🇸 US優先</option>
+      <option value="GB">🇬🇧 GB優先</option>
+    </select>
+    <select id="voice-select" style="flex:2;"></select>
+  </div>
+  <div class="panel-row">
+    <label>速度</label>
+    <input type="range" id="rate-slider" min="0.5" max="1.5" step="0.1" value="1.0" oninput="updateRate()">
+    <span class="speed-val" id="rate-val">1.0×</span>
+  </div>
+</div>
+
+<!-- Normal controls -->
+<div id="normal-controls">
+  <div class="btn-row">
+    <button class="btn btn-secondary" onclick="prev()">← 戻る</button>
+    <button class="btn btn-primary"   onclick="speakCurrent()">🔊 音声</button>
+    <button class="btn btn-secondary" onclick="next()">次へ →</button>
+  </div>
+  <div class="btn-row">
+    <button class="btn btn-secondary" id="random-btn" onclick="toggleRandom()">🔀 ランダム: OFF</button>
+    <button class="btn btn-secondary" onclick="switchMode()">🔄 英⇄日</button>
+  </div>
+  <div class="btn-row">
+    <button class="btn btn-amber" onclick="startShadowing()">🗣️ シャドウイング</button>
+    <button class="btn btn-blue"  onclick="startContinuous()">▶ 連続再生</button>
+  </div>
+</div>
+
+<!-- Auto controls (shadowing / continuous) -->
+<div id="auto-controls" style="display:none;">
+  <div class="btn-row">
+    <button class="btn btn-red" onclick="stopAutoPlay()">⏹ 停止</button>
+  </div>
+</div>
+
+</div><!-- /container -->
+
+<!-- ── Guide Modal ───────────────────────────────────────────── -->
+<div class="guide-overlay" id="guide-overlay" onclick="handleOverlayClick(event)">
+<div class="guide-modal" id="guide-modal">
+
+  <div class="guide-modal-header">
+    <h2>❓ 使い方ガイド</h2>
+    <button class="guide-close" onclick="closeGuide()">✕ 閉じる</button>
+  </div>
+
+  <div class="guide-body">
+
+    <!-- ① ボタン説明 -->
+    <div class="g-section">
+      <div class="g-head"><span>🔘</span> 各ボタンの説明</div>
+      <div class="g-body">
+        <div style="margin-bottom:12px">
+          <div><span class="gbd gbd-sec">← 戻る</span><span class="gbd gbd-pri">🔊 音声</span><span class="gbd gbd-sec">次へ →</span></div>
+          <p class="g-text" style="margin-top:6px">カードを前後に移動します。<strong>音声</strong>ボタンで英語を読み上げます。</p>
+        </div>
+        <div style="margin-bottom:12px">
+          <div><span class="gbd gbd-amb">🗣️ シャドウイング</span><span class="gbd gbd-blue">▶ 連続再生</span></div>
+          <p class="g-text" style="margin-top:6px">
+            <span class="gti gti-a">シャドウイング</span> 4ステップの反復練習を自動で進めます。<br>
+            <span class="gti gti-b">連続再生</span> 全カードを英語音声で流し聴きします（全情報表示）。
+          </p>
+        </div>
+        <div>
+          <div><span class="gbd gbd-sec">🔀 ランダム: OFF</span><span class="gbd gbd-mode">🔄 英⇄日</span></div>
+          <p class="g-text" style="margin-top:6px">ランダムでカードをシャッフルします。<strong>英⇄日</strong>で日本語を見て英語を答えるスピーキング練習モードになります。</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ② まずは1枚ずつ -->
+    <div class="g-section">
+      <div class="g-head"><span>👆</span> まずは1枚ずつ — 基本の練習法</div>
+      <div class="g-body">
+        <p class="g-text">英語に慣れていない方は、まずこの方法から始めましょう。1枚のカードとじっくり向き合います。</p>
+        <div class="g-method">
+          <div class="g-method-title">手順</div>
+          <div class="g-method-body">
+            <div class="g-step">
+              <div class="g-step-num">1</div>
+              <div class="g-step-text"><strong>音声を聴く</strong> — 英語が表示された状態で「🔊 音声」を押し、意味を考えながら聴きます。</div>
+            </div>
+            <div class="g-step">
+              <div class="g-step-num">2</div>
+              <div class="g-step-text"><strong>カードをタップ</strong> — 日本語訳と💡解説を確認します。</div>
+            </div>
+            <div class="g-step">
+              <div class="g-step-num">3</div>
+              <div class="g-step-text"><strong>もう一度音声を聴く</strong> → 聴き終わったら<strong>自分で声に出して繰り返します（リピートアフターミー）</strong>。2〜3回繰り返しましょう。</div>
+            </div>
+            <div class="g-step">
+              <div class="g-step-num">4</div>
+              <div class="g-step-text">覚えたら<strong>右上のマスターにチェック</strong>を入れます → 自動で次のカードへ進みます。マスターしたカードは出題されなくなります。</div>
+            </div>
+          </div>
+        </div>
+        <div class="g-note">この練習を続けていくうちに、<strong>音声を聴きながら同時に声に出せる（シャドウイング）</strong>ようになっていきます。慣れてきたら次のシャドウイングに挑戦しましょう。</div>
+      </div>
+    </div>
+
+    <!-- ③ シャドウイング -->
+    <div class="g-section">
+      <div class="g-head"><span>🗣️</span> シャドウイング自動再生 — 上達を加速させる</div>
+      <div class="g-body">
+        <p class="g-text">1枚ずつの練習でカードに慣れてきたら、<span class="gti gti-a">シャドウイング</span>を使いましょう。「聴く → まねする → 見ながら → 見ずに」という4ステップを、全カードで自動的に繰り返します。この流れこそが英語習得の最も効率的な方法です。</p>
+        <div class="g-method g-amber">
+          <div class="g-method-title">4ステップの流れ（1カードごとに自動で進みます）</div>
+          <div class="g-shadow-steps">
+            <div class="g-s-step">
+              <span class="g-s-badge gsb-g">STEP 1</span>
+              <div class="g-s-text"><strong>文字を見ずに2回聴く</strong> — まず耳だけで音とリズムをつかみます。</div>
+            </div>
+            <div class="g-s-step">
+              <span class="g-s-badge gsb-g">STEP 2</span>
+              <div class="g-s-text"><strong>文字を見ずにシャドウイング×2</strong> — 音声に重ねるように声に出します。</div>
+            </div>
+            <div class="g-s-step">
+              <span class="g-s-badge gsb-b">STEP 3</span>
+              <div class="g-s-text"><strong>日本語訳を見ながらシャドウイング×2</strong> — 意味を確認しながら声に出します。</div>
+            </div>
+            <div class="g-s-step">
+              <span class="g-s-badge gsb-g">STEP 4</span>
+              <div class="g-s-text"><strong>また文字を見ずにシャドウイング×2</strong> — 最後に何も見ずに声に出し、定着を確認します。</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ④ 連続再生 -->
+    <div class="g-section">
+      <div class="g-head"><span>▶</span> 連続再生 — 復習と聴き流しに</div>
+      <div class="g-body">
+        <div class="g-method g-blue">
+          <div class="g-method-title">こんな使い方がおすすめ</div>
+          <div class="g-method-body">マスター済みのカードは自動でスキップされ、未マスターのカードだけが英語音声で流れます。日本語訳・解説も全表示されるので、<strong>通学中の聴き流し</strong>や<strong>寝る前の復習</strong>に最適です。</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ⑤ 推奨サイクル -->
+    <div class="g-section">
+      <div class="g-head"><span>🔁</span> おすすめの学習サイクル</div>
+      <div class="g-body">
+        <div class="g-flow">
+          <span class="g-flow-tag gft-green">1枚ずつ練習</span>
+          <span class="g-flow-arr">→</span>
+          <span class="g-flow-tag gft-green">マスターにチェック</span>
+          <span class="g-flow-arr">→</span>
+          <span class="g-flow-tag gft-amber">シャドウイング</span>
+          <span class="g-flow-arr">→</span>
+          <span class="g-flow-tag gft-blue">連続再生で復習</span>
+        </div>
+        <p class="g-text">まず1枚ずつじっくり取り組んでカードに慣れる → 覚えたものをマスターに → シャドウイングで発音と定着を強化 → 連続再生で総復習。このサイクルを繰り返すことで着実に力がつきます。</p>
+        <div class="g-note"><strong>スピーキング練習も忘れずに。</strong> 「🔄 英⇄日」ボタンで日本語表示モードに切り替え、日本語を見て英語を声に出す練習をすると、さらに効果的です。</div>
+      </div>
+    </div>
+
+    <!-- ⑥ 音声設定 -->
+    <div class="g-section">
+      <div class="g-head"><span>🔊</span> 音声・速度の設定</div>
+      <div class="g-body">
+        <div class="g-step">
+          <div class="g-step-num">1</div>
+          <div class="g-step-text"><strong>US優先 / GB優先</strong>でアクセントを切り替えられます（デフォルト: 🇺🇸 US優先）。</div>
+        </div>
+        <div class="g-step">
+          <div class="g-step-num">2</div>
+          <div class="g-step-text">速度スライダーで<strong>0.5倍〜1.5倍</strong>に調整できます。最初は<strong>0.8×</strong>くらいのゆっくりめがおすすめです。慣れてきたら1.0×に戻しましょう。</div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /guide-body -->
+</div><!-- /guide-modal -->
+</div><!-- /guide-overlay -->
+
+<script>
+// ── Data ──────────────────────────────────────────────────────────
+const CATS = {
+  '数の読み方①〜⑩': '#e85d26',
+  '数の読み方11〜30': '#2563c4',
+  '数の読み方40〜100': '#16a34a',
+  '順序・比較': '#d97706',
+  '足し算': '#9333ea',
+  '引き算': '#0891b2',
+};
+
+const phrases = [
+  {cat:'数の読み方①〜⑩', en:'<mark>1</mark> is <mark>one</mark>. <mark>2</mark> is <mark>two</mark>. <mark>3</mark> is <mark>three</mark>. <mark>4</mark> is <mark>four</mark>. <mark>5</mark> is <mark>five</mark>.', ja:'1＝one（ワン）、2＝two（トゥー）、3＝three（スリー）、4＝four（フォー）、5＝five（ファイブ）', tip:'"three" と "tree" は同じ発音。"four" と "for" も同じ発音！'},
+  {cat:'数の読み方①〜⑩', en:'<mark>6</mark> is <mark>six</mark>. <mark>7</mark> is <mark>seven</mark>. <mark>8</mark> is <mark>eight</mark>. <mark>9</mark> is <mark>nine</mark>. <mark>10</mark> is <mark>ten</mark>.', ja:'6＝six（シックス）、7＝seven（セブン）、8＝eight（エイト）、9＝nine（ナイン）、10＝ten（テン）', tip:'"eight" のスペルに注意。gh は読まない。"e-i-g-h-t" で「エイト」'},
+  {cat:'数の読み方11〜30', en:'<mark>11</mark> is <mark>eleven</mark>.', ja:'11 は eleven（イレブン）です。', tip:'"eleven" は特別な形。teen でも ty でもない唯一の形！'},
+  {cat:'数の読み方11〜30', en:'<mark>12</mark> is <mark>twelve</mark>.', ja:'12 は twelve（トゥエルブ）です。', tip:'"twelve" も特別な形。11 と 12 は丸覚えしよう。'},
+  {cat:'数の読み方11〜30', en:'<mark>13</mark> is <mark>thirteen</mark>.', ja:'13 は thirteen（サーティーン）です。', tip:'"three" + "teen" ＝ thirteen。three の r が少し変わる。'},
+  {cat:'数の読み方11〜30', en:'<mark>14</mark> is <mark>fourteen</mark>.', ja:'14 は fourteen（フォーティーン）です。', tip:'"four" + "teen" ＝ fourteen。4 の "four" そのまま使う！'},
+  {cat:'数の読み方11〜30', en:'<mark>15</mark> is <mark>fifteen</mark>.', ja:'15 は fifteen（フィフティーン）です。', tip:'"five" → "fif" + "teen"。five の ve が f に変わる点に注意！'},
+  {cat:'数の読み方11〜30', en:'<mark>16</mark> is <mark>sixteen</mark>. <mark>17</mark> is <mark>seventeen</mark>. <mark>18</mark> is <mark>eighteen</mark>.', ja:'16＝sixteen、17＝seventeen、18＝eighteen', tip:'"eighteen" は "eight" + "teen"。e が1つ消える（eighTEEN）。'},
+  {cat:'数の読み方11〜30', en:'<mark>19</mark> is <mark>nineteen</mark>. <mark>20</mark> is <mark>twenty</mark>.', ja:'19＝nineteen（ナインティーン）、20＝twenty（トゥエンティ）', tip:'"twenty" は "two" のなかまだが形が変わる。20 から "ty" 系になる！'},
+  {cat:'数の読み方11〜30', en:'<mark>21</mark> is <mark>twenty-one</mark>. <mark>22</mark> is <mark>twenty-two</mark>. <mark>23</mark> is <mark>twenty-three</mark>.', ja:'21＝twenty-one、22＝twenty-two、23＝twenty-three', tip:'20以上は「twenty + 数字」をハイフンでつなぐ。twenty-one, twenty-two…'},
+  {cat:'数の読み方11〜30', en:'<mark>24</mark> is <mark>twenty-four</mark>. <mark>25</mark> is <mark>twenty-five</mark>. <mark>26</mark> is <mark>twenty-six</mark>.', ja:'24＝twenty-four、25＝twenty-five、26＝twenty-six', tip:'ハイフン（-）を忘れずに！twenty-four のように書く。'},
+  {cat:'数の読み方11〜30', en:'<mark>27</mark> is <mark>twenty-seven</mark>. <mark>28</mark> is <mark>twenty-eight</mark>. <mark>29</mark> is <mark>twenty-nine</mark>.', ja:'27＝twenty-seven、28＝twenty-eight、29＝twenty-nine', tip:'"twenty-eight" は「トゥエニエイト」と続けて言う。'},
+  {cat:'数の読み方11〜30', en:'<mark>30</mark> is <mark>thirty</mark>.', ja:'30 は thirty（サーティ）です。', tip:'"three" → "thir" + "ty"。three の ee が消えて "thir" になる。'},
+  {cat:'数の読み方11〜30', en:'<mark>How do you say 25 in English?</mark> You say <mark>twenty-five</mark>.', ja:'25 は英語でどう言う？ → twenty-five です。', tip:'授業でよく聞かれる表現。"How do you say … in English?" ＝ 英語で何と言う？'},
+  {cat:'数の読み方40〜100', en:'<mark>40</mark> is <mark>forty</mark>.', ja:'40 は forty（フォーティ）です。', tip:'"four" → "for" + "ty"。u が消えて "forty"。"fourteen" とスペルが違う！'},
+  {cat:'数の読み方40〜100', en:'<mark>50</mark> is <mark>fifty</mark>.', ja:'50 は fifty（フィフティ）です。', tip:'"five" → "fif" + "ty"。fifteen と同じく v が f になる。'},
+  {cat:'数の読み方40〜100', en:'<mark>60</mark> is <mark>sixty</mark>.', ja:'60 は sixty（シックスティ）です。', tip:'"six" + "ty" ＝ sixty。そのまま繋げるだけ！'},
+  {cat:'数の読み方40〜100', en:'<mark>70</mark> is <mark>seventy</mark>.', ja:'70 は seventy（セブンティ）です。', tip:'"seven" + "ty" ＝ seventy。そのまま繋げる。'},
+  {cat:'数の読み方40〜100', en:'<mark>80</mark> is <mark>eighty</mark>.', ja:'80 は eighty（エイティ）です。', tip:'"eight" + "y" ＝ eighty。"t" が1つ消える感じ。'},
+  {cat:'数の読み方40〜100', en:'<mark>90</mark> is <mark>ninety</mark>.', ja:'90 は ninety（ナインティ）です。', tip:'"nine" + "ty" ＝ ninety。e が1つ消える。'},
+  {cat:'数の読み方40〜100', en:'<mark>100</mark> is <mark>one hundred</mark>.', ja:'100 は one hundred（ワン ハンドレッド）です。', tip:'"hundred" ＝ 百。必ず "one hundred" と "one" をつけて言う。'},
+  {cat:'数の読み方40〜100', en:'<mark>Count by tens</mark>: ten, twenty, thirty, forty, fifty, sixty, seventy, eighty, ninety, one hundred.', ja:'10ずつ数えましょう: 10, 20, 30, 40, 50, 60, 70, 80, 90, 100', tip:'"Count by tens" ＝ 10 ずつ数える。全部まとめて覚えよう！'},
+  {cat:'順序・比較', en:'<mark>First</mark> is number one. <mark>Second</mark> is number two. <mark>Third</mark> is number three.', ja:'first＝1番目、second＝2番目、third＝3番目', tip:'1st, 2nd, 3rd は特別な形。4番目からは "fourth, fifth…" と規則的になる。'},
+  {cat:'順序・比較', en:'<mark>Fourth</mark> is 4th. <mark>Fifth</mark> is 5th. <mark>Sixth</mark> is 6th. <mark>Seventh</mark> is 7th.', ja:'fourth＝4番目、fifth＝5番目、sixth＝6番目、seventh＝7番目', tip:'"fifth" は five → fif + th。"fourth" は four + th。'},
+  {cat:'順序・比較', en:'<mark>Eighth</mark> is 8th. <mark>Ninth</mark> is 9th. <mark>Tenth</mark> is 10th.', ja:'eighth＝8番目、ninth＝9番目、tenth＝10番目', tip:'"ninth" は nine の e が消える。"eighth" は eight + h。'},
+  {cat:'順序・比較', en:'<mark>Which is bigger</mark>, 7 or 5? <mark>7 is bigger</mark> than 5.', ja:'7 と 5 どちらが大きい？ → 7 の方が大きい。', tip:'"bigger than" ＝ 〜より大きい。"bigger" は big の比較級。'},
+  {cat:'順序・比較', en:'<mark>Which is smaller</mark>, 3 or 8? <mark>3 is smaller</mark> than 8.', ja:'3 と 8 どちらが小さい？ → 3 の方が小さい。', tip:'"smaller than" ＝ 〜より小さい。'},
+  {cat:'順序・比較', en:'<mark>What number comes between</mark> 4 and 6? <mark>5</mark> comes between 4 and 6.', ja:'4 と 6 の間の数は何？ → 5 です。', tip:'"between A and B" ＝ A と B の間。'},
+  {cat:'順序・比較', en:'<mark>What comes next</mark>? 1, 2, 3, 4, … <mark>5</mark> comes next!', ja:'次は何？ 1, 2, 3, 4, … → 次は 5 です！', tip:'"What comes next?" ＝ 次は何？ 数列の問題でよく使う。'},
+  {cat:'順序・比較', en:'<mark>Count from 1 to 10</mark>: one, two, three, four, five, six, seven, eight, nine, ten.', ja:'1から10まで数えましょう。', tip:'"Count from A to B" ＝ A から B まで数える。'},
+  {cat:'順序・比較', en:'<mark>How many</mark> apples are there? There are <mark>six</mark> apples.', ja:'リンゴは何個ありますか？ → 6 個あります。', tip:'"How many?" ＝ いくつ？ 数を聞く時の基本フレーズ。'},
+  {cat:'順序・比較', en:'<mark>Put them in order</mark> from smallest to biggest: 3, 7, 1, 5. → 1, 3, 5, 7.', ja:'小さい順に並べましょう: 3, 7, 1, 5 → 1, 3, 5, 7', tip:'"Put in order" ＝ 順番に並べる。"from smallest to biggest" ＝ 小さい順に。'},
+  {cat:'足し算', en:'<mark>1 plus 1</mark> equals <mark>2</mark>. (1 + 1 = 2)', ja:'1 足す 1 は 2 です。', tip:'"plus" ＝ 足す（+）。"equals" ＝ 等しい（=）。'},
+  {cat:'足し算', en:'<mark>2 plus 3</mark> equals <mark>5</mark>. (2 + 3 = 5)', ja:'2 足す 3 は 5 です。', tip:'"2 plus 3 equals 5" をそのまま英語で言えるようにしよう。'},
+  {cat:'足し算', en:'<mark>5 plus 4</mark> equals <mark>9</mark>. (5 + 4 = 9)', ja:'5 足す 4 は 9 です。', tip:'足し算の答えは "sum（和）" という。"The sum is 9."'},
+  {cat:'足し算', en:'<mark>6 plus 7</mark> equals <mark>13</mark>. (6 + 7 = 13)', ja:'6 足す 7 は 13 です。', tip:'"equals" のかわりに "is" も使える。"6 plus 7 is 13."'},
+  {cat:'足し算', en:'<mark>8 plus 5</mark> equals <mark>13</mark>. (8 + 5 = 13)', ja:'8 足す 5 は 13 です。', tip:'"add" も "plus" と同じ意味。"Add 8 and 5." ＝「8 と 5 を足して」'},
+  {cat:'足し算', en:'<mark>10 plus 10</mark> equals <mark>20</mark>. (10 + 10 = 20)', ja:'10 足す 10 は 20 です。', tip:'10 + 10 = 20。"twenty" の読み方を確認しよう。'},
+  {cat:'足し算', en:'<mark>What is 4 plus 6?</mark> The answer is <mark>10</mark>.', ja:'4 足す 6 はいくつ？ → 答えは 10 です。', tip:'"What is A plus B?" ＝ A + B はいくつ？ テストでよく出る質問文。'},
+  {cat:'足し算', en:'<mark>Add 9 and 3.</mark> The sum is <mark>12</mark>. (9 + 3 = 12)', ja:'9 と 3 を足しましょう。和は 12 です。', tip:'"Add A and B" ＝ A と B を足す。"sum" ＝ 和（足した答え）。'},
+  {cat:'足し算', en:'<mark>3 plus 4 plus 2</mark> equals <mark>9</mark>. (3 + 4 + 2 = 9)', ja:'3 足す 4 足す 2 は 9 です。', tip:'3つの数を足すこともある。"plus" を2回使う。'},
+  {cat:'引き算', en:'<mark>5 minus 2</mark> equals <mark>3</mark>. (5 − 2 = 3)', ja:'5 引く 2 は 3 です。', tip:'"minus" ＝ 引く（−）。"5 minus 2 equals 3"'},
+  {cat:'引き算', en:'<mark>10 minus 4</mark> equals <mark>6</mark>. (10 − 4 = 6)', ja:'10 引く 4 は 6 です。', tip:'引き算の答えは "difference（差）" という。"The difference is 6."'},
+  {cat:'引き算', en:'<mark>8 minus 3</mark> equals <mark>5</mark>. (8 − 3 = 5)', ja:'8 引く 3 は 5 です。', tip:'"take away" も "minus" と同じ意味。"8 take away 3 is 5."'},
+  {cat:'引き算', en:'<mark>What is 9 minus 5?</mark> The answer is <mark>4</mark>.', ja:'9 引く 5 はいくつ？ → 答えは 4 です。', tip:'"What is A minus B?" ＝ A − B はいくつ？'},
+  {cat:'引き算', en:'I have <mark>7 apples</mark>. I eat <mark>3</mark>. How many are <mark>left</mark>? <mark>4</mark> are left.', ja:'リンゴが 7 個。3 個食べた。残りは何個？ → 4 個残っています。', tip:'"How many are left?" ＝ 残りはいくつ？ 引き算の文章題の定番。'},
+  {cat:'引き算', en:'<mark>15 minus 6</mark> equals <mark>9</mark>. (15 − 6 = 9)', ja:'15 引く 6 は 9 です。', tip:'"fifteen minus six equals nine" — 声に出して練習しよう。'},
+  {cat:'引き算', en:'<mark>20 minus 8</mark> equals <mark>12</mark>. (20 − 8 = 12)', ja:'20 引く 8 は 12 です。', tip:'"twenty minus eight equals twelve" — 20以上の引き算も英語で言えるようにしよう。'},
+  {cat:'引き算', en:'<mark>Subtract 5 from 10.</mark> The answer is <mark>5</mark>. (10 − 5 = 5)', ja:'10 から 5 を引きましょう。答えは 5 です。', tip:'"subtract A from B" ＝ B から A を引く。順番に注意！'},
+  {cat:'引き算', en:'There are <mark>10 children</mark>. <mark>4</mark> go home. How many are <mark>left</mark>? <mark>6</mark> are left. (10 − 4 = 6)', ja:'子供が10人。4人帰った。残りは何人？ → 6人残っています。', tip:'"left" ＝ 残り。文章題の引き算の定番パターン。'},
+];
+
+const TOTAL = phrases.length;
+
+// ── State ────────────────────────────────────────────────────────
+let currentIndex  = 0;
+let isRandom      = false;
+let isEnToJa      = true;
+let isRevealed    = false;
+let activeCategory = 'all';
+let isAutoPlaying  = false;
+let autoMode       = '';   // 'shadow' | 'continuous'
+let autoStopped    = false;
+let autoTimeout    = null;
+let masterSet = new Set(JSON.parse(localStorage.getItem('g1math_master') || '[]'));
+
+// ── Voice setup ───────────────────────────────────────────────────
+let enVoices = [];
+
+function populateVoices() {
+  const all = window.speechSynthesis.getVoices();
+  enVoices = all.filter(v => v.lang.startsWith('en'));
+  if (!enVoices.length) enVoices = all;
+  applyVoicePref();
+}
+
+function applyVoicePref() {
+  const pref = document.getElementById('voice-pref').value;
+  const preferred = pref === 'US'
+    ? ['en-US','en-GB','en-AU','en-SG']
+    : ['en-GB','en-US','en-AU','en-SG'];
+  const sorted = [...enVoices].sort((a,b) => {
+    const ai = preferred.findIndex(p => a.lang.startsWith(p));
+    const bi = preferred.findIndex(p => b.lang.startsWith(p));
+    return (ai<0?99:ai)-(bi<0?99:bi);
+  });
+  const sel = document.getElementById('voice-select');
+  sel.innerHTML = '';
+  sorted.forEach((v,i) => {
+    const o = document.createElement('option');
+    o.value = i; o.textContent = `${v.name} (${v.lang})`;
+    sel.appendChild(o);
+  });
+  // store sorted in enVoices for getVoice()
+  enVoices = sorted;
+}
+
+populateVoices();
+if (window.speechSynthesis.onvoiceschanged !== undefined)
+  window.speechSynthesis.onvoiceschanged = populateVoices;
+
+function getVoice() {
+  const sel = document.getElementById('voice-select');
+  return enVoices[parseInt(sel.value)] || enVoices[0] || null;
+}
+function getRate() { return parseFloat(document.getElementById('rate-slider').value); }
+function updateRate() {
+  document.getElementById('rate-val').textContent = getRate().toFixed(1) + '×';
+}
+
+// iOS keepalive
+let keepAlive = null;
+function startKeepAlive() {
+  stopKeepAlive();
+  keepAlive = setInterval(() => {
+    if (window.speechSynthesis.speaking) {
+      window.speechSynthesis.pause();
+      window.speechSynthesis.resume();
+    }
+  }, 10000);
+}
+function stopKeepAlive() { if (keepAlive) { clearInterval(keepAlive); keepAlive = null; } }
+
+let isSpeaking = false;
+function speakOne(text, onEnd) {
+  window.speechSynthesis.cancel();
+  isSpeaking = false;
+  clearTimeout(speakOne._t);
+  speakOne._t = setTimeout(() => {
+    if (isSpeaking) return;
+    isSpeaking = true;
+    const utt = new SpeechSynthesisUtterance(text);
+    const v = getVoice(); if (v) utt.voice = v;
+    utt.rate = getRate();
+    utt.onstart = startKeepAlive;
+    utt.onend   = () => { isSpeaking=false; stopKeepAlive(); if(onEnd) onEnd(); };
+    utt.onerror = () => { isSpeaking=false; stopKeepAlive(); if(onEnd) onEnd(); };
+    window.speechSynthesis.speak(utt);
+  }, 150);
+}
+
+function stripTags(html) { return html.replace(/<[^>]+>/g,'').replace(/\s+/g,' ').trim(); }
+
+function speakCurrent() {
+  const a = getActive(); if(!a.length) return;
+  speakOne(stripTags(a[currentIndex].en));
+}
+
+function speakP() {
+  return new Promise(resolve => {
+    if (autoStopped) { resolve(); return; }
+    const a = getActive(); if(!a.length) { resolve(); return; }
+    speakOne(stripTags(a[currentIndex].en), resolve);
+  });
+}
+
+// ── Category ─────────────────────────────────────────────────────
+const allCats = [...new Set(phrases.map(p => p.cat))];
+
+function buildCatRows() {
+  const wrap = document.getElementById('cat-rows');
+  wrap.innerHTML = '';
+  allCats.forEach(cat => {
+    const total    = phrases.filter(p => p.cat === cat).length;
+    const mastered = phrases.filter((p,i)=>p.cat===cat && masterSet.has(i)).length;
+    const done     = total > 0 && mastered === total;
+    const row = document.createElement('div');
+    row.className = 'cat-row' + (cat===activeCategory?' active':'');
+    row.innerHTML = `<div class="cat-dot ${done?'done':''}"></div><div class="cat-row-name">${cat}</div><div class="cat-row-count">${mastered===0?total:`${total-mastered}残/${total}`}</div>`;
+    row.onclick = () => selectCategory(cat);
+    wrap.appendChild(row);
+  });
+  document.getElementById('chip-all').className = 'chip-all'+(activeCategory==='all'?' active':'');
+}
+
+let filterOpen = false;
+function toggleFilterPanel() {
+  filterOpen = !filterOpen;
+  document.getElementById('filter-chips-wrap').className = 'filter-chips-wrap'+(filterOpen?' open':'');
+  document.getElementById('filter-toggle-icon').className = 'filter-toggle-icon'+(filterOpen?' open':'');
+}
+
+function updateFilterLabel() {
+  const a = getActive();
+  document.getElementById('filter-current-label').textContent =
+    activeCategory==='all' ? `すべて（${a.length}）` : `${activeCategory}（${a.length}）`;
+}
+
+function selectCategory(cat) {
+  if (isAutoPlaying) return;
+  activeCategory = cat; currentIndex = 0;
+  filterOpen = false;
+  document.getElementById('filter-chips-wrap').className = 'filter-chips-wrap';
+  document.getElementById('filter-toggle-icon').className = 'filter-toggle-icon';
+  buildCatRows(); updateFilterLabel(); update();
+}
+
+// ── Helpers ───────────────────────────────────────────────────────
+function getActive() {
+  return phrases
+    .map((p,i) => ({...p, globalIdx:i}))
+    .filter(p => !masterSet.has(p.globalIdx) && (activeCategory==='all' || p.cat===activeCategory));
+}
+
+function saveMaster() {
+  localStorage.setItem('g1math_master', JSON.stringify([...masterSet]));
+}
+
+// ── Update UI ─────────────────────────────────────────────────────
+function update() {
+  const active = getActive();
+  const noActive = document.getElementById('no-active');
+  const mainCard = document.getElementById('main-card');
+  const tapHint  = document.getElementById('tap-hint');
+
+  document.getElementById('master-badge').textContent = `マスター: ${masterSet.size} / ${TOTAL}`;
+
+  if (!active.length) {
+    noActive.classList.add('show');
+    mainCard.style.display = 'none';
+    tapHint.style.display  = 'none';
+    updateMasterUI(); buildCatRows(); updateFilterLabel();
+    return;
+  }
+  noActive.classList.remove('show');
+  mainCard.style.display = '';
+  tapHint.style.display  = '';
+
+  if (currentIndex >= active.length) currentIndex = 0;
+  const item  = active[currentIndex];
+  const color = CATS[item.cat] || '#16a34a';
+
+  // progress
+  document.getElementById('cur-num').textContent = currentIndex + 1;
+  document.getElementById('tot-num').textContent = active.length;
+  document.getElementById('progress-bar').style.width = ((currentIndex+1)/active.length*100)+'%';
+  document.getElementById('progress-bar').style.background = color;
+
+  // card
+  document.getElementById('card-num').textContent  = String(item.globalIdx+1).padStart(2,'0');
+  document.getElementById('card-cat').textContent  = item.cat;
+  document.getElementById('card-cat').style.color  = color;
+
+  // content
+  const displayHTML = isEnToJa ? item.en : item.ja;
+  document.getElementById('main-text').innerHTML   = displayHTML;
+  document.getElementById('answer-ja').innerHTML   = isEnToJa ? item.ja : item.en;
+  const tipEl = document.getElementById('answer-tip');
+  if (item.tip) { tipEl.textContent = item.tip; tipEl.style.display=''; }
+  else tipEl.style.display = 'none';
+
+  document.getElementById('mode-badge').textContent = isEnToJa ? '📖 英 → 日' : '📖 日 → 英';
+
+  // reset reveal
+  isRevealed = false;
+  document.getElementById('answer-wrap').classList.remove('show');
+  mainCard.classList.remove('revealed');
+
+  // master
+  document.getElementById('master-cb').checked = masterSet.has(item.globalIdx);
+  document.getElementById('mastered-badge').classList.toggle('show', masterSet.has(item.globalIdx));
+
+  updateMasterUI(); buildCatRows(); updateFilterLabel();
+}
+
+function updateMasterUI() {
+  const count   = masterSet.size;
+  const summary = document.getElementById('master-summary');
+  const listWrap = document.getElementById('master-list-wrap');
+  if (count > 0) {
+    summary.classList.add('show');
+    summary.textContent = `✅ ${count}枚マスター済 — タップして一覧表示 / 解除`;
+    const listEl = document.getElementById('master-list');
+    listEl.innerHTML = '';
+    [...masterSet].sort((a,b)=>a-b).forEach(idx => {
+      const p = phrases[idx]; if(!p) return;
+      const row = document.createElement('div');
+      row.style.cssText = 'display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid #e2e8f0;font-size:12px;';
+      row.innerHTML = `<span style="flex:1;line-height:1.5;"><span style="color:${CATS[p.cat]};font-weight:800;">${p.cat}</span><br>${stripTags(p.en)}</span><button onclick="removeMaster(${idx})" style="border:none;background:#e11d48;color:#fff;border-radius:99px;padding:3px 10px;font-size:11px;font-weight:700;cursor:pointer;">解除</button>`;
+      listEl.appendChild(row);
+    });
+  } else {
+    summary.classList.remove('show');
+    listWrap.style.display = 'none';
+  }
+}
+
+// ── Actions ───────────────────────────────────────────────────────
+function handleTap() {
+  if (isAutoPlaying) return;
+  if (!isRevealed) {
+    isRevealed = true;
+    document.getElementById('answer-wrap').classList.add('show');
+    document.getElementById('main-card').classList.add('revealed');
+  }
+}
+
+function toggleMaster(e) {
+  if (isAutoPlaying) return;
+  const active = getActive(); if(!active.length) return;
+  const item = active[currentIndex];
+  if (e.target.checked) {
+    masterSet.add(item.globalIdx);
+    saveMaster();
+    updateMasterUI(); buildCatRows(); updateFilterLabel();
+    document.getElementById('master-badge').textContent = `マスター: ${masterSet.size} / ${TOTAL}`;
+    // チェックしたら少し待って次のカードへ
+    setTimeout(() => {
+      const nextActive = getActive();
+      if (nextActive.length === 0) { update(); return; }
+      // currentIndex はそのまま（マスター済みが消えるので自動的に次が表示される）
+      if (currentIndex >= nextActive.length) currentIndex = 0;
+      update();
+    }, 400);
+  } else {
+    masterSet.delete(item.globalIdx);
+    saveMaster();
+    document.getElementById('mastered-badge').classList.remove('show');
+    updateMasterUI(); buildCatRows(); updateFilterLabel();
+    document.getElementById('master-badge').textContent = `マスター: ${masterSet.size} / ${TOTAL}`;
+  }
+}
+
+function removeMaster(idx) {
+  masterSet.delete(idx); saveMaster();
+  if (!masterSet.size) document.getElementById('master-list-wrap').style.display='none';
+  update();
+}
+function clearAllMasterStep1() {
+  const btn = document.getElementById('clear-all-btn');
+  if (!btn) return;
+  btn.textContent = '本当に全解除？';
+  btn.style.background = '#e11d48';
+  btn.style.color = '#fff';
+  btn.onclick = clearAllMasterStep2;
+  // 3秒後に戻す
+  setTimeout(() => {
+    if (btn.textContent === '本当に全解除？') {
+      btn.textContent = '全解除';
+      btn.style.background = '';
+      btn.style.color = '';
+      btn.onclick = clearAllMasterStep1;
+    }
+  }, 3000);
+}
+function clearAllMasterStep2() {
+  masterSet.clear(); saveMaster();
+  document.getElementById('master-list-wrap').style.display = 'none';
+  const btn = document.getElementById('clear-all-btn');
+  if (btn) {
+    btn.textContent = '全解除';
+    btn.style.background = '';
+    btn.style.color = '';
+    btn.onclick = clearAllMasterStep1;
+  }
+  update();
+}
+function clearAllMaster() { clearAllMasterStep1(); }
+function toggleMasterList() {
+  if (!masterSet.size) return;
+  const w = document.getElementById('master-list-wrap');
+  w.style.display = w.style.display==='none' ? '' : 'none';
+}
+
+function next() {
+  if (isAutoPlaying) return;
+  const active = getActive(); if(!active.length) return;
+  currentIndex = isRandom
+    ? Math.floor(Math.random()*active.length)
+    : (currentIndex+1) % active.length;
+  update();
+}
+
+function prev() {
+  if (isAutoPlaying) return;
+  const active = getActive(); if(!active.length) return;
+  currentIndex = (currentIndex - 1 + active.length) % active.length;
+  update();
+}
+
+function toggleRandom() {
+  isRandom = !isRandom;
+  const btn = document.getElementById('random-btn');
+  btn.textContent = isRandom ? '🔀 ランダム: ON' : '🔀 ランダム: OFF';
+  btn.className   = isRandom ? 'btn btn-on' : 'btn btn-secondary';
+  document.getElementById('order-badge').textContent = isRandom ? 'ランダム' : '順番通り';
+}
+
+function switchMode() {
+  if (isAutoPlaying) return;
+  isEnToJa = !isEnToJa;
+  update();
+}
+
+// ── Auto-play helpers ─────────────────────────────────────────────
+function delayP(ms) {
+  return new Promise(r => {
+    if (autoStopped) { r(); return; }
+    autoTimeout = setTimeout(r, ms);
+  });
+}
+
+function setAutoPanel(step, instr, count) {
+  document.getElementById('auto-step-title').textContent  = step;
+  document.getElementById('auto-instruction').textContent = instr;
+  document.getElementById('auto-count').textContent       = count;
+}
+
+function enterAutoUI() {
+  isAutoPlaying = true; autoStopped = false;
+  document.getElementById('normal-controls').style.display = 'none';
+  document.getElementById('auto-controls').style.display   = '';
+  document.getElementById('auto-panel').classList.add('show');
+  document.getElementById('tap-hint').style.display        = 'none';
+  document.getElementById('master-wrap').classList.add('disabled');
+  document.getElementById('main-card').classList.remove('tappable');
+  document.getElementById('main-card').classList.add('no-tap');
+}
+
+function exitAutoUI() {
+  autoStopped = true; isAutoPlaying = false;
+  window.speechSynthesis.cancel();
+  isSpeaking = false; stopKeepAlive();
+  clearTimeout(speakOne._t);
+  if (autoTimeout) { clearTimeout(autoTimeout); autoTimeout = null; }
+  document.getElementById('normal-controls').style.display = '';
+  document.getElementById('auto-controls').style.display   = 'none';
+  document.getElementById('auto-panel').classList.remove('show');
+  document.getElementById('tap-hint').style.display        = '';
+  document.getElementById('master-wrap').classList.remove('disabled');
+  document.getElementById('main-card').classList.add('tappable');
+  document.getElementById('main-card').classList.remove('no-tap');
+}
+
+function stopAutoPlay() {
+  exitAutoUI();
+  update(); // 現在のカードから再開できるよう index を保持
+}
+
+// ── Shadowing auto-play ───────────────────────────────────────────
+function showHidden() {
+  // 画面を？？？にする（英文も隠す）
+  document.getElementById('main-text').textContent = '？？？';
+  document.getElementById('answer-wrap').classList.remove('show');
+  document.getElementById('main-card').classList.remove('revealed');
+}
+function showEnOnly() {
+  // 英文のみ表示、日本語・解説は隠す
+  const active = getActive();
+  if (!active.length) return;
+  const item = active[currentIndex];
+  document.getElementById('main-text').innerHTML = item.en;
+  document.getElementById('answer-wrap').classList.remove('show');
+  document.getElementById('main-card').classList.remove('revealed');
+}
+function showAll() {
+  // 英文＋日本語訳＋解説を全て表示
+  const active = getActive();
+  if (!active.length) return;
+  const item = active[currentIndex];
+  document.getElementById('main-text').innerHTML = item.en;
+  document.getElementById('answer-wrap').classList.add('show');
+  document.getElementById('main-card').classList.add('revealed');
+}
+
+async function runShadowing() {
+  const active = getActive();
+  if (!active.length) { stopAutoPlay(); return; }
+  const startIdx = currentIndex;
+
+  for (let i = 0; i < active.length; i++) {
+    if (autoStopped) break;
+    currentIndex = (startIdx + i) % active.length;
+    update();
+    const n = i+1, tot = active.length;
+
+    // Step1: ？？？表示で2回聴く
+    showHidden();
+    setAutoPanel(`カード ${n}/${tot} — STEP 1`,'👂 発話せずに2回聴いてください。（画面は見なくてOK）','1/2回目…');
+    await speakP(); if(autoStopped) break; await delayP(350); if(autoStopped) break;
+    setAutoPanel(`カード ${n}/${tot} — STEP 1`,'👂 発話せずに2回聴いてください。（画面は見なくてOK）','2/2回目…');
+    await speakP(); if(autoStopped) break; await delayP(450); if(autoStopped) break;
+
+    // Step2: ？？？のまま音声に合わせてシャドウイング×2
+    showHidden();
+    setAutoPanel(`カード ${n}/${tot} — STEP 2`,'🗣️ 音声に合わせてシャドウイングしてください。（画面は見なくてOK）','1/2回目…');
+    await speakP(); if(autoStopped) break; await delayP(350); if(autoStopped) break;
+    setAutoPanel(`カード ${n}/${tot} — STEP 2`,'🗣️ 音声に合わせてシャドウイングしてください。（画面は見なくてOK）','2/2回目…');
+    await speakP(); if(autoStopped) break; await delayP(450); if(autoStopped) break;
+
+    // Step3: 英文＋日本語訳＋解説を全表示でシャドウイング×2
+    showAll();
+    setAutoPanel(`カード ${n}/${tot} — STEP 3`,'📖 英文・日本語訳・解説を見ながら2回シャドウイングしてください。','1/2回目…');
+    await speakP(); if(autoStopped) break; await delayP(350); if(autoStopped) break;
+    setAutoPanel(`カード ${n}/${tot} — STEP 3`,'📖 英文・日本語訳・解説を見ながら2回シャドウイングしてください。','2/2回目…');
+    await speakP(); if(autoStopped) break; await delayP(450); if(autoStopped) break;
+
+    // Step4: ？？？表示で何も見ずにシャドウイング×2
+    showHidden();
+    setAutoPanel(`カード ${n}/${tot} — STEP 4`,'🙈 何も見ずに2回シャドウイングしてください。','1/2回目…');
+    await speakP(); if(autoStopped) break; await delayP(350); if(autoStopped) break;
+    setAutoPanel(`カード ${n}/${tot} — STEP 4`,'🙈 何も見ずに2回シャドウイングしてください。','2/2回目…');
+    await speakP(); if(autoStopped) break; await delayP(700);
+  }
+  if (!autoStopped) {
+    setAutoPanel('完了！', `🎉 シャドウイング完了しました！`, '');
+    await delayP(2000);
+    stopAutoPlay();
+  }
+}
+
+function startShadowing() {
+  if (!getActive().length) { alert('出題できるカードがありません。'); return; }
+  autoMode = 'shadow';
+  enterAutoUI();
+  runShadowing();
+}
+
+// ── Continuous play (英語連続再生・全表示) ────────────────────────
+async function runContinuous() {
+  let loopCount = 0;
+  while (!autoStopped) {
+    const active = getActive();
+    if (!active.length) { stopAutoPlay(); return; }
+    loopCount++;
+    const startIdx = currentIndex;
+
+    for (let i = 0; i < active.length; i++) {
+      if (autoStopped) break;
+      currentIndex = (startIdx + i) % active.length;
+      update();
+      // 全部表示
+      document.getElementById('answer-wrap').classList.add('show');
+      document.getElementById('main-card').classList.add('revealed');
+
+      const n = i+1, tot = active.length;
+      setAutoPanel(
+        `連続再生 ${n}/${tot}（${loopCount}周目）`,
+        '▶ 英語音声を再生中 — ⏹ 停止ボタンで終了',
+        ''
+      );
+      await speakP(); if(autoStopped) break;
+      await delayP(500);
+    }
+    // 一周したら先頭に戻してループ継続
+    if (!autoStopped) {
+      currentIndex = 0;
+    }
+  }
+}
+
+function startContinuous() {
+  if (!getActive().length) { alert('出題できるカードがありません。'); return; }
+  autoMode = 'continuous';
+  enterAutoUI();
+  runContinuous();
+}
+
+// ── Guide modal ───────────────────────────────────────────────────
+function openGuide() {
+  document.getElementById('guide-overlay').classList.add('show');
+  document.getElementById('guide-overlay').scrollTop = 0;
+}
+function closeGuide() {
+  document.getElementById('guide-overlay').classList.remove('show');
+}
+function handleOverlayClick(e) {
+  if (e.target === document.getElementById('guide-overlay')) closeGuide();
+}
+
+// ── Init ──────────────────────────────────────────────────────────
+buildCatRows();
+updateFilterLabel();
+update();
+</script>
+</body>
+</html>
