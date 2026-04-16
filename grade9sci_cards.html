@@ -356,7 +356,7 @@ body {
 <div class="container">
 
 <div class="header">
-  <h2>Grade 9 Science 理科英語カード</h2>
+  <h2>🔬 Grade 9 Science 理科英語カード</h2>
   <p>1枚ずつ・タップで答え表示・マスターしたら消える</p>
   <button class="help-btn" onclick="openGuide()">❓ 使い方ガイド</button>
 </div>
@@ -620,53 +620,53 @@ const CATS = {
 };
 
 const phrases = [
-  {cat:'化学', en:'All matter is made of <mark>atoms</mark>. An atom is the smallest particle of an element.', ja:'すべての物質は原子でできています。原子は元素の最小粒子です。', tip:'"atom" ＝ 原子。"element" ＝ 元素'},
-  {cat:'化学', en:'A <mark>molecule</mark> is formed when two or more atoms bond together. H₂O is a molecule of water.', ja:'分子は 2 つ以上の原子が結合してできます。H₂O は水の分子です。', tip:'"molecule" ＝ 分子。"bond" ＝ 結合する'},
-  {cat:'化学', en:'The <mark>periodic table</mark> arranges elements by their <mark>atomic number</mark>.', ja:'周期表は元素を原子番号順に並べたものです。', tip:'"periodic table" ＝ 周期表、"atomic number" ＝ 原子番号'},
-  {cat:'化学', en:'An atom has a <mark>nucleus</mark> containing <mark>protons</mark> and <mark>neutrons</mark>, surrounded by <mark>electrons</mark>.', ja:'原子は陽子と中性子を含む核を持ち、その周りを電子が取り囲んでいます。', tip:'"nucleus" ＝ 核、"proton" ＝ 陽子、"neutron" ＝ 中性子、"electron" ＝ 電子'},
-  {cat:'化学', en:'An <mark>ion</mark> is an atom that has gained or lost electrons. Positive ions are <mark>cations</mark>; negative ions are <mark>anions</mark>.', ja:'イオンは電子を得たり失ったりした原子です。陽イオンをカチオン、陰イオンをアニオンといいます。', tip:'"ion" ＝ イオン、"cation" ＝ 陽イオン、"anion" ＝ 陰イオン'},
-  {cat:'化学', en:'In a <mark>chemical reaction</mark>, <mark>reactants</mark> are converted into <mark>products</mark>.', ja:'化学反応では、反応物が生成物に変換されます。', tip:'"reactant" ＝ 反応物、"product" ＝ 生成物'},
-  {cat:'化学', en:'The law of <mark>conservation of mass</mark>: mass is neither created nor destroyed in a chemical reaction.', ja:'質量保存の法則: 化学反応では質量は生まれも消えもしません。', tip:'"conservation of mass" ＝ 質量保存の法則'},
-  {cat:'化学', en:'An <mark>acid</mark> has a pH below 7. A <mark>base</mark> has a pH above 7. A <mark>neutral</mark> substance has pH 7.', ja:'酸の pH は 7 未満です。塩基の pH は 7 を超えます。中性は pH 7 です。', tip:'"acid" ＝ 酸、"base" ＝ 塩基、"neutral" ＝ 中性'},
-  {cat:'化学', en:'A <mark>compound</mark> contains two or more elements chemically combined. It has different properties from its elements.', ja:'化合物は 2 種類以上の元素が化学的に結合したものです。元素とは異なる性質を持ちます。', tip:'"compound" ＝ 化合物。"mixture" は化学結合していない（混合物）'},
-  {cat:'化学', en:'In <mark>oxidation</mark>, a substance gains oxygen or loses electrons. In <mark>reduction</mark>, the opposite occurs.', ja:'酸化では物質が酸素を得るか電子を失います。還元はその逆です。', tip:'"oxidation" ＝ 酸化、"reduction" ＝ 還元。セットで "redox reaction"'},
-  {cat:'化学', en:'<mark>Endothermic</mark> reactions absorb heat. <mark>Exothermic</mark> reactions release heat.', ja:'吸熱反応は熱を吸収します。発熱反応は熱を放出します。', tip:'"endothermic" ＝ 吸熱、"exothermic" ＝ 発熱'},
-  {cat:'化学', en:'The <mark>concentration</mark> of a solution is measured in mol/L or g/L.', ja:'溶液の濃度は mol/L または g/L で測定されます。', tip:'"concentration" ＝ 濃度。"dilute" ＝ 薄める、"concentrated" ＝ 濃い'},
-  {cat:'物理', en:'<mark>Speed</mark> = distance ÷ time. <mark>Velocity</mark> includes direction as well as speed.', ja:'速さ = 距離 ÷ 時間。速度は速さに加えて方向も含みます。', tip:'"speed" ＝ 速さ（方向なし）、"velocity" ＝ 速度（方向あり）'},
-  {cat:'物理', en:'<mark>Acceleration</mark> = change in velocity ÷ time. It is measured in m/s².', ja:'加速度 = 速度の変化 ÷ 時間。単位は m/s² です。', tip:'"acceleration" ＝ 加速度。"deceleration" ＝ 減速'},
-  {cat:'物理', en:'Newton\'s <mark>first law</mark>: an object remains at rest or in uniform motion unless acted on by a net force.', ja:'ニュートンの第 1 法則: 正味の力が働かない限り、物体は静止または等速運動を続けます。', tip:'"net force" ＝ 合力。"inertia" ＝ 慣性'},
-  {cat:'物理', en:'Newton\'s <mark>second law</mark>: Force = mass × acceleration (F = ma).', ja:'ニュートンの第 2 法則: 力 = 質量 × 加速度（F = ma）', tip:'"F = ma" は最重要公式。"mass" ＝ 質量（kg）、"force" ＝ 力（N）'},
-  {cat:'物理', en:'Newton\'s <mark>third law</mark>: for every action, there is an equal and opposite reaction.', ja:'ニュートンの第 3 法則: すべての作用に対して、等しく反対方向の反作用があります。', tip:'"action and reaction" ＝ 作用と反作用'},
-  {cat:'物理', en:'<mark>Work</mark> = force × distance. It is measured in joules (J).', ja:'仕事 = 力 × 距離。単位はジュール（J）です。', tip:'"work" ＝ 仕事（物理）。"joule" ＝ ジュール（エネルギーの単位）'},
-  {cat:'物理', en:'<mark>Kinetic energy</mark> is the energy of a moving object. KE = ½mv².', ja:'運動エネルギーは動いている物体のエネルギーです。KE = ½mv²', tip:'"kinetic energy" ＝ 運動エネルギー、"potential energy" ＝ 位置エネルギー'},
-  {cat:'物理', en:'<mark>Power</mark> = work done ÷ time. It is measured in watts (W).', ja:'仕事率 = 仕事 ÷ 時間。単位はワット（W）です。', tip:'"power" ＝ 仕事率・電力（W）。"watt" ＝ ワット'},
-  {cat:'物理', en:'<mark>Voltage</mark> (V) drives the current through a circuit. <mark>Resistance</mark> (Ω) opposes the current.', ja:'電圧（V）は電流を回路に流します。抵抗（Ω）は電流に逆らいます。', tip:'"voltage" ＝ 電圧（V）、"resistance" ＝ 抵抗（Ω）'},
-  {cat:'物理', en:'Ohm\'s Law: <mark>V = IR</mark>. Voltage equals current multiplied by resistance.', ja:'オームの法則: V = IR。電圧 = 電流 × 抵抗', tip:'"Ohm\'s Law" ＝ オームの法則。V=電圧、I=電流、R=抵抗'},
-  {cat:'物理', en:'Waves transfer <mark>energy</mark> without transferring matter. <mark>Amplitude</mark> is the height of the wave.', ja:'波はエネルギーを物質の移動なしに伝えます。振幅は波の高さです。', tip:'"amplitude" ＝ 振幅、"wavelength" ＝ 波長、"frequency" ＝ 振動数'},
-  {cat:'物理', en:'The <mark>electromagnetic spectrum</mark> includes radio waves, microwaves, infrared, visible light, UV, X-rays, and gamma rays.', ja:'電磁スペクトルには電波・マイクロ波・赤外線・可視光・紫外線・X 線・ガンマ線が含まれます。', tip:'"electromagnetic spectrum" ＝ 電磁スペクトル'},
-  {cat:'生物', en:'The <mark>cell membrane</mark> controls what enters and exits the cell. The <mark>nucleus</mark> contains DNA.', ja:'細胞膜は細胞への出入りを制御します。核には DNA が含まれています。', tip:'"cell membrane" ＝ 細胞膜、"nucleus" ＝ 核（細胞の）'},
-  {cat:'生物', en:'<mark>Mitosis</mark> is cell division that produces two identical daughter cells. It is used for growth and repair.', ja:'体細胞分裂は 2 つの同一の娘細胞を生み出す細胞分裂です。成長と修復に使われます。', tip:'"mitosis" ＝ 体細胞分裂。"meiosis" ＝ 減数分裂（生殖細胞）'},
-  {cat:'生物', en:'<mark>DNA</mark> is a double helix molecule that carries genetic information.', ja:'DNA は遺伝情報を運ぶ二重らせん分子です。', tip:'"DNA" ＝ デオキシリボ核酸。"double helix" ＝ 二重らせん'},
-  {cat:'生物', en:'A <mark>gene</mark> is a section of DNA that codes for a specific protein.', ja:'遺伝子は特定のタンパク質をコードする DNA の一部です。', tip:'"gene" ＝ 遺伝子、"chromosome" ＝ 染色体'},
-  {cat:'生物', en:'In <mark>respiration</mark>, glucose + oxygen → carbon dioxide + water + energy.', ja:'呼吸では: グルコース + 酸素 → 二酸化炭素 + 水 + エネルギー', tip:'"respiration" ＝ 細胞呼吸（呼吸と区別。breathing は外呼吸）'},
-  {cat:'生物', en:'The <mark>digestive system</mark> breaks down food into nutrients that can be absorbed into the blood.', ja:'消化器系は食べ物を血液に吸収できる栄養素に分解します。', tip:'"digestive system" ＝ 消化器系、"nutrients" ＝ 栄養素'},
-  {cat:'生物', en:'<mark>Natural selection</mark>: organisms with favourable traits survive and pass on their genes.', ja:'自然選択: 有利な形質を持つ生物が生き残り、遺伝子を次代に伝えます。', tip:'"natural selection" ＝ 自然選択（ダーウィンの進化論）'},
-  {cat:'生物', en:'The <mark>nervous system</mark> sends electrical signals called <mark>impulses</mark> throughout the body.', ja:'神経系は電気信号（インパルス）を体全体に送ります。', tip:'"nervous system" ＝ 神経系、"impulse" ＝ 神経インパルス'},
-  {cat:'生物', en:'<mark>Enzymes</mark> are biological catalysts that speed up chemical reactions in living organisms.', ja:'酵素は生体内の化学反応を加速する生物触媒です。', tip:'"enzyme" ＝ 酵素、"catalyst" ＝ 触媒'},
-  {cat:'生物', en:'The <mark>immune system</mark> defends the body against pathogens such as bacteria and viruses.', ja:'免疫系は細菌やウイルスなどの病原体から体を守ります。', tip:'"immune system" ＝ 免疫系、"pathogen" ＝ 病原体'},
-  {cat:'地学', en:'The Earth is made of three layers: <mark>crust</mark>, <mark>mantle</mark>, and <mark>core</mark>.', ja:'地球は地殻・マントル・核の 3 層からなります。', tip:'"crust" ＝ 地殻、"mantle" ＝ マントル、"core" ＝ 核'},
-  {cat:'地学', en:'<mark>Plate tectonics</mark>: the Earth\'s crust is divided into plates that move slowly.', ja:'プレートテクトニクス: 地球の地殻はゆっくり動くプレートに分かれています。', tip:'"plate tectonics" ＝ プレートテクトニクス、"tectonic plate" ＝ プレート'},
-  {cat:'地学', en:'<mark>Earthquakes</mark> occur when tectonic plates suddenly slip past each other at a <mark>fault line</mark>.', ja:'地震はプレートが断層線で突然ずれるときに起きます。', tip:'"earthquake" ＝ 地震、"fault line" ＝ 断層線'},
-  {cat:'地学', en:'The <mark>atmosphere</mark> is the layer of gases surrounding the Earth. It protects life from radiation.', ja:'大気は地球を取り囲むガスの層です。放射線から生命を守ります。', tip:'"atmosphere" ＝ 大気。"ozone layer" ＝ オゾン層'},
-  {cat:'地学', en:'<mark>Climate change</mark> is caused by increased greenhouse gases such as CO₂ and methane.', ja:'気候変動は CO₂ やメタンなどの温室効果ガスの増加によって引き起こされます。', tip:'"climate change" ＝ 気候変動、"greenhouse gas" ＝ 温室効果ガス'},
-  {cat:'実験・授業表現', en:'State the <mark>aim</mark> of your experiment: What are you trying to find out?', ja:'実験の目的を述べましょう: 何を調べようとしていますか？', tip:'"aim" ＝ 目的。"method" ＝ 方法、"result" ＝ 結果、"conclusion" ＝ 結論'},
-  {cat:'実験・授業表現', en:'The <mark>independent variable</mark> is what you change. The <mark>dependent variable</mark> is what you measure.', ja:'独立変数は自分が変えるもの。従属変数は自分が測定するものです。', tip:'"control variables" ＝ 制御変数（一定に保つもの）'},
-  {cat:'実験・授業表現', en:'To improve <mark>accuracy</mark>, repeat the experiment at least three times and calculate the <mark>mean</mark>.', ja:'精度を上げるために、実験を少なくとも 3 回繰り返し、平均を計算しましょう。', tip:'"accuracy" ＝ 精度、"reliability" ＝ 信頼性'},
-  {cat:'実験・授業表現', en:'Identify any <mark>anomalous results</mark> and explain why they may have occurred.', ja:'異常な結果を特定し、なぜ起きたか説明しましょう。', tip:'"anomalous result" ＝ 異常値・外れ値'},
-  {cat:'実験・授業表現', en:'The results <mark>support</mark> the hypothesis because the concentration increased as temperature rose.', ja:'温度が上がるにつれて濃度が増加したため、結果は仮説を支持しています。', tip:'"support the hypothesis" ＝ 仮説を支持する'},
-  {cat:'実験・授業表現', en:'One <mark>limitation</mark> of this experiment is that only a small sample size was used.', ja:'この実験の限界の 1 つは、サンプルサイズが小さかったことです。', tip:'"limitation" ＝ 限界・制限。試験の論述でよく求められる'},
-  {cat:'実験・授業表現', en:'Always wear <mark>safety goggles</mark> when handling chemicals in the laboratory.', ja:'実験室で化学薬品を扱うときは必ず安全ゴーグルを着用してください。', tip:'"safety goggles" ＝ 安全ゴーグル。"lab coat" ＝ 実験着'},
-  {cat:'実験・授業表現', en:'I would like to improve this experiment by increasing the <mark>sample size</mark> to get more reliable results.', ja:'より信頼性の高い結果を得るためにサンプルサイズを増やして実験を改善したいです。', tip:'"sample size" ＝ サンプルサイズ。論述の改善点でよく使う表現'},
+  {cat:'化学', en:'All matter is made of <mark>atoms</mark>. An atom is the smallest particle of an element.', speech:'All matter is made of atoms. An atom is the smallest particle of an element.', ja:'すべての物質は原子でできています。原子は元素の最小粒子です。', tip:'"atom" ＝ 原子。"element" ＝ 元素'},
+  {cat:'化学', en:'A <mark>molecule</mark> is formed when two or more atoms bond together. H₂O is a molecule of water.', speech:'A molecule is formed when two or more atoms bond together. H-2-O is a molecule of water.', ja:'分子は 2 つ以上の原子が結合してできます。H₂O は水の分子です。', tip:'"molecule" ＝ 分子。H₂O は "H-2-O" または "water" と読む'},
+  {cat:'化学', en:'The <mark>periodic table</mark> arranges elements by their <mark>atomic number</mark>.', speech:'The periodic table arranges elements by their atomic number.', ja:'周期表は元素を原子番号順に並べたものです。', tip:'"periodic table" ＝ 周期表、"atomic number" ＝ 原子番号'},
+  {cat:'化学', en:'An atom has a <mark>nucleus</mark> containing <mark>protons</mark> and <mark>neutrons</mark>, surrounded by <mark>electrons</mark>.', speech:'An atom has a nucleus containing protons and neutrons, surrounded by electrons.', ja:'原子は陽子と中性子を含む核を持ち、その周りを電子が取り囲んでいます。', tip:'"nucleus" ＝ 核、"proton" ＝ 陽子、"neutron" ＝ 中性子、"electron" ＝ 電子'},
+  {cat:'化学', en:'An <mark>ion</mark> is an atom that has gained or lost electrons. Positive ions are <mark>cations</mark>; negative ions are <mark>anions</mark>.', speech:'An ion is an atom that has gained or lost electrons. Positive ions are called cations, and negative ions are called anions.', ja:'イオンは電子を得たり失ったりした原子です。陽イオンをカチオン、陰イオンをアニオンといいます。', tip:'"ion" ＝ イオン、"cation" ＝ 陽イオン、"anion" ＝ 陰イオン'},
+  {cat:'化学', en:'In a <mark>chemical reaction</mark>, <mark>reactants</mark> are converted into <mark>products</mark>.', speech:'In a chemical reaction, reactants are converted into products.', ja:'化学反応では、反応物が生成物に変換されます。', tip:'"reactant" ＝ 反応物、"product" ＝ 生成物'},
+  {cat:'化学', en:'The law of <mark>conservation of mass</mark>: mass is neither created nor destroyed in a chemical reaction.', speech:'The law of conservation of mass: mass is neither created nor destroyed in a chemical reaction.', ja:'質量保存の法則: 化学反応では質量は生まれも消えもしません。', tip:'"conservation of mass" ＝ 質量保存の法則'},
+  {cat:'化学', en:'An <mark>acid</mark> has a pH below 7. A <mark>base</mark> has a pH above 7. A <mark>neutral</mark> substance has pH 7.', speech:'An acid has a pH below 7. A base has a pH above 7. A neutral substance has a pH of 7.', ja:'酸の pH は 7 未満です。塩基の pH は 7 を超えます。中性は pH 7 です。', tip:'"acid" ＝ 酸、"base" ＝ 塩基、"neutral" ＝ 中性'},
+  {cat:'化学', en:'A <mark>compound</mark> contains two or more elements chemically combined.', speech:'A compound contains two or more elements chemically combined. It has different properties from its elements.', ja:'化合物は 2 種類以上の元素が化学的に結合したものです。', tip:'"compound" ＝ 化合物。"mixture" は化学結合していない（混合物）'},
+  {cat:'化学', en:'In <mark>oxidation</mark>, a substance gains oxygen or loses electrons. In <mark>reduction</mark>, the opposite occurs.', speech:'In oxidation, a substance gains oxygen or loses electrons. In reduction, the opposite occurs.', ja:'酸化では物質が酸素を得るか電子を失います。還元はその逆です。', tip:'"oxidation" ＝ 酸化、"reduction" ＝ 還元'},
+  {cat:'化学', en:'<mark>Endothermic</mark> reactions absorb heat. <mark>Exothermic</mark> reactions release heat.', speech:'Endothermic reactions absorb heat. Exothermic reactions release heat.', ja:'吸熱反応は熱を吸収します。発熱反応は熱を放出します。', tip:'"endothermic" ＝ 吸熱、"exothermic" ＝ 発熱'},
+  {cat:'化学', en:'The <mark>concentration</mark> of a solution is measured in mol/L or g/L.', speech:'The concentration of a solution is measured in moles per litre or grams per litre.', ja:'溶液の濃度は mol/L または g/L で測定されます。', tip:'"concentration" ＝ 濃度。mol/L は "moles per litre"、g/L は "grams per litre" と読む'},
+  {cat:'物理', en:'<mark>Speed</mark> = distance ÷ time. <mark>Velocity</mark> includes direction as well as speed.', speech:'Speed equals distance divided by time. Velocity includes direction as well as speed.', ja:'速さ = 距離 ÷ 時間。速度は速さに加えて方向も含みます。', tip:'"speed" ＝ 速さ（方向なし）、"velocity" ＝ 速度（方向あり）'},
+  {cat:'物理', en:'<mark>Acceleration</mark> = change in velocity ÷ time. It is measured in m/s².', speech:'Acceleration equals change in velocity divided by time. It is measured in metres per second squared.', ja:'加速度 = 速度の変化 ÷ 時間。単位は m/s² です。', tip:'"acceleration" ＝ 加速度。m/s² は "metres per second squared" と読む'},
+  {cat:'物理', en:'Newton\'s <mark>first law</mark>: an object remains at rest or in uniform motion unless acted on by a net force.', speech:'Newton\'s first law: an object remains at rest or in uniform motion unless acted on by a net force.', ja:'ニュートンの第 1 法則: 正味の力が働かない限り、物体は静止または等速運動を続けます。', tip:'"net force" ＝ 合力。"inertia" ＝ 慣性'},
+  {cat:'物理', en:'Newton\'s <mark>second law</mark>: Force = mass × acceleration (F = ma).', speech:'Newton\'s second law: Force equals mass times acceleration. F equals m a.', ja:'ニュートンの第 2 法則: 力 = 質量 × 加速度（F = ma）', tip:'"F = ma" は最重要公式。× は "times" と読む'},
+  {cat:'物理', en:'Newton\'s <mark>third law</mark>: for every action, there is an equal and opposite reaction.', speech:'Newton\'s third law: for every action, there is an equal and opposite reaction.', ja:'ニュートンの第 3 法則: すべての作用に対して、等しく反対方向の反作用があります。', tip:'"action and reaction" ＝ 作用と反作用'},
+  {cat:'物理', en:'<mark>Work</mark> = force × distance. It is measured in joules (J).', speech:'Work equals force times distance. It is measured in joules.', ja:'仕事 = 力 × 距離。単位はジュール（J）です。', tip:'"work" ＝ 仕事（物理）。× は "times" と読む'},
+  {cat:'物理', en:'<mark>Kinetic energy</mark> is the energy of a moving object. KE = ½mv².', speech:'Kinetic energy is the energy of a moving object. K E equals one half, or 1 over 2 m v squared.', ja:'運動エネルギーは動いている物体のエネルギーです。KE = ½mv²', tip:'"kinetic energy" ＝ 運動エネルギー。½mv² は "one half m v squared" と読む'},
+  {cat:'物理', en:'<mark>Power</mark> = work done ÷ time. It is measured in watts (W).', speech:'Power equals work done divided by time. It is measured in watts.', ja:'仕事率 = 仕事 ÷ 時間。単位はワット（W）です。', tip:'"power" ＝ 仕事率・電力（W）'},
+  {cat:'物理', en:'<mark>Voltage</mark> (V) drives the current through a circuit. <mark>Resistance</mark> (Ω) opposes the current.', speech:'Voltage drives the current through a circuit. Resistance, measured in ohms, opposes the current.', ja:'電圧（V）は電流を回路に流します。抵抗（Ω）は電流に逆らいます。', tip:'"voltage" ＝ 電圧（V）、"resistance" ＝ 抵抗（Ω＝ohms）'},
+  {cat:'物理', en:'Ohm\'s Law: <mark>V = IR</mark>. Voltage equals current multiplied by resistance.', speech:'Ohm\'s Law: V equals I times R. Voltage equals current multiplied by resistance.', ja:'オームの法則: V = IR。電圧 = 電流 × 抵抗', tip:'"Ohm\'s Law" ＝ オームの法則'},
+  {cat:'物理', en:'Waves transfer <mark>energy</mark> without transferring matter. <mark>Amplitude</mark> is the height of the wave.', speech:'Waves transfer energy without transferring matter. Amplitude is the height of the wave.', ja:'波はエネルギーを物質の移動なしに伝えます。振幅は波の高さです。', tip:'"amplitude" ＝ 振幅、"wavelength" ＝ 波長、"frequency" ＝ 振動数'},
+  {cat:'物理', en:'The <mark>electromagnetic spectrum</mark> includes radio waves, microwaves, infrared, visible light, UV, X-rays, and gamma rays.', speech:'The electromagnetic spectrum includes radio waves, microwaves, infrared, visible light, ultraviolet, X-rays, and gamma rays.', ja:'電磁スペクトルには電波・マイクロ波・赤外線・可視光・紫外線・X 線・ガンマ線が含まれます。', tip:'"electromagnetic spectrum" ＝ 電磁スペクトル'},
+  {cat:'生物', en:'The <mark>cell membrane</mark> controls what enters and exits the cell. The <mark>nucleus</mark> contains DNA.', speech:'The cell membrane controls what enters and exits the cell. The nucleus contains DNA.', ja:'細胞膜は細胞への出入りを制御します。核には DNA が含まれています。', tip:'"cell membrane" ＝ 細胞膜、"nucleus" ＝ 核'},
+  {cat:'生物', en:'<mark>Mitosis</mark> is cell division that produces two identical daughter cells.', speech:'Mitosis is cell division that produces two identical daughter cells. It is used for growth and repair.', ja:'体細胞分裂は 2 つの同一の娘細胞を生み出す細胞分裂です。', tip:'"mitosis" ＝ 体細胞分裂。"meiosis" ＝ 減数分裂（生殖細胞）'},
+  {cat:'生物', en:'<mark>DNA</mark> is a double helix molecule that carries genetic information.', speech:'DNA is a double helix molecule that carries genetic information.', ja:'DNA は遺伝情報を運ぶ二重らせん分子です。', tip:'"DNA" ＝ デオキシリボ核酸。"double helix" ＝ 二重らせん'},
+  {cat:'生物', en:'A <mark>gene</mark> is a section of DNA that codes for a specific protein.', speech:'A gene is a section of DNA that codes for a specific protein.', ja:'遺伝子は特定のタンパク質をコードする DNA の一部です。', tip:'"gene" ＝ 遺伝子、"chromosome" ＝ 染色体'},
+  {cat:'生物', en:'In <mark>respiration</mark>, glucose + oxygen → carbon dioxide + water + energy.', speech:'In respiration: glucose plus oxygen produces carbon dioxide, plus water, plus energy.', ja:'呼吸では: グルコース + 酸素 → 二酸化炭素 + 水 + エネルギー', tip:'"respiration" ＝ 細胞呼吸。+ は "plus"、→ は "produces" と読む'},
+  {cat:'生物', en:'The <mark>digestive system</mark> breaks down food into nutrients that can be absorbed into the blood.', speech:'The digestive system breaks down food into nutrients that can be absorbed into the blood.', ja:'消化器系は食べ物を血液に吸収できる栄養素に分解します。', tip:'"digestive system" ＝ 消化器系、"nutrients" ＝ 栄養素'},
+  {cat:'生物', en:'<mark>Natural selection</mark>: organisms with favourable traits survive and pass on their genes.', speech:'Natural selection: organisms with favourable traits survive and pass on their genes.', ja:'自然選択: 有利な形質を持つ生物が生き残り、遺伝子を次代に伝えます。', tip:'"natural selection" ＝ 自然選択（ダーウィンの進化論）'},
+  {cat:'生物', en:'The <mark>nervous system</mark> sends electrical signals called <mark>impulses</mark> throughout the body.', speech:'The nervous system sends electrical signals called impulses throughout the body.', ja:'神経系は電気信号（インパルス）を体全体に送ります。', tip:'"nervous system" ＝ 神経系、"impulse" ＝ 神経インパルス'},
+  {cat:'生物', en:'<mark>Enzymes</mark> are biological catalysts that speed up chemical reactions in living organisms.', speech:'Enzymes are biological catalysts that speed up chemical reactions in living organisms.', ja:'酵素は生体内の化学反応を加速する生物触媒です。', tip:'"enzyme" ＝ 酵素、"catalyst" ＝ 触媒'},
+  {cat:'生物', en:'The <mark>immune system</mark> defends the body against pathogens such as bacteria and viruses.', speech:'The immune system defends the body against pathogens such as bacteria and viruses.', ja:'免疫系は細菌やウイルスなどの病原体から体を守ります。', tip:'"immune system" ＝ 免疫系、"pathogen" ＝ 病原体'},
+  {cat:'地学', en:'The Earth is made of three layers: <mark>crust</mark>, <mark>mantle</mark>, and <mark>core</mark>.', speech:'The Earth is made of three layers: crust, mantle, and core.', ja:'地球は地殻・マントル・核の 3 層からなります。', tip:'"crust" ＝ 地殻、"mantle" ＝ マントル、"core" ＝ 核'},
+  {cat:'地学', en:'<mark>Plate tectonics</mark>: the Earth\'s crust is divided into plates that move slowly.', speech:'Plate tectonics: the Earth\'s crust is divided into plates that move slowly.', ja:'プレートテクトニクス: 地球の地殻はゆっくり動くプレートに分かれています。', tip:'"plate tectonics" ＝ プレートテクトニクス'},
+  {cat:'地学', en:'<mark>Earthquakes</mark> occur when tectonic plates suddenly slip past each other at a <mark>fault line</mark>.', speech:'Earthquakes occur when tectonic plates suddenly slip past each other at a fault line.', ja:'地震はプレートが断層線で突然ずれるときに起きます。', tip:'"earthquake" ＝ 地震、"fault line" ＝ 断層線'},
+  {cat:'地学', en:'The <mark>atmosphere</mark> is the layer of gases surrounding the Earth.', speech:'The atmosphere is the layer of gases surrounding the Earth. It protects life from radiation.', ja:'大気は地球を取り囲むガスの層です。放射線から生命を守ります。', tip:'"atmosphere" ＝ 大気。"ozone layer" ＝ オゾン層'},
+  {cat:'地学', en:'<mark>Climate change</mark> is caused by increased greenhouse gases such as CO₂ and methane.', speech:'Climate change is caused by increased greenhouse gases such as carbon dioxide and methane.', ja:'気候変動は CO₂（二酸化炭素）やメタンなどの温室効果ガスの増加によって引き起こされます。', tip:'"climate change" ＝ 気候変動。CO₂ は "carbon dioxide" と読む'},
+  {cat:'実験・授業表現', en:'State the <mark>aim</mark> of your experiment: What are you trying to find out?', speech:'State the aim of your experiment: What are you trying to find out?', ja:'実験の目的を述べましょう: 何を調べようとしていますか？', tip:'"aim" ＝ 目的。"method" ＝ 方法、"result" ＝ 結果、"conclusion" ＝ 結論'},
+  {cat:'実験・授業表現', en:'The <mark>independent variable</mark> is what you change. The <mark>dependent variable</mark> is what you measure.', speech:'The independent variable is what you change. The dependent variable is what you measure.', ja:'独立変数は自分が変えるもの。従属変数は自分が測定するものです。', tip:'"control variables" ＝ 制御変数（一定に保つもの）'},
+  {cat:'実験・授業表現', en:'To improve <mark>accuracy</mark>, repeat the experiment at least three times and calculate the <mark>mean</mark>.', speech:'To improve accuracy, repeat the experiment at least three times and calculate the mean.', ja:'精度を上げるために、実験を少なくとも 3 回繰り返し、平均を計算しましょう。', tip:'"accuracy" ＝ 精度、"reliability" ＝ 信頼性'},
+  {cat:'実験・授業表現', en:'Identify any <mark>anomalous results</mark> and explain why they may have occurred.', speech:'Identify any anomalous results and explain why they may have occurred.', ja:'異常な結果を特定し、なぜ起きたか説明しましょう。', tip:'"anomalous result" ＝ 異常値・外れ値'},
+  {cat:'実験・授業表現', en:'The results <mark>support</mark> the hypothesis because the concentration increased as temperature rose.', speech:'The results support the hypothesis because the concentration increased as temperature rose.', ja:'温度が上がるにつれて濃度が増加したため、結果は仮説を支持しています。', tip:'"support the hypothesis" ＝ 仮説を支持する'},
+  {cat:'実験・授業表現', en:'One <mark>limitation</mark> of this experiment is that only a small sample size was used.', speech:'One limitation of this experiment is that only a small sample size was used.', ja:'この実験の限界の 1 つは、サンプルサイズが小さかったことです。', tip:'"limitation" ＝ 限界・制限'},
+  {cat:'実験・授業表現', en:'Always wear <mark>safety goggles</mark> when handling chemicals in the laboratory.', speech:'Always wear safety goggles when handling chemicals in the laboratory.', ja:'実験室で化学薬品を扱うときは必ず安全ゴーグルを着用してください。', tip:'"safety goggles" ＝ 安全ゴーグル。"lab coat" ＝ 実験着'},
+  {cat:'実験・授業表現', en:'I would like to improve this experiment by increasing the <mark>sample size</mark>.', speech:'I would like to improve this experiment by increasing the sample size to get more reliable results.', ja:'より信頼性の高い結果を得るためにサンプルサイズを増やして実験を改善したいです。', tip:'"sample size" ＝ サンプルサイズ'},
 ];
 
 const TOTAL = phrases.length;
@@ -760,16 +760,22 @@ function speakOne(text, onEnd) {
 
 function stripTags(html) { return html.replace(/<[^>]+>/g,'').replace(/\s+/g,' ').trim(); }
 
+function getSpeechText(item) {
+  // speech: フィールドがあればそちらを優先、なければ en: のタグを除去して読む
+  if (item.speech) return item.speech;
+  return stripTags(item.en);
+}
+
 function speakCurrent() {
   const a = getActive(); if(!a.length) return;
-  speakOne(stripTags(a[currentIndex].en));
+  speakOne(getSpeechText(a[currentIndex]));
 }
 
 function speakP() {
   return new Promise(resolve => {
     if (autoStopped) { resolve(); return; }
     const a = getActive(); if(!a.length) { resolve(); return; }
-    speakOne(stripTags(a[currentIndex].en), resolve);
+    speakOne(getSpeechText(a[currentIndex]), resolve);
   });
 }
 
