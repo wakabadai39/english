@@ -621,66 +621,72 @@ const CATS = {
 };
 
 const phrases = [
-    {cat:'数と演算', en:'<mark>BODMAS</mark> — the rule for the order of operations.<br>B = Brackets（括弧）<br>O = Orders（累乗・平方根）<br>D = Division（割り算）<br>M = Multiplication（掛け算）<br>A = Addition（足し算）<br>S = Subtraction（引き算）<br>※ A と S は同じ優先度 — 左から順に計算する', speech:'BODMAS is the rule for the order of operations. Always follow this rule when calculating.', ja:'BODMAS（ボドマス）は計算の順序を示すルールです。B＝括弧、O＝累乗・平方根、D＝割り算、M＝掛け算、A＝足し算、S＝引き算。この順番で計算します。A と S は同じ優先度で、左から順に計算します。', tip:'アメリカでは "PEMDAS" と言う。シンガポール・イギリスでは BODMAS が標準'},
-  {cat:'数と演算', en:'<mark>B</mark> = <mark>Brackets</mark>. Calculate what is inside the brackets first. (3 + 5) × 2 → first 3 + 5 = 8, then 8 × 2 = 16.', speech:'B stands for Brackets. Calculate what is inside the brackets first. Open bracket 3 plus 5 close bracket, times 2. First 3 plus 5 equals 8, then 8 times 2 equals 16.', ja:'B＝Brackets（括弧）。まず括弧の中を計算します。例: (3+5)×2 → まず 3+5=8、次に 8×2=16', tip:'"brackets" ＝ 括弧。アメリカでは "parentheses（パレンシシーズ）" と言う'},
-  {cat:'数と演算', en:'<mark>O</mark> = <mark>Orders</mark>. Calculate powers and square roots next. Example: 2² = 4.', speech:'O stands for Orders: powers and square roots. For example, 2 squared equals 4.', ja:'O＝Orders（累乗・平方根）。括弧の次は累乗と平方根を計算します。例: 2²=4', tip:'"orders" ＝ 累乗・平方根。"2 squared" ＝ 2の2乗、"square root" ＝ 平方根'},
-  {cat:'数と演算', en:'<mark>D</mark> = <mark>Division</mark>. Divide before adding or subtracting. Example: 10 + 6 ÷ 2 → first 6 ÷ 2 = 3, then 10 + 3 = 13.', speech:'D stands for Division. Divide before adding or subtracting. Example: 10 plus 6 divided by 2. First 6 divided by 2 equals 3, then 10 plus 3 equals 13.', ja:'D＝Division（割り算）。足し算・引き算より先に割り算をします。例: 10+6÷2 → まず 6÷2=3、次に 10+3=13', tip:'D と M（掛け算）は同じ優先度。左から順に計算する'},
-  {cat:'数と演算', en:'<mark>M</mark> = <mark>Multiplication</mark>. Multiply before adding or subtracting. Example: 2 + 3 × 4 → first 3 × 4 = 12, then 2 + 12 = 14.', speech:'M stands for Multiplication. Multiply before adding or subtracting. Example: 2 plus 3 times 4. First 3 times 4 equals 12, then 2 plus 12 equals 14.', ja:'M＝Multiplication（掛け算）。足し算・引き算より先に掛け算をします。例: 2+3×4 → まず 3×4=12、次に 2+12=14', tip:'M と D（割り算）は同じ優先度。左から順に計算する'},
-  {cat:'数と演算', en:'<mark>A</mark> = <mark>Addition</mark> and <mark>S</mark> = <mark>Subtraction</mark> have the <mark>same priority</mark> — always calculate left to right. Example: 5 − 2 + 3 → left to right: 5 − 2 = 3, then 3 + 3 = 6.', speech:'A stands for Addition and S stands for Subtraction. They have the same priority. Always calculate left to right. Example: 5 minus 2 plus 3. Left to right: 5 minus 2 equals 3, then 3 plus 3 equals 6.', ja:'A＝Addition（足し算）、S＝Subtraction（引き算）は同じ優先度です。必ず左から右の順に計算します。例: 5−2+3 → 左から: 5−2=3、次に 3+3=6。足し算を先にすると間違いになります！', tip:'足し算・引き算は左から順に。"left to right" ＝ 左から右へ'},
-{cat:'数と演算', en:'Express 180 as a product of its <mark>prime factors</mark>: 180 = 2² × 3² × 5.', speech:'Express 180 as a product of its prime factors: 180 equals 2 squared, times 3 squared, times 5.', ja:'180 を素因数の積で表すと 180 = 2² × 3² × 5 です。', tip:'"prime factorisation" ＝ 素因数分解。factor tree（因数の木）で求める'},
-  {cat:'数と演算', en:'Find the <mark>HCF</mark> of 48 and 60. HCF = <mark>12</mark>.', speech:'Find the H C F of 48 and 60. H C F equals 12.', ja:'48 と 60 の最大公約数（HCF）は 12 です。', tip:'HCF = Highest Common Factor ＝ 最大公約数。素因数分解で共通部分を掛け合わせる'},
-  {cat:'数と演算', en:'Find the <mark>LCM</mark> of 8 and 12. LCM = <mark>24</mark>.', speech:'Find the L C M of 8 and 12. L C M equals 24.', ja:'8 と 12 の最小公倍数（LCM）は 24 です。', tip:'LCM = Lowest Common Multiple ＝ 最小公倍数'},
-  {cat:'数と演算', en:'Calculate <mark>5³</mark>. Five cubed equals <mark>125</mark>.', speech:'Calculate 5 cubed. Five cubed equals 125.', ja:'5³ を計算すると 125 です。', tip:'"cubed" ＝ 3乗。"squared" ＝ 2乗、"to the power of 4" ＝ 4乗'},
-  {cat:'数と演算', en:'Evaluate <mark>√144</mark>. The square root of 144 is <mark>12</mark>.', speech:'Evaluate the square root of 144. The square root of 144 is 12.', ja:'√144 を計算すると 12 です。', tip:'"square root" ＝ 平方根。√ は radical sign（根号）'},
-  {cat:'数と演算', en:'Use <mark>BODMAS</mark>: (3 + 5)² ÷ 4 − 1 = <mark>15</mark>.', speech:'Use BODMAS: open bracket 3 plus 5 close bracket, squared, divided by 4, minus 1, equals 15.', ja:'計算の順序（BODMAS）: (3 + 5)² ÷ 4 − 1 = 64 ÷ 4 − 1 = 15', tip:'Brackets → Orders → Division → Multiplication → Addition → Subtraction の順。括弧は "bracket"（英）または "parenthesis"（米）'},
-  {cat:'数と演算', en:'Add: −8 + 5 = <mark>−3</mark>.', speech:'Add: negative 8 plus 5 equals negative 3.', ja:'−8 + 5 = −3 です。', tip:'"directed numbers" ＝ 正負の数。負の数は "negative" と読む'},
-  {cat:'数と演算', en:'Subtract: −4 − (−7) = <mark>3</mark>.', speech:'Subtract: negative 4, minus negative 7, equals 3.', ja:'−4 − (−7) = −4 + 7 = 3 です。', tip:'マイナスを引く ＝ プラスを足す。"subtracting a negative"'},
-  {cat:'数と演算', en:'(−6) × (−4) = <mark>24</mark>. Negative × negative = positive.', speech:'Negative 6 times negative 4 equals 24. Negative times negative is positive.', ja:'(−6) × (−4) = 24。負 × 負 ＝ 正 です。', tip:'符号のルール: (−)(−)＝(+)、(−)(+)＝(−)'},
+    {cat:'数と演算', en:'BODMAS — the rule for the order of operations.', speech:'BODMAS, the rule for the order of operations.', ja:'BODMAS（ボドマス）＝計算の順序を示すルールです。', tip:'アメリカでは "PEMDAS" と言う。シンガポール・イギリスでは BODMAS が標準'},
+  {cat:'数と演算', en:'B = <mark>Brackets</mark>. Calculate inside brackets first. (3 + 5) × 2 = 16.', speech:'B equals Brackets. Calculate inside brackets first. Open bracket 3 plus 5 close bracket times 2 equals 16.', ja:'B＝Brackets（括弧）。まず括弧の中を計算します。', tip:'"brackets" ＝ 括弧'},
+  {cat:'数と演算', en:'O = <mark>Orders</mark>. Powers and square roots. 2² = 4.', speech:'O equals Orders. Powers and square roots. 2 squared equals 4.', ja:'O＝Orders（累乗・平方根）。', tip:'"orders" ＝ 累乗・平方根'},
+  {cat:'数と演算', en:'D = <mark>Division</mark>. Divide before adding or subtracting. 10 + 6 ÷ 2 = 13.', speech:'D equals Division. Divide before adding or subtracting. 10 plus 6 divided by 2 equals 13.', ja:'D＝Division（割り算）。足し算・引き算より先に割り算をします。', tip:'D と M は同じ優先度。左から順に計算する'},
+  {cat:'数と演算', en:'M = <mark>Multiplication</mark>. Multiply before adding or subtracting. 2 + 3 × 4 = 14.', speech:'M equals Multiplication. Multiply before adding or subtracting. 2 plus 3 times 4 equals 14.', ja:'M＝Multiplication（掛け算）。足し算・引き算より先に掛け算をします。', tip:'M と D は同じ優先度。左から順に計算する'},
+  {cat:'数と演算', en:'A = <mark>Addition</mark> and S = <mark>Subtraction</mark> have the same priority. Calculate left to right. 5 − 2 + 3 = 6.', speech:'A equals Addition and S equals Subtraction. Same priority, calculate left to right. 5 minus 2 plus 3 equals 6.', ja:'A＝足し算、S＝引き算。同じ優先度で左から順に計算します。', tip:'足し算を先にすると間違いになります！左から右へ。'},
+{cat:'数と演算', en:'<mark>BODMAS</mark> — the rule for the order of operations.<br>B = Brackets（括弧）<br>O = Orders（累乗・平方根）<br>D = Division（割り算）<br>M = Multiplication（掛け算）<br>A = Addition（足し算）<br>S = Subtraction（引き算）<br>※ A と S は同じ優先度 — 左から順に計算する', speech:'BODMAS, the rule for the order of operations. B equals Brackets. O equals Orders. D equals Division. M equals Multiplication. A equals Addition. S equals Subtraction. A and S have the same priority, always calculate left to right.', ja:'BODMAS（ボドマス）は計算の順序を示すルールです。B＝括弧、O＝累乗・平方根、D＝割り算、M＝掛け算、A＝足し算、S＝引き算。A と S は同じ優先度で、左から順に計算します。', tip:'アメリカでは "PEMDAS" と言う。シンガポール・イギリスでは BODMAS が標準'},
+  {cat:'数と演算', en:'<mark>B</mark> = <mark>Brackets</mark>. Calculate what is inside the brackets first. (3 + 5) × 2 → first 3 + 5 = 8, then 8 × 2 = 16.', speech:'B equals Brackets. Calculate what is inside the brackets first. Open bracket 3 plus 5 close bracket, times 2. First 3 plus 5 equals 8, then 8 times 2 equals 16.', ja:'B＝Brackets（括弧）。まず括弧の中を計算します。例: (3+5)×2 → まず 3+5=8、次に 8×2=16', tip:'"brackets" ＝ 括弧。アメリカでは "parentheses（パレンシシーズ）" と言う'},
+  {cat:'数と演算', en:'<mark>O</mark> = <mark>Orders</mark>. Calculate powers and square roots next. Example: 2² = 4.', speech:'O equals Orders. Calculate powers and square roots next. Example: 2 squared equals 4.', ja:'O＝Orders（累乗・平方根）。括弧の次は累乗と平方根を計算します。例: 2²=4', tip:'"orders" ＝ 累乗・平方根'},
+  {cat:'数と演算', en:'<mark>D</mark> = <mark>Division</mark>. Divide before adding or subtracting. Example: 10 + 6 ÷ 2 → first 6 ÷ 2 = 3, then 10 + 3 = 13.', speech:'D equals Division. Divide before adding or subtracting. Example: 10 plus 6 divided by 2. First 6 divided by 2 equals 3, then 10 plus 3 equals 13.', ja:'D＝Division（割り算）。足し算・引き算より先に割り算をします。例: 10+6÷2 → まず 6÷2=3、次に 10+3=13', tip:'D と M（掛け算）は同じ優先度。左から順に計算する'},
+  {cat:'数と演算', en:'<mark>M</mark> = <mark>Multiplication</mark>. Multiply before adding or subtracting. Example: 2 + 3 × 4 → first 3 × 4 = 12, then 2 + 12 = 14.', speech:'M equals Multiplication. Multiply before adding or subtracting. Example: 2 plus 3 times 4. First 3 times 4 equals 12, then 2 plus 12 equals 14.', ja:'M＝Multiplication（掛け算）。足し算・引き算より先に掛け算をします。例: 2+3×4 → まず 3×4=12、次に 2+12=14', tip:'M と D（割り算）は同じ優先度。左から順に計算する'},
+  {cat:'数と演算', en:'<mark>A</mark> = <mark>Addition</mark> and <mark>S</mark> = <mark>Subtraction</mark> have the <mark>same priority</mark> — always calculate left to right. Example: 5 − 2 + 3 → left to right: 5 − 2 = 3, then 3 + 3 = 6.', speech:'A equals Addition and S equals Subtraction. They have the same priority. Always calculate left to right. Example: 5 minus 2 plus 3. Left to right: 5 minus 2 equals 3, then 3 plus 3 equals 6.', ja:'A＝Addition（足し算）、S＝Subtraction（引き算）は同じ優先度です。必ず左から右の順に計算します。例: 5−2+3 → 左から: 5−2=3、次に 3+3=6。足し算を先にすると間違いになります！', tip:'足し算・引き算は左から順に。"left to right" ＝ 左から右へ'},
+  {cat:'数と演算', en:'Express 180 as a product of its <mark>prime factors</mark>: 180 = 2² × 3² × 5.', speech:'Express 180 as a product of its prime factors: 180 equals 2 squared, times 3 squared, times 5.', ja:'180 を素因数の積で表すと 180 = 2² × 3² × 5 です。', tip:'"prime factorisation" ＝ 素因数分解'},
+  {cat:'数と演算', en:'Find the <mark>HCF</mark> of 48 and 60. HCF = <mark>12</mark>.', speech:'Find the HCF of 48 and 60. HCF equals 12.', ja:'48 と 60 の最大公約数（HCF）は 12 です。', tip:'HCF = Highest Common Factor ＝ 最大公約数'},
+  {cat:'数と演算', en:'Find the <mark>LCM</mark> of 8 and 12. LCM = <mark>24</mark>.', speech:'Find the LCM of 8 and 12. LCM equals 24.', ja:'8 と 12 の最小公倍数（LCM）は 24 です。', tip:'LCM = Lowest Common Multiple ＝ 最小公倍数'},
+  {cat:'数と演算', en:'Calculate <mark>5³</mark>. Five cubed equals <mark>125</mark>.', speech:'Calculate 5 cubed. Five cubed equals 125.', ja:'5³ を計算すると 125 です。', tip:'"cubed" ＝ 3乗'},
+  {cat:'数と演算', en:'Evaluate <mark>√144</mark>. The square root of 144 is <mark>12</mark>.', speech:'Evaluate the square root of 144. The square root of 144 is 12.', ja:'√144 を計算すると 12 です。', tip:'"square root" ＝ 平方根'},
+  {cat:'数と演算', en:'Use <mark>BODMAS</mark>: (3 + 5)² ÷ 4 − 1 = <mark>15</mark>.', speech:'Use BODMAS: open bracket 3 plus 5 close bracket, squared, divided by 4, minus 1, equals 15.', ja:'計算の順序（BODMAS）: (3 + 5)² ÷ 4 − 1 = 15', tip:'Brackets → Orders → Division → Multiplication → Addition → Subtraction の順'},
+  {cat:'数と演算', en:'Add: −8 + 5 = <mark>−3</mark>.', speech:'Add: negative 8 plus 5 equals negative 3.', ja:'−8 + 5 = −3 です。', tip:'"negative" ＝ 負の数'},
+  {cat:'数と演算', en:'Subtract: −4 − (−7) = <mark>3</mark>.', speech:'Subtract: negative 4, minus negative 7, equals 3.', ja:'−4 − (−7) = 3 です。', tip:'マイナスを引く ＝ プラスを足す'},
+  {cat:'数と演算', en:'(−6) × (−4) = <mark>24</mark>. Negative × negative = positive.', speech:'Negative 6 times negative 4 equals 24. Negative times negative equals positive.', ja:'(−6) × (−4) = 24。負 × 負 ＝ 正 です。', tip:'符号のルール: (−)(−)＝(+)'},
   {cat:'数と演算', en:'Write 0.000056 in <mark>standard form</mark>: <mark>5.6 × 10⁻⁵</mark>.', speech:'Write 0.000056 in standard form: 5.6 times 10 to the power of negative 5.', ja:'0.000056 を標準形で表すと 5.6 × 10⁻⁵ です。', tip:'"standard form" ＝ 標準形（科学的記数法）'},
-  {cat:'分数・小数・比', en:'Divide <mark>2/3 ÷ 4/5</mark> = <mark>5/6</mark>. Multiply by the <mark>reciprocal</mark>.', speech:'2 over 3, or 2 thirds divided by 4 fifths equals 5 sixths. Multiply by the reciprocal.', ja:'2/3 ÷ 4/5 は逆数をかける: 2/3 × 5/4 = 5/6 です。', tip:'"reciprocal" ＝ 逆数。a/b の逆数は b/a'},
-  {cat:'分数・小数・比', en:'Calculate <mark>15% of 240</mark> = <mark>36</mark>.', speech:'Calculate 15 percent of 240. The answer is 36.', ja:'240 の 15% = 36 です。', tip:'10% = 24、5% = 12 → 15% = 36。10% を基準にして計算'},
-  {cat:'分数・小数・比', en:'Price: $80 → $100. <mark>Percentage increase</mark> = <mark>25%</mark>.', speech:'Price increased from 80 dollars to 100 dollars. Percentage increase equals 25 percent.', ja:'$80 から $100 への増加率は 25% です。', tip:'増加率 = (変化量 ÷ 元の値) × 100'},
-  {cat:'分数・小数・比', en:'Price: $120 → $90. <mark>Percentage decrease</mark> = <mark>25%</mark>.', speech:'Price decreased from 120 dollars to 90 dollars. Percentage decrease equals 25 percent.', ja:'$120 から $90 への減少率は 25% です。', tip:'"percentage decrease" ＝ 減少率'},
-  {cat:'分数・小数・比', en:'Simplify the ratio <mark>2.4 : 1.6</mark> = <mark>3 : 2</mark>.', speech:'Simplify the ratio 2.4 to 1.6. The answer is 3 to 2.', ja:'比 2.4 : 1.6 → ×10 して 24:16 → HCF=8 で割ると 3:2', tip:'小数の比は整数にしてから simplify する'},
+  {cat:'分数・小数・比', en:'Divide <mark>2/3 ÷ 4/5</mark> = <mark>5/6</mark>. Multiply by the <mark>reciprocal</mark>.', speech:'2 over 3 divided by 4 over 5 equals 5 over 6. Multiply by the reciprocal.', ja:'2/3 ÷ 4/5 は逆数をかける: 5/6 です。', tip:'"reciprocal" ＝ 逆数'},
+  {cat:'分数・小数・比', en:'Calculate <mark>15% of 240</mark> = <mark>36</mark>.', speech:'Calculate 15 percent of 240. The answer is 36.', ja:'240 の 15% = 36 です。', tip:'10% = 24、5% = 12 → 15% = 36'},
+  {cat:'分数・小数・比', en:'Price: $80 → $100. <mark>Percentage increase</mark> = <mark>25%</mark>.', speech:'Price: 80 dollars to 100 dollars. Percentage increase equals 25 percent.', ja:'$80 から $100 への増加率は 25% です。', tip:'増加率 = (変化量 ÷ 元の値) × 100'},
+  {cat:'分数・小数・比', en:'Price: $120 → $90. <mark>Percentage decrease</mark> = <mark>25%</mark>.', speech:'Price: 120 dollars to 90 dollars. Percentage decrease equals 25 percent.', ja:'$120 から $90 への減少率は 25% です。', tip:'"percentage decrease" ＝ 減少率'},
+  {cat:'分数・小数・比', en:'Simplify the ratio <mark>2.4 : 1.6</mark> = <mark>3 : 2</mark>.', speech:'Simplify the ratio 2.4 to 1.6. The answer is 3 to 2.', ja:'比 2.4 : 1.6 → 3 : 2 です。', tip:'小数の比は整数にしてから simplify する'},
   {cat:'分数・小数・比', en:'Divide $200 in the ratio <mark>3 : 2 : 5</mark> → $60, $40, $100.', speech:'Divide 200 dollars in the ratio 3 to 2 to 5. The shares are 60, 40, and 100 dollars.', ja:'$200 を 3:2:5 に分ける → $60、$40、$100 です。', tip:'合計 10 部分。$200 ÷ 10 = $20 が 1 部分'},
-  {cat:'分数・小数・比', en:'y is <mark>directly proportional</mark> to x. y = 12 when x = 3. Find y when x = 7. y = <mark>28</mark>.', speech:'y is directly proportional to x. y equals 12 when x equals 3. Find y when x equals 7. y equals 28.', ja:'y は x に正比例。x=3 で y=12 なら x=7 のとき y=28 です。', tip:'"directly proportional" ＝ 正比例。y = kx の形で表す'},
-  {cat:'分数・小数・比', en:'4 workers take 6 days. <mark>Inverse proportion</mark>: 8 workers take <mark>3 days</mark>.', speech:'4 workers take 6 days. By inverse proportion, 8 workers take 3 days.', ja:'4 人で 6 日 → 8 人なら 3 日。これは反比例です。', tip:'"inverse proportion" ＝ 反比例。人数 × 日数 = 一定'},
-  {cat:'分数・小数・比', en:'Map scale <mark>1 : 25,000</mark>. 8 cm → <mark>2 km</mark>.', speech:'Map scale 1 to 25,000. 8 centimetres on the map represents 2 kilometres in real life.', ja:'縮尺 1:25,000 の地図で 8 cm → 実際は 2 km です。', tip:'8 × 25,000 = 200,000 cm = 2 km'},
-  {cat:'分数・小数・比', en:'<mark>Simple interest</mark>: I = PRT = $2,000 × 3% × 4 = <mark>$240</mark>.', speech:'Simple interest: I equals P times R times T. 2,000 dollars times 3 percent times 4 years equals 240 dollars.', ja:'単利: I = PRT = $2,000 × 0.03 × 4 = $240 です。', tip:'"simple interest" ＝ 単利。P=元金、R=利率、T=期間（年）'},
-  {cat:'代数入門', en:'Simplify: 4a + 3b − 2a + b = <mark>2a + 4b</mark>.', speech:'Simplify: 4a plus 3b minus 2a plus b equals 2a plus 4b.', ja:'同類項をまとめると 4a + 3b − 2a + b = 2a + 4b です。', tip:'"collect like terms" ＝ 同類項をまとめる'},
-  {cat:'代数入門', en:'Expand: 3(2x + 5) − 4(x − 1) = <mark>2x + 19</mark>.', speech:'Expand: 3 times open bracket 2x plus 5 close bracket, minus 4 times open bracket x minus 1 close bracket, equals 2x plus 19.', ja:'展開: 3(2x + 5) − 4(x − 1) = 2x + 19 です。', tip:'"expand" ＝ 展開する。括弧は "bracket"（英）または "parenthesis"（米）。授業では省略することも多い'},
-  {cat:'代数入門', en:'Solve: 3x − 4 = 11 → x = <mark>5</mark>.', speech:'Solve: 3x minus 4 equals 11. x equals 5.', ja:'3x − 4 = 11 → 両辺に 4 を足す → x = 5', tip:'"solve" ＝ 解く。"both sides" ＝ 両辺'},
-  {cat:'代数入門', en:'Solve: 2(x + 3) = 14 → x = <mark>4</mark>.', speech:'Solve: 2 times open bracket x plus 3 close bracket equals 14. x equals 4.', ja:'2(x + 3) = 14 → 展開して 2x + 6 = 14 → x = 4', tip:'授業では "2, x plus 3, equals 14" と括弧を省略することも多い'},
-  {cat:'代数入門', en:'Solve the <mark>inequality</mark>: 2x + 1 > 9 → x > <mark>4</mark>.', speech:'Solve the inequality: 2x plus 1 is greater than 9. x is greater than 4.', ja:'不等式 2x + 1 > 9 → x > 4 です。', tip:'"inequality" ＝ 不等式。負の数で割るとき不等号の向きが逆になる'},
-  {cat:'代数入門', en:'nth term = 4n − 1. Find the 6th term: 4(6) − 1 = <mark>23</mark>.', speech:'The nth term is 4n minus 1. The 6th term equals 4 times 6, minus 1, equals 23.', ja:'第 n 項が 4n − 1 のとき、第 6 項 = 23 です。', tip:'"nth term" ＝ 第 n 項（一般項）'},
-  {cat:'代数入門', en:'Substitute x = −2, y = 3 into 2x² + y. → <mark>11</mark>.', speech:'Substitute x equals negative 2, y equals 3 into 2x squared plus y. 2 times 4, plus 3, equals 11.', ja:'x = −2、y = 3 を 2x² + y に代入すると 11 です。', tip:'"substitute" ＝ 代入する。負の数の代入は括弧をつけて丁寧に'},
-  {cat:'代数入門', en:'Make x the subject of y = 3x + 2. → x = <mark>(y − 2) / 3</mark>.', speech:'Make x the subject of y equals 3x plus 2. x equals open bracket y minus 2 close bracket, over 3.', ja:'y = 3x + 2 で x について解く → x = (y − 2)/3', tip:'"make x the subject" ＝ x について解く（変数の移項）'},
-  {cat:'代数入門', en:'Plot <mark>y = 2x − 3</mark> using a table of values.', speech:'Plot y equals 2x minus 3 using a table of values.', ja:'対応表を使って y = 2x − 3 のグラフを描きましょう。', tip:'"table of values" ＝ 対応表'},
-  {cat:'代数入門', en:'Gradient of line through (1, 2) and (4, 8): (8−2)/(4−1) = <mark>2</mark>.', speech:'The gradient of the line through the points (1, 2) and (4, 8) is 8 minus 2, over 4 minus 1, equals 2.', ja:'(1, 2) と (4, 8) を結ぶ直線の傾き = (8−2)÷(4−1) = 2 です。', tip:'"gradient" ＝ 傾き。= (y₂ − y₁) ÷ (x₂ − x₁)'},
-  {cat:'図形・面積・体積', en:'Area of <mark>trapezium</mark>: A = ½(a + b)h. a=5, b=9, h=4 → A = <mark>28 cm²</mark>.', speech:'Area of a trapezium: A equals one half, or 1 over 2 times open bracket a plus b close bracket times h. a equals 5, b equals 9, h equals 4. Area equals 28 centimetres squared.', ja:'台形の面積: ½ × (5 + 9) × 4 = 28 cm² です。', tip:'"trapezium" ＝ 台形。a と b は平行な 2 辺、h は高さ'},
-  {cat:'図形・面積・体積', en:'Circumference: C = πd. Diameter = 14 cm → C ≈ <mark>44.0 cm</mark>.', speech:'Circumference: C equals pi times d. Diameter equals 14 centimetres. C approximately equals 44 centimetres.', ja:'直径 14 cm の円の円周: C = πd ≈ 44.0 cm', tip:'"diameter" ＝ 直径。C = πd または C = 2πr'},
-  {cat:'図形・面積・体積', en:'Area of circle: A = πr². r = 6 cm → A ≈ <mark>113.1 cm²</mark>.', speech:'Area of a circle: A equals pi r squared. r equals 6 centimetres. Area approximately equals 113.1 centimetres squared.', ja:'半径 6 cm の円の面積: A = πr² ≈ 113.1 cm²', tip:'"radius" ＝ 半径。π ≈ 3.14159…'},
-  {cat:'図形・面積・体積', en:'Volume of cylinder: V = πr²h. r=3, h=10 → V ≈ <mark>282.7 cm³</mark>.', speech:'Volume of a cylinder: V equals pi r squared times h. r equals 3 centimetres, h equals 10 centimetres. V approximately equals 282.7 centimetres cubed.', ja:'円柱の体積: V = πr²h = π × 9 × 10 ≈ 282.7 cm³', tip:'"cylinder" ＝ 円柱。底面積 × 高さ'},
-  {cat:'図形・面積・体積', en:'Surface area of cuboid: 6×4×3 cm → SA = <mark>108 cm²</mark>.', speech:'Surface area of a cuboid: 6 by 4 by 3 centimetres. Surface area equals 108 centimetres squared.', ja:'直方体の表面積: 2(6×4 + 4×3 + 6×3) = 108 cm²', tip:'"surface area" ＝ 表面積。6 面の面積の合計'},
-  {cat:'図形・面積・体積', en:'Angles in a <mark>quadrilateral</mark> = 360°. Missing angle: 360 − 80 − 95 − 110 = <mark>75°</mark>.', speech:'Angles in a quadrilateral add up to 360 degrees. Missing angle: 360 minus 80 minus 95 minus 110 equals 75 degrees.', ja:'四角形の内角の和は 360°。不明な角 = 75°', tip:'"quadrilateral" ＝ 四角形。三角形の内角の和は 180°'},
-  {cat:'図形・面積・体積', en:'<mark>Alternate angles</mark> are equal when a transversal crosses parallel lines.', speech:'Alternate angles are equal when a transversal crosses parallel lines.', ja:'錯角は等しい。平行線に横断線が交わるとき、錯角は同じ大きさです。', tip:'"alternate angles" ＝ 錯角、"co-interior angles" ＝ 同側内角（合計 180°）'},
-  {cat:'図形・面積・体積', en:'The <mark>exterior angle</mark> of a triangle = sum of two non-adjacent interior angles.', speech:'The exterior angle of a triangle equals the sum of the two non-adjacent interior angles.', ja:'三角形の外角は、隣り合わない 2 つの内角の和に等しい。', tip:'"exterior angle" ＝ 外角、"interior angle" ＝ 内角'},
-  {cat:'図形・面積・体積', en:'Construct a triangle: sides <mark>5 cm, 7 cm, 9 cm</mark> using ruler and compass.', speech:'Construct a triangle with sides 5 centimetres, 7 centimetres, and 9 centimetres using a ruler and compass.', ja:'辺 5cm・7cm・9cm の三角形を作図しましょう。', tip:'"construct" ＝ 作図する。"compass" ＝ コンパス'},
-  {cat:'図形・面積・体積', en:'The <mark>bearing</mark> of B from A is <mark>065°</mark>, measured clockwise from north.', speech:'The bearing of B from A is 065 degrees, measured clockwise from north.', ja:'A から B の方位角は 065° です。北から時計回りに測ります。', tip:'"bearing" ＝ 方位角。3 桁で表し、常に北から時計回り'},
-  {cat:'統計・グラフ', en:'Mean of 5, 8, 12, 7, 3 = <mark>7</mark>.', speech:'The mean of 5, 8, 12, 7, and 3 is 7.', ja:'5, 8, 12, 7, 3 の平均 = 7 です。', tip:'"mean" ＝ 平均値。全部足して個数で割る'},
-  {cat:'統計・グラフ', en:'Median of 3, 5, 7, 8, 12 = <mark>7</mark>.', speech:'The median of 3, 5, 7, 8, and 12 is 7, the middle value.', ja:'3, 5, 7, 8, 12 の中央値は 7 です。', tip:'偶数個なら中央 2 つの平均。必ず昇順に並べてから求める'},
-  {cat:'統計・グラフ', en:'Mode of 4, 6, 6, 8, 9, 6 = <mark>6</mark>.', speech:'The mode of 4, 6, 6, 8, 9, and 6 is 6, the most frequent value.', ja:'4, 6, 6, 8, 9, 6 の最頻値は 6 です。', tip:'"mode" ＝ 最頻値。複数あることもある（bimodal など）'},
-  {cat:'統計・グラフ', en:'Pie chart: sports sector = 90° = <mark>25%</mark> of the total.', speech:'Reading a pie chart: the sports sector is 90 degrees, which is 25 percent of the total.', ja:'円グラフで「スポーツ」が 90° → 全体の 25% です。', tip:'"pie chart" ＝ 円グラフ。90° ÷ 360° × 100% = 25%'},
-  {cat:'統計・グラフ', en:'Scatter graph: <mark>positive correlation</mark> between height and shoe size.', speech:'The scatter graph shows a positive correlation between height and shoe size.', ja:'散布図: 身長と靴のサイズの間には正の相関があります。', tip:'"scatter graph" ＝ 散布図。positive/negative/no correlation ＝ 正・負・無相関'},
-  {cat:'統計・グラフ', en:'Draw a <mark>frequency table</mark> and find the class with the highest frequency.', speech:'Draw a frequency table and find the class with the highest frequency.', ja:'度数分布表を作り、最も度数が高い階級を求めましょう。', tip:'"frequency table" ＝ 度数分布表、"class" ＝ 階級'},
-  {cat:'統計・グラフ', en:'P(not A) = <mark>1 − P(A)</mark>. If P(rain) = 0.3, P(no rain) = <mark>0.7</mark>.', speech:'The probability of an event not occurring equals 1 minus P of A. If P of rain equals 0.3, then P of no rain equals 0.7.', ja:'P(A でない) = 1 − P(A)。P(雨) = 0.3 → P(雨でない) = 0.7', tip:'"complementary event" ＝ 余事象'},
-  {cat:'授業表現', en:'Could you explain what <mark>reciprocal</mark> means?', speech:'Could you explain what reciprocal means? I have not seen that word before.', ja:'"reciprocal（逆数）" の意味を説明していただけますか？', tip:'"Could you explain …?" が丁寧な表現'},
-  {cat:'授業表現', en:'I need to <mark>rearrange</mark> the formula first before substituting.', speech:'I need to rearrange the formula first before substituting.', ja:'まず公式を変形してから代入する必要があります。', tip:'"rearrange" ＝ 式を変形する・整理する'},
-  {cat:'授業表現', en:'<mark>Hence</mark>, find the value of y when x = 4.', speech:'Hence, find the value of y when x equals 4.', ja:'したがって、x = 4 のときの y の値を求めなさい。', tip:'"hence" ＝ したがって。試験問題で頻出の指示語'},
-  {cat:'授業表現', en:'Give your answer correct to <mark>3 significant figures</mark>: 3.14159… ≈ 3.14.', speech:'Give your answer correct to 3 significant figures. 3.14159 approximately equals 3.14.', ja:'有効数字 3 桁で答えなさい: 3.14159… ≈ 3.14', tip:'"significant figures (s.f.)" ＝ 有効数字'},
-  {cat:'授業表現', en:'I can see two possible <mark>methods</mark>: substitution and graphing.', speech:'I can see two possible methods. The first is substitution, and the second is using a graph.', ja:'2 つの方法が考えられます: 代入法とグラフ法です。', tip:'Singapore の授業では alternative methods の説明が評価される'},
-  {cat:'授業表現', en:'<mark>State</mark> x. <mark>Show</mark> your working. <mark>Hence</mark>, find y.', speech:'State the value of x. Show your working. Hence, find y.', ja:'x を答えなさい。途中式を示しなさい。したがって y を求めなさい。', tip:'"state" ＝ 答えを書く、"show" ＝ 途中式を示す。試験の 3 大指示語'},
-  {cat:'授業表現', en:'I made a <mark>sign error</mark>. It should be −6, not +6.', speech:'I made a sign error. It should be negative 6, not positive 6.', ja:'符号のミスをしました。+6 ではなく −6 が正しいです。', tip:'"sign error" ＝ 符号ミス。Grade 6 で最も多いミスのひとつ'},
+  {cat:'分数・小数・比', en:'y is <mark>directly proportional</mark> to x. y = 12 when x = 3. Find y when x = 7. y = <mark>28</mark>.', speech:'y is directly proportional to x. y equals 12 when x equals 3. Find y when x equals 7. y equals 28.', ja:'y は x に正比例。x=3 で y=12 なら x=7 のとき y=28 です。', tip:'"directly proportional" ＝ 正比例'},
+  {cat:'分数・小数・比', en:'4 workers take 6 days. <mark>Inverse proportion</mark>: 8 workers take <mark>3 days</mark>.', speech:'4 workers take 6 days. Inverse proportion: 8 workers take 3 days.', ja:'4 人で 6 日 → 8 人なら 3 日。反比例です。', tip:'"inverse proportion" ＝ 反比例'},
+  {cat:'分数・小数・比', en:'Map scale <mark>1 : 25,000</mark>. 8 cm → <mark>2 km</mark>.', speech:'Map scale 1 to 25,000. 8 centimetres represents 2 kilometres.', ja:'縮尺 1:25,000 の地図で 8 cm → 実際は 2 km です。', tip:'8 × 25,000 = 200,000 cm = 2 km'},
+  {cat:'分数・小数・比', en:'<mark>Simple interest</mark>: I = PRT = $2,000 × 3% × 4 = <mark>$240</mark>.', speech:'Simple interest: I equals P times R times T. 2,000 dollars times 3 percent times 4 equals 240 dollars.', ja:'単利: I = PRT = $2,000 × 0.03 × 4 = $240 です。', tip:'"simple interest" ＝ 単利'},
+  {cat:'代数入門', en:'Simplify: 4a + 3b − 2a + b = <mark>2a + 4b</mark>.', speech:'Simplify: 4a plus 3b minus 2a plus b equals 2a plus 4b.', ja:'同類項をまとめると 2a + 4b です。', tip:'"collect like terms" ＝ 同類項をまとめる'},
+  {cat:'代数入門', en:'Expand: 3(2x + 5) − 4(x − 1) = <mark>2x + 19</mark>.', speech:'Expand: 3 times open bracket 2x plus 5 close bracket, minus 4 times open bracket x minus 1 close bracket, equals 2x plus 19.', ja:'展開: 3(2x + 5) − 4(x − 1) = 2x + 19 です。', tip:'"expand" ＝ 展開する'},
+  {cat:'代数入門', en:'Solve: 3x − 4 = 11 → x = <mark>5</mark>.', speech:'Solve: 3x minus 4 equals 11. x equals 5.', ja:'3x − 4 = 11 → x = 5', tip:'"solve" ＝ 解く'},
+  {cat:'代数入門', en:'Solve: 2(x + 3) = 14 → x = <mark>4</mark>.', speech:'Solve: 2 times open bracket x plus 3 close bracket equals 14. x equals 4.', ja:'2(x + 3) = 14 → x = 4', tip:'括弧は "bracket"（英）または "parenthesis"（米）'},
+  {cat:'代数入門', en:'Solve the <mark>inequality</mark>: 2x + 1 > 9 → x > <mark>4</mark>.', speech:'Solve the inequality: 2x plus 1 is greater than 9. x is greater than 4.', ja:'不等式 2x + 1 > 9 → x > 4 です。', tip:'"inequality" ＝ 不等式'},
+  {cat:'代数入門', en:'nth term = 4n − 1. Find the 6th term: 4(6) − 1 = <mark>23</mark>.', speech:'nth term equals 4n minus 1. The 6th term equals 4 times 6, minus 1, equals 23.', ja:'第 n 項が 4n − 1 のとき、第 6 項 = 23 です。', tip:'"nth term" ＝ 第 n 項（一般項）'},
+  {cat:'代数入門', en:'Substitute x = −2, y = 3 into 2x² + y. → <mark>11</mark>.', speech:'Substitute x equals negative 2, y equals 3 into 2x squared plus y. The answer is 11.', ja:'x = −2、y = 3 を 2x² + y に代入すると 11 です。', tip:'"substitute" ＝ 代入する'},
+  {cat:'代数入門', en:'Make x the subject of y = 3x + 2. → x = <mark>(y − 2) / 3</mark>.', speech:'Make x the subject of y equals 3x plus 2. x equals open bracket y minus 2 close bracket over 3.', ja:'y = 3x + 2 で x について解く → x = (y − 2)/3', tip:'"make x the subject" ＝ x について解く'},
+  {cat:'代数入門', en:'Plot <mark>y = 2x − 3</mark> using a table of values.', speech:'Plot y equals 2x minus 3 using a table of values.', ja:'y = 2x − 3 のグラフを対応表で描きましょう。', tip:'"table of values" ＝ 対応表'},
+  {cat:'代数入門', en:'Gradient of line through (1, 2) and (4, 8): (8−2)/(4−1) = <mark>2</mark>.', speech:'Gradient of line through 1, 2 and 4, 8: 8 minus 2 over 4 minus 1 equals 2.', ja:'(1, 2) と (4, 8) を結ぶ直線の傾き = 2 です。', tip:'"gradient" ＝ 傾き'},
+  {cat:'図形・面積・体積', en:'Area of <mark>trapezium</mark>: A = ½(a + b)h. a=5, b=9, h=4 → A = <mark>28 cm²</mark>.', speech:'Area of a trapezium: A equals one half times open bracket a plus b close bracket times h. a equals 5, b equals 9, h equals 4. Area equals 28 centimetres squared.', ja:'台形の面積: ½ × (5 + 9) × 4 = 28 cm² です。', tip:'"trapezium" ＝ 台形'},
+  {cat:'図形・面積・体積', en:'Circumference: C = πd. Diameter = 14 cm → C ≈ <mark>44.0 cm</mark>.', speech:'Circumference: C equals pi times d. Diameter equals 14 centimetres. C approximately equals 44 centimetres.', ja:'直径 14 cm の円の円周 ≈ 44.0 cm', tip:'"diameter" ＝ 直径'},
+  {cat:'図形・面積・体積', en:'Area of circle: A = πr². r = 6 cm → A ≈ <mark>113.1 cm²</mark>.', speech:'Area of a circle: A equals pi r squared. r equals 6 centimetres. Area approximately equals 113.1 centimetres squared.', ja:'半径 6 cm の円の面積 ≈ 113.1 cm²', tip:'"radius" ＝ 半径'},
+  {cat:'図形・面積・体積', en:'Volume of cylinder: V = πr²h. r=3, h=10 → V ≈ <mark>282.7 cm³</mark>.', speech:'Volume of a cylinder: V equals pi r squared times h. r equals 3 centimetres, h equals 10 centimetres. V approximately equals 282.7 centimetres cubed.', ja:'円柱の体積 ≈ 282.7 cm³', tip:'"cylinder" ＝ 円柱'},
+  {cat:'図形・面積・体積', en:'Surface area of cuboid: 6×4×3 cm → SA = <mark>108 cm²</mark>.', speech:'Surface area of a cuboid: 6 by 4 by 3 centimetres. Surface area equals 108 centimetres squared.', ja:'直方体の表面積 = 108 cm²', tip:'"surface area" ＝ 表面積'},
+  {cat:'図形・面積・体積', en:'Angles in a <mark>quadrilateral</mark> = 360°. Missing: 360 − 80 − 95 − 110 = <mark>75°</mark>.', speech:'Angles in a quadrilateral equal 360 degrees. Missing angle: 360 minus 80 minus 95 minus 110 equals 75 degrees.', ja:'四角形の内角の和は 360°。不明な角 = 75°', tip:'"quadrilateral" ＝ 四角形'},
+  {cat:'図形・面積・体積', en:'<mark>Alternate angles</mark> are equal when a transversal crosses parallel lines.', speech:'Alternate angles are equal when a transversal crosses parallel lines.', ja:'錯角は等しい。', tip:'"alternate angles" ＝ 錯角'},
+  {cat:'図形・面積・体積', en:'The <mark>exterior angle</mark> of a triangle = sum of two non-adjacent interior angles.', speech:'The exterior angle of a triangle equals the sum of the two non-adjacent interior angles.', ja:'三角形の外角は隣り合わない 2 つの内角の和に等しい。', tip:'"exterior angle" ＝ 外角'},
+  {cat:'図形・面積・体積', en:'Construct a triangle: sides <mark>5 cm, 7 cm, 9 cm</mark> using ruler and compass.', speech:'Construct a triangle with sides 5 centimetres, 7 centimetres, and 9 centimetres using a ruler and compass.', ja:'辺 5cm・7cm・9cm の三角形を作図しましょう。', tip:'"construct" ＝ 作図する'},
+  {cat:'図形・面積・体積', en:'The <mark>bearing</mark> of B from A is <mark>065°</mark>, measured clockwise from north.', speech:'The bearing of B from A is 065 degrees, measured clockwise from north.', ja:'A から B の方位角は 065° です。', tip:'"bearing" ＝ 方位角'},
+  {cat:'統計・グラフ', en:'Mean of 5, 8, 12, 7, 3 = <mark>7</mark>.', speech:'Mean of 5, 8, 12, 7, and 3 equals 7.', ja:'5, 8, 12, 7, 3 の平均 = 7 です。', tip:'"mean" ＝ 平均値'},
+  {cat:'統計・グラフ', en:'Median of 3, 5, 7, 8, 12 = <mark>7</mark>.', speech:'Median of 3, 5, 7, 8, and 12 equals 7.', ja:'3, 5, 7, 8, 12 の中央値は 7 です。', tip:'"median" ＝ 中央値'},
+  {cat:'統計・グラフ', en:'Mode of 4, 6, 6, 8, 9, 6 = <mark>6</mark>.', speech:'Mode of 4, 6, 6, 8, 9, and 6 equals 6.', ja:'4, 6, 6, 8, 9, 6 の最頻値は 6 です。', tip:'"mode" ＝ 最頻値'},
+  {cat:'統計・グラフ', en:'Pie chart: sports sector = 90° = <mark>25%</mark> of the total.', speech:'Pie chart: sports sector equals 90 degrees, which is 25 percent of the total.', ja:'円グラフで「スポーツ」が 90° → 25% です。', tip:'90° ÷ 360° × 100% = 25%'},
+  {cat:'統計・グラフ', en:'Scatter graph: <mark>positive correlation</mark> between height and shoe size.', speech:'Scatter graph: positive correlation between height and shoe size.', ja:'散布図: 身長と靴のサイズの間には正の相関があります。', tip:'"scatter graph" ＝ 散布図'},
+  {cat:'統計・グラフ', en:'Draw a <mark>frequency table</mark> and find the class with the highest frequency.', speech:'Draw a frequency table and find the class with the highest frequency.', ja:'度数分布表を作り、最も度数が高い階級を求めましょう。', tip:'"frequency table" ＝ 度数分布表'},
+  {cat:'統計・グラフ', en:'P(not A) = <mark>1 − P(A)</mark>. If P(rain) = 0.3, P(no rain) = <mark>0.7</mark>.', speech:'P of not A equals 1 minus P of A. If P of rain equals 0.3, P of no rain equals 0.7.', ja:'P(A でない) = 1 − P(A)。P(雨) = 0.3 → P(雨でない) = 0.7', tip:'"complementary event" ＝ 余事象'},
+  {cat:'授業表現', en:'Could you explain what <mark>reciprocal</mark> means?', speech:'Could you explain what reciprocal means?', ja:'"reciprocal（逆数）" の意味を説明していただけますか？', tip:''},
+  {cat:'授業表現', en:'I need to <mark>rearrange</mark> the formula first before substituting.', speech:'I need to rearrange the formula first before substituting.', ja:'まず公式を変形してから代入する必要があります。', tip:'"rearrange" ＝ 式を変形する'},
+  {cat:'授業表現', en:'<mark>Hence</mark>, find the value of y when x = 4.', speech:'Hence, find the value of y when x equals 4.', ja:'したがって、x = 4 のときの y の値を求めなさい。', tip:'"hence" ＝ したがって'},
+  {cat:'授業表現', en:'Give your answer correct to <mark>3 significant figures</mark>: 3.14159… ≈ 3.14.', speech:'Give your answer correct to 3 significant figures: 3.14159 approximately equals 3.14.', ja:'有効数字 3 桁で答えなさい: ≈ 3.14', tip:'"significant figures" ＝ 有効数字'},
+  {cat:'授業表現', en:'I can see two possible <mark>methods</mark>: substitution and graphing.', speech:'I can see two possible methods: substitution and graphing.', ja:'2 つの方法が考えられます: 代入法とグラフ法です。', tip:''},
+  {cat:'授業表現', en:'<mark>State</mark> x. <mark>Show</mark> your working. <mark>Hence</mark>, find y.', speech:'State x. Show your working. Hence, find y.', ja:'x を答えなさい。途中式を示しなさい。したがって y を求めなさい。', tip:'"state" ＝ 答えを書く、"show" ＝ 途中式を示す'},
+  {cat:'授業表現', en:'I made a <mark>sign error</mark>. It should be −6, not +6.', speech:'I made a sign error. It should be negative 6, not positive 6.', ja:'符号のミスをしました。+6 ではなく −6 が正しいです。', tip:'"sign error" ＝ 符号ミス'},
 ];
 
 const TOTAL = phrases.length;
@@ -702,7 +708,70 @@ let enVoices = [];
 
 function populateVoices() {
   const all = window.speechSynthesis.getVoices();
-  enVoices = all.filter(v => v.lang.startsWith('en'));
+  // 動作確認済みの完全な音声名リスト（完全一致）
+  const okNames = new Set([
+    // en-US
+    'Microsoft Ava Online (Natural) - English (United States)',
+    'Microsoft Andrew Online (Natural) - English (United States)',
+    'Microsoft Emma Online (Natural) - English (United States)',
+    'Microsoft Brian Online (Natural) - English (United States)',
+    'Microsoft Jenny Online (Natural) - English (United States)',
+    'Microsoft Guy Online (Natural) - English (United States)',
+    'Microsoft Aria Online (Natural) - English (United States)',
+    'Microsoft Ana Online (Natural) - English (United States)',
+    'Microsoft Christopher Online (Natural) - English (United States)',
+    'Microsoft Eric Online (Natural) - English (United States)',
+    'Microsoft Michelle Online (Natural) - English (United States)',
+    'Microsoft Steffan Online (Natural) - English (United States)',
+    'Microsoft Ava Multilingual Online (Natural) - English (United States)',
+    'Microsoft Andrew Multilingual Online (Natural) - English (United States)',
+    'Microsoft Emma Multilingual Online (Natural) - English (United States)',
+    'Microsoft Brian Multilingual Online (Natural) - English (United States)',
+    // en-GB
+    'Microsoft Hazel - English (United Kingdom)',
+    'Microsoft Susan - English (United Kingdom)',
+    'Microsoft George - English (United Kingdom)',
+    'Microsoft Libby Online (Natural) - English (United Kingdom)',
+    'Microsoft Maisie Online (Natural) - English (United Kingdom)',
+    'Microsoft Thomas Online (Natural) - English (United Kingdom)',
+    'Microsoft Sonia Online (Natural) - English (United Kingdom)',
+    'Microsoft Ryan Online (Natural) - English (United Kingdom)',
+    // en-AU
+    'Microsoft William Online (Natural) - English (Australia)',
+    'Microsoft Natasha Online (Natural) - English (Australia)',
+    // en-CA
+    'Microsoft Clara Online (Natural) - English (Canada)',
+    'Microsoft Liam Online (Natural) - English (Canada)',
+    // en-ZA
+    'Microsoft Leah Online (Natural) - English (South Africa)',
+    'Microsoft Luke Online (Natural) - English (South Africa)',
+    // en-IE
+    'Microsoft Emily Online (Natural) - English (Ireland)',
+    'Microsoft Connor Online (Natural) - English (Ireland)',
+    // en-HK
+    'Microsoft Yan Online (Natural) - English (Hong Kong SAR)',
+    'Microsoft Sam Online (Natural) - English (Hong Kong SAR)',
+    // en-KE
+    'Microsoft Asilia Online (Natural) - English (Kenya)',
+    'Microsoft Chilemba Online (Natural) - English (Kenya)',
+    // en-NG
+    'Microsoft Ezinne Online (Natural) - English (Nigeria)',
+    'Microsoft Abeo Online (Natural) - English (Nigeria)',
+    // en-NZ
+    'Microsoft Molly Online (Natural) - English (New Zealand)',
+    // en-SG
+    'Microsoft Luna Online (Natural) - English (Singapore)',
+    // en-TZ
+    'Microsoft Imani Online (Natural) - English (Tanzania)',
+    'Microsoft Elimu Online (Natural) - English (Tanzania)',
+    // en-PH
+    'Microsoft James Online (Natural) - English (Philippines)',
+    // en-IN
+    'Microsoft Neerja Online (Natural) - English (India)',
+    'Microsoft Prabhat Online (Natural) - English (India)',
+  ]);
+  const whitelist = all.filter(v => okNames.has(v.name));
+  enVoices = whitelist.length ? whitelist : all.filter(v => v.lang.startsWith('en'));
   if (!enVoices.length) enVoices = all;
   applyVoicePref();
 }
@@ -763,7 +832,15 @@ function speakOne(text, onEnd) {
     if (isSpeaking) return;
     isSpeaking = true;
     const utt = new SpeechSynthesisUtterance(text);
-    const v = getVoice(); if (v) utt.voice = v;
+    const v = getVoice();
+    if (v) {
+      utt.voice = v;
+      utt.lang  = v.lang;  // 音声のlangを明示的に設定
+    } else {
+      // フォールバック：voice-prefの設定に応じてlangを設定
+      const pref = document.getElementById('voice-pref').value;
+      utt.lang = pref === 'US' ? 'en-US' : 'en-GB';
+    }
     utt.rate = getRate();
     utt.onstart = startKeepAlive;
     utt.onend   = () => { isSpeaking=false; stopKeepAlive(); if(onEnd) onEnd(); };

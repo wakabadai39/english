@@ -638,7 +638,7 @@ const phrases = [
   {cat:'物理', en:'Newton\'s <mark>second law</mark>: Force = mass × acceleration (F = ma).', speech:'Newton\'s second law: Force equals mass times acceleration. F equals m a.', ja:'ニュートンの第 2 法則: 力 = 質量 × 加速度（F = ma）', tip:'"F = ma" は最重要公式。× は "times" と読む'},
   {cat:'物理', en:'Newton\'s <mark>third law</mark>: for every action, there is an equal and opposite reaction.', speech:'Newton\'s third law: for every action, there is an equal and opposite reaction.', ja:'ニュートンの第 3 法則: すべての作用に対して、等しく反対方向の反作用があります。', tip:'"action and reaction" ＝ 作用と反作用'},
   {cat:'物理', en:'<mark>Work</mark> = force × distance. It is measured in joules (J).', speech:'Work equals force times distance. It is measured in joules.', ja:'仕事 = 力 × 距離。単位はジュール（J）です。', tip:'"work" ＝ 仕事（物理）。× は "times" と読む'},
-  {cat:'物理', en:'<mark>Kinetic energy</mark> is the energy of a moving object. KE = ½mv².', speech:'Kinetic energy is the energy of a moving object. K E equals one half, or 1 over 2 m v squared.', ja:'運動エネルギーは動いている物体のエネルギーです。KE = ½mv²', tip:'"kinetic energy" ＝ 運動エネルギー。½mv² は "one half m v squared" と読む'},
+  {cat:'物理', en:'<mark>Kinetic energy</mark> is the energy of a moving object. KE = ½mv².', speech:'Kinetic energy is the energy of a moving object. K E equals one half m v squared.', ja:'運動エネルギーは動いている物体のエネルギーです。KE = ½mv²', tip:'"kinetic energy" ＝ 運動エネルギー。½mv² は "one half m v squared" と読む'},
   {cat:'物理', en:'<mark>Power</mark> = work done ÷ time. It is measured in watts (W).', speech:'Power equals work done divided by time. It is measured in watts.', ja:'仕事率 = 仕事 ÷ 時間。単位はワット（W）です。', tip:'"power" ＝ 仕事率・電力（W）'},
   {cat:'物理', en:'<mark>Voltage</mark> (V) drives the current through a circuit. <mark>Resistance</mark> (Ω) opposes the current.', speech:'Voltage drives the current through a circuit. Resistance, measured in ohms, opposes the current.', ja:'電圧（V）は電流を回路に流します。抵抗（Ω）は電流に逆らいます。', tip:'"voltage" ＝ 電圧（V）、"resistance" ＝ 抵抗（Ω＝ohms）'},
   {cat:'物理', en:'Ohm\'s Law: <mark>V = IR</mark>. Voltage equals current multiplied by resistance.', speech:'Ohm\'s Law: V equals I times R. Voltage equals current multiplied by resistance.', ja:'オームの法則: V = IR。電圧 = 電流 × 抵抗', tip:'"Ohm\'s Law" ＝ オームの法則'},
@@ -688,7 +688,70 @@ let enVoices = [];
 
 function populateVoices() {
   const all = window.speechSynthesis.getVoices();
-  enVoices = all.filter(v => v.lang.startsWith('en'));
+  // 動作確認済みの完全な音声名リスト（完全一致）
+  const okNames = new Set([
+    // en-US
+    'Microsoft Ava Online (Natural) - English (United States)',
+    'Microsoft Andrew Online (Natural) - English (United States)',
+    'Microsoft Emma Online (Natural) - English (United States)',
+    'Microsoft Brian Online (Natural) - English (United States)',
+    'Microsoft Jenny Online (Natural) - English (United States)',
+    'Microsoft Guy Online (Natural) - English (United States)',
+    'Microsoft Aria Online (Natural) - English (United States)',
+    'Microsoft Ana Online (Natural) - English (United States)',
+    'Microsoft Christopher Online (Natural) - English (United States)',
+    'Microsoft Eric Online (Natural) - English (United States)',
+    'Microsoft Michelle Online (Natural) - English (United States)',
+    'Microsoft Steffan Online (Natural) - English (United States)',
+    'Microsoft Ava Multilingual Online (Natural) - English (United States)',
+    'Microsoft Andrew Multilingual Online (Natural) - English (United States)',
+    'Microsoft Emma Multilingual Online (Natural) - English (United States)',
+    'Microsoft Brian Multilingual Online (Natural) - English (United States)',
+    // en-GB
+    'Microsoft Hazel - English (United Kingdom)',
+    'Microsoft Susan - English (United Kingdom)',
+    'Microsoft George - English (United Kingdom)',
+    'Microsoft Libby Online (Natural) - English (United Kingdom)',
+    'Microsoft Maisie Online (Natural) - English (United Kingdom)',
+    'Microsoft Thomas Online (Natural) - English (United Kingdom)',
+    'Microsoft Sonia Online (Natural) - English (United Kingdom)',
+    'Microsoft Ryan Online (Natural) - English (United Kingdom)',
+    // en-AU
+    'Microsoft William Online (Natural) - English (Australia)',
+    'Microsoft Natasha Online (Natural) - English (Australia)',
+    // en-CA
+    'Microsoft Clara Online (Natural) - English (Canada)',
+    'Microsoft Liam Online (Natural) - English (Canada)',
+    // en-ZA
+    'Microsoft Leah Online (Natural) - English (South Africa)',
+    'Microsoft Luke Online (Natural) - English (South Africa)',
+    // en-IE
+    'Microsoft Emily Online (Natural) - English (Ireland)',
+    'Microsoft Connor Online (Natural) - English (Ireland)',
+    // en-HK
+    'Microsoft Yan Online (Natural) - English (Hong Kong SAR)',
+    'Microsoft Sam Online (Natural) - English (Hong Kong SAR)',
+    // en-KE
+    'Microsoft Asilia Online (Natural) - English (Kenya)',
+    'Microsoft Chilemba Online (Natural) - English (Kenya)',
+    // en-NG
+    'Microsoft Ezinne Online (Natural) - English (Nigeria)',
+    'Microsoft Abeo Online (Natural) - English (Nigeria)',
+    // en-NZ
+    'Microsoft Molly Online (Natural) - English (New Zealand)',
+    // en-SG
+    'Microsoft Luna Online (Natural) - English (Singapore)',
+    // en-TZ
+    'Microsoft Imani Online (Natural) - English (Tanzania)',
+    'Microsoft Elimu Online (Natural) - English (Tanzania)',
+    // en-PH
+    'Microsoft James Online (Natural) - English (Philippines)',
+    // en-IN
+    'Microsoft Neerja Online (Natural) - English (India)',
+    'Microsoft Prabhat Online (Natural) - English (India)',
+  ]);
+  const whitelist = all.filter(v => okNames.has(v.name));
+  enVoices = whitelist.length ? whitelist : all.filter(v => v.lang.startsWith('en'));
   if (!enVoices.length) enVoices = all;
   applyVoicePref();
 }
@@ -749,7 +812,15 @@ function speakOne(text, onEnd) {
     if (isSpeaking) return;
     isSpeaking = true;
     const utt = new SpeechSynthesisUtterance(text);
-    const v = getVoice(); if (v) utt.voice = v;
+    const v = getVoice();
+    if (v) {
+      utt.voice = v;
+      utt.lang  = v.lang;  // 音声のlangを明示的に設定
+    } else {
+      // フォールバック：voice-prefの設定に応じてlangを設定
+      const pref = document.getElementById('voice-pref').value;
+      utt.lang = pref === 'US' ? 'en-US' : 'en-GB';
+    }
     utt.rate = getRate();
     utt.onstart = startKeepAlive;
     utt.onend   = () => { isSpeaking=false; stopKeepAlive(); if(onEnd) onEnd(); };

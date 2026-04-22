@@ -612,58 +612,64 @@ body {
 <script>
 // ── Data ──────────────────────────────────────────────────────────
 const CATS = {
-  '生物・生態系': '#16a34a',
-  '物質・変化': '#2563c4',
+  '生物・生態系':   '#16a34a',
+  '物質・変化':     '#2563c4',
   '力・エネルギー': '#e85d26',
-  '電気・回路': '#d97706',
-  '地球・宇宙': '#9333ea',
+  '電気・回路':     '#d97706',
+  '地球・宇宙':     '#9333ea',
   '実験・授業表現': '#0891b2',
 };
 
 const phrases = [
-  {cat:'生物・生態系', en:'All living things are made of <mark>cells</mark>. A cell is the basic unit of life.', speech:'All living things are made of cells. A cell is the basic unit of life.', ja:'すべての生き物は細胞でできています。細胞は生命の基本単位です。', tip:'"cell" ＝ 細胞。"basic unit" ＝ 基本単位'},
-  {cat:'生物・生態系', en:'Plants make their own food through <mark>photosynthesis</mark>: sunlight + water + CO₂ → glucose + oxygen.', speech:'Plants make their own food through photosynthesis: sunlight plus water plus carbon dioxide produces glucose and oxygen.', ja:'植物は光合成で食べ物を作ります: 光+水+二酸化炭素 → ブドウ糖+酸素', tip:'"photosynthesis" ＝ 光合成。CO₂ は "carbon dioxide"、→ は "produces" と読む'},
-  {cat:'生物・生態系', en:'A <mark>food chain</mark> shows how energy passes from one organism to another. Example: grass → rabbit → fox.', speech:'A food chain shows how energy passes from one organism to another. Example: grass is eaten by a rabbit, which is eaten by a fox.', ja:'食物連鎖はエネルギーが生物から生物へ移ることを示します。例: 草→ウサギ→キツネ', tip:'"food chain" ＝ 食物連鎖。→ は "is eaten by" と読む'},
-  {cat:'生物・生態系', en:'The <mark>producer</mark> in a food chain is always a plant. <mark>Consumers</mark> are animals that eat other organisms.', speech:'The producer in a food chain is always a plant. Consumers are animals that eat other organisms.', ja:'食物連鎖の生産者は常に植物です。消費者は他の生物を食べる動物です。', tip:'"producer" ＝ 生産者（植物）、"consumer" ＝ 消費者（動物）'},
-  {cat:'生物・生態系', en:'A <mark>predator</mark> hunts and eats other animals called <mark>prey</mark>.', speech:'A predator hunts and eats other animals called prey.', ja:'捕食者は獲物と呼ばれる他の動物を狩って食べます。', tip:'"predator" ＝ 捕食者、"prey" ＝ 獲物'},
-  {cat:'生物・生態系', en:'The <mark>habitat</mark> is the natural environment where an organism lives.', speech:'The habitat is the natural environment where an organism lives.', ja:'生息地とは、生物が生活する自然環境のことです。', tip:'"habitat" ＝ 生息地。"environment" ＝ 環境'},
-  {cat:'生物・生態系', en:'Animals and plants depend on each other. This relationship is called <mark>interdependence</mark>.', speech:'Animals and plants depend on each other. This relationship is called interdependence.', ja:'動植物はお互いに依存しています。この関係を相互依存といいます。', tip:'"interdependence" ＝ 相互依存'},
-  {cat:'生物・生態系', en:'Plants need <mark>chlorophyll</mark> to absorb sunlight. Chlorophyll gives leaves their green colour.', speech:'Plants need chlorophyll to absorb sunlight. Chlorophyll gives leaves their green colour.', ja:'植物は日光を吸収するために葉緑素が必要です。', tip:'"chlorophyll" ＝ 葉緑素・クロロフィル'},
-  {cat:'生物・生態系', en:'The <mark>life cycle</mark> of a butterfly has four stages: egg → larva → pupa → adult.', speech:'The life cycle of a butterfly has four stages: egg, then larva, then pupa, then adult.', ja:'チョウの生活環は 4 段階: 卵→幼虫→さなぎ→成虫です。', tip:'"life cycle" ＝ 生活環。→ は "then" と読む'},
-  {cat:'生物・生態系', en:'Plants reproduce by making <mark>seeds</mark>. Seeds are dispersed by wind, water, or animals.', speech:'Plants reproduce by making seeds. Seeds are dispersed by wind, water, or animals.', ja:'植物は種を作ることで繁殖します。種は風・水・動物によって散布されます。', tip:'"reproduce" ＝ 繁殖する、"dispersed" ＝ 散布される'},
-  {cat:'物質・変化', en:'Matter can exist as a <mark>solid</mark>, <mark>liquid</mark>, or <mark>gas</mark>. These are the three states of matter.', speech:'Matter can exist as a solid, a liquid, or a gas. These are the three states of matter.', ja:'物質は固体・液体・気体として存在できます。これが物質の3つの状態です。', tip:'"solid" ＝ 固体、"liquid" ＝ 液体、"gas" ＝ 気体'},
-  {cat:'物質・変化', en:'When a solid is heated and melts, it becomes a liquid. This is called <mark>melting</mark>.', speech:'When a solid is heated and melts, it becomes a liquid. This is called melting.', ja:'固体が加熱されて溶けると液体になります。これを融解といいます。', tip:'"melting" ＝ 融解。"freezing" ＝ 凝固（液体→固体）'},
-  {cat:'物質・変化', en:'<mark>Evaporation</mark> is when a liquid changes into a gas. <mark>Condensation</mark> is the reverse process.', speech:'Evaporation is when a liquid changes into a gas. Condensation is the reverse process.', ja:'蒸発は液体が気体に変わることです。凝縮はその逆の過程です。', tip:'"evaporation" ＝ 蒸発、"condensation" ＝ 凝縮'},
-  {cat:'物質・変化', en:'When salt is dissolved in water, it forms a <mark>solution</mark>. The salt is the <mark>solute</mark>, water is the <mark>solvent</mark>.', speech:'When salt is dissolved in water, it forms a solution. The salt is the solute, and water is the solvent.', ja:'塩が水に溶けると溶液ができます。塩が溶質、水が溶媒です。', tip:'"solution" ＝ 溶液、"solute" ＝ 溶質、"solvent" ＝ 溶媒'},
-  {cat:'物質・変化', en:'A <mark>mixture</mark> can be separated by filtering, evaporation, or using a magnet.', speech:'A mixture can be separated by filtering, evaporation, or using a magnet.', ja:'混合物はろ過・蒸発・磁石などで分離できます。', tip:'"mixture" ＝ 混合物。"separate" ＝ 分離する'},
-  {cat:'物質・変化', en:'<mark>Rusting</mark> is a chemical change. Iron reacts with oxygen and water to form rust.', speech:'Rusting is a chemical change. Iron reacts with oxygen and water to form rust.', ja:'さびは化学変化です。鉄が酸素と水と反応してさびができます。', tip:'"rusting" ＝ さびること。"chemical change" ＝ 化学変化'},
-  {cat:'物質・変化', en:'A <mark>physical change</mark> does not create a new substance. Cutting paper is a physical change.', speech:'A physical change does not create a new substance. Cutting paper is a physical change.', ja:'物理変化では新しい物質はできません。紙を切ることは物理変化です。', tip:'"physical change" ＝ 物理変化。"chemical change" ＝ 化学変化'},
-  {cat:'物質・変化', en:'The <mark>boiling point</mark> of water is 100°C. The <mark>freezing point</mark> is 0°C.', speech:'The boiling point of water is 100 degrees Celsius. The freezing point is 0 degrees Celsius.', ja:'水の沸点は 100°C です。凝固点は 0°C です。', tip:'"boiling point" ＝ 沸点、"freezing point" ＝ 凝固点。°C は "degrees Celsius" と読む'},
-  {cat:'力・エネルギー', en:'A <mark>force</mark> is a push or pull. Forces can change the speed, direction, or shape of an object.', speech:'A force is a push or pull. Forces can change the speed, direction, or shape of an object.', ja:'力は押す・引くことです。力は物体の速度・方向・形を変えることができます。', tip:'"force" ＝ 力。"push" ＝ 押す、"pull" ＝ 引く'},
-  {cat:'力・エネルギー', en:'<mark>Gravity</mark> is a force that pulls objects towards the Earth.', speech:'Gravity is a force that pulls objects towards the Earth.', ja:'重力は物体を地球に向けて引き付ける力です。', tip:'"gravity" ＝ 重力'},
-  {cat:'力・エネルギー', en:'<mark>Friction</mark> is a force that opposes motion. It acts between two surfaces in contact.', speech:'Friction is a force that opposes motion. It acts between two surfaces in contact.', ja:'摩擦は運動に逆らう力です。接触している 2 つの面の間に働きます。', tip:'"friction" ＝ 摩擦。"opposes" ＝ 逆らう'},
-  {cat:'力・エネルギー', en:'A <mark>lever</mark> is a simple machine. It has a <mark>fulcrum</mark>, an effort, and a load.', speech:'A lever is a simple machine. It has a fulcrum, an effort, and a load.', ja:'てこは単純な機械です。支点・力点・荷重点があります。', tip:'"lever" ＝ てこ、"fulcrum" ＝ 支点、"effort" ＝ 力点'},
-  {cat:'力・エネルギー', en:'<mark>Energy</mark> cannot be created or destroyed. It can only be converted from one form to another.', speech:'Energy cannot be created or destroyed. It can only be converted from one form to another.', ja:'エネルギーは生まれたり消えたりしません。ある形から別の形に変換されるだけです。', tip:'"energy" ＝ エネルギー。"converted" ＝ 変換される'},
-  {cat:'力・エネルギー', en:'Light energy from the Sun is converted into heat energy when it hits a dark surface.', speech:'Light energy from the Sun is converted into heat energy when it hits a dark surface.', ja:'太陽からの光エネルギーは、暗い表面に当たると熱エネルギーに変換されます。', tip:'"light energy" ＝ 光エネルギー、"heat energy" ＝ 熱エネルギー'},
-  {cat:'電気・回路', en:'An electric <mark>circuit</mark> needs a power source, wires, and a component to work.', speech:'An electric circuit needs a power source, wires, and a component to work.', ja:'電気回路が動くには電源・導線・部品が必要です。', tip:'"circuit" ＝ 回路、"power source" ＝ 電源、"component" ＝ 部品'},
-  {cat:'電気・回路', en:'In a <mark>series circuit</mark>, all components are connected in one loop. If one breaks, all stop.', speech:'In a series circuit, all components are connected in one loop. If one breaks, all stop.', ja:'直列回路では、すべての部品が 1 つのループでつながれています。', tip:'"series circuit" ＝ 直列回路、"parallel circuit" ＝ 並列回路'},
-  {cat:'電気・回路', en:'A <mark>conductor</mark> allows electricity to flow through it. Metals are good conductors.', speech:'A conductor allows electricity to flow through it. Metals are good conductors.', ja:'導体は電気を通すことができます。金属は良い導体です。', tip:'"conductor" ＝ 導体、"insulator" ＝ 絶縁体'},
-  {cat:'電気・回路', en:'A <mark>switch</mark> opens or closes a circuit to turn electrical devices on or off.', speech:'A switch opens or closes a circuit to turn electrical devices on or off.', ja:'スイッチは回路を開閉して電気器具のオン・オフを切り替えます。', tip:'"switch" ＝ スイッチ。"open circuit" ＝ 開回路（電気が流れない）'},
-  {cat:'電気・回路', en:'The brighter a bulb glows, the greater the <mark>current</mark> flowing through the circuit.', speech:'The brighter a bulb glows, the greater the current flowing through the circuit.', ja:'電球が明るく輝くほど、回路に流れる電流が大きいです。', tip:'"current" ＝ 電流。"voltage" ＝ 電圧'},
-  {cat:'地球・宇宙', en:'The Earth takes 365 days to <mark>orbit</mark> the Sun. This is called one <mark>revolution</mark>.', speech:'The Earth takes 365 days to orbit the Sun. This is called one revolution.', ja:'地球が太陽の周りを 1 周するのに 365 日かかります。これを公転といいます。', tip:'"orbit" ＝ 軌道を回る、"revolution" ＝ 公転'},
-  {cat:'地球・宇宙', en:'The Earth <mark>rotates</mark> on its <mark>axis</mark> once every 24 hours. This causes day and night.', speech:'The Earth rotates on its axis once every 24 hours. This causes day and night.', ja:'地球は 24 時間に 1 回、自転軸の周りを回ります。', tip:'"rotates" ＝ 自転する、"axis" ＝ 軸'},
-  {cat:'地球・宇宙', en:'The <mark>Moon</mark> is a natural satellite of the Earth. It takes about 28 days to orbit the Earth.', speech:'The Moon is a natural satellite of the Earth. It takes about 28 days to orbit the Earth.', ja:'月は地球の自然な衛星です。地球を 1 周するのに約 28 日かかります。', tip:'"satellite" ＝ 衛星'},
-  {cat:'地球・宇宙', en:'Rocks are classified as <mark>igneous</mark>, <mark>sedimentary</mark>, or <mark>metamorphic</mark>.', speech:'Rocks are classified as igneous, sedimentary, or metamorphic.', ja:'岩石は火成岩・堆積岩・変成岩に分類されます。', tip:'"igneous" ＝ 火成岩、"sedimentary" ＝ 堆積岩、"metamorphic" ＝ 変成岩'},
-  {cat:'地球・宇宙', en:'The <mark>water cycle</mark> includes evaporation, condensation, and precipitation.', speech:'The water cycle includes evaporation, condensation, and precipitation.', ja:'水循環は蒸発・凝縮・降水を含みます。', tip:'"water cycle" ＝ 水循環、"precipitation" ＝ 降水（雨・雪など）'},
-  {cat:'地球・宇宙', en:'The <mark>solar system</mark> consists of the Sun and eight planets. Earth is the third planet from the Sun.', speech:'The solar system consists of the Sun and eight planets. Earth is the third planet from the Sun.', ja:'太陽系は太陽と 8 つの惑星からなります。', tip:'"solar system" ＝ 太陽系、"planet" ＝ 惑星'},
-  {cat:'実験・授業表現', en:'Before the experiment, state your <mark>hypothesis</mark>: what do you predict will happen?', speech:'Before the experiment, state your hypothesis: what do you predict will happen?', ja:'実験の前に仮説を述べましょう: 何が起きると予測しますか？', tip:'"hypothesis" ＝ 仮説。"predict" ＝ 予測する'},
-  {cat:'実験・授業表現', en:'Record your <mark>observations</mark> carefully in the table.', speech:'Record your observations carefully in the table.', ja:'観察結果を表に丁寧に記録しましょう。', tip:'"observation" ＝ 観察・観察結果。"record" ＝ 記録する'},
-  {cat:'実験・授業表現', en:'The <mark>variable</mark> we change is called the <mark>independent variable</mark>. The one we measure is the <mark>dependent variable</mark>.', speech:'The variable we change is called the independent variable. The one we measure is the dependent variable.', ja:'変える変数を独立変数、測る変数を従属変数といいます。', tip:'"independent variable" ＝ 独立変数、"dependent variable" ＝ 従属変数'},
-  {cat:'実験・授業表現', en:'To make the experiment <mark>fair</mark>, only change one variable at a time.', speech:'To make the experiment fair, only change one variable at a time.', ja:'実験を公正にするために、一度に 1 つの変数だけを変えましょう。', tip:'"fair test" ＝ 公正な実験。"control variable" ＝ 制御変数'},
-  {cat:'実験・授業表現', en:'Write your <mark>conclusion</mark>: does your result support your hypothesis?', speech:'Write your conclusion: does your result support your hypothesis?', ja:'結論を書きましょう: 結果はあなたの仮説を支持していますか？', tip:'"conclusion" ＝ 結論。"support" ＝ 支持する'},
-  {cat:'実験・授業表現', en:'Use the correct <mark>units</mark>: length in cm, mass in g, temperature in °C.', speech:'Use the correct units: length in centimetres, mass in grams, temperature in degrees Celsius.', ja:'正しい単位を使いましょう: 長さは cm、質量は g、温度は °C です。', tip:'°C は "degrees Celsius" と読む。理科では必ず単位を書く'},
-  {cat:'実験・授業表現', en:'Handle equipment <mark>carefully</mark> and follow all <mark>safety rules</mark>.', speech:'Handle equipment carefully and follow all safety rules.', ja:'機材を丁寧に扱い、すべての安全規則に従いましょう。', tip:'"safety rules" ＝ 安全規則'},
-  {cat:'実験・授業表現', en:'I think the result shows that <mark>the more light a plant gets, the faster it grows</mark>.', speech:'I think the result shows that the more light a plant gets, the faster it grows.', ja:'結果は「植物が光を多く受けるほど速く成長する」ことを示していると思います。', tip:'"the more … the more …" ＝ 〜すればするほど〜'},
+  // ── 生物・生態系 ──
+  {cat:'生物・生態系', en:'All living things are made of <mark>cells</mark>. A cell is the basic unit of life.', ja:'すべての生き物は細胞でできています。細胞は生命の基本単位です。', tip:'"cell" ＝ 細胞。"basic unit" ＝ 基本単位'},
+  {cat:'生物・生態系', en:'Plants make their own food through <mark>photosynthesis</mark>: sunlight + water + CO₂ → glucose + oxygen.', ja:'植物は光合成で自分の食べ物を作ります: 光+水+CO₂ → ブドウ糖+酸素', tip:'"photosynthesis" ＝ 光合成。"sunlight" ＝ 日光、"glucose" ＝ ブドウ糖'},
+  {cat:'生物・生態系', en:'A <mark>food chain</mark> shows how energy passes from one organism to another. Example: grass → rabbit → fox.', ja:'食物連鎖はエネルギーが生物から生物へ移ることを示します。例: 草→ウサギ→キツネ', tip:'"food chain" ＝ 食物連鎖。"organism" ＝ 生物・生命体'},
+  {cat:'生物・生態系', en:'The <mark>producer</mark> in a food chain is always a plant. <mark>Consumers</mark> are animals that eat other organisms.', ja:'食物連鎖の生産者は常に植物です。消費者は他の生物を食べる動物です。', tip:'"producer" ＝ 生産者（植物）、"consumer" ＝ 消費者（動物）'},
+  {cat:'生物・生態系', en:'A <mark>predator</mark> hunts and eats other animals called <mark>prey</mark>.', ja:'捕食者は獲物と呼ばれる他の動物を狩って食べます。', tip:'"predator" ＝ 捕食者、"prey" ＝ 獲物'},
+  {cat:'生物・生態系', en:'The <mark>habitat</mark> is the natural environment where an organism lives.', ja:'生息地とは、生物が生活する自然環境のことです。', tip:'"habitat" ＝ 生息地。"environment" ＝ 環境'},
+  {cat:'生物・生態系', en:'Animals and plants depend on each other. This relationship is called <mark>interdependence</mark>.', ja:'動植物はお互いに依存しています。この関係を相互依存といいます。', tip:'"interdependence" ＝ 相互依存'},
+  {cat:'生物・生態系', en:'Plants need <mark>chlorophyll</mark> to absorb sunlight. Chlorophyll gives leaves their green colour.', ja:'植物は日光を吸収するために葉緑素が必要です。葉緑素が葉を緑色にします。', tip:'"chlorophyll" ＝ 葉緑素・クロロフィル'},
+  {cat:'生物・生態系', en:'The <mark>life cycle</mark> of a butterfly has four stages: egg → larva → pupa → adult.', ja:'チョウの生活環は 4 段階: 卵→幼虫→さなぎ→成虫です。', tip:'"life cycle" ＝ 生活環。"larva" ＝ 幼虫、"pupa" ＝ さなぎ'},
+  {cat:'生物・生態系', en:'Plants reproduce by making <mark>seeds</mark>. Seeds are dispersed by wind, water, or animals.', ja:'植物は種を作ることで繁殖します。種は風・水・動物によって散布されます。', tip:'"reproduce" ＝ 繁殖する、"dispersed" ＝ 散布される'},
+  // ── 物質・変化 ──
+  {cat:'物質・変化', en:'Matter can exist as a <mark>solid</mark>, <mark>liquid</mark>, or <mark>gas</mark>. These are the three states of matter.', ja:'物質は固体・液体・気体として存在できます。これが物質の3つの状態です。', tip:'"solid" ＝ 固体、"liquid" ＝ 液体、"gas" ＝ 気体'},
+  {cat:'物質・変化', en:'When a solid is heated and melts, it becomes a liquid. This is called <mark>melting</mark>.', ja:'固体が加熱されて溶けると液体になります。これを融解（melting）といいます。', tip:'"melting" ＝ 融解。"freezing" ＝ 凝固（液体→固体）'},
+  {cat:'物質・変化', en:'<mark>Evaporation</mark> is when a liquid changes into a gas. <mark>Condensation</mark> is the reverse process.', ja:'蒸発は液体が気体に変わることです。凝縮はその逆の過程です。', tip:'"evaporation" ＝ 蒸発、"condensation" ＝ 凝縮'},
+  {cat:'物質・変化', en:'When salt is dissolved in water, it forms a <mark>solution</mark>. The salt is the <mark>solute</mark>, water is the <mark>solvent</mark>.', ja:'塩が水に溶けると溶液ができます。塩が溶質、水が溶媒です。', tip:'"solution" ＝ 溶液、"solute" ＝ 溶質、"solvent" ＝ 溶媒'},
+  {cat:'物質・変化', en:'A <mark>mixture</mark> can be separated by filtering, evaporation, or using a magnet.', ja:'混合物はろ過・蒸発・磁石などで分離できます。', tip:'"mixture" ＝ 混合物。"separate" ＝ 分離する'},
+  {cat:'物質・変化', en:'<mark>Rusting</mark> is a chemical change. Iron reacts with oxygen and water to form rust.', ja:'さびは化学変化です。鉄が酸素と水と反応してさびができます。', tip:'"rusting" ＝ さびること。"chemical change" ＝ 化学変化'},
+  {cat:'物質・変化', en:'A <mark>physical change</mark> does not create a new substance. Cutting paper is a physical change.', ja:'物理変化では新しい物質はできません。紙を切ることは物理変化です。', tip:'"physical change" ＝ 物理変化。"chemical change" ＝ 化学変化'},
+  {cat:'物質・変化', en:'The <mark>boiling point</mark> of water is 100°C. The <mark>freezing point</mark> is 0°C.', ja:'水の沸点は 100°C です。凝固点は 0°C です。', tip:'"boiling point" ＝ 沸点、"freezing point" ＝ 凝固点'},
+  // ── 力・エネルギー ──
+  {cat:'力・エネルギー', en:'A <mark>force</mark> is a push or pull. Forces can change the speed, direction, or shape of an object.', ja:'力は押す・引くことです。力は物体の速度・方向・形を変えることができます。', tip:'"force" ＝ 力。"push" ＝ 押す、"pull" ＝ 引く'},
+  {cat:'力・エネルギー', en:'<mark>Gravity</mark> is a force that pulls objects towards the Earth.', ja:'重力は物体を地球に向けて引き付ける力です。', tip:'"gravity" ＝ 重力。"pulls towards" ＝ 〜に向けて引き付ける'},
+  {cat:'力・エネルギー', en:'<mark>Friction</mark> is a force that opposes motion. It acts between two surfaces in contact.', ja:'摩擦は運動に逆らう力です。接触している 2 つの面の間に働きます。', tip:'"friction" ＝ 摩擦。"opposes" ＝ 逆らう'},
+  {cat:'力・エネルギー', en:'A <mark>lever</mark> is a simple machine. It has a <mark>fulcrum</mark>, an effort, and a load.', ja:'てこは単純な機械です。支点・力点・荷重点があります。', tip:'"lever" ＝ てこ、"fulcrum" ＝ 支点、"effort" ＝ 力点'},
+  {cat:'力・エネルギー', en:'<mark>Energy</mark> cannot be created or destroyed. It can only be converted from one form to another.', ja:'エネルギーは生まれたり消えたりしません。ある形から別の形に変換されるだけです。', tip:'"energy" ＝ エネルギー。"converted" ＝ 変換される'},
+  {cat:'力・エネルギー', en:'Light energy from the Sun is converted into heat energy when it hits a dark surface.', ja:'太陽からの光エネルギーは、暗い表面に当たると熱エネルギーに変換されます。', tip:'"light energy" ＝ 光エネルギー、"heat energy" ＝ 熱エネルギー'},
+  // ── 電気・回路 ──
+  {cat:'電気・回路', en:'An electric <mark>circuit</mark> needs a power source, wires, and a component to work.', ja:'電気回路が動くには電源・導線・部品が必要です。', tip:'"circuit" ＝ 回路、"power source" ＝ 電源、"component" ＝ 部品'},
+  {cat:'電気・回路', en:'In a <mark>series circuit</mark>, all components are connected in one loop. If one breaks, all stop.', ja:'直列回路では、すべての部品が 1 つのループでつながれています。1 つ切れると全部止まります。', tip:'"series circuit" ＝ 直列回路、"parallel circuit" ＝ 並列回路'},
+  {cat:'電気・回路', en:'A <mark>conductor</mark> allows electricity to flow through it. Metals are good conductors.', ja:'導体は電気を通すことができます。金属は良い導体です。', tip:'"conductor" ＝ 導体、"insulator" ＝ 絶縁体（電気を通さないもの）'},
+  {cat:'電気・回路', en:'A <mark>switch</mark> opens or closes a circuit to turn electrical devices on or off.', ja:'スイッチは回路を開閉して電気器具のオン・オフを切り替えます。', tip:'"switch" ＝ スイッチ。"open circuit" ＝ 開回路（電気が流れない）'},
+  {cat:'電気・回路', en:'The brighter a bulb glows, the greater the <mark>current</mark> flowing through the circuit.', ja:'電球が明るく輝くほど、回路に流れる電流が大きいです。', tip:'"current" ＝ 電流。"voltage" ＝ 電圧'},
+  // ── 地球・宇宙 ──
+  {cat:'地球・宇宙', en:'The Earth takes 365 days to <mark>orbit</mark> the Sun. This is called one <mark>revolution</mark>.', ja:'地球が太陽の周りを 1 周するのに 365 日かかります。これを公転といいます。', tip:'"orbit" ＝ 軌道を回る、"revolution" ＝ 公転'},
+  {cat:'地球・宇宙', en:'The Earth <mark>rotates</mark> on its <mark>axis</mark> once every 24 hours. This causes day and night.', ja:'地球は 24 時間に 1 回、自転軸の周りを回ります。これが昼と夜を生み出します。', tip:'"rotates" ＝ 自転する、"axis" ＝ 軸'},
+  {cat:'地球・宇宙', en:'The <mark>Moon</mark> is a natural satellite of the Earth. It takes about 28 days to orbit the Earth.', ja:'月は地球の自然な衛星です。地球を 1 周するのに約 28 日かかります。', tip:'"satellite" ＝ 衛星。"natural satellite" ＝ 天然衛星'},
+  {cat:'地球・宇宙', en:'Rocks are classified as <mark>igneous</mark>, <mark>sedimentary</mark>, or <mark>metamorphic</mark>.', ja:'岩石は火成岩・堆積岩・変成岩に分類されます。', tip:'"igneous" ＝ 火成岩、"sedimentary" ＝ 堆積岩、"metamorphic" ＝ 変成岩'},
+  {cat:'地球・宇宙', en:'The <mark>water cycle</mark> includes evaporation, condensation, and precipitation.', ja:'水循環は蒸発・凝縮・降水を含みます。', tip:'"water cycle" ＝ 水循環、"precipitation" ＝ 降水（雨・雪など）'},
+  {cat:'地球・宇宙', en:'The <mark>solar system</mark> consists of the Sun and eight planets. Earth is the third planet from the Sun.', ja:'太陽系は太陽と 8 つの惑星からなります。地球は太陽から 3 番目の惑星です。', tip:'"solar system" ＝ 太陽系、"planet" ＝ 惑星'},
+  // ── 実験・授業表現 ──
+  {cat:'実験・授業表現', en:'Before the experiment, state your <mark>hypothesis</mark>: what do you predict will happen?', ja:'実験の前に仮説を述べましょう: 何が起きると予測しますか？', tip:'"hypothesis" ＝ 仮説。"predict" ＝ 予測する'},
+  {cat:'実験・授業表現', en:'Record your <mark>observations</mark> carefully in the table.', ja:'観察結果を表に丁寧に記録しましょう。', tip:'"observation" ＝ 観察・観察結果。"record" ＝ 記録する'},
+  {cat:'実験・授業表現', en:'The <mark>variable</mark> we change is called the <mark>independent variable</mark>. The one we measure is the <mark>dependent variable</mark>.', ja:'変える変数を独立変数、測る変数を従属変数といいます。', tip:'"independent variable" ＝ 独立変数、"dependent variable" ＝ 従属変数'},
+  {cat:'実験・授業表現', en:'To make the experiment <mark>fair</mark>, only change one variable at a time.', ja:'実験を公正にするために、一度に 1 つの変数だけを変えましょう。', tip:'"fair test" ＝ 公正な実験。"control variable" ＝ 制御変数'},
+  {cat:'実験・授業表現', en:'Write your <mark>conclusion</mark>: does your result support your hypothesis?', ja:'結論を書きましょう: 結果はあなたの仮説を支持していますか？', tip:'"conclusion" ＝ 結論。"support" ＝ 支持する'},
+  {cat:'実験・授業表現', en:'Use the correct <mark>units</mark>: length in cm, mass in g, temperature in °C.', ja:'正しい単位を使いましょう: 長さは cm、質量は g、温度は °C です。', tip:'"units" ＝ 単位。理科では必ず単位を書く'},
+  {cat:'実験・授業表現', en:'Handle equipment <mark>carefully</mark> and follow all <mark>safety rules</mark>.', ja:'機材を丁寧に扱い、すべての安全規則に従いましょう。', tip:'"safety rules" ＝ 安全規則。実験室では必ず守る'},
+  {cat:'実験・授業表現', en:'I think the result shows that <mark>the more light a plant gets, the faster it grows</mark>.', ja:'結果は「植物が光を多く受けるほど速く成長する」ことを示していると思います。', tip:'"the more … the more …" ＝ 〜すればするほど〜という構文を使う'},
 ];
 
 const TOTAL = phrases.length;
@@ -685,7 +691,70 @@ let enVoices = [];
 
 function populateVoices() {
   const all = window.speechSynthesis.getVoices();
-  enVoices = all.filter(v => v.lang.startsWith('en'));
+  // 動作確認済みの完全な音声名リスト（完全一致）
+  const okNames = new Set([
+    // en-US
+    'Microsoft Ava Online (Natural) - English (United States)',
+    'Microsoft Andrew Online (Natural) - English (United States)',
+    'Microsoft Emma Online (Natural) - English (United States)',
+    'Microsoft Brian Online (Natural) - English (United States)',
+    'Microsoft Jenny Online (Natural) - English (United States)',
+    'Microsoft Guy Online (Natural) - English (United States)',
+    'Microsoft Aria Online (Natural) - English (United States)',
+    'Microsoft Ana Online (Natural) - English (United States)',
+    'Microsoft Christopher Online (Natural) - English (United States)',
+    'Microsoft Eric Online (Natural) - English (United States)',
+    'Microsoft Michelle Online (Natural) - English (United States)',
+    'Microsoft Steffan Online (Natural) - English (United States)',
+    'Microsoft Ava Multilingual Online (Natural) - English (United States)',
+    'Microsoft Andrew Multilingual Online (Natural) - English (United States)',
+    'Microsoft Emma Multilingual Online (Natural) - English (United States)',
+    'Microsoft Brian Multilingual Online (Natural) - English (United States)',
+    // en-GB
+    'Microsoft Hazel - English (United Kingdom)',
+    'Microsoft Susan - English (United Kingdom)',
+    'Microsoft George - English (United Kingdom)',
+    'Microsoft Libby Online (Natural) - English (United Kingdom)',
+    'Microsoft Maisie Online (Natural) - English (United Kingdom)',
+    'Microsoft Thomas Online (Natural) - English (United Kingdom)',
+    'Microsoft Sonia Online (Natural) - English (United Kingdom)',
+    'Microsoft Ryan Online (Natural) - English (United Kingdom)',
+    // en-AU
+    'Microsoft William Online (Natural) - English (Australia)',
+    'Microsoft Natasha Online (Natural) - English (Australia)',
+    // en-CA
+    'Microsoft Clara Online (Natural) - English (Canada)',
+    'Microsoft Liam Online (Natural) - English (Canada)',
+    // en-ZA
+    'Microsoft Leah Online (Natural) - English (South Africa)',
+    'Microsoft Luke Online (Natural) - English (South Africa)',
+    // en-IE
+    'Microsoft Emily Online (Natural) - English (Ireland)',
+    'Microsoft Connor Online (Natural) - English (Ireland)',
+    // en-HK
+    'Microsoft Yan Online (Natural) - English (Hong Kong SAR)',
+    'Microsoft Sam Online (Natural) - English (Hong Kong SAR)',
+    // en-KE
+    'Microsoft Asilia Online (Natural) - English (Kenya)',
+    'Microsoft Chilemba Online (Natural) - English (Kenya)',
+    // en-NG
+    'Microsoft Ezinne Online (Natural) - English (Nigeria)',
+    'Microsoft Abeo Online (Natural) - English (Nigeria)',
+    // en-NZ
+    'Microsoft Molly Online (Natural) - English (New Zealand)',
+    // en-SG
+    'Microsoft Luna Online (Natural) - English (Singapore)',
+    // en-TZ
+    'Microsoft Imani Online (Natural) - English (Tanzania)',
+    'Microsoft Elimu Online (Natural) - English (Tanzania)',
+    // en-PH
+    'Microsoft James Online (Natural) - English (Philippines)',
+    // en-IN
+    'Microsoft Neerja Online (Natural) - English (India)',
+    'Microsoft Prabhat Online (Natural) - English (India)',
+  ]);
+  const whitelist = all.filter(v => okNames.has(v.name));
+  enVoices = whitelist.length ? whitelist : all.filter(v => v.lang.startsWith('en'));
   if (!enVoices.length) enVoices = all;
   applyVoicePref();
 }
@@ -746,7 +815,15 @@ function speakOne(text, onEnd) {
     if (isSpeaking) return;
     isSpeaking = true;
     const utt = new SpeechSynthesisUtterance(text);
-    const v = getVoice(); if (v) utt.voice = v;
+    const v = getVoice();
+    if (v) {
+      utt.voice = v;
+      utt.lang  = v.lang;  // 音声のlangを明示的に設定
+    } else {
+      // フォールバック：voice-prefの設定に応じてlangを設定
+      const pref = document.getElementById('voice-pref').value;
+      utt.lang = pref === 'US' ? 'en-US' : 'en-GB';
+    }
     utt.rate = getRate();
     utt.onstart = startKeepAlive;
     utt.onend   = () => { isSpeaking=false; stopKeepAlive(); if(onEnd) onEnd(); };

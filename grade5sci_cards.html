@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Grade 8 Math – 数学英語カード</title>
+<title>Grade 5 Science – 理科英語カード</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -356,7 +356,7 @@ body {
 <div class="container">
 
 <div class="header">
-  <h2>Grade 8 Math 数学英語カード</h2>
+  <h2>🔬 Grade 5 Science 理科英語カード</h2>
   <p>1枚ずつ・タップで答え表示・マスターしたら消える</p>
   <button class="help-btn" onclick="openGuide()">❓ 使い方ガイド</button>
 </div>
@@ -612,69 +612,58 @@ body {
 <script>
 // ── Data ──────────────────────────────────────────────────────────
 const CATS = {
-  '代数・方程式': '#38bdf8',
-  '関数・グラフ': '#a78bfa',
-  '図形・三角法': '#34d399',
-  '数と指数': '#fb923c',
-  '統計・確率': '#f472b6',
-  '授業表現': '#64748b',
+  '生物・生態系': '#16a34a',
+  '物質・変化': '#2563c4',
+  '力・エネルギー': '#e85d26',
+  '電気・回路': '#d97706',
+  '地球・宇宙': '#9333ea',
+  '実験・授業表現': '#0891b2',
 };
 
 const phrases = [
-  {cat:'代数・方程式', en:'Expand: (x + 3)(x + 5) = <mark>x² + 8x + 15</mark>.', speech:'Expand: open bracket x plus 3 close bracket times open bracket x plus 5 close bracket equals x squared plus 8x plus 15.', ja:'展開: (x + 3)(x + 5) = x² + 8x + 15 です。', tip:'"expand" ＝ 展開する。括弧は "bracket"（英）または "parenthesis"（米）'},
-  {cat:'代数・方程式', en:'Expand: (2x − 3)² = <mark>4x² − 12x + 9</mark>.', speech:'Expand: open bracket 2x minus 3 close bracket squared equals 4x squared minus 12x plus 9.', ja:'(2x − 3)² を展開すると 4x² − 12x + 9 です。', tip:'"perfect square" ＝ 完全平方式'},
-  {cat:'代数・方程式', en:'Factorise: x² + 7x + 12 = <mark>(x + 3)(x + 4)</mark>.', speech:'Factorise: x squared plus 7x plus 12 equals open bracket x plus 3 close bracket times open bracket x plus 4 close bracket.', ja:'x² + 7x + 12 を因数分解すると (x + 3)(x + 4) です。', tip:'積が 12、和が 7 になる 2 数を探す → 3 と 4'},
-  {cat:'代数・方程式', en:'Factorise: x² − 25 = <mark>(x + 5)(x − 5)</mark>. Difference of two squares.', speech:'Factorise: x squared minus 25 equals open bracket x plus 5 close bracket times open bracket x minus 5 close bracket. Difference of two squares.', ja:'x² − 25 = (x + 5)(x − 5)。「2 乗の差」の因数分解です。', tip:'"difference of two squares" ＝ 2 乗の差'},
-  {cat:'代数・方程式', en:'Solve quadratic: x² − 5x + 6 = 0 → <mark>x = 2 or x = 3</mark>.', speech:'Solve: x squared minus 5x plus 6 equals 0. Factorise: open bracket x minus 2 close bracket times open bracket x minus 3 close bracket equals 0. x equals 2 or x equals 3.', ja:'二次方程式 x² − 5x + 6 = 0 → x = 2 または x = 3', tip:'"quadratic equation" ＝ 二次方程式'},
-  {cat:'代数・方程式', en:'Quadratic formula for ax² + bx + c = 0: x = (−b ± √(b²−4ac)) / 2a. Solve 2x² + 3x − 2 = 0: a=2, b=3, c=−2 → <mark>x = 1/2 or x = −2</mark>.', speech:'Quadratic formula for a x squared plus b x plus c equals 0: x equals open bracket negative b plus or minus the square root of open bracket b squared minus 4ac close bracket close bracket over 2a. Solve 2x squared plus 3x minus 2 equals 0: a equals 2, b equals 3, c equals negative 2. x equals 1 over 2 or x equals negative 2.', ja:'解の公式: ax²+bx+c=0 → x=(−b±√(b²−4ac))/2a。2x²+3x−2=0 の解は x=1/2 または x=−2', tip:'解の公式は係数 a・b・c を公式に代入して使う。判別式 b²−4ac が正なら 2 つの実数解がある'},
-  {cat:'代数・方程式', en:'Simultaneous equations: 2x + y = 7 and x − y = 2 → <mark>x = 3, y = 1</mark>.', speech:'Simultaneous equations: 2x plus y equals 7 and x minus y equals 2. x equals 3, y equals 1.', ja:'連立方程式 → x = 3、y = 1', tip:'"simultaneous equations" ＝ 連立方程式'},
-  {cat:'代数・方程式', en:'Elimination method: add equations to eliminate y. 3x = 9 → x = 3.', speech:'Elimination method: add equations to eliminate y. 3x equals 9. x equals 3.', ja:'加減法: 2 式を足して y を消去 → x = 3', tip:'"elimination method" ＝ 加減法'},
-  {cat:'代数・方程式', en:'Simplify: (x² − 4) / (x + 2) = <mark>x − 2</mark>.', speech:'Simplify: open bracket x squared minus 4 close bracket over open bracket x plus 2 close bracket equals x minus 2.', ja:'代数分数: (x² − 4)/(x + 2) = x − 2 です。', tip:'"algebraic fraction" ＝ 代数分数'},
-  {cat:'代数・方程式', en:'Discriminant: b² − 4ac > 0 → <mark>two distinct roots</mark>.', speech:'Discriminant: b squared minus 4ac greater than 0 gives two distinct roots.', ja:'判別式 b² − 4ac > 0 なら 2 つの異なる解があります。', tip:'"discriminant" ＝ 判別式'},
-  {cat:'関数・グラフ', en:'Equation of a straight line: y = mx + c.', speech:'Equation of a straight line: y equals m x plus c.', ja:'直線の方程式は y = mx + c です。', tip:'"gradient" ＝ 傾き、"y-intercept" ＝ y 切片'},
-  {cat:'関数・グラフ', en:'Line through (2, 5), gradient 3: y = <mark>3x − 1</mark>.', speech:'Line through 2, 5, gradient 3: y equals 3x minus 1.', ja:'点 (2, 5)、傾き 3 の直線: y = 3x − 1', tip:'"point-slope form" ＝ 点傾き形式'},
-  {cat:'関数・グラフ', en:'Parallel lines have the same gradient. y = 3x + 1 ∥ y = 3x − 4.', speech:'Parallel lines have the same gradient. y equals 3x plus 1 is parallel to y equals 3x minus 4.', ja:'傾きが同じなら 2 直線は平行です。', tip:'perpendicular（垂直）の場合、傾きの積 = −1'},
-  {cat:'関数・グラフ', en:'Sketch y = x² − 4x + 3. Minimum point at (2, −1).', speech:'Sketch y equals x squared minus 4x plus 3. Minimum point at 2, negative 1.', ja:'二次関数 y = x² − 4x + 3。最小値は (2, −1) です。', tip:'"turning point / vertex" ＝ 頂点'},
-  {cat:'関数・グラフ', en:'y = x² is a parabola with line of symmetry x = 0.', speech:'y equals x squared is a parabola with line of symmetry x equals 0.', ja:'y = x² のグラフは放物線で、対称軸は x = 0 です。', tip:'"parabola" ＝ 放物線'},
-  {cat:'関数・グラフ', en:'x-intercepts of y = x² − x − 6: x = <mark>3 or −2</mark>.', speech:'x-intercepts of y equals x squared minus x minus 6: x equals 3 or negative 2.', ja:'y = x² − x − 6 の x 切片: x = 3 または −2', tip:'"x-intercept" ＝ x 切片'},
-  {cat:'関数・グラフ', en:'Complete the square: x² + 6x + 11 = (x + 3)² + 2. Min = <mark>2</mark>.', speech:'Complete the square: x squared plus 6x plus 11 equals open bracket x plus 3 close bracket squared plus 2. Minimum value is 2.', ja:'平方完成: x² + 6x + 11 = (x + 3)² + 2。最小値は 2 です。', tip:'"complete the square" ＝ 平方完成'},
-  {cat:'関数・グラフ', en:'A one-to-one function: each input has exactly one output.', speech:'A one-to-one function: each input has exactly one output.', ja:'1 対 1 関数: 入力と出力が 1 対 1 対応します。', tip:'"function" ＝ 関数'},
-  {cat:'関数・グラフ', en:'Solve graphically: draw y = 2x + 1 and y = x² − 3. Find intersections.', speech:'Solve graphically: draw y equals 2x plus 1 and y equals x squared minus 3. Find intersections.', ja:'グラフで解く: y = 2x+1 と y = x²−3 の交点を求める。', tip:'"point of intersection" ＝ 交点'},
-  {cat:'関数・グラフ', en:'Midpoint of (1, 3) and (5, 7) = <mark>(3, 5)</mark>.', speech:'Midpoint of 1, 3 and 5, 7 equals 3, 5.', ja:'(1, 3) と (5, 7) の中点 = (3, 5)', tip:'"midpoint formula" ＝ 中点の公式'},
-  {cat:'図形・三角法', en:'sin θ = opposite / hypotenuse.', speech:'Sine theta equals opposite over hypotenuse.', ja:'直角三角形: sin θ = 対辺 ÷ 斜辺 です。', tip:'SOH-CAH-TOA'},
-  {cat:'図形・三角法', en:'cos 40° = adjacent / 10. Adjacent ≈ <mark>7.66 cm</mark>.', speech:'Cosine 40 degrees equals adjacent over 10. Adjacent approximately equals 7.66 centimetres.', ja:'cos 40° = 隣辺 ÷ 10 → 隣辺 ≈ 7.66 cm', tip:'"adjacent" ＝ 隣辺、"opposite" ＝ 対辺'},
-  {cat:'図形・三角法', en:'tan θ = 5/12. θ = tan⁻¹(5/12) ≈ <mark>22.6°</mark>.', speech:'Tan theta equals 5 over 12. Theta equals inverse tan of 5 over 12, approximately 22.6 degrees.', ja:'tan θ = 5/12 → θ ≈ 22.6° です。', tip:'"inverse tan" ＝ tan⁻¹'},
-  {cat:'図形・三角法', en:'Pythagoras: a² + b² = c². a=6, b=8 → c = <mark>10</mark>.', speech:'Pythagoras: a squared plus b squared equals c squared. a equals 6, b equals 8. c equals 10.', ja:'三平方の定理: 6² + 8² = c² → c = 10 です。', tip:'"hypotenuse" ＝ 斜辺'},
-  {cat:'図形・三角法', en:'Angle of elevation: 20 m away, tree 15 m tall. tan θ = 15/20 → θ ≈ <mark>36.9°</mark>.', speech:'Angle of elevation: 20 metres away, tree 15 metres tall. Tan theta equals 15 over 20. Theta approximately equals 36.9 degrees.', ja:'仰角: 20m 離れ、高さ 15m の木 → θ ≈ 36.9°', tip:'"angle of elevation" ＝ 仰角'},
-  {cat:'図形・三角法', en:'Arc length = (θ/360) × 2πr. r=6, θ=60° → arc = <mark>2π cm</mark>.', speech:'Arc length equals theta over 360 times 2 pi r. r equals 6, theta equals 60 degrees. Arc equals 2 pi centimetres.', ja:'弧の長さ = (θ/360) × 2πr → 2π cm', tip:'"sector" ＝ 扇形、"arc" ＝ 弧'},
-  {cat:'図形・三角法', en:'Area of sector = (θ/360) × πr². r=5, θ=90° → <mark>25π/4 cm²</mark>.', speech:'Area of a sector equals theta over 360 times pi r squared. r equals 5, theta equals 90 degrees. Area equals 25 pi over 4 centimetres squared.', ja:'扇形の面積 → 25π/4 cm²', tip:'"leave in terms of pi" ＝ π を使った形で'},
-  {cat:'図形・三角法', en:'Volume of cone: V = ⅓πr²h. r=4, h=9 → V = <mark>48π cm³</mark>.', speech:'Volume of a cone: V equals one third pi r squared times h. r equals 4, h equals 9. V equals 48 pi centimetres cubed.', ja:'円錐の体積 = ⅓πr²h = 48π cm³', tip:'"cone" ＝ 円錐'},
-  {cat:'図形・三角法', en:'Surface area of sphere = 4πr². r=3 → SA = <mark>36π cm²</mark>.', speech:'Surface area of a sphere equals 4 pi r squared. r equals 3. SA equals 36 pi centimetres squared.', ja:'球の表面積 = 4πr² = 36π cm²', tip:'Volume of a sphere = four thirds pi r cubed'},
-  {cat:'図形・三角法', en:'Rotation of 90° clockwise about the origin.', speech:'Rotation of 90 degrees clockwise about the origin.', ja:'原点を中心に 90° 時計回りに回転させます。', tip:'"clockwise" ＝ 時計回り'},
-  {cat:'数と指数', en:'Index law: x³ × x⁵ = <mark>x⁸</mark>.', speech:'Index law: x cubed times x to the 5 equals x to the 8.', ja:'指数法則: x³ × x⁵ = x⁸ です。', tip:'aᵐ × aⁿ = aᵐ⁺ⁿ'},
-  {cat:'数と指数', en:'x⁶ ÷ x² = <mark>x⁴</mark>.', speech:'x to the 6 divided by x squared equals x to the 4.', ja:'x⁶ ÷ x² = x⁴ です。', tip:'aᵐ ÷ aⁿ = aᵐ⁻ⁿ'},
-  {cat:'数と指数', en:'(x³)⁴ = <mark>x¹²</mark>.', speech:'Open bracket x cubed close bracket to the power of 4 equals x to the 12.', ja:'(x³)⁴ = x¹² です。', tip:'"power of a power" ＝ 累乗の累乗'},
-  {cat:'数と指数', en:'x⁰ = <mark>1</mark> for any non-zero x.', speech:'x to the power of zero equals 1 for any non-zero x.', ja:'0 でない数の 0 乗は 1 です。例: 7⁰ = 1', tip:'"zero index" ＝ 0 乗'},
-  {cat:'数と指数', en:'x⁻² = 1/x². Example: 3⁻² = <mark>1/9</mark>.', speech:'x to the power of negative 2 equals 1 over x squared. 3 to the power of negative 2 equals 1 over 9.', ja:'x⁻² = 1/x²。例: 3⁻² = 1/9 です。', tip:'"negative index" ＝ 負の指数'},
-  {cat:'数と指数', en:'27^(1/3) = ∛27 = <mark>3</mark>. Fractional index.', speech:'27 to the power of one third equals the cube root of 27, equals 3. Fractional index.', ja:'27^(1/3) = 3 です。分数の指数。', tip:'"fractional index" ＝ 分数の指数'},
-  {cat:'数と指数', en:'3.74 × 10⁴ = <mark>37,400</mark>.', speech:'3.74 times 10 to the 4 equals 37,400.', ja:'3.74 × 10⁴ = 37,400 です。', tip:'"standard form" ＝ 標準形'},
-  {cat:'数と指数', en:'(2.4 × 10³) × (3.0 × 10²) = <mark>7.2 × 10⁵</mark>.', speech:'2.4 times 10 cubed, times 3.0 times 10 squared, equals 7.2 times 10 to the 5.', ja:'(2.4 × 10³) × (3.0 × 10²) = 7.2 × 10⁵ です。', tip:'数字どうし・指数どうしを別々に計算する'},
-  {cat:'数と指数', en:'√50 = <mark>5√2</mark>. Surd.', speech:'The square root of 50 equals 5 times the square root of 2. Surd.', ja:'√50 = 5√2 です（surd = 無理数の平方根）。', tip:'"surd" ＝ 無理数の平方根'},
-  {cat:'数と指数', en:'1/√3 = √3/3. Rationalise the denominator.', speech:'1 over the square root of 3 equals the square root of 3 over 3. Rationalise the denominator.', ja:'1/√3 の分母を有理化 → √3/3 です。', tip:'"rationalise the denominator" ＝ 分母を有理化する'},
-  {cat:'統計・確率', en:'IQR = Q3 − Q1 = 15 − 7 = <mark>8</mark>.', speech:'IQR equals Q3 minus Q1, equals 15 minus 7, equals 8.', ja:'四分位範囲 (IQR) = Q3 − Q1 = 8 です。', tip:'"interquartile range" ＝ 四分位範囲'},
-  {cat:'統計・確率', en:'Box-and-whisker plot: median = 12, Q1 = 8, Q3 = 16.', speech:'Box-and-whisker plot: median equals 12, Q1 equals 8, Q3 equals 16.', ja:'箱ひげ図: 中央値 12、Q1 = 8、Q3 = 16 です。', tip:'"box-and-whisker plot" ＝ 箱ひげ図'},
-  {cat:'統計・確率', en:'P(A and B) = P(A) × P(B) for independent events.', speech:'P of A and B equals P of A times P of B for independent events.', ja:'独立な 2 事象: P(A かつ B) = P(A) × P(B) です。', tip:'"independent events" ＝ 独立な事象'},
-  {cat:'統計・確率', en:'Tree diagram: P(HH) = 0.5 × 0.5 = <mark>0.25</mark>.', speech:'Tree diagram: P of H H equals 0.5 times 0.5 equals 0.25.', ja:'樹形図: P(HH) = 0.5 × 0.5 = 0.25 です。', tip:'"tree diagram" ＝ 樹形図'},
-  {cat:'統計・確率', en:'P(A or B) = P(A) + P(B) − P(A and B).', speech:'P of A or B equals P of A plus P of B minus P of A and B.', ja:'P(A または B) = P(A) + P(B) − P(A かつ B)', tip:'"mutually exclusive" なら P(A and B) = 0'},
-  {cat:'統計・確率', en:'P(A|B) = P(A and B) / P(B). Conditional probability.', speech:'P of A given B equals P of A and B divided by P of B. Conditional probability.', ja:'条件付き確率 P(A|B) = P(A かつ B) ÷ P(B)', tip:'"conditional probability" ＝ 条件付き確率'},
-  {cat:'統計・確率', en:'Scatter diagram shows strong positive correlation.', speech:'Scatter diagram shows strong positive correlation.', ja:'散布図: 強い正の相関があります。', tip:'"strong positive correlation" ＝ 強い正の相関'},
-  {cat:'授業表現', en:'The discriminant is negative → no real solutions.', speech:'The discriminant is negative. No real solutions.', ja:'判別式が負なので、実数解はありません。', tip:'"no real solutions" ＝ 実数解なし'},
-  {cat:'授業表現', en:'By inspection, y-intercept of y = 3x − 7 is −7.', speech:'By inspection, y-intercept of y equals 3x minus 7 is negative 7.', ja:'一目見て、y = 3x − 7 の y 切片は −7 です。', tip:'"by inspection" ＝ 見てすぐわかる方法で'},
-  {cat:'授業表現', en:'Write down the value of x. No working needed.', speech:'Write down the value of x. No working needed.', ja:'x の値を書きなさい（途中式は不要）。', tip:'"write down" ＝ 答えを書くだけでよい'},
-  {cat:'授業表現', en:'Prove that x² + 2x + 5 is always positive.', speech:'Prove that x squared plus 2x plus 5 is always positive.', ja:'x² + 2x + 5 が常に正であることを証明しなさい。', tip:'"prove" ＝ 証明する'},
-  {cat:'授業表現', en:'Hence or otherwise, solve the equation.', speech:'Hence or otherwise, solve the equation.', ja:'したがって、あるいは別の方法で、方程式を解きなさい。', tip:'"hence or otherwise" ＝ 前問を使っても別解でもよい'},
-  {cat:'授業表現', en:'Give your answer in exact form: x = 3 + √5.', speech:'Give your answer in exact form: x equals 3 plus the square root of 5.', ja:'正確な形で答えなさい: x = 3 + √5', tip:'"exact form" ＝ 近似しない正確な値'},
-  {cat:'授業表現', en:'I would like to verify my answer by substituting x = 3.', speech:'I would like to verify my answer by substituting x equals 3.', ja:'x = 3 を元の方程式に代入して検算したいと思います。', tip:'"verify by substitution" ＝ 代入して検算する'},
+  {cat:'生物・生態系', en:'All living things are made of <mark>cells</mark>. A cell is the basic unit of life.', speech:'All living things are made of cells. A cell is the basic unit of life.', ja:'すべての生き物は細胞でできています。細胞は生命の基本単位です。', tip:'"cell" ＝ 細胞。"basic unit" ＝ 基本単位'},
+  {cat:'生物・生態系', en:'Plants make their own food through <mark>photosynthesis</mark>: sunlight + water + CO₂ → glucose + oxygen.', speech:'Plants make their own food through photosynthesis: sunlight plus water plus carbon dioxide produces glucose and oxygen.', ja:'植物は光合成で食べ物を作ります: 光+水+二酸化炭素 → ブドウ糖+酸素', tip:'"photosynthesis" ＝ 光合成。CO₂ は "carbon dioxide"、→ は "produces" と読む'},
+  {cat:'生物・生態系', en:'A <mark>food chain</mark> shows how energy passes from one organism to another. Example: grass → rabbit → fox.', speech:'A food chain shows how energy passes from one organism to another. Example: grass is eaten by a rabbit, which is eaten by a fox.', ja:'食物連鎖はエネルギーが生物から生物へ移ることを示します。例: 草→ウサギ→キツネ', tip:'"food chain" ＝ 食物連鎖。→ は "is eaten by" と読む'},
+  {cat:'生物・生態系', en:'The <mark>producer</mark> in a food chain is always a plant. <mark>Consumers</mark> are animals that eat other organisms.', speech:'The producer in a food chain is always a plant. Consumers are animals that eat other organisms.', ja:'食物連鎖の生産者は常に植物です。消費者は他の生物を食べる動物です。', tip:'"producer" ＝ 生産者（植物）、"consumer" ＝ 消費者（動物）'},
+  {cat:'生物・生態系', en:'A <mark>predator</mark> hunts and eats other animals called <mark>prey</mark>.', speech:'A predator hunts and eats other animals called prey.', ja:'捕食者は獲物と呼ばれる他の動物を狩って食べます。', tip:'"predator" ＝ 捕食者、"prey" ＝ 獲物'},
+  {cat:'生物・生態系', en:'The <mark>habitat</mark> is the natural environment where an organism lives.', speech:'The habitat is the natural environment where an organism lives.', ja:'生息地とは、生物が生活する自然環境のことです。', tip:'"habitat" ＝ 生息地。"environment" ＝ 環境'},
+  {cat:'生物・生態系', en:'Animals and plants depend on each other. This relationship is called <mark>interdependence</mark>.', speech:'Animals and plants depend on each other. This relationship is called interdependence.', ja:'動植物はお互いに依存しています。この関係を相互依存といいます。', tip:'"interdependence" ＝ 相互依存'},
+  {cat:'生物・生態系', en:'Plants need <mark>chlorophyll</mark> to absorb sunlight. Chlorophyll gives leaves their green colour.', speech:'Plants need chlorophyll to absorb sunlight. Chlorophyll gives leaves their green colour.', ja:'植物は日光を吸収するために葉緑素が必要です。', tip:'"chlorophyll" ＝ 葉緑素・クロロフィル'},
+  {cat:'生物・生態系', en:'The <mark>life cycle</mark> of a butterfly has four stages: egg → larva → pupa → adult.', speech:'The life cycle of a butterfly has four stages: egg, then larva, then pupa, then adult.', ja:'チョウの生活環は 4 段階: 卵→幼虫→さなぎ→成虫です。', tip:'"life cycle" ＝ 生活環。→ は "then" と読む'},
+  {cat:'生物・生態系', en:'Plants reproduce by making <mark>seeds</mark>. Seeds are dispersed by wind, water, or animals.', speech:'Plants reproduce by making seeds. Seeds are dispersed by wind, water, or animals.', ja:'植物は種を作ることで繁殖します。種は風・水・動物によって散布されます。', tip:'"reproduce" ＝ 繁殖する、"dispersed" ＝ 散布される'},
+  {cat:'物質・変化', en:'Matter can exist as a <mark>solid</mark>, <mark>liquid</mark>, or <mark>gas</mark>. These are the three states of matter.', speech:'Matter can exist as a solid, a liquid, or a gas. These are the three states of matter.', ja:'物質は固体・液体・気体として存在できます。これが物質の3つの状態です。', tip:'"solid" ＝ 固体、"liquid" ＝ 液体、"gas" ＝ 気体'},
+  {cat:'物質・変化', en:'When a solid is heated and melts, it becomes a liquid. This is called <mark>melting</mark>.', speech:'When a solid is heated and melts, it becomes a liquid. This is called melting.', ja:'固体が加熱されて溶けると液体になります。これを融解といいます。', tip:'"melting" ＝ 融解。"freezing" ＝ 凝固（液体→固体）'},
+  {cat:'物質・変化', en:'<mark>Evaporation</mark> is when a liquid changes into a gas. <mark>Condensation</mark> is the reverse process.', speech:'Evaporation is when a liquid changes into a gas. Condensation is the reverse process.', ja:'蒸発は液体が気体に変わることです。凝縮はその逆の過程です。', tip:'"evaporation" ＝ 蒸発、"condensation" ＝ 凝縮'},
+  {cat:'物質・変化', en:'When salt is dissolved in water, it forms a <mark>solution</mark>. The salt is the <mark>solute</mark>, water is the <mark>solvent</mark>.', speech:'When salt is dissolved in water, it forms a solution. The salt is the solute, and water is the solvent.', ja:'塩が水に溶けると溶液ができます。塩が溶質、水が溶媒です。', tip:'"solution" ＝ 溶液、"solute" ＝ 溶質、"solvent" ＝ 溶媒'},
+  {cat:'物質・変化', en:'A <mark>mixture</mark> can be separated by filtering, evaporation, or using a magnet.', speech:'A mixture can be separated by filtering, evaporation, or using a magnet.', ja:'混合物はろ過・蒸発・磁石などで分離できます。', tip:'"mixture" ＝ 混合物。"separate" ＝ 分離する'},
+  {cat:'物質・変化', en:'<mark>Rusting</mark> is a chemical change. Iron reacts with oxygen and water to form rust.', speech:'Rusting is a chemical change. Iron reacts with oxygen and water to form rust.', ja:'さびは化学変化です。鉄が酸素と水と反応してさびができます。', tip:'"rusting" ＝ さびること。"chemical change" ＝ 化学変化'},
+  {cat:'物質・変化', en:'A <mark>physical change</mark> does not create a new substance. Cutting paper is a physical change.', speech:'A physical change does not create a new substance. Cutting paper is a physical change.', ja:'物理変化では新しい物質はできません。紙を切ることは物理変化です。', tip:'"physical change" ＝ 物理変化。"chemical change" ＝ 化学変化'},
+  {cat:'物質・変化', en:'The <mark>boiling point</mark> of water is 100°C. The <mark>freezing point</mark> is 0°C.', speech:'The boiling point of water is 100 degrees Celsius. The freezing point is 0 degrees Celsius.', ja:'水の沸点は 100°C です。凝固点は 0°C です。', tip:'"boiling point" ＝ 沸点、"freezing point" ＝ 凝固点。°C は "degrees Celsius" と読む'},
+  {cat:'力・エネルギー', en:'A <mark>force</mark> is a push or pull. Forces can change the speed, direction, or shape of an object.', speech:'A force is a push or pull. Forces can change the speed, direction, or shape of an object.', ja:'力は押す・引くことです。力は物体の速度・方向・形を変えることができます。', tip:'"force" ＝ 力。"push" ＝ 押す、"pull" ＝ 引く'},
+  {cat:'力・エネルギー', en:'<mark>Gravity</mark> is a force that pulls objects towards the Earth.', speech:'Gravity is a force that pulls objects towards the Earth.', ja:'重力は物体を地球に向けて引き付ける力です。', tip:'"gravity" ＝ 重力'},
+  {cat:'力・エネルギー', en:'<mark>Friction</mark> is a force that opposes motion. It acts between two surfaces in contact.', speech:'Friction is a force that opposes motion. It acts between two surfaces in contact.', ja:'摩擦は運動に逆らう力です。接触している 2 つの面の間に働きます。', tip:'"friction" ＝ 摩擦。"opposes" ＝ 逆らう'},
+  {cat:'力・エネルギー', en:'A <mark>lever</mark> is a simple machine. It has a <mark>fulcrum</mark>, an effort, and a load.', speech:'A lever is a simple machine. It has a fulcrum, an effort, and a load.', ja:'てこは単純な機械です。支点・力点・荷重点があります。', tip:'"lever" ＝ てこ、"fulcrum" ＝ 支点、"effort" ＝ 力点'},
+  {cat:'力・エネルギー', en:'<mark>Energy</mark> cannot be created or destroyed. It can only be converted from one form to another.', speech:'Energy cannot be created or destroyed. It can only be converted from one form to another.', ja:'エネルギーは生まれたり消えたりしません。ある形から別の形に変換されるだけです。', tip:'"energy" ＝ エネルギー。"converted" ＝ 変換される'},
+  {cat:'力・エネルギー', en:'Light energy from the Sun is converted into heat energy when it hits a dark surface.', speech:'Light energy from the Sun is converted into heat energy when it hits a dark surface.', ja:'太陽からの光エネルギーは、暗い表面に当たると熱エネルギーに変換されます。', tip:'"light energy" ＝ 光エネルギー、"heat energy" ＝ 熱エネルギー'},
+  {cat:'電気・回路', en:'An electric <mark>circuit</mark> needs a power source, wires, and a component to work.', speech:'An electric circuit needs a power source, wires, and a component to work.', ja:'電気回路が動くには電源・導線・部品が必要です。', tip:'"circuit" ＝ 回路、"power source" ＝ 電源、"component" ＝ 部品'},
+  {cat:'電気・回路', en:'In a <mark>series circuit</mark>, all components are connected in one loop. If one breaks, all stop.', speech:'In a series circuit, all components are connected in one loop. If one breaks, all stop.', ja:'直列回路では、すべての部品が 1 つのループでつながれています。', tip:'"series circuit" ＝ 直列回路、"parallel circuit" ＝ 並列回路'},
+  {cat:'電気・回路', en:'A <mark>conductor</mark> allows electricity to flow through it. Metals are good conductors.', speech:'A conductor allows electricity to flow through it. Metals are good conductors.', ja:'導体は電気を通すことができます。金属は良い導体です。', tip:'"conductor" ＝ 導体、"insulator" ＝ 絶縁体'},
+  {cat:'電気・回路', en:'A <mark>switch</mark> opens or closes a circuit to turn electrical devices on or off.', speech:'A switch opens or closes a circuit to turn electrical devices on or off.', ja:'スイッチは回路を開閉して電気器具のオン・オフを切り替えます。', tip:'"switch" ＝ スイッチ。"open circuit" ＝ 開回路（電気が流れない）'},
+  {cat:'電気・回路', en:'The brighter a bulb glows, the greater the <mark>current</mark> flowing through the circuit.', speech:'The brighter a bulb glows, the greater the current flowing through the circuit.', ja:'電球が明るく輝くほど、回路に流れる電流が大きいです。', tip:'"current" ＝ 電流。"voltage" ＝ 電圧'},
+  {cat:'地球・宇宙', en:'The Earth takes 365 days to <mark>orbit</mark> the Sun. This is called one <mark>revolution</mark>.', speech:'The Earth takes 365 days to orbit the Sun. This is called one revolution.', ja:'地球が太陽の周りを 1 周するのに 365 日かかります。これを公転といいます。', tip:'"orbit" ＝ 軌道を回る、"revolution" ＝ 公転'},
+  {cat:'地球・宇宙', en:'The Earth <mark>rotates</mark> on its <mark>axis</mark> once every 24 hours. This causes day and night.', speech:'The Earth rotates on its axis once every 24 hours. This causes day and night.', ja:'地球は 24 時間に 1 回、自転軸の周りを回ります。', tip:'"rotates" ＝ 自転する、"axis" ＝ 軸'},
+  {cat:'地球・宇宙', en:'The <mark>Moon</mark> is a natural satellite of the Earth. It takes about 28 days to orbit the Earth.', speech:'The Moon is a natural satellite of the Earth. It takes about 28 days to orbit the Earth.', ja:'月は地球の自然な衛星です。地球を 1 周するのに約 28 日かかります。', tip:'"satellite" ＝ 衛星'},
+  {cat:'地球・宇宙', en:'Rocks are classified as <mark>igneous</mark>, <mark>sedimentary</mark>, or <mark>metamorphic</mark>.', speech:'Rocks are classified as igneous, sedimentary, or metamorphic.', ja:'岩石は火成岩・堆積岩・変成岩に分類されます。', tip:'"igneous" ＝ 火成岩、"sedimentary" ＝ 堆積岩、"metamorphic" ＝ 変成岩'},
+  {cat:'地球・宇宙', en:'The <mark>water cycle</mark> includes evaporation, condensation, and precipitation.', speech:'The water cycle includes evaporation, condensation, and precipitation.', ja:'水循環は蒸発・凝縮・降水を含みます。', tip:'"water cycle" ＝ 水循環、"precipitation" ＝ 降水（雨・雪など）'},
+  {cat:'地球・宇宙', en:'The <mark>solar system</mark> consists of the Sun and eight planets. Earth is the third planet from the Sun.', speech:'The solar system consists of the Sun and eight planets. Earth is the third planet from the Sun.', ja:'太陽系は太陽と 8 つの惑星からなります。', tip:'"solar system" ＝ 太陽系、"planet" ＝ 惑星'},
+  {cat:'実験・授業表現', en:'Before the experiment, state your <mark>hypothesis</mark>: what do you predict will happen?', speech:'Before the experiment, state your hypothesis: what do you predict will happen?', ja:'実験の前に仮説を述べましょう: 何が起きると予測しますか？', tip:'"hypothesis" ＝ 仮説。"predict" ＝ 予測する'},
+  {cat:'実験・授業表現', en:'Record your <mark>observations</mark> carefully in the table.', speech:'Record your observations carefully in the table.', ja:'観察結果を表に丁寧に記録しましょう。', tip:'"observation" ＝ 観察・観察結果。"record" ＝ 記録する'},
+  {cat:'実験・授業表現', en:'The <mark>variable</mark> we change is called the <mark>independent variable</mark>. The one we measure is the <mark>dependent variable</mark>.', speech:'The variable we change is called the independent variable. The one we measure is the dependent variable.', ja:'変える変数を独立変数、測る変数を従属変数といいます。', tip:'"independent variable" ＝ 独立変数、"dependent variable" ＝ 従属変数'},
+  {cat:'実験・授業表現', en:'To make the experiment <mark>fair</mark>, only change one variable at a time.', speech:'To make the experiment fair, only change one variable at a time.', ja:'実験を公正にするために、一度に 1 つの変数だけを変えましょう。', tip:'"fair test" ＝ 公正な実験。"control variable" ＝ 制御変数'},
+  {cat:'実験・授業表現', en:'Write your <mark>conclusion</mark>: does your result support your hypothesis?', speech:'Write your conclusion: does your result support your hypothesis?', ja:'結論を書きましょう: 結果はあなたの仮説を支持していますか？', tip:'"conclusion" ＝ 結論。"support" ＝ 支持する'},
+  {cat:'実験・授業表現', en:'Use the correct <mark>units</mark>: length in cm, mass in g, temperature in °C.', speech:'Use the correct units: length in centimetres, mass in grams, temperature in degrees Celsius.', ja:'正しい単位を使いましょう: 長さは cm、質量は g、温度は °C です。', tip:'°C は "degrees Celsius" と読む。理科では必ず単位を書く'},
+  {cat:'実験・授業表現', en:'Handle equipment <mark>carefully</mark> and follow all <mark>safety rules</mark>.', speech:'Handle equipment carefully and follow all safety rules.', ja:'機材を丁寧に扱い、すべての安全規則に従いましょう。', tip:'"safety rules" ＝ 安全規則'},
+  {cat:'実験・授業表現', en:'I think the result shows that <mark>the more light a plant gets, the faster it grows</mark>.', speech:'I think the result shows that the more light a plant gets, the faster it grows.', ja:'結果は「植物が光を多く受けるほど速く成長する」ことを示していると思います。', tip:'"the more … the more …" ＝ 〜すればするほど〜'},
 ];
 
 const TOTAL = phrases.length;
@@ -689,7 +678,7 @@ let isAutoPlaying  = false;
 let autoMode       = '';   // 'shadow' | 'continuous'
 let autoStopped    = false;
 let autoTimeout    = null;
-let masterSet = new Set(JSON.parse(localStorage.getItem('g8math_master') || '[]'));
+let masterSet = new Set(JSON.parse(localStorage.getItem('g5sci_master') || '[]'));
 
 // ── Voice setup ───────────────────────────────────────────────────
 let enVoices = [];
@@ -907,7 +896,7 @@ function getActive() {
 }
 
 function saveMaster() {
-  localStorage.setItem('g8math_master', JSON.stringify([...masterSet]));
+  localStorage.setItem('g5sci_master', JSON.stringify([...masterSet]));
 }
 
 // ── Update UI ─────────────────────────────────────────────────────
