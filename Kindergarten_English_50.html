@@ -660,17 +660,17 @@ const phrases = [
   {cat:'あいさつ・返事', en:'<mark>Good morning!</mark>', ja:'おはようございます！', tip:'"Good morning!" は朝のあいさつ。昼は "Good afternoon!"、夜は "Good night!"'},
   {cat:'あいさつ・返事', en:'<mark>Thank you!</mark>', ja:'ありがとう！', tip:'"Thank you!" ＝ ありがとう。"You\'re welcome." ＝ どういたしまして。'},
   {cat:'あいさつ・返事', en:'I\'m <mark>sorry</mark>.', ja:'ごめんなさい。', tip:'"I\'m sorry." ＝ ごめんなさい。"That\'s OK." ＝ いいよ。セットで覚えよう。'},
-  {cat:'あいさつ・返事', en:'<mark>Yes!</mark><mark>No!</mark>', ja:'はい！ / いいえ！', tip:'"Yes" ＝ はい、"No" ＝ いいえ。一番大切な返事。はっきり言おう！'},
+  {cat:'あいさつ・返事', en:'<mark>Yes!</mark> / <mark>No!</mark>', ja:'はい！ / いいえ！', tip:'"Yes" ＝ はい、"No" ＝ いいえ。一番大切な返事。はっきり言おう！'},
   {cat:'あいさつ・返事', en:'<mark>Please.</mark>', ja:'お願いします。', tip:'"Please." ＝ お願いします。何かほしいときにつける魔法の言葉。'},
   {cat:'あいさつ・返事', en:'<mark>Help me!</mark>', ja:'助けて！', tip:'"Help!" ＝ 助けて！困ったときや危ないときに大きな声で言おう。'},
   {cat:'あいさつ・返事', en:'<mark>Wait!</mark>', ja:'待って！', tip:'"Wait!" ＝ 待って！急いでいる友達に声をかけるときに使う。'},
   {cat:'あいさつ・返事', en:'I <mark>don\'t know</mark>.', ja:'わかりません。', tip:'"I don\'t know." ＝ わかりません。知らないことは正直に言おう！'},
-  {cat:'色・形・大きさ', en:'It\'s <mark>red</mark>.  It\'s <mark>blue</mark>.  It\'s <mark>yellow</mark>.', ja:'赤です。/ 青です。/ 黄色です。', tip:'"red, blue, yellow" は3原色。色を言うときは "It\'s ～." を使おう。'},
-  {cat:'色・形・大きさ', en:'It\'s <mark>green</mark>.  It\'s <mark>pink</mark>.  It\'s <mark>white</mark>.', ja:'緑です。/ ピンクです。/ 白です。', tip:'"green, pink, white" もよく使う色。"pink" はそのまま英語と同じ！'},
+  {cat:'色・形・大きさ', en:'It\'s <mark>red</mark>. / It\'s <mark>blue</mark>. / It\'s <mark>yellow</mark>.', ja:'赤です。/ 青です。/ 黄色です。', tip:'"red, blue, yellow" は3原色。色を言うときは "It\'s ～." を使おう。'},
+  {cat:'色・形・大きさ', en:'It\'s <mark>green</mark>. / It\'s <mark>pink</mark>. / It\'s <mark>white</mark>.', ja:'緑です。/ ピンクです。/ 白です。', tip:'"green, pink, white" もよく使う色。"pink" はそのまま英語と同じ！'},
   {cat:'色・形・大きさ', en:'What <mark>color</mark> is it? It\'s <mark>orange</mark>.', ja:'何色ですか？→ オレンジです。', tip:'"What color is it?" ＝ 何色？"orange" は果物の名前と同じ！'},
-  {cat:'色・形・大きさ', en:'It\'s <mark>round</mark>.  It\'s <mark>square</mark>.', ja:'丸いです。/ 四角いです。', tip:'"round" ＝ 丸い、"square" ＝ 四角い。形を表す言葉。'},
-  {cat:'色・形・大きさ', en:'It\'s <mark>big</mark>.  It\'s <mark>small</mark>.', ja:'大きいです。/ 小さいです。', tip:'"big" ＝ 大きい、"small" ＝ 小さい。反対の言葉はセットで覚えよう。'},
-  {cat:'色・形・大きさ', en:'It\'s <mark>long</mark>.  It\'s <mark>short</mark>.', ja:'長いです。/ 短いです。', tip:'"long" ＝ 長い、"short" ＝ 短い。"short" は背が低いときにも使う。'},
+  {cat:'色・形・大きさ', en:'It\'s <mark>round</mark>. / It\'s <mark>square</mark>.', ja:'丸いです。/ 四角いです。', tip:'"round" ＝ 丸い、"square" ＝ 四角い。形を表す言葉。'},
+  {cat:'色・形・大きさ', en:'It\'s <mark>big</mark>. / It\'s <mark>small</mark>.', ja:'大きいです。/ 小さいです。', tip:'"big" ＝ 大きい、"small" ＝ 小さい。反対の言葉はセットで覚えよう。'},
+  {cat:'色・形・大きさ', en:'It\'s <mark>long</mark>. / It\'s <mark>short</mark>.', ja:'長いです。/ 短いです。', tip:'"long" ＝ 長い、"short" ＝ 短い。"short" は背が低いときにも使う。'},
 ];
 
 const TOTAL = phrases.length;
@@ -692,7 +692,70 @@ let enVoices = [];
 
 function populateVoices() {
   const all = window.speechSynthesis.getVoices();
-  enVoices = all.filter(v => v.lang.startsWith('en'));
+  // 動作確認済みの完全な音声名リスト（完全一致）
+  const okNames = new Set([
+    // en-US
+    'Microsoft Ava Online (Natural) - English (United States)',
+    'Microsoft Andrew Online (Natural) - English (United States)',
+    'Microsoft Emma Online (Natural) - English (United States)',
+    'Microsoft Brian Online (Natural) - English (United States)',
+    'Microsoft Jenny Online (Natural) - English (United States)',
+    'Microsoft Guy Online (Natural) - English (United States)',
+    'Microsoft Aria Online (Natural) - English (United States)',
+    'Microsoft Ana Online (Natural) - English (United States)',
+    'Microsoft Christopher Online (Natural) - English (United States)',
+    'Microsoft Eric Online (Natural) - English (United States)',
+    'Microsoft Michelle Online (Natural) - English (United States)',
+    'Microsoft Steffan Online (Natural) - English (United States)',
+    'Microsoft Ava Multilingual Online (Natural) - English (United States)',
+    'Microsoft Andrew Multilingual Online (Natural) - English (United States)',
+    'Microsoft Emma Multilingual Online (Natural) - English (United States)',
+    'Microsoft Brian Multilingual Online (Natural) - English (United States)',
+    // en-GB
+    'Microsoft Hazel - English (United Kingdom)',
+    'Microsoft Susan - English (United Kingdom)',
+    'Microsoft George - English (United Kingdom)',
+    'Microsoft Libby Online (Natural) - English (United Kingdom)',
+    'Microsoft Maisie Online (Natural) - English (United Kingdom)',
+    'Microsoft Thomas Online (Natural) - English (United Kingdom)',
+    'Microsoft Sonia Online (Natural) - English (United Kingdom)',
+    'Microsoft Ryan Online (Natural) - English (United Kingdom)',
+    // en-AU
+    'Microsoft William Online (Natural) - English (Australia)',
+    'Microsoft Natasha Online (Natural) - English (Australia)',
+    // en-CA
+    'Microsoft Clara Online (Natural) - English (Canada)',
+    'Microsoft Liam Online (Natural) - English (Canada)',
+    // en-ZA
+    'Microsoft Leah Online (Natural) - English (South Africa)',
+    'Microsoft Luke Online (Natural) - English (South Africa)',
+    // en-IE
+    'Microsoft Emily Online (Natural) - English (Ireland)',
+    'Microsoft Connor Online (Natural) - English (Ireland)',
+    // en-HK
+    'Microsoft Yan Online (Natural) - English (Hong Kong SAR)',
+    'Microsoft Sam Online (Natural) - English (Hong Kong SAR)',
+    // en-KE
+    'Microsoft Asilia Online (Natural) - English (Kenya)',
+    'Microsoft Chilemba Online (Natural) - English (Kenya)',
+    // en-NG
+    'Microsoft Ezinne Online (Natural) - English (Nigeria)',
+    'Microsoft Abeo Online (Natural) - English (Nigeria)',
+    // en-NZ
+    'Microsoft Molly Online (Natural) - English (New Zealand)',
+    // en-SG
+    'Microsoft Luna Online (Natural) - English (Singapore)',
+    // en-TZ
+    'Microsoft Imani Online (Natural) - English (Tanzania)',
+    'Microsoft Elimu Online (Natural) - English (Tanzania)',
+    // en-PH
+    'Microsoft James Online (Natural) - English (Philippines)',
+    // en-IN
+    'Microsoft Neerja Online (Natural) - English (India)',
+    'Microsoft Prabhat Online (Natural) - English (India)',
+  ]);
+  const whitelist = all.filter(v => okNames.has(v.name));
+  enVoices = whitelist.length ? whitelist : all.filter(v => v.lang.startsWith('en'));
   if (!enVoices.length) enVoices = all;
   applyVoicePref();
 }
@@ -753,7 +816,15 @@ function speakOne(text, onEnd) {
     if (isSpeaking) return;
     isSpeaking = true;
     const utt = new SpeechSynthesisUtterance(text);
-    const v = getVoice(); if (v) utt.voice = v;
+    const v = getVoice();
+    if (v) {
+      utt.voice = v;
+      utt.lang  = v.lang;  // 音声のlangを明示的に設定
+    } else {
+      // フォールバック：voice-prefの設定に応じてlangを設定
+      const pref = document.getElementById('voice-pref').value;
+      utt.lang = pref === 'US' ? 'en-US' : 'en-GB';
+    }
     utt.rate = getRate();
     utt.onstart = startKeepAlive;
     utt.onend   = () => { isSpeaking=false; stopKeepAlive(); if(onEnd) onEnd(); };
@@ -764,16 +835,22 @@ function speakOne(text, onEnd) {
 
 function stripTags(html) { return html.replace(/<[^>]+>/g,'').replace(/\s+/g,' ').trim(); }
 
+function getSpeechText(item) {
+  // speech: フィールドがあればそちらを優先、なければ en: のタグを除去して読む
+  if (item.speech) return item.speech;
+  return stripTags(item.en);
+}
+
 function speakCurrent() {
   const a = getActive(); if(!a.length) return;
-  speakOne(stripTags(a[currentIndex].en));
+  speakOne(getSpeechText(a[currentIndex]));
 }
 
 function speakP() {
   return new Promise(resolve => {
     if (autoStopped) { resolve(); return; }
     const a = getActive(); if(!a.length) { resolve(); return; }
-    speakOne(stripTags(a[currentIndex].en), resolve);
+    speakOne(getSpeechText(a[currentIndex]), resolve);
   });
 }
 
