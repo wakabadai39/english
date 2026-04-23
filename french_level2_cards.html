@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>フランス語カード 段階２</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f5f0ff;
+  --surface: #ffffff;
+  --primary: #0369a1;
+  --primary-light: #e0f2fe;
+  --accent: #0891b2;
+  --green: #16a34a;
+  --green-light: #dcfce7;
+  --amber: #d97706;
+  --amber-light: #fef3c7;
+  --red: #e11d48;
+  --text: #1e293b;
+  --muted: #64748b;
+  --border: #bae6fd;
+  --shadow: 0 4px 24px rgba(124,58,237,0.10);
+  --radius: 18px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+body {
+  font-family: 'Noto Sans JP', sans-serif;
+  background: var(--bg);
+  min-height: 100vh;
+  padding: 16px 12px 48px;
+  color: var(--text);
+}
+.container { max-width: 560px; margin: auto; }
+
+.header { text-align: center; margin-bottom: 14px; }
+.header h2 { font-size: 18px; font-weight: 900; color: var(--primary); }
+.header p  { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+.badges { display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; margin-bottom: 10px; }
+.badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 4px 12px; border-radius: 99px; font-size: 11px; font-weight: 700;
+  background: var(--primary-light); color: var(--primary);
+  border: 1px solid var(--border);
+}
+.badge.green { background: var(--green-light); color: var(--green); border-color: #86efac; }
+
+.progress-wrap { background: #ddd6fe; border-radius: 99px; height: 6px; margin-bottom: 4px; overflow: hidden; }
+.progress-bar  { height: 100%; background: var(--primary); border-radius: 99px; transition: width 0.4s ease; }
+.progress-label { font-size: 11px; color: var(--muted); text-align: right; margin-bottom: 10px; }
+
+.no-active {
+  display: none; text-align: center; padding: 20px;
+  background: var(--surface); border-radius: var(--radius);
+  color: var(--green); font-weight: 700; margin-bottom: 12px;
+  box-shadow: var(--shadow);
+}
+
+.auto-panel {
+  display: none; text-align: center; padding: 10px 14px;
+  background: var(--primary-light); border-radius: 12px;
+  margin-bottom: 10px; border: 1px solid var(--border);
+}
+.auto-step-title   { font-size: 11px; font-weight: 900; color: var(--primary); margin-bottom: 2px; }
+.auto-instruction  { font-size: 13px; font-weight: 700; color: var(--text); }
+.auto-count        { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+.tap-hint { text-align: center; font-size: 12px; color: var(--muted); margin-bottom: 8px; }
+
+.card {
+  background: var(--surface); border-radius: var(--radius);
+  padding: 20px 18px 16px; margin-bottom: 12px;
+  box-shadow: var(--shadow);
+  border: 2px solid transparent;
+  transition: border-color .2s;
+  min-height: 160px;
+}
+.card-top {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 14px;
+}
+.card-num { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--muted); }
+.cat-label {
+  font-size: 10px; font-weight: 700; padding: 2px 10px;
+  border-radius: 99px; background: var(--primary-light); color: var(--primary);
+}
+.master-wrap { display: flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 700; color: var(--muted); }
+.master-wrap input[type=checkbox] { width: 17px; height: 17px; accent-color: var(--green); cursor: pointer; }
+
+.main-text {
+  font-size: clamp(17px, 4.5vw, 22px); font-weight: 900;
+  text-align: center; line-height: 1.5; margin-bottom: 6px;
+  color: var(--text);
+}
+.main-text mark { background: none; color: var(--primary); font-weight: 900; }
+
+/* 発音表示 */
+.pronunciation-text {
+  font-size: clamp(12px, 3.2vw, 14px);
+  color: var(--primary);
+  font-style: italic;
+  text-align: center;
+  line-height: 1.5;
+  padding: 3px 8px 2px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+/* speech読み上げ用テキスト */
+.speech-text {
+  font-size: clamp(11px, 3vw, 13px);
+  color: #9ca3af;
+  font-style: italic;
+  text-align: center;
+  line-height: 1.5;
+  padding: 2px 8px 4px;
+  letter-spacing: 0.01em;
+}
+.speech-text .speech-icon { font-style: normal; margin-right: 3px; opacity: 0.6; }
+
+.card.tappable { cursor: pointer; }
+.card.tappable:active { transform: scale(0.985); }
+.card.revealed { border-color: var(--primary); }
+.card.no-tap { cursor: default; }
+
+.answer-wrap {
+  opacity: 0; transform: translateY(5px);
+  transition: opacity .25s, transform .25s;
+  pointer-events: none;
+}
+.answer-wrap.show { opacity: 1; transform: translateY(0); pointer-events: auto; }
+
+.answer-ja {
+  font-size: clamp(13px, 3.5vw, 15px); font-weight: 700;
+  color: var(--accent); text-align: center; line-height: 1.6;
+  background: #f0f9ff; border-radius: 10px; padding: 10px 14px; margin-bottom: 8px;
+}
+.answer-tip {
+  font-size: 12px; font-weight: 600; color: var(--green);
+  text-align: left; padding: 0 4px; line-height: 1.7;
+}
+.answer-tip::before { content: '💡 '; }
+
+.master-badge {
+  display: none; text-align: center; margin-top: 8px;
+  font-size: 11px; font-weight: 900; color: var(--green);
+}
+.master-badge.show { display: block; }
+
+.master-summary {
+  text-align: center; font-size: 12px; font-weight: 700;
+  color: var(--primary); cursor: pointer; margin-bottom: 6px;
+  padding: 6px; border-radius: 10px;
+}
+.master-summary:hover { background: var(--primary-light); }
+
+/* filter panel */
+.filter-panel {
+  background: var(--surface); border-radius: var(--radius);
+  padding: 12px 14px; margin-bottom: 10px;
+  box-shadow: var(--shadow);
+}
+.filter-header { display: flex; align-items: center; justify-content: space-between; cursor: pointer; user-select: none; }
+.filter-header-left { font-size: 13px; font-weight: 900; color: var(--primary); }
+.filter-current {
+  font-size: 11px; font-weight: 700; color: var(--primary);
+  background: var(--primary-light); padding: 3px 10px; border-radius: 99px;
+  border: 1px solid var(--border); max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.filter-toggle-icon { font-size: 10px; color: var(--muted); transition: transform .2s; }
+.filter-toggle-icon.open { transform: rotate(180deg); }
+.filter-chips-wrap { display: none; margin-top: 10px; }
+.filter-chips-wrap.open { display: block; }
+
+.chip-all {
+  width: 100%; padding: 7px 12px; border-radius: 99px; border: 2px solid var(--border);
+  background: #fff; color: var(--muted); font-size: 12px; font-weight: 700;
+  cursor: pointer; margin-bottom: 5px; transition: all .15s; user-select: none;
+}
+.chip-all.active { background: var(--primary-light); color: var(--primary); border-color: var(--primary); }
+
+.cat-row {
+  display: flex; align-items: center; gap: 8px;
+  padding: 7px 12px; border-radius: 12px; border: 2px solid var(--border);
+  background: #fff; margin-bottom: 5px; transition: all .15s; user-select: none; cursor: pointer;
+}
+.cat-row.active { background: var(--primary-light); border-color: var(--primary); }
+.cat-row-name { flex: 1; font-size: 12px; font-weight: 700; }
+.cat-row-count {
+  font-size: 11px; font-weight: 700; color: var(--muted);
+  background: #f1f5f9; padding: 2px 8px; border-radius: 99px; font-weight: 600;
+}
+.cat-row.active .cat-row-count { background: #fff; color: var(--primary); }
+.cat-dot { width: 8px; height: 8px; border-radius: 50%; background: #e2e8f0; flex-shrink: 0; }
+
+/* voice panel */
+.panel {
+  background: var(--surface); border-radius: var(--radius);
+  padding: 12px 14px; margin-bottom: 10px;
+  box-shadow: var(--shadow);
+}
+.panel-row {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 12px; font-weight: 700; color: var(--muted);
+}
+.panel-row label { white-space: nowrap; }
+.panel-row select { flex: 1; font-size: 11px; border-radius: 8px; border: 1px solid var(--border); padding: 4px 6px; }
+.panel-row input[type=range] { flex: 1; }
+.speed-val { font-family: 'DM Mono', monospace; font-size: 11px; white-space: nowrap; }
+
+/* buttons */
+.btn {
+  flex: 1; padding: 11px 8px; border-radius: 12px; border: none;
+  font-size: 13px; font-weight: 900; cursor: pointer;
+  transition: opacity .15s, transform .1s;
+}
+.btn:active { transform: scale(0.97); opacity: 0.85; }
+.btn-primary   { background: var(--primary); color: #fff; }
+.btn-secondary { background: var(--primary-light); color: var(--primary); }
+.btn-amber     { background: var(--amber-light); color: var(--amber); }
+.btn-blue      { background: #e0f2fe; color: #0369a1; }
+.btn-red       { background: #fee2e2; color: var(--red); }
+.btn-row { display: flex; gap: 8px; margin-bottom: 8px; }
+
+/* guide modal */
+.guide-overlay {
+  display: none; position: fixed; inset: 0;
+  background: rgba(0,0,0,0.45); z-index: 100;
+  justify-content: center; align-items: flex-start;
+  padding: 20px 12px; overflow-y: auto;
+}
+.guide-overlay.open { display: flex; }
+.guide-modal {
+  background: #fff; border-radius: 20px; width: 100%; max-width: 520px;
+  padding: 20px; box-shadow: 0 8px 40px rgba(0,0,0,0.18);
+}
+.guide-modal-header {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 14px;
+}
+.guide-modal-header h2 { font-size: 16px; font-weight: 900; color: var(--primary); }
+.guide-close {
+  background: #f1f5f9; border: none; border-radius: 8px;
+  padding: 4px 12px; font-size: 12px; font-weight: 700;
+  cursor: pointer; color: var(--muted);
+}
+.guide-body { font-size: 13px; line-height: 1.7; color: var(--text); }
+.g-section { margin-bottom: 16px; }
+.g-section h3 { font-size: 13px; font-weight: 900; color: var(--primary); margin-bottom: 6px; }
+.g-section p, .g-section li { margin-bottom: 4px; }
+.g-section ul { padding-left: 16px; }
+
+.header-row {
+  display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;
+}
+.guide-btn {
+  background: var(--primary-light); border: none; border-radius: 99px;
+  padding: 4px 12px; font-size: 12px; font-weight: 700;
+  color: var(--primary); cursor: pointer;
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<div class="header-row">
+  <div class="header" style="flex:1;text-align:left;">
+    <h2>🇫🇷 フランス語カード 段階２</h2>
+    <p>旅行の基本シーン — ホテル・レストラン・交通・買い物・緊急</p>
+  </div>
+  <button class="guide-btn" onclick="openGuide()">❓ 使い方</button>
+</div>
+
+<div class="badges">
+  <div class="badge" id="mode-badge">📖 仏 → 日</div>
+  <div class="badge" id="order-badge">順番通り</div>
+  <div class="badge green" id="master-badge">マスター: 0 / 50</div>
+</div>
+
+<div class="progress-wrap"><div class="progress-bar" id="progress-bar" style="width:2%"></div></div>
+<div class="progress-label">カード <span id="cur-num">1</span> / <span id="tot-num">50</span></div>
+
+<div class="no-active" id="no-active">
+  ✅ このカテゴリをすべてマスターしました！<br>
+  <span style="font-size:12px;font-weight:600;">チェックを外すか別のカテゴリを選んでください。</span>
+</div>
+
+<div class="auto-panel" id="auto-panel">
+  <div class="auto-step-title" id="auto-step-title">STEP 1</div>
+  <div class="auto-instruction" id="auto-instruction">音声を聴いてください。</div>
+  <div class="auto-count" id="auto-count"></div>
+</div>
+
+<div class="tap-hint" id="tap-hint">👆 カードをタップして日本語訳・解説を表示</div>
+
+<div class="card tappable" id="main-card" onclick="handleTap()">
+  <div class="card-top">
+    <div class="card-num" id="card-num">01</div>
+    <div class="cat-label" id="card-cat">挨拶</div>
+    <div class="master-wrap" id="master-wrap">
+      <span>マスター</span>
+      <input type="checkbox" id="master-cb" onchange="toggleMaster(event)" onclick="event.stopPropagation()">
+    </div>
+  </div>
+  <div class="main-text" id="main-text">Loading...</div>
+  <div class="pronunciation-text" id="pronunciation-text"></div>
+  <div class="speech-text" id="speech-text"></div>
+  <div class="answer-wrap" id="answer-wrap">
+    <div class="answer-ja" id="answer-ja"></div>
+    <div class="answer-tip" id="answer-tip" style="display:none"></div>
+  </div>
+  <div class="master-badge" id="mastered-badge">✔ マスター済</div>
+</div>
+
+<div class="master-summary" id="master-summary" onclick="toggleMasterList()"></div>
+<div id="master-list-wrap" style="display:none;margin-bottom:12px;">
+  <div style="background:#fff;border-radius:16px;padding:14px 16px;box-shadow:var(--shadow);">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+      <span style="font-size:13px;font-weight:900;color:var(--green);">✅ マスター済みリスト</span>
+      <button class="btn btn-secondary" id="clear-all-btn" style="padding:4px 12px;font-size:11px;" onclick="clearAllMasterStep1()">全解除</button>
+    </div>
+    <div id="master-list"></div>
+  </div>
+</div>
+
+<!-- Category filter -->
+<div class="filter-panel">
+  <div class="filter-header" onclick="toggleFilterPanel()">
+    <div class="filter-header-left">📂 カテゴリを選ぶ</div>
+    <div style="display:flex;align-items:center;gap:4px;">
+      <div class="filter-current" id="filter-current-label">すべて</div>
+      <span class="filter-toggle-icon" id="filter-toggle-icon">▼</span>
+    </div>
+  </div>
+  <div class="filter-chips-wrap" id="filter-chips-wrap">
+    <button class="chip-all active" id="chip-all" onclick="selectCategory('all')">🎯 すべて表示</button>
+    <div id="cat-rows"></div>
+  </div>
+</div>
+
+<!-- Voice panel -->
+<div class="panel">
+  <div class="panel-row" style="margin-bottom:8px;">
+    <label>🔊 音声</label>
+    <select id="voice-select" style="flex:2;"></select>
+  </div>
+  <div class="panel-row">
+    <label>速度</label>
+    <input type="range" id="rate-slider" min="0.5" max="1.5" step="0.1" value="0.9" oninput="updateRate()">
+    <span class="speed-val" id="rate-val">0.9×</span>
+  </div>
+</div>
+
+<!-- Normal controls -->
+<div id="normal-controls">
+  <div class="btn-row">
+    <button class="btn btn-secondary" onclick="prev()">← 戻る</button>
+    <button class="btn btn-primary"   onclick="speakCurrent()">🔊 音声</button>
+    <button class="btn btn-secondary" onclick="next()">次へ →</button>
+  </div>
+  <div class="btn-row">
+    <button class="btn btn-secondary" id="random-btn" onclick="toggleRandom()">🔀 ランダム: OFF</button>
+    <button class="btn btn-secondary" onclick="switchMode()">🔄 仏⇄日</button>
+  </div>
+  <div class="btn-row">
+    <button class="btn btn-amber" onclick="startShadowing()">🗣️ シャドウイング</button>
+    <button class="btn btn-blue"  onclick="startContinuous()">▶ 連続再生</button>
+  </div>
+</div>
+
+<div id="auto-controls" style="display:none;">
+  <div class="btn-row">
+    <button class="btn btn-red" onclick="stopAutoPlay()">⏹ 停止</button>
+  </div>
+</div>
+
+</div><!-- /container -->
+
+<!-- Guide Modal -->
+<div class="guide-overlay" id="guide-overlay" onclick="handleOverlayClick(event)">
+<div class="guide-modal" id="guide-modal">
+  <div class="guide-modal-header">
+    <h2>❓ 使い方ガイド</h2>
+    <button class="guide-close" onclick="closeGuide()">✕ 閉じる</button>
+  </div>
+  <div class="guide-body">
+    <div class="g-section">
+      <h3>📖 基本の使い方</h3>
+      <ul>
+        <li>カードをタップすると日本語訳と文法ヒントが表示されます</li>
+        <li>カード上部の発音表示（斜体・紫）はカタカナ読みの目安です</li>
+        <li>🔊ボタン または カードタップ後に音声が流れます</li>
+        <li>「マスター」チェックで覚えたカードを記録できます</li>
+      </ul>
+    </div>
+    <div class="g-section">
+      <h3>🗣️ シャドウイング</h3>
+      <p>音声を聴いた直後に自分でも声に出す練習です。発音上達に効果的です。</p>
+    </div>
+    <div class="g-section">
+      <h3>▶ 連続再生</h3>
+      <p>カードを自動で送りながら音声を連続再生します。聞き流し練習に使えます。</p>
+    </div>
+    <div class="g-section">
+      <h3>🔊 発音について</h3>
+      <p>お使いの端末にフランス語音声（fr-FR）がインストールされている場合、自然なフランス語発音で読み上げます。Windows・Mac・iOS・Android いずれも対応しています。音声が出ない場合は端末の言語設定でフランス語音声を追加してください。</p>
+    </div>
+    <div class="g-section">
+      <h3>📂 カテゴリ</h3>
+      <p>「カテゴリを選ぶ」から練習したいジャンルだけに絞れます。</p>
+    </div>
+  </div>
+</div>
+</div>
+
+<script>
+// ── Card Data ────────────────────────────────────────────────────
+const phrases = [
+  {cat:'ホテル', fr:'Je voudrais réserver une chambre pour deux nuits.', pron:'ジュ ヴドレ レゼルヴェ ユン シャンブル プール ドゥ ニュイ', speech:'Je voudrais réserver une chambre pour deux nuits.', ja:'2泊分の部屋を予約したいのですが。', tip:'"réserver" は -er 規則動詞「予約する」。"voudrais" は条件法で丁寧な依頼を表す。"nuit（夜）" は女性名詞。'},
+  {cat:'ホテル', fr:'Avez-vous une chambre disponible ?', pron:'アヴェ ヴ ユン シャンブル ディスポニブル', speech:'Avez-vous une chambre disponible ?', ja:'空き部屋はありますか？', tip:'"Avez-vous...?" は "avoir" の倒置疑問文。"disponible" は「利用可能な」。'},
+  {cat:'ホテル', fr:'À quelle heure est le petit-déjeuner ?', pron:'ア ケル ウール エ ル プティ デジュネ', speech:'À quelle heure est le petit-déjeuner ?', ja:'朝食は何時ですか？', tip:'"petit-déjeuner" は「朝食」（直訳: 小さな昼食）。"déjeuner" は「昼食」、"dîner" は「夕食」。'},
+  {cat:'ホテル', fr:'Pourriez-vous appeler un taxi, s\'il vous plaît ?', pron:'プリエ ヴ アプレ アン タクスィ スィル ヴ プレ', speech:'Pourriez-vous appeler un taxi, s\'il vous plaît ?', ja:'タクシーを呼んでいただけますか？', tip:'"Pourriez-vous...?" は "pouvoir" の条件法（〜していただけますか？）。最丁寧な依頼表現。'},
+  {cat:'ホテル', fr:'La climatisation ne fonctionne pas.', pron:'ラ クリマティザスィオン ヌ フォンクスィオン パ', speech:'La climatisation ne fonctionne pas.', ja:'エアコンが動きません。', tip:'"ne... pas" で否定。"fonctionner" は「機能する」。故障を伝える定番表現。'},
+  {cat:'ホテル', fr:'Pouvez-vous me réveiller à sept heures ?', pron:'プヴェ ヴ ム レヴェイエ ア セット ウール', speech:'Pouvez-vous me réveiller à sept heures ?', ja:'7時にモーニングコールをお願いできますか？', tip:'"réveiller" は「起こす」。"me" は再帰的な間接目的語（私を）。"Pouvez-vous" は "pouvoir" の丁寧な倒置疑問。'},
+  {cat:'ホテル', fr:'Je voudrais la clé de ma chambre, s\'il vous plaît.', pron:'ジュ ヴドレ ラ クレ ドゥ マ シャンブル', speech:'Je voudrais la clé de ma chambre, s\'il vous plaît.', ja:'部屋の鍵をお願いします。', tip:'"la clé" は「鍵」（女性名詞）。"ma chambre" の "ma" は女性形の所有形容詞（私の）。'},
+  {cat:'ホテル', fr:'Est-ce que le petit-déjeuner est inclus ?', pron:'エス ク ル プティ デジュネ エ アンクリュ', speech:'Est-ce que le petit-déjeuner est inclus ?', ja:'朝食は含まれていますか？', tip:'"Est-ce que...?" は疑問文を作る最も一般的な表現（倒置不要）。"inclus" は「含まれた」（形容詞）。'},
+  {cat:'レストラン', fr:'Une table pour deux personnes, s\'il vous plaît.', pron:'ユン ターブル プール ドゥ ペルソン スィル ヴ プレ', speech:'Une table pour deux personnes, s\'il vous plaît.', ja:'2名のテーブルをお願いします。', tip:'"personne" は「人」（女性名詞）。数字の後は複数形 "personnes" になる。'},
+  {cat:'レストラン', fr:'Avez-vous une table en terrasse ?', pron:'アヴェ ヴ ユン ターブル アン テラス', speech:'Avez-vous une table en terrasse ?', ja:'テラス席はありますか？', tip:'"en terrasse" は「テラスで」。"en" は場所・状態を表す前置詞のひとつ。'},
+  {cat:'レストラン', fr:'Je voudrais voir la carte, s\'il vous plaît.', pron:'ジュ ヴドレ ヴォワール ラ カルト', speech:'Je voudrais voir la carte, s\'il vous plaît.', ja:'メニューを見せていただけますか。', tip:'"la carte" はメニュー（カード状のもの）。"le menu" はコース料理セットを指す。意味が異なるので注意。'},
+  {cat:'レストラン', fr:'Qu\'est-ce que vous recommandez ?', pron:'ケス ク ヴ ルコマンデ', speech:'Qu\'est-ce que vous recommandez ?', ja:'何がおすすめですか？', tip:'"recommander" は「薦める」。"vous recommandez" は二人称複数の現在形。旅行で非常によく使う表現。'},
+  {cat:'レストラン', fr:'Je suis allergique aux noix.', pron:'ジュ スイ アレルジック オ ノワ', speech:'Je suis allergique aux noix.', ja:'私はナッツアレルギーがあります。', tip:'"allergique à" で「〜アレルギーの」。"aux" は "à + les" の縮約形。アレルギー情報は命にかかわるので確実に伝えること。'},
+  {cat:'レストラン', fr:'L\'addition, s\'il vous plaît.', pron:'ラディスィオン スィル ヴ プレ', speech:'L\'addition, s\'il vous plaît.', ja:'お会計をお願いします。', tip:'"l\'addition" は「勘定書き」。"addition" は元々「足し算」の意。定冠詞 "la" が母音前で "l\'" に縮約。'},
+  {cat:'レストラン', fr:'Est-ce que le service est compris ?', pron:'エス ク ル セルヴィス エ コンプリ', speech:'Est-ce que le service est compris ?', ja:'サービス料は含まれていますか？', tip:'フランスではほとんどのレストランでサービス料（15%程度）が含まれている。"compris" は「含まれた」。'},
+  {cat:'レストラン', fr:'C\'était vraiment délicieux. Merci beaucoup.', pron:'セテ ヴレマン デリスィユ メルスィ ボクー', speech:'C\'était vraiment délicieux. Merci beaucoup.', ja:'本当においしかったです。ありがとうございました。', tip:'"c\'était" は "c\'est" の半過去形（〜だった）。"vraiment" は「本当に」（副詞）。'},
+  {cat:'レストラン', fr:'Je ne mange pas de viande.', pron:'ジュ ヌ マンジュ パ ドゥ ヴィアンド', speech:'Je ne mange pas de viande.', ja:'私は肉を食べません。', tip:'否定文では不定冠詞 "un/une/des" が "de" に変わる。"manger" は「食べる」(-er 規則動詞)。'},
+  {cat:'交通・移動', fr:'Un billet pour Paris, s\'il vous plaît.', pron:'アン ビエ プール パリ スィル ヴ プレ', speech:'Un billet pour Paris, s\'il vous plaît.', ja:'パリまで切符を1枚ください。', tip:'"billet" は「切符・チケット」（男性名詞）。"pour" は目的地を表す。"aller-retour（アレ ルトゥール）" で「往復」。'},
+  {cat:'交通・移動', fr:'Le train part à quelle heure ?', pron:'ル トラン パール ア ケル ウール', speech:'Le train part à quelle heure ?', ja:'電車は何時に出発しますか？', tip:'"partir" は「出発する」（不規則動詞）。"part" は三人称単数形。"arriver（到着する）" と対で覚える。'},
+  {cat:'交通・移動', fr:'Est-ce que ce bus va au centre-ville ?', pron:'エス ク ス ビュス ヴァ オ サントル ヴィル', speech:'Est-ce que ce bus va au centre-ville ?', ja:'このバスは市内中心部に行きますか？', tip:'"centre-ville" は「市内中心部」。"au" は "à + le" の縮約形。"ce bus" の "ce" は指示形容詞「この」。'},
+  {cat:'交通・移動', fr:'Je voudrais louer une voiture.', pron:'ジュ ヴドレ ルエ ユン ヴォワチュール', speech:'Je voudrais louer une voiture.', ja:'車を借りたいのですが。', tip:'"louer" は「借りる・貸す」（-er 規則動詞）。"voiture" は「車」（女性名詞）。'},
+  {cat:'交通・移動', fr:'Où se trouve l\'arrêt de bus ?', pron:'ウ ス トルーヴ ラレ ドゥ ビュス', speech:'Où se trouve l\'arrêt de bus ?', ja:'バス停はどこですか？', tip:'"se trouver" は再帰動詞で「〜に位置する・ある」。"se trouve" は三人称単数形。"Où est...?" より少しフォーマル。'},
+  {cat:'交通・移動', fr:'Je me suis perdu(e). Pouvez-vous m\'aider ?', pron:'ジュ ム スイ ペルデュ プヴェ ヴ メデ', speech:'Je me suis perdu. Pouvez-vous m\'aider ?', ja:'道に迷いました。助けていただけますか？', tip:'"se perdre" の複合過去形。再帰動詞の複合過去は "être" を使う。"m\'aider" は「私を助ける」。'},
+  {cat:'交通・移動', fr:'C\'est loin à pied ?', pron:'セ ルワン ア ピエ', speech:'C\'est loin à pied ?', ja:'歩いて遠いですか？', tip:'"à pied" は「徒歩で」。"en voiture（車で）"、"en métro（地下鉄で）" など交通手段には "en" を使う（"à pied" だけ例外）。'},
+  {cat:'買い物', fr:'Combien coûte cette veste ?', pron:'コンビヤン クット セット ヴェスト', speech:'Combien coûte cette veste ?', ja:'このジャケットはいくらですか？', tip:'"cette" は女性形の指示形容詞「この」。"veste（ジャケット）" が女性名詞なので "cette" を使う。男性名詞なら "ce/cet"。'},
+  {cat:'買い物', fr:'Est-ce que vous avez ça en taille M ?', pron:'エス ク ヴ ザヴェ サ アン タイユ エム', speech:'Est-ce que vous avez ça en taille M ?', ja:'これのMサイズはありますか？', tip:'"taille" は「サイズ・身長」（女性名詞）。"en taille M" で「Mサイズで」。衣類のサイズを尋ねる定番表現。'},
+  {cat:'買い物', fr:'Puis-je l\'essayer ?', pron:'ピュイ ジュ レセイエ', speech:'Puis-je l\'essayer ?', ja:'試着してもいいですか？', tip:'"Puis-je...?" は "pouvoir" の倒置疑問で「〜してもいいですか？」（丁寧）。"essayer" は「試す・試着する」。'},
+  {cat:'買い物', fr:'C\'est trop cher. Vous faites une réduction ?', pron:'セ トロ シェール ヴ フェット ユン レデュクスィオン', speech:'C\'est trop cher. Vous faites une réduction ?', ja:'高すぎます。値引きはできますか？', tip:'"trop" は「〜すぎる」。"cher" は「高い・大切な」。"réduction" は「割引」。ただしフランスの多くの店では値引き交渉は一般的でない。'},
+  {cat:'買い物', fr:'Je vais le prendre.', pron:'ジュ ヴェ ル プランドル', speech:'Je vais le prendre.', ja:'これにします（買います）。', tip:'"aller + 不定詞" で近接未来「〜するつもりだ」。"le" は男性単数の直接目的語代名詞。女性名詞なら "la prendre"。'},
+  {cat:'買い物', fr:'Vous acceptez les cartes de crédit ?', pron:'ヴ ザクセプテ レ カルト ドゥ クレディ', speech:'Vous acceptez les cartes de crédit ?', ja:'クレジットカードは使えますか？', tip:'"accepter" は「受け付ける」(-er 規則動詞)。"carte de crédit" は「クレジットカード」。'},
+  {cat:'買い物', fr:'Pouvez-vous me faire un paquet-cadeau ?', pron:'プヴェ ヴ ム フェール アン パケ カドー', speech:'Pouvez-vous me faire un paquet-cadeau ?', ja:'プレゼント包装をしていただけますか？', tip:'"paquet-cadeau" は「ギフト包装」。"faire" は多義語で「する・作る・行う」など。'},
+  {cat:'体調・緊急', fr:'Je ne me sens pas bien.', pron:'ジュ ヌ ム サン パ ビヤン', speech:'Je ne me sens pas bien.', ja:'気分がよくありません。', tip:'"se sentir" は再帰動詞「〜と感じる」。"bien" は「良く」（副詞）。"Je me sens bien." で「気分がいい」。'},
+  {cat:'体調・緊急', fr:'J\'ai mal à la tête.', pron:'ジェ マル ア ラ テット', speech:'J\'ai mal à la tête.', ja:'頭が痛いです。', tip:'"avoir mal à + 部位" で「〜が痛い」。"tête（頭）"、"ventre（お腹）"、"gorge（喉）" など部位を変えて使える。'},
+  {cat:'体調・緊急', fr:'Appelez une ambulance, s\'il vous plaît !', pron:'アプレ ユン アンビュランス スィル ヴ プレ', speech:'Appelez une ambulance, s\'il vous plaît !', ja:'救急車を呼んでください！', tip:'命令形 "Appelez" は二人称複数（丁寧）の命令。緊急番号はフランスで "15"（SAMU）。'},
+  {cat:'体調・緊急', fr:'J\'ai besoin d\'un médecin.', pron:'ジェ ブゾワン ダン メドゥサン', speech:'J\'ai besoin d\'un médecin.', ja:'医者が必要です。', tip:'"avoir besoin de" は「〜が必要だ」という熟語表現。"médecin" は「医者」（男性名詞）。'},
+  {cat:'体調・緊急', fr:'On m\'a volé mon passeport.', pron:'オン マ ヴォレ モン パスポール', speech:'On m\'a volé mon passeport.', ja:'パスポートを盗まれました。', tip:'"on" は不特定の人称「誰かが・人々が」。"voler" は「盗む」。複合過去で「〜された」という受け身的意味になる。'},
+  {cat:'体調・緊急', fr:'Où est la pharmacie la plus proche ?', pron:'ウ エ ラ ファルマスィ ラ プリュ プロシュ', speech:'Où est la pharmacie la plus proche ?', ja:'一番近い薬局はどこですか？', tip:'"la plus proche" は最上級「最も近い」。"proche" は「近い」（形容詞）。フランスの薬局は緑の十字マーク。'},
+  {cat:'体調・緊急', fr:'J\'ai perdu mes affaires.', pron:'ジェ ペルデュ メ ザフェール', speech:'J\'ai perdu mes affaires.', ja:'荷物をなくしてしまいました。', tip:'"perdre" の複合過去形 "j\'ai perdu"。"affaires" は「持ち物・荷物」（常に複数形で使うことが多い）。'},
+  {cat:'観光・文化', fr:'À quelle heure ouvre le musée ?', pron:'ア ケル ウール ウーヴル ル ミュゼ', speech:'À quelle heure ouvre le musée ?', ja:'博物館は何時に開きますか？', tip:'"ouvrir（開く）" は不規則動詞。"musée" は「博物館・美術館」（男性名詞）。"fermer" は「閉まる」。'},
+  {cat:'観光・文化', fr:'Est-ce qu\'il y a une visite guidée en anglais ?', pron:'エス キリヤ ユン ヴィジット ギデ アン アングレ', speech:'Est-ce qu\'il y a une visite guidée en anglais ?', ja:'英語のガイドツアーはありますか？', tip:'"il y a" は「〜がある」。"visite guidée" は「ガイドツアー」。"en anglais" は「英語で」。'},
+  {cat:'観光・文化', fr:'Puis-je prendre des photos ici ?', pron:'ピュイ ジュ プランドル デ フォト イスィ', speech:'Puis-je prendre des photos ici ?', ja:'ここで写真を撮ってもいいですか？', tip:'"prendre des photos" は「写真を撮る」。直訳は「写真たちを取る」。"ici" は「ここで」。'},
+  {cat:'観光・文化', fr:'Pourriez-vous prendre une photo de nous ?', pron:'プリエ ヴ プランドル ユン フォト ドゥ ヌ', speech:'Pourriez-vous prendre une photo de nous ?', ja:'私たちの写真を撮っていただけますか？', tip:'"Pourriez-vous...?" は最も丁寧な依頼。"de nous" は「私たちの」（前置詞 de + 人称代名詞）。'},
+  {cat:'観光・文化', fr:'C\'est magnifique !', pron:'セ マニフィック', speech:'C\'est magnifique !', ja:'素晴らしい！', tip:'"magnifique" は「壮大な・素晴らしい」。"c\'est" + 形容詞で感想を表す。"C\'est beau !（きれい！）"、"C\'est incroyable !（信じられない！）" も使える。'},
+  {cat:'観光・文化', fr:'Quelle est l\'histoire de ce monument ?', pron:'ケル エ リストワール ドゥ ス モニュマン', speech:'Quelle est l\'histoire de ce monument ?', ja:'この建物の歴史は何ですか？', tip:'"histoire" は「歴史・物語」（女性名詞）。"monument" は「記念碑・建造物」。"ce" は男性指示形容詞「この」。'},
+  {cat:'観光・文化', fr:'Y a-t-il une entrée gratuite pour les enfants ?', pron:'イヤ ティル ユン アントレ グラテュイット プール レ ザンファン', speech:'Y a-t-il une entrée gratuite pour les enfants ?', ja:'子ども無料入場はありますか？', tip:'"Y a-t-il" は "il y a" の倒置疑問形。"gratuit(e)" は「無料の」。"entrée" は「入場・入り口」。'},
+  {cat:'天気・日常会話', fr:'Quel temps fait-il aujourd\'hui ?', pron:'ケル タン フェ ティル オジュルドゥイ', speech:'Quel temps fait-il aujourd\'hui ?', ja:'今日の天気はどうですか？', tip:'天気は非人称構文 "il fait..." で表す。"Quel temps" の "temps" は「天気」と「時間」の両方の意味を持つ。'},
+  {cat:'天気・日常会話', fr:'Il va pleuvoir cet après-midi.', pron:'イル ヴァ プルヴォワール セ タプレミディ', speech:'Il va pleuvoir cet après-midi.', ja:'今日の午後は雨が降るでしょう。', tip:'"aller + 不定詞" の近接未来。"pleuvoir" は「雨が降る」（非人称動詞）。"cet" は母音前の男性指示形容詞。'},
+  {cat:'天気・日常会話', fr:'Il fait très chaud en été à Paris.', pron:'イル フェ トレ ショ アン ネテ ア パリ', speech:'Il fait très chaud en été à Paris.', ja:'パリの夏はとても暑いです。', tip:'"très" は「とても」（副詞）。"en été" は「夏に」。季節には "en" を使う（"en printemps" だけ "au printemps"）。'},
+  {cat:'天気・日常会話', fr:'J\'adore Paris au printemps.', pron:'ジャドール パリ オ プランタン', speech:'J\'adore Paris au printemps.', ja:'私は春のパリが大好きです。', tip:'"adorer" は「大好きだ」（"aimer" より強い）。"au printemps" の "au" は "à + le" の縮約。春だけ "au" を使う。'},
+  {cat:'天気・日常会話', fr:'Est-ce que vous aimez la France ?', pron:'エス ク ヴ ゼメ ラ フランス', speech:'Est-ce que vous aimez la France ?', ja:'フランスは好きですか？', tip:'国名には定冠詞をつける（"la France"）。ただし "au Japon（日本で）" のように前置詞と一緒のときは縮約する。'},
+  {cat:'天気・日常会話', fr:'C\'est ma première visite en France.', pron:'セ マ プルミエール ヴィジット アン フランス', speech:'C\'est ma première visite en France.', ja:'フランスは初めての訪問です。', tip:'"premier/première" は「最初の」（序数詞）。"en France" は「フランスで・に」。国名が女性名詞のとき "en" を使う。'},
+  {cat:'通信・手続き', fr:'Avez-vous le wi-fi gratuit ?', pron:'アヴェ ヴ ル ウィフィ グラテュイ', speech:'Avez-vous le wi-fi gratuit ?', ja:'無料Wi-Fiはありますか？', tip:'"gratuit" は男性形（女性形は "gratuite"）。"le wi-fi" は男性名詞として扱う。'},
+  {cat:'通信・手続き', fr:'Quel est le mot de passe du wi-fi ?', pron:'ケル エ ル モ ドゥ パス デュ ウィフィ', speech:'Quel est le mot de passe du wi-fi ?', ja:'Wi-Fiのパスワードは何ですか？', tip:'"mot de passe" は「パスワード」（直訳: 通行語）。"du" は "de + le" の縮約形。'},
+  {cat:'通信・手続き', fr:'Je voudrais acheter une carte SIM.', pron:'ジュ ヴドレ アシュテ ユン カルト スィム', speech:'Je voudrais acheter une carte SIM.', ja:'SIMカードを購入したいのですが。', tip:'"acheter" は「買う」(-er 動詞だが語幹変化あり: "j\'achète")。旅行中の通信手段として実用的。'},
+  {cat:'通信・手続き', fr:'Où se trouve la poste la plus proche ?', pron:'ウ ス トルーヴ ラ ポスト ラ プリュ プロシュ', speech:'Où se trouve la poste la plus proche ?', ja:'一番近い郵便局はどこですか？', tip:'"la poste" は「郵便局」（女性名詞）。最上級 "la plus proche" の "la" は女性形。'},
+  {cat:'通信・手続き', fr:'Je voudrais envoyer ce colis au Japon.', pron:'ジュ ヴドレ アンヴォワイエ ス コリ オ ジャポン', speech:'Je voudrais envoyer ce colis au Japon.', ja:'この荷物を日本に送りたいのですが。', tip:'"envoyer" は「送る」（語幹変化動詞）。"colis" は「小包・荷物」（男性名詞）。"au Japon" は "à + le Japon" の縮約。'},
+  {cat:'感情・意見表現', fr:'Je suis très content(e) d\'être ici.', pron:'ジュ スイ トレ コンタン デットル イスィ', speech:'Je suis très content d\'être ici.', ja:'ここにいられてとても嬉しいです。', tip:'"content(e)" は「嬉しい・満足した」。"d\'être" は "de + être" の縮約（不定詞の前の de）。'},
+  {cat:'感情・意見表現', fr:'Je trouve ça très intéressant.', pron:'ジュ トルーヴ サ トレ アンテレサン', speech:'Je trouve ça très intéressant.', ja:'それはとても興味深いと思います。', tip:'"trouver + 形容詞" は「〜だと思う・感じる」。"intéressant" は「興味深い」（形容詞）。'},
+  {cat:'感情・意見表現', fr:'Je ne suis pas d\'accord.', pron:'ジュ ヌ スイ パ ダコール', speech:'Je ne suis pas d\'accord.', ja:'私は同意しません。', tip:'"être d\'accord" は「同意する・賛成する」。"ne... pas" で否定。"Je suis d\'accord" で「賛成です」。'},
+  {cat:'感情・意見表現', fr:'C\'est exactement ce que je cherchais.', pron:'セ テグザクトゥマン ス ク ジュ シェルシェ', speech:'C\'est exactement ce que je cherchais.', ja:'それはまさに私が探していたものです。', tip:'"exactement" は「まさに」。"ce que" は「〜するもの・こと」（関係代名詞）。"cherchais" は半過去形（〜していた）。'},
+  {cat:'感情・意見表現', fr:'À mon avis, c\'est une bonne idée.', pron:'ア モン アヴィ セ ユン ボン イデ', speech:'À mon avis, c\'est une bonne idée.', ja:'私の意見では、それは良いアイデアだと思います。', tip:'"à mon avis" は「私の意見では」。"bonne" は "bon" の女性形（"idée" が女性名詞のため）。形容詞の性の一致。'},
+  {cat:'感情・意見表現', fr:'Je préfère le vin rouge.', pron:'ジュ プレフェール ル ヴァン ルージュ', speech:'Je préfère le vin rouge.', ja:'私は赤ワインの方が好きです。', tip:'"préférer" は「〜の方を好む」（語幹変化動詞）。"vin" は「ワイン」（男性名詞）。定冠詞 "le" は好みの対象につける。'},
+  {cat:'比較・描写', fr:'Ce restaurant est meilleur que l\'autre.', pron:'ス レストラン エ メイユール ク ロートル', speech:'Ce restaurant est meilleur que l\'autre.', ja:'このレストランは他の店より良いです。', tip:'"meilleur" は "bon（良い）" の比較級（より良い）。"que" は「〜より」。"mieux" は副詞の比較級（bien の比較級）。'},
+  {cat:'比較・描写', fr:'C\'est moins cher que je pensais.', pron:'セ モワン シェール ク ジュ パンセ', speech:'C\'est moins cher que je pensais.', ja:'思っていたより安いです。', tip:'"moins + 形容詞 + que" は劣等比較「〜より〜でない」。"je pensais" は半過去形「私が思っていた」。'},
+  {cat:'比較・描写', fr:'Cette chambre est plus grande que l\'autre.', pron:'セット シャンブル エ プリュ グランド ク ロートル', speech:'Cette chambre est plus grande que l\'autre.', ja:'この部屋は他の部屋より広いです。', tip:'"plus + 形容詞 + que" は優等比較。"grande" は "grand" の女性形（"chambre" が女性名詞）。形容詞の性数一致。'},
+  {cat:'比較・描写', fr:'Il parle plus vite que moi.', pron:'イル パール プリュ ヴィット ク モワ', speech:'Il parle plus vite que moi.', ja:'彼は私より速く話します。', tip:'副詞の比較は "plus + 副詞 + que"。"vite" は「速く」（副詞）。"moi" は強調形の人称代名詞「私」（比較の後に使う）。'},
+  {cat:'ホテル', fr:'Je voudrais une chambre avec vue sur la mer.', pron:'ジュ ヴドレ ユン シャンブル アヴェック ヴュ シュール ラ メール', speech:'Je voudrais une chambre avec vue sur la mer.', ja:'海が見える部屋をお願いします。', tip:'"vue sur" は「〜の眺め」。"mer" は「海」（女性名詞）。"avec" で条件を付け加える。'},
+  {cat:'ホテル', fr:'Est-ce que je peux laisser mes bagages ici ?', pron:'エス ク ジュ プ レセ メ バガージュ イスィ', speech:'Est-ce que je peux laisser mes bagages ici ?', ja:'ここに荷物を預けられますか？', tip:'"laisser" は「残す・預ける」。"bagages" は「荷物」（常に複数形）。"puis-je" より "est-ce que je peux" の方が口語的。'},
+  {cat:'レストラン', fr:'Je voudrais une table non-fumeur, s\'il vous plaît.', pron:'ジュ ヴドレ ユン ターブル ノン フュムール', speech:'Je voudrais une table non-fumeur, s\'il vous plaît.', ja:'禁煙席をお願いします。', tip:'"non-fumeur" は「禁煙の」。"fumeur" は「喫煙者・喫煙」。フランスでは2008年から飲食店内は全面禁煙。'},
+  {cat:'レストラン', fr:'Est-ce que vous avez un menu végétarien ?', pron:'エス ク ヴ ザヴェ アン ムニュ ヴェジェタリヤン', speech:'Est-ce que vous avez un menu végétarien ?', ja:'ベジタリアンメニューはありますか？', tip:'"végétarien" は「ベジタリアンの」。"végétalien" はビーガン（動物性食品一切なし）。使い分けに注意。'},
+  {cat:'レストラン', fr:'Le repas était excellent. Mes compliments au chef !', pron:'ル ルパ エテ エクセラン メ コンプリマン オ シェフ', speech:'Le repas était excellent. Mes compliments au chef !', ja:'食事は最高でした。シェフによろしくお伝えください！', tip:'"mes compliments au chef" は「シェフに賛辞を」（直訳）。フランスのレストランで喜ばれる言葉。'},
+  {cat:'交通・移動', fr:'Le prochain train pour Lyon part à quelle heure ?', pron:'ル プロシャン トラン プール リヨン パール ア ケル ウール', speech:'Le prochain train pour Lyon part à quelle heure ?', ja:'リヨン行きの次の電車は何時に出発しますか？', tip:'"prochain" は「次の」。"partir" の三人称単数 "part"。列車の発車時刻を確認する実用的な表現。'},
+  {cat:'交通・移動', fr:'Où est-ce que je dois descendre ?', pron:'ウ エス ク ジュ ドワ デサンドル', speech:'Où est-ce que je dois descendre ?', ja:'どこで降りればいいですか？', tip:'"descendre" は「降りる」（移動動詞）。"devoir + 不定詞" は「〜しなければならない」。バスや地下鉄で使う。'},
+  {cat:'買い物', fr:'Est-ce que vous faites les retouches ?', pron:'エス ク ヴ フェット レ ルトゥーシュ', speech:'Est-ce que vous faites les retouches ?', ja:'お直しはしていただけますか？', tip:'"retouche" は「修正・お直し」（女性名詞）。洋服の裾上げなどを頼むときの表現。'},
+  {cat:'買い物', fr:'Je fais du trente-huit.', pron:'ジュ フェ デュ トランテ ユイット', speech:'Je fais du trente-huit.', ja:'私のサイズは38です。', tip:'"faire du 〜" は「〜サイズを着る」（直訳: 〜をする）。ヨーロッパのサイズ表記は日本と異なる。38はおよそ日本の M。'},
+  {cat:'観光・文化', fr:'Quelles sont les heures d\'ouverture ?', pron:'ケル ソン レ ズール ドゥーヴェルテュール', speech:'Quelles sont les heures d\'ouverture ?', ja:'開館時間は何時ですか？', tip:'"heures d\'ouverture" は「開館・営業時間」。"Quelles" は女性複数形の疑問形容詞。'},
+  {cat:'観光・文化', fr:'Y a-t-il un tarif réduit pour les étudiants ?', pron:'イヤ ティル アン タリフ レデュイ プール レ ゼテュディアン', speech:'Y a-t-il un tarif réduit pour les étudiants ?', ja:'学生割引はありますか？', tip:'"tarif réduit" は「割引料金」。"étudiant" は「学生」（男性形）。学生証を提示して割引を求める表現。'},
+  {cat:'体調・緊急', fr:'J\'ai été piqué(e) par une guêpe.', pron:'ジェ エテ ピケ パール ユン ゲップ', speech:'J\'ai été piqué par une guêpe.', ja:'スズメバチに刺されました。', tip:'"piquer" は「刺す・つまむ」。"guêpe" は「スズメバチ」（女性名詞）。"abeille" は「ミツバチ」。受動態で被害を表す。'},
+  {cat:'体調・緊急', fr:'Je souffre de maux de dos depuis quelques jours.', pron:'ジュ スフル ドゥ モ ドゥ ド ドゥピュイ ケルク ジュール', speech:'Je souffre de maux de dos depuis quelques jours.', ja:'数日前から腰痛があります。', tip:'"souffrir de" は「〜に苦しむ」。"maux" は "mal" の複数形。"dos" は「背中・腰」。"depuis quelques jours" は「数日前から」。'},
+  {cat:'天気・日常会話', fr:'Il fait un froid de canard aujourd\'hui !', pron:'イル フェ アン フロワ ドゥ カナール オジュルドゥイ', speech:'Il fait un froid de canard aujourd\'hui !', ja:'今日は猛烈に寒いですね！', tip:'"froid de canard" は「アヒルの寒さ」というフランスのイディオムで「猛烈な寒さ」を意味する。季節の慣用表現。'},
+  {cat:'天気・日常会話', fr:'On dirait qu\'il va neiger.', pron:'オン ディレ キル ヴァ ネジェ', speech:'On dirait qu\'il va neiger.', ja:'雪が降りそうです。', tip:'"on dirait que" は「〜のようだ・〜みたいだ」（推量）。"neiger" は「雪が降る」（非人称動詞）。'},
+  {cat:'感情・意見表現', fr:'Quelle bonne surprise !', pron:'ケル ボン シュルプリーズ', speech:'Quelle bonne surprise !', ja:'なんて嬉しいサプライズ！', tip:'"Quelle + 名詞 !" は感嘆文「なんて〜だ！」。"surprise" は「サプライズ・驚き」（女性名詞）なので "bonne"。'},
+  {cat:'感情・意見表現', fr:'Je suis tout à fait d\'accord avec vous.', pron:'ジュ スイ トゥタフェ ダコール アヴェック ヴ', speech:'Je suis tout à fait d\'accord avec vous.', ja:'全く同感です。', tip:'"tout à fait" は「全く・まったく」。"être d\'accord avec" は「〜と意見が一致する」。强い同意を表す。'},
+  {cat:'通信・手続き', fr:'Puis-je utiliser votre chargeur un instant ?', pron:'ピュイ ジュ ユティリゼ ヴォットル シャルジュール アン アンスタン', speech:'Puis-je utiliser votre chargeur un instant ?', ja:'少しの間充電器を使わせていただけますか？', tip:'"chargeur" は「充電器」（男性名詞）。"un instant" は「少しの間」。"utiliser" は「使う・利用する」。'},
+  {cat:'通信・手続き', fr:'Je n\'ai plus de batterie.', pron:'ジュ ネ プリュ ドゥ バテリー', speech:'Je n\'ai plus de batterie.', ja:'バッテリーが切れました。', tip:'"ne... plus" は「もう〜ない」（以前はあったが今はない）。"batterie" は「バッテリー」（女性名詞）。'},
+  {cat:'比較・描写', fr:'C\'est exactement ce que je cherchais.', pron:'セ テグザクトゥマン ス ク ジュ シェルシェ', speech:'C\'est exactement ce que je cherchais.', ja:'まさに探していたものです！', tip:'"exactement" は「まさに」。"ce que" は目的格の関係代名詞「〜するもの」。"cherchais" は半過去「探していた」。'},
+  {cat:'ホテル', fr:'À quelle heure faut-il libérer la chambre ?', pron:'ア ケル ウール フォ ティル リベレ ラ シャンブル', speech:'À quelle heure faut-il libérer la chambre ?', ja:'チェックアウトは何時ですか？', tip:'"libérer la chambre" は「部屋を空ける」（チェックアウト）。"il faut" は非人称の「〜しなければならない」。'},
+  {cat:'レストラン', fr:'Pouvez-vous nous mettre ensemble ?', pron:'プヴェ ヴ ヌ メットル アンサンブル', speech:'Pouvez-vous nous mettre ensemble ?', ja:'一緒の席にしていただけますか？', tip:'"mettre" は「置く・入れる」（不規則動詞）。"ensemble" は「一緒に」。グループで別々になってしまったときに。'},
+  {cat:'交通・移動', fr:'Je voudrais un aller-retour pour Bordeaux.', pron:'ジュ ヴドレ アン ナレ ルトゥール プール ボルドー', speech:'Je voudrais un aller-retour pour Bordeaux.', ja:'ボルドーまで往復切符をください。', tip:'"aller-retour" は「往復」（直訳: 行き帰り）。"aller simple" は「片道」。'},
+  {cat:'買い物', fr:'Est-ce que vous livrez à l\'étranger ?', pron:'エス ク ヴ リヴレ ア レトランジェ', speech:'Est-ce que vous livrez à l\'étranger ?', ja:'海外発送はできますか？', tip:'"livrer" は「配達する」。"à l\'étranger" は「外国に」。"étranger" は「外国・外国人」（男性名詞）。'},
+  {cat:'観光・文化', fr:'Pouvez-vous m\'indiquer les monuments à ne pas manquer ?', pron:'プヴェ ヴ マンディケ レ モニュマン ア ヌ パ マンケ', speech:'Pouvez-vous m\'indiquer les monuments à ne pas manquer ?', ja:'見逃せない名所を教えていただけますか？', tip:'"à ne pas manquer" は「見逃してはならない」（否定の不定詞）。"indiquer" は「示す・教える」。'},
+  {cat:'体調・緊急', fr:'Je dois contacter mon assurance.', pron:'ジュ ドワ コンタクテ モン アシュランス', speech:'Je dois contacter mon assurance.', ja:'保険会社に連絡しなければなりません。', tip:'"contacter" は「連絡する」。"devoir + 不定詞" は「〜しなければならない」。旅行トラブル時の必須表現。'},
+  {cat:'天気・日常会話', fr:'Le soleil se couche si tôt en hiver !', pron:'ル ソレイユ ス クーシュ スィ トー アン ニヴェール', speech:'Le soleil se couche si tôt en hiver !', ja:'冬は日が沈むのがとても早いですね！', tip:'"se coucher" は「沈む・横になる」（再帰動詞）。"soleil" は「太陽」（男性名詞）。"en hiver" は「冬に」。'},
+  {cat:'感情・意見表現', fr:'Honnêtement, je préférerais rester à l\'hôtel.', pron:'オネットマン ジュ プレフェルレ レステ ア ロテル', speech:'Honnêtement, je préférerais rester à l\'hôtel.', ja:'正直なところ、ホテルに残る方が好みです。', tip:'"préférerais" は "préférer" の条件法「〜の方が好ましい」。丁寧に希望を伝えるときに条件法を使う。'},
+  {cat:'比較・描写', fr:'Ce quartier est beaucoup plus calme que le centre.', pron:'ス カルティエ エ ボクー プリュ カルム ク ル サントル', speech:'Ce quartier est beaucoup plus calme que le centre.', ja:'この地区は中心部よりずっと静かです。', tip:'"beaucoup plus" で比較の度合いを強調「ずっと〜だ」。"calme" は「静かな・穏やかな」。'},
+  {cat:'比較・描写', fr:'Le service ici est bien meilleur qu\'avant.', pron:'ル セルヴィス イスィ エ ビヤン メイユール カヴァン', speech:'Le service ici est bien meilleur qu\'avant.', ja:'ここのサービスは以前よりずっと良くなりました。', tip:'"bien meilleur" で「ずっと良い」（比較を強調）。"meilleur" は "bon" の比較級。"qu\'avant" は「以前より」。'},
+  {cat:'通信・手続き', fr:'Pouvez-vous me donner un reçu détaillé ?', pron:'プヴェ ヴ ム ドネ アン ルスュ デタイエ', speech:'Pouvez-vous me donner un reçu détaillé ?', ja:'明細の領収書をいただけますか？', tip:'"détaillé" は「詳細な」（"détail" の形容詞化）。出張経費や税務申告に必要な詳細レシートを求める。'},
+  {cat:'体調・緊急', fr:'J\'ai des difficultés à respirer.', pron:'ジェ デ ディフィキュルテ ア レスピレ', speech:'J\'ai des difficultés à respirer.', ja:'息をするのが困難です。', tip:'"difficulté à + 不定詞" は「〜するのに困難がある」。"respirer" は「呼吸する」。緊急医療の場面で重要な表現。'},
+  {cat:'観光・文化', fr:'C\'est ouvert tous les jours sauf le lundi.', pron:'セ ウーヴェール トゥ レ ジュール ソフ ル ランディ', speech:'C\'est ouvert tous les jours sauf le lundi.', ja:'月曜日を除いて毎日開いています。', tip:'"sauf" は「〜を除いて」（前置詞）。"tous les jours" は「毎日」。美術館などの休館日の説明でよく聞く。'},
+  {cat:'感情・意見表現', fr:'Franchement, je ne m\'y attendais pas.', pron:'フランシュマン ジュ ヌ ミ アタンデ パ', speech:'Franchement, je ne m\'y attendais pas.', ja:'率直に言うと、それは予想していませんでした。', tip:'"franchement" は「率直に・正直に」。"s\'attendre à" は「〜を予期する」。"y" が "à" の内容を受ける。'},
+];
+
+
+const TOTAL = phrases.length;
+
+// ── State ────────────────────────────────────────────────────────
+let currentIndex   = 0;
+let isRandom       = false;
+let isFrToJa       = true;
+let isRevealed     = false;
+let activeCategory = 'all';
+let isAutoPlaying  = false;
+let autoMode       = '';
+let autoStopped    = false;
+let autoTimeout    = null;
+let masterSet = new Set(JSON.parse(localStorage.getItem('fr_lv2_master') || '[]'));
+
+// ── French Voice Setup ───────────────────────────────────────────
+let frVoices = [];
+
+function populateVoices() {
+  const all = window.speechSynthesis.getVoices();
+  // フランス語音声を優先順位付きで取得
+  const frAll = all.filter(v => v.lang.startsWith('fr'));
+  // Microsoftのナチュラル音声を優先
+  const natural = frAll.filter(v => v.name.includes('Natural') || v.name.includes('Online'));
+  frVoices = natural.length ? natural : frAll.length ? frAll : all;
+  
+  const sel = document.getElementById('voice-select');
+  sel.innerHTML = '';
+  frVoices.forEach((v, i) => {
+    const o = document.createElement('option');
+    o.value = i;
+    o.textContent = `${v.name} (${v.lang})`;
+    sel.appendChild(o);
+  });
+}
+
+populateVoices();
+if (window.speechSynthesis.onvoiceschanged !== undefined)
+  window.speechSynthesis.onvoiceschanged = populateVoices;
+
+function getVoice() {
+  const sel = document.getElementById('voice-select');
+  return frVoices[parseInt(sel.value)] || frVoices[0] || null;
+}
+function getRate() { return parseFloat(document.getElementById('rate-slider').value); }
+function updateRate() {
+  document.getElementById('rate-val').textContent = getRate().toFixed(1) + '×';
+}
+
+// iOS keepalive
+let keepAlive = null;
+function startKeepAlive() {
+  stopKeepAlive();
+  keepAlive = setInterval(() => {
+    if (window.speechSynthesis.speaking) {
+      window.speechSynthesis.pause();
+      window.speechSynthesis.resume();
+    }
+  }, 10000);
+}
+function stopKeepAlive() { if (keepAlive) { clearInterval(keepAlive); keepAlive = null; } }
+
+let isSpeaking = false;
+function speakOne(text, onEnd) {
+  window.speechSynthesis.cancel();
+  isSpeaking = false;
+  clearTimeout(speakOne._t);
+  speakOne._t = setTimeout(() => {
+    if (isSpeaking) return;
+    isSpeaking = true;
+    const utt = new SpeechSynthesisUtterance(text);
+    const v = getVoice();
+    if (v) { utt.voice = v; utt.lang = v.lang; }
+    else { utt.lang = 'fr-FR'; }
+    utt.rate = getRate();
+    utt.onstart = startKeepAlive;
+    utt.onend   = () => { isSpeaking=false; stopKeepAlive(); if(onEnd) onEnd(); };
+    utt.onerror = () => { isSpeaking=false; stopKeepAlive(); if(onEnd) onEnd(); };
+    window.speechSynthesis.speak(utt);
+  }, 150);
+}
+
+function stripTags(html) { return html.replace(/<[^>]+>/g,'').replace(/\s+/g,' ').trim(); }
+
+function speakCurrent() {
+  const a = getActive(); if (!a.length) return;
+  speakOne(a[currentIndex].speech || a[currentIndex].fr);
+}
+
+function speakP() {
+  return new Promise(resolve => {
+    if (autoStopped) { resolve(); return; }
+    const a = getActive(); if (!a.length) { resolve(); return; }
+    speakOne(a[currentIndex].speech || a[currentIndex].fr, resolve);
+  });
+}
+
+// ── Category ─────────────────────────────────────────────────────
+const allCats = [...new Set(phrases.map(p => p.cat))];
+
+function getActive() {
+  const arr = phrases.map((p, i) => ({...p, globalIdx: i}));
+  return activeCategory === 'all'
+    ? arr.filter(p => !masterSet.has(p.globalIdx))
+    : arr.filter(p => p.cat === activeCategory && !masterSet.has(p.globalIdx));
+}
+
+function buildCatRows() {
+  const container = document.getElementById('cat-rows');
+  container.innerHTML = '';
+  allCats.forEach(cat => {
+    const total   = phrases.filter(p => p.cat === cat).length;
+    const mastered = phrases.filter((p,i) => p.cat===cat && masterSet.has(i)).length;
+    const row = document.createElement('div');
+    row.className = 'cat-row' + (activeCategory === cat ? ' active' : '');
+    row.innerHTML = `<div class="cat-dot"></div><div class="cat-row-name">${cat}</div><div class="cat-row-count">${mastered}/${total}</div>`;
+    row.onclick = () => selectCategory(cat);
+    container.appendChild(row);
+  });
+}
+
+function selectCategory(cat) {
+  activeCategory = cat;
+  currentIndex = 0;
+  document.getElementById('chip-all').className = 'chip-all' + (cat==='all'?' active':'');
+  document.querySelectorAll('.cat-row').forEach(r => r.classList.remove('active'));
+  buildCatRows();
+  document.querySelectorAll('.cat-row').forEach(r => {
+    if (r.querySelector('.cat-row-name').textContent === cat) r.classList.add('active');
+  });
+  document.getElementById('filter-current-label').textContent = cat==='all' ? 'すべて' : cat;
+  showCard();
+}
+
+function toggleFilterPanel() {
+  const wrap = document.getElementById('filter-chips-wrap');
+  const icon = document.getElementById('filter-toggle-icon');
+  wrap.classList.toggle('open');
+  icon.classList.toggle('open');
+}
+
+// ── Card Display ─────────────────────────────────────────────────
+function showCard() {
+  const active = getActive();
+  const noActiveEl = document.getElementById('no-active');
+
+  if (!active.length) {
+    noActiveEl.style.display = 'block';
+    document.getElementById('main-card').style.display = 'none';
+    document.getElementById('tap-hint').style.display = 'none';
+    updateBadges();
+    return;
+  }
+  noActiveEl.style.display = 'none';
+  document.getElementById('main-card').style.display = 'block';
+  document.getElementById('tap-hint').style.display = 'block';
+
+  if (currentIndex >= active.length) currentIndex = 0;
+  const item = active[currentIndex];
+
+  const displayFr   = isFrToJa ? item.fr  : item.ja;
+  const displayPron = isFrToJa ? item.pron : '';
+  const answerText  = isFrToJa ? item.ja  : item.fr;
+
+  document.getElementById('card-num').textContent  = String(item.globalIdx+1).padStart(2,'0');
+  document.getElementById('card-cat').textContent  = item.cat;
+  document.getElementById('main-text').innerHTML   = displayFr;
+  document.getElementById('pronunciation-text').textContent = displayPron ? `[ ${displayPron} ]` : '';
+
+  // speech テキスト（読み方ガイド）
+  const speechEl = document.getElementById('speech-text');
+  if (isFrToJa && item.speech) {
+    speechEl.innerHTML = '<span class="speech-icon">🔊</span>' + item.speech;
+  } else {
+    speechEl.textContent = '';
+  }
+
+  document.getElementById('answer-ja').innerHTML   = answerText;
+  const tipEl = document.getElementById('answer-tip');
+  if (item.tip) { tipEl.textContent = item.tip; tipEl.style.display = ''; }
+  else tipEl.style.display = 'none';
+
+  document.getElementById('answer-wrap').classList.remove('show');
+  document.getElementById('main-card').classList.remove('revealed');
+  document.getElementById('main-card').classList.add('tappable');
+  document.getElementById('main-card').classList.remove('no-tap');
+
+  document.getElementById('master-cb').checked = masterSet.has(item.globalIdx);
+  document.getElementById('mastered-badge').classList.toggle('show', masterSet.has(item.globalIdx));
+
+  isRevealed = false;
+  updateBadges();
+  updateProgress();
+}
+
+function updateBadges() {
+  document.getElementById('mode-badge').textContent = isFrToJa ? '📖 仏 → 日' : '📖 日 → 仏';
+  document.getElementById('order-badge').textContent = isRandom ? '🔀 ランダム' : '順番通り';
+  document.getElementById('master-badge').textContent = `マスター: ${masterSet.size} / ${TOTAL}`;
+  updateMasterSummary();
+}
+
+function updateProgress() {
+  const active = getActive();
+  const tot = activeCategory === 'all' ? TOTAL - masterSet.size : active.length + phrases.filter((p,i)=>p.cat===activeCategory&&masterSet.has(i)).length - phrases.filter((p,i)=>p.cat===activeCategory&&masterSet.has(i)).length;
+  const totDisplay = activeCategory === 'all' ? TOTAL : phrases.filter(p=>p.cat===activeCategory).length;
+  document.getElementById('cur-num').textContent = currentIndex + 1;
+  document.getElementById('tot-num').textContent = active.length;
+  const pct = active.length ? Math.max(2, Math.round(((currentIndex+1)/active.length)*100)) : 100;
+  document.getElementById('progress-bar').style.width = pct + '%';
+}
+
+function handleTap() {
+  if (isAutoPlaying) return;
+  const active = getActive();
+  if (!active.length) return;
+  if (!isRevealed) {
+    document.getElementById('answer-wrap').classList.add('show');
+    document.getElementById('main-card').classList.add('revealed');
+    isRevealed = true;
+    speakCurrent();
+  } else {
+    next();
+  }
+}
+
+function next() {
+  if (isAutoPlaying) return;
+  const active = getActive();
+  if (!active.length) return;
+  if (isRandom) {
+    currentIndex = Math.floor(Math.random() * active.length);
+  } else {
+    currentIndex = (currentIndex + 1) % active.length;
+  }
+  showCard();
+}
+
+function prev() {
+  if (isAutoPlaying) return;
+  const active = getActive();
+  if (!active.length) return;
+  currentIndex = (currentIndex - 1 + active.length) % active.length;
+  showCard();
+}
+
+function switchMode() {
+  isFrToJa = !isFrToJa;
+  showCard();
+}
+
+function toggleRandom() {
+  isRandom = !isRandom;
+  document.getElementById('random-btn').textContent = `🔀 ランダム: ${isRandom?'ON':'OFF'}`;
+  updateBadges();
+}
+
+// ── Master ───────────────────────────────────────────────────────
+function saveMaster() {
+  localStorage.setItem('fr_lv2_master', JSON.stringify([...masterSet]));
+}
+
+function toggleMaster(e) {
+  const active = getActive();
+  if (!active.length) return;
+  const item = active[currentIndex];
+  if (e.target.checked) { masterSet.add(item.globalIdx); }
+  else { masterSet.delete(item.globalIdx); }
+  saveMaster();
+  document.getElementById('mastered-badge').classList.toggle('show', masterSet.has(item.globalIdx));
+  document.getElementById('master-badge').textContent = `マスター: ${masterSet.size} / ${TOTAL}`;
+  buildCatRows();
+  updateMasterSummary();
+}
+
+function updateMasterSummary() {
+  const el = document.getElementById('master-summary');
+  if (!masterSet.size) { el.textContent = ''; return; }
+  el.textContent = `✅ マスター済み ${masterSet.size} 枚 — タップして確認`;
+}
+
+function toggleMasterList() {
+  const wrap = document.getElementById('master-list-wrap');
+  const isOpen = wrap.style.display !== 'none';
+  if (isOpen) { wrap.style.display = 'none'; return; }
+  const listEl = document.getElementById('master-list');
+  listEl.innerHTML = '';
+  [...masterSet].sort((a,b)=>a-b).forEach(idx => {
+    const p = phrases[idx];
+    const div = document.createElement('div');
+    div.style.cssText = 'display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid #f1f5f9;font-size:12px;';
+    div.innerHTML = `<span style="font-weight:700;color:var(--primary);">${p.fr}</span><span style="color:var(--muted);">${p.ja}</span><button style="background:none;border:none;cursor:pointer;color:var(--red);font-size:13px;" onclick="removeMaster(${idx})">✕</button>`;
+    listEl.appendChild(div);
+  });
+  wrap.style.display = 'block';
+}
+
+function removeMaster(idx) {
+  masterSet.delete(idx);
+  saveMaster();
+  document.getElementById('master-badge').textContent = `マスター: ${masterSet.size} / ${TOTAL}`;
+  if (!masterSet.size) document.getElementById('master-list-wrap').style.display='none';
+  buildCatRows();
+  updateMasterSummary();
+  toggleMasterList();
+  toggleMasterList();
+}
+
+let clearStep = 0;
+function clearAllMasterStep1() {
+  const btn = document.getElementById('clear-all-btn');
+  if (clearStep === 0) {
+    btn.textContent = '本当に全解除？'; btn.style.background='#fee2e2'; btn.style.color='var(--red)';
+    clearStep = 1;
+    setTimeout(() => { if(clearStep===1){ btn.textContent='全解除'; btn.style.background=''; btn.style.color=''; clearStep=0; } }, 3000);
+  } else {
+    masterSet.clear(); saveMaster();
+    document.getElementById('master-list-wrap').style.display='none';
+    buildCatRows(); updateBadges(); showCard();
+    btn.textContent='全解除'; btn.style.background=''; btn.style.color=''; clearStep=0;
+  }
+}
+
+// ── Auto Play ────────────────────────────────────────────────────
+async function startShadowing() {
+  const active = getActive(); if (!active.length) return;
+  isAutoPlaying = true; autoStopped = false; autoMode = 'shadow';
+  document.getElementById('normal-controls').style.display = 'none';
+  document.getElementById('auto-controls').style.display = 'block';
+  document.getElementById('auto-panel').style.display = 'block';
+  document.getElementById('main-card').classList.remove('tappable');
+  document.getElementById('main-card').classList.add('no-tap');
+
+  while (!autoStopped) {
+    const a = getActive(); if (!a.length) break;
+    if (currentIndex >= a.length) currentIndex = 0;
+
+    document.getElementById('auto-step-title').textContent = 'STEP 1';
+    document.getElementById('auto-instruction').textContent = '音声を聴いてください。';
+    document.getElementById('auto-count').textContent = `${currentIndex+1} / ${a.length}`;
+    showCard();
+    document.getElementById('answer-wrap').classList.add('show');
+    document.getElementById('main-card').classList.add('revealed');
+    await speakP(); if (autoStopped) break;
+
+    document.getElementById('auto-step-title').textContent = 'STEP 2';
+    document.getElementById('auto-instruction').textContent = '声に出して真似してください。';
+    await new Promise(r => { autoTimeout = setTimeout(r, 2500); });
+    if (autoStopped) break;
+
+    document.getElementById('auto-step-title').textContent = 'STEP 3';
+    document.getElementById('auto-instruction').textContent = 'もう一度聴きましょう。';
+    await speakP(); if (autoStopped) break;
+
+    await new Promise(r => { autoTimeout = setTimeout(r, 800); });
+    if (autoStopped) break;
+    currentIndex = (currentIndex + 1) % getActive().length;
+  }
+  stopAutoPlay();
+}
+
+async function startContinuous() {
+  const active = getActive(); if (!active.length) return;
+  isAutoPlaying = true; autoStopped = false; autoMode = 'continuous';
+  document.getElementById('normal-controls').style.display = 'none';
+  document.getElementById('auto-controls').style.display = 'block';
+  document.getElementById('auto-panel').style.display = 'block';
+  document.getElementById('main-card').classList.remove('tappable');
+  document.getElementById('main-card').classList.add('no-tap');
+
+  while (!autoStopped) {
+    const a = getActive(); if (!a.length) break;
+    if (currentIndex >= a.length) currentIndex = 0;
+    document.getElementById('auto-step-title').textContent = '連続再生中';
+    document.getElementById('auto-instruction').textContent = '音声を聴いてください。';
+    document.getElementById('auto-count').textContent = `${currentIndex+1} / ${a.length}`;
+    showCard();
+    document.getElementById('answer-wrap').classList.add('show');
+    document.getElementById('main-card').classList.add('revealed');
+    await speakP(); if (autoStopped) break;
+    await new Promise(r => { autoTimeout = setTimeout(r, 1200); });
+    if (autoStopped) break;
+    currentIndex = (currentIndex + 1) % getActive().length;
+    if (currentIndex === 0 && autoMode === 'continuous') { stopAutoPlay(); break; }
+  }
+  if (!autoStopped) stopAutoPlay();
+}
+
+function stopAutoPlay() {
+  autoStopped = true; isAutoPlaying = false;
+  if (autoTimeout) { clearTimeout(autoTimeout); autoTimeout = null; }
+  window.speechSynthesis.cancel(); isSpeaking = false; stopKeepAlive();
+  document.getElementById('normal-controls').style.display = 'block';
+  document.getElementById('auto-controls').style.display = 'none';
+  document.getElementById('auto-panel').style.display = 'none';
+  document.getElementById('main-card').classList.add('tappable');
+  document.getElementById('main-card').classList.remove('no-tap');
+  showCard();
+}
+
+// ── Guide ────────────────────────────────────────────────────────
+function openGuide()  { document.getElementById('guide-overlay').classList.add('open'); }
+function closeGuide() { document.getElementById('guide-overlay').classList.remove('open'); }
+function handleOverlayClick(e) { if (e.target === document.getElementById('guide-overlay')) closeGuide(); }
+
+// ── Init ─────────────────────────────────────────────────────────
+buildCatRows();
+showCard();
+</script>
+</body>
+</html>

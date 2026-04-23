@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>フランス語入門カード</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f5f0ff;
+  --surface: #ffffff;
+  --primary: #7c3aed;
+  --primary-light: #ede9fe;
+  --accent: #0891b2;
+  --green: #16a34a;
+  --green-light: #dcfce7;
+  --amber: #d97706;
+  --amber-light: #fef3c7;
+  --red: #e11d48;
+  --text: #1e293b;
+  --muted: #64748b;
+  --border: #c4b5fd;
+  --shadow: 0 4px 24px rgba(124,58,237,0.10);
+  --radius: 18px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+body {
+  font-family: 'Noto Sans JP', sans-serif;
+  background: var(--bg);
+  min-height: 100vh;
+  padding: 16px 12px 48px;
+  color: var(--text);
+}
+.container { max-width: 560px; margin: auto; }
+
+.header { text-align: center; margin-bottom: 14px; }
+.header h2 { font-size: 18px; font-weight: 900; color: var(--primary); }
+.header p  { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+.badges { display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; margin-bottom: 10px; }
+.badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 4px 12px; border-radius: 99px; font-size: 11px; font-weight: 700;
+  background: var(--primary-light); color: var(--primary);
+  border: 1px solid var(--border);
+}
+.badge.green { background: var(--green-light); color: var(--green); border-color: #86efac; }
+
+.progress-wrap { background: #ddd6fe; border-radius: 99px; height: 6px; margin-bottom: 4px; overflow: hidden; }
+.progress-bar  { height: 100%; background: var(--primary); border-radius: 99px; transition: width 0.4s ease; }
+.progress-label { font-size: 11px; color: var(--muted); text-align: right; margin-bottom: 10px; }
+
+.no-active {
+  display: none; text-align: center; padding: 20px;
+  background: var(--surface); border-radius: var(--radius);
+  color: var(--green); font-weight: 700; margin-bottom: 12px;
+  box-shadow: var(--shadow);
+}
+
+.auto-panel {
+  display: none; text-align: center; padding: 10px 14px;
+  background: var(--primary-light); border-radius: 12px;
+  margin-bottom: 10px; border: 1px solid var(--border);
+}
+.auto-step-title   { font-size: 11px; font-weight: 900; color: var(--primary); margin-bottom: 2px; }
+.auto-instruction  { font-size: 13px; font-weight: 700; color: var(--text); }
+.auto-count        { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+.tap-hint { text-align: center; font-size: 12px; color: var(--muted); margin-bottom: 8px; }
+
+.card {
+  background: var(--surface); border-radius: var(--radius);
+  padding: 20px 18px 16px; margin-bottom: 12px;
+  box-shadow: var(--shadow);
+  border: 2px solid transparent;
+  transition: border-color .2s;
+  min-height: 160px;
+}
+.card-top {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 14px;
+}
+.card-num { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--muted); }
+.cat-label {
+  font-size: 10px; font-weight: 700; padding: 2px 10px;
+  border-radius: 99px; background: var(--primary-light); color: var(--primary);
+}
+.master-wrap { display: flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 700; color: var(--muted); }
+.master-wrap input[type=checkbox] { width: 17px; height: 17px; accent-color: var(--green); cursor: pointer; }
+
+.main-text {
+  font-size: clamp(17px, 4.5vw, 22px); font-weight: 900;
+  text-align: center; line-height: 1.5; margin-bottom: 6px;
+  color: var(--text);
+}
+.main-text mark { background: none; color: var(--primary); font-weight: 900; }
+
+/* 発音表示 */
+.pronunciation-text {
+  font-size: clamp(12px, 3.2vw, 14px);
+  color: var(--primary);
+  font-style: italic;
+  text-align: center;
+  line-height: 1.5;
+  padding: 3px 8px 2px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+/* speech読み上げ用テキスト */
+.speech-text {
+  font-size: clamp(11px, 3vw, 13px);
+  color: #9ca3af;
+  font-style: italic;
+  text-align: center;
+  line-height: 1.5;
+  padding: 2px 8px 4px;
+  letter-spacing: 0.01em;
+}
+.speech-text .speech-icon { font-style: normal; margin-right: 3px; opacity: 0.6; }
+
+.card.tappable { cursor: pointer; }
+.card.tappable:active { transform: scale(0.985); }
+.card.revealed { border-color: var(--primary); }
+.card.no-tap { cursor: default; }
+
+.answer-wrap {
+  opacity: 0; transform: translateY(5px);
+  transition: opacity .25s, transform .25s;
+  pointer-events: none;
+}
+.answer-wrap.show { opacity: 1; transform: translateY(0); pointer-events: auto; }
+
+.answer-ja {
+  font-size: clamp(13px, 3.5vw, 15px); font-weight: 700;
+  color: var(--accent); text-align: center; line-height: 1.6;
+  background: #f0f9ff; border-radius: 10px; padding: 10px 14px; margin-bottom: 8px;
+}
+.answer-tip {
+  font-size: 12px; font-weight: 600; color: var(--green);
+  text-align: left; padding: 0 4px; line-height: 1.7;
+}
+.answer-tip::before { content: '💡 '; }
+
+.master-badge {
+  display: none; text-align: center; margin-top: 8px;
+  font-size: 11px; font-weight: 900; color: var(--green);
+}
+.master-badge.show { display: block; }
+
+.master-summary {
+  text-align: center; font-size: 12px; font-weight: 700;
+  color: var(--primary); cursor: pointer; margin-bottom: 6px;
+  padding: 6px; border-radius: 10px;
+}
+.master-summary:hover { background: var(--primary-light); }
+
+/* filter panel */
+.filter-panel {
+  background: var(--surface); border-radius: var(--radius);
+  padding: 12px 14px; margin-bottom: 10px;
+  box-shadow: var(--shadow);
+}
+.filter-header { display: flex; align-items: center; justify-content: space-between; cursor: pointer; user-select: none; }
+.filter-header-left { font-size: 13px; font-weight: 900; color: var(--primary); }
+.filter-current {
+  font-size: 11px; font-weight: 700; color: var(--primary);
+  background: var(--primary-light); padding: 3px 10px; border-radius: 99px;
+  border: 1px solid var(--border); max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.filter-toggle-icon { font-size: 10px; color: var(--muted); transition: transform .2s; }
+.filter-toggle-icon.open { transform: rotate(180deg); }
+.filter-chips-wrap { display: none; margin-top: 10px; }
+.filter-chips-wrap.open { display: block; }
+
+.chip-all {
+  width: 100%; padding: 7px 12px; border-radius: 99px; border: 2px solid var(--border);
+  background: #fff; color: var(--muted); font-size: 12px; font-weight: 700;
+  cursor: pointer; margin-bottom: 5px; transition: all .15s; user-select: none;
+}
+.chip-all.active { background: var(--primary-light); color: var(--primary); border-color: var(--primary); }
+
+.cat-row {
+  display: flex; align-items: center; gap: 8px;
+  padding: 7px 12px; border-radius: 12px; border: 2px solid var(--border);
+  background: #fff; margin-bottom: 5px; transition: all .15s; user-select: none; cursor: pointer;
+}
+.cat-row.active { background: var(--primary-light); border-color: var(--primary); }
+.cat-row-name { flex: 1; font-size: 12px; font-weight: 700; }
+.cat-row-count {
+  font-size: 11px; font-weight: 700; color: var(--muted);
+  background: #f1f5f9; padding: 2px 8px; border-radius: 99px; font-weight: 600;
+}
+.cat-row.active .cat-row-count { background: #fff; color: var(--primary); }
+.cat-dot { width: 8px; height: 8px; border-radius: 50%; background: #e2e8f0; flex-shrink: 0; }
+
+/* voice panel */
+.panel {
+  background: var(--surface); border-radius: var(--radius);
+  padding: 12px 14px; margin-bottom: 10px;
+  box-shadow: var(--shadow);
+}
+.panel-row {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 12px; font-weight: 700; color: var(--muted);
+}
+.panel-row label { white-space: nowrap; }
+.panel-row select { flex: 1; font-size: 11px; border-radius: 8px; border: 1px solid var(--border); padding: 4px 6px; }
+.panel-row input[type=range] { flex: 1; }
+.speed-val { font-family: 'DM Mono', monospace; font-size: 11px; white-space: nowrap; }
+
+/* buttons */
+.btn {
+  flex: 1; padding: 11px 8px; border-radius: 12px; border: none;
+  font-size: 13px; font-weight: 900; cursor: pointer;
+  transition: opacity .15s, transform .1s;
+}
+.btn:active { transform: scale(0.97); opacity: 0.85; }
+.btn-primary   { background: var(--primary); color: #fff; }
+.btn-secondary { background: var(--primary-light); color: var(--primary); }
+.btn-amber     { background: var(--amber-light); color: var(--amber); }
+.btn-blue      { background: #e0f2fe; color: #0369a1; }
+.btn-red       { background: #fee2e2; color: var(--red); }
+.btn-row { display: flex; gap: 8px; margin-bottom: 8px; }
+
+/* guide modal */
+.guide-overlay {
+  display: none; position: fixed; inset: 0;
+  background: rgba(0,0,0,0.45); z-index: 100;
+  justify-content: center; align-items: flex-start;
+  padding: 20px 12px; overflow-y: auto;
+}
+.guide-overlay.open { display: flex; }
+.guide-modal {
+  background: #fff; border-radius: 20px; width: 100%; max-width: 520px;
+  padding: 20px; box-shadow: 0 8px 40px rgba(0,0,0,0.18);
+}
+.guide-modal-header {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 14px;
+}
+.guide-modal-header h2 { font-size: 16px; font-weight: 900; color: var(--primary); }
+.guide-close {
+  background: #f1f5f9; border: none; border-radius: 8px;
+  padding: 4px 12px; font-size: 12px; font-weight: 700;
+  cursor: pointer; color: var(--muted);
+}
+.guide-body { font-size: 13px; line-height: 1.7; color: var(--text); }
+.g-section { margin-bottom: 16px; }
+.g-section h3 { font-size: 13px; font-weight: 900; color: var(--primary); margin-bottom: 6px; }
+.g-section p, .g-section li { margin-bottom: 4px; }
+.g-section ul { padding-left: 16px; }
+
+.header-row {
+  display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;
+}
+.guide-btn {
+  background: var(--primary-light); border: none; border-radius: 99px;
+  padding: 4px 12px; font-size: 12px; font-weight: 700;
+  color: var(--primary); cursor: pointer;
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<div class="header-row">
+  <div class="header" style="flex:1;text-align:left;">
+    <h2>🇫🇷 フランス語入門カード</h2>
+    <p>初歩的なフランス語 — 発音・文法のヒント付き</p>
+  </div>
+  <button class="guide-btn" onclick="openGuide()">❓ 使い方</button>
+</div>
+
+<div class="badges">
+  <div class="badge" id="mode-badge">📖 仏 → 日</div>
+  <div class="badge" id="order-badge">順番通り</div>
+  <div class="badge green" id="master-badge">マスター: 0 / 50</div>
+</div>
+
+<div class="progress-wrap"><div class="progress-bar" id="progress-bar" style="width:2%"></div></div>
+<div class="progress-label">カード <span id="cur-num">1</span> / <span id="tot-num">50</span></div>
+
+<div class="no-active" id="no-active">
+  ✅ このカテゴリをすべてマスターしました！<br>
+  <span style="font-size:12px;font-weight:600;">チェックを外すか別のカテゴリを選んでください。</span>
+</div>
+
+<div class="auto-panel" id="auto-panel">
+  <div class="auto-step-title" id="auto-step-title">STEP 1</div>
+  <div class="auto-instruction" id="auto-instruction">音声を聴いてください。</div>
+  <div class="auto-count" id="auto-count"></div>
+</div>
+
+<div class="tap-hint" id="tap-hint">👆 カードをタップして日本語訳・解説を表示</div>
+
+<div class="card tappable" id="main-card" onclick="handleTap()">
+  <div class="card-top">
+    <div class="card-num" id="card-num">01</div>
+    <div class="cat-label" id="card-cat">挨拶</div>
+    <div class="master-wrap" id="master-wrap">
+      <span>マスター</span>
+      <input type="checkbox" id="master-cb" onchange="toggleMaster(event)" onclick="event.stopPropagation()">
+    </div>
+  </div>
+  <div class="main-text" id="main-text">Loading...</div>
+  <div class="pronunciation-text" id="pronunciation-text"></div>
+  <div class="speech-text" id="speech-text"></div>
+  <div class="answer-wrap" id="answer-wrap">
+    <div class="answer-ja" id="answer-ja"></div>
+    <div class="answer-tip" id="answer-tip" style="display:none"></div>
+  </div>
+  <div class="master-badge" id="mastered-badge">✔ マスター済</div>
+</div>
+
+<div class="master-summary" id="master-summary" onclick="toggleMasterList()"></div>
+<div id="master-list-wrap" style="display:none;margin-bottom:12px;">
+  <div style="background:#fff;border-radius:16px;padding:14px 16px;box-shadow:var(--shadow);">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+      <span style="font-size:13px;font-weight:900;color:var(--green);">✅ マスター済みリスト</span>
+      <button class="btn btn-secondary" id="clear-all-btn" style="padding:4px 12px;font-size:11px;" onclick="clearAllMasterStep1()">全解除</button>
+    </div>
+    <div id="master-list"></div>
+  </div>
+</div>
+
+<!-- Category filter -->
+<div class="filter-panel">
+  <div class="filter-header" onclick="toggleFilterPanel()">
+    <div class="filter-header-left">📂 カテゴリを選ぶ</div>
+    <div style="display:flex;align-items:center;gap:4px;">
+      <div class="filter-current" id="filter-current-label">すべて</div>
+      <span class="filter-toggle-icon" id="filter-toggle-icon">▼</span>
+    </div>
+  </div>
+  <div class="filter-chips-wrap" id="filter-chips-wrap">
+    <button class="chip-all active" id="chip-all" onclick="selectCategory('all')">🎯 すべて表示</button>
+    <div id="cat-rows"></div>
+  </div>
+</div>
+
+<!-- Voice panel -->
+<div class="panel">
+  <div class="panel-row" style="margin-bottom:8px;">
+    <label>🔊 音声</label>
+    <select id="voice-select" style="flex:2;"></select>
+  </div>
+  <div class="panel-row">
+    <label>速度</label>
+    <input type="range" id="rate-slider" min="0.5" max="1.5" step="0.1" value="0.9" oninput="updateRate()">
+    <span class="speed-val" id="rate-val">0.9×</span>
+  </div>
+</div>
+
+<!-- Normal controls -->
+<div id="normal-controls">
+  <div class="btn-row">
+    <button class="btn btn-secondary" onclick="prev()">← 戻る</button>
+    <button class="btn btn-primary"   onclick="speakCurrent()">🔊 音声</button>
+    <button class="btn btn-secondary" onclick="next()">次へ →</button>
+  </div>
+  <div class="btn-row">
+    <button class="btn btn-secondary" id="random-btn" onclick="toggleRandom()">🔀 ランダム: OFF</button>
+    <button class="btn btn-secondary" onclick="switchMode()">🔄 仏⇄日</button>
+  </div>
+  <div class="btn-row">
+    <button class="btn btn-amber" onclick="startShadowing()">🗣️ シャドウイング</button>
+    <button class="btn btn-blue"  onclick="startContinuous()">▶ 連続再生</button>
+  </div>
+</div>
+
+<div id="auto-controls" style="display:none;">
+  <div class="btn-row">
+    <button class="btn btn-red" onclick="stopAutoPlay()">⏹ 停止</button>
+  </div>
+</div>
+
+</div><!-- /container -->
+
+<!-- Guide Modal -->
+<div class="guide-overlay" id="guide-overlay" onclick="handleOverlayClick(event)">
+<div class="guide-modal" id="guide-modal">
+  <div class="guide-modal-header">
+    <h2>❓ 使い方ガイド</h2>
+    <button class="guide-close" onclick="closeGuide()">✕ 閉じる</button>
+  </div>
+  <div class="guide-body">
+    <div class="g-section">
+      <h3>📖 基本の使い方</h3>
+      <ul>
+        <li>カードをタップすると日本語訳と文法ヒントが表示されます</li>
+        <li>カード上部の発音表示（斜体・紫）はカタカナ読みの目安です</li>
+        <li>🔊ボタン または カードタップ後に音声が流れます</li>
+        <li>「マスター」チェックで覚えたカードを記録できます</li>
+      </ul>
+    </div>
+    <div class="g-section">
+      <h3>🗣️ シャドウイング</h3>
+      <p>音声を聴いた直後に自分でも声に出す練習です。発音上達に効果的です。</p>
+    </div>
+    <div class="g-section">
+      <h3>▶ 連続再生</h3>
+      <p>カードを自動で送りながら音声を連続再生します。聞き流し練習に使えます。</p>
+    </div>
+    <div class="g-section">
+      <h3>🔊 発音について</h3>
+      <p>お使いの端末にフランス語音声（fr-FR）がインストールされている場合、自然なフランス語発音で読み上げます。Windows・Mac・iOS・Android いずれも対応しています。音声が出ない場合は端末の言語設定でフランス語音声を追加してください。</p>
+    </div>
+    <div class="g-section">
+      <h3>📂 カテゴリ</h3>
+      <p>「カテゴリを選ぶ」から練習したいジャンルだけに絞れます。</p>
+    </div>
+  </div>
+</div>
+</div>
+
+<script>
+// ── Card Data ────────────────────────────────────────────────────
+const phrases = [
+  // 挨拶・基本表現
+  {cat:'挨拶・基本表現', fr:'Bonjour', pron:'ボンジュール', speech:'Bonjour', ja:'こんにちは（おはようございます）', tip:'一日中使える万能の挨拶。文字通りは "bon（良い）+ jour（日）"。'},
+  {cat:'挨拶・基本表現', fr:'Bonsoir', pron:'ボンソワール', speech:'Bonsoir', ja:'こんばんは', tip:'"bon（良い）+ soir（夕方）"。夕方以降に使う。'},
+  {cat:'挨拶・基本表現', fr:'Bonne nuit', pron:'ボンニュイ', speech:'Bonne nuit', ja:'おやすみなさい', tip:'"nuit" は女性名詞なので "bonne"（bon の女性形）を使う。'},
+  {cat:'挨拶・基本表現', fr:'Au revoir', pron:'オ ルヴォワール', speech:'Au revoir', ja:'さようなら', tip:'"revoir" は "再び見る" の意。また会いましょう、というニュアンス。'},
+  {cat:'挨拶・基本表現', fr:'Salut !', pron:'サリュ', speech:'Salut', ja:'やあ！／またね！（くだけた表現）', tip:'友人間で使うカジュアルな挨拶。初対面や目上の人には使わない。'},
+  {cat:'挨拶・基本表現', fr:'Comment allez-vous ?', pron:'コモン タレ ヴ', speech:'Comment allez-vous', ja:'お元気ですか？（丁寧）', tip:'"vous" は敬称・複数の "あなた"。語尾の "-vous" で丁寧さが決まる。疑問文は語順を逆転（倒置）させる。'},
+  {cat:'挨拶・基本表現', fr:'Ça va ?', pron:'サ ヴァ', speech:'Ça va', ja:'元気？（くだけた表現）', tip:'"Ça va !" は「元気だよ」の返答にもなる。"Ça" は "cela（それ）" の短縮形。'},
+  {cat:'挨拶・基本表現', fr:'Merci', pron:'メルスィ', speech:'Merci', ja:'ありがとう', tip:'"Merci beaucoup（メルスィ ボクー）" で「ありがとうございます」。'},
+  {cat:'挨拶・基本表現', fr:'De rien', pron:'ドゥ リヤン', speech:'De rien', ja:'どういたしまして', tip:'"rien" は「何もない」の意。「たいしたことではない」というニュアンス。'},
+  {cat:'挨拶・基本表現', fr:'S\'il vous plaît', pron:'スィル ヴ プレ', speech:'S\'il vous plaît', ja:'お願いします（丁寧）', tip:'"s\'il" は "si il（もし〜ならば）" の縮約形。直訳は "もしあなたが気に入るなら"。'},
+
+  // 自己紹介
+  {cat:'自己紹介', fr:'Je m\'appelle Marie.', pron:'ジュ マペル マリー', speech:'Je m\'appelle Marie.', ja:'私はマリーといいます。', tip:'"s\'appeler（〜という名前だ）" は再帰動詞。"je m\'appelle" で「私の名前は〜」。名前の部分を入れ替えて使う。'},
+  {cat:'自己紹介', fr:'Je suis japonais(e).', pron:'ジュ スイ ジャポネ（ズ）', speech:'Je suis japonais.', ja:'私は日本人です。', tip:'"être（〜である）" の現在形 "suis"。男性は "japonais"、女性は "japonaise"（語尾に -e を追加）。'},
+  {cat:'自己紹介', fr:'J\'ai 13 ans.', pron:'ジェ トレーズ アン', speech:'J\'ai treize ans.', ja:'私は13歳です。', tip:'フランス語では年齢に "avoir（持つ）" を使う。「13年を持っている」という表現。"avoir" の一人称 "j\'ai"（有音のため je → j\'）。'},
+  {cat:'自己紹介', fr:'J\'habite à Tokyo.', pron:'ジャビト ア トキョ', speech:'J\'habite à Tokyo.', ja:'私は東京に住んでいます。', tip:'"habiter（住む）" は -er 動詞（第一群規則動詞）。"h" は無音のため "je" が "j\'" に縮約する。'},
+  {cat:'自己紹介', fr:'Enchanté(e) !', pron:'アンシャンテ', speech:'Enchanté !', ja:'はじめまして！（お会いできて光栄です）', tip:'男性形 "enchanté"、女性形 "enchantée"（発音は同じ）。初対面のときに使う定番フレーズ。'},
+
+  // 数字
+  {cat:'数字', fr:'un, deux, trois', pron:'アン、ドゥ、トロワ', speech:'un, deux, trois', ja:'1、2、3', tip:'"un" は男性形（女性形は "une"）。数を数えるときは男性形を使う。'},
+  {cat:'数字', fr:'quatre, cinq, six', pron:'キャトル、サンク、スィス', speech:'quatre, cinq, six', ja:'4、5、6', tip:'"cinq" の語尾の -q と "six" の語尾の -x は単独では発音する。次に子音が来ると無音になることがある。'},
+  {cat:'数字', fr:'sept, huit, neuf', pron:'セット、ユイット、ヌフ', speech:'sept, huit, neuf', ja:'7、8、9', tip:'"sept" の -p と -t は無音。"neuf" は「新しい」という別の単語にもなる（同音異義語）。'},
+  {cat:'数字', fr:'dix, vingt, cent', pron:'ディス、ヴァン、サン', speech:'dix, vingt, cent', ja:'10、20、100', tip:'"vingt（20）" は単独では -t を発音しない。"vingt et un（21）" では "et" を入れる。'},
+  {cat:'数字', fr:'Combien ça coûte ?', pron:'コンビヤン サ クット', speech:'Combien ça coûte ?', ja:'いくらですか？', tip:'"combien" は「いくつ／いくら」。"coûter（かかる）" はアクサン・シルコンフレクス（ê）付き。'},
+
+  // 色・形容詞
+  {cat:'色・形容詞', fr:'rouge / bleu(e)', pron:'ルージュ／ブル', speech:'rouge, bleu', ja:'赤／青', tip:'色の形容詞は名詞の後ろに置く（英語と逆）。"bleu" は男性形、"bleue" は女性形（発音は同じ）。'},
+  {cat:'色・形容詞', fr:'vert(e) / jaune', pron:'ヴェール／ジョーヌ', speech:'vert, jaune', ja:'緑／黄色', tip:'"vert" の女性形は "verte"（語末の -t が聞こえるようになる）。"jaune" は男女同形。'},
+  {cat:'色・形容詞', fr:'noir(e) / blanc(he)', pron:'ノワール／ブラン（シュ）', speech:'noir, blanc', ja:'黒／白', tip:'"blanc" の女性形 "blanche" は発音が大きく変わる（語末が -sh 音に）。変則的な形容詞の代表例。'},
+  {cat:'色・形容詞', fr:'grand(e) / petit(e)', pron:'グラン／プティ', speech:'grand, petit', ja:'大きい／小さい', tip:'フランス語の形容詞は BAGS の法則（Beauty・Age・Goodness・Size）に当てはまるものは名詞の前に置く。"grand" と "petit" は前置き形容詞。'},
+  {cat:'色・形容詞', fr:'beau / belle', pron:'ボ／ベル', speech:'beau, belle', ja:'美しい（男性形／女性形）', tip:'"beau" は男性形、"belle" は女性形で発音が大きく違う。母音の前では "bel" になる（例: un bel homme）。'},
+
+  // 食べ物・飲み物
+  {cat:'食べ物・飲み物', fr:'le pain', pron:'ル パン', speech:'le pain', ja:'パン', tip:'"le" は男性定冠詞（英語の "the" に相当）。フランスパンは "une baguette（バゲット）"。'},
+  {cat:'食べ物・飲み物', fr:'l\'eau', pron:'ロ', speech:'l\'eau', ja:'水', tip:'"eau" は女性名詞だが、母音で始まるため冠詞が縮約して "l\'eau"。"l\'" は "la" または "le" の省略形。'},
+  {cat:'食べ物・飲み物', fr:'le café', pron:'ル カフェ', speech:'le café', ja:'コーヒー', tip:'アクサン・テギュ（é）は「エ」と発音する。フランスのカフェはエスプレッソが基本。'},
+  {cat:'食べ物・飲み物', fr:'Je voudrais un café.', pron:'ジュ ヴドレ アン カフェ', speech:'Je voudrais un café.', ja:'コーヒーをひとつください。', tip:'"voudrais" は "vouloir（欲しい）" の条件法（〜したい）。"je veux" より丁寧な注文の表現。'},
+  {cat:'食べ物・飲み物', fr:'C\'est délicieux !', pron:'セ デリスィユ', speech:'C\'est délicieux !', ja:'おいしい！', tip:'"C\'est" は "c\'est（これは〜だ）"。"délicieux" は男性形、女性形は "délicieuse"（発音が変わる）。'},
+
+  // 場所・移動
+  {cat:'場所・移動', fr:'Où est la gare ?', pron:'ウ エ ラ ガール', speech:'Où est la gare ?', ja:'駅はどこですか？', tip:'"où" は「どこ」。"est" は "être" の三人称単数形。"la gare" は女性名詞（駅）。'},
+  {cat:'場所・移動', fr:'à gauche / à droite', pron:'ア ゴーシュ／ア ドロワット', speech:'à gauche, à droite', ja:'左へ／右へ', tip:'"à" は「〜へ・〜に」を表す前置詞。方向を示すときに使う。"tout droit（トゥ ドロワ）" は「まっすぐ」。'},
+  {cat:'場所・移動', fr:'près d\'ici / loin d\'ici', pron:'プレ ディスィ／ルワン ディスィ', speech:'près d\'ici, loin d\'ici', ja:'ここの近く／ここから遠い', tip:'"de + ici" → "d\'ici"（母音前で de が縮約）。"près" と "loin" は副詞として単独でも使える。'},
+  {cat:'場所・移動', fr:'Je vais à l\'école.', pron:'ジュ ヴェ ア レコル', speech:'Je vais à l\'école.', ja:'私は学校に行きます。', tip:'"aller（行く）" は不規則動詞。"vais" は一人称単数形。"à le" は "au" に縮約するが、"l\'école" は母音始まりのため縮約しない。'},
+  {cat:'場所・移動', fr:'le métro', pron:'ル メトロ', speech:'le métro', ja:'地下鉄', tip:'パリの地下鉄は "le métro" が有名。"prendre le métro（地下鉄に乗る）" のように "prendre" と一緒に使うことが多い。'},
+
+  // 時間・曜日
+  {cat:'時間・曜日', fr:'Quelle heure est-il ?', pron:'ケル ウール エティル', speech:'Quelle heure est-il ?', ja:'何時ですか？', tip:'"quelle" は女性形の疑問形容詞（"quel" の女性形）。"heure" が女性名詞なので "quelle" を使う。'},
+  {cat:'時間・曜日', fr:'Il est deux heures.', pron:'イル エ ドゥ ズール', speech:'Il est deux heures.', ja:'2時です。', tip:'時刻は "il est 〜 heure(s)" で表す。"deux" の語末 -x は "heures" の語頭母音とリエゾンして「ドゥ ズール」と読む。'},
+  {cat:'時間・曜日', fr:'lundi / mardi / mercredi', pron:'ランディ／マルディ／メルクルディ', speech:'lundi, mardi, mercredi', ja:'月曜日／火曜日／水曜日', tip:'フランス語の曜日は小文字で書く。冠詞なしで「〜曜日に」を表す（例: lundi＝月曜日に）。定冠詞をつけると「毎週〜曜日」（例: le lundi＝毎週月曜日）。'},
+  {cat:'時間・曜日', fr:'jeudi / vendredi / samedi / dimanche', pron:'ジュディ／ヴァンドルディ／サムディ／ディマンシュ', speech:'jeudi, vendredi, samedi, dimanche', ja:'木曜日／金曜日／土曜日／日曜日', tip:'フランスの週は月曜始まり。"dimanche（日曜）" だけ語源がラテン語の "dies Dominica（主の日）" に由来。'},
+  {cat:'時間・曜日', fr:'aujourd\'hui / demain / hier', pron:'オジュルドゥイ／ドゥマン／イエール', speech:'aujourd\'hui, demain, hier', ja:'今日／明日／昨日', tip:'"aujourd\'hui" は "au jour d\'hui（今日のこの日）" という長い表現が縮まったもの。'},
+
+  // 学校・文房具
+  {cat:'学校・文房具', fr:'le livre', pron:'ル リーヴル', speech:'le livre', ja:'本', tip:'男性名詞。"un livre（一冊の本）"、"les livres（本たち）"。定冠詞 le, la, les と不定冠詞 un, une, des を使い分ける。'},
+  {cat:'学校・文房具', fr:'le stylo / le crayon', pron:'ル スティロ／ル クレイヨン', speech:'le stylo, le crayon', ja:'ペン／鉛筆', tip:'どちらも男性名詞。"stylo" はボールペン・万年筆などのペン全般を指す。'},
+  {cat:'学校・文房具', fr:'le professeur', pron:'ル プロフェスール', speech:'le professeur', ja:'先生・教授', tip:'男女ともに "le professeur" が使われることが多い（伝統的に）。口語では "le prof" と省略する。'},
+  {cat:'学校・文房具', fr:'J\'étudie le français.', pron:'ジェテュディ ル フランセ', speech:'J\'étudie le français.', ja:'私はフランス語を勉強しています。', tip:'"étudier（勉強する）" は -er 動詞（規則活用）。言語名には定冠詞 "le/la" をつける（英語は "l\'anglais"）。'},
+  {cat:'学校・文房具', fr:'Je ne comprends pas.', pron:'ジュ ヌ コンプラン パ', speech:'Je ne comprends pas.', ja:'私はわかりません。', tip:'否定は動詞を "ne 〜 pas" で挟む。"ne" は口語では省略されることが多い。"comprendre（理解する）" は不規則動詞。'},
+
+  // 家族
+  {cat:'家族', fr:'la famille', pron:'ラ ファミーユ', speech:'la famille', ja:'家族', tip:'女性名詞。末尾の -ille は「イーユ」と発音（"fille（娘）" も同様）。'},
+  {cat:'家族', fr:'le père / la mère', pron:'ル ペール／ラ メール', speech:'le père, la mère', ja:'父／母', tip:'男性名詞 "père"、女性名詞 "mère"。フランス語は名詞に性（男性・女性）があり、冠詞が変わる。'},
+  {cat:'家族', fr:'le frère / la sœur', pron:'ル フレール／ラ スール', speech:'le frère, la sœur', ja:'兄弟／姉妹', tip:'"sœur" の "œ" はエとウの中間の音（口をウにして「エ」と言う）。フランス語特有の文字。'},
+  {cat:'家族', fr:'J\'ai un frère et une sœur.', pron:'ジェ アン フレール エ ユン スール', speech:'J\'ai un frère et une sœur.', ja:'私には兄弟が一人と姉妹が一人います。', tip:'"et" は「そして・と」。"un" は男性不定冠詞（= a/an）、"une" は女性不定冠詞。冠詞が名詞の性に合う。'},
+
+  // 動詞・基本文型
+  {cat:'動詞・基本文型', fr:'Je parle français.', pron:'ジュ パール フランセ', speech:'Je parle français.', ja:'私はフランス語を話します。', tip:'"parler（話す）" は -er 動詞の代表。語幹 "parl-" に語尾 "-e（je）, -es（tu）, -e（il/elle）..." をつける規則活用。'},
+  {cat:'動詞・基本文型', fr:'Tu aimes la musique ?', pron:'テュ エーム ラ ミュジーク', speech:'Tu aimes la musique ?', ja:'あなたは音楽が好きですか？', tip:'"aimer（好む・愛する）" も -er 規則動詞。"tu" は親しい間柄の「あなた」。疑問文はイントネーションを上げるだけでもOK。'},
+  {cat:'動詞・基本文型', fr:'Il fait beau aujourd\'hui.', pron:'イル フェ ボ オジュルドゥイ', speech:'Il fait beau aujourd\'hui.', ja:'今日は良い天気です。', tip:'天気の表現は非人称の "il" を使う。"faire（する・作る）" の三人称単数は "fait"。"il fait beau（晴れている）", "il pleut（雨が降っている）"。'},
+  {cat:'動詞・基本文型', fr:'Nous avons un chien.', pron:'ヌ ザヴォン アン シヤン', speech:'Nous avons un chien.', ja:'私たちは犬を一匹飼っています。', tip:'"avoir（持つ）" の一人称複数は "avons"。"nous" の語末 -s と "avons" の語頭母音がリエゾンして「ヌ ザヴォン」と発音。'},
+  {cat:'動詞・基本文型', fr:'Qu\'est-ce que c\'est ?', pron:'ケス ク セ', speech:'Qu\'est-ce que c\'est ?', ja:'これは何ですか？', tip:'フランス語でよく使われる疑問の決まり文句。"Qu\'est-ce que（何が）+ c\'est（それは〜だ）"。会話では "C\'est quoi ?" とも言う。'},
+];
+
+const TOTAL = phrases.length;
+
+// ── State ────────────────────────────────────────────────────────
+let currentIndex   = 0;
+let isRandom       = false;
+let isFrToJa       = true;
+let isRevealed     = false;
+let activeCategory = 'all';
+let isAutoPlaying  = false;
+let autoMode       = '';
+let autoStopped    = false;
+let autoTimeout    = null;
+let masterSet = new Set(JSON.parse(localStorage.getItem('fr_basic_master') || '[]'));
+
+// ── French Voice Setup ───────────────────────────────────────────
+let frVoices = [];
+
+function populateVoices() {
+  const all = window.speechSynthesis.getVoices();
+  // フランス語音声を優先順位付きで取得
+  const frAll = all.filter(v => v.lang.startsWith('fr'));
+  // Microsoftのナチュラル音声を優先
+  const natural = frAll.filter(v => v.name.includes('Natural') || v.name.includes('Online'));
+  frVoices = natural.length ? natural : frAll.length ? frAll : all;
+  
+  const sel = document.getElementById('voice-select');
+  sel.innerHTML = '';
+  frVoices.forEach((v, i) => {
+    const o = document.createElement('option');
+    o.value = i;
+    o.textContent = `${v.name} (${v.lang})`;
+    sel.appendChild(o);
+  });
+}
+
+populateVoices();
+if (window.speechSynthesis.onvoiceschanged !== undefined)
+  window.speechSynthesis.onvoiceschanged = populateVoices;
+
+function getVoice() {
+  const sel = document.getElementById('voice-select');
+  return frVoices[parseInt(sel.value)] || frVoices[0] || null;
+}
+function getRate() { return parseFloat(document.getElementById('rate-slider').value); }
+function updateRate() {
+  document.getElementById('rate-val').textContent = getRate().toFixed(1) + '×';
+}
+
+// iOS keepalive
+let keepAlive = null;
+function startKeepAlive() {
+  stopKeepAlive();
+  keepAlive = setInterval(() => {
+    if (window.speechSynthesis.speaking) {
+      window.speechSynthesis.pause();
+      window.speechSynthesis.resume();
+    }
+  }, 10000);
+}
+function stopKeepAlive() { if (keepAlive) { clearInterval(keepAlive); keepAlive = null; } }
+
+let isSpeaking = false;
+function speakOne(text, onEnd) {
+  window.speechSynthesis.cancel();
+  isSpeaking = false;
+  clearTimeout(speakOne._t);
+  speakOne._t = setTimeout(() => {
+    if (isSpeaking) return;
+    isSpeaking = true;
+    const utt = new SpeechSynthesisUtterance(text);
+    const v = getVoice();
+    if (v) { utt.voice = v; utt.lang = v.lang; }
+    else { utt.lang = 'fr-FR'; }
+    utt.rate = getRate();
+    utt.onstart = startKeepAlive;
+    utt.onend   = () => { isSpeaking=false; stopKeepAlive(); if(onEnd) onEnd(); };
+    utt.onerror = () => { isSpeaking=false; stopKeepAlive(); if(onEnd) onEnd(); };
+    window.speechSynthesis.speak(utt);
+  }, 150);
+}
+
+function stripTags(html) { return html.replace(/<[^>]+>/g,'').replace(/\s+/g,' ').trim(); }
+
+function speakCurrent() {
+  const a = getActive(); if (!a.length) return;
+  speakOne(a[currentIndex].speech || a[currentIndex].fr);
+}
+
+function speakP() {
+  return new Promise(resolve => {
+    if (autoStopped) { resolve(); return; }
+    const a = getActive(); if (!a.length) { resolve(); return; }
+    speakOne(a[currentIndex].speech || a[currentIndex].fr, resolve);
+  });
+}
+
+// ── Category ─────────────────────────────────────────────────────
+const allCats = [...new Set(phrases.map(p => p.cat))];
+
+function getActive() {
+  const arr = phrases.map((p, i) => ({...p, globalIdx: i}));
+  return activeCategory === 'all'
+    ? arr.filter(p => !masterSet.has(p.globalIdx))
+    : arr.filter(p => p.cat === activeCategory && !masterSet.has(p.globalIdx));
+}
+
+function buildCatRows() {
+  const container = document.getElementById('cat-rows');
+  container.innerHTML = '';
+  allCats.forEach(cat => {
+    const total   = phrases.filter(p => p.cat === cat).length;
+    const mastered = phrases.filter((p,i) => p.cat===cat && masterSet.has(i)).length;
+    const row = document.createElement('div');
+    row.className = 'cat-row' + (activeCategory === cat ? ' active' : '');
+    row.innerHTML = `<div class="cat-dot"></div><div class="cat-row-name">${cat}</div><div class="cat-row-count">${mastered}/${total}</div>`;
+    row.onclick = () => selectCategory(cat);
+    container.appendChild(row);
+  });
+}
+
+function selectCategory(cat) {
+  activeCategory = cat;
+  currentIndex = 0;
+  document.getElementById('chip-all').className = 'chip-all' + (cat==='all'?' active':'');
+  document.querySelectorAll('.cat-row').forEach(r => r.classList.remove('active'));
+  buildCatRows();
+  document.querySelectorAll('.cat-row').forEach(r => {
+    if (r.querySelector('.cat-row-name').textContent === cat) r.classList.add('active');
+  });
+  document.getElementById('filter-current-label').textContent = cat==='all' ? 'すべて' : cat;
+  showCard();
+}
+
+function toggleFilterPanel() {
+  const wrap = document.getElementById('filter-chips-wrap');
+  const icon = document.getElementById('filter-toggle-icon');
+  wrap.classList.toggle('open');
+  icon.classList.toggle('open');
+}
+
+// ── Card Display ─────────────────────────────────────────────────
+function showCard() {
+  const active = getActive();
+  const noActiveEl = document.getElementById('no-active');
+
+  if (!active.length) {
+    noActiveEl.style.display = 'block';
+    document.getElementById('main-card').style.display = 'none';
+    document.getElementById('tap-hint').style.display = 'none';
+    updateBadges();
+    return;
+  }
+  noActiveEl.style.display = 'none';
+  document.getElementById('main-card').style.display = 'block';
+  document.getElementById('tap-hint').style.display = 'block';
+
+  if (currentIndex >= active.length) currentIndex = 0;
+  const item = active[currentIndex];
+
+  const displayFr   = isFrToJa ? item.fr  : item.ja;
+  const displayPron = isFrToJa ? item.pron : '';
+  const answerText  = isFrToJa ? item.ja  : item.fr;
+
+  document.getElementById('card-num').textContent  = String(item.globalIdx+1).padStart(2,'0');
+  document.getElementById('card-cat').textContent  = item.cat;
+  document.getElementById('main-text').innerHTML   = displayFr;
+  document.getElementById('pronunciation-text').textContent = displayPron ? `[ ${displayPron} ]` : '';
+
+  // speech テキスト（読み方ガイド）
+  const speechEl = document.getElementById('speech-text');
+  if (isFrToJa && item.speech) {
+    speechEl.innerHTML = '<span class="speech-icon">🔊</span>' + item.speech;
+  } else {
+    speechEl.textContent = '';
+  }
+
+  document.getElementById('answer-ja').innerHTML   = answerText;
+  const tipEl = document.getElementById('answer-tip');
+  if (item.tip) { tipEl.textContent = item.tip; tipEl.style.display = ''; }
+  else tipEl.style.display = 'none';
+
+  document.getElementById('answer-wrap').classList.remove('show');
+  document.getElementById('main-card').classList.remove('revealed');
+  document.getElementById('main-card').classList.add('tappable');
+  document.getElementById('main-card').classList.remove('no-tap');
+
+  document.getElementById('master-cb').checked = masterSet.has(item.globalIdx);
+  document.getElementById('mastered-badge').classList.toggle('show', masterSet.has(item.globalIdx));
+
+  isRevealed = false;
+  updateBadges();
+  updateProgress();
+}
+
+function updateBadges() {
+  document.getElementById('mode-badge').textContent = isFrToJa ? '📖 仏 → 日' : '📖 日 → 仏';
+  document.getElementById('order-badge').textContent = isRandom ? '🔀 ランダム' : '順番通り';
+  document.getElementById('master-badge').textContent = `マスター: ${masterSet.size} / ${TOTAL}`;
+  updateMasterSummary();
+}
+
+function updateProgress() {
+  const active = getActive();
+  const tot = activeCategory === 'all' ? TOTAL - masterSet.size : active.length + phrases.filter((p,i)=>p.cat===activeCategory&&masterSet.has(i)).length - phrases.filter((p,i)=>p.cat===activeCategory&&masterSet.has(i)).length;
+  const totDisplay = activeCategory === 'all' ? TOTAL : phrases.filter(p=>p.cat===activeCategory).length;
+  document.getElementById('cur-num').textContent = currentIndex + 1;
+  document.getElementById('tot-num').textContent = active.length;
+  const pct = active.length ? Math.max(2, Math.round(((currentIndex+1)/active.length)*100)) : 100;
+  document.getElementById('progress-bar').style.width = pct + '%';
+}
+
+function handleTap() {
+  if (isAutoPlaying) return;
+  const active = getActive();
+  if (!active.length) return;
+  if (!isRevealed) {
+    document.getElementById('answer-wrap').classList.add('show');
+    document.getElementById('main-card').classList.add('revealed');
+    isRevealed = true;
+    speakCurrent();
+  } else {
+    next();
+  }
+}
+
+function next() {
+  if (isAutoPlaying) return;
+  const active = getActive();
+  if (!active.length) return;
+  if (isRandom) {
+    currentIndex = Math.floor(Math.random() * active.length);
+  } else {
+    currentIndex = (currentIndex + 1) % active.length;
+  }
+  showCard();
+}
+
+function prev() {
+  if (isAutoPlaying) return;
+  const active = getActive();
+  if (!active.length) return;
+  currentIndex = (currentIndex - 1 + active.length) % active.length;
+  showCard();
+}
+
+function switchMode() {
+  isFrToJa = !isFrToJa;
+  showCard();
+}
+
+function toggleRandom() {
+  isRandom = !isRandom;
+  document.getElementById('random-btn').textContent = `🔀 ランダム: ${isRandom?'ON':'OFF'}`;
+  updateBadges();
+}
+
+// ── Master ───────────────────────────────────────────────────────
+function saveMaster() {
+  localStorage.setItem('fr_basic_master', JSON.stringify([...masterSet]));
+}
+
+function toggleMaster(e) {
+  const active = getActive();
+  if (!active.length) return;
+  const item = active[currentIndex];
+  if (e.target.checked) { masterSet.add(item.globalIdx); }
+  else { masterSet.delete(item.globalIdx); }
+  saveMaster();
+  document.getElementById('mastered-badge').classList.toggle('show', masterSet.has(item.globalIdx));
+  document.getElementById('master-badge').textContent = `マスター: ${masterSet.size} / ${TOTAL}`;
+  buildCatRows();
+  updateMasterSummary();
+}
+
+function updateMasterSummary() {
+  const el = document.getElementById('master-summary');
+  if (!masterSet.size) { el.textContent = ''; return; }
+  el.textContent = `✅ マスター済み ${masterSet.size} 枚 — タップして確認`;
+}
+
+function toggleMasterList() {
+  const wrap = document.getElementById('master-list-wrap');
+  const isOpen = wrap.style.display !== 'none';
+  if (isOpen) { wrap.style.display = 'none'; return; }
+  const listEl = document.getElementById('master-list');
+  listEl.innerHTML = '';
+  [...masterSet].sort((a,b)=>a-b).forEach(idx => {
+    const p = phrases[idx];
+    const div = document.createElement('div');
+    div.style.cssText = 'display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid #f1f5f9;font-size:12px;';
+    div.innerHTML = `<span style="font-weight:700;color:var(--primary);">${p.fr}</span><span style="color:var(--muted);">${p.ja}</span><button style="background:none;border:none;cursor:pointer;color:var(--red);font-size:13px;" onclick="removeMaster(${idx})">✕</button>`;
+    listEl.appendChild(div);
+  });
+  wrap.style.display = 'block';
+}
+
+function removeMaster(idx) {
+  masterSet.delete(idx);
+  saveMaster();
+  document.getElementById('master-badge').textContent = `マスター: ${masterSet.size} / ${TOTAL}`;
+  if (!masterSet.size) document.getElementById('master-list-wrap').style.display='none';
+  buildCatRows();
+  updateMasterSummary();
+  toggleMasterList();
+  toggleMasterList();
+}
+
+let clearStep = 0;
+function clearAllMasterStep1() {
+  const btn = document.getElementById('clear-all-btn');
+  if (clearStep === 0) {
+    btn.textContent = '本当に全解除？'; btn.style.background='#fee2e2'; btn.style.color='var(--red)';
+    clearStep = 1;
+    setTimeout(() => { if(clearStep===1){ btn.textContent='全解除'; btn.style.background=''; btn.style.color=''; clearStep=0; } }, 3000);
+  } else {
+    masterSet.clear(); saveMaster();
+    document.getElementById('master-list-wrap').style.display='none';
+    buildCatRows(); updateBadges(); showCard();
+    btn.textContent='全解除'; btn.style.background=''; btn.style.color=''; clearStep=0;
+  }
+}
+
+// ── Auto Play ────────────────────────────────────────────────────
+async function startShadowing() {
+  const active = getActive(); if (!active.length) return;
+  isAutoPlaying = true; autoStopped = false; autoMode = 'shadow';
+  document.getElementById('normal-controls').style.display = 'none';
+  document.getElementById('auto-controls').style.display = 'block';
+  document.getElementById('auto-panel').style.display = 'block';
+  document.getElementById('main-card').classList.remove('tappable');
+  document.getElementById('main-card').classList.add('no-tap');
+
+  while (!autoStopped) {
+    const a = getActive(); if (!a.length) break;
+    if (currentIndex >= a.length) currentIndex = 0;
+
+    document.getElementById('auto-step-title').textContent = 'STEP 1';
+    document.getElementById('auto-instruction').textContent = '音声を聴いてください。';
+    document.getElementById('auto-count').textContent = `${currentIndex+1} / ${a.length}`;
+    showCard();
+    document.getElementById('answer-wrap').classList.add('show');
+    document.getElementById('main-card').classList.add('revealed');
+    await speakP(); if (autoStopped) break;
+
+    document.getElementById('auto-step-title').textContent = 'STEP 2';
+    document.getElementById('auto-instruction').textContent = '声に出して真似してください。';
+    await new Promise(r => { autoTimeout = setTimeout(r, 2500); });
+    if (autoStopped) break;
+
+    document.getElementById('auto-step-title').textContent = 'STEP 3';
+    document.getElementById('auto-instruction').textContent = 'もう一度聴きましょう。';
+    await speakP(); if (autoStopped) break;
+
+    await new Promise(r => { autoTimeout = setTimeout(r, 800); });
+    if (autoStopped) break;
+    currentIndex = (currentIndex + 1) % getActive().length;
+  }
+  stopAutoPlay();
+}
+
+async function startContinuous() {
+  const active = getActive(); if (!active.length) return;
+  isAutoPlaying = true; autoStopped = false; autoMode = 'continuous';
+  document.getElementById('normal-controls').style.display = 'none';
+  document.getElementById('auto-controls').style.display = 'block';
+  document.getElementById('auto-panel').style.display = 'block';
+  document.getElementById('main-card').classList.remove('tappable');
+  document.getElementById('main-card').classList.add('no-tap');
+
+  while (!autoStopped) {
+    const a = getActive(); if (!a.length) break;
+    if (currentIndex >= a.length) currentIndex = 0;
+    document.getElementById('auto-step-title').textContent = '連続再生中';
+    document.getElementById('auto-instruction').textContent = '音声を聴いてください。';
+    document.getElementById('auto-count').textContent = `${currentIndex+1} / ${a.length}`;
+    showCard();
+    document.getElementById('answer-wrap').classList.add('show');
+    document.getElementById('main-card').classList.add('revealed');
+    await speakP(); if (autoStopped) break;
+    await new Promise(r => { autoTimeout = setTimeout(r, 1200); });
+    if (autoStopped) break;
+    currentIndex = (currentIndex + 1) % getActive().length;
+    if (currentIndex === 0 && autoMode === 'continuous') { stopAutoPlay(); break; }
+  }
+  if (!autoStopped) stopAutoPlay();
+}
+
+function stopAutoPlay() {
+  autoStopped = true; isAutoPlaying = false;
+  if (autoTimeout) { clearTimeout(autoTimeout); autoTimeout = null; }
+  window.speechSynthesis.cancel(); isSpeaking = false; stopKeepAlive();
+  document.getElementById('normal-controls').style.display = 'block';
+  document.getElementById('auto-controls').style.display = 'none';
+  document.getElementById('auto-panel').style.display = 'none';
+  document.getElementById('main-card').classList.add('tappable');
+  document.getElementById('main-card').classList.remove('no-tap');
+  showCard();
+}
+
+// ── Guide ────────────────────────────────────────────────────────
+function openGuide()  { document.getElementById('guide-overlay').classList.add('open'); }
+function closeGuide() { document.getElementById('guide-overlay').classList.remove('open'); }
+function handleOverlayClick(e) { if (e.target === document.getElementById('guide-overlay')) closeGuide(); }
+
+// ── Init ─────────────────────────────────────────────────────────
+buildCatRows();
+showCard();
+</script>
+</body>
+</html>
