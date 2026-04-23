@@ -3,14 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🇫🇷 フランス語カード 段階５</title>
+<title>🇫🇷 フランス語入門カード</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root {
   --bg: #f0f9f4;
   --surface: #ffffff;
-  --primary: #065f46;
-  --primary-light: #065f4622;
+  --primary: #7c3aed;
+  --primary-light: #7c3aed22;
   --accent: #0891b2;
   --green: #16a34a;
   --green-light: #dcfce7;
@@ -51,7 +51,7 @@ body {
 .badge.amber { background: var(--amber-light); color: var(--amber); border-color: #fcd34d; }
 
 /* ── Progress ── */
-.progress-wrap { background: #065f4633; border-radius: 99px; height: 6px; margin-bottom: 4px; overflow: hidden; }
+.progress-wrap { background: #7c3aed33; border-radius: 99px; height: 6px; margin-bottom: 4px; overflow: hidden; }
 .progress-bar  { height: 100%; background: var(--primary); border-radius: 99px; transition: width 0.4s ease; }
 .progress-label { text-align: center; font-size: 12px; color: var(--muted); margin-bottom: 10px; }
 
@@ -361,8 +361,8 @@ body {
 <div class="container">
 
 <div class="header">
-  <h2>🇫🇷 フランス語カード 段階５</h2>
-  <p>仏検2級完成 — 強調構文・使役・間接話法・論述表現</p>
+  <h2>🇫🇷 フランス語入門カード</h2>
+  <p>初歩的なフランス語 — 発音・文法のヒント付き</p>
   <button class="help-btn" onclick="openGuide()">❓ 使い方ガイド</button>
 </div>
 
@@ -480,7 +480,7 @@ body {
 <div class="guide-modal" id="guide-modal">
 
   <div class="guide-modal-header">
-    <h2>🇫🇷 フランス語カード 段階５</h2>
+    <h2>🇫🇷 フランス語入門カード</h2>
     <button class="guide-close" onclick="closeGuide()">✕ 閉じる</button>
   </div>
 
@@ -618,123 +618,73 @@ body {
 <script>
 // ── Data ──────────────────────────────────────────────────────────
 const CATS = {
-  '強調構文': '#065f46',
-  '関係代名詞': '#7c3aed',
-  '使役・放任構文': '#0369a1',
-  '間接話法': '#16a34a',
-  '数量・冠詞の応用': '#d97706',
-  '動詞句・慣用表現': '#e85d26',
-  'フォーマル表現': '#9333ea',
-  '否定の応用': '#dc2626',
-  '分詞構文・ジェロンディフ': '#0891b2',
-  '条件法過去': '#b45309',
-  '接続法の応用': '#c2410c',
-  '2級頻出語彙': '#6d28d9',
-  '論理接続詞': '#0f766e',
-  '試験・論述表現': '#1d4ed8',
+  '挨拶・基本表現': '#7c3aed',
+  '自己紹介': '#0891b2',
+  '数字': '#16a34a',
+  '色・形容詞': '#d97706',
+  '食べ物・飲み物': '#e85d26',
+  '場所・移動': '#9333ea',
+  '時間・曜日': '#dc2626',
+  '学校・文房具': '#0369a1',
+  '家族': '#b45309',
+  '動詞・基本文型': '#065f46',
 };
 
 const phrases = [
-  {cat:'強調構文', en:'C\'est Marie qui a trouvé la solution.', speech:'C\'est Marie qui a trouvé la solution.', ja:'解決策を見つけたのはマリーです。', tip:'【発音】セ マリー キ ア トルーヴェ ラ ソリュスィオン｜強調構文 "C\'est + 強調要素 + qui/que"。主語を強調するときは "qui"、目的語なら "que"。英語の "It is... that" に相当。'},
-  {cat:'強調構文', en:'C\'est ce livre que je cherchais.', speech:'C\'est ce livre que je cherchais.', ja:'私が探していたのはこの本です。', tip:'【発音】セ ス リーヴル ク ジュ シェルシェ｜目的語の強調なので "que"。"cherchais" は半過去「探していた」。強調構文は口語・書き言葉ともに頻出。'},
-  {cat:'強調構文', en:'C\'est à Paris que je me sens le mieux.', speech:'C\'est à Paris que je me sens le mieux.', ja:'一番気分がいいのはパリにいるときです。', tip:'【発音】セ タ パリ ク ジュ ム サン ル ミュ｜前置詞句（à Paris）を強調するときも "que" を使う。"le mieux" は "bien" の最上級（最もよく）。'},
-  {cat:'強調構文', en:'C\'est parce qu\'il était fatigué qu\'il a fait une erreur.', speech:'C\'est parce qu\'il était fatigué qu\'il a fait une erreur.', ja:'彼が間違えたのは疲れていたからです。', tip:'【発音】セ パルス キル エテ ファティゲ キル ア フェ ユン エルール｜原因を強調する強調構文。"parce que" の節全体を強調している。試験の長文でよく登場する構造。'},
-  {cat:'強調構文', en:'Ce qui m\'intéresse, c\'est la littérature.', speech:'Ce qui m\'intéresse, c\'est la littérature.', ja:'私が興味を持っているのは文学です。', tip:'【発音】ス キ マンテレス セ ラ リテラテュール｜"Ce qui" は主格の不定関係代名詞「〜するもの・こと」。"Ce que" は目的格。文頭に置いて強調する倒置的表現。'},
-  {cat:'強調構文', en:'Ce que j\'aime dans ce pays, c\'est la cuisine.', speech:'Ce que j\'aime dans ce pays, c\'est la cuisine.', ja:'この国で好きなのは料理です。', tip:'【発音】ス ク ジェーム ダン ス ペイ セ ラ キュイズィーヌ｜"Ce que" は目的格（私が愛するもの）。文頭のCe que節を主題化し、"c\'est" で受ける構文。'},
-  {cat:'関係代名詞', en:'La ville dont je vous parle est Lyon.', speech:'La ville dont je vous parle est Lyon.', ja:'私がお話ししている街はリヨンです。', tip:'【発音】ラ ヴィル ドン ジュ ヴ パール エ リヨン｜"dont" は "de" を含む関係代名詞。"parler de" の "de" が関係詞化されて "dont" になる。先行詞が人でも物でも使える。'},
-  {cat:'関係代名詞', en:'C\'est l\'hôtel où nous avons passé notre lune de miel.', speech:'C\'est l\'hôtel où nous avons passé notre lune de miel.', ja:'そこは私たちがハネムーンを過ごしたホテルです。', tip:'【発音】セ ロテル ウ ヌ ザヴォン パセ ノットル リュン ドゥ ミエル｜"où" は場所・時を表す関係代名詞。"lune de miel" は「ハネムーン」（直訳: 蜜月）。'},
-  {cat:'関係代名詞', en:'Le stylo avec lequel j\'écris est un cadeau.', speech:'Le stylo avec lequel j\'écris est un cadeau.', ja:'私が書いているペンはプレゼントです。', tip:'【発音】ル スティロ アヴェック ルケル ジェクリ エ タン カドー｜"lequel" 系は前置詞の後に使う関係代名詞。男性単数 "lequel"、女性単数 "laquelle"、複数 "lesquels/lesquelles"。'},
-  {cat:'関係代名詞', en:'Les gens auxquels je pense sont loin.', speech:'Les gens auxquels je pense sont loin.', ja:'私が思っている人たちは遠くにいます。', tip:'【発音】レ ジャン オケル ジュ パンス ソン ルワン｜"auxquels" は "à + lesquels" の縮約形。"penser à" の "à" が関係詞化。人には "dont" も使えるが "auxquels" の方が格式的。'},
-  {cat:'関係代名詞', en:'La raison pour laquelle il est parti reste mystérieuse.', speech:'La raison pour laquelle il est parti reste mystérieuse.', ja:'彼が去った理由は謎のままです。', tip:'【発音】ラ レゾン プール ラケル イル エ パルティ レスト ミステリウーズ｜"pour laquelle" は "pour" + 女性関係代名詞。"raison" が女性名詞なので "laquelle"。理由を表す関係節。'},
-  {cat:'関係代名詞', en:'Tout ce dont j\'ai besoin, c\'est du temps.', speech:'Tout ce dont j\'ai besoin, c\'est du temps.', ja:'私が必要なものはすべて時間です。', tip:'【発音】トゥ ス ドン ジェ ブゾワン セ デュ タン｜"ce dont" は "avoir besoin de" の "de" を受ける。"tout ce dont" で「〜するすべてのもの」。強調構文との組み合わせ。'},
-  {cat:'使役・放任構文', en:'Je fais réparer ma voiture.', speech:'Je fais réparer ma voiture.', ja:'車を修理させています（修理に出しています）。', tip:'【発音】ジュ フェ レパレ マ ヴォワチュール｜"faire + 不定詞" は使役構文「〜させる」。主語は行為をさせる側。目的語の位置に注意（réparer の対象が ma voiture）。'},
-  {cat:'使役・放任構文', en:'Elle fait apprendre le piano à ses enfants.', speech:'Elle fait apprendre le piano à ses enfants.', ja:'彼女は子どもたちにピアノを習わせています。', tip:'【発音】エル フェ アプランドル ル ピアノ ア セ ザンファン｜"faire apprendre à" で「〜に〜を学ばせる」。行為者（子ども）は "à" で導く。使役のfaire構文の基本形。'},
-  {cat:'使役・放任構文', en:'Ce film m\'a fait pleurer.', speech:'Ce film m\'a fait pleurer.', ja:'この映画は私を泣かせました。', tip:'【発音】ス フィルム マ フェ プルレ｜"faire + 不定詞" の複合過去。過去分詞 "fait" は主語との性数一致しない（不変）のが特徴。感情を引き起こす表現。'},
-  {cat:'使役・放任構文', en:'Laissez-moi vous expliquer la situation.', speech:'Laissez-moi vous expliquer la situation.', ja:'状況を説明させてください。', tip:'【発音】レセ モワ ヴ エクスプリケ ラ スィテュアスィオン｜"laisser + 不定詞" は「〜させておく・〜するのを許す」。"faire" より自発的・許可のニュアンスが強い。'},
-  {cat:'使役・放任構文', en:'Ne laisse pas les autres décider à ta place.', speech:'Ne laisse pas les autres décider à ta place.', ja:'他人にあなたの代わりに決めさせてはいけない。', tip:'【発音】ヌ レス パ レ ゾートル デスィデ ア タ プラス｜"laisser + 不定詞" の否定命令形。"à ta place" は「あなたの代わりに」。'},
-  {cat:'使役・放任構文', en:'Il se fait couper les cheveux tous les mois.', speech:'Il se fait couper les cheveux tous les mois.', ja:'彼は毎月髪を切ってもらいます。', tip:'【発音】イル ス フェ クペ レ シュヴ トゥ レ モワ｜"se faire + 不定詞" は「〜してもらう・〜される」（受益の受動表現）。美容院や整備など専門家に依頼する場面に使う。'},
-  {cat:'間接話法', en:'Il m\'a dit qu\'il viendrait demain.', speech:'Il m\'a dit qu\'il viendrait demain.', ja:'彼は明日来ると言っていました。', tip:'【発音】イル マ ディ キル ヴィアンドレ ドゥマン｜間接話法での時制の一致。直接話法 "Je viendrai" → 間接話法で主節が過去のとき条件法 "viendrait" に変わる。'},
-  {cat:'間接話法', en:'Elle a demandé si j\'avais compris.', speech:'Elle a demandé si j\'avais compris.', ja:'彼女は私が理解したかどうか尋ねました。', tip:'【発音】エル ア ドゥマンデ スィ ジャヴェ コンプリ｜間接疑問文の時制の一致。"Est-ce que tu as compris ?" → 過去の主節のあとは大過去 "j\'avais compris" になる。'},
-  {cat:'間接話法', en:'Il a expliqué qu\'il était arrivé la veille.', speech:'Il a expliqué qu\'il était arrivé la veille.', ja:'彼は前日に到着したと説明しました。', tip:'【発音】イル ア エクスプリケ キル エテ タリヴェ ラ ヴェーユ｜複合過去 "est arrivé" → 間接話法で大過去 "était arrivé" になる。"la veille" は「前日」（"hier" も大過去の文脈では "la veille" に変わる）。'},
-  {cat:'間接話法', en:'Elle m\'a demandé de l\'appeler dès mon arrivée.', speech:'Elle m\'a demandé de l\'appeler dès mon arrivée.', ja:'彼女は着いたらすぐ電話するよう頼みました。', tip:'【発音】エル マ ドゥマンデ ドゥ ラプレ デ モン アリヴェ｜命令の間接話法は "demander de + 不定詞"。"dès + 名詞" は「〜するとすぐに」。"arrivée" は "arriver" の名詞形。'},
-  {cat:'間接話法', en:'Il se demandait ce qu\'il allait faire.', speech:'Il se demandait ce qu\'il allait faire.', ja:'彼は何をすべきか思い悩んでいました。', tip:'【発音】イル ス ドゥマンデ ス キル アレ フェール｜"se demander" は「〜かと自問する」。"ce que" は間接疑問の目的格。"allait faire" は近接未来の半過去形（過去における未来）。'},
-  {cat:'数量・冠詞の応用', en:'La plupart des touristes visitent le Louvre.', speech:'La plupart des touristes visitent le Louvre.', ja:'観光客の大部分はルーヴルを訪れます。', tip:'【発音】ラ プリュパール デ トゥリスト ヴィジット ル ルーヴル｜"la plupart de" は「〜の大部分」。後に複数名詞が来ると動詞も複数形になる。"la plupart du temps" は「ほとんどの場合」。'},
-  {cat:'数量・冠詞の応用', en:'Il y en a beaucoup qui ne savent pas cela.', speech:'Il y en a beaucoup qui ne savent pas cela.', ja:'それを知らない人が大勢います。', tip:'【発音】イリ ヤン ア ボクー キ ヌ サーヴ パ スラ｜"il y en a" は "il y a" + "en"（数量を受ける代名詞）。"beaucoup qui" で「〜する人が多い」という数量表現。'},
-  {cat:'数量・冠詞の応用', en:'Peu d\'étudiants ont réussi cet examen difficile.', speech:'Peu d\'étudiants ont réussi cet examen difficile.', ja:'その難しい試験に合格した学生はほとんどいませんでした。', tip:'【発音】プ デテュディアン オン レユスィ セット エグザマン ディフィスィル｜"peu de" は「少ししかない」（否定的ニュアンス）。"un peu de" は「少し」（肯定的）。冠詞が "de" になる点に注意。'},
-  {cat:'数量・冠詞の応用', en:'Bien des gens ignorent cette règle.', speech:'Bien des gens ignorent cette règle.', ja:'このルールを知らない人が多くいます。', tip:'【発音】ビヤン デ ジャン イニョール セット レーグル｜"bien des" は「多くの〜」（"beaucoup de" より文語的）。"ignorer" は「知らない・無視する」（要注意：英語の "ignore" と意味が違う）。'},
-  {cat:'数量・冠詞の応用', en:'J\'ai eu du mal à trouver un taxi.', speech:'J\'ai eu du mal à trouver un taxi.', ja:'タクシーを見つけるのに苦労しました。', tip:'【発音】ジェ ユ デュ マル ア トルーヴェ アン タクスィ｜"avoir du mal à + 不定詞" は「〜するのに苦労する」。"du" は部分冠詞。「苦労」が不定量として表現されている。'},
-  {cat:'数量・冠詞の応用', en:'Il ne reste plus que deux jours avant le départ.', speech:'Il ne reste plus que deux jours avant le départ.', ja:'出発まであと2日しか残っていません。', tip:'【発音】イル ヌ レスト プリュ ク ドゥ ジュール アヴァン ル デパール｜"ne... plus que" は「〜しか〜ない」（制限の表現）。"il reste" は非人称の「〜が残っている」。'},
-  {cat:'動詞句・慣用表現', en:'Ça ne vaut pas la peine d\'y aller.', speech:'Ça ne vaut pas la peine d\'y aller.', ja:'そこへ行く価値はありません。', tip:'【発音】サ ヌ ヴォ パ ラ ペーヌ ディ アレ｜"valoir la peine de + 不定詞" は「〜する価値がある」。否定で「価値がない」。"y" は場所を受ける代名詞。'},
-  {cat:'動詞句・慣用表現', en:'Il s\'agit d\'un problème complexe.', speech:'Il s\'agit d\'un problème complexe.', ja:'これは複雑な問題に関することです。', tip:'【発音】イル サジー ダン プロブレム コンプレックス｜"il s\'agit de" は「〜に関する・〜が問題だ」（非人称表現）。書き言葉・フォーマルな場面で頻出。常に三人称単数。'},
-  {cat:'動詞句・慣用表現', en:'Tu as l\'air fatiguée ce soir.', speech:'Tu as l\'air fatiguée ce soir.', ja:'今夜は疲れているようですね。', tip:'【発音】テュ ア レール ファティゲ ス ソワール｜"avoir l\'air + 形容詞" は「〜のように見える」。形容詞は主語と一致させるのが現代の用法（"fatiguée" は女性形）。'},
-  {cat:'動詞句・慣用表現', en:'Il tient à finir ce projet avant les vacances.', speech:'Il tient à finir ce projet avant les vacances.', ja:'彼は休暇前にこのプロジェクトを終わらせることにこだわっています。', tip:'【発音】イル ティヤン ア フィニール ス プロジェ アヴァン レ ヴァカンス｜"tenir à + 不定詞" は「〜することにこだわる・〜したいと強く思う」。強い意志・執着を表す。'},
-  {cat:'動詞句・慣用表現', en:'Elle s\'est mise à pleurer sans raison.', speech:'Elle s\'est mise à pleurer sans raison.', ja:'彼女は理由もなく泣き始めました。', tip:'【発音】エル セ ミーズ ア プルレ サン レゾン｜"se mettre à + 不定詞" は「〜し始める」（突然の開始）。再帰動詞なので複合過去は "être" を使い、過去分詞が主語に一致（"mise"）。'},
-  {cat:'動詞句・慣用表現', en:'Je me suis rendu compte de mon erreur.', speech:'Je me suis rendu compte de mon erreur.', ja:'自分の間違いに気づきました。', tip:'【発音】ジュ ム スイ ランデュ コント ドゥ モン エルール｜"se rendre compte de" は「〜に気づく」（重要熟語）。"rendu" は性数不変（慣用的に）。2級頻出の表現。'},
-  {cat:'動詞句・慣用表現', en:'Ça m\'est égal.', speech:'Ça m\'est égal.', ja:'どちらでも構いません。（どうでもいいです）', tip:'【発音】サ メ テガル｜"être égal à" は「〜にとってどうでもいい」。"m\'" は間接目的語。口語でよく使う。丁寧に言うなら "Cela m\'est indifférent"。'},
-  {cat:'動詞句・慣用表現', en:'Il ne faut pas se fier aux apparences.', speech:'Il ne faut pas se fier aux apparences.', ja:'外見を信用してはいけません。', tip:'【発音】イル ヌ フォ パ ス フィエ オ ザパランス｜"se fier à" は「〜を信頼する」（再帰動詞）。"apparences" は「外見・見かけ」（複数形が自然）。ことわざ的な表現。'},
-  {cat:'動詞句・慣用表現', en:'Je n\'en reviens pas !', speech:'Je n\'en reviens pas !', ja:'信じられない！（びっくりした！）', tip:'【発音】ジュ ナン ルヴィヤン パ｜"ne pas en revenir" は「信じられない・驚きあきれる」（イディオム）。"en" は前述の事柄を受ける。口語で頻繁に使う感嘆表現。'},
-  {cat:'フォーマル表現', en:'Je vous prie de bien vouloir excuser ce retard.', speech:'Je vous prie de bien vouloir excuser ce retard.', ja:'遅延につきましてどうかご容赦ください。', tip:'【発音】ジュ ヴ プリ ドゥ ビヤン ヴロワール エクスキュゼ ス ルタール｜"je vous prie de bien vouloir + 不定詞" は手紙・メールの最丁寧表現。"bien vouloir" は「どうか〜する」という丁寧な依頼。'},
-  {cat:'フォーマル表現', en:'Suite à notre conversation, je vous envoie les documents.', speech:'Suite à notre conversation, je vous envoie les documents.', ja:'お話の後、書類をお送りします。', tip:'【発音】スュイット ア ノットル コンヴェルサスィオン ジュ ヴ アンヴォワイ レ ドキュマン｜"suite à" は「〜を受けて・〜に続いて」（ビジネス書き言葉の定番）。メール・手紙の書き出しに頻出。'},
-  {cat:'フォーマル表現', en:'Dans l\'attente de votre réponse, je vous adresse mes cordiales salutations.', speech:'Dans l\'attente de votre réponse, je vous adresse mes cordiales salutations.', ja:'ご返事をお待ちしつつ、謹んでご挨拶申し上げます。', tip:'【発音】ダン ラタント ドゥ ヴォットル レポンス ジュ ヴ ザドレス メ コルディアル サリュタスィオン｜フランス語の手紙・メールの結びの定型句。"dans l\'attente de" は「〜をお待ちしつつ」。仏検2級の書き言葉問題で頻出。'},
-  {cat:'フォーマル表現', en:'Je me permets de vous soumettre ma candidature.', speech:'Je me permets de vous soumettre ma candidature.', ja:'志願書を提出させていただきます。', tip:'【発音】ジュ ム ペルメ ドゥ ヴ スメットル マ カンディダテュール｜"soumettre" は「提出する・服させる」。"candidature" は「志願・立候補」。就職・進学などの応募表現。'},
-  {cat:'フォーマル表現', en:'Veuillez trouver ci-joint les pièces justificatives.', speech:'Veuillez trouver ci-joint les pièces justificatives.', ja:'添付書類をご確認ください。', tip:'【発音】ヴィエイエ トルーヴェ スィ ジョワン レ ピエス ジュスティフィカティーヴ｜"ci-joint" は「添付の」（不変形容詞）。"pièces justificatives" は「証明書類・添付書類」。メール・手紙の定番表現。'},
-  {cat:'フォーマル表現', en:'Il convient de souligner l\'importance de ce point.', speech:'Il convient de souligner l\'importance de ce point.', ja:'この点の重要性を強調することが適切です。', tip:'【発音】イル コンヴィヤン ドゥ スリニェ ランポルタンス ドゥ ス ポワン｜"souligner" は「強調する・下線を引く」。"il convient de" は「〜することが適切だ」（格式的）。論述文・報告書でよく使う。'},
-  {cat:'否定の応用', en:'Je n\'ai vu personne dans la rue.', speech:'Je n\'ai vu personne dans la rue.', ja:'通りには誰も見ませんでした。', tip:'【発音】ジュ ネ ヴュ ペルソン ダン ラ リュ｜"ne... personne" は「誰も〜ない」。複合過去では "personne" は過去分詞の後に置く（"rien" は前）。'},
-  {cat:'否定の応用', en:'Je ne veux ni thé ni café.', speech:'Je ne veux ni thé ni café.', ja:'紅茶もコーヒーも要りません。', tip:'【発音】ジュ ヌ ヴ ニ テ ニ カフェ｜"ne... ni... ni" は「〜も〜もない」。"ni" の後は冠詞をつけない点に注意（"ni le thé" でなく "ni thé"）。'},
-  {cat:'否定の応用', en:'Il ne fait que se plaindre.', speech:'Il ne fait que se plaindre.', ja:'彼は不平を言うばかりです。', tip:'【発音】イル ヌ フェ ク ス プランドル｜"ne faire que + 不定詞" は「〜してばかりいる・〜するだけだ」。"se plaindre" は「不平を言う」（再帰動詞）。'},
-  {cat:'否定の応用', en:'Rien de nouveau sous le soleil.', speech:'Rien de nouveau sous le soleil.', ja:'太陽の下に新しいものは何もない。（目新しいことは何もない）', tip:'【発音】リヤン ドゥ ヌーヴォー スー ル ソレイユ｜聖書由来のフランス語の慣用表現。"rien de + 形容詞" で「〜なものは何もない」。"de" の後の形容詞は男性単数形。'},
-  {cat:'否定の応用', en:'Ce n\'est pas sans raison qu\'il a refusé.', speech:'Ce n\'est pas sans raison qu\'il a refusé.', ja:'彼が断ったのは理由がないわけではありません。', tip:'【発音】ス ネ パ サン レゾン キル ア ルフュゼ｜二重否定「sans（なし）の否定」で肯定を暗示する表現。"ce n\'est pas sans + 名詞" は「〜がないわけではない」。'},
-  {cat:'分詞構文・ジェロンディフ', en:'Tout en comprenant sa position, je ne suis pas d\'accord.', speech:'Tout en comprenant sa position, je ne suis pas d\'accord.', ja:'彼の立場を理解しつつも、私は同意しません。', tip:'【発音】トゥ タン コンプラナン サ ポズィスィオン ジュ ヌ スイ パ ダコール｜"tout en + 現在分詞" は「〜しながらも・〜であるにもかかわらず」（同時性 + 逆接）。"tout" が逆接のニュアンスを加える。'},
-  {cat:'分詞構文・ジェロンディフ', en:'Ayant raté son train, il a pris un taxi.', speech:'Ayant raté son train, il a pris un taxi.', ja:'電車に乗り遅れたので、タクシーに乗りました。', tip:'【発音】エイヤン ラテ ソン トラン イル ア プリ アン タクスィ｜複合分詞構文（"ayant + 過去分詞"）は主節より前の出来事を表す。「〜してしまったので」という完了・原因のニュアンス。'},
-  {cat:'分詞構文・ジェロンディフ', en:'Ne sachant pas quoi dire, il a gardé le silence.', speech:'Ne sachant pas quoi dire, il a gardé le silence.', ja:'何を言えばよいかわからず、黙っていました。', tip:'【発音】ヌ サシャン パ クワ ディール イル ア ガルデ ル スィランス｜現在分詞の否定は "ne + 分詞" の形。"garder le silence" は「沈黙を保つ」。原因・理由を表す分詞構文。'},
-  {cat:'分詞構文・ジェロンディフ', en:'C\'est en forgeant qu\'on devient forgeron.', speech:'C\'est en forgeant qu\'on devient forgeron.', ja:'鍛冶をすることで鍛冶師になる。（習うより慣れよ）', tip:'【発音】セ タン フォルジャン コン ドゥヴィヤン フォルジュロン｜フランスの有名なことわざ。"en + 現在分詞" のジェロンディフ。"c\'est... que" の強調構文との組み合わせ。'},
-  {cat:'条件法過去', en:'Tu aurais dû me le dire avant.', speech:'Tu aurais dû me le dire avant.', ja:'事前に言っておくべきでした。', tip:'【発音】テュ オレ デュ ム ル ディール アヴァン｜"aurait dû + 不定詞" は「〜すべきだったのに」（後悔・非難）。条件法過去は過去の仮定や後悔に使う。'},
-  {cat:'条件法過去', en:'Nous aurions pu éviter cet accident.', speech:'Nous aurions pu éviter cet accident.', ja:'この事故は避けられたはずなのに。', tip:'【発音】ヌ ゾリオン ピュ エヴィテ セット アクスィダン｜"aurait pu + 不定詞" は「〜できたはずなのに」（後悔）。条件法過去の "avoir" + 過去分詞 + 不定詞の形。'},
-  {cat:'条件法過去', en:'Il aurait mieux valu partir plus tôt.', speech:'Il aurait mieux valu partir plus tôt.', ja:'もっと早く出発すべきでした。', tip:'【発音】イル オレ ミュ ヴァリュ パルティール プリュ トー｜"il aurait mieux valu + 不定詞" は「〜した方がよかったのに」。"valoir" の条件法過去の非人称表現。'},
-  {cat:'条件法過去', en:'J\'aurais voulu te voir avant ton départ.', speech:'J\'aurais voulu te voir avant ton départ.', ja:'出発前に会いたかったのですが。', tip:'【発音】ジョレ ヴリュ テ ヴォワール アヴァン トン デパール｜"aurait voulu + 不定詞" は「〜したかったのに（できなかった）」。実現しなかった願望の後悔表現。'},
-  {cat:'接続法の応用', en:'Où que vous alliez, soyez prudent.', speech:'Où que vous alliez, soyez prudent.', ja:'どこへ行かれるにしても、気をつけてください。', tip:'【発音】ウ ク ヴ ザリエ ソワイエ プリュダン｜"où que + 接続法" は「どこへ〜しようとも」（譲歩の接続法）。"quoi que"（何をしても）、"qui que"（誰であっても）も同パターン。'},
-  {cat:'接続法の応用', en:'Quoi que tu fasses, je serai là pour toi.', speech:'Quoi que tu fasses, je serai là pour toi.', ja:'何をしても、あなたのそばにいます。', tip:'【発音】クワ ク テュ ファス ジュ スレ ラ プール トワ｜"quoi que + 接続法" は「何をしようとも」。"fasses" は "faire" の接続法（不規則）。無条件の支持・愛情を表す。'},
-  {cat:'接続法の応用', en:'Il est possible qu\'elle ait déjà quitté la ville.', speech:'Il est possible qu\'elle ait déjà quitté la ville.', ja:'彼女はすでに街を去ったかもしれません。', tip:'【発音】イル エ ポスィブル ケル エ デジャ キテ ラ ヴィル｜接続法過去（"ait + 過去分詞"）は現在から見た過去の行為への判断・感情。"il est possible que" の後は接続法。'},
-  {cat:'接続法の応用', en:'Je cherche un appartement qui soit calme et lumineux.', speech:'Je cherche un appartement qui soit calme et lumineux.', ja:'静かで明るいアパートを探しています。', tip:'【発音】ジュ シェルシュ アン アパルトゥマン キ ソワ カルム エ リュミヌ｜先行詞が不定（まだ見つかっていない）のとき関係節に接続法を使う。"soit" は "être" の接続法三人称単数。'},
-  {cat:'2級頻出語彙', en:'Malgré les difficultés, il a réussi son examen.', speech:'Malgré les difficultés, il a réussi son examen.', ja:'困難にもかかわらず、彼は試験に合格しました。', tip:'【発音】マルグレ レ ディフィキュルテ イル ア レユスィ ソン エグザマン｜"malgré" は「〜にもかかわらず」（前置詞、後に名詞）。"bien que + 接続法" と同義だが、こちらは前置詞なので動詞を続けられない。'},
-  {cat:'2級頻出語彙', en:'À condition de travailler sérieusement, tu réussiras.', speech:'À condition de travailler sérieusement, tu réussiras.', ja:'真剣に勉強するという条件なら、成功するでしょう。', tip:'【発音】ア コンディスィオン ドゥ トラヴァイエ セリュズゥマン テュ レユスィラ｜"à condition de + 不定詞" は「〜するという条件で」（同一主語の場合）。"à condition que + 接続法" は主語が違う場合。'},
-  {cat:'2級頻出語彙', en:'Faute de temps, nous n\'avons pas pu tout visiter.', speech:'Faute de temps, nous n\'avons pas pu tout visiter.', ja:'時間がなかったために、すべて見て回ることができませんでした。', tip:'【発音】フォット ドゥ タン ヌ ナヴォン パ ピュ トゥ ヴィジテ｜"faute de" は「〜がないために・〜不足のために」（前置詞句）。"manque de" より原因・責任のニュアンスが強い。'},
-  {cat:'2級頻出語彙', en:'Il a beau essayer, il n\'y arrive pas.', speech:'Il a beau essayer, il n\'y arrive pas.', ja:'いくら頑張っても、うまくいきません。', tip:'【発音】イル ア ボ エセイエ イリヤ リーヴ パ｜"avoir beau + 不定詞" は「いくら〜しても」（逆接の慣用表現）。フランス語特有の構文で2級で頻出。'},
-  {cat:'2級頻出語彙', en:'À mesure que le temps passe, tout devient plus clair.', speech:'À mesure que le temps passe, tout devient plus clair.', ja:'時間が経つにつれて、すべてが明らかになります。', tip:'【発音】ア ムジュール ク ル タン パス トゥ ドゥヴィヤン プリュ クレール｜"à mesure que" は「〜するにつれて」（比例の進行）。"au fur et à mesure que" も同義。比例・変化の表現。'},
-  {cat:'2級頻出語彙', en:'Quitte à faire des erreurs, autant essayer.', speech:'Quitte à faire des erreurs, autant essayer.', ja:'間違いを犯すことになるにしても、試してみた方がいい。', tip:'【発音】キット ア フェール デ ゼルール オタン エセイエ｜"quitte à + 不定詞" は「〜する羽目になるにしても」（覚悟の逆接）。"autant + 不定詞" は「〜した方がよい」。'},
-  {cat:'2級頻出語彙', en:'Il est question de changer complètement notre approche.', speech:'Il est question de changer complètement notre approche.', ja:'私たちのアプローチを完全に変えることが問題になっています。', tip:'【発音】イル エ ケスティオン ドゥ シャンジェ コンプレットマン ノットル アプロッシュ｜"il est question de" は「〜が問題になっている・〜が話題だ」（非人称表現）。"il s\'agit de" と意味が近い。'},
-  {cat:'2級頻出語彙', en:'Cela va de soi qu\'il faut respecter les règles.', speech:'Cela va de soi qu\'il faut respecter les règles.', ja:'ルールを守るべきことは言うまでもありません。', tip:'【発音】スラ ヴァ ドゥ ソワ キル フォ ルスペクテ レ レーグル｜"aller de soi" は「自明だ・言うまでもない」（イディオム）。"cela va de soi" の形で使う。'},
-  {cat:'論理接続詞', en:'Or, il s\'avère que la situation était plus complexe.', speech:'Or, il s\'avère que la situation était plus complexe.', ja:'ところが、状況はより複雑だったことがわかりました。', tip:'【発音】オール イル サヴェール ク ラ スィテュアスィオン エテ プリュ コンプレックス｜"or" は「ところが・さて」（話題の転換・逆接）。"s\'avérer" は「〜であることが判明する」。論述文・読解でよく出る。'},
-  {cat:'論理接続詞', en:'C\'est pourquoi nous avons décidé de reporter la réunion.', speech:'C\'est pourquoi nous avons décidé de reporter la réunion.', ja:'そのため、会議を延期することにしました。', tip:'【発音】セ プールクワ ヌ ザヴォン デスィデ ドゥ ルポルテ ラ レユニオン｜"c\'est pourquoi" は「そのため・だから」（結果）。"donc" より格式的。"reporter" は「延期する」（"rapporter" と混同注意）。'},
-  {cat:'論理接続詞', en:'En revanche, les prix ont considérablement baissé.', speech:'En revanche, les prix ont considérablement baissé.', ja:'一方で、価格は大幅に下がりました。', tip:'【発音】アン ルヴァンシュ レ プリ オン コンスィデラブルマン ベセ｜"en revanche" は「一方で・その代わりに」（対比）。"par contre" の格式的な言い方。"considérablement" は「著しく」。'},
-  {cat:'論理接続詞', en:'Néanmoins, des progrès ont été réalisés.', speech:'Néanmoins, des progrès ont été réalisés.', ja:'それにもかかわらず、進歩が達成されました。', tip:'【発音】ネアンモワン デ プログレ オン エテ レアリゼ｜"néanmoins" は「それにもかかわらず」（"cependant" "pourtant" も同義）。論文・新聞でよく使う逆接。'},
-  {cat:'論理接続詞', en:'D\'ailleurs, il est arrivé en retard comme d\'habitude.', speech:'D\'ailleurs, il est arrivé en retard comme d\'habitude.', ja:'それに、彼はいつものように遅刻しました。', tip:'【発音】ダイユール イル エ タリヴェ アン ルタール コム ダビテュード｜"d\'ailleurs" は「それに・そのうえ・そもそも」（追加・強調）。"comme d\'habitude" は「いつものように」。'},
-  {cat:'論理接続詞', en:'Autrement, nous n\'aurons pas le temps de tout finir.', speech:'Autrement, nous n\'aurons pas le temps de tout finir.', ja:'そうでなければ、すべて終える時間がありません。', tip:'【発音】オートルマン ヌ ノロン パ ル タン ドゥ トゥ フィニール｜"autrement" は「そうでなければ・さもないと」（条件の副詞）。"sinon" も同義。単純未来で結果を述べる。'},
-  {cat:'試験・論述表現', en:'Dans quelle mesure peut-on dire que...?', speech:'Dans quelle mesure peut-on dire que... ?', ja:'どの程度〜と言えるでしょうか？', tip:'【発音】ダン ケル ムジュール プ トン ディール ク｜"dans quelle mesure" は「どの程度・どの範囲で」。フランス語の作文・討論でよく使う問いかけの表現。'},
-  {cat:'試験・論述表現', en:'Force est de constater que la situation s\'est améliorée.', speech:'Force est de constater que la situation s\'est améliorée.', ja:'状況が改善されたことは認めざるを得ません。', tip:'【発音】フォルス エ ドゥ コンスタテ ク ラ スィテュアスィオン セ タメリオレ｜"force est de constater que" は「〜せざるを得ない」（格式的慣用表現）。論説文・新聞でよく使われる。'},
-  {cat:'試験・論述表現', en:'Il serait réducteur de limiter ce problème à un seul aspect.', speech:'Il serait réducteur de limiter ce problème à un seul aspect.', ja:'この問題を一つの側面だけに限定するのは単純化しすぎです。', tip:'【発音】イル スレ レデュクトゥール ドゥ リミテ ス プロブレム ア アン スール アスペクト｜"réducteur" は「単純化しすぎの・還元的な」。条件法 "serait" で断定を避ける。論述の発展に使える表現。'},
-  {cat:'試験・論述表現', en:'Loin de résoudre le problème, cette mesure l\'a aggravé.', speech:'Loin de résoudre le problème, cette mesure l\'a aggravé.', ja:'この措置は問題を解決するどころか、悪化させました。', tip:'【発音】ルワン ドゥ レゾードル ル プロブレム セット ムジュール ラ アグラヴェ｜"loin de + 不定詞" は「〜するどころか」（強い逆接）。"aggraver" は「悪化させる」。論述・読解に頻出。'},
-  {cat:'強調構文', en:'C\'est grâce à toi que j\'ai réussi.', speech:'C\'est grâce à toi que j\'ai réussi.', ja:'成功したのはあなたのおかげです。', tip:'【発音】セ グラース ア トワ ク ジェ レユスィ｜前置詞句（"grâce à toi"）を強調する構文。"que" を使う。感謝を表す場面で自然に使える実用的な強調表現。'},
-  {cat:'関係代名詞', en:'Le jour où je t\'ai rencontré reste inoubliable.', speech:'Le jour où je t\'ai rencontré reste inoubliable.', ja:'あなたに出会った日は忘れられません。', tip:'【発音】ル ジュール ウ ジュ テ ランコントレ レスト イヌブリアーブル｜"où" は時を表す関係代名詞にも使える（"le jour où"「〜した日」）。場所だけでなく時間にも使えることを確認。'},
-  {cat:'使役・放任構文', en:'Ce roman m\'a fait réfléchir sur ma vie.', speech:'Ce roman m\'a fait réfléchir sur ma vie.', ja:'この小説は自分の人生について考えさせてくれました。', tip:'【発音】ス ロマン マ フェ レフレシール シュール マ ヴィ｜"faire réfléchir" は「考えさせる」。"réfléchir sur" は「〜について考える」。読書の感想を述べる表現。'},
-  {cat:'間接話法', en:'Elle a affirmé ne pas avoir vu cet homme.', speech:'Elle a affirmé ne pas avoir vu cet homme.', ja:'彼女はその男性を見ていないと断言しました。', tip:'【発音】エル ア アフィルメ ヌ パ アヴォワール ヴュ セット オム｜不定詞の否定は "ne pas + 不定詞"。完了不定詞 "avoir vu" で間接話法の過去を表す。主語が同じ場合の間接話法の省略形。'},
-  {cat:'数量・冠詞の応用', en:'Une grande partie du budget a été consacrée à la recherche.', speech:'Une grande partie du budget a été consacrée à la recherche.', ja:'予算の大部分が研究に充てられました。', tip:'【発音】ユン グランド パルティ デュ ビュジェ ア エテ コンサクレ ア ラ レシェルシュ｜"une grande partie de" は「〜の大部分」。"consacrer à" は「〜に充てる・捧げる」。受動態との組み合わせ。'},
-  {cat:'動詞句・慣用表現', en:'Il faut en finir avec ces mauvaises habitudes.', speech:'Il faut en finir avec ces mauvaises habitudes.', ja:'この悪い習慣にけりをつけなければなりません。', tip:'【発音】イル フォ タン フィニール アヴェック セ モヴェーズ アビテュード｜"en finir avec" は「〜にけりをつける・〜を終わりにする」。"habitude" は「習慣」（女性名詞）。'},
-  {cat:'動詞句・慣用表現', en:'Ça saute aux yeux que quelque chose ne va pas.', speech:'Ça saute aux yeux que quelque chose ne va pas.', ja:'何かがおかしいのは一目瞭然です。', tip:'【発音】サ ソット オ ズィユ ク ケルク ショーズ ヌ ヴァ パ｜"sauter aux yeux" は「一目瞭然だ」（イディオム）。"quelque chose ne va pas" は「何かがおかしい」。'},
-  {cat:'フォーマル表現', en:'Je suis heureux(se) de vous informer que votre demande a été acceptée.', speech:'Je suis heureux de vous informer que votre demande a été acceptée.', ja:'ご依頼が受理されたことをお知らせできて嬉しく思います。', tip:'【発音】ジュ スイ ウルー ドゥ ヴ アンフォルメ ク ヴォットル ドゥマンド ア エテ アクセプテ｜"je suis heureux de + 不定詞" で格式ある知らせ方。"informer" は「知らせる」。公式な承諾通知の表現。'},
-  {cat:'フォーマル表現', en:'Je me vois dans l\'obligation de refuser votre offre.', speech:'Je me vois dans l\'obligation de refuser votre offre.', ja:'やむを得ずご提案をお断りしなければなりません。', tip:'【発音】ジュ ム ヴォワ ダン ロブリガスィオン ドゥ ルフュゼ ヴォットル オフル｜"se voir dans l\'obligation de" は「〜せざるを得ない」（丁寧な断りの公式表現）。ビジネスレターの定型句。'},
-  {cat:'否定の応用', en:'Il ne cesse de poser des questions.', speech:'Il ne cesse de poser des questions.', ja:'彼は質問し続けてやみません。', tip:'【発音】イル ヌ セス ドゥ ポゼ デ ケスティオン｜"ne cesser de + 不定詞" は「〜し続ける・〜してやまない」。"ne... jamais" との違いに注意（こちらは継続を強調）。'},
-  {cat:'否定の応用', en:'Sans que personne le sache, il est parti.', speech:'Sans que personne le sache, il est parti.', ja:'誰にも知られずに、彼は去りました。', tip:'【発音】サン ク ペルソン ル サッシュ イル エ パルティ｜"sans que + 接続法" は「〜することなしに」。"sans + 不定詞" は同一主語のとき、"sans que + 接続法" は主語が違うとき。'},
-  {cat:'分詞構文・ジェロンディフ', en:'Bien que voulant l\'aider, il ne savait pas comment.', speech:'Bien que voulant l\'aider, il ne savait pas comment.', ja:'助けたいと思いながらも、どうすればよいかわかりませんでした。', tip:'【発音】ビヤン ク ヴリュラン レデ イル ヌ サヴェ パ コモン｜"bien que + 現在分詞" は口語的な簡略形（本来は接続法が正式だが、同一主語のとき分詞可）。'},
-  {cat:'条件法過去', en:'Si tu m\'avais écouté, on n\'en serait pas là.', speech:'Si tu m\'avais écouté, on n\'en serait pas là.', ja:'私の言うことを聞いていたら、こんなことにはなっていなかったのに。', tip:'【発音】スィ テュ マヴェ エクテ オン ナン スレ パ ラ｜"si + 大過去、条件法過去" の仮定構文。"on n\'en serait pas là" は「こんな状況にはなっていない」というイディオム的表現。'},
-  {cat:'接続法の応用', en:'Soit qu\'il soit malade, soit qu\'il soit occupé, il ne répond pas.', speech:'Soit qu\'il soit malade, soit qu\'il soit occupé, il ne répond pas.', ja:'病気であれ、忙しいのであれ、彼は返事をしません。', tip:'【発音】ソワ キル ソワ マラード ソワ キル ソワ トキュペ イル ヌ レポン パ｜"soit que... soit que" は「〜であれ〜であれ」（選択的譲歩）。両方の節に接続法を使う。'},
-  {cat:'2級頻出語彙', en:'Au risque de me répéter, je tiens à souligner ce point.', speech:'Au risque de me répéter, je tiens à souligner ce point.', ja:'繰り返しになるかもしれませんが、この点を強調したいと思います。', tip:'【発音】オ リスク ドゥ ム レペテ ジュ ティヤン ア スリニェ ス ポワン｜"au risque de + 不定詞" は「〜の危険を冒して」。"tenir à" は「こだわって〜する」。丁寧な強調表現。'},
-  {cat:'2級頻出語彙', en:'En dépit de ses efforts, il n\'a pas obtenu le poste.', speech:'En dépit de ses efforts, il n\'a pas obtenu le poste.', ja:'努力にもかかわらず、彼はそのポストを得られませんでした。', tip:'【発音】アン デピ ドゥ セ ゼフォール イル ナ パ オブテニュ ル ポスト｜"en dépit de" は「〜にもかかわらず」（"malgré" と同義）。"obtenir" は「得る」（不規則動詞）。'},
-  {cat:'2級頻出語彙', en:'Il importe de prendre une décision rapidement.', speech:'Il importe de prendre une décision rapidement.', ja:'早急に決断を下すことが重要です。', tip:'【発音】イル アンポルト ドゥ プランドル ユン デスィスィオン ラピドゥマン｜"il importe de + 不定詞" は「〜することが重要だ」（"il est important de" の格式体）。非人称構文。'},
-  {cat:'2級頻出語彙', en:'Quand bien même il pleuvrait, nous partirions.', speech:'Quand bien même il pleuvrait, nous partirions.', ja:'たとえ雨が降っても、出発します。', tip:'【発音】カン ビヤン メム イル プルヴレ ヌ パルティリオン｜"quand bien même + 条件法" は「たとえ〜でも」（強い逆接・仮定）。"même si + 条件法" より強調度が高い。'},
-  {cat:'論理接続詞', en:'Partant de ce principe, on peut conclure que...', speech:'Partant de ce principe, on peut conclure que...', ja:'この原則から出発して、〜と結論づけることができます。', tip:'【発音】パルタン ドゥ ス プランスィプ オン プ コンクリュール ク｜"partant de" は「〜から出発して」（分詞構文）。論述・論理的説明の展開で使う表現。'},
-  {cat:'論理接続詞', en:'Tout compte fait, les avantages l\'emportent sur les inconvénients.', speech:'Tout compte fait, les avantages l\'emportent sur les inconvénients.', ja:'総合的に見ると、利点が欠点を上回っています。', tip:'【発音】トゥ コント フェ レ ザヴァンタージュ ランポルト シュール レ ザンコンヴェニアン｜"l\'emporter sur" は「〜に勝る・〜を上回る」。"avantage/inconvénient" は「利点/欠点」。論述の締めくくりに使う。'},
-  {cat:'試験・論述表現', en:'Il n\'en reste pas moins que des problèmes subsistent.', speech:'Il n\'en reste pas moins que des problèmes subsistent.', ja:'それでも問題が残っていることに変わりはありません。', tip:'【発音】イル ナン レスト パ モワン ク デ プロブレム シュブズィスト｜"il n\'en reste pas moins que" は「それでも〜は変わらない」（逆接の強調）。論述文の展開でよく使う。'},
+  {cat:'挨拶・基本表現', en:'Bonjour', speech:'Bonjour', ja:'こんにちは（おはようございます）', tip:'【発音】ボンジュール｜一日中使える万能の挨拶。bon（良い）+ jour（日）。'},
+  {cat:'挨拶・基本表現', en:'Bonsoir', speech:'Bonsoir', ja:'こんばんは', tip:'【発音】ボンソワール｜bon（良い）+ soir（夕方）。夕方以降に使う。'},
+  {cat:'挨拶・基本表現', en:'Bonne nuit', speech:'Bonne nuit', ja:'おやすみなさい', tip:'【発音】ボンニュイ｜nuit は女性名詞なので bonne（bon の女性形）を使う。'},
+  {cat:'挨拶・基本表現', en:'Au revoir', speech:'Au revoir', ja:'さようなら', tip:'【発音】オ ルヴォワール｜revoir は再び見る の意。また会いましょう、というニュアンス。'},
+  {cat:'挨拶・基本表現', en:'Salut !', speech:'Salut !', ja:'やあ！／またね！（くだけた表現）', tip:'【発音】サリュ｜友人間で使うカジュアルな挨拶。初対面や目上の人には使わない。'},
+  {cat:'挨拶・基本表現', en:'Comment allez-vous ?', speech:'Comment allez-vous ?', ja:'お元気ですか？（丁寧）', tip:'【発音】コマン タレ ヴ｜vous は敬称・複数の あなた。疑問文は語順を逆転（倒置）させる。'},
+  {cat:'挨拶・基本表現', en:'Ça va ?', speech:'Ça va ?', ja:'元気？（くだけた表現）', tip:'【発音】サ ヴァ｜Ça va ! は元気だよ の返答にもなる。Ça は cela（それ）の短縮形。'},
+  {cat:'挨拶・基本表現', en:'Merci', speech:'Merci', ja:'ありがとう', tip:'【発音】メルスィ｜Merci beaucoup で ありがとうございます。'},
+  {cat:'挨拶・基本表現', en:'De rien', speech:'De rien', ja:'どういたしまして', tip:'【発音】ドゥ リヤン｜rien は何もない の意。たいしたことではない というニュアンス。'},
+  {cat:'挨拶・基本表現', en:'S\'il vous plaît', speech:'S\'il vous plaît', ja:'お願いします（丁寧）', tip:'【発音】スィル ヴ プレ｜s\'il は si il の縮約形。直訳は もしあなたが気に入るなら。'},
+  {cat:'自己紹介', en:'Je m\'appelle Marie.', speech:'Je m\'appelle Marie.', ja:'私はマリーといいます。', tip:'【発音】ジュ マペル マリー｜s\'appeler（〜という名前だ）は再帰動詞。名前の部分を入れ替えて使う。'},
+  {cat:'自己紹介', en:'Je suis japonais.', speech:'Je suis japonais.', ja:'私は日本人です。', tip:'【発音】ジュ スイ ジャポネ｜être の現在形 suis。男性は japonais、女性は japonaise。'},
+  {cat:'自己紹介', en:'J\'ai 13 ans.', speech:'J\'ai treize ans.', ja:'私は13歳です。', tip:'【発音】ジェ トレーズ アン｜フランス語では年齢に avoir（持つ）を使う。avoir の一人称 j\'ai。'},
+  {cat:'自己紹介', en:'J\'habite à Tokyo.', speech:'J\'habite à Tokyo.', ja:'私は東京に住んでいます。', tip:'【発音】ジャビト ア トキョ｜habiter（住む）は -er 動詞。h は無音のため je が j\' に縮約する。'},
+  {cat:'自己紹介', en:'Enchanté !', speech:'Enchanté !', ja:'はじめまして！', tip:'【発音】アンシャンテ｜男性形 enchanté、女性形 enchantée（発音は同じ）。初対面の定番フレーズ。'},
+  {cat:'数字', en:'un, deux, trois', speech:'un, deux, trois', ja:'1、2、3', tip:'【発音】アン、ドゥ、トロワ｜un は男性形（女性形は une）。数を数えるときは男性形を使う。'},
+  {cat:'数字', en:'quatre, cinq, six', speech:'quatre, cinq, six', ja:'4、5、6', tip:'【発音】キャトル、サンク、スィス｜cinq の語尾の q と six の語尾の x は単独では発音する。'},
+  {cat:'数字', en:'sept, huit, neuf', speech:'sept, huit, neuf', ja:'7、8、9', tip:'【発音】セット、ユイット、ヌフ｜sept の p と t は無音。neuf は新しい という別の単語にもなる。'},
+  {cat:'数字', en:'dix, vingt, cent', speech:'dix, vingt, cent', ja:'10、20、100', tip:'【発音】ディス、ヴァン、サン｜vingt（20）は単独では t を発音しない。vingt et un（21）では et を入れる。'},
+  {cat:'数字', en:'Combien ça coûte ?', speech:'Combien ça coûte ?', ja:'いくらですか？', tip:'【発音】コンビヤン サ クット｜combien は いくつ／いくら。coûter（かかる）はアクサン・シルコンフレクス付き。'},
+  {cat:'色・形容詞', en:'rouge / bleu', speech:'rouge, bleu', ja:'赤／青', tip:'【発音】ルージュ／ブル｜色の形容詞は名詞の後ろに置く（英語と逆）。bleu は男性形、bleue は女性形。'},
+  {cat:'色・形容詞', en:'vert / jaune', speech:'vert, jaune', ja:'緑／黄色', tip:'【発音】ヴェール／ジョーヌ｜vert の女性形は verte（語末の t が聞こえる）。jaune は男女同形。'},
+  {cat:'色・形容詞', en:'noir / blanc', speech:'noir, blanc', ja:'黒／白', tip:'【発音】ノワール／ブラン｜blanc の女性形 blanche は発音が大きく変わる。変則的な形容詞の代表例。'},
+  {cat:'色・形容詞', en:'grand / petit', speech:'grand, petit', ja:'大きい／小さい', tip:'【発音】グラン／プティ｜grand と petit は名詞の前に置く形容詞（BAGS の法則）。'},
+  {cat:'色・形容詞', en:'beau / belle', speech:'beau, belle', ja:'美しい（男性形／女性形）', tip:'【発音】ボ／ベル｜beau は男性形、belle は女性形で発音が大きく違う。母音の前では bel になる。'},
+  {cat:'食べ物・飲み物', en:'le pain', speech:'le pain', ja:'パン', tip:'【発音】ル パン｜le は男性定冠詞（英語の the に相当）。フランスパンは une baguette。'},
+  {cat:'食べ物・飲み物', en:'l\'eau', speech:'l\'eau', ja:'水', tip:'【発音】ロ｜eau は女性名詞。母音で始まるため冠詞が縮約して l\'eau。'},
+  {cat:'食べ物・飲み物', en:'le café', speech:'le café', ja:'コーヒー', tip:'【発音】ル カフェ｜アクサン・テギュ（é）は エ と発音する。フランスのカフェはエスプレッソが基本。'},
+  {cat:'食べ物・飲み物', en:'Je voudrais un café.', speech:'Je voudrais un café.', ja:'コーヒーをひとつください。', tip:'【発音】ジュ ヴドレ アン カフェ｜voudrais は vouloir の条件法。je veux より丁寧な注文の表現。'},
+  {cat:'食べ物・飲み物', en:'C\'est délicieux !', speech:'C\'est délicieux !', ja:'おいしい！', tip:'【発音】セ デリスィユ｜C\'est は これは〜だ。délicieux は男性形、女性形は délicieuse。'},
+  {cat:'場所・移動', en:'Où est la gare ?', speech:'Où est la gare ?', ja:'駅はどこですか？', tip:'【発音】ウ エ ラ ガール｜où は どこ。est は être の三人称単数形。la gare は女性名詞（駅）。'},
+  {cat:'場所・移動', en:'à gauche / à droite', speech:'à gauche, à droite', ja:'左へ／右へ', tip:'【発音】ア ゴーシュ／ア ドロワット｜à は 〜へ・〜に を表す前置詞。tout droit は まっすぐ。'},
+  {cat:'場所・移動', en:'près d\'ici / loin d\'ici', speech:'près d\'ici, loin d\'ici', ja:'ここの近く／ここから遠い', tip:'【発音】プレ ディスィ／ルワン ディスィ｜de + ici が d\'ici に縮約（母音前で de が縮約）。'},
+  {cat:'場所・移動', en:'Je vais à l\'école.', speech:'Je vais à l\'école.', ja:'私は学校に行きます。', tip:'【発音】ジュ ヴェ ア レコル｜aller（行く）は不規則動詞。vais は一人称単数形。'},
+  {cat:'場所・移動', en:'le métro', speech:'le métro', ja:'地下鉄', tip:'【発音】ル メトロ｜prendre le métro（地下鉄に乗る）のように prendre と一緒に使うことが多い。'},
+  {cat:'時間・曜日', en:'Quelle heure est-il ?', speech:'Quelle heure est-il ?', ja:'何時ですか？', tip:'【発音】ケル ウール エティル｜quelle は女性形の疑問形容詞。heure が女性名詞なので quelle を使う。'},
+  {cat:'時間・曜日', en:'Il est deux heures.', speech:'Il est deux heures.', ja:'2時です。', tip:'【発音】イル エ ドゥ ズール｜時刻は il est 〜 heure(s) で表す。deux の x は heures とリエゾンして ドゥ ズール と読む。'},
+  {cat:'時間・曜日', en:'lundi / mardi / mercredi', speech:'lundi, mardi, mercredi', ja:'月曜日／火曜日／水曜日', tip:'【発音】ランディ／マルディ／メルクルディ｜フランス語の曜日は小文字で書く。定冠詞をつけると毎週〜曜日（例: le lundi）。'},
+  {cat:'時間・曜日', en:'jeudi / vendredi / samedi / dimanche', speech:'jeudi, vendredi, samedi, dimanche', ja:'木曜日／金曜日／土曜日／日曜日', tip:'【発音】ジュディ／ヴァンドルディ／サムディ／ディマンシュ｜フランスの週は月曜始まり。dimanche だけ語源がラテン語の dies Dominica（主の日）に由来。'},
+  {cat:'時間・曜日', en:'aujourd\'hui / demain / hier', speech:'aujourd\'hui, demain, hier', ja:'今日／明日／昨日', tip:'【発音】オジュルドゥイ／ドゥマン／イエール｜aujourd\'hui は au jour d\'hui（今日のこの日）という長い表現が縮まったもの。'},
+  {cat:'学校・文房具', en:'le livre', speech:'le livre', ja:'本', tip:'【発音】ル リーヴル｜男性名詞。un livre（一冊の本）、les livres（本たち）。'},
+  {cat:'学校・文房具', en:'le stylo / le crayon', speech:'le stylo, le crayon', ja:'ペン／鉛筆', tip:'【発音】ル スティロ／ル クレイヨン｜どちらも男性名詞。stylo はボールペン・万年筆などのペン全般を指す。'},
+  {cat:'学校・文房具', en:'le professeur', speech:'le professeur', ja:'先生・教授', tip:'【発音】ル プロフェスール｜男女ともに le professeur が使われることが多い。口語では le prof と省略する。'},
+  {cat:'学校・文房具', en:'J\'étudie le français.', speech:'J\'étudie le français.', ja:'私はフランス語を勉強しています。', tip:'【発音】ジェテュディ ル フランセ｜étudier（勉強する）は -er 動詞（規則活用）。言語名には定冠詞 le/la をつける。'},
+  {cat:'学校・文房具', en:'Je ne comprends pas.', speech:'Je ne comprends pas.', ja:'私はわかりません。', tip:'【発音】ジュ ヌ コンプラン パ｜否定は動詞を ne 〜 pas で挟む。comprendre（理解する）は不規則動詞。'},
+  {cat:'家族', en:'la famille', speech:'la famille', ja:'家族', tip:'【発音】ラ ファミーユ｜女性名詞。末尾の -ille は イーユ と発音。'},
+  {cat:'家族', en:'le père / la mère', speech:'le père, la mère', ja:'父／母', tip:'【発音】ル ペール／ラ メール｜男性名詞 père、女性名詞 mère。フランス語は名詞に性（男性・女性）がある。'},
+  {cat:'家族', en:'le frère / la soeur', speech:'le frère, la soeur', ja:'兄弟／姉妹', tip:'【発音】ル フレール／ラ スール｜soeur の oe はエとウの中間の音。フランス語特有の文字。'},
+  {cat:'家族', en:'J\'ai un frère et une soeur.', speech:'J\'ai un frère et une soeur.', ja:'私には兄弟が一人と姉妹が一人います。', tip:'【発音】ジェ アン フレール エ ユン スール｜et は そして・と。un は男性不定冠詞、une は女性不定冠詞。冠詞が名詞の性に合う。'},
+  {cat:'動詞・基本文型', en:'Je parle français.', speech:'Je parle français.', ja:'私はフランス語を話します。', tip:'【発音】ジュ パール フランセ｜parler（話す）は -er 動詞の代表。語幹 parl- に語尾をつける規則活用。'},
+  {cat:'動詞・基本文型', en:'Tu aimes la musique ?', speech:'Tu aimes la musique ?', ja:'あなたは音楽が好きですか？', tip:'【発音】テュ エーム ラ ミュジーク｜aimer（好む・愛する）も -er 規則動詞。tu は親しい間柄の あなた。'},
+  {cat:'動詞・基本文型', en:'Il fait beau aujourd\'hui.', speech:'Il fait beau aujourd\'hui.', ja:'今日は良い天気です。', tip:'【発音】イル フェ ボ オジュルドゥイ｜天気の表現は非人称の il を使う。faire の三人称単数は fait。'},
+  {cat:'動詞・基本文型', en:'Nous avons un chien.', speech:'Nous avons un chien.', ja:'私たちは犬を一匹飼っています。', tip:'【発音】ヌ ザヴォン アン シヤン｜avoir の一人称複数は avons。nous と avons がリエゾンして ヌ ザヴォン と発音。'},
+  {cat:'動詞・基本文型', en:'Qu\'est-ce que c\'est ?', speech:'Qu\'est-ce que c\'est ?', ja:'これは何ですか？', tip:'【発音】ケス ク セ｜よく使われる疑問の決まり文句。Qu\'est-ce que（何が）+ c\'est（それは〜だ）。'},
 ];
 
 
@@ -750,7 +700,7 @@ let isAutoPlaying  = false;
 let autoMode       = '';   // 'shadow' | 'continuous'
 let autoStopped    = false;
 let autoTimeout    = null;
-let masterSet = new Set(JSON.parse(localStorage.getItem('fr_lv5_master') || '[]'));
+let masterSet = new Set(JSON.parse(localStorage.getItem('fr_basic_master') || '[]'));
 
 // ── Voice setup ───────────────────────────────────────────────────
 let enVoices = [];
@@ -897,7 +847,7 @@ function getActive() {
 }
 
 function saveMaster() {
-  localStorage.setItem('fr_lv5_master', JSON.stringify([...masterSet]));
+  localStorage.setItem('fr_basic_master', JSON.stringify([...masterSet]));
 }
 
 // ── Update UI ─────────────────────────────────────────────────────

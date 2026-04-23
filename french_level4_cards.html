@@ -3,14 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>フランス語カード 段階４</title>
+<title>🇫🇷 フランス語カード 段階４</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #f5f0ff;
+  --bg: #f0f9f4;
   --surface: #ffffff;
   --primary: #b45309;
-  --primary-light: #fef3c7;
+  --primary-light: #b4530922;
   --accent: #0891b2;
   --green: #16a34a;
   --green-light: #dcfce7;
@@ -19,8 +19,8 @@
   --red: #e11d48;
   --text: #1e293b;
   --muted: #64748b;
-  --border: #fcd34d;
-  --shadow: 0 4px 24px rgba(124,58,237,0.10);
+  --border: #86efac;
+  --shadow: 0 4px 24px rgba(22,163,74,0.10);
   --radius: 18px;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -34,10 +34,12 @@ body {
 }
 .container { max-width: 560px; margin: auto; }
 
+/* ── Header ── */
 .header { text-align: center; margin-bottom: 14px; }
 .header h2 { font-size: 18px; font-weight: 900; color: var(--primary); }
 .header p  { font-size: 12px; color: var(--muted); margin-top: 2px; }
 
+/* ── Badges ── */
 .badges { display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; margin-bottom: 10px; }
 .badge {
   display: inline-flex; align-items: center; gap: 4px;
@@ -46,84 +48,47 @@ body {
   border: 1px solid var(--border);
 }
 .badge.green { background: var(--green-light); color: var(--green); border-color: #86efac; }
+.badge.amber { background: var(--amber-light); color: var(--amber); border-color: #fcd34d; }
 
-.progress-wrap { background: #ddd6fe; border-radius: 99px; height: 6px; margin-bottom: 4px; overflow: hidden; }
+/* ── Progress ── */
+.progress-wrap { background: #b4530933; border-radius: 99px; height: 6px; margin-bottom: 4px; overflow: hidden; }
 .progress-bar  { height: 100%; background: var(--primary); border-radius: 99px; transition: width 0.4s ease; }
-.progress-label { font-size: 11px; color: var(--muted); text-align: right; margin-bottom: 10px; }
+.progress-label { text-align: center; font-size: 12px; color: var(--muted); margin-bottom: 10px; }
 
-.no-active {
-  display: none; text-align: center; padding: 20px;
-  background: var(--surface); border-radius: var(--radius);
-  color: var(--green); font-weight: 700; margin-bottom: 12px;
-  box-shadow: var(--shadow);
-}
-
-.auto-panel {
-  display: none; text-align: center; padding: 10px 14px;
-  background: var(--primary-light); border-radius: 12px;
-  margin-bottom: 10px; border: 1px solid var(--border);
-}
-.auto-step-title   { font-size: 11px; font-weight: 900; color: var(--primary); margin-bottom: 2px; }
-.auto-instruction  { font-size: 13px; font-weight: 700; color: var(--text); }
-.auto-count        { font-size: 11px; color: var(--muted); margin-top: 2px; }
-
-.tap-hint { text-align: center; font-size: 12px; color: var(--muted); margin-bottom: 8px; }
+/* ── Card ── */
+.tap-hint { font-size: 11px; color: var(--muted); margin-bottom: 6px; text-align: center; }
 
 .card {
   background: var(--surface); border-radius: var(--radius);
-  padding: 20px 18px 16px; margin-bottom: 12px;
-  box-shadow: var(--shadow);
-  border: 2px solid transparent;
-  transition: border-color .2s;
+  padding: 28px 20px 20px; box-shadow: var(--shadow);
+  margin-bottom: 12px; position: relative;
+  border: 2px solid var(--border);
   min-height: 160px;
+  cursor: pointer; user-select: none;
+  transition: transform .1s, border-color .2s;
 }
-.card-top {
-  display: flex; align-items: center; justify-content: space-between;
-  margin-bottom: 14px;
-}
-.card-num { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--muted); }
-.cat-label {
-  font-size: 10px; font-weight: 700; padding: 2px 10px;
-  border-radius: 99px; background: var(--primary-light); color: var(--primary);
-}
-.master-wrap { display: flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 700; color: var(--muted); }
-.master-wrap input[type=checkbox] { width: 17px; height: 17px; accent-color: var(--green); cursor: pointer; }
-
-.main-text {
-  font-size: clamp(17px, 4.5vw, 22px); font-weight: 900;
-  text-align: center; line-height: 1.5; margin-bottom: 6px;
-  color: var(--text);
-}
-.main-text mark { background: none; color: var(--primary); font-weight: 900; }
-
-/* 発音表示 */
-.pronunciation-text {
-  font-size: clamp(12px, 3.2vw, 14px);
-  color: var(--primary);
-  font-style: italic;
-  text-align: center;
-  line-height: 1.5;
-  padding: 3px 8px 2px;
-  font-weight: 600;
-  letter-spacing: 0.02em;
-}
-
-/* speech読み上げ用テキスト */
-.speech-text {
-  font-size: clamp(11px, 3vw, 13px);
-  color: #9ca3af;
-  font-style: italic;
-  text-align: center;
-  line-height: 1.5;
-  padding: 2px 8px 4px;
-  letter-spacing: 0.01em;
-}
-.speech-text .speech-icon { font-style: normal; margin-right: 3px; opacity: 0.6; }
-
-.card.tappable { cursor: pointer; }
 .card.tappable:active { transform: scale(0.985); }
 .card.revealed { border-color: var(--primary); }
 .card.no-tap { cursor: default; }
+
+.card-top {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 10px;
+}
+.card-num { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--muted); }
+.cat-label {
+  font-size: 11px; font-weight: 700; letter-spacing: .06em;
+  color: var(--primary); text-align: center; flex: 1;
+}
+.master-wrap { display: flex; align-items: center; gap: 4px; font-size: 11px; color: var(--muted); }
+.master-wrap input[type=checkbox] { width: 17px; height: 17px; accent-color: var(--green); cursor: pointer; }
+.master-wrap.disabled { opacity: .3; pointer-events: none; }
+
+.main-text {
+  font-size: clamp(15px, 4vw, 19px); font-weight: 700;
+  line-height: 1.65; text-align: center; margin-bottom: 14px;
+}
+.main-text mark { background: none; color: var(--primary); font-weight: 900; }
 
 .answer-wrap {
   opacity: 0; transform: translateY(5px);
@@ -139,148 +104,276 @@ body {
 }
 .answer-tip {
   font-size: 12px; font-weight: 600; color: var(--green);
-  text-align: left; padding: 0 4px; line-height: 1.7;
+  text-align: left; padding: 0 4px; line-height: 1.6;
 }
 .answer-tip::before { content: '💡 '; }
 
+.pronunciation-text {
+  font-size: clamp(12px,3.2vw,14px); color: var(--primary);
+  font-style: italic; text-align: center; line-height: 1.5;
+  padding: 3px 8px 2px; font-weight: 600; margin-bottom: 4px;
+}
 .master-badge {
   display: none; text-align: center; margin-top: 8px;
-  font-size: 11px; font-weight: 900; color: var(--green);
+  background: var(--green-light); color: var(--green);
+  padding: 2px 10px; border-radius: 99px; font-size: 10px; font-weight: 700;
 }
 .master-badge.show { display: block; }
 
-.master-summary {
-  text-align: center; font-size: 12px; font-weight: 700;
-  color: var(--primary); cursor: pointer; margin-bottom: 6px;
-  padding: 6px; border-radius: 10px;
+/* ── No active ── */
+.no-active {
+  background: var(--amber-light); border-radius: 12px; padding: 16px;
+  text-align: center; font-size: 14px; color: var(--amber); font-weight: 700;
+  display: none; margin-bottom: 12px;
 }
-.master-summary:hover { background: var(--primary-light); }
+.no-active.show { display: block; }
 
-/* filter panel */
+/* ── Auto panel ── */
+.auto-panel {
+  background: var(--surface); border-radius: var(--radius);
+  padding: 14px 18px; box-shadow: var(--shadow); margin-bottom: 12px;
+  display: none; border-left: 4px solid var(--primary);
+}
+.auto-panel.show { display: block; }
+.auto-step-title { font-size: 12px; font-weight: 900; color: var(--primary); margin-bottom: 4px; }
+.auto-instruction { font-size: 14px; font-weight: 700; color: var(--text); line-height: 1.5; }
+.auto-count { font-family: 'DM Mono', monospace; font-size: 12px; color: var(--muted); margin-top: 4px; }
+
+/* ── Filter panel ── */
 .filter-panel {
   background: var(--surface); border-radius: var(--radius);
-  padding: 12px 14px; margin-bottom: 10px;
-  box-shadow: var(--shadow);
+  padding: 14px 16px; box-shadow: var(--shadow); margin-bottom: 12px;
 }
 .filter-header { display: flex; align-items: center; justify-content: space-between; cursor: pointer; user-select: none; }
-.filter-header-left { font-size: 13px; font-weight: 900; color: var(--primary); }
+.filter-header-left { font-size: 12px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; }
 .filter-current {
-  font-size: 11px; font-weight: 700; color: var(--primary);
+  font-size: 12px; font-weight: 700; color: var(--primary);
   background: var(--primary-light); padding: 3px 10px; border-radius: 99px;
   border: 1px solid var(--border); max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
-.filter-toggle-icon { font-size: 10px; color: var(--muted); transition: transform .2s; }
+.filter-toggle-icon { font-size: 12px; color: var(--muted); transition: transform .2s; margin-left: 6px; }
 .filter-toggle-icon.open { transform: rotate(180deg); }
 .filter-chips-wrap { display: none; margin-top: 10px; }
 .filter-chips-wrap.open { display: block; }
-
 .chip-all {
-  width: 100%; padding: 7px 12px; border-radius: 99px; border: 2px solid var(--border);
-  background: #fff; color: var(--muted); font-size: 12px; font-weight: 700;
-  cursor: pointer; margin-bottom: 5px; transition: all .15s; user-select: none;
+  display: block; width: 100%; padding: 8px 14px; margin-bottom: 8px;
+  border-radius: 10px; font-size: 12px; font-weight: 700; cursor: pointer;
+  border: 2px solid var(--border); background: #fff; color: var(--muted);
+  text-align: left; font-family: 'Noto Sans JP', sans-serif; transition: all .15s;
 }
 .chip-all.active { background: var(--primary-light); color: var(--primary); border-color: var(--primary); }
-
 .cat-row {
-  display: flex; align-items: center; gap: 8px;
-  padding: 7px 12px; border-radius: 12px; border: 2px solid var(--border);
-  background: #fff; margin-bottom: 5px; transition: all .15s; user-select: none; cursor: pointer;
+  display: flex; align-items: center; gap: 8px; padding: 8px 10px;
+  border-radius: 10px; cursor: pointer; border: 2px solid transparent;
+  background: #fff; margin-bottom: 5px; transition: all .15s; user-select: none;
 }
 .cat-row.active { background: var(--primary-light); border-color: var(--primary); }
-.cat-row-name { flex: 1; font-size: 12px; font-weight: 700; }
+.cat-row-name { flex: 1; font-size: 13px; font-weight: 700; color: var(--text); }
+.cat-row.active .cat-row-name { color: var(--primary); }
 .cat-row-count {
-  font-size: 11px; font-weight: 700; color: var(--muted);
+  font-family: 'DM Mono', monospace; font-size: 11px; color: var(--muted);
   background: #f1f5f9; padding: 2px 8px; border-radius: 99px; font-weight: 600;
 }
 .cat-row.active .cat-row-count { background: #fff; color: var(--primary); }
 .cat-dot { width: 8px; height: 8px; border-radius: 50%; background: #e2e8f0; flex-shrink: 0; }
+.cat-dot.done { background: var(--green); }
 
-/* voice panel */
+/* ── Panel / controls ── */
 .panel {
   background: var(--surface); border-radius: var(--radius);
-  padding: 12px 14px; margin-bottom: 10px;
-  box-shadow: var(--shadow);
+  padding: 14px 16px; box-shadow: var(--shadow); margin-bottom: 12px;
 }
-.panel-row {
-  display: flex; align-items: center; gap: 8px;
-  font-size: 12px; font-weight: 700; color: var(--muted);
+.panel-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.panel-row + .panel-row { margin-top: 8px; }
+.panel label { font-size: 12px; color: var(--muted); font-weight: 700; white-space: nowrap; }
+.panel select {
+  flex: 1; font-size: 12px; border: 1px solid var(--border);
+  border-radius: 8px; padding: 4px 8px; background: #fff;
+  color: var(--text); font-family: 'Noto Sans JP', sans-serif;
 }
-.panel-row label { white-space: nowrap; }
-.panel-row select { flex: 1; font-size: 11px; border-radius: 8px; border: 1px solid var(--border); padding: 4px 6px; }
-.panel-row input[type=range] { flex: 1; }
-.speed-val { font-family: 'DM Mono', monospace; font-size: 11px; white-space: nowrap; }
+.panel input[type=range] { flex: 1; min-width: 80px; accent-color: var(--primary); }
+.speed-val { font-family: 'DM Mono', monospace; font-size: 13px; font-weight: 600; color: var(--primary); min-width: 32px; }
 
-/* buttons */
+/* ── Buttons ── */
+.btn-row { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin-bottom: 10px; }
 .btn {
-  flex: 1; padding: 11px 8px; border-radius: 12px; border: none;
-  font-size: 13px; font-weight: 900; cursor: pointer;
-  transition: opacity .15s, transform .1s;
+  border: none; border-radius: 99px; padding: 10px 18px;
+  font-size: 13px; font-weight: 700; font-family: 'Noto Sans JP', sans-serif;
+  cursor: pointer; transition: opacity .15s, transform .1s;
+  display: inline-flex; align-items: center; gap: 5px;
 }
-.btn:active { transform: scale(0.97); opacity: 0.85; }
+.btn:active { transform: scale(0.94); opacity: .85; }
 .btn-primary   { background: var(--primary); color: #fff; }
-.btn-secondary { background: var(--primary-light); color: var(--primary); }
-.btn-amber     { background: var(--amber-light); color: var(--amber); }
-.btn-blue      { background: #e0f2fe; color: #0369a1; }
-.btn-red       { background: #fee2e2; color: var(--red); }
-.btn-row { display: flex; gap: 8px; margin-bottom: 8px; }
+.btn-secondary { background: #e2e8f0; color: var(--text); }
+.btn-green     { background: var(--green); color: #fff; }
+.btn-red       { background: var(--red); color: #fff; }
+.btn-amber     { background: var(--amber); color: #fff; }
+.btn-blue      { background: #2563eb; color: #fff; }
+.btn-on        { background: var(--green); color: #fff; }
 
-/* guide modal */
-.guide-overlay {
-  display: none; position: fixed; inset: 0;
-  background: rgba(0,0,0,0.45); z-index: 100;
-  justify-content: center; align-items: flex-start;
-  padding: 20px 12px; overflow-y: auto;
+/* ── Master list ── */
+.master-summary {
+  background: var(--green-light); border-radius: 12px; padding: 10px 14px;
+  font-size: 12px; color: var(--green); font-weight: 700;
+  text-align: center; margin-bottom: 10px; display: none; cursor: pointer; user-select: none;
 }
-.guide-overlay.open { display: flex; }
+.master-summary.show { display: block; }
+
+/* ── Help button ── */
+.help-btn {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 5px 14px; border-radius: 99px;
+  border: 1px solid var(--border); background: var(--primary-light);
+  color: var(--primary); font-size: 12px; font-weight: 700;
+  cursor: pointer; margin-top: 8px;
+  font-family: 'Noto Sans JP', sans-serif;
+}
+
+/* ── Guide modal overlay ── */
+.guide-overlay {
+  display: none;
+  position: fixed; inset: 0; z-index: 100;
+  background: rgba(0,0,0,0.5);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.guide-overlay.show { display: block; }
 .guide-modal {
-  background: #fff; border-radius: 20px; width: 100%; max-width: 520px;
-  padding: 20px; box-shadow: 0 8px 40px rgba(0,0,0,0.18);
+  background: var(--bg);
+  max-width: 520px; margin: 0 auto;
+  min-height: 100vh;
+  padding: 0 0 60px;
+  position: relative;
 }
 .guide-modal-header {
-  display: flex; justify-content: space-between; align-items: center;
-  margin-bottom: 14px;
+  position: sticky; top: 0; z-index: 10;
+  background: var(--primary);
+  color: #fff;
+  padding: 16px 20px;
+  display: flex; align-items: center; justify-content: space-between;
 }
-.guide-modal-header h2 { font-size: 16px; font-weight: 900; color: var(--primary); }
+.guide-modal-header h2 { font-size: 16px; font-weight: 900; }
 .guide-close {
-  background: #f1f5f9; border: none; border-radius: 8px;
-  padding: 4px 12px; font-size: 12px; font-weight: 700;
-  cursor: pointer; color: var(--muted);
+  background: rgba(255,255,255,0.2); border: none; border-radius: 99px;
+  color: #fff; font-size: 13px; font-weight: 700; padding: 5px 14px;
+  cursor: pointer; font-family: 'Noto Sans JP', sans-serif;
 }
-.guide-body { font-size: 13px; line-height: 1.7; color: var(--text); }
-.g-section { margin-bottom: 16px; }
-.g-section h3 { font-size: 13px; font-weight: 900; color: var(--primary); margin-bottom: 6px; }
-.g-section p, .g-section li { margin-bottom: 4px; }
-.g-section ul { padding-left: 16px; }
+.guide-body { padding: 14px 14px 20px; }
 
-.header-row {
-  display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;
+/* guide sections */
+.g-section {
+  background: #fff; border-radius: 14px;
+  border: 1px solid #d1fae5;
+  margin-bottom: 10px; overflow: hidden;
 }
-.guide-btn {
-  background: var(--primary-light); border: none; border-radius: 99px;
-  padding: 4px 12px; font-size: 12px; font-weight: 700;
-  color: var(--primary); cursor: pointer;
+.g-head {
+  padding: 11px 14px;
+  background: #f0fdf4;
+  border-bottom: 1px solid #d1fae5;
+  display: flex; align-items: center; gap: 8px;
+  font-size: 13px; font-weight: 700; color: var(--text);
 }
+.g-body { padding: 14px; }
+.g-text { font-size: 12px; color: var(--muted); line-height: 1.8; margin-bottom: 10px; }
+.g-text:last-child { margin-bottom: 0; }
+.g-text strong { color: var(--text); font-weight: 700; }
+
+/* guide step */
+.g-step { display: flex; gap: 9px; margin-bottom: 9px; align-items: flex-start; }
+.g-step:last-child { margin-bottom: 0; }
+.g-step-num {
+  min-width: 22px; height: 22px; border-radius: 50%;
+  background: var(--primary-light); color: var(--primary);
+  font-size: 11px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; margin-top: 2px;
+}
+.g-step-text { font-size: 12px; color: var(--muted); line-height: 1.8; }
+.g-step-text strong { color: var(--text); font-weight: 700; }
+
+/* guide method blocks */
+.g-method {
+  border-left: 3px solid var(--border);
+  padding: 8px 12px; margin-bottom: 9px;
+  border-radius: 0 8px 8px 0;
+  background: #f0fdf4;
+}
+.g-method:last-child { margin-bottom: 0; }
+.g-method-title { font-size: 12px; font-weight: 700; color: var(--primary); margin-bottom: 4px; }
+.g-method-body { font-size: 12px; color: var(--muted); line-height: 1.8; }
+.g-method-body strong { color: var(--text); font-weight: 700; }
+
+.g-amber { border-left-color: #fcd34d; background: #fffbeb; }
+.g-amber .g-method-title { color: #92400e; }
+.g-amber .g-method-body { color: #78350f; }
+.g-blue  { border-left-color: #93c5fd; background: #eff6ff; }
+.g-blue  .g-method-title { color: #1e40af; }
+.g-blue  .g-method-body  { color: #1e3a8a; }
+
+/* shadow steps inside guide */
+.g-shadow-steps { background: #f0fdf4; border-radius: 10px; padding: 10px 12px; margin-top: 8px; }
+.g-s-step { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 7px; }
+.g-s-step:last-child { margin-bottom: 0; }
+.g-s-badge {
+  min-width: 52px; padding: 2px 0; text-align: center;
+  border-radius: 99px; font-size: 10px; font-weight: 700;
+  flex-shrink: 0; margin-top: 2px;
+}
+.gsb-g { background: var(--primary-light); color: #166534; }
+.gsb-b { background: #dbeafe; color: #1e40af; }
+.g-s-text { font-size: 11px; color: var(--muted); line-height: 1.75; }
+.g-s-text strong { color: var(--text); font-weight: 700; }
+
+/* flow arrows */
+.g-flow { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin: 10px 0 6px; }
+.g-flow-tag {
+  padding: 4px 11px; border-radius: 99px;
+  font-size: 11px; font-weight: 700;
+}
+.gft-green { background: var(--primary-light); color: #166534; border: 1px solid #86efac; }
+.gft-amber { background: #fef3c7; color: #92400e; border: 1px solid #fcd34d; }
+.gft-blue  { background: #dbeafe; color: #1e40af; border: 1px solid #93c5fd; }
+.g-flow-arr { color: var(--muted); font-size: 13px; }
+
+/* btn demo in guide */
+.gbd { display:inline-flex;align-items:center;gap:4px;padding:5px 12px;border-radius:99px;font-size:11px;font-weight:700;border:none;margin:3px; }
+.gbd-sec  { background:#e2e8f0;color:#1e293b; }
+.gbd-pri  { background:#16a34a;color:#fff; }
+.gbd-amb  { background:#d97706;color:#fff; }
+.gbd-blue { background:#2563eb;color:#fff; }
+.gbd-mode { background:#e2e8f0;color:#1e293b; }
+
+.g-note {
+  background: #f0fdf4; border: 1px solid #86efac;
+  border-radius: 10px; padding: 10px 12px;
+  font-size: 12px; color: #166534; line-height: 1.8; margin-top: 10px;
+}
+.g-note strong { font-weight: 700; }
+
+/* tag inline */
+.gti { display:inline-block;padding:1px 7px;border-radius:99px;font-size:10px;font-weight:700;vertical-align:middle; }
+.gti-g { background:var(--primary-light);color:#166534; }
+.gti-a { background:#fef3c7;color:#92400e; }
+.gti-b { background:#dbeafe;color:#1e40af; }
 </style>
 </head>
 <body>
 <div class="container">
 
-<div class="header-row">
-  <div class="header" style="flex:1;text-align:left;">
-    <h2>🇫🇷 フランス語カード 段階４</h2>
-    <p>接続法・イディオム・ことわざ — 自然な会話表現</p>
-  </div>
-  <button class="guide-btn" onclick="openGuide()">❓ 使い方</button>
+<div class="header">
+  <h2>🇫🇷 フランス語カード 段階４</h2>
+  <p>接続法・イディオム・ことわざ — 自然な会話表現</p>
+  <button class="help-btn" onclick="openGuide()">❓ 使い方ガイド</button>
 </div>
 
 <div class="badges">
-  <div class="badge" id="mode-badge">📖 仏 → 日</div>
+  <div class="badge" id="mode-badge">📖 英 → 日</div>
   <div class="badge" id="order-badge">順番通り</div>
-  <div class="badge green" id="master-badge">マスター: 0 / 50</div>
+  <div class="badge green" id="master-badge">マスター: 0 / 43</div>
 </div>
 
 <div class="progress-wrap"><div class="progress-bar" id="progress-bar" style="width:2%"></div></div>
-<div class="progress-label">カード <span id="cur-num">1</span> / <span id="tot-num">50</span></div>
+<div class="progress-label">カード <span id="cur-num">1</span> / <span id="tot-num">43</span></div>
 
 <div class="no-active" id="no-active">
   ✅ このカテゴリをすべてマスターしました！<br>
@@ -298,7 +391,7 @@ body {
 <div class="card tappable" id="main-card" onclick="handleTap()">
   <div class="card-top">
     <div class="card-num" id="card-num">01</div>
-    <div class="cat-label" id="card-cat">挨拶</div>
+    <div class="cat-label" id="card-cat">生物・生態系</div>
     <div class="master-wrap" id="master-wrap">
       <span>マスター</span>
       <input type="checkbox" id="master-cb" onchange="toggleMaster(event)" onclick="event.stopPropagation()">
@@ -306,7 +399,6 @@ body {
   </div>
   <div class="main-text" id="main-text">Loading...</div>
   <div class="pronunciation-text" id="pronunciation-text"></div>
-  <div class="speech-text" id="speech-text"></div>
   <div class="answer-wrap" id="answer-wrap">
     <div class="answer-ja" id="answer-ja"></div>
     <div class="answer-tip" id="answer-tip" style="display:none"></div>
@@ -340,16 +432,20 @@ body {
   </div>
 </div>
 
-<!-- Voice panel -->
+<!-- Voice / speed panel -->
 <div class="panel">
   <div class="panel-row" style="margin-bottom:8px;">
-    <label>🔊 音声</label>
+    <label>🔊 フランス語音声</label>
+    <select id="voice-pref" onchange="applyVoicePref()">
+      <option value="FR">🇫🇷 フランス優先</option>
+      <option value="CA">🇨🇦 カナダ優先</option>
+    </select>
     <select id="voice-select" style="flex:2;"></select>
   </div>
   <div class="panel-row">
     <label>速度</label>
-    <input type="range" id="rate-slider" min="0.5" max="1.5" step="0.1" value="0.9" oninput="updateRate()">
-    <span class="speed-val" id="rate-val">0.9×</span>
+    <input type="range" id="rate-slider" min="0.5" max="1.5" step="0.1" value="1.0" oninput="updateRate()">
+    <span class="speed-val" id="rate-val">1.0×</span>
   </div>
 </div>
 
@@ -370,6 +466,7 @@ body {
   </div>
 </div>
 
+<!-- Auto controls (shadowing / continuous) -->
 <div id="auto-controls" style="display:none;">
   <div class="btn-row">
     <button class="btn btn-red" onclick="stopAutoPlay()">⏹ 停止</button>
@@ -378,182 +475,308 @@ body {
 
 </div><!-- /container -->
 
-<!-- Guide Modal -->
+<!-- ── Guide Modal ───────────────────────────────────────────── -->
 <div class="guide-overlay" id="guide-overlay" onclick="handleOverlayClick(event)">
 <div class="guide-modal" id="guide-modal">
+
   <div class="guide-modal-header">
-    <h2>❓ 使い方ガイド</h2>
+    <h2>🇫🇷 フランス語カード 段階４</h2>
     <button class="guide-close" onclick="closeGuide()">✕ 閉じる</button>
   </div>
+
   <div class="guide-body">
+
+    <!-- ① ボタン説明 -->
     <div class="g-section">
-      <h3>📖 基本の使い方</h3>
-      <ul>
-        <li>カードをタップすると日本語訳と文法ヒントが表示されます</li>
-        <li>カード上部の発音表示（斜体・紫）はカタカナ読みの目安です</li>
-        <li>🔊ボタン または カードタップ後に音声が流れます</li>
-        <li>「マスター」チェックで覚えたカードを記録できます</li>
-      </ul>
+      <div class="g-head"><span>🔘</span> 各ボタンの説明</div>
+      <div class="g-body">
+        <div style="margin-bottom:12px">
+          <div><span class="gbd gbd-sec">← 戻る</span><span class="gbd gbd-pri">🔊 音声</span><span class="gbd gbd-sec">次へ →</span></div>
+          <p class="g-text" style="margin-top:6px">カードを前後に移動します。<strong>音声</strong>ボタンで英語を読み上げます。</p>
+        </div>
+        <div style="margin-bottom:12px">
+          <div><span class="gbd gbd-amb">🗣️ シャドウイング</span><span class="gbd gbd-blue">▶ 連続再生</span></div>
+          <p class="g-text" style="margin-top:6px">
+            <span class="gti gti-a">シャドウイング</span> 4ステップの反復練習を自動で進めます。<br>
+            <span class="gti gti-b">連続再生</span> 全カードを英語音声で流し聴きします（全情報表示）。
+          </p>
+        </div>
+        <div>
+          <div><span class="gbd gbd-sec">🔀 ランダム: OFF</span><span class="gbd gbd-mode">🔄 仏⇄日</span></div>
+          <p class="g-text" style="margin-top:6px">ランダムでカードをシャッフルします。<strong>英⇄日</strong>で日本語を見て英語を答えるスピーキング練習モードになります。</p>
+        </div>
+      </div>
     </div>
+
+    <!-- ② まずは1枚ずつ -->
     <div class="g-section">
-      <h3>🗣️ シャドウイング</h3>
-      <p>音声を聴いた直後に自分でも声に出す練習です。発音上達に効果的です。</p>
+      <div class="g-head"><span>👆</span> まずは1枚ずつ — 基本の練習法</div>
+      <div class="g-body">
+        <p class="g-text">英語に慣れていない方は、まずこの方法から始めましょう。1枚のカードとじっくり向き合います。</p>
+        <div class="g-method">
+          <div class="g-method-title">手順</div>
+          <div class="g-method-body">
+            <div class="g-step">
+              <div class="g-step-num">1</div>
+              <div class="g-step-text"><strong>音声を聴く</strong> — 英語が表示された状態で「🔊 音声」を押し、意味を考えながら聴きます。</div>
+            </div>
+            <div class="g-step">
+              <div class="g-step-num">2</div>
+              <div class="g-step-text"><strong>カードをタップ</strong> — 日本語訳と💡解説を確認します。</div>
+            </div>
+            <div class="g-step">
+              <div class="g-step-num">3</div>
+              <div class="g-step-text"><strong>もう一度音声を聴く</strong> → 聴き終わったら<strong>自分で声に出して繰り返します（リピートアフターミー）</strong>。2〜3回繰り返しましょう。</div>
+            </div>
+            <div class="g-step">
+              <div class="g-step-num">4</div>
+              <div class="g-step-text">覚えたら<strong>右上のマスターにチェック</strong>を入れます → 自動で次のカードへ進みます。マスターしたカードは出題されなくなります。</div>
+            </div>
+          </div>
+        </div>
+        <div class="g-note">この練習を続けていくうちに、<strong>音声を聴きながら同時に声に出せる（シャドウイング）</strong>ようになっていきます。慣れてきたら次のシャドウイングに挑戦しましょう。</div>
+      </div>
     </div>
+
+    <!-- ③ シャドウイング -->
     <div class="g-section">
-      <h3>▶ 連続再生</h3>
-      <p>カードを自動で送りながら音声を連続再生します。聞き流し練習に使えます。</p>
+      <div class="g-head"><span>🗣️</span> シャドウイング自動再生 — 上達を加速させる</div>
+      <div class="g-body">
+        <p class="g-text">1枚ずつの練習でカードに慣れてきたら、<span class="gti gti-a">シャドウイング</span>を使いましょう。「聴く → まねする → 見ながら → 見ずに」という4ステップを、全カードで自動的に繰り返します。この流れこそが英語習得の最も効率的な方法です。</p>
+        <div class="g-method g-amber">
+          <div class="g-method-title">4ステップの流れ（1カードごとに自動で進みます）</div>
+          <div class="g-shadow-steps">
+            <div class="g-s-step">
+              <span class="g-s-badge gsb-g">STEP 1</span>
+              <div class="g-s-text"><strong>文字を見ずに2回聴く</strong> — まず耳だけで音とリズムをつかみます。</div>
+            </div>
+            <div class="g-s-step">
+              <span class="g-s-badge gsb-g">STEP 2</span>
+              <div class="g-s-text"><strong>文字を見ずにシャドウイング×2</strong> — 音声に重ねるように声に出します。</div>
+            </div>
+            <div class="g-s-step">
+              <span class="g-s-badge gsb-b">STEP 3</span>
+              <div class="g-s-text"><strong>日本語訳を見ながらシャドウイング×2</strong> — 意味を確認しながら声に出します。</div>
+            </div>
+            <div class="g-s-step">
+              <span class="g-s-badge gsb-g">STEP 4</span>
+              <div class="g-s-text"><strong>また文字を見ずにシャドウイング×2</strong> — 最後に何も見ずに声に出し、定着を確認します。</div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
+
+    <!-- ④ 連続再生 -->
     <div class="g-section">
-      <h3>🔊 発音について</h3>
-      <p>お使いの端末にフランス語音声（fr-FR）がインストールされている場合、自然なフランス語発音で読み上げます。Windows・Mac・iOS・Android いずれも対応しています。音声が出ない場合は端末の言語設定でフランス語音声を追加してください。</p>
+      <div class="g-head"><span>▶</span> 連続再生 — 復習と聴き流しに</div>
+      <div class="g-body">
+        <div class="g-method g-blue">
+          <div class="g-method-title">こんな使い方がおすすめ</div>
+          <div class="g-method-body">マスター済みのカードは自動でスキップされ、未マスターのカードだけが英語音声で流れます。日本語訳・解説も全表示されるので、<strong>通学中の聴き流し</strong>や<strong>寝る前の復習</strong>に最適です。</div>
+        </div>
+      </div>
     </div>
+
+    <!-- ⑤ 推奨サイクル -->
     <div class="g-section">
-      <h3>📂 カテゴリ</h3>
-      <p>「カテゴリを選ぶ」から練習したいジャンルだけに絞れます。</p>
+      <div class="g-head"><span>🔁</span> おすすめの学習サイクル</div>
+      <div class="g-body">
+        <div class="g-flow">
+          <span class="g-flow-tag gft-green">1枚ずつ練習</span>
+          <span class="g-flow-arr">→</span>
+          <span class="g-flow-tag gft-green">マスターにチェック</span>
+          <span class="g-flow-arr">→</span>
+          <span class="g-flow-tag gft-amber">シャドウイング</span>
+          <span class="g-flow-arr">→</span>
+          <span class="g-flow-tag gft-blue">連続再生で復習</span>
+        </div>
+        <p class="g-text">まず1枚ずつじっくり取り組んでカードに慣れる → 覚えたものをマスターに → シャドウイングで発音と定着を強化 → 連続再生で総復習。このサイクルを繰り返すことで着実に力がつきます。</p>
+        <div class="g-note"><strong>スピーキング練習も忘れずに。</strong> 「🔄 仏⇄日」ボタンで日本語表示モードに切り替え、日本語を見て英語を声に出す練習をすると、さらに効果的です。</div>
+      </div>
     </div>
-  </div>
-</div>
-</div>
+
+    <!-- ⑥ 音声設定 -->
+    <div class="g-section">
+      <div class="g-head"><span>🔊</span> 音声・速度の設定</div>
+      <div class="g-body">
+        <div class="g-step">
+          <div class="g-step-num">1</div>
+          <div class="g-step-text"><strong>US優先 / GB優先</strong>でアクセントを切り替えられます（デフォルト: 🇺🇸 US優先）。</div>
+        </div>
+        <div class="g-step">
+          <div class="g-step-num">2</div>
+          <div class="g-step-text">速度スライダーで<strong>0.5倍〜1.5倍</strong>に調整できます。最初は<strong>0.8×</strong>くらいのゆっくりめがおすすめです。慣れてきたら1.0×に戻しましょう。</div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /guide-body -->
+</div><!-- /guide-modal -->
+</div><!-- /guide-overlay -->
 
 <script>
-// ── Card Data ────────────────────────────────────────────────────
+// ── Data ──────────────────────────────────────────────────────────
+const CATS = {
+  '接続法': '#b45309',
+  '受動態・分詞': '#7c3aed',
+  '代名詞の活用': '#0369a1',
+  '豊かな表現': '#16a34a',
+  '文化・社会表現': '#d97706',
+  '仕事・学習': '#e85d26',
+  'ニュアンス表現': '#9333ea',
+  '芸術・エンタメ': '#dc2626',
+  '総合会話': '#0891b2',
+  '社交・感情': '#065f46',
+  '議論・説明': '#c2410c',
+  '自然・環境': '#6d28d9',
+};
+
 const phrases = [
-  {cat:'接続法', fr:'Il faut que vous fassiez attention.', pron:'イル フォ ク ヴ ファスィエ アタンスィオン', speech:'Il faut que vous fassiez attention.', ja:'気をつけなければなりません。', tip:'"il faut que + 接続法" は「〜しなければならない」。"fassiez" は "faire" の接続法（活用が不規則）。"faire attention" は「気をつける」。'},
-  {cat:'接続法', fr:'Je suis content(e) que vous soyez là.', pron:'ジュ スイ コンタン ク ヴ ソワイエ ラ', speech:'Je suis content que vous soyez là.', ja:'あなたがここにいてくれて嬉しいです。', tip:'感情を表す動詞の後は接続法。"soyez" は "être" の接続法二人称複数形。"là" は「そこに・ここに」。'},
-  {cat:'接続法', fr:'Je doute qu\'il vienne ce soir.', pron:'ジュ ドゥット キル ヴィエンヌ ス ソワール', speech:'Je doute qu\'il vienne ce soir.', ja:'今夜彼が来るとは思いません。', tip:'"douter que + 接続法" は「〜だとは思わない」。"vienne" は "venir" の接続法（不規則）。疑念・不確実さの後は接続法。'},
-  {cat:'接続法', fr:'Je cherche quelqu\'un qui puisse m\'aider.', pron:'ジュ シェルシュ ケルカン キ ピュイス メデ', speech:'Je cherche quelqu\'un qui puisse m\'aider.', ja:'手伝ってくれる人を探しています。', tip:'先行詞が不定・仮定の場合、関係節に接続法を使う。"puisse" は "pouvoir" の接続法。"quelqu\'un" は「誰か」。'},
-  {cat:'接続法', fr:'Quoiqu\'il soit tard, je vais continuer.', pron:'クワキル ソワ タール ジュ ヴェ コンティニュエ', speech:'Quoiqu\'il soit tard, je vais continuer.', ja:'遅くても、続けます。', tip:'"quoique + 接続法" は「〜にもかかわらず」。"bien que" と同義。"soit" は "être" の接続法三人称単数。'},
-  {cat:'受動態・分詞', fr:'Ce tableau a été peint par Monet.', pron:'ス タブロー ア エテ パン パール モネ', speech:'Ce tableau a été peint par Monet.', ja:'この絵はモネによって描かれました。', tip:'受動態は "être + 過去分詞 + par"。"peint" は "peindre（描く）" の過去分詞。フランス語の受動態は英語より少し使用頻度が低い。'},
-  {cat:'受動態・分詞', fr:'Les billets seront envoyés par email.', pron:'レ ビエ スロン ザンヴォワイェ パール イーメール', speech:'Les billets seront envoyés par email.', ja:'チケットはメールで送られます。', tip:'未来の受動態 "seront + 過去分詞"。"envoyés" は "envoyer" の過去分詞（複数形に一致）。'},
-  {cat:'受動態・分詞', fr:'En entrant dans le musée, j\'ai été impressionné(e).', pron:'アン アントラン ダン ル ミュゼ ジェ エテ アンプレスィオネ', speech:'En entrant dans le musée, j\'ai été impressionné.', ja:'美術館に入ると、感動しました。', tip:'"en + 現在分詞" は「〜しながら・〜すると同時に」（ジェロンディフ）。"impressionné" は「感銘を受けた」。'},
-  {cat:'代名詞の活用', fr:'Je lui ai envoyé un message hier soir.', pron:'ジュ リュイ エ アンヴォワイェ アン メサージュ イエール ソワール', speech:'Je lui ai envoyé un message hier soir.', ja:'昨夜、彼（彼女）にメッセージを送りました。', tip:'"lui" は三人称単数の間接目的語代名詞（彼/彼女に）。直接目的語なら "le/la"。動詞の前に置く。'},
-  {cat:'代名詞の活用', fr:'Je n\'en ai pas besoin, merci.', pron:'ジュ ナン ネ パ ブゾワン メルスィ', speech:'Je n\'en ai pas besoin, merci.', ja:'それは必要ありません、ありがとう。', tip:'"en" は "de + 名詞" を受ける代名詞。"avoir besoin de" → "en" で置き換え。"Je n\'en veux pas" も同様。'},
-  {cat:'代名詞の活用', fr:'On y va ensemble ?', pron:'オン ニ ヴァ アンサンブル', speech:'On y va ensemble ?', ja:'一緒に行きましょうか？', tip:'"y" は "à + 場所" を受ける代名詞（そこに・そこへ）。"on" は「私たち・人々」の意。"y aller" は「行く」の日常的な表現。'},
-  {cat:'代名詞の活用', fr:'Je m\'en souviens très bien.', pron:'ジュ マン スヴィヤン トレ ビヤン', speech:'Je m\'en souviens très bien.', ja:'それをよく覚えています。', tip:'"se souvenir de" は「〜を覚えている」（再帰動詞）。"en" が "de + 名詞" を置き換え。再帰動詞 + en の組み合わせ。'},
-  {cat:'豊かな表現', fr:'Ce paysage m\'a coupé le souffle.', pron:'ス ペイザージュ マ クペ ル スフル', speech:'Ce paysage m\'a coupé le souffle.', ja:'その景色は息をのむほど美しかったです。', tip:'"couper le souffle" は「息を切らせる・息をのむ」（イディオム）。"paysage" は「風景・景色」（男性名詞）。'},
-  {cat:'豊かな表現', fr:'Je suis tombé(e) amoureux/amoureuse de cette ville.', pron:'ジュ スイ トンベ アムルー ドゥ セット ヴィル', speech:'Je suis tombé amoureux de cette ville.', ja:'この街に恋をしてしまいました。', tip:'"tomber amoureux/amoureuse de" は「〜に恋する」。"tomber" は移動動詞なので複合過去は "être" を使う。'},
-  {cat:'豊かな表現', fr:'Ça m\'a beaucoup touché(e).', pron:'サ マ ボクー トゥシェ', speech:'Ça m\'a beaucoup touché.', ja:'それはとても感動しました。', tip:'"toucher" は「触れる・感動させる」。"m\'a touché(e)" は複合過去で、主語（ça）が感動を与えた側。感情表現の定番。'},
-  {cat:'豊かな表現', fr:'Je n\'ai jamais rien vu d\'aussi beau.', pron:'ジュ ネ ジャメ リヤン ヴュ ドスィ ボ', speech:'Je n\'ai jamais rien vu d\'aussi beau.', ja:'こんなに美しいものを見たことがありません。', tip:'二重否定 "ne... jamais rien" は「決して何も〜ない」。"d\'aussi beau" は「これほど美しいもの」。強い感嘆の表現。'},
-  {cat:'豊かな表現', fr:'Tout compte fait, ce voyage valait vraiment la peine.', pron:'トゥ コント フェ ス ヴォワヤージュ ヴァレ ヴレマン ラ ペーヌ', speech:'Tout compte fait, ce voyage valait vraiment la peine.', ja:'すべてを考えると、この旅は本当に価値がありました。', tip:'"tout compte fait" は「すべてを考えると」（イディオム）。"valait" は "valoir" の半過去「価値があった」。'},
-  {cat:'文化・社会表現', fr:'En France, on dîne généralement vers vingt heures.', pron:'アン フランス オン ディーヌ ジェネラルマン ヴェール ヴァン ウール', speech:'En France, on dîne généralement vers vingt heures.', ja:'フランスでは一般的に20時頃夕食をとります。', tip:'"dîner" は「夕食をとる」。"généralement" は「一般的に」。"vers" は「〜頃」（おおよその時間）。'},
-  {cat:'文化・社会表現', fr:'La bise est une façon de se saluer en France.', pron:'ラ ビーズ エ ユン ファソン ドゥ ス サリュエ アン フランス', speech:'La bise est une façon de se saluer en France.', ja:'ビズ（頬のキス）はフランスでの挨拶の習慣です。', tip:'"la bise" は頬を合わせる挨拶。"façon de" は「〜する方法」。"se saluer" は再帰動詞「挨拶し合う」。'},
-  {cat:'文化・社会表現', fr:'Il est impoli d\'arriver en retard à un dîner.', pron:'イル エ アンポリ ダリヴェ アン ルタール ア アン ディネ', speech:'Il est impoli d\'arriver en retard à un dîner.', ja:'夕食に遅刻するのは失礼です。', tip:'"il est + 形容詞 + de + 不定詞" は「〜することは〜だ」（非人称構文）。"impoli" は「失礼な・無礼な」。'},
-  {cat:'文化・社会表現', fr:'Les Français apprécient beaucoup leur patrimoine culturel.', pron:'レ フランセ アプレスィ ボクー ルール パトリモワン キュルテュレル', speech:'Les Français apprécient beaucoup leur patrimoine culturel.', ja:'フランス人は自国の文化遺産をとても大切にしています。', tip:'"apprécier" は「評価する・大切にする」。"patrimoine" は「遺産・財産」。"culturel" は形容詞「文化的な」。'},
-  {cat:'仕事・学習', fr:'Je travaille dans le domaine de l\'informatique.', pron:'ジュ トラヴァイユ ダン ル ドメーヌ ドゥ ランフォルマティック', speech:'Je travaille dans le domaine de l\'informatique.', ja:'私はIT分野で働いています。', tip:'"domaine" は「分野・領域」。"informatique" は「情報技術・IT」（女性名詞）。自己紹介で仕事を説明する表現。'},
-  {cat:'仕事・学習', fr:'J\'apprends le français depuis six mois.', pron:'ジャプラン ル フランセ ドゥピュイ スィ モワ', speech:'J\'apprends le français depuis six mois.', ja:'6ヶ月前からフランス語を学んでいます。', tip:'"apprendre" は「学ぶ」（不規則動詞）。"depuis + 期間" + 現在形で「〜から（今も）続けている」。'},
-  {cat:'仕事・学習', fr:'Mon objectif est de parler couramment français.', pron:'モン オブジェクティフ エ ドゥ パルレ クラマン フランセ', speech:'Mon objectif est de parler couramment français.', ja:'私の目標は流暢にフランス語を話すことです。', tip:'"objectif" は「目標」（男性名詞）。"couramment" は「流暢に」（副詞）。"de + 不定詞" で目標の内容を表す。'},
-  {cat:'仕事・学習', fr:'Est-ce que vous pouvez corriger mes erreurs ?', pron:'エス ク ヴ プヴェ コリジェ メ ゼルール', speech:'Est-ce que vous pouvez corriger mes erreurs ?', ja:'間違いを直していただけますか？', tip:'"corriger" は「訂正する」。"erreur" は「間違い・エラー」（女性名詞）。言語学習で使う実用的な表現。'},
-  {cat:'仕事・学習', fr:'Je lis des livres en français pour m\'améliorer.', pron:'ジュ リ デ リーヴル アン フランセ プール マメリオレ', speech:'Je lis des livres en français pour m\'améliorer.', ja:'上達するためにフランス語の本を読んでいます。', tip:'"pour + 不定詞" は「〜するために」（目的）。"s\'améliorer" は再帰動詞「上達する」。"lire" の現在形 "lis"。'},
-  {cat:'ニュアンス表現', fr:'Honnêtement, je ne sais pas quoi dire.', pron:'オネットマン ジュ ヌ セ パ クワ ディール', speech:'Honnêtement, je ne sais pas quoi dire.', ja:'正直なところ、何を言えばいいか分かりません。', tip:'"honnêtement" は「正直に言うと」。"quoi dire" は "quoi" + 不定詞「何を言えばよいか」（間接疑問の簡略形）。'},
-  {cat:'ニュアンス表現', fr:'En fait, c\'est plus compliqué que ça.', pron:'アン フェ セ プリュ コンプリケ ク サ', speech:'En fait, c\'est plus compliqué que ça.', ja:'実は、それより複雑なのです。', tip:'"en fait" は「実は・実際には」。会話でよく使う。"compliqué" は「複雑な」。"que ça" は「それより」（比較）。'},
-  {cat:'ニュアンス表現', fr:'Ça dépend de la situation.', pron:'サ デパン ドゥ ラ スィテュアスィオン', speech:'Ça dépend de la situation.', ja:'状況によります。', tip:'"dépendre de" は「〜による・〜次第だ」。会話で非常によく使う表現。"situation" は「状況」（女性名詞）。'},
-  {cat:'ニュアンス表現', fr:'Dans un sens, vous avez raison.', pron:'ダン ザン サン ヴ ザヴェ レゾン', speech:'Dans un sens, vous avez raison.', ja:'ある意味では、あなたは正しいです。', tip:'"dans un sens" は「ある意味では」。"avoir raison" は「正しい」（動詞 "avoir" を使う！英語の "be right" と異なる）。'},
-  {cat:'ニュアンス表現', fr:'Je vois ce que vous voulez dire.', pron:'ジュ ヴォワ ス ク ヴ ヴレ ディール', speech:'Je vois ce que vous voulez dire.', ja:'おっしゃりたいことはわかります。', tip:'"je vois" は「見る」だが会話では「わかる・理解する」の意。"ce que vous voulez dire" は「あなたが言いたいこと」（関係代名詞 que）。'},
-  {cat:'ニュアンス表現', fr:'Ce n\'est pas grave, ne vous inquiétez pas.', pron:'ス ネ パ グラーヴ ヌ ヴ アンキエテ パ', speech:'Ce n\'est pas grave, ne vous inquiétez pas.', ja:'大丈夫ですよ、心配しないでください。', tip:'"ce n\'est pas grave" は「大したことない」。命令形の否定は "ne + 動詞（命令形）+ pas"。"s\'inquiéter" は「心配する」。'},
-  {cat:'芸術・エンタメ', fr:'Avez-vous des billets pour la soirée de demain ?', pron:'アヴェ ヴ デ ビエ プール ラ ソワレ ドゥ ドゥマン', speech:'Avez-vous des billets pour la soirée de demain ?', ja:'明日の夜のチケットはありますか？', tip:'"soirée" は「夜の催し・パーティー」（"soir" より時間的広がりを持つ）。コンサートや公演のチケット購入に使う。'},
-  {cat:'芸術・エンタメ', fr:'Je cherche un bon film français à regarder.', pron:'ジュ シェルシュ アン ボン フィルム フランセ ア ルガルデ', speech:'Je cherche un bon film français à regarder.', ja:'良いフランス映画を探しています。', tip:'"à + 不定詞" で「〜するための」（形容詞的用法）。"regarder" は「見る」。"film" は男性名詞なので "bon"（女性形 bonne）。'},
-  {cat:'芸術・エンタメ', fr:'La littérature française m\'intéresse beaucoup.', pron:'ラ リテラテュール フランセーズ マンテレス ボクー', speech:'La littérature française m\'intéresse beaucoup.', ja:'フランス文学はとても興味があります。', tip:'"intéresser" は「〜の興味を引く」。"m\'intéresse" の "m\'" は直接目的語「私を」。"française" は "français" の女性形（"littérature" が女性名詞）。'},
-  {cat:'芸術・エンタメ', fr:'Quel est votre auteur français préféré ?', pron:'ケル エ ヴォットル オトゥール フランセ プレフェレ', speech:'Quel est votre auteur français préféré ?', ja:'お気に入りのフランス人作家は誰ですか？', tip:'"auteur" は「作家・著者」（伝統的に男女とも男性名詞）。"préféré" は「お気に入りの」（"préférer" の過去分詞が形容詞化）。'},
-  {cat:'総合会話', fr:'Ce voyage a vraiment changé ma façon de voir les choses.', pron:'ス ヴォワヤージュ ア ヴレマン シャンジェ マ ファソン ドゥ ヴォワール レ ショーズ', speech:'Ce voyage a vraiment changé ma façon de voir les choses.', ja:'この旅行は本当に物事の見方を変えてくれました。', tip:'"façon de voir" は「物の見方」。"les choses" は「物事・こと」（複数）。旅行の感想を述べる豊かな表現。'},
-  {cat:'総合会話', fr:'J\'espère pouvoir revenir un jour.', pron:'ジェスペール プヴォワール ルヴニール アン ジュール', speech:'J\'espère pouvoir revenir un jour.', ja:'いつかまた戻ってこれることを願っています。', tip:'"espérer + 不定詞" は「〜することを望む」（同一主語の場合、接続法不要）。"un jour" は「いつか」。'},
-  {cat:'総合会話', fr:'Grâce à vous, j\'ai passé un séjour inoubliable.', pron:'グラース ア ヴ ジェ パセ アン セジュール イヌブリアーブル', speech:'Grâce à vous, j\'ai passé un séjour inoubliable.', ja:'おかげさまで、忘れられない滞在を過ごせました。', tip:'"grâce à" は「〜のおかげで」。"séjour" は「滞在・旅行期間」。"inoubliable" は「忘れられない」（"oublier（忘れる）" の否定形容詞）。'},
-  {cat:'総合会話', fr:'Permettez-moi de vous offrir quelque chose.', pron:'ペルメテ モワ ドゥ ヴ オフリール ケルク ショーズ', speech:'Permettez-moi de vous offrir quelque chose.', ja:'何かお礼をさせてください。', tip:'"Permettez-moi de + 不定詞" は「〜させてください」（命令形の丁寧表現）。"offrir" は「贈る・ごちそうする」。'},
-  {cat:'総合会話', fr:'Si vous venez au Japon, je serai ravi(e) de vous accueillir.', pron:'スィ ヴ ヴネ オ ジャポン ジュ スレ ラヴィ ドゥ ヴ ザクイイール', speech:'Si vous venez au Japon, je serai ravi de vous accueillir.', ja:'日本にいらっしゃることがあれば、ぜひお迎えします。', tip:'"ravi(e) de + 不定詞" は「〜できてとても嬉しい」。"accueillir" は「迎える・もてなす」（不規則動詞）。'},
-  {cat:'総合会話', fr:'Je garderai un excellent souvenir de ce voyage.', pron:'ジュ ガルドレ アン エクセラン スヴニール ドゥ ス ヴォワヤージュ', speech:'Je garderai un excellent souvenir de ce voyage.', ja:'この旅の素晴らしい思い出をずっと大切にします。', tip:'"garder" は「保つ・大切にする」。"souvenir" は「思い出・お土産」（男性名詞）。"garderai" は単純未来形。'},
-  {cat:'社交・感情', fr:'Ça fait longtemps qu\'on ne s\'est pas vus !', pron:'サ フェ ロンタン コン ヌ ス エ パ ヴュ', speech:'Ça fait longtemps qu\'on ne s\'est pas vus !', ja:'久しぶりですね！', tip:'"ça fait longtemps que" は「〜してから久しい」。"se voir" の複合過去（再帰動詞）。日常会話でよく使うイディオム。'},
-  {cat:'社交・感情', fr:'Je vous souhaite un bon voyage !', pron:'ジュ ヴ スウェット アン ボン ヴォワヤージュ', speech:'Je vous souhaite un bon voyage !', ja:'良い旅を！', tip:'"souhaiter" は「願う・望む」。"bon voyage" はフランス語のまま多くの言語で使われている表現。お見送りの言葉。'},
-  {cat:'社交・感情', fr:'Je suis de tout cœur avec vous.', pron:'ジュ スイ ドゥ トゥ クール アヴェック ヴ', speech:'Je suis de tout cœur avec vous.', ja:'心から応援しています。', tip:'"de tout cœur" は「心から」（イディオム）。"cœur" は「心・心臓」（男性名詞）。"œ" は特殊な文字（o + e の合字）。'},
-  {cat:'社交・感情', fr:'Félicitations ! Vous l\'avez bien mérité.', pron:'フェリスィタスィオン ヴ ラヴェ ビヤン メリテ', speech:'Félicitations ! Vous l\'avez bien mérité.', ja:'おめでとうございます！よくやりました。', tip:'"félicitations" は「おめでとう」（常に複数形）。"mériter" は「値する・ふさわしい」。"bien mérité" で「当然の報い」。'},
-  {cat:'社交・感情', fr:'Je vous présente ma collègue, Sophie.', pron:'ジュ ヴ プレザント マ コレーグ ソフィー', speech:'Je vous présente ma collègue, Sophie.', ja:'同僚のソフィーを紹介します。', tip:'"présenter" は「紹介する・プレゼンする」。"collègue" は男女同形（男性も女性も同じ綴り）。'},
-  {cat:'社交・感情', fr:'Avec plaisir ! J\'en serais ravi(e).', pron:'アヴェック プレジール ジャン スレ ラヴィ', speech:'Avec plaisir ! J\'en serais ravi.', ja:'喜んで！とても嬉しいです。', tip:'"avec plaisir" は「喜んで」。"j\'en serais ravi(e)" は条件法で丁寧に喜びを表す。"en" は前述の事柄を受ける。'},
-  {cat:'議論・説明', fr:'Pour résumer, il y a trois points importants.', pron:'プール レジュメ イリヤ トロワ ポワン アンポルタン', speech:'Pour résumer, il y a trois points importants.', ja:'まとめると、3つの重要なポイントがあります。', tip:'"pour résumer" は「要約すると」。"point" は「点・ポイント」（男性名詞）。プレゼンや説明でよく使う構文。'},
-  {cat:'議論・説明', fr:'C\'est-à-dire que je ne suis pas disponible demain.', pron:'セ タ ディール ク ジュ ヌ スイ パ ディスポニブル ドゥマン', speech:'C\'est-à-dire que je ne suis pas disponible demain.', ja:'つまり、明日は都合がつかないということです。', tip:'"c\'est-à-dire" は「つまり・すなわち」（英語の "that is to say"）。説明や言い換えに使う。'},
-  {cat:'議論・説明', fr:'D\'une part... d\'autre part...', pron:'デュン パール ドートル パール', speech:'D\'une part, d\'autre part.', ja:'一方では…、他方では…', tip:'"d\'une part... d\'autre part" は「一方では〜、他方では〜」（対比の接続表現）。論理的な説明や意見述べに使う。'},
-  {cat:'議論・説明', fr:'Il convient de mentionner que les règles ont changé.', pron:'イル コンヴィヤン ドゥ マンスィオネ ク レ レーグル オン シャンジェ', speech:'Il convient de mentionner que les règles ont changé.', ja:'規則が変わったことに言及する必要があります。', tip:'"il convient de + 不定詞" は「〜することが適切だ」（フォーマルな非人称表現）。"mentionner" は「言及する」。'},
-  {cat:'自然・環境', fr:'Il est important de protéger l\'environnement.', pron:'イル エ アンポルタン ドゥ プロテジェ ランヴィロンマン', speech:'Il est important de protéger l\'environnement.', ja:'環境を守ることは大切です。', tip:'"protéger" は「守る・保護する」（語幹変化動詞）。"environnement" は「環境」（男性名詞）。'},
-  {cat:'自然・環境', fr:'La vue sur les Alpes est époustouflante.', pron:'ラ ヴュ シュール レ ザルプ エ エプストゥフランテ', speech:'La vue sur les Alpes est époustouflante.', ja:'アルプスの眺めは息をのむほど素晴らしいです。', tip:'"époustouflant(e)" は「驚くほど素晴らしい」（口語的に強い表現）。"vue sur" は「〜の眺め」。'},
-  {cat:'自然・環境', fr:'Je préfère la campagne à la ville.', pron:'ジュ プレフェール ラ カンパーニュ ア ラ ヴィル', speech:'Je préfère la campagne à la ville.', ja:'都会より田舎の方が好きです。', tip:'"préférer A à B" は「BよりAを好む」。"campagne" は「田舎・農村」（女性名詞）。'},
-  {cat:'接続法', fr:'Il est temps que nous partions.', pron:'イル エ タン ク ヌ パルティオン', speech:'Il est temps que nous partions.', ja:'そろそろ出発する時間です。', tip:'"il est temps que + 接続法" は「〜する時間だ」。"partions" は "partir" の接続法一人称複数。時間の切迫を丁寧に伝える。'},
-  {cat:'接続法', fr:'Je veux que tu saches la vérité.', pron:'ジュ ヴ ク テュ サッシュ ラ ヴェリテ', speech:'Je veux que tu saches la vérité.', ja:'あなたに真実を知ってほしいです。', tip:'"vouloir que + 接続法" は「〜してほしい」（意志・欲求）。"saches" は "savoir" の接続法（不規則）。'},
-  {cat:'接続法', fr:'À moins qu\'il ne pleuve, on sortira.', pron:'ア モワン キル ヌ プルーヴ オン ソルティラ', speech:'À moins qu\'il ne pleuve, on sortira.', ja:'雨が降らなければ、外出します。', tip:'"à moins que + 接続法" は「〜でない限り」。"ne" は意味を持たない虚辞（否定ではない）。'},
-  {cat:'接続法', fr:'Bien qu\'elle soit petite, elle est très courageuse.', pron:'ビヤン ケル ソワ プティット エル エ トレ クラジューズ', speech:'Bien qu\'elle soit petite, elle est très courageuse.', ja:'小さいけれど、彼女はとても勇気があります。', tip:'"bien que + 接続法" の逆接。"courageuse" は "courageux" の女性形。形容詞の性一致。'},
-  {cat:'受動態・分詞', fr:'La décision a été prise à l\'unanimité.', pron:'ラ デスィスィオン ア エテ プリーズ ア リュナニミテ', speech:'La décision a été prise à l\'unanimité.', ja:'決定は全会一致で行われました。', tip:'"prise" は "prendre" の女性過去分詞（"décision" が女性名詞のため一致）。"à l\'unanimité" は「全会一致で」。'},
-  {cat:'受動態・分詞', fr:'Ce roman a été traduit en vingt langues.', pron:'ス ロマン ア エテ トラデュイ アン ヴァン ラング', speech:'Ce roman a été traduit en vingt langues.', ja:'この小説は20の言語に翻訳されました。', tip:'"traduit" は "traduire" の過去分詞。"langue" は「言語」（女性名詞）。"en + 言語数" は「〜の言語に」。'},
-  {cat:'代名詞の活用', fr:'Dis-le-lui toi-même.', pron:'ディ ル ルイ トワ メーム', speech:'Dis-le-lui toi-même.', ja:'あなた自身で彼（女）に言いなさい。', tip:'命令形での代名詞の順序: 動詞-直接目的語-間接目的語。"toi-même" は「あなた自身」（強調形）。'},
-  {cat:'代名詞の活用', fr:'Je les leur ai tous envoyés.', pron:'ジュ レ ルール エ トゥ ザンヴォワイェ', speech:'Je les leur ai tous envoyés.', ja:'それらをすべて彼らに送りました。', tip:'"les" (直接目的語)+ "leur" (間接目的語)の語順。複数なので過去分詞 "envoyés" も複数形に一致。'},
-  {cat:'豊かな表現', fr:'La France m\'a conquis le cœur dès le premier jour.', pron:'ラ フランス マ コンキ ル クール デ ル プルミエ ジュール', speech:'La France m\'a conquis le cœur dès le premier jour.', ja:'フランスは初日から私の心を虜にしました。', tip:'"conquérir le cœur" は「心を征服する・虜にする」（イディオム）。"dès" は「〜から（最初の瞬間から）」。'},
-  {cat:'豊かな表現', fr:'C\'est une expérience qui restera gravée dans ma mémoire.', pron:'セ ユン エクスペリアンス キ レストラ グラヴェ ダン マ メモワール', speech:'C\'est une expérience qui restera gravée dans ma mémoire.', ja:'それは記憶に刻み込まれる体験です。', tip:'"gravé(e)" は「刻まれた」（"graver" の過去分詞）。"restera" は単純未来。"mémoire" は「記憶」（女性名詞）。'},
-  {cat:'豊かな表現', fr:'Paris ne s\'est pas fait en un jour.', pron:'パリ ヌ セ パ フェ アン ザン ジュール', speech:'Paris ne s\'est pas fait en un jour.', ja:'ローマは一日にして成らず（パリ版）。', tip:'フランス語の慣用句（"Rome ne s\'est pas faite en un jour" の変形）。"se faire" は「作られる」。'},
-  {cat:'豊かな表現', fr:'Chaque chose en son temps.', pron:'シャーク ショーズ アン ソン タン', speech:'Chaque chose en son temps.', ja:'物事にはそれぞれの時機がある。（急いては事を仕損じる）', tip:'フランスのことわざ。"chaque" は「それぞれの」（形容詞）。"en son temps" は「その時期に」。'},
-  {cat:'文化・社会表現', fr:'Il ne faut pas juger un livre à sa couverture.', pron:'イル ヌ フォ パ ジュジェ アン リーヴル ア サ クヴェルテュール', speech:'Il ne faut pas juger un livre à sa couverture.', ja:'本を表紙で判断してはいけない。（外見で判断するな）', tip:'フランス語のことわざ。英語の "Don\'t judge a book by its cover" に相当。"couverture" は「表紙・カバー」。'},
-  {cat:'文化・社会表現', fr:'Mieux vaut prévenir que guérir.', pron:'ミュ ヴォ プレヴニール ク ゲリール', speech:'Mieux vaut prévenir que guérir.', ja:'治療するより予防する方がよい。（備えあれば憂いなし）', tip:'フランスのことわざ。"mieux vaut + 不定詞" は「〜する方がよい」。"prévenir" は「予防する」、"guérir" は「治す」。'},
-  {cat:'仕事・学習', fr:'Je suis en train de me perfectionner en français.', pron:'ジュ スイ アン トラン ドゥ ム ペルフェクスィオネ アン フランセ', speech:'Je suis en train de me perfectionner en français.', ja:'今フランス語の完成度を高めているところです。', tip:'"être en train de + 不定詞" は「ちょうど〜しているところだ」（進行中を強調）。"se perfectionner" は「上達する」。'},
-  {cat:'仕事・学習', fr:'Ce stage m\'a beaucoup apporté sur le plan professionnel.', pron:'ス スタージュ マ ボクー アポルテ シュール ル プラン プロフェスィオネル', speech:'Ce stage m\'a beaucoup apporté sur le plan professionnel.', ja:'このインターンシップは職業的に多くをもたらしてくれました。', tip:'"stage" は「インターンシップ・研修」（男性名詞）。"apporter" は「もたらす」。"sur le plan de" は「〜の面では」。'},
-  {cat:'ニュアンス表現', fr:'Il y a quelque chose qui ne tourne pas rond.', pron:'イリヤ ケルク ショーズ キ ヌ トゥールヌ パ ロン', speech:'Il y a quelque chose qui ne tourne pas rond.', ja:'何かがうまくいっていません。', tip:'"ne pas tourner rond" は「うまく回らない・おかしい」（口語的イディオム）。機械や状況がおかしいときに使う。'},
-  {cat:'ニュアンス表現', fr:'Ça ne m\'étonne pas du tout.', pron:'サ ヌ メトン パ デュ トゥ', speech:'Ça ne m\'étonne pas du tout.', ja:'それは全く驚きません。（そうだろうと思っていました）', tip:'"étonner" は「驚かせる」。"ne... pas du tout" は「全く〜ない」（強い否定）。"ça ne m\'étonne pas" で「驚かない」。'},
-  {cat:'ニュアンス表現', fr:'Je n\'y suis pour rien.', pron:'ジュ ニ スイ プール リヤン', speech:'Je n\'y suis pour rien.', ja:'私には何も関係ありません。（私のせいではありません）', tip:'"n\'y être pour rien" は「〜に全く関係ない」（イディオム）。"y" は前述の状況を受ける。'},
-  {cat:'芸術・エンタメ', fr:'Cette exposition m\'a vraiment ouvert les yeux.', pron:'セット エクスポズィスィオン マ ヴレマン ウーヴェール レ ズィユ', speech:'Cette exposition m\'a vraiment ouvert les yeux.', ja:'この展覧会は本当に目を開かせてくれました。', tip:'"ouvrir les yeux" は「目を開かせる・気づかせる」（イディオム）。"exposition" は「展覧会・展示」。'},
-  {cat:'芸術・エンタメ', fr:'J\'ai été touché(e) par la profondeur de ce film.', pron:'ジェ エテ トゥシェ パール ラ プロフォンドゥール ドゥ ス フィルム', speech:'J\'ai été touché par la profondeur de ce film.', ja:'この映画の深さに感動しました。', tip:'"profondeur" は「深さ・深み」（女性名詞）。"être touché par" は「〜に感動する」（受動表現）。'},
-  {cat:'総合会話', fr:'Cette expérience a renforcé mon désir d\'apprendre le français.', pron:'セット エクスペリアンス ア ランフォルセ モン デジール ダプランドル ル フランセ', speech:'Cette expérience a renforcé mon désir d\'apprendre le français.', ja:'この体験はフランス語を学びたいという気持ちを強くしました。', tip:'"renforcer" は「強化する」。"désir de + 不定詞" は「〜したいという欲求」。"d\'apprendre" は "de + apprendre"。'},
-  {cat:'総合会話', fr:'Je ne regrette pas d\'être venu(e) ici.', pron:'ジュ ヌ ルグレット パ デットル ヴニュ イスィ', speech:'Je ne regrette pas d\'être venu ici.', ja:'ここに来たことを後悔していません。', tip:'"regretter de + 不定詞" は「〜したことを後悔する」（否定で「後悔しない」）。"d\'être venu" は完了不定詞。'},
-  {cat:'社交・感情', fr:'Je vous souhaite tout le bonheur du monde.', pron:'ジュ ヴ スウェット トゥ ル ボヌール デュ モンド', speech:'Je vous souhaite tout le bonheur du monde.', ja:'世界中の幸せをお祈りしています。', tip:'"tout le bonheur du monde" は「世界中の幸福」。"souhaiter" は「願う・祈る」。誕生日や特別なときに使う。'},
-  {cat:'社交・感情', fr:'On s\'est bien amusé(e)s ensemble, n\'est-ce pas ?', pron:'オン セ ビヤン ナミュゼ アンサンブル ネス パ', speech:'On s\'est bien amusé ensemble, n\'est-ce pas ?', ja:'一緒に楽しみましたね？', tip:'"s\'amuser" は「楽しむ」（再帰動詞）。"n\'est-ce pas ?" は「〜ですよね？」（付加疑問文）。会話の締めくくりに使う。'},
-  {cat:'議論・説明', fr:'En d\'autres termes, la qualité prime sur la quantité.', pron:'アン ドートル テルム ラ カリテ プリーム シュール ラ カンティテ', speech:'En d\'autres termes, la qualité prime sur la quantité.', ja:'言い換えれば、質は量に勝ります。', tip:'"en d\'autres termes" は「言い換えれば」。"primer sur" は「〜より優先する」（フォーマル）。'},
-  {cat:'議論・説明', fr:'Prenons l\'exemple de Paris pour illustrer ce point.', pron:'プルノン レグザンプル ドゥ パリ プール イリュストレ ス ポワン', speech:'Prenons l\'exemple de Paris pour illustrer ce point.', ja:'この点を説明するためにパリの例を挙げてみましょう。', tip:'"prenons" は "prendre" の命令形一人称複数「〜しましょう」。"illustrer" は「例示する・説明する」。'},
-  {cat:'自然・環境', fr:'Le changement climatique affecte aussi la France.', pron:'ル シャンジュマン クリマティック アフェクト オスィ ラ フランス', speech:'Le changement climatique affecte aussi la France.', ja:'気候変動はフランスにも影響を与えています。', tip:'"changement climatique" は「気候変動」。"affecter" は「影響する」。現代の重要テーマを語る表現。'},
-  {cat:'自然・環境', fr:'Je fais attention à réduire mes déchets.', pron:'ジュ フェ アタンスィオン ア レデュイール メ デシェ', speech:'Je fais attention à réduire mes déchets.', ja:'ゴミを減らすよう心がけています。', tip:'"faire attention à + 不定詞" は「〜するよう気をつける」。"déchets" は「ゴミ・廃棄物」（男性複数名詞）。'},
-  {cat:'自然・環境', fr:'Nous avons la responsabilité de protéger la nature.', pron:'ヌ ザヴォン ラ レスポンサビリテ ドゥ プロテジェ ラ ナテュール', speech:'Nous avons la responsabilité de protéger la nature.', ja:'私たちには自然を守る責任があります。', tip:'"responsabilité" は「責任」（女性名詞）。"avoir la responsabilité de" は「〜する責任がある」。'},
-  {cat:'接続法', fr:'Pourvu que tout se passe bien !', pron:'プルヴュ ク トゥ ス パス ビヤン', speech:'Pourvu que tout se passe bien !', ja:'すべてうまくいくといいですね！', tip:'"pourvu que + 接続法" は強い願望「〜であればよい」。"se passer" は「起こる・進む」。'},
-  {cat:'豊かな表現', fr:'On n\'a qu\'une seule vie, autant en profiter.', pron:'オン ナ キュン スール ヴィ オタン アン プロフィテ', speech:'On n\'a qu\'une seule vie, autant en profiter.', ja:'人生は一度きり、思いきり楽しみましょう。', tip:'"on n\'a qu\'une seule vie" は「人生は一度きり」。"autant + 不定詞" は「〜した方がよい」（控えめな提案）。'},
-  {cat:'文化・社会表現', fr:'La gastronomie française est inscrite au patrimoine de l\'UNESCO.', pron:'ラ ガストロノミ フランセーズ エ アンスクリット オ パトリモワン ドゥ リュネスコ', speech:'La gastronomie française est inscrite au patrimoine de l\'UNESCO.', ja:'フランスの食文化はユネスコの遺産に登録されています。', tip:'"inscrit(e)" は「登録された」（受動態）。"patrimoine" は「遺産」。フランス食文化はユネスコ無形文化遺産（2010年）。'},
-  {cat:'仕事・学習', fr:'La pratique régulière est la clé du succès.', pron:'ラ プラティック レギュリエール エ ラ クレ デュ シュクセ', speech:'La pratique régulière est la clé du succès.', ja:'定期的な練習が成功の鍵です。', tip:'"régulier/régulière" は「定期的な」（形容詞）。"la clé de" は「〜の鍵」。"succès" は「成功」（男性名詞）。'},
-  {cat:'ニュアンス表現', fr:'C\'est une question de point de vue.', pron:'セ ユン ケスティオン ドゥ ポワン ドゥ ヴュ', speech:'C\'est une question de point de vue.', ja:'それは見方の問題です。', tip:'"point de vue" は「見地・視点」（男性名詞）。"une question de" は「〜の問題」。意見の相違を穏やかに表現。'},
-  {cat:'芸術・エンタメ', fr:'Le théâtre est un miroir de la société.', pron:'ル テアートル エ アン ミロワール ドゥ ラ ソスィエテ', speech:'Le théâtre est un miroir de la société.', ja:'演劇は社会の鏡です。', tip:'"miroir" は「鏡」（男性名詞）。"théâtre" は「劇場・演劇」。フランスでは演劇・映画が非常に重視される文化がある。'},
-  {cat:'総合会話', fr:'Tout ce qui brille n\'est pas or.', pron:'トゥ ス キ ブリーユ ネ パ ゾール', speech:'Tout ce qui brille n\'est pas or.', ja:'輝くものすべてが金ではない。（外見にだまされるな）', tip:'フランスのことわざ（"All that glitters is not gold" に相当）。"briller" は「輝く」。"or" は「金・黄金」。'},
-  {cat:'社交・感情', fr:'Je suis de tout cœur avec vous dans cette épreuve.', pron:'ジュ スイ ドゥ トゥ クール アヴェック ヴ ダン セット エプルーヴ', speech:'Je suis de tout cœur avec vous dans cette épreuve.', ja:'この試練の中で心からあなたを支持しています。', tip:'"épreuve" は「試練・テスト」（女性名詞）。"de tout cœur" は「心から」（イディオム）。辛いときの支持表現。'},
-  {cat:'議論・説明', fr:'Il convient de nuancer cette affirmation.', pron:'イル コンヴィヤン ドゥ ニュアンセ セット アフィルマスィオン', speech:'Il convient de nuancer cette affirmation.', ja:'この主張を少し和らげる必要があります。', tip:'"nuancer" は「ニュアンスをつける・和らげる」（英語由来）。"affirmation" は「主張・断言」。知的な議論での表現。'},
-  {cat:'自然・環境', fr:'Le mistral est un vent fort qui souffle dans le sud de la France.', pron:'ル ミストラル エ アン ヴァン フォール キ スフル ダン ル シュッド ドゥ ラ フランス', speech:'Le mistral est un vent fort qui souffle dans le sud de la France.', ja:'ミストラルはフランス南部に吹く強い風です。', tip:'"mistral" はプロヴァンス地方の有名な北風。"souffler" は「吹く」。フランスの地域的特徴を語る表現。'},
-  {cat:'接続法', fr:'Je suis surpris(e) qu\'elle n\'ait pas encore répondu.', pron:'ジュ スイ シュルプリ ケル ネ パ アンコール レポンデュ', speech:'Je suis surpris qu\'elle n\'ait pas encore répondu.', ja:'彼女がまだ返事をしていないことに驚いています。', tip:'感情形容詞 "surpris" の後は接続法。"n\'ait pas répondu" は接続法過去（過去の出来事への感情）。'},
-  {cat:'豊かな表現', fr:'Les voyages forment la jeunesse.', pron:'レ ヴォワヤージュ フォルム ラ ジュネス', speech:'Les voyages forment la jeunesse.', ja:'旅は若者を育てる。（旅は百の学問に値する）', tip:'フランスの格言（モンテーニュに由来）。"former" は「形成する・育てる」。"jeunesse" は「若さ・若者」（女性名詞）。'},
-  {cat:'総合会話', fr:'Au fond, c\'est l\'expérience humaine qui compte.', pron:'オ フォン セ レクスペリアンス ユメーヌ キ コント', speech:'Au fond, c\'est l\'expérience humaine qui compte.', ja:'つまるところ、大切なのは人間的な体験です。', tip:'"au fond" は「つまるところ・根本的には」。"humain(e)" は「人間的な」。"ce qui compte" は「大切なこと」（関係代名詞の強調構文）。'},
-  {cat:'社交・感情', fr:'Je vous garderai toujours dans mon cœur.', pron:'ジュ ヴ ガルドレ トゥジュール ダン モン クール', speech:'Je vous garderai toujours dans mon cœur.', ja:'いつも心の中に大切にします。', tip:'"garder dans son cœur" は「心に大切にしまう」（詩的表現）。"toujours" は「いつも・常に」。別れの言葉として使える。'},
-  {cat:'ニュアンス表現', fr:'On ne peut pas plaire à tout le monde.', pron:'オン ヌ プ パ プレール ア トゥ ル モンド', speech:'On ne peut pas plaire à tout le monde.', ja:'誰もを喜ばせることはできない。（十人十色）', tip:'"plaire à" は「〜を喜ばせる・気に入られる」。"tout le monde" は「全員」。失敗を気にしすぎないときの慰めの言葉。'},
+  {cat:'接続法', en:'Il faut que vous fassiez attention.', speech:'Il faut que vous fassiez attention.', ja:'気をつけなければなりません。', tip:'【発音】イル フォ ク ヴ ファスィエ アタンスィオン｜"il faut que + 接続法" は「〜しなければならない」。"fassiez" は "faire" の接続法（活用が不規則）。"faire attention" は「気をつける」。'},
+  {cat:'接続法', en:'Je suis content(e) que vous soyez là.', speech:'Je suis content que vous soyez là.', ja:'あなたがここにいてくれて嬉しいです。', tip:'【発音】ジュ スイ コンタン ク ヴ ソワイエ ラ｜感情を表す動詞の後は接続法。"soyez" は "être" の接続法二人称複数形。"là" は「そこに・ここに」。'},
+  {cat:'接続法', en:'Je doute qu\'il vienne ce soir.', speech:'Je doute qu\'il vienne ce soir.', ja:'今夜彼が来るとは思いません。', tip:'【発音】ジュ ドゥット キル ヴィエンヌ ス ソワール｜"douter que + 接続法" は「〜だとは思わない」。"vienne" は "venir" の接続法（不規則）。疑念・不確実さの後は接続法。'},
+  {cat:'接続法', en:'Je cherche quelqu\'un qui puisse m\'aider.', speech:'Je cherche quelqu\'un qui puisse m\'aider.', ja:'手伝ってくれる人を探しています。', tip:'【発音】ジュ シェルシュ ケルカン キ ピュイス メデ｜先行詞が不定・仮定の場合、関係節に接続法を使う。"puisse" は "pouvoir" の接続法。"quelqu\'un" は「誰か」。'},
+  {cat:'接続法', en:'Quoiqu\'il soit tard, je vais continuer.', speech:'Quoiqu\'il soit tard, je vais continuer.', ja:'遅くても、続けます。', tip:'【発音】クワキル ソワ タール ジュ ヴェ コンティニュエ｜"quoique + 接続法" は「〜にもかかわらず」。"bien que" と同義。"soit" は "être" の接続法三人称単数。'},
+  {cat:'受動態・分詞', en:'Ce tableau a été peint par Monet.', speech:'Ce tableau a été peint par Monet.', ja:'この絵はモネによって描かれました。', tip:'【発音】ス タブロー ア エテ パン パール モネ｜受動態は "être + 過去分詞 + par"。"peint" は "peindre（描く）" の過去分詞。フランス語の受動態は英語より少し使用頻度が低い。'},
+  {cat:'受動態・分詞', en:'Les billets seront envoyés par email.', speech:'Les billets seront envoyés par email.', ja:'チケットはメールで送られます。', tip:'【発音】レ ビエ スロン ザンヴォワイェ パール イーメール｜未来の受動態 "seront + 過去分詞"。"envoyés" は "envoyer" の過去分詞（複数形に一致）。'},
+  {cat:'受動態・分詞', en:'En entrant dans le musée, j\'ai été impressionné(e).', speech:'En entrant dans le musée, j\'ai été impressionné.', ja:'美術館に入ると、感動しました。', tip:'【発音】アン アントラン ダン ル ミュゼ ジェ エテ アンプレスィオネ｜"en + 現在分詞" は「〜しながら・〜すると同時に」（ジェロンディフ）。"impressionné" は「感銘を受けた」。'},
+  {cat:'代名詞の活用', en:'Je lui ai envoyé un message hier soir.', speech:'Je lui ai envoyé un message hier soir.', ja:'昨夜、彼（彼女）にメッセージを送りました。', tip:'【発音】ジュ リュイ エ アンヴォワイェ アン メサージュ イエール ソワール｜"lui" は三人称単数の間接目的語代名詞（彼/彼女に）。直接目的語なら "le/la"。動詞の前に置く。'},
+  {cat:'代名詞の活用', en:'Je n\'en ai pas besoin, merci.', speech:'Je n\'en ai pas besoin, merci.', ja:'それは必要ありません、ありがとう。', tip:'【発音】ジュ ナン ネ パ ブゾワン メルスィ｜"en" は "de + 名詞" を受ける代名詞。"avoir besoin de" → "en" で置き換え。"Je n\'en veux pas" も同様。'},
+  {cat:'代名詞の活用', en:'On y va ensemble ?', speech:'On y va ensemble ?', ja:'一緒に行きましょうか？', tip:'【発音】オン ニ ヴァ アンサンブル｜"y" は "à + 場所" を受ける代名詞（そこに・そこへ）。"on" は「私たち・人々」の意。"y aller" は「行く」の日常的な表現。'},
+  {cat:'代名詞の活用', en:'Je m\'en souviens très bien.', speech:'Je m\'en souviens très bien.', ja:'それをよく覚えています。', tip:'【発音】ジュ マン スヴィヤン トレ ビヤン｜"se souvenir de" は「〜を覚えている」（再帰動詞）。"en" が "de + 名詞" を置き換え。再帰動詞 + en の組み合わせ。'},
+  {cat:'豊かな表現', en:'Ce paysage m\'a coupé le souffle.', speech:'Ce paysage m\'a coupé le souffle.', ja:'その景色は息をのむほど美しかったです。', tip:'【発音】ス ペイザージュ マ クペ ル スフル｜"couper le souffle" は「息を切らせる・息をのむ」（イディオム）。"paysage" は「風景・景色」（男性名詞）。'},
+  {cat:'豊かな表現', en:'Je suis tombé(e) amoureux/amoureuse de cette ville.', speech:'Je suis tombé amoureux de cette ville.', ja:'この街に恋をしてしまいました。', tip:'【発音】ジュ スイ トンベ アムルー ドゥ セット ヴィル｜"tomber amoureux/amoureuse de" は「〜に恋する」。"tomber" は移動動詞なので複合過去は "être" を使う。'},
+  {cat:'豊かな表現', en:'Ça m\'a beaucoup touché(e).', speech:'Ça m\'a beaucoup touché.', ja:'それはとても感動しました。', tip:'【発音】サ マ ボクー トゥシェ｜"toucher" は「触れる・感動させる」。"m\'a touché(e)" は複合過去で、主語（ça）が感動を与えた側。感情表現の定番。'},
+  {cat:'豊かな表現', en:'Je n\'ai jamais rien vu d\'aussi beau.', speech:'Je n\'ai jamais rien vu d\'aussi beau.', ja:'こんなに美しいものを見たことがありません。', tip:'【発音】ジュ ネ ジャメ リヤン ヴュ ドスィ ボ｜二重否定 "ne... jamais rien" は「決して何も〜ない」。"d\'aussi beau" は「これほど美しいもの」。強い感嘆の表現。'},
+  {cat:'豊かな表現', en:'Tout compte fait, ce voyage valait vraiment la peine.', speech:'Tout compte fait, ce voyage valait vraiment la peine.', ja:'すべてを考えると、この旅は本当に価値がありました。', tip:'【発音】トゥ コント フェ ス ヴォワヤージュ ヴァレ ヴレマン ラ ペーヌ｜"tout compte fait" は「すべてを考えると」（イディオム）。"valait" は "valoir" の半過去「価値があった」。'},
+  {cat:'文化・社会表現', en:'En France, on dîne généralement vers vingt heures.', speech:'En France, on dîne généralement vers vingt heures.', ja:'フランスでは一般的に20時頃夕食をとります。', tip:'【発音】アン フランス オン ディーヌ ジェネラルマン ヴェール ヴァン ウール｜"dîner" は「夕食をとる」。"généralement" は「一般的に」。"vers" は「〜頃」（おおよその時間）。'},
+  {cat:'文化・社会表現', en:'La bise est une façon de se saluer en France.', speech:'La bise est une façon de se saluer en France.', ja:'ビズ（頬のキス）はフランスでの挨拶の習慣です。', tip:'【発音】ラ ビーズ エ ユン ファソン ドゥ ス サリュエ アン フランス｜"la bise" は頬を合わせる挨拶。"façon de" は「〜する方法」。"se saluer" は再帰動詞「挨拶し合う」。'},
+  {cat:'文化・社会表現', en:'Il est impoli d\'arriver en retard à un dîner.', speech:'Il est impoli d\'arriver en retard à un dîner.', ja:'夕食に遅刻するのは失礼です。', tip:'【発音】イル エ アンポリ ダリヴェ アン ルタール ア アン ディネ｜"il est + 形容詞 + de + 不定詞" は「〜することは〜だ」（非人称構文）。"impoli" は「失礼な・無礼な」。'},
+  {cat:'文化・社会表現', en:'Les Français apprécient beaucoup leur patrimoine culturel.', speech:'Les Français apprécient beaucoup leur patrimoine culturel.', ja:'フランス人は自国の文化遺産をとても大切にしています。', tip:'【発音】レ フランセ アプレスィ ボクー ルール パトリモワン キュルテュレル｜"apprécier" は「評価する・大切にする」。"patrimoine" は「遺産・財産」。"culturel" は形容詞「文化的な」。'},
+  {cat:'仕事・学習', en:'Je travaille dans le domaine de l\'informatique.', speech:'Je travaille dans le domaine de l\'informatique.', ja:'私はIT分野で働いています。', tip:'【発音】ジュ トラヴァイユ ダン ル ドメーヌ ドゥ ランフォルマティック｜"domaine" は「分野・領域」。"informatique" は「情報技術・IT」（女性名詞）。自己紹介で仕事を説明する表現。'},
+  {cat:'仕事・学習', en:'J\'apprends le français depuis six mois.', speech:'J\'apprends le français depuis six mois.', ja:'6ヶ月前からフランス語を学んでいます。', tip:'【発音】ジャプラン ル フランセ ドゥピュイ スィ モワ｜"apprendre" は「学ぶ」（不規則動詞）。"depuis + 期間" + 現在形で「〜から（今も）続けている」。'},
+  {cat:'仕事・学習', en:'Mon objectif est de parler couramment français.', speech:'Mon objectif est de parler couramment français.', ja:'私の目標は流暢にフランス語を話すことです。', tip:'【発音】モン オブジェクティフ エ ドゥ パルレ クラマン フランセ｜"objectif" は「目標」（男性名詞）。"couramment" は「流暢に」（副詞）。"de + 不定詞" で目標の内容を表す。'},
+  {cat:'仕事・学習', en:'Est-ce que vous pouvez corriger mes erreurs ?', speech:'Est-ce que vous pouvez corriger mes erreurs ?', ja:'間違いを直していただけますか？', tip:'【発音】エス ク ヴ プヴェ コリジェ メ ゼルール｜"corriger" は「訂正する」。"erreur" は「間違い・エラー」（女性名詞）。言語学習で使う実用的な表現。'},
+  {cat:'仕事・学習', en:'Je lis des livres en français pour m\'améliorer.', speech:'Je lis des livres en français pour m\'améliorer.', ja:'上達するためにフランス語の本を読んでいます。', tip:'【発音】ジュ リ デ リーヴル アン フランセ プール マメリオレ｜"pour + 不定詞" は「〜するために」（目的）。"s\'améliorer" は再帰動詞「上達する」。"lire" の現在形 "lis"。'},
+  {cat:'ニュアンス表現', en:'Honnêtement, je ne sais pas quoi dire.', speech:'Honnêtement, je ne sais pas quoi dire.', ja:'正直なところ、何を言えばいいか分かりません。', tip:'【発音】オネットマン ジュ ヌ セ パ クワ ディール｜"honnêtement" は「正直に言うと」。"quoi dire" は "quoi" + 不定詞「何を言えばよいか」（間接疑問の簡略形）。'},
+  {cat:'ニュアンス表現', en:'En fait, c\'est plus compliqué que ça.', speech:'En fait, c\'est plus compliqué que ça.', ja:'実は、それより複雑なのです。', tip:'【発音】アン フェ セ プリュ コンプリケ ク サ｜"en fait" は「実は・実際には」。会話でよく使う。"compliqué" は「複雑な」。"que ça" は「それより」（比較）。'},
+  {cat:'ニュアンス表現', en:'Ça dépend de la situation.', speech:'Ça dépend de la situation.', ja:'状況によります。', tip:'【発音】サ デパン ドゥ ラ スィテュアスィオン｜"dépendre de" は「〜による・〜次第だ」。会話で非常によく使う表現。"situation" は「状況」（女性名詞）。'},
+  {cat:'ニュアンス表現', en:'Dans un sens, vous avez raison.', speech:'Dans un sens, vous avez raison.', ja:'ある意味では、あなたは正しいです。', tip:'【発音】ダン ザン サン ヴ ザヴェ レゾン｜"dans un sens" は「ある意味では」。"avoir raison" は「正しい」（動詞 "avoir" を使う！英語の "be right" と異なる）。'},
+  {cat:'ニュアンス表現', en:'Je vois ce que vous voulez dire.', speech:'Je vois ce que vous voulez dire.', ja:'おっしゃりたいことはわかります。', tip:'【発音】ジュ ヴォワ ス ク ヴ ヴレ ディール｜"je vois" は「見る」だが会話では「わかる・理解する」の意。"ce que vous voulez dire" は「あなたが言いたいこと」（関係代名詞 que）。'},
+  {cat:'ニュアンス表現', en:'Ce n\'est pas grave, ne vous inquiétez pas.', speech:'Ce n\'est pas grave, ne vous inquiétez pas.', ja:'大丈夫ですよ、心配しないでください。', tip:'【発音】ス ネ パ グラーヴ ヌ ヴ アンキエテ パ｜"ce n\'est pas grave" は「大したことない」。命令形の否定は "ne + 動詞（命令形）+ pas"。"s\'inquiéter" は「心配する」。'},
+  {cat:'芸術・エンタメ', en:'Avez-vous des billets pour la soirée de demain ?', speech:'Avez-vous des billets pour la soirée de demain ?', ja:'明日の夜のチケットはありますか？', tip:'【発音】アヴェ ヴ デ ビエ プール ラ ソワレ ドゥ ドゥマン｜"soirée" は「夜の催し・パーティー」（"soir" より時間的広がりを持つ）。コンサートや公演のチケット購入に使う。'},
+  {cat:'芸術・エンタメ', en:'Je cherche un bon film français à regarder.', speech:'Je cherche un bon film français à regarder.', ja:'良いフランス映画を探しています。', tip:'【発音】ジュ シェルシュ アン ボン フィルム フランセ ア ルガルデ｜"à + 不定詞" で「〜するための」（形容詞的用法）。"regarder" は「見る」。"film" は男性名詞なので "bon"（女性形 bonne）。'},
+  {cat:'芸術・エンタメ', en:'La littérature française m\'intéresse beaucoup.', speech:'La littérature française m\'intéresse beaucoup.', ja:'フランス文学はとても興味があります。', tip:'【発音】ラ リテラテュール フランセーズ マンテレス ボクー｜"intéresser" は「〜の興味を引く」。"m\'intéresse" の "m\'" は直接目的語「私を」。"française" は "français" の女性形（"littérature" が女性名詞）。'},
+  {cat:'芸術・エンタメ', en:'Quel est votre auteur français préféré ?', speech:'Quel est votre auteur français préféré ?', ja:'お気に入りのフランス人作家は誰ですか？', tip:'【発音】ケル エ ヴォットル オトゥール フランセ プレフェレ｜"auteur" は「作家・著者」（伝統的に男女とも男性名詞）。"préféré" は「お気に入りの」（"préférer" の過去分詞が形容詞化）。'},
+  {cat:'総合会話', en:'Ce voyage a vraiment changé ma façon de voir les choses.', speech:'Ce voyage a vraiment changé ma façon de voir les choses.', ja:'この旅行は本当に物事の見方を変えてくれました。', tip:'【発音】ス ヴォワヤージュ ア ヴレマン シャンジェ マ ファソン ドゥ ヴォワール レ ショーズ｜"façon de voir" は「物の見方」。"les choses" は「物事・こと」（複数）。旅行の感想を述べる豊かな表現。'},
+  {cat:'総合会話', en:'J\'espère pouvoir revenir un jour.', speech:'J\'espère pouvoir revenir un jour.', ja:'いつかまた戻ってこれることを願っています。', tip:'【発音】ジェスペール プヴォワール ルヴニール アン ジュール｜"espérer + 不定詞" は「〜することを望む」（同一主語の場合、接続法不要）。"un jour" は「いつか」。'},
+  {cat:'総合会話', en:'Grâce à vous, j\'ai passé un séjour inoubliable.', speech:'Grâce à vous, j\'ai passé un séjour inoubliable.', ja:'おかげさまで、忘れられない滞在を過ごせました。', tip:'【発音】グラース ア ヴ ジェ パセ アン セジュール イヌブリアーブル｜"grâce à" は「〜のおかげで」。"séjour" は「滞在・旅行期間」。"inoubliable" は「忘れられない」（"oublier（忘れる）" の否定形容詞）。'},
+  {cat:'総合会話', en:'Permettez-moi de vous offrir quelque chose.', speech:'Permettez-moi de vous offrir quelque chose.', ja:'何かお礼をさせてください。', tip:'【発音】ペルメテ モワ ドゥ ヴ オフリール ケルク ショーズ｜"Permettez-moi de + 不定詞" は「〜させてください」（命令形の丁寧表現）。"offrir" は「贈る・ごちそうする」。'},
+  {cat:'総合会話', en:'Si vous venez au Japon, je serai ravi(e) de vous accueillir.', speech:'Si vous venez au Japon, je serai ravi de vous accueillir.', ja:'日本にいらっしゃることがあれば、ぜひお迎えします。', tip:'【発音】スィ ヴ ヴネ オ ジャポン ジュ スレ ラヴィ ドゥ ヴ ザクイイール｜"ravi(e) de + 不定詞" は「〜できてとても嬉しい」。"accueillir" は「迎える・もてなす」（不規則動詞）。'},
+  {cat:'総合会話', en:'Je garderai un excellent souvenir de ce voyage.', speech:'Je garderai un excellent souvenir de ce voyage.', ja:'この旅の素晴らしい思い出をずっと大切にします。', tip:'【発音】ジュ ガルドレ アン エクセラン スヴニール ドゥ ス ヴォワヤージュ｜"garder" は「保つ・大切にする」。"souvenir" は「思い出・お土産」（男性名詞）。"garderai" は単純未来形。'},
+  {cat:'社交・感情', en:'Ça fait longtemps qu\'on ne s\'est pas vus !', speech:'Ça fait longtemps qu\'on ne s\'est pas vus !', ja:'久しぶりですね！', tip:'【発音】サ フェ ロンタン コン ヌ ス エ パ ヴュ｜"ça fait longtemps que" は「〜してから久しい」。"se voir" の複合過去（再帰動詞）。日常会話でよく使うイディオム。'},
+  {cat:'社交・感情', en:'Je vous souhaite un bon voyage !', speech:'Je vous souhaite un bon voyage !', ja:'良い旅を！', tip:'【発音】ジュ ヴ スウェット アン ボン ヴォワヤージュ｜"souhaiter" は「願う・望む」。"bon voyage" はフランス語のまま多くの言語で使われている表現。お見送りの言葉。'},
+  {cat:'社交・感情', en:'Je suis de tout cœur avec vous.', speech:'Je suis de tout cœur avec vous.', ja:'心から応援しています。', tip:'【発音】ジュ スイ ドゥ トゥ クール アヴェック ヴ｜"de tout cœur" は「心から」（イディオム）。"cœur" は「心・心臓」（男性名詞）。"œ" は特殊な文字（o + e の合字）。'},
+  {cat:'社交・感情', en:'Félicitations ! Vous l\'avez bien mérité.', speech:'Félicitations ! Vous l\'avez bien mérité.', ja:'おめでとうございます！よくやりました。', tip:'【発音】フェリスィタスィオン ヴ ラヴェ ビヤン メリテ｜"félicitations" は「おめでとう」（常に複数形）。"mériter" は「値する・ふさわしい」。"bien mérité" で「当然の報い」。'},
+  {cat:'社交・感情', en:'Je vous présente ma collègue, Sophie.', speech:'Je vous présente ma collègue, Sophie.', ja:'同僚のソフィーを紹介します。', tip:'【発音】ジュ ヴ プレザント マ コレーグ ソフィー｜"présenter" は「紹介する・プレゼンする」。"collègue" は男女同形（男性も女性も同じ綴り）。'},
+  {cat:'社交・感情', en:'Avec plaisir ! J\'en serais ravi(e).', speech:'Avec plaisir ! J\'en serais ravi.', ja:'喜んで！とても嬉しいです。', tip:'【発音】アヴェック プレジール ジャン スレ ラヴィ｜"avec plaisir" は「喜んで」。"j\'en serais ravi(e)" は条件法で丁寧に喜びを表す。"en" は前述の事柄を受ける。'},
+  {cat:'議論・説明', en:'Pour résumer, il y a trois points importants.', speech:'Pour résumer, il y a trois points importants.', ja:'まとめると、3つの重要なポイントがあります。', tip:'【発音】プール レジュメ イリヤ トロワ ポワン アンポルタン｜"pour résumer" は「要約すると」。"point" は「点・ポイント」（男性名詞）。プレゼンや説明でよく使う構文。'},
+  {cat:'議論・説明', en:'C\'est-à-dire que je ne suis pas disponible demain.', speech:'C\'est-à-dire que je ne suis pas disponible demain.', ja:'つまり、明日は都合がつかないということです。', tip:'【発音】セ タ ディール ク ジュ ヌ スイ パ ディスポニブル ドゥマン｜"c\'est-à-dire" は「つまり・すなわち」（英語の "that is to say"）。説明や言い換えに使う。'},
+  {cat:'議論・説明', en:'D\'une part... d\'autre part...', speech:'D\'une part, d\'autre part.', ja:'一方では…、他方では…', tip:'【発音】デュン パール ドートル パール｜"d\'une part... d\'autre part" は「一方では〜、他方では〜」（対比の接続表現）。論理的な説明や意見述べに使う。'},
+  {cat:'議論・説明', en:'Il convient de mentionner que les règles ont changé.', speech:'Il convient de mentionner que les règles ont changé.', ja:'規則が変わったことに言及する必要があります。', tip:'【発音】イル コンヴィヤン ドゥ マンスィオネ ク レ レーグル オン シャンジェ｜"il convient de + 不定詞" は「〜することが適切だ」（フォーマルな非人称表現）。"mentionner" は「言及する」。'},
+  {cat:'自然・環境', en:'Il est important de protéger l\'environnement.', speech:'Il est important de protéger l\'environnement.', ja:'環境を守ることは大切です。', tip:'【発音】イル エ アンポルタン ドゥ プロテジェ ランヴィロンマン｜"protéger" は「守る・保護する」（語幹変化動詞）。"environnement" は「環境」（男性名詞）。'},
+  {cat:'自然・環境', en:'La vue sur les Alpes est époustouflante.', speech:'La vue sur les Alpes est époustouflante.', ja:'アルプスの眺めは息をのむほど素晴らしいです。', tip:'【発音】ラ ヴュ シュール レ ザルプ エ エプストゥフランテ｜"époustouflant(e)" は「驚くほど素晴らしい」（口語的に強い表現）。"vue sur" は「〜の眺め」。'},
+  {cat:'自然・環境', en:'Je préfère la campagne à la ville.', speech:'Je préfère la campagne à la ville.', ja:'都会より田舎の方が好きです。', tip:'【発音】ジュ プレフェール ラ カンパーニュ ア ラ ヴィル｜"préférer A à B" は「BよりAを好む」。"campagne" は「田舎・農村」（女性名詞）。'},
+  {cat:'接続法', en:'Il est temps que nous partions.', speech:'Il est temps que nous partions.', ja:'そろそろ出発する時間です。', tip:'【発音】イル エ タン ク ヌ パルティオン｜"il est temps que + 接続法" は「〜する時間だ」。"partions" は "partir" の接続法一人称複数。時間の切迫を丁寧に伝える。'},
+  {cat:'接続法', en:'Je veux que tu saches la vérité.', speech:'Je veux que tu saches la vérité.', ja:'あなたに真実を知ってほしいです。', tip:'【発音】ジュ ヴ ク テュ サッシュ ラ ヴェリテ｜"vouloir que + 接続法" は「〜してほしい」（意志・欲求）。"saches" は "savoir" の接続法（不規則）。'},
+  {cat:'接続法', en:'À moins qu\'il ne pleuve, on sortira.', speech:'À moins qu\'il ne pleuve, on sortira.', ja:'雨が降らなければ、外出します。', tip:'【発音】ア モワン キル ヌ プルーヴ オン ソルティラ｜"à moins que + 接続法" は「〜でない限り」。"ne" は意味を持たない虚辞（否定ではない）。'},
+  {cat:'接続法', en:'Bien qu\'elle soit petite, elle est très courageuse.', speech:'Bien qu\'elle soit petite, elle est très courageuse.', ja:'小さいけれど、彼女はとても勇気があります。', tip:'【発音】ビヤン ケル ソワ プティット エル エ トレ クラジューズ｜"bien que + 接続法" の逆接。"courageuse" は "courageux" の女性形。形容詞の性一致。'},
+  {cat:'受動態・分詞', en:'La décision a été prise à l\'unanimité.', speech:'La décision a été prise à l\'unanimité.', ja:'決定は全会一致で行われました。', tip:'【発音】ラ デスィスィオン ア エテ プリーズ ア リュナニミテ｜"prise" は "prendre" の女性過去分詞（"décision" が女性名詞のため一致）。"à l\'unanimité" は「全会一致で」。'},
+  {cat:'受動態・分詞', en:'Ce roman a été traduit en vingt langues.', speech:'Ce roman a été traduit en vingt langues.', ja:'この小説は20の言語に翻訳されました。', tip:'【発音】ス ロマン ア エテ トラデュイ アン ヴァン ラング｜"traduit" は "traduire" の過去分詞。"langue" は「言語」（女性名詞）。"en + 言語数" は「〜の言語に」。'},
+  {cat:'代名詞の活用', en:'Dis-le-lui toi-même.', speech:'Dis-le-lui toi-même.', ja:'あなた自身で彼（女）に言いなさい。', tip:'【発音】ディ ル ルイ トワ メーム｜命令形での代名詞の順序: 動詞-直接目的語-間接目的語。"toi-même" は「あなた自身」（強調形）。'},
+  {cat:'代名詞の活用', en:'Je les leur ai tous envoyés.', speech:'Je les leur ai tous envoyés.', ja:'それらをすべて彼らに送りました。', tip:'【発音】ジュ レ ルール エ トゥ ザンヴォワイェ｜"les" (直接目的語)+ "leur" (間接目的語)の語順。複数なので過去分詞 "envoyés" も複数形に一致。'},
+  {cat:'豊かな表現', en:'La France m\'a conquis le cœur dès le premier jour.', speech:'La France m\'a conquis le cœur dès le premier jour.', ja:'フランスは初日から私の心を虜にしました。', tip:'【発音】ラ フランス マ コンキ ル クール デ ル プルミエ ジュール｜"conquérir le cœur" は「心を征服する・虜にする」（イディオム）。"dès" は「〜から（最初の瞬間から）」。'},
+  {cat:'豊かな表現', en:'C\'est une expérience qui restera gravée dans ma mémoire.', speech:'C\'est une expérience qui restera gravée dans ma mémoire.', ja:'それは記憶に刻み込まれる体験です。', tip:'【発音】セ ユン エクスペリアンス キ レストラ グラヴェ ダン マ メモワール｜"gravé(e)" は「刻まれた」（"graver" の過去分詞）。"restera" は単純未来。"mémoire" は「記憶」（女性名詞）。'},
+  {cat:'豊かな表現', en:'Paris ne s\'est pas fait en un jour.', speech:'Paris ne s\'est pas fait en un jour.', ja:'ローマは一日にして成らず（パリ版）。', tip:'【発音】パリ ヌ セ パ フェ アン ザン ジュール｜フランス語の慣用句（"Rome ne s\'est pas faite en un jour" の変形）。"se faire" は「作られる」。'},
+  {cat:'豊かな表現', en:'Chaque chose en son temps.', speech:'Chaque chose en son temps.', ja:'物事にはそれぞれの時機がある。（急いては事を仕損じる）', tip:'【発音】シャーク ショーズ アン ソン タン｜フランスのことわざ。"chaque" は「それぞれの」（形容詞）。"en son temps" は「その時期に」。'},
+  {cat:'文化・社会表現', en:'Il ne faut pas juger un livre à sa couverture.', speech:'Il ne faut pas juger un livre à sa couverture.', ja:'本を表紙で判断してはいけない。（外見で判断するな）', tip:'【発音】イル ヌ フォ パ ジュジェ アン リーヴル ア サ クヴェルテュール｜フランス語のことわざ。英語の "Don\'t judge a book by its cover" に相当。"couverture" は「表紙・カバー」。'},
+  {cat:'文化・社会表現', en:'Mieux vaut prévenir que guérir.', speech:'Mieux vaut prévenir que guérir.', ja:'治療するより予防する方がよい。（備えあれば憂いなし）', tip:'【発音】ミュ ヴォ プレヴニール ク ゲリール｜フランスのことわざ。"mieux vaut + 不定詞" は「〜する方がよい」。"prévenir" は「予防する」、"guérir" は「治す」。'},
+  {cat:'仕事・学習', en:'Je suis en train de me perfectionner en français.', speech:'Je suis en train de me perfectionner en français.', ja:'今フランス語の完成度を高めているところです。', tip:'【発音】ジュ スイ アン トラン ドゥ ム ペルフェクスィオネ アン フランセ｜"être en train de + 不定詞" は「ちょうど〜しているところだ」（進行中を強調）。"se perfectionner" は「上達する」。'},
+  {cat:'仕事・学習', en:'Ce stage m\'a beaucoup apporté sur le plan professionnel.', speech:'Ce stage m\'a beaucoup apporté sur le plan professionnel.', ja:'このインターンシップは職業的に多くをもたらしてくれました。', tip:'【発音】ス スタージュ マ ボクー アポルテ シュール ル プラン プロフェスィオネル｜"stage" は「インターンシップ・研修」（男性名詞）。"apporter" は「もたらす」。"sur le plan de" は「〜の面では」。'},
+  {cat:'ニュアンス表現', en:'Il y a quelque chose qui ne tourne pas rond.', speech:'Il y a quelque chose qui ne tourne pas rond.', ja:'何かがうまくいっていません。', tip:'【発音】イリヤ ケルク ショーズ キ ヌ トゥールヌ パ ロン｜"ne pas tourner rond" は「うまく回らない・おかしい」（口語的イディオム）。機械や状況がおかしいときに使う。'},
+  {cat:'ニュアンス表現', en:'Ça ne m\'étonne pas du tout.', speech:'Ça ne m\'étonne pas du tout.', ja:'それは全く驚きません。（そうだろうと思っていました）', tip:'【発音】サ ヌ メトン パ デュ トゥ｜"étonner" は「驚かせる」。"ne... pas du tout" は「全く〜ない」（強い否定）。"ça ne m\'étonne pas" で「驚かない」。'},
+  {cat:'ニュアンス表現', en:'Je n\'y suis pour rien.', speech:'Je n\'y suis pour rien.', ja:'私には何も関係ありません。（私のせいではありません）', tip:'【発音】ジュ ニ スイ プール リヤン｜"n\'y être pour rien" は「〜に全く関係ない」（イディオム）。"y" は前述の状況を受ける。'},
+  {cat:'芸術・エンタメ', en:'Cette exposition m\'a vraiment ouvert les yeux.', speech:'Cette exposition m\'a vraiment ouvert les yeux.', ja:'この展覧会は本当に目を開かせてくれました。', tip:'【発音】セット エクスポズィスィオン マ ヴレマン ウーヴェール レ ズィユ｜"ouvrir les yeux" は「目を開かせる・気づかせる」（イディオム）。"exposition" は「展覧会・展示」。'},
+  {cat:'芸術・エンタメ', en:'J\'ai été touché(e) par la profondeur de ce film.', speech:'J\'ai été touché par la profondeur de ce film.', ja:'この映画の深さに感動しました。', tip:'【発音】ジェ エテ トゥシェ パール ラ プロフォンドゥール ドゥ ス フィルム｜"profondeur" は「深さ・深み」（女性名詞）。"être touché par" は「〜に感動する」（受動表現）。'},
+  {cat:'総合会話', en:'Cette expérience a renforcé mon désir d\'apprendre le français.', speech:'Cette expérience a renforcé mon désir d\'apprendre le français.', ja:'この体験はフランス語を学びたいという気持ちを強くしました。', tip:'【発音】セット エクスペリアンス ア ランフォルセ モン デジール ダプランドル ル フランセ｜"renforcer" は「強化する」。"désir de + 不定詞" は「〜したいという欲求」。"d\'apprendre" は "de + apprendre"。'},
+  {cat:'総合会話', en:'Je ne regrette pas d\'être venu(e) ici.', speech:'Je ne regrette pas d\'être venu ici.', ja:'ここに来たことを後悔していません。', tip:'【発音】ジュ ヌ ルグレット パ デットル ヴニュ イスィ｜"regretter de + 不定詞" は「〜したことを後悔する」（否定で「後悔しない」）。"d\'être venu" は完了不定詞。'},
+  {cat:'社交・感情', en:'Je vous souhaite tout le bonheur du monde.', speech:'Je vous souhaite tout le bonheur du monde.', ja:'世界中の幸せをお祈りしています。', tip:'【発音】ジュ ヴ スウェット トゥ ル ボヌール デュ モンド｜"tout le bonheur du monde" は「世界中の幸福」。"souhaiter" は「願う・祈る」。誕生日や特別なときに使う。'},
+  {cat:'社交・感情', en:'On s\'est bien amusé(e)s ensemble, n\'est-ce pas ?', speech:'On s\'est bien amusé ensemble, n\'est-ce pas ?', ja:'一緒に楽しみましたね？', tip:'【発音】オン セ ビヤン ナミュゼ アンサンブル ネス パ｜"s\'amuser" は「楽しむ」（再帰動詞）。"n\'est-ce pas ?" は「〜ですよね？」（付加疑問文）。会話の締めくくりに使う。'},
+  {cat:'議論・説明', en:'En d\'autres termes, la qualité prime sur la quantité.', speech:'En d\'autres termes, la qualité prime sur la quantité.', ja:'言い換えれば、質は量に勝ります。', tip:'【発音】アン ドートル テルム ラ カリテ プリーム シュール ラ カンティテ｜"en d\'autres termes" は「言い換えれば」。"primer sur" は「〜より優先する」（フォーマル）。'},
+  {cat:'議論・説明', en:'Prenons l\'exemple de Paris pour illustrer ce point.', speech:'Prenons l\'exemple de Paris pour illustrer ce point.', ja:'この点を説明するためにパリの例を挙げてみましょう。', tip:'【発音】プルノン レグザンプル ドゥ パリ プール イリュストレ ス ポワン｜"prenons" は "prendre" の命令形一人称複数「〜しましょう」。"illustrer" は「例示する・説明する」。'},
+  {cat:'自然・環境', en:'Le changement climatique affecte aussi la France.', speech:'Le changement climatique affecte aussi la France.', ja:'気候変動はフランスにも影響を与えています。', tip:'【発音】ル シャンジュマン クリマティック アフェクト オスィ ラ フランス｜"changement climatique" は「気候変動」。"affecter" は「影響する」。現代の重要テーマを語る表現。'},
+  {cat:'自然・環境', en:'Je fais attention à réduire mes déchets.', speech:'Je fais attention à réduire mes déchets.', ja:'ゴミを減らすよう心がけています。', tip:'【発音】ジュ フェ アタンスィオン ア レデュイール メ デシェ｜"faire attention à + 不定詞" は「〜するよう気をつける」。"déchets" は「ゴミ・廃棄物」（男性複数名詞）。'},
+  {cat:'自然・環境', en:'Nous avons la responsabilité de protéger la nature.', speech:'Nous avons la responsabilité de protéger la nature.', ja:'私たちには自然を守る責任があります。', tip:'【発音】ヌ ザヴォン ラ レスポンサビリテ ドゥ プロテジェ ラ ナテュール｜"responsabilité" は「責任」（女性名詞）。"avoir la responsabilité de" は「〜する責任がある」。'},
+  {cat:'接続法', en:'Pourvu que tout se passe bien !', speech:'Pourvu que tout se passe bien !', ja:'すべてうまくいくといいですね！', tip:'【発音】プルヴュ ク トゥ ス パス ビヤン｜"pourvu que + 接続法" は強い願望「〜であればよい」。"se passer" は「起こる・進む」。'},
+  {cat:'豊かな表現', en:'On n\'a qu\'une seule vie, autant en profiter.', speech:'On n\'a qu\'une seule vie, autant en profiter.', ja:'人生は一度きり、思いきり楽しみましょう。', tip:'【発音】オン ナ キュン スール ヴィ オタン アン プロフィテ｜"on n\'a qu\'une seule vie" は「人生は一度きり」。"autant + 不定詞" は「〜した方がよい」（控えめな提案）。'},
+  {cat:'文化・社会表現', en:'La gastronomie française est inscrite au patrimoine de l\'UNESCO.', speech:'La gastronomie française est inscrite au patrimoine de l\'UNESCO.', ja:'フランスの食文化はユネスコの遺産に登録されています。', tip:'【発音】ラ ガストロノミ フランセーズ エ アンスクリット オ パトリモワン ドゥ リュネスコ｜"inscrit(e)" は「登録された」（受動態）。"patrimoine" は「遺産」。フランス食文化はユネスコ無形文化遺産（2010年）。'},
+  {cat:'仕事・学習', en:'La pratique régulière est la clé du succès.', speech:'La pratique régulière est la clé du succès.', ja:'定期的な練習が成功の鍵です。', tip:'【発音】ラ プラティック レギュリエール エ ラ クレ デュ シュクセ｜"régulier/régulière" は「定期的な」（形容詞）。"la clé de" は「〜の鍵」。"succès" は「成功」（男性名詞）。'},
+  {cat:'ニュアンス表現', en:'C\'est une question de point de vue.', speech:'C\'est une question de point de vue.', ja:'それは見方の問題です。', tip:'【発音】セ ユン ケスティオン ドゥ ポワン ドゥ ヴュ｜"point de vue" は「見地・視点」（男性名詞）。"une question de" は「〜の問題」。意見の相違を穏やかに表現。'},
+  {cat:'芸術・エンタメ', en:'Le théâtre est un miroir de la société.', speech:'Le théâtre est un miroir de la société.', ja:'演劇は社会の鏡です。', tip:'【発音】ル テアートル エ アン ミロワール ドゥ ラ ソスィエテ｜"miroir" は「鏡」（男性名詞）。"théâtre" は「劇場・演劇」。フランスでは演劇・映画が非常に重視される文化がある。'},
+  {cat:'総合会話', en:'Tout ce qui brille n\'est pas or.', speech:'Tout ce qui brille n\'est pas or.', ja:'輝くものすべてが金ではない。（外見にだまされるな）', tip:'【発音】トゥ ス キ ブリーユ ネ パ ゾール｜フランスのことわざ（"All that glitters is not gold" に相当）。"briller" は「輝く」。"or" は「金・黄金」。'},
+  {cat:'社交・感情', en:'Je suis de tout cœur avec vous dans cette épreuve.', speech:'Je suis de tout cœur avec vous dans cette épreuve.', ja:'この試練の中で心からあなたを支持しています。', tip:'【発音】ジュ スイ ドゥ トゥ クール アヴェック ヴ ダン セット エプルーヴ｜"épreuve" は「試練・テスト」（女性名詞）。"de tout cœur" は「心から」（イディオム）。辛いときの支持表現。'},
+  {cat:'議論・説明', en:'Il convient de nuancer cette affirmation.', speech:'Il convient de nuancer cette affirmation.', ja:'この主張を少し和らげる必要があります。', tip:'【発音】イル コンヴィヤン ドゥ ニュアンセ セット アフィルマスィオン｜"nuancer" は「ニュアンスをつける・和らげる」（英語由来）。"affirmation" は「主張・断言」。知的な議論での表現。'},
+  {cat:'自然・環境', en:'Le mistral est un vent fort qui souffle dans le sud de la France.', speech:'Le mistral est un vent fort qui souffle dans le sud de la France.', ja:'ミストラルはフランス南部に吹く強い風です。', tip:'【発音】ル ミストラル エ アン ヴァン フォール キ スフル ダン ル シュッド ドゥ ラ フランス｜"mistral" はプロヴァンス地方の有名な北風。"souffler" は「吹く」。フランスの地域的特徴を語る表現。'},
+  {cat:'接続法', en:'Je suis surpris(e) qu\'elle n\'ait pas encore répondu.', speech:'Je suis surpris qu\'elle n\'ait pas encore répondu.', ja:'彼女がまだ返事をしていないことに驚いています。', tip:'【発音】ジュ スイ シュルプリ ケル ネ パ アンコール レポンデュ｜感情形容詞 "surpris" の後は接続法。"n\'ait pas répondu" は接続法過去（過去の出来事への感情）。'},
+  {cat:'豊かな表現', en:'Les voyages forment la jeunesse.', speech:'Les voyages forment la jeunesse.', ja:'旅は若者を育てる。（旅は百の学問に値する）', tip:'【発音】レ ヴォワヤージュ フォルム ラ ジュネス｜フランスの格言（モンテーニュに由来）。"former" は「形成する・育てる」。"jeunesse" は「若さ・若者」（女性名詞）。'},
+  {cat:'総合会話', en:'Au fond, c\'est l\'expérience humaine qui compte.', speech:'Au fond, c\'est l\'expérience humaine qui compte.', ja:'つまるところ、大切なのは人間的な体験です。', tip:'【発音】オ フォン セ レクスペリアンス ユメーヌ キ コント｜"au fond" は「つまるところ・根本的には」。"humain(e)" は「人間的な」。"ce qui compte" は「大切なこと」（関係代名詞の強調構文）。'},
+  {cat:'社交・感情', en:'Je vous garderai toujours dans mon cœur.', speech:'Je vous garderai toujours dans mon cœur.', ja:'いつも心の中に大切にします。', tip:'【発音】ジュ ヴ ガルドレ トゥジュール ダン モン クール｜"garder dans son cœur" は「心に大切にしまう」（詩的表現）。"toujours" は「いつも・常に」。別れの言葉として使える。'},
+  {cat:'ニュアンス表現', en:'On ne peut pas plaire à tout le monde.', speech:'On ne peut pas plaire à tout le monde.', ja:'誰もを喜ばせることはできない。（十人十色）', tip:'【発音】オン ヌ プ パ プレール ア トゥ ル モンド｜"plaire à" は「〜を喜ばせる・気に入られる」。"tout le monde" は「全員」。失敗を気にしすぎないときの慰めの言葉。'},
 ];
 
 
 const TOTAL = phrases.length;
 
 // ── State ────────────────────────────────────────────────────────
-let currentIndex   = 0;
-let isRandom       = false;
-let isFrToJa       = true;
-let isRevealed     = false;
+let currentIndex  = 0;
+let isRandom      = false;
+let isEnToJa      = true;
+let isRevealed    = false;
 let activeCategory = 'all';
 let isAutoPlaying  = false;
-let autoMode       = '';
+let autoMode       = '';   // 'shadow' | 'continuous'
 let autoStopped    = false;
 let autoTimeout    = null;
 let masterSet = new Set(JSON.parse(localStorage.getItem('fr_lv4_master') || '[]'));
 
-// ── French Voice Setup ───────────────────────────────────────────
-let frVoices = [];
+// ── Voice setup ───────────────────────────────────────────────────
+let enVoices = [];
 
 function populateVoices() {
   const all = window.speechSynthesis.getVoices();
-  // フランス語音声を優先順位付きで取得
-  const frAll = all.filter(v => v.lang.startsWith('fr'));
-  // Microsoftのナチュラル音声を優先
-  const natural = frAll.filter(v => v.name.includes('Natural') || v.name.includes('Online'));
-  frVoices = natural.length ? natural : frAll.length ? frAll : all;
-  
+  enVoices = all.filter(v => v.lang.startsWith('fr'));
+  if (!enVoices.length) enVoices = all;
+  applyVoicePref();
+}
+
+function applyVoicePref() {
+  const pref = document.getElementById('voice-pref').value;
+  const preferred = pref === 'FR' ? ['fr-FR','fr-BE','fr-CH','fr-CA'] : ['fr-CA','fr-FR','fr-BE','fr-CH'];
+  const sorted = [...enVoices].sort((a,b) => {
+    const ai = preferred.findIndex(p => a.lang.startsWith(p));
+    const bi = preferred.findIndex(p => b.lang.startsWith(p));
+    return (ai<0?99:ai)-(bi<0?99:bi);
+  });
   const sel = document.getElementById('voice-select');
   sel.innerHTML = '';
-  frVoices.forEach((v, i) => {
+  sorted.forEach((v,i) => {
     const o = document.createElement('option');
-    o.value = i;
-    o.textContent = `${v.name} (${v.lang})`;
+    o.value = i; o.textContent = `${v.name} (${v.lang})`;
     sel.appendChild(o);
   });
+  // store sorted in enVoices for getVoice()
+  enVoices = sorted;
 }
 
 populateVoices();
@@ -562,7 +785,7 @@ if (window.speechSynthesis.onvoiceschanged !== undefined)
 
 function getVoice() {
   const sel = document.getElementById('voice-select');
-  return frVoices[parseInt(sel.value)] || frVoices[0] || null;
+  return enVoices[parseInt(sel.value)] || enVoices[0] || null;
 }
 function getRate() { return parseFloat(document.getElementById('rate-slider').value); }
 function updateRate() {
@@ -592,8 +815,14 @@ function speakOne(text, onEnd) {
     isSpeaking = true;
     const utt = new SpeechSynthesisUtterance(text);
     const v = getVoice();
-    if (v) { utt.voice = v; utt.lang = v.lang; }
-    else { utt.lang = 'fr-FR'; }
+    if (v) {
+      utt.voice = v;
+      utt.lang = v.lang || 'fr-FR';  // 音声のlangを明示的に設定
+    } else {
+      // フォールバック：voice-prefの設定に応じてlangを設定
+      const pref = document.getElementById('voice-pref').value;
+      utt.lang = 'fr-FR';
+    }
     utt.rate = getRate();
     utt.onstart = startKeepAlive;
     utt.onend   = () => { isSpeaking=false; stopKeepAlive(); if(onEnd) onEnd(); };
@@ -605,329 +834,442 @@ function speakOne(text, onEnd) {
 function stripTags(html) { return html.replace(/<[^>]+>/g,'').replace(/\s+/g,' ').trim(); }
 
 function speakCurrent() {
-  const a = getActive(); if (!a.length) return;
-  speakOne(a[currentIndex].speech || a[currentIndex].fr);
+  const a = getActive(); if(!a.length) return;
+  speakOne(a[currentIndex].speech || stripTags(a[currentIndex].en));
 }
 
 function speakP() {
   return new Promise(resolve => {
     if (autoStopped) { resolve(); return; }
-    const a = getActive(); if (!a.length) { resolve(); return; }
-    speakOne(a[currentIndex].speech || a[currentIndex].fr, resolve);
+    const a = getActive(); if(!a.length) { resolve(); return; }
+    speakOne(a[currentIndex].speech || stripTags(a[currentIndex].en), resolve);
   });
 }
 
 // ── Category ─────────────────────────────────────────────────────
 const allCats = [...new Set(phrases.map(p => p.cat))];
 
-function getActive() {
-  const arr = phrases.map((p, i) => ({...p, globalIdx: i}));
-  return activeCategory === 'all'
-    ? arr.filter(p => !masterSet.has(p.globalIdx))
-    : arr.filter(p => p.cat === activeCategory && !masterSet.has(p.globalIdx));
+function buildCatRows() {
+  const wrap = document.getElementById('cat-rows');
+  wrap.innerHTML = '';
+  allCats.forEach(cat => {
+    const total    = phrases.filter(p => p.cat === cat).length;
+    const mastered = phrases.filter((p,i)=>p.cat===cat && masterSet.has(i)).length;
+    const done     = total > 0 && mastered === total;
+    const row = document.createElement('div');
+    row.className = 'cat-row' + (cat===activeCategory?' active':'');
+    row.innerHTML = `<div class="cat-dot ${done?'done':''}"></div><div class="cat-row-name">${cat}</div><div class="cat-row-count">${mastered===0?total:`${total-mastered}残/${total}`}</div>`;
+    row.onclick = () => selectCategory(cat);
+    wrap.appendChild(row);
+  });
+  document.getElementById('chip-all').className = 'chip-all'+(activeCategory==='all'?' active':'');
 }
 
-function buildCatRows() {
-  const container = document.getElementById('cat-rows');
-  container.innerHTML = '';
-  allCats.forEach(cat => {
-    const total   = phrases.filter(p => p.cat === cat).length;
-    const mastered = phrases.filter((p,i) => p.cat===cat && masterSet.has(i)).length;
-    const row = document.createElement('div');
-    row.className = 'cat-row' + (activeCategory === cat ? ' active' : '');
-    row.innerHTML = `<div class="cat-dot"></div><div class="cat-row-name">${cat}</div><div class="cat-row-count">${mastered}/${total}</div>`;
-    row.onclick = () => selectCategory(cat);
-    container.appendChild(row);
-  });
+let filterOpen = false;
+function toggleFilterPanel() {
+  filterOpen = !filterOpen;
+  document.getElementById('filter-chips-wrap').className = 'filter-chips-wrap'+(filterOpen?' open':'');
+  document.getElementById('filter-toggle-icon').className = 'filter-toggle-icon'+(filterOpen?' open':'');
+}
+
+function updateFilterLabel() {
+  const a = getActive();
+  document.getElementById('filter-current-label').textContent =
+    activeCategory==='all' ? `すべて（${a.length}）` : `${activeCategory}（${a.length}）`;
 }
 
 function selectCategory(cat) {
-  activeCategory = cat;
-  currentIndex = 0;
-  document.getElementById('chip-all').className = 'chip-all' + (cat==='all'?' active':'');
-  document.querySelectorAll('.cat-row').forEach(r => r.classList.remove('active'));
-  buildCatRows();
-  document.querySelectorAll('.cat-row').forEach(r => {
-    if (r.querySelector('.cat-row-name').textContent === cat) r.classList.add('active');
-  });
-  document.getElementById('filter-current-label').textContent = cat==='all' ? 'すべて' : cat;
-  showCard();
-}
-
-function toggleFilterPanel() {
-  const wrap = document.getElementById('filter-chips-wrap');
-  const icon = document.getElementById('filter-toggle-icon');
-  wrap.classList.toggle('open');
-  icon.classList.toggle('open');
-}
-
-// ── Card Display ─────────────────────────────────────────────────
-function showCard() {
-  const active = getActive();
-  const noActiveEl = document.getElementById('no-active');
-
-  if (!active.length) {
-    noActiveEl.style.display = 'block';
-    document.getElementById('main-card').style.display = 'none';
-    document.getElementById('tap-hint').style.display = 'none';
-    updateBadges();
-    return;
-  }
-  noActiveEl.style.display = 'none';
-  document.getElementById('main-card').style.display = 'block';
-  document.getElementById('tap-hint').style.display = 'block';
-
-  if (currentIndex >= active.length) currentIndex = 0;
-  const item = active[currentIndex];
-
-  const displayFr   = isFrToJa ? item.fr  : item.ja;
-  const displayPron = isFrToJa ? item.pron : '';
-  const answerText  = isFrToJa ? item.ja  : item.fr;
-
-  document.getElementById('card-num').textContent  = String(item.globalIdx+1).padStart(2,'0');
-  document.getElementById('card-cat').textContent  = item.cat;
-  document.getElementById('main-text').innerHTML   = displayFr;
-  document.getElementById('pronunciation-text').textContent = displayPron ? `[ ${displayPron} ]` : '';
-
-  // speech テキスト（読み方ガイド）
-  const speechEl = document.getElementById('speech-text');
-  if (isFrToJa && item.speech) {
-    speechEl.innerHTML = '<span class="speech-icon">🔊</span>' + item.speech;
-  } else {
-    speechEl.textContent = '';
-  }
-
-  document.getElementById('answer-ja').innerHTML   = answerText;
-  const tipEl = document.getElementById('answer-tip');
-  if (item.tip) { tipEl.textContent = item.tip; tipEl.style.display = ''; }
-  else tipEl.style.display = 'none';
-
-  document.getElementById('answer-wrap').classList.remove('show');
-  document.getElementById('main-card').classList.remove('revealed');
-  document.getElementById('main-card').classList.add('tappable');
-  document.getElementById('main-card').classList.remove('no-tap');
-
-  document.getElementById('master-cb').checked = masterSet.has(item.globalIdx);
-  document.getElementById('mastered-badge').classList.toggle('show', masterSet.has(item.globalIdx));
-
-  isRevealed = false;
-  updateBadges();
-  updateProgress();
-}
-
-function updateBadges() {
-  document.getElementById('mode-badge').textContent = isFrToJa ? '📖 仏 → 日' : '📖 日 → 仏';
-  document.getElementById('order-badge').textContent = isRandom ? '🔀 ランダム' : '順番通り';
-  document.getElementById('master-badge').textContent = `マスター: ${masterSet.size} / ${TOTAL}`;
-  updateMasterSummary();
-}
-
-function updateProgress() {
-  const active = getActive();
-  const tot = activeCategory === 'all' ? TOTAL - masterSet.size : active.length + phrases.filter((p,i)=>p.cat===activeCategory&&masterSet.has(i)).length - phrases.filter((p,i)=>p.cat===activeCategory&&masterSet.has(i)).length;
-  const totDisplay = activeCategory === 'all' ? TOTAL : phrases.filter(p=>p.cat===activeCategory).length;
-  document.getElementById('cur-num').textContent = currentIndex + 1;
-  document.getElementById('tot-num').textContent = active.length;
-  const pct = active.length ? Math.max(2, Math.round(((currentIndex+1)/active.length)*100)) : 100;
-  document.getElementById('progress-bar').style.width = pct + '%';
-}
-
-function handleTap() {
   if (isAutoPlaying) return;
-  const active = getActive();
-  if (!active.length) return;
-  if (!isRevealed) {
-    document.getElementById('answer-wrap').classList.add('show');
-    document.getElementById('main-card').classList.add('revealed');
-    isRevealed = true;
-    speakCurrent();
-  } else {
-    next();
-  }
+  activeCategory = cat; currentIndex = 0;
+  filterOpen = false;
+  document.getElementById('filter-chips-wrap').className = 'filter-chips-wrap';
+  document.getElementById('filter-toggle-icon').className = 'filter-toggle-icon';
+  buildCatRows(); updateFilterLabel(); update();
 }
 
-function next() {
-  if (isAutoPlaying) return;
-  const active = getActive();
-  if (!active.length) return;
-  if (isRandom) {
-    currentIndex = Math.floor(Math.random() * active.length);
-  } else {
-    currentIndex = (currentIndex + 1) % active.length;
-  }
-  showCard();
+// ── Helpers ───────────────────────────────────────────────────────
+function getActive() {
+  return phrases
+    .map((p,i) => ({...p, globalIdx:i}))
+    .filter(p => !masterSet.has(p.globalIdx) && (activeCategory==='all' || p.cat===activeCategory));
 }
 
-function prev() {
-  if (isAutoPlaying) return;
-  const active = getActive();
-  if (!active.length) return;
-  currentIndex = (currentIndex - 1 + active.length) % active.length;
-  showCard();
-}
-
-function switchMode() {
-  isFrToJa = !isFrToJa;
-  showCard();
-}
-
-function toggleRandom() {
-  isRandom = !isRandom;
-  document.getElementById('random-btn').textContent = `🔀 ランダム: ${isRandom?'ON':'OFF'}`;
-  updateBadges();
-}
-
-// ── Master ───────────────────────────────────────────────────────
 function saveMaster() {
   localStorage.setItem('fr_lv4_master', JSON.stringify([...masterSet]));
 }
 
-function toggleMaster(e) {
+// ── Update UI ─────────────────────────────────────────────────────
+function update() {
   const active = getActive();
-  if (!active.length) return;
-  const item = active[currentIndex];
-  if (e.target.checked) { masterSet.add(item.globalIdx); }
-  else { masterSet.delete(item.globalIdx); }
-  saveMaster();
-  document.getElementById('mastered-badge').classList.toggle('show', masterSet.has(item.globalIdx));
+  const noActive = document.getElementById('no-active');
+  const mainCard = document.getElementById('main-card');
+  const tapHint  = document.getElementById('tap-hint');
+
   document.getElementById('master-badge').textContent = `マスター: ${masterSet.size} / ${TOTAL}`;
-  buildCatRows();
-  updateMasterSummary();
+
+  if (!active.length) {
+    noActive.classList.add('show');
+    mainCard.style.display = 'none';
+    tapHint.style.display  = 'none';
+    updateMasterUI(); buildCatRows(); updateFilterLabel();
+    return;
+  }
+  noActive.classList.remove('show');
+  mainCard.style.display = '';
+  tapHint.style.display  = '';
+
+  if (currentIndex >= active.length) currentIndex = 0;
+  const item  = active[currentIndex];
+  const color = CATS[item.cat] || '#16a34a';
+
+  // progress
+  document.getElementById('cur-num').textContent = currentIndex + 1;
+  document.getElementById('tot-num').textContent = active.length;
+  document.getElementById('progress-bar').style.width = ((currentIndex+1)/active.length*100)+'%';
+  document.getElementById('progress-bar').style.background = color;
+
+  // card
+  document.getElementById('card-num').textContent  = String(item.globalIdx+1).padStart(2,'0');
+  document.getElementById('card-cat').textContent  = item.cat;
+  document.getElementById('card-cat').style.color  = color;
+
+  // content
+  const displayHTML = isEnToJa ? item.en : item.ja;
+  document.getElementById('main-text').innerHTML = displayHTML;
+  const pronEl = document.getElementById('pronunciation-text');
+  if (pronEl) {
+    const tipText = item.tip || '';
+    const pronMatch = tipText.match(/【発音】([^｜]+)/);
+    pronEl.textContent = (pronMatch && isEnToJa) ? '[ ' + pronMatch[1].trim() + ' ]' : '';
+  }
+  document.getElementById('answer-ja').innerHTML   = isEnToJa ? item.ja : item.en;
+  const tipEl = document.getElementById('answer-tip');
+  if (item.tip) { const t = item.tip.replace(/【発音】[^｜]+｜?/, ''); tipEl.textContent = t; tipEl.style.display = t ? '' : 'none'; }
+  else tipEl.style.display = 'none';
+
+  document.getElementById('mode-badge').textContent = isEnToJa ? '📖 仏 → 日' : '📖 日 → 仏';
+
+  // reset reveal
+  isRevealed = false;
+  document.getElementById('answer-wrap').classList.remove('show');
+  mainCard.classList.remove('revealed');
+
+  // master
+  document.getElementById('master-cb').checked = masterSet.has(item.globalIdx);
+  document.getElementById('mastered-badge').classList.toggle('show', masterSet.has(item.globalIdx));
+
+  updateMasterUI(); buildCatRows(); updateFilterLabel();
 }
 
-function updateMasterSummary() {
-  const el = document.getElementById('master-summary');
-  if (!masterSet.size) { el.textContent = ''; return; }
-  el.textContent = `✅ マスター済み ${masterSet.size} 枚 — タップして確認`;
+function updateMasterUI() {
+  const count   = masterSet.size;
+  const summary = document.getElementById('master-summary');
+  const listWrap = document.getElementById('master-list-wrap');
+  if (count > 0) {
+    summary.classList.add('show');
+    summary.textContent = `✅ ${count}枚マスター済 — タップして一覧表示 / 解除`;
+    const listEl = document.getElementById('master-list');
+    listEl.innerHTML = '';
+    [...masterSet].sort((a,b)=>a-b).forEach(idx => {
+      const p = phrases[idx]; if(!p) return;
+      const row = document.createElement('div');
+      row.style.cssText = 'display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid #e2e8f0;font-size:12px;';
+      row.innerHTML = `<span style="flex:1;line-height:1.5;"><span style="color:${CATS[p.cat]};font-weight:800;">${p.cat}</span><br>${stripTags(p.en)}</span><button onclick="removeMaster(${idx})" style="border:none;background:#e11d48;color:#fff;border-radius:99px;padding:3px 10px;font-size:11px;font-weight:700;cursor:pointer;">解除</button>`;
+      listEl.appendChild(row);
+    });
+  } else {
+    summary.classList.remove('show');
+    listWrap.style.display = 'none';
+  }
 }
 
-function toggleMasterList() {
-  const wrap = document.getElementById('master-list-wrap');
-  const isOpen = wrap.style.display !== 'none';
-  if (isOpen) { wrap.style.display = 'none'; return; }
-  const listEl = document.getElementById('master-list');
-  listEl.innerHTML = '';
-  [...masterSet].sort((a,b)=>a-b).forEach(idx => {
-    const p = phrases[idx];
-    const div = document.createElement('div');
-    div.style.cssText = 'display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid #f1f5f9;font-size:12px;';
-    div.innerHTML = `<span style="font-weight:700;color:var(--primary);">${p.fr}</span><span style="color:var(--muted);">${p.ja}</span><button style="background:none;border:none;cursor:pointer;color:var(--red);font-size:13px;" onclick="removeMaster(${idx})">✕</button>`;
-    listEl.appendChild(div);
-  });
-  wrap.style.display = 'block';
+// ── Actions ───────────────────────────────────────────────────────
+function handleTap() {
+  if (isAutoPlaying) return;
+  if (!isRevealed) {
+    isRevealed = true;
+    document.getElementById('answer-wrap').classList.add('show');
+    document.getElementById('main-card').classList.add('revealed');
+  }
+}
+
+function toggleMaster(e) {
+  if (isAutoPlaying) return;
+  const active = getActive(); if(!active.length) return;
+  const item = active[currentIndex];
+  if (e.target.checked) {
+    masterSet.add(item.globalIdx);
+    saveMaster();
+    updateMasterUI(); buildCatRows(); updateFilterLabel();
+    document.getElementById('master-badge').textContent = `マスター: ${masterSet.size} / ${TOTAL}`;
+    // チェックしたら少し待って次のカードへ
+    setTimeout(() => {
+      const nextActive = getActive();
+      if (nextActive.length === 0) { update(); return; }
+      // currentIndex はそのまま（マスター済みが消えるので自動的に次が表示される）
+      if (currentIndex >= nextActive.length) currentIndex = 0;
+      update();
+    }, 400);
+  } else {
+    masterSet.delete(item.globalIdx);
+    saveMaster();
+    document.getElementById('mastered-badge').classList.remove('show');
+    updateMasterUI(); buildCatRows(); updateFilterLabel();
+    document.getElementById('master-badge').textContent = `マスター: ${masterSet.size} / ${TOTAL}`;
+  }
 }
 
 function removeMaster(idx) {
-  masterSet.delete(idx);
-  saveMaster();
-  document.getElementById('master-badge').textContent = `マスター: ${masterSet.size} / ${TOTAL}`;
+  masterSet.delete(idx); saveMaster();
   if (!masterSet.size) document.getElementById('master-list-wrap').style.display='none';
-  buildCatRows();
-  updateMasterSummary();
-  toggleMasterList();
-  toggleMasterList();
+  update();
 }
-
-let clearStep = 0;
 function clearAllMasterStep1() {
   const btn = document.getElementById('clear-all-btn');
-  if (clearStep === 0) {
-    btn.textContent = '本当に全解除？'; btn.style.background='#fee2e2'; btn.style.color='var(--red)';
-    clearStep = 1;
-    setTimeout(() => { if(clearStep===1){ btn.textContent='全解除'; btn.style.background=''; btn.style.color=''; clearStep=0; } }, 3000);
-  } else {
-    masterSet.clear(); saveMaster();
-    document.getElementById('master-list-wrap').style.display='none';
-    buildCatRows(); updateBadges(); showCard();
-    btn.textContent='全解除'; btn.style.background=''; btn.style.color=''; clearStep=0;
+  if (!btn) return;
+  btn.textContent = '本当に全解除？';
+  btn.style.background = '#e11d48';
+  btn.style.color = '#fff';
+  btn.onclick = clearAllMasterStep2;
+  // 3秒後に戻す
+  setTimeout(() => {
+    if (btn.textContent === '本当に全解除？') {
+      btn.textContent = '全解除';
+      btn.style.background = '';
+      btn.style.color = '';
+      btn.onclick = clearAllMasterStep1;
+    }
+  }, 3000);
+}
+function clearAllMasterStep2() {
+  masterSet.clear(); saveMaster();
+  document.getElementById('master-list-wrap').style.display = 'none';
+  const btn = document.getElementById('clear-all-btn');
+  if (btn) {
+    btn.textContent = '全解除';
+    btn.style.background = '';
+    btn.style.color = '';
+    btn.onclick = clearAllMasterStep1;
   }
+  update();
+}
+function clearAllMaster() { clearAllMasterStep1(); }
+function toggleMasterList() {
+  if (!masterSet.size) return;
+  const w = document.getElementById('master-list-wrap');
+  w.style.display = w.style.display==='none' ? '' : 'none';
 }
 
-// ── Auto Play ────────────────────────────────────────────────────
-async function startShadowing() {
-  const active = getActive(); if (!active.length) return;
-  isAutoPlaying = true; autoStopped = false; autoMode = 'shadow';
-  document.getElementById('normal-controls').style.display = 'none';
-  document.getElementById('auto-controls').style.display = 'block';
-  document.getElementById('auto-panel').style.display = 'block';
-  document.getElementById('main-card').classList.remove('tappable');
-  document.getElementById('main-card').classList.add('no-tap');
-
-  while (!autoStopped) {
-    const a = getActive(); if (!a.length) break;
-    if (currentIndex >= a.length) currentIndex = 0;
-
-    document.getElementById('auto-step-title').textContent = 'STEP 1';
-    document.getElementById('auto-instruction').textContent = '音声を聴いてください。';
-    document.getElementById('auto-count').textContent = `${currentIndex+1} / ${a.length}`;
-    showCard();
-    document.getElementById('answer-wrap').classList.add('show');
-    document.getElementById('main-card').classList.add('revealed');
-    await speakP(); if (autoStopped) break;
-
-    document.getElementById('auto-step-title').textContent = 'STEP 2';
-    document.getElementById('auto-instruction').textContent = '声に出して真似してください。';
-    await new Promise(r => { autoTimeout = setTimeout(r, 2500); });
-    if (autoStopped) break;
-
-    document.getElementById('auto-step-title').textContent = 'STEP 3';
-    document.getElementById('auto-instruction').textContent = 'もう一度聴きましょう。';
-    await speakP(); if (autoStopped) break;
-
-    await new Promise(r => { autoTimeout = setTimeout(r, 800); });
-    if (autoStopped) break;
-    currentIndex = (currentIndex + 1) % getActive().length;
-  }
-  stopAutoPlay();
+function next() {
+  if (isAutoPlaying) return;
+  const active = getActive(); if(!active.length) return;
+  currentIndex = isRandom
+    ? Math.floor(Math.random()*active.length)
+    : (currentIndex+1) % active.length;
+  update();
 }
 
-async function startContinuous() {
-  const active = getActive(); if (!active.length) return;
-  isAutoPlaying = true; autoStopped = false; autoMode = 'continuous';
+function prev() {
+  if (isAutoPlaying) return;
+  const active = getActive(); if(!active.length) return;
+  currentIndex = (currentIndex - 1 + active.length) % active.length;
+  update();
+}
+
+function toggleRandom() {
+  isRandom = !isRandom;
+  const btn = document.getElementById('random-btn');
+  btn.textContent = isRandom ? '🔀 ランダム: ON' : '🔀 ランダム: OFF';
+  btn.className   = isRandom ? 'btn btn-on' : 'btn btn-secondary';
+  document.getElementById('order-badge').textContent = isRandom ? 'ランダム' : '順番通り';
+}
+
+function switchMode() {
+  if (isAutoPlaying) return;
+  isEnToJa = !isEnToJa;
+  update();
+}
+
+// ── Auto-play helpers ─────────────────────────────────────────────
+function delayP(ms) {
+  return new Promise(r => {
+    if (autoStopped) { r(); return; }
+    autoTimeout = setTimeout(r, ms);
+  });
+}
+
+function setAutoPanel(step, instr, count) {
+  document.getElementById('auto-step-title').textContent  = step;
+  document.getElementById('auto-instruction').textContent = instr;
+  document.getElementById('auto-count').textContent       = count;
+}
+
+function enterAutoUI() {
+  isAutoPlaying = true; autoStopped = false;
   document.getElementById('normal-controls').style.display = 'none';
-  document.getElementById('auto-controls').style.display = 'block';
-  document.getElementById('auto-panel').style.display = 'block';
+  document.getElementById('auto-controls').style.display   = '';
+  document.getElementById('auto-panel').classList.add('show');
+  document.getElementById('tap-hint').style.display        = 'none';
+  document.getElementById('master-wrap').classList.add('disabled');
   document.getElementById('main-card').classList.remove('tappable');
   document.getElementById('main-card').classList.add('no-tap');
+}
 
-  while (!autoStopped) {
-    const a = getActive(); if (!a.length) break;
-    if (currentIndex >= a.length) currentIndex = 0;
-    document.getElementById('auto-step-title').textContent = '連続再生中';
-    document.getElementById('auto-instruction').textContent = '音声を聴いてください。';
-    document.getElementById('auto-count').textContent = `${currentIndex+1} / ${a.length}`;
-    showCard();
-    document.getElementById('answer-wrap').classList.add('show');
-    document.getElementById('main-card').classList.add('revealed');
-    await speakP(); if (autoStopped) break;
-    await new Promise(r => { autoTimeout = setTimeout(r, 1200); });
-    if (autoStopped) break;
-    currentIndex = (currentIndex + 1) % getActive().length;
-    if (currentIndex === 0 && autoMode === 'continuous') { stopAutoPlay(); break; }
-  }
-  if (!autoStopped) stopAutoPlay();
+function exitAutoUI() {
+  autoStopped = true; isAutoPlaying = false;
+  window.speechSynthesis.cancel();
+  isSpeaking = false; stopKeepAlive();
+  clearTimeout(speakOne._t);
+  if (autoTimeout) { clearTimeout(autoTimeout); autoTimeout = null; }
+  document.getElementById('normal-controls').style.display = '';
+  document.getElementById('auto-controls').style.display   = 'none';
+  document.getElementById('auto-panel').classList.remove('show');
+  document.getElementById('tap-hint').style.display        = '';
+  document.getElementById('master-wrap').classList.remove('disabled');
+  document.getElementById('main-card').classList.add('tappable');
+  document.getElementById('main-card').classList.remove('no-tap');
 }
 
 function stopAutoPlay() {
-  autoStopped = true; isAutoPlaying = false;
-  if (autoTimeout) { clearTimeout(autoTimeout); autoTimeout = null; }
-  window.speechSynthesis.cancel(); isSpeaking = false; stopKeepAlive();
-  document.getElementById('normal-controls').style.display = 'block';
-  document.getElementById('auto-controls').style.display = 'none';
-  document.getElementById('auto-panel').style.display = 'none';
-  document.getElementById('main-card').classList.add('tappable');
-  document.getElementById('main-card').classList.remove('no-tap');
-  showCard();
+  exitAutoUI();
+  update(); // 現在のカードから再開できるよう index を保持
 }
 
-// ── Guide ────────────────────────────────────────────────────────
-function openGuide()  { document.getElementById('guide-overlay').classList.add('open'); }
-function closeGuide() { document.getElementById('guide-overlay').classList.remove('open'); }
-function handleOverlayClick(e) { if (e.target === document.getElementById('guide-overlay')) closeGuide(); }
+// ── Shadowing auto-play ───────────────────────────────────────────
+function showHidden() {
+  // 画面を？？？にする（英文も隠す）
+  document.getElementById('main-text').textContent = '？？？';
+  document.getElementById('answer-wrap').classList.remove('show');
+  document.getElementById('main-card').classList.remove('revealed');
+}
+function showEnOnly() {
+  // 英文のみ表示、日本語・解説は隠す
+  const active = getActive();
+  if (!active.length) return;
+  const item = active[currentIndex];
+  document.getElementById('main-text').innerHTML = item.en;
+  document.getElementById('answer-wrap').classList.remove('show');
+  document.getElementById('main-card').classList.remove('revealed');
+}
+function showAll() {
+  // 英文＋日本語訳＋解説を全て表示
+  const active = getActive();
+  if (!active.length) return;
+  const item = active[currentIndex];
+  document.getElementById('main-text').innerHTML = item.en;
+  document.getElementById('answer-wrap').classList.add('show');
+  document.getElementById('main-card').classList.add('revealed');
+}
 
-// ── Init ─────────────────────────────────────────────────────────
+async function runShadowing() {
+  const active = getActive();
+  if (!active.length) { stopAutoPlay(); return; }
+  const startIdx = currentIndex;
+
+  for (let i = 0; i < active.length; i++) {
+    if (autoStopped) break;
+    currentIndex = (startIdx + i) % active.length;
+    update();
+    const n = i+1, tot = active.length;
+
+    // Step1: ？？？表示で2回聴く
+    showHidden();
+    setAutoPanel(`カード ${n}/${tot} — STEP 1`,'👂 発話せずに2回聴いてください。（画面は見なくてOK）','1/2回目…');
+    await speakP(); if(autoStopped) break; await delayP(350); if(autoStopped) break;
+    setAutoPanel(`カード ${n}/${tot} — STEP 1`,'👂 発話せずに2回聴いてください。（画面は見なくてOK）','2/2回目…');
+    await speakP(); if(autoStopped) break; await delayP(450); if(autoStopped) break;
+
+    // Step2: ？？？のまま音声に合わせてシャドウイング×2
+    showHidden();
+    setAutoPanel(`カード ${n}/${tot} — STEP 2`,'🗣️ 音声に合わせてシャドウイングしてください。（画面は見なくてOK）','1/2回目…');
+    await speakP(); if(autoStopped) break; await delayP(350); if(autoStopped) break;
+    setAutoPanel(`カード ${n}/${tot} — STEP 2`,'🗣️ 音声に合わせてシャドウイングしてください。（画面は見なくてOK）','2/2回目…');
+    await speakP(); if(autoStopped) break; await delayP(450); if(autoStopped) break;
+
+    // Step3: 英文＋日本語訳＋解説を全表示でシャドウイング×2
+    showAll();
+    setAutoPanel(`カード ${n}/${tot} — STEP 3`,'📖 英文・日本語訳・解説を見ながら2回シャドウイングしてください。','1/2回目…');
+    await speakP(); if(autoStopped) break; await delayP(350); if(autoStopped) break;
+    setAutoPanel(`カード ${n}/${tot} — STEP 3`,'📖 英文・日本語訳・解説を見ながら2回シャドウイングしてください。','2/2回目…');
+    await speakP(); if(autoStopped) break; await delayP(450); if(autoStopped) break;
+
+    // Step4: ？？？表示で何も見ずにシャドウイング×2
+    showHidden();
+    setAutoPanel(`カード ${n}/${tot} — STEP 4`,'🙈 何も見ずに2回シャドウイングしてください。','1/2回目…');
+    await speakP(); if(autoStopped) break; await delayP(350); if(autoStopped) break;
+    setAutoPanel(`カード ${n}/${tot} — STEP 4`,'🙈 何も見ずに2回シャドウイングしてください。','2/2回目…');
+    await speakP(); if(autoStopped) break; await delayP(700);
+  }
+  if (!autoStopped) {
+    setAutoPanel('完了！', `🎉 シャドウイング完了しました！`, '');
+    await delayP(2000);
+    stopAutoPlay();
+  }
+}
+
+function startShadowing() {
+  if (!getActive().length) { alert('出題できるカードがありません。'); return; }
+  autoMode = 'shadow';
+  enterAutoUI();
+  runShadowing();
+}
+
+// ── Continuous play (英語連続再生・全表示) ────────────────────────
+async function runContinuous() {
+  let loopCount = 0;
+  while (!autoStopped) {
+    const active = getActive();
+    if (!active.length) { stopAutoPlay(); return; }
+    loopCount++;
+    const startIdx = currentIndex;
+
+    for (let i = 0; i < active.length; i++) {
+      if (autoStopped) break;
+      currentIndex = (startIdx + i) % active.length;
+      update();
+      // 全部表示
+      document.getElementById('answer-wrap').classList.add('show');
+      document.getElementById('main-card').classList.add('revealed');
+
+      const n = i+1, tot = active.length;
+      setAutoPanel(
+        `連続再生 ${n}/${tot}（${loopCount}周目）`,
+        '▶ 英語音声を再生中 — ⏹ 停止ボタンで終了',
+        ''
+      );
+      await speakP(); if(autoStopped) break;
+      await delayP(500);
+    }
+    // 一周したら先頭に戻してループ継続
+    if (!autoStopped) {
+      currentIndex = 0;
+    }
+  }
+}
+
+function startContinuous() {
+  if (!getActive().length) { alert('出題できるカードがありません。'); return; }
+  autoMode = 'continuous';
+  enterAutoUI();
+  runContinuous();
+}
+
+// ── Guide modal ───────────────────────────────────────────────────
+function openGuide() {
+  document.getElementById('guide-overlay').classList.add('show');
+  document.getElementById('guide-overlay').scrollTop = 0;
+}
+function closeGuide() {
+  document.getElementById('guide-overlay').classList.remove('show');
+}
+function handleOverlayClick(e) {
+  if (e.target === document.getElementById('guide-overlay')) closeGuide();
+}
+
+// ── Init ──────────────────────────────────────────────────────────
 buildCatRows();
-showCard();
+updateFilterLabel();
+update();
 </script>
 </body>
 </html>
