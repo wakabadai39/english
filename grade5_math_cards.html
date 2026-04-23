@@ -107,6 +107,21 @@ body {
   text-align: left; padding: 0 4px; line-height: 1.6;
 }
 .answer-tip::before { content: '💡 '; }
+.speech-text {
+  font-size: clamp(11px, 3vw, 13px);
+  color: #6b7280;
+  font-style: italic;
+  text-align: center;
+  line-height: 1.5;
+  padding: 4px 8px 2px;
+  letter-spacing: 0.01em;
+}
+.speech-text .speech-icon {
+  font-style: normal;
+  margin-right: 3px;
+  opacity: 0.7;
+}
+
 
 .master-badge {
   display: none; text-align: center; margin-top: 8px;
@@ -393,6 +408,7 @@ body {
     </div>
   </div>
   <div class="main-text" id="main-text">Loading...</div>
+  <div class="speech-text" id="speech-text"></div>
   <div class="answer-wrap" id="answer-wrap">
     <div class="answer-ja" id="answer-ja"></div>
     <div class="answer-tip" id="answer-tip" style="display:none"></div>
@@ -621,7 +637,7 @@ const CATS = {
 };
 
 const phrases = [
-    {cat:'整数・演算', en:'BODMAS — the rule for the order of operations.', speech:'BODMAS, the rule for the order of operations.', ja:'BODMAS（ボドマス）＝計算の順序を示すルールです。', tip:'アメリカでは "PEMDAS" と言う。シンガポール・イギリスでは BODMAS が標準'},
+    {cat:'整数・演算', en:'BODMAS — the rule for the order of operations.', speech:'BODMAS, the rule for the order of operations.', ja:'BODMAS（ボドマス）＝計算の順序を示すルールです。', tip:'BODMAS: Brackets・Orders・Division・Multiplication・Addition・Subtraction / アメリカでは PEMDAS（Parentheses・Exponents・M・D・A・S）と言う'},
   {cat:'整数・演算', en:'B = <mark>Brackets</mark>. Calculate inside brackets first. (3 + 5) × 2 = 16.', speech:'B equals Brackets. Calculate inside brackets first. Open bracket 3 plus 5 close bracket times 2 equals 16.', ja:'B＝Brackets（括弧）。まず括弧の中を計算します。', tip:'"brackets" ＝ 括弧'},
   {cat:'整数・演算', en:'O = <mark>Orders</mark>. Powers and square roots. 2² = 4.', speech:'O equals Orders. Powers and square roots. 2 squared equals 4.', ja:'O＝Orders（累乗・平方根）。', tip:'"orders" ＝ 累乗・平方根'},
   {cat:'整数・演算', en:'D = <mark>Division</mark>. Divide before adding or subtracting. 10 + 6 ÷ 2 = 13.', speech:'D equals Division. Divide before adding or subtracting. 10 plus 6 divided by 2 equals 13.', ja:'D＝Division（割り算）。足し算・引き算より先に割り算をします。', tip:'D と M は同じ優先度。左から順に計算する'},
@@ -959,6 +975,12 @@ function update() {
   const displayHTML = isEnToJa ? item.en : item.ja;
   document.getElementById('main-text').innerHTML   = displayHTML;
   document.getElementById('answer-ja').innerHTML   = isEnToJa ? item.ja : item.en;
+  const speechEl = document.getElementById('speech-text');
+  if (item.speech) {
+    speechEl.innerHTML = '<span class="speech-icon">🔊</span>' + item.speech;
+  } else {
+    speechEl.textContent = '';
+  }
   const tipEl = document.getElementById('answer-tip');
   if (item.tip) { tipEl.textContent = item.tip; tipEl.style.display=''; }
   else tipEl.style.display = 'none';

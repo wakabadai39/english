@@ -107,6 +107,21 @@ body {
   text-align: left; padding: 0 4px; line-height: 1.6;
 }
 .answer-tip::before { content: '💡 '; }
+.speech-text {
+  font-size: clamp(11px, 3vw, 13px);
+  color: #6b7280;
+  font-style: italic;
+  text-align: center;
+  line-height: 1.5;
+  padding: 4px 8px 2px;
+  letter-spacing: 0.01em;
+}
+.speech-text .speech-icon {
+  font-style: normal;
+  margin-right: 3px;
+  opacity: 0.7;
+}
+
 
 .master-badge {
   display: none; text-align: center; margin-top: 8px;
@@ -393,6 +408,7 @@ body {
     </div>
   </div>
   <div class="main-text" id="main-text">Loading...</div>
+  <div class="speech-text" id="speech-text"></div>
   <div class="answer-wrap" id="answer-wrap">
     <div class="answer-ja" id="answer-ja"></div>
     <div class="answer-tip" id="answer-tip" style="display:none"></div>
@@ -955,6 +971,12 @@ function update() {
   const displayHTML = isEnToJa ? item.en : item.ja;
   document.getElementById('main-text').innerHTML   = displayHTML;
   document.getElementById('answer-ja').innerHTML   = isEnToJa ? item.ja : item.en;
+  const speechEl = document.getElementById('speech-text');
+  if (item.speech) {
+    speechEl.innerHTML = '<span class="speech-icon">🔊</span>' + item.speech;
+  } else {
+    speechEl.textContent = '';
+  }
   const tipEl = document.getElementById('answer-tip');
   if (item.tip) { tipEl.textContent = item.tip; tipEl.style.display=''; }
   else tipEl.style.display = 'none';

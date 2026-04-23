@@ -107,6 +107,21 @@ body {
   text-align: left; padding: 0 4px; line-height: 1.6;
 }
 .answer-tip::before { content: '💡 '; }
+.speech-text {
+  font-size: clamp(11px, 3vw, 13px);
+  color: #6b7280;
+  font-style: italic;
+  text-align: center;
+  line-height: 1.5;
+  padding: 4px 8px 2px;
+  letter-spacing: 0.01em;
+}
+.speech-text .speech-icon {
+  font-style: normal;
+  margin-right: 3px;
+  opacity: 0.7;
+}
+
 
 .master-badge {
   display: none; text-align: center; margin-top: 8px;
@@ -393,6 +408,7 @@ body {
     </div>
   </div>
   <div class="main-text" id="main-text">Loading...</div>
+  <div class="speech-text" id="speech-text"></div>
   <div class="answer-wrap" id="answer-wrap">
     <div class="answer-ja" id="answer-ja"></div>
     <div class="answer-tip" id="answer-tip" style="display:none"></div>
@@ -629,8 +645,8 @@ const phrases = [
   {cat:'整数・数の性質', en:'A = <mark>Addition</mark> and S = <mark>Subtraction</mark> have the same priority. Calculate left to right. 5 − 2 + 3 = 6.', speech:'A equals Addition and S equals Subtraction. Same priority, calculate left to right. 5 minus 2 plus 3 equals 6.', ja:'A＝足し算、S＝引き算。同じ優先度で左から順に計算します。', tip:'足し算を先にすると間違いになります！左から右へ。'},
   {cat:'整数・数の性質', en:'The <mark>absolute value</mark> of −7 is <mark>7</mark>: |−7| = 7.', speech:'The absolute value of negative 7 is 7.', ja:'−7 の絶対値は 7 です。', tip:'"absolute value" ＝ 絶対値'},
   {cat:'整数・数の性質', en:'Order from least to greatest: −5, 2, −1, 0, 3.', speech:'Order from least to greatest: negative 5, negative 1, 0, 2, 3.', ja:'整数を小さい順に: −5, −1, 0, 2, 3', tip:'"least to greatest" ＝ 昇順'},
-  {cat:'整数・数の性質', en:'LCM of 4 and 6 = <mark>12</mark>.', speech:'LCM of 4 and 6 equals 12.', ja:'4 と 6 の最小公倍数（LCM）は 12 です。', tip:'"LCM" ＝ 最小公倍数'},
-  {cat:'整数・数の性質', en:'HCF of 18 and 24 = <mark>6</mark>.', speech:'HCF of 18 and 24 equals 6.', ja:'18 と 24 の最大公約数（HCF）は 6 です。', tip:'"HCF" ＝ 最大公約数'},
+  {cat:'整数・数の性質', en:'LCM of 4 and 6 = <mark>12</mark>.', speech:'LCM of 4 and 6 equals 12.', ja:'4 と 6 の最小公倍数（LCM）は 12 です。', tip:'LCM = Lowest Common Multiple ＝ 最小公倍数'},
+  {cat:'整数・数の性質', en:'HCF of 18 and 24 = <mark>6</mark>.', speech:'HCF of 18 and 24 equals 6.', ja:'18 と 24 の最大公約数（HCF）は 6 です。', tip:'HCF = Highest Common Factor ＝ 最大公約数'},
   {cat:'整数・数の性質', en:'Is 37 a <mark>prime number</mark>? Yes — factors are 1 and 37 only.', speech:'Is 37 a prime number? Yes. Factors are 1 and 37 only.', ja:'37 は素数です。約数が 1 と 37 だけ。', tip:'"prime number" ＝ 素数'},
   {cat:'整数・数の性質', en:'60 = <mark>2² × 3 × 5</mark> (prime factorisation).', speech:'60 equals 2 squared, times 3, times 5. Prime factorisation.', ja:'60 の素因数分解: 60 = 2² × 3 × 5 です。', tip:'"prime factorisation" ＝ 素因数分解'},
   {cat:'整数・数の性質', en:'Evaluate <mark>2³</mark>. Two cubed = <mark>8</mark>.', speech:'Evaluate 2 cubed. Two cubed equals 8.', ja:'2³ を計算すると 8 です。', tip:'"cubed" ＝ 3乗'},
@@ -955,6 +971,12 @@ function update() {
   const displayHTML = isEnToJa ? item.en : item.ja;
   document.getElementById('main-text').innerHTML   = displayHTML;
   document.getElementById('answer-ja').innerHTML   = isEnToJa ? item.ja : item.en;
+  const speechEl = document.getElementById('speech-text');
+  if (item.speech) {
+    speechEl.innerHTML = '<span class="speech-icon">🔊</span>' + item.speech;
+  } else {
+    speechEl.textContent = '';
+  }
   const tipEl = document.getElementById('answer-tip');
   if (item.tip) { tipEl.textContent = item.tip; tipEl.style.display=''; }
   else tipEl.style.display = 'none';
