@@ -844,8 +844,18 @@ function speakSub(text, onEnd) {
     utt.lang = pref === 'US' ? 'en-US' : 'en-GB';
   }
   utt.rate = getRate();
-  utt.onend   = () => { if (onEnd) onEnd(); };
-  utt.onerror = () => { if (onEnd) onEnd(); };
+  // onendとタイマーの両方で次へ進む（iPhoneではonendが発火しない場合がある）
+  let done = false;
+  function advance() {
+    if (done) return;
+    done = true;
+    if (onEnd) onEnd();
+  }
+  utt.onend   = advance;
+  utt.onerror = advance;
+  // 文字数から読み上げ時間を推定してフォールバック
+  const estimatedMs = Math.max(1500, text.length * 70 / getRate());
+  setTimeout(advance, estimatedMs);
   window.speechSynthesis.speak(utt);
 }
 
