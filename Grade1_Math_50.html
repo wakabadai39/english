@@ -836,20 +836,59 @@ function speakOne(text, onEnd) {
 function stripTags(html) { return html.replace(/<[^>]+>/g,'').replace(/\s+/g,' ').trim(); }
 
 function speakWithPause(text, pauseMs, onEnd) {
-  // 文の区切りにピリオドを追加してTTSに自然なポーズを取らせる
-  // 「? 」「! 」「. 」の後に続く大文字の前にポーズ用のピリオドを挿入
-  let pausedText = '';
+  // iOS WebKit対応：onendに頼らず時間ベースで管理
+  const sentences = [];
+  let buf = '';
   for (let i = 0; i < text.length; i++) {
-    pausedText += text[i];
-    if ((/[?.!]/).test(text[i]) && i + 1 < text.length && text[i+1] === ' ' &&
+    buf += text[i];
+    if ((/[?.!]/).test(text[i]) &&
+        i + 1 < text.length && text[i+1] === ' ' &&
         i + 2 < text.length && (/[A-Z]/).test(text[i+2])) {
-      // ポーズを誘発するため「...」を挿入
-      pausedText += ' ... ';
+      sentences.push(buf.trim());
+      buf = '';
+      i++;
     }
   }
-  speakOne(pausedText, onEnd);
-}
+  if (buf.trim()) sentences.push(buf.trim());
+  if (sentences.length <= 1) { speakOne(text, onEnd); return; }
 
+  const rate = getRate();
+  // 文字数から読み上げ時間を推定（英語は約1文字=60ms / rate）
+  function estimateMs(s) {
+    return Math.max(800, Math.round(s.length * 65 / rate));
+  }
+
+  let si = 0;
+  function nextSentence() {
+    if (si >= sentences.length) { if (onEnd) onEnd(); return; }
+    const s = sentences[si++];
+    const last = si >= sentences.length;
+    // utteranceを作成してキューに積む
+    const utt = new SpeechSynthesisUtterance(s);
+    const v = getVoice();
+    if (v) { utt.voice = v; utt.lang = v.lang; }
+    else {
+      const pref = document.getElementById('voice-pref') ?
+        document.getElementById('voice-pref').value : 'US';
+      utt.lang = pref === 'US' ? 'en-US' : 'en-GB';
+    }
+    utt.rate = rate;
+    window.speechSynthesis.speak(utt);
+    // onendとタイマーの両方で次へ進む（早い方が勝つ）
+    let advanced = false;
+    function advance() {
+      if (advanced) return;
+      advanced = true;
+      if (last) { if (onEnd) onEnd(); }
+      else { setTimeout(nextSentence, pauseMs); }
+    }
+    utt.onend = advance;
+    utt.onerror = advance;
+    // フォールバック：推定時間後に強制的に次へ
+    setTimeout(advance, estimateMs(s) + pauseMs);
+  }
+  nextSentence();
+}
 function speakCurrent() {
   const a = getActive(); if(!a.length) return;
   const item = a[currentIndex];
