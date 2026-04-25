@@ -835,10 +835,43 @@ function speakOne(text, onEnd) {
 
 function stripTags(html) { return html.replace(/<[^>]+>/g,'').replace(/\s+/g,' ').trim(); }
 
+function speakSub(text, onEnd) {
+  const utt = new SpeechSynthesisUtterance(text);
+  const v = getVoice();
+  if (v) { utt.voice = v; utt.lang = v.lang; }
+  else {
+    const pref = document.getElementById('voice-pref').value;
+    utt.lang = pref === 'US' ? 'en-US' : 'en-GB';
+  }
+  utt.rate = getRate();
+  utt.onend   = () => { if (onEnd) onEnd(); };
+  utt.onerror = () => { if (onEnd) onEnd(); };
+  window.speechSynthesis.speak(utt);
+}
+
+function speakWithPause(text, pauseMs, onEnd) {
+  const sentences = text.split('\n');
+  if (sentences.length <= 1) { speakSub(text, onEnd); return; }
+  let i = 0;
+  function next() {
+    if (i >= sentences.length) { if (onEnd) onEnd(); return; }
+    const s = sentences[i++];
+    const last = i >= sentences.length;
+    speakSub(s, () => {
+      if (last) { if (onEnd) onEnd(); }
+      else { setTimeout(next, pauseMs); }
+    });
+  }
+  next();
+}
+
 function speakCurrent() {
   const a = getActive(); if(!a.length) return;
   const item = a[currentIndex];
-  speakOne(item.speech || stripTags(item.en));
+  window.speechSynthesis.cancel();
+  setTimeout(() => {
+    speakWithPause(item.speech || stripTags(item.en), 1000);
+  }, 150);
 }
 
 function speakP() {
@@ -846,7 +879,10 @@ function speakP() {
     if (autoStopped) { resolve(); return; }
     const a = getActive(); if(!a.length) { resolve(); return; }
     const _item = a[currentIndex];
-    speakOne(_item.speech || stripTags(_item.en), resolve);
+    window.speechSynthesis.cancel();
+    setTimeout(() => {
+      speakWithPause(_item.speech || stripTags(_item.en), 1000, resolve);
+    }, 150);
   });
 }
 
