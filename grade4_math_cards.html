@@ -854,33 +854,18 @@ function speakOne(text, onEnd) {
 function stripTags(html) { return html.replace(/<[^>]+>/g,'').replace(/\s+/g,' ').trim(); }
 
 function speakWithPause(text, pauseMs, onEnd) {
-  // Safari対応：lookbehindを使わずに文を分割
-  // [?.!]の後にスペース+大文字が続く箇所で区切る
-  const sentences = [];
-  let buf = '';
+  // 文の区切りにピリオドを追加してTTSに自然なポーズを取らせる
+  // 「? 」「! 」「. 」の後に続く大文字の前にポーズ用のピリオドを挿入
+  let pausedText = '';
   for (let i = 0; i < text.length; i++) {
-    buf += text[i];
-    if ((/[?.!]/).test(text[i]) && i + 1 < text.length && text[i+1] === ' ' && i + 2 < text.length && (/[A-Z]/).test(text[i+2])) {
-      sentences.push(buf.trim());
-      buf = '';
-      i++; // スペースをスキップ
+    pausedText += text[i];
+    if ((/[?.!]/).test(text[i]) && i + 1 < text.length && text[i+1] === ' ' &&
+        i + 2 < text.length && (/[A-Z]/).test(text[i+2])) {
+      // ポーズを誘発するため「...」を挿入
+      pausedText += ' ... ';
     }
   }
-  if (buf.trim()) sentences.push(buf.trim());
-
-  if (sentences.length <= 1) { speakOne(text, onEnd); return; }
-
-  let idx = 0;
-  function next() {
-    if (idx >= sentences.length) { if (onEnd) onEnd(); return; }
-    const part = sentences[idx++];
-    const isLast = (idx >= sentences.length);
-    speakOne(part, () => {
-      if (isLast) { if (onEnd) onEnd(); }
-      else { setTimeout(next, pauseMs); }
-    });
-  }
-  next();
+  speakOne(pausedText, onEnd);
 }
 
 function speakCurrent() {
