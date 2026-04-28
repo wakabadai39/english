@@ -6,56 +6,28 @@
 *{box-sizing:border-box;margin:0;padding:0}
 :root{--sky:#FFF8E7;--card:#fff;--mint:#4ECBA3;--mintd:#3aab88;--sun:#FFD93D;--coral:#FF6B6B;--corald:#e85555;--lav:#A78BFA;--blue:#60A5FA;--pink:#E879A0;--orange:#FFB347;--text:#2D2D2D;--muted:#999;--sh:#E8D9C0}
 body{background:var(--sky);font-family:'Nunito','Hiragino Sans',sans-serif;font-size:14px}
-.app{max-width:640px;margin:0 auto;padding:1rem 1rem 2rem}
+.app{max-width:640px;margin:0 auto;padding:.5rem .75rem 2rem}
 
-/* === Alphablocks推奨バナー === */
-.ab-banner{background:linear-gradient(135deg,#1a1a2e,#16213e,#0f3460);border-radius:20px;padding:1.25rem;margin-bottom:.75rem;color:#fff;position:relative;overflow:hidden}
-.ab-banner::after{content:'▶';position:absolute;right:20px;top:50%;transform:translateY(-50%);font-size:52px;opacity:.08}
-.ab-top{display:flex;align-items:center;gap:12px;margin-bottom:10px}
-.ab-logo{font-size:36px;line-height:1}
-.ab-head{flex:1}
-.ab-title{font-size:15px;font-weight:900;margin-bottom:2px}
-.ab-sub{font-size:11px;opacity:.8;font-weight:700;line-height:1.5}
-.ab-link{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.12);border:1.5px solid rgba(255,255,255,.25);border-radius:14px;padding:10px 14px;text-decoration:none;color:#fff;transition:background .15s;margin-bottom:8px}
-.ab-link:hover{background:rgba(255,255,255,.22)}
-.ab-link-icon{font-size:26px;flex-shrink:0}
-.ab-link-text{flex:1}
-.ab-link-title{font-size:14px;font-weight:900;margin-bottom:2px}
-.ab-link-desc{font-size:11px;opacity:.8;font-weight:700;line-height:1.4}
-.ab-link-arrow{font-size:18px;opacity:.6}
-.ab-note{font-size:11px;opacity:.75;font-weight:700;line-height:1.6;background:rgba(255,255,255,.08);border-radius:10px;padding:8px 12px}
+/* バナー */
+.ab-link{display:flex;align-items:center;gap:8px;background:linear-gradient(135deg,#1a1a2e,#0f3460);border-radius:10px;padding:7px 11px;text-decoration:none;color:#fff;margin-bottom:.4rem}
+.ab-link-title{font-size:11px;font-weight:900;flex:1}
 
-/* === 使い方（折りたたみ） === */
-.howto-section{background:var(--card);border-radius:16px;box-shadow:0 3px 0 var(--sh);margin-bottom:.75rem;overflow:hidden}
-.howto-header{display:flex;align-items:center;justify-content:space-between;padding:11px 15px;cursor:pointer;font-size:13px;font-weight:900;color:var(--text);user-select:none}
-.howto-header:hover{background:#FAFAFA}
-.howto-arrow{font-size:12px;color:var(--muted);transition:transform .2s}
-.howto-arrow.open{transform:rotate(180deg)}
-.howto-body{display:none;padding:0 15px 14px;border-top:1px solid #F3F4F6}
-.howto-body.open{display:block}
-.howto-step{display:flex;gap:10px;margin-top:12px;align-items:flex-start}
-.howto-num{width:24px;height:24px;border-radius:50%;background:var(--mint);color:#fff;font-size:12px;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
-.howto-text{font-size:12px;font-weight:700;color:var(--text);line-height:1.6}
-.howto-text b{color:var(--coral)}
+/* topbar */
+.topbar{display:flex;align-items:center;gap:8px;margin-bottom:.4rem}
+.mascot{font-size:34px;animation:bob 2s ease-in-out infinite;cursor:pointer;line-height:1;flex-shrink:0}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+.title-block{display:flex;align-items:center;gap:8px;flex:1}
+.title-block h1{font-size:20px;font-weight:900;color:var(--text)}
+.howto-btn{padding:4px 10px;border-radius:8px;border:none;font-family:inherit;font-size:10px;font-weight:900;cursor:pointer;background:var(--lav);color:#fff;flex-shrink:0}
 
-/* === topbar === */
-.topbar{display:flex;align-items:center;gap:10px;margin-bottom:.75rem}
-.mascot{font-size:42px;animation:bob 2s ease-in-out infinite;cursor:pointer;line-height:1}
-@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
-.title-block h1{font-size:24px;font-weight:900;color:var(--text)}
-.title-block p{font-size:11px;color:var(--muted);font-weight:700}
-.trophy-bar{background:var(--card);border-radius:16px;padding:9px 13px;margin-bottom:.75rem;box-shadow:0 3px 0 var(--sh);display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.trophy-items{display:flex;gap:5px;align-items:center;flex-wrap:wrap;flex:1;min-height:28px}
-.trophy-item{font-size:20px}
-.trophy-right{text-align:right}
-.total-words{font-size:11px;font-weight:900;color:var(--muted)}
-.next-goal{font-size:10px;color:var(--mint);font-weight:700}
-.stats{display:flex;gap:7px;margin-bottom:.75rem}
-.stat-card{flex:1;background:var(--card);border-radius:12px;padding:7px 8px;text-align:center;box-shadow:0 3px 0 var(--sh)}
-.stat-num{font-size:18px;font-weight:900;color:var(--text)}
-.stat-label{font-size:9px;color:var(--muted);font-weight:700}
-.level-tabs{display:flex;gap:5px;margin-bottom:.75rem;overflow-x:auto;padding-bottom:2px}
-.ltab{flex-shrink:0;padding:6px 11px;border-radius:99px;border:none;font-family:inherit;font-size:11px;font-weight:900;cursor:pointer;background:var(--card);color:var(--muted);box-shadow:0 3px 0 var(--sh);transition:all .15s;white-space:nowrap}
+/* 使用方法パネル */
+.howto-panel{display:none;background:var(--card);border-radius:12px;padding:10px 12px;margin-bottom:.4rem;box-shadow:0 3px 0 var(--sh);font-size:11px;font-weight:700;color:var(--text);line-height:1.8}
+.howto-panel.open{display:block}
+.howto-panel b{color:var(--coral)}
+
+/* レベルタブ */
+.level-tabs{display:flex;gap:4px;margin-bottom:.5rem;overflow-x:auto;padding-bottom:2px}
+.ltab{flex-shrink:0;padding:5px 9px;border-radius:99px;border:none;font-family:inherit;font-size:10px;font-weight:900;cursor:pointer;background:var(--card);color:var(--muted);box-shadow:0 3px 0 var(--sh);white-space:nowrap}
 .ltab.active{color:#fff;box-shadow:0 3px 0 rgba(0,0,0,.15)}
 .ltab[data-lv="0"].active{background:var(--pink)}
 .ltab[data-lv="1"].active{background:#9B8BFA}
@@ -64,153 +36,159 @@ body{background:var(--sky);font-family:'Nunito','Hiragino Sans',sans-serif;font-
 .ltab[data-lv="4"].active{background:var(--mint)}
 .ltab[data-lv="5"].active{background:var(--blue)}
 .ltab[data-lv="6"].active{background:var(--lav)}
-.pattern-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:5px;margin-bottom:.75rem}
-.pat-btn{background:var(--card);border:3px solid transparent;border-radius:12px;padding:6px 3px;cursor:pointer;text-align:center;box-shadow:0 3px 0 var(--sh);transition:transform .1s,box-shadow .1s}
-.pat-btn:active{transform:translateY(3px);box-shadow:none}
+
+/* 子音グリッド：4行×5列 */
+.cons-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:5px;margin-bottom:.5rem}
+.cons-cell{display:flex;align-items:center;gap:5px;background:var(--card);border:2px solid transparent;border-radius:10px;padding:5px 6px;cursor:pointer;box-shadow:0 2px 0 var(--sh);transition:all .1s}
+.cons-cell:active{transform:translateY(2px);box-shadow:none}
+.cons-cell.active{border-color:var(--mint);background:#F0FDF9}
+.cons-cell.playing-now{border-color:var(--coral);background:#FFF0F0}
+.cons-cell-emoji{font-size:18px;flex-shrink:0}
+.cons-cell-label{font-size:14px;font-weight:900;color:var(--coral)}
+
+/* パターングリッド（子音以外） */
+.pattern-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:5px;margin-bottom:.5rem}
+.pat-btn{background:var(--card);border:2px solid transparent;border-radius:10px;padding:6px 3px;cursor:pointer;text-align:center;box-shadow:0 2px 0 var(--sh);transition:transform .1s,box-shadow .1s}
+.pat-btn:active{transform:translateY(2px);box-shadow:none}
 .pat-btn.active{border-color:var(--mint);background:#F0FDF9}
 .pat-btn.playing-now{border-color:var(--coral);background:#FFF0F0}
-.pat-btn .pemoji{font-size:16px;display:block;margin-bottom:1px}
+.pat-btn .pemoji{font-size:15px;display:block;margin-bottom:1px}
 .pat-btn .plabel{font-size:10px;font-weight:900;color:var(--text)}
-.stage{background:var(--card);border-radius:24px;padding:1.25rem 1rem 1rem;box-shadow:0 7px 0 var(--sh);margin-bottom:.75rem;text-align:center;min-height:210px;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;overflow:hidden}
-.stage::before{content:'';position:absolute;top:-12px;right:-12px;width:80px;height:80px;background:var(--sun);border-radius:50%;opacity:.13}
-.contrast-panel{display:flex;gap:16px;justify-content:center;align-items:center;margin-bottom:8px;width:100%}
-.contrast-card{flex:1;max-width:140px;background:#F8F9FA;border-radius:16px;padding:10px 8px;text-align:center;border:2px solid #E5E7EB}
-.contrast-card.magic{background:#FFF0F5;border-color:#F9A8D4}
-.contrast-word{font-size:32px;font-weight:900;color:var(--text);letter-spacing:1px}
-.contrast-word .hl{color:var(--coral)}
-.contrast-word .magic-e{color:var(--pink);text-decoration:underline}
-.contrast-meaning{font-size:13px;font-weight:700;color:var(--lav)}
-.contrast-emoji{font-size:32px}
-.contrast-arrow{font-size:24px;color:var(--muted)}
-.word-emoji{font-size:52px;line-height:1;margin-bottom:4px;min-height:56px;display:flex;align-items:center;justify-content:center}
-.big-word{font-size:46px;font-weight:900;color:var(--text);letter-spacing:2px;line-height:1;margin-bottom:3px}
-.big-word .hl{color:var(--coral)}
-.big-word .magic-e{color:var(--pink);text-decoration:underline dotted 2px}
-.meaning{font-size:17px;font-weight:700;color:var(--lav);min-height:24px;margin-bottom:4px}
-.ex-word{font-size:12px;font-weight:700;color:var(--muted);min-height:18px;margin-bottom:8px}
-.hint-box{background:#FEF9C3;border-radius:10px;padding:6px 12px;font-size:12px;font-weight:700;color:#92400E;margin-bottom:8px;max-width:320px}
-.repeat-bar{display:flex;align-items:center;justify-content:center;gap:6px;min-height:20px;margin-bottom:6px}
-.rdot{width:9px;height:9px;border-radius:50%;background:#E5E7EB;transition:background .2s}
+
+/* ステージ */
+.stage{background:var(--card);border-radius:18px;padding:.75rem;box-shadow:0 6px 0 var(--sh);margin-bottom:.5rem;min-height:170px;display:flex;flex-direction:column;justify-content:center;position:relative;overflow:hidden}
+.stage::before{content:'';position:absolute;top:-10px;right:-10px;width:60px;height:60px;background:var(--sun);border-radius:50%;opacity:.13}
+
+/* 子音・通常表示：左に文字、右に絵 */
+.stage-main{display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:8px}
+.stage-word{font-size:52px;font-weight:900;color:var(--text);letter-spacing:2px;line-height:1}
+.stage-word .hl{color:var(--coral)}
+.stage-word .magic-e{color:var(--pink);text-decoration:underline dotted 2px}
+.stage-emoji{font-size:52px;line-height:1}
+.stage-meaning{font-size:15px;font-weight:700;color:var(--lav);text-align:center;min-height:20px;margin-bottom:4px}
+.hint-box{background:#FEF9C3;border-radius:8px;padding:4px 10px;font-size:11px;font-weight:700;color:#92400E;margin-bottom:6px;text-align:center}
+.repeat-bar{display:flex;align-items:center;justify-content:center;gap:5px;min-height:16px;margin-bottom:5px}
+.rdot{width:7px;height:7px;border-radius:50%;background:#E5E7EB;transition:background .2s}
 .rdot.on{background:var(--coral)}
 .rdot.done{background:var(--mint)}
-.chips{display:flex;flex-wrap:wrap;gap:5px;justify-content:center}
-.chip{font-size:11px;font-weight:700;padding:3px 10px;border-radius:99px;background:#F3F4F6;color:#9CA3AF;border:2px solid transparent;transition:transform .15s}
+.chips{display:flex;flex-wrap:wrap;gap:4px;justify-content:center}
+.chip{font-size:10px;font-weight:700;padding:3px 8px;border-radius:99px;background:#F3F4F6;color:#9CA3AF;border:2px solid transparent;transition:transform .15s}
 .chip.done{background:#FEF9C3;color:#A16207;border-color:#FDE047}
-.chip.cur{background:var(--coral);color:#fff;border-color:var(--corald);transform:scale(1.12)}
-.chip.rep{background:var(--mint);color:#fff;border-color:var(--mintd);transform:scale(1.12)}
-.controls{display:flex;gap:7px;justify-content:center;margin-bottom:.4rem;flex-wrap:wrap}
-.btn{font-family:inherit;font-weight:900;border:none;border-radius:13px;cursor:pointer;box-shadow:0 4px 0 rgba(0,0,0,.1);transition:transform .1s,box-shadow .1s}
+.chip.cur{background:var(--coral);color:#fff;border-color:var(--corald);transform:scale(1.1)}
+.chip.rep{background:var(--mint);color:#fff;border-color:var(--mintd);transform:scale(1.1)}
+
+/* マジックe対比 */
+.contrast-panel{display:flex;gap:10px;justify-content:center;align-items:center;margin-bottom:6px;width:100%}
+.contrast-card{flex:1;max-width:120px;background:#F8F9FA;border-radius:12px;padding:7px 6px;text-align:center;border:2px solid #E5E7EB}
+.contrast-card.magic{background:#FFF0F5;border-color:#F9A8D4}
+.contrast-word{font-size:26px;font-weight:900;color:var(--text)}
+.contrast-word .magic-e{color:var(--pink);text-decoration:underline}
+.contrast-meaning{font-size:11px;font-weight:700;color:var(--lav)}
+.contrast-emoji{font-size:26px}
+.contrast-arrow{font-size:18px;color:var(--muted)}
+
+/* コントロール */
+.status{text-align:center;font-size:11px;font-weight:700;color:var(--muted);min-height:16px;margin-bottom:3px}
+.controls{display:flex;gap:6px;justify-content:center;margin-bottom:.35rem}
+.btn{font-family:inherit;font-weight:900;border:none;border-radius:11px;cursor:pointer;box-shadow:0 4px 0 rgba(0,0,0,.1);transition:transform .1s,box-shadow .1s}
 .btn:active{transform:translateY(3px);box-shadow:0 1px 0 rgba(0,0,0,.1)}
-.btn-nav{background:#fff;color:var(--text);font-size:15px;padding:10px 15px}
-.btn-play{background:var(--mint);color:#fff;font-size:15px;padding:10px 26px}
-.btn-level{background:var(--lav);color:#fff;font-size:12px;padding:10px 14px}
-.tempo-row{display:flex;align-items:center;gap:7px;justify-content:center;font-size:11px;font-weight:700;color:var(--muted);margin-top:.4rem}
-.tempo-row input{width:100px;accent-color:var(--mint)}
-.status{text-align:center;font-size:12px;font-weight:700;color:var(--muted);min-height:18px;margin-bottom:4px}
-.cal-section{background:var(--card);border-radius:18px;box-shadow:0 4px 0 var(--sh);margin-top:.75rem;overflow:hidden}
-.cal-header{display:flex;align-items:center;justify-content:space-between;padding:11px 15px;cursor:pointer;font-size:12px;font-weight:900;color:var(--text)}
-.cal-body{padding:0 15px 13px;display:none}
+.btn-nav{background:#fff;color:var(--text);font-size:14px;padding:9px 13px}
+.btn-play{background:var(--mint);color:#fff;font-size:15px;padding:9px 22px}
+.btn-level{background:var(--lav);color:#fff;font-size:11px;padding:8px 11px}
+.tempo-row{display:flex;align-items:center;gap:6px;justify-content:center;font-size:11px;font-weight:700;color:var(--muted);margin-top:.3rem}
+.tempo-row input{width:90px;accent-color:var(--mint)}
+
+/* 下部 */
+.bottom-section{margin-top:.6rem}
+.trophy-bar{background:var(--card);border-radius:12px;padding:7px 11px;margin-bottom:.4rem;box-shadow:0 3px 0 var(--sh);display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.trophy-items{display:flex;gap:4px;align-items:center;flex-wrap:wrap;flex:1;min-height:22px}
+.trophy-item{font-size:18px}
+.trophy-right{text-align:right}
+.total-words{font-size:10px;font-weight:900;color:var(--muted)}
+.next-goal{font-size:9px;color:var(--mint);font-weight:700}
+.stats{display:flex;gap:5px;margin-bottom:.4rem}
+.stat-card{flex:1;background:var(--card);border-radius:9px;padding:5px 7px;text-align:center;box-shadow:0 2px 0 var(--sh)}
+.stat-num{font-size:15px;font-weight:900;color:var(--text)}
+.stat-label{font-size:8px;color:var(--muted);font-weight:700}
+.cal-section{background:var(--card);border-radius:14px;box-shadow:0 3px 0 var(--sh);overflow:hidden}
+.cal-header{display:flex;align-items:center;justify-content:space-between;padding:9px 13px;cursor:pointer;font-size:11px;font-weight:900;color:var(--text)}
+.cal-body{padding:0 13px 11px;display:none}
 .cal-body.open{display:block}
-.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-bottom:5px}
-.cday{aspect-ratio:1;border-radius:7px;background:#F3F4F6;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#ccc}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-bottom:4px}
+.cday{aspect-ratio:1;border-radius:5px;background:#F3F4F6;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;color:#ccc}
 .cday.studied{background:var(--mint);color:#fff}
 .cday.today{background:var(--coral);color:#fff}
-.streak-msg{text-align:center;font-size:12px;font-weight:700;color:var(--coral)}
+.streak-msg{text-align:center;font-size:11px;font-weight:700;color:var(--coral)}
+
+/* ダイアログ */
 .overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;z-index:100;opacity:0;pointer-events:none;transition:opacity .2s}
 .overlay.show{opacity:1;pointer-events:all}
-.dialog{background:var(--card);border-radius:26px;padding:1.75rem 1.4rem;text-align:center;max-width:300px;width:92%;box-shadow:0 10px 0 var(--sh);transform:scale(.85);transition:transform .2s}
+.dialog{background:var(--card);border-radius:22px;padding:1.4rem 1.1rem;text-align:center;max-width:280px;width:92%;box-shadow:0 8px 0 var(--sh);transform:scale(.85);transition:transform .2s}
 .overlay.show .dialog{transform:scale(1)}
-.dlg-emoji{font-size:58px;margin-bottom:.4rem}
-.dlg-title{font-size:20px;font-weight:900;color:var(--text);margin-bottom:.3rem}
-.dlg-sub{font-size:13px;color:var(--muted);font-weight:700;margin-bottom:1rem}
-.dlg-btns{display:flex;flex-direction:column;gap:8px}
-.dbtn{font-family:inherit;font-size:14px;font-weight:900;padding:12px;border:none;border-radius:14px;cursor:pointer;box-shadow:0 3px 0 rgba(0,0,0,.1)}
+.dlg-emoji{font-size:48px;margin-bottom:.3rem}
+.dlg-title{font-size:17px;font-weight:900;color:var(--text);margin-bottom:.25rem}
+.dlg-sub{font-size:11px;color:var(--muted);font-weight:700;margin-bottom:.8rem}
+.dlg-btns{display:flex;flex-direction:column;gap:6px}
+.dbtn{font-family:inherit;font-size:13px;font-weight:900;padding:10px;border:none;border-radius:11px;cursor:pointer;box-shadow:0 3px 0 rgba(0,0,0,.1)}
 .dbtn-again{background:var(--mint);color:#fff}
 .dbtn-next{background:var(--lav);color:#fff}
 .dbtn-stop{background:#F3F4F6;color:var(--text)}
-.tpop{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0);background:var(--card);border-radius:22px;padding:1.4rem;text-align:center;z-index:200;box-shadow:0 8px 36px rgba(0,0,0,.18);transition:transform .3s cubic-bezier(.34,1.56,.64,1)}
+.tpop{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0);background:var(--card);border-radius:18px;padding:1.1rem;text-align:center;z-index:200;box-shadow:0 6px 32px rgba(0,0,0,.18);transition:transform .3s cubic-bezier(.34,1.56,.64,1)}
 .tpop.show{transform:translate(-50%,-50%) scale(1)}
-.tpop-emoji{font-size:68px;margin-bottom:.4rem}
-.tpop-title{font-size:18px;font-weight:900;color:var(--text)}
+.tpop-emoji{font-size:60px;margin-bottom:.3rem}
+.tpop-title{font-size:16px;font-weight:900;color:var(--text)}
 </style>
 </head>
 <body>
 <div class="app">
 
-<!-- Alphablocks推奨バナー（常時表示） -->
-<div class="ab-banner">
-  <a class="ab-link" href="https://www.youtube.com/watch?v=xrjVALwDx_Y" target="_blank">
-    <span class="ab-link-icon">▶️</span>
-    <div class="ab-link-text">
-      <div class="ab-link-title">まずはこの動画でネイティブのフォニックスを体験しよう（BBC公式 Alphablocks）</div>
-    </div>
-    <span class="ab-link-arrow">›</span>
-  </a>
-</div>
+<!-- バナー -->
+<a class="ab-link" href="https://www.youtube.com/watch?v=xrjVALwDx_Y" target="_blank">
+  <span style="font-size:16px">▶️</span>
+  <span class="ab-link-title">まずこの動画でフォニックスを体験しよう（BBC公式 Alphablocks）</span>
+  <span style="font-size:14px;opacity:.6">›</span>
+</a>
 
-<!-- 使い方（折りたたみ） -->
-<div class="howto-section">
-  <div class="howto-header" onclick="toggleHowto()">
-    <span>📖 このアプリの使い方</span>
-    <span class="howto-arrow" id="howtoArrow">▼</span>
-  </div>
-  <div class="howto-body" id="howtoBody">
-    <div class="howto-step">
-      <div class="howto-num">1</div>
-      <div class="howto-text">上の動画で<b>フォニックスのしくみ</b>を体験してから始めましょう</div>
-    </div>
-    <div class="howto-step">
-      <div class="howto-num">2</div>
-      <div class="howto-text">レベルタブを選んでパターンをタップ。<b>Lv0a（子音）</b>から順番に進むのがおすすめです</div>
-    </div>
-    <div class="howto-step">
-      <div class="howto-num">3</div>
-      <div class="howto-text"><b>▶ スタート</b>を押すと「Repeat after me!」と流れます。聞いた後に声に出してまねしましょう</div>
-    </div>
-    <div class="howto-step">
-      <div class="howto-num">4</div>
-      <div class="howto-text">3周すると自動で止まります。<b>「もういっかい」「つぎへ」「きょうはここまで」</b>から選んでください</div>
-    </div>
-    <div class="howto-step">
-      <div class="howto-num">5</div>
-      <div class="howto-text"><b>🌟 このレベルをながす</b>でそのレベルの全パターンを連続再生できます</div>
-    </div>
-    <div class="howto-step">
-      <div class="howto-num">6</div>
-      <div class="howto-text">100語聞くたびにトロフィーがもらえます。<b>毎日続けて</b>コレクションを増やしましょう！</div>
-    </div>
-  </div>
-</div>
-
+<!-- topbar：タイトル＋使用方法ボタン -->
 <div class="topbar">
   <span class="mascot" id="mascot" onclick="bounceMascot()">🐸</span>
-  <div class="title-block"><h1>Phonics!</h1><p>きいて・まねして・おぼえよう</p></div>
-</div>
-<div class="trophy-bar">
-  <div class="trophy-items" id="trophyItems"><span style="font-size:11px;color:var(--muted)">100語できたら★がもらえるよ！</span></div>
-  <div class="trophy-right">
-    <div class="total-words">ごうけい <span id="totalW">0</span>語</div>
-    <div class="next-goal" id="nextGoal"></div>
+  <div class="title-block">
+    <h1>Phonics!</h1>
+    <button class="howto-btn" onclick="toggleHowto()">使用方法</button>
   </div>
 </div>
-<div class="stats">
-  <div class="stat-card"><div class="stat-num" id="sDays">0</div><div class="stat-label">れんぞく日</div></div>
-  <div class="stat-card"><div class="stat-num" id="sToday">0</div><div class="stat-label">きょうきいた</div></div>
-  <div class="stat-card"><div class="stat-num" id="sDayCount">0</div><div class="stat-label">がくしゅう日</div></div>
+
+<!-- 使用方法パネル -->
+<div class="howto-panel" id="howtoPanel">
+  1. レベルタブを選びパターンをタップ。<b>Lv0a（子音）</b>から順番がおすすめ<br>
+  2. <b>▶ スタート</b>→「Repeat after me!」の後に声に出してまねしよう<br>
+  3. 3周で自動停止。<b>もういっかい／つぎへ／きょうはここまで</b>を選ぼう<br>
+  4. <b>🌟このレベルをながす</b>でレベル内を連続再生できる
 </div>
+
+<!-- レベルタブ -->
 <div class="level-tabs" id="levelTabs"></div>
+
+<!-- 子音グリッド（4行×5列） -->
+<div class="cons-grid" id="consGrid" style="display:none"></div>
+
+<!-- パターングリッド（子音以外） -->
 <div class="pattern-grid" id="patternGrid"></div>
+
+<!-- ステージ -->
 <div class="stage" id="stage">
-  <div class="word-emoji">👆</div>
-  <div class="big-word"><span style="color:#ccc;font-size:18px">パターンをえらぼう</span></div>
+  <div class="stage-main">
+    <div class="stage-word"><span style="color:#ccc;font-size:16px">えらぼう</span></div>
+  </div>
 </div>
+
 <div class="status" id="status"></div>
 <div class="controls">
   <button class="btn btn-nav" onclick="prevPat()">◀</button>
   <button class="btn btn-play" id="playBtn" onclick="togglePlay()">▶ スタート</button>
   <button class="btn btn-nav" onclick="nextPat()">▶</button>
 </div>
-<div style="text-align:center;margin:5px 0">
+<div style="text-align:center;margin:4px 0">
   <button class="btn btn-level" id="levelBtn" onclick="toggleLevelPlay()">🌟 このレベルをながす</button>
 </div>
 <div class="tempo-row">
@@ -218,13 +196,30 @@ body{background:var(--sky);font-family:'Nunito','Hiragino Sans',sans-serif;font-
   <input type="range" min="600" max="2500" value="1200" step="200" oninput="updatePause(this.value)">
   <span id="pauseLabel">ゆっくり</span>
 </div>
-<div class="cal-section">
-  <div class="cal-header" onclick="toggleCal()"><span>📅 がくしゅうきろく</span><span id="calArrow">▼</span></div>
-  <div class="cal-body" id="calBody">
-    <div class="cal-grid" id="calGrid"></div>
-    <div class="streak-msg" id="streakMsg"></div>
+
+<!-- 下部：トロフィー・記録 -->
+<div class="bottom-section">
+  <div class="trophy-bar">
+    <div class="trophy-items" id="trophyItems"><span style="font-size:10px;color:var(--muted)">100語できたら★がもらえるよ！</span></div>
+    <div class="trophy-right">
+      <div class="total-words">ごうけい <span id="totalW">0</span>語</div>
+      <div class="next-goal" id="nextGoal"></div>
+    </div>
+  </div>
+  <div class="stats">
+    <div class="stat-card"><div class="stat-num" id="sDays">0</div><div class="stat-label">れんぞく日</div></div>
+    <div class="stat-card"><div class="stat-num" id="sToday">0</div><div class="stat-label">きょうきいた</div></div>
+    <div class="stat-card"><div class="stat-num" id="sDayCount">0</div><div class="stat-label">がくしゅう日</div></div>
+  </div>
+  <div class="cal-section">
+    <div class="cal-header" onclick="toggleCal()"><span>📅 がくしゅうきろく</span><span id="calArrow">▼</span></div>
+    <div class="cal-body" id="calBody">
+      <div class="cal-grid" id="calGrid"></div>
+      <div class="streak-msg" id="streakMsg"></div>
+    </div>
   </div>
 </div>
+
 <div class="overlay" id="overlay">
   <div class="dialog">
     <div class="dlg-emoji" id="dlgEmoji">🎉</div>
@@ -244,18 +239,6 @@ body{background:var(--sky);font-family:'Nunito','Hiragino Sans',sans-serif;font-
 </div>
 
 <script>
-function toggleHowto(){
-  const b=document.getElementById('howtoBody');
-  const a=document.getElementById('howtoArrow');
-  b.classList.toggle('open');
-  a.classList.toggle('open');
-}
-function toggleCal(){
-  const b=document.getElementById('calBody');
-  b.classList.toggle('open');
-  document.getElementById('calArrow').textContent=b.classList.contains('open')?'▲':'▼';
-}
-
 const LEVELS=[
   {name:'Lv0a 子音'},{name:'Lv0b 短母音'},{name:'Lv1 短母音パターン'},
   {name:'Lv2 マジックe'},{name:'Lv3 二重母音'},{name:'Lv4 R支配母音'},{name:'Lv5 子音ブレンド'},
@@ -266,33 +249,32 @@ const TROPHIES=[
   {t:20000,e:'💎',l:'ダイヤ'},{t:50000,e:'👑',l:'おうかん'},
 ];
 const ALL=[
-  // Lv0a 子音
-  {lv:0,label:'s',emoji:'🐍',type:'consonant',sound:'s',hint:'スーッとへびがならす音',words:[{w:'s',e:'🐍',m:'スーッという音',ex:'sun · sit · sea'},{w:'sun',e:'☀️',m:'たいよう'},{w:'sit',e:'🪑',m:'すわる'},{w:'sea',e:'🌊',m:'うみ'},{w:'six',e:'6️⃣',m:'ろく'}]},
-  {lv:0,label:'t',emoji:'🐢',type:'consonant',sound:'t',hint:'トッ！と短く切る音',words:[{w:'t',e:'🐢',m:'トッという音',ex:'top · ten · tap'},{w:'top',e:'🏔️',m:'てっぺん'},{w:'ten',e:'🔟',m:'じゅう'},{w:'tap',e:'🚿',m:'たたく'},{w:'tip',e:'☝️',m:'さき'}]},
-  {lv:0,label:'p',emoji:'🐧',type:'consonant',sound:'p',hint:'プッ！と息を出す音',words:[{w:'p',e:'🐧',m:'プッという音',ex:'pig · pan · pop'},{w:'pig',e:'🐷',m:'ぶた'},{w:'pan',e:'🍳',m:'フライパン'},{w:'pop',e:'🎈',m:'ポン'},{w:'pet',e:'🐹',m:'ペット'}]},
-  {lv:0,label:'n',emoji:'🌙',type:'consonant',sound:'n',hint:'ンーと鼻からでる音',words:[{w:'n',e:'🌙',m:'ンという音',ex:'net · nap · not'},{w:'net',e:'🥅',m:'あみ'},{w:'nap',e:'😴',m:'ひるね'},{w:'not',e:'🚫',m:'〜でない'},{w:'nose',e:'👃',m:'はな'}]},
-  {lv:0,label:'h',emoji:'🏠',type:'consonant',sound:'h',hint:'ハッ！と息を出す音',words:[{w:'h',e:'🏠',m:'ハッという音',ex:'hat · hop · hen'},{w:'hat',e:'🎩',m:'ぼうし'},{w:'hop',e:'🐰',m:'はねる'},{w:'hen',e:'🐔',m:'めんどり'},{w:'hot',e:'🔥',m:'あつい'}]},
-  {lv:0,label:'r',emoji:'🌈',type:'consonant',sound:'r',hint:'舌を丸めてルーという音',words:[{w:'r',e:'🌈',m:'ルーという音',ex:'run · red · rat'},{w:'run',e:'🏃',m:'はしる'},{w:'red',e:'🔴',m:'あか'},{w:'rat',e:'🐀',m:'ねずみ'},{w:'rug',e:'🏠',m:'じゅうたん'}]},
-  {lv:0,label:'m',emoji:'🐮',type:'consonant',sound:'m',hint:'口を閉じてムーという音',words:[{w:'m',e:'🐮',m:'ムーという音',ex:'man · mop · map'},{w:'man',e:'🧑',m:'おとこ'},{w:'mop',e:'🧹',m:'モップ'},{w:'map',e:'🗺️',m:'ちず'},{w:'mud',e:'💧',m:'どろ'}]},
-  {lv:0,label:'d',emoji:'🐶',type:'consonant',sound:'d',hint:'ドッ！と短く切る音',words:[{w:'d',e:'🐶',m:'ドッという音',ex:'dog · dig · dot'},{w:'dog',e:'🐶',m:'いぬ'},{w:'dig',e:'⛏️',m:'ほる'},{w:'dot',e:'🔴',m:'てん'},{w:'dip',e:'💧',m:'つける'}]},
-  {lv:0,label:'g',emoji:'🦍',type:'consonant',sound:'g',hint:'グッ！とのどから出す音',words:[{w:'g',e:'🦍',m:'グッという音',ex:'got · gap · gum'},{w:'got',e:'🎁',m:'もらった'},{w:'gap',e:'↔️',m:'すきま'},{w:'gum',e:'🍬',m:'ガム'},{w:'gas',e:'⛽',m:'ガス'}]},
-  {lv:0,label:'c/k',emoji:'🐱',type:'consonant',sound:'k',hint:'クッ！と短く切る音（cもkも同じ音！）',words:[{w:'c/k',e:'🐱',m:'クッという音',ex:'cat · kid · cup'},{w:'cat',e:'🐱',m:'ねこ'},{w:'kid',e:'👦',m:'こども'},{w:'cup',e:'☕',m:'カップ'},{w:'cap',e:'🧢',m:'ぼうし'}]},
-  {lv:0,label:'l',emoji:'🦁',type:'consonant',sound:'l',hint:'舌先を上の歯の裏につけてルという音',words:[{w:'l',e:'🦁',m:'ルという音',ex:'lip · log · let'},{w:'lip',e:'👄',m:'くちびる'},{w:'log',e:'🪵',m:'まるた'},{w:'lot',e:'📦',m:'たくさん'},{w:'let',e:'✋',m:'させる'}]},
-  {lv:0,label:'f',emoji:'🌬️',type:'consonant',sound:'f',hint:'上の歯を下唇にあててフッという音',words:[{w:'f',e:'🌬️',m:'フッという音',ex:'fan · fog · fin'},{w:'fan',e:'🌀',m:'うちわ'},{w:'fog',e:'🌫️',m:'きり'},{w:'fin',e:'🐟',m:'ひれ'},{w:'fit',e:'💪',m:'ぴったり'}]},
-  {lv:0,label:'b',emoji:'🐝',type:'consonant',sound:'b',hint:'唇を閉じてブッという音',words:[{w:'b',e:'🐝',m:'ブッという音',ex:'bat · bus · bed'},{w:'bat',e:'🦇',m:'こうもり'},{w:'bus',e:'🚌',m:'バス'},{w:'bed',e:'🛏️',m:'ベッド'},{w:'bug',e:'🐛',m:'むし'}]},
-  {lv:0,label:'j',emoji:'🤹',type:'consonant',sound:'j',hint:'ジュッという音',words:[{w:'j',e:'🤹',m:'ジュッという音',ex:'jet · jog · jam'},{w:'jet',e:'✈️',m:'ジェット'},{w:'jog',e:'🏃',m:'ジョギング'},{w:'jam',e:'🍓',m:'ジャム'},{w:'jug',e:'🫙',m:'かめ'}]},
-  {lv:0,label:'z',emoji:'⚡',type:'consonant',sound:'z',hint:'ズーと振動する音',words:[{w:'z',e:'⚡',m:'ズーという音',ex:'zip · zoo · zap'},{w:'zip',e:'🤐',m:'ジッパー'},{w:'zoo',e:'🦁',m:'どうぶつえん'},{w:'zap',e:'⚡',m:'ビリッ'},{w:'zero',e:'0️⃣',m:'ゼロ'}]},
-  {lv:0,label:'w',emoji:'🌊',type:'consonant',sound:'w',hint:'唇を丸めてウッという音',words:[{w:'w',e:'🌊',m:'ウッという音',ex:'wet · win · web'},{w:'wet',e:'💧',m:'ぬれた'},{w:'win',e:'🏆',m:'かつ'},{w:'web',e:'🕸️',m:'くもの巣'},{w:'wig',e:'👱',m:'かつら'}]},
-  {lv:0,label:'v',emoji:'🎻',type:'consonant',sound:'v',hint:'上の歯を下唇にあててヴッという音',words:[{w:'v',e:'🎻',m:'ヴッという音',ex:'van · vet · vine'},{w:'van',e:'🚐',m:'バン'},{w:'vet',e:'🩺',m:'じゅうい'},{w:'vine',e:'🍇',m:'つるくさ'},{w:'vest',e:'🦺',m:'ベスト'}]},
-  {lv:0,label:'y',emoji:'🧶',type:'consonant',sound:'y',hint:'ヤッという音',words:[{w:'y',e:'🧶',m:'ヤッという音',ex:'yes · yam · yet'},{w:'yes',e:'✅',m:'はい'},{w:'yam',e:'🍠',m:'やまいも'},{w:'yet',e:'⏳',m:'まだ'},{w:'yak',e:'🦬',m:'ヤク'}]},
-  {lv:0,label:'x',emoji:'❌',type:'consonant',sound:'x',hint:'クスという音（語尾でよく使う）',words:[{w:'x',e:'❌',m:'クスという音',ex:'fox · box · mix'},{w:'fox',e:'🦊',m:'きつね'},{w:'box',e:'📦',m:'はこ'},{w:'mix',e:'🔄',m:'まぜる'},{w:'six',e:'6️⃣',m:'ろく'}]},
-  {lv:0,label:'qu',emoji:'👑',type:'consonant',sound:'qu',hint:'クウという音（qは必ずuとセット）',words:[{w:'qu',e:'👑',m:'クウという音',ex:'queen · quiz'},{w:'queen',e:'👑',m:'じょおう'},{w:'quiz',e:'❓',m:'クイズ'},{w:'quick',e:'⚡',m:'はやい'},{w:'quit',e:'🚪',m:'やめる'}]},
+  {lv:0,label:'s',emoji:'🐍',type:'consonant',sound:'s',hint:'スーッと進む音',words:[{w:'s',e:'🐍',m:'スーッ'},{w:'sun',e:'☀️',m:'たいよう'},{w:'sit',e:'🪑',m:'すわる'},{w:'sea',e:'🌊',m:'うみ'},{w:'six',e:'6️⃣',m:'ろく'}]},
+  {lv:0,label:'t',emoji:'🐢',type:'consonant',sound:'t',hint:'トッ！と短く切る音',words:[{w:'t',e:'🐢',m:'トッ'},{w:'top',e:'🏔️',m:'てっぺん'},{w:'ten',e:'🔟',m:'じゅう'},{w:'tap',e:'🚿',m:'たたく'},{w:'tip',e:'☝️',m:'さき'}]},
+  {lv:0,label:'p',emoji:'🐧',type:'consonant',sound:'p',hint:'プッ！と息を吐く音',words:[{w:'p',e:'🐧',m:'プッ'},{w:'pig',e:'🐷',m:'ぶた'},{w:'pan',e:'🍳',m:'フライパン'},{w:'pop',e:'🎈',m:'ポン'},{w:'pet',e:'🐹',m:'ペット'}]},
+  {lv:0,label:'n',emoji:'🌙',type:'consonant',sound:'n',hint:'鼻から抜けるン',words:[{w:'n',e:'🌙',m:'ン'},{w:'net',e:'🥅',m:'あみ'},{w:'nap',e:'😴',m:'ひるね'},{w:'not',e:'🚫',m:'〜でない'},{w:'nose',e:'👃',m:'はな'}]},
+  {lv:0,label:'h',emoji:'🏠',type:'consonant',sound:'h',hint:'ハッ！と息を出す音',words:[{w:'h',e:'🏠',m:'ハッ'},{w:'hat',e:'🎩',m:'ぼうし'},{w:'hop',e:'🐰',m:'はねる'},{w:'hen',e:'🐔',m:'めんどり'},{w:'hot',e:'🔥',m:'あつい'}]},
+  {lv:0,label:'r',emoji:'🌈',type:'consonant',sound:'r',hint:'舌を丸めて奥に引くル',words:[{w:'r',e:'🌈',m:'ル（舌を丸めて）'},{w:'run',e:'🏃',m:'はしる'},{w:'red',e:'🔴',m:'あか'},{w:'rat',e:'🐀',m:'ねずみ'},{w:'rug',e:'🏠',m:'じゅうたん'}]},
+  {lv:0,label:'m',emoji:'🐮',type:'consonant',sound:'m',hint:'唇を閉じて鼻から出すン',words:[{w:'m',e:'🐮',m:'ン（唇を閉じて）'},{w:'man',e:'🧑',m:'おとこ'},{w:'mop',e:'🧹',m:'モップ'},{w:'map',e:'🗺️',m:'ちず'},{w:'mud',e:'💧',m:'どろ'}]},
+  {lv:0,label:'d',emoji:'🐶',type:'consonant',sound:'d',hint:'ドッ！と短く切る音',words:[{w:'d',e:'🐶',m:'ドッ'},{w:'dog',e:'🐶',m:'いぬ'},{w:'dig',e:'⛏️',m:'ほる'},{w:'dot',e:'🔴',m:'てん'},{w:'dip',e:'💧',m:'つける'}]},
+  {lv:0,label:'g',emoji:'🦍',type:'consonant',sound:'g',hint:'のどの奥からグッ！',words:[{w:'g',e:'🦍',m:'グッ（のどの奥から）'},{w:'got',e:'🎁',m:'もらった'},{w:'gap',e:'↔️',m:'すきま'},{w:'gum',e:'🍬',m:'ガム'},{w:'gas',e:'⛽',m:'ガス'}]},
+  {lv:0,label:'c/k',emoji:'🐱',type:'consonant',sound:'k',hint:'クッ！（cもkも同じ音）',words:[{w:'c/k',e:'🐱',m:'クッ'},{w:'cat',e:'🐱',m:'ねこ'},{w:'kid',e:'👦',m:'こども'},{w:'cup',e:'☕',m:'カップ'},{w:'cap',e:'🧢',m:'ぼうし'}]},
+  {lv:0,label:'l',emoji:'🦁',type:'consonant',sound:'l',hint:'舌先を上の歯の裏につけてル',words:[{w:'l',e:'🦁',m:'ル（舌先を上の歯の裏へ）'},{w:'lip',e:'👄',m:'くちびる'},{w:'log',e:'🪵',m:'まるた'},{w:'lot',e:'📦',m:'たくさん'},{w:'let',e:'✋',m:'させる'}]},
+  {lv:0,label:'f',emoji:'🌬️',type:'consonant',sound:'f',hint:'上の歯を下唇にあててフッ！',words:[{w:'f',e:'🌬️',m:'フッ（歯を唇に当てて）'},{w:'fan',e:'🌀',m:'うちわ'},{w:'fog',e:'🌫️',m:'きり'},{w:'fin',e:'🐟',m:'ひれ'},{w:'fit',e:'💪',m:'ぴったり'}]},
+  {lv:0,label:'b',emoji:'🐝',type:'consonant',sound:'b',hint:'唇を閉じてブッ！',words:[{w:'b',e:'🐝',m:'ブッ（唇を閉じて）'},{w:'bat',e:'🦇',m:'こうもり'},{w:'bus',e:'🚌',m:'バス'},{w:'bed',e:'🛏️',m:'ベッド'},{w:'bug',e:'🐛',m:'むし'}]},
+  {lv:0,label:'j',emoji:'🤹',type:'consonant',sound:'j',hint:'ジュッという音',words:[{w:'j',e:'🤹',m:'ジュッ'},{w:'jet',e:'✈️',m:'ジェット'},{w:'jog',e:'🏃',m:'ジョギング'},{w:'jam',e:'🍓',m:'ジャム'},{w:'jug',e:'🫙',m:'かめ'}]},
+  {lv:0,label:'z',emoji:'⚡',type:'consonant',sound:'z',hint:'振動するズーという音',words:[{w:'z',e:'⚡',m:'ズー（振動する）'},{w:'zip',e:'🤐',m:'ジッパー'},{w:'zoo',e:'🦁',m:'どうぶつえん'},{w:'zap',e:'⚡',m:'ビリッ'},{w:'zero',e:'0️⃣',m:'ゼロ'}]},
+  {lv:0,label:'w',emoji:'🌊',type:'consonant',sound:'w',hint:'唇を丸めてウッ！',words:[{w:'w',e:'🌊',m:'ウッ（唇を丸めて）'},{w:'wet',e:'💧',m:'ぬれた'},{w:'win',e:'🏆',m:'かつ'},{w:'web',e:'🕸️',m:'くもの巣'},{w:'wig',e:'👱',m:'かつら'}]},
+  {lv:0,label:'v',emoji:'🎻',type:'consonant',sound:'v',hint:'上の歯を下唇にあててヴッ！',words:[{w:'v',e:'🎻',m:'ヴッ（歯を唇に当てて）'},{w:'van',e:'🚐',m:'バン'},{w:'vet',e:'🩺',m:'じゅうい'},{w:'vine',e:'🍇',m:'つるくさ'},{w:'vest',e:'🦺',m:'ベスト'}]},
+  {lv:0,label:'y',emoji:'🧶',type:'consonant',sound:'y',hint:'ヤッという音',words:[{w:'y',e:'🧶',m:'ヤッ'},{w:'yes',e:'✅',m:'はい'},{w:'yam',e:'🍠',m:'やまいも'},{w:'yet',e:'⏳',m:'まだ'},{w:'yak',e:'🦬',m:'ヤク'}]},
+  {lv:0,label:'x',emoji:'❌',type:'consonant',sound:'x',hint:'語尾でクスという音',words:[{w:'x',e:'❌',m:'クス（語尾で）'},{w:'fox',e:'🦊',m:'きつね'},{w:'box',e:'📦',m:'はこ'},{w:'mix',e:'🔄',m:'まぜる'},{w:'six',e:'6️⃣',m:'ろく'}]},
+  {lv:0,label:'qu',emoji:'👑',type:'consonant',sound:'qu',hint:'クウ（qは必ずuとセット）',words:[{w:'qu',e:'👑',m:'クウ（qは必ずuとセット）'},{w:'queen',e:'👑',m:'じょおう'},{w:'quiz',e:'❓',m:'クイズ'},{w:'quick',e:'⚡',m:'はやい'},{w:'quit',e:'🚪',m:'やめる'}]},
   // Lv0b 短母音
-  {lv:1,label:'a',emoji:'🍎',type:'vowel',sound:'a',hint:'「ア」と口を大きく開ける音（appleのア）\nアルファベットの名前は「エイ」',words:[{w:'a',e:'🍎',m:'エイ → ア（短母音）',ex:'apple · ant · ask'},{w:'apple',e:'🍎',m:'りんご'},{w:'ant',e:'🐜',m:'あり'},{w:'ask',e:'🙋',m:'たずねる'},{w:'add',e:'➕',m:'たす'}]},
-  {lv:1,label:'e',emoji:'🥚',type:'vowel',sound:'e',hint:'「エ」と口を横に開ける音（eggのエ）\nアルファベットの名前は「イー」',words:[{w:'e',e:'🥚',m:'イー → エ（短母音）',ex:'egg · end · elf'},{w:'egg',e:'🥚',m:'たまご'},{w:'end',e:'🏁',m:'おわり'},{w:'elf',e:'🧝',m:'エルフ'},{w:'elm',e:'🌳',m:'にれの木'}]},
-  {lv:1,label:'i',emoji:'🦋',type:'vowel',sound:'i',hint:'「イ」と短く切る音（itchのイ）\nアルファベットの名前は「アイ」',words:[{w:'i',e:'🦋',m:'アイ → イ（短母音）',ex:'itch · in · ink'},{w:'itch',e:'😣',m:'かゆい'},{w:'in',e:'📦',m:'なかに'},{w:'ink',e:'🖊️',m:'インク'},{w:'ill',e:'🤒',m:'びょうき'}]},
-  {lv:1,label:'o',emoji:'🐙',type:'vowel',sound:'o',hint:'「オ」と口を丸く開ける音（octopusのオ）\nアルファベットの名前は「オウ」',words:[{w:'o',e:'🐙',m:'オウ → オ（短母音）',ex:'on · odd · ox'},{w:'on',e:'💡',m:'オン'},{w:'odd',e:'🤔',m:'へんな'},{w:'ox',e:'🐂',m:'うし'},{w:'otter',e:'🦦',m:'カワウソ'}]},
-  {lv:1,label:'u',emoji:'☂️',type:'vowel',sound:'u',hint:'喉の奥から「ア」と出す音（umbrellaのア）\nアルファベットの名前は「ユー」',words:[{w:'u',e:'☂️',m:'ユー → ア（短母音）',ex:'up · us · under'},{w:'up',e:'⬆️',m:'うえ'},{w:'us',e:'👫',m:'わたしたち'},{w:'under',e:'⬇️',m:'したに'},{w:'ugly',e:'😬',m:'みにくい'}]},
+  {lv:1,label:'a',emoji:'🍎',type:'vowel',sound:'a',hint:'「ア」と口を大きく開ける音\nアルファベットの名前は「エイ」',words:[{w:'a',e:'🍎',m:'エイ → ア（短母音）'},{w:'apple',e:'🍎',m:'りんご'},{w:'ant',e:'🐜',m:'あり'},{w:'ask',e:'🙋',m:'たずねる'},{w:'add',e:'➕',m:'たす'}]},
+  {lv:1,label:'e',emoji:'🥚',type:'vowel',sound:'e',hint:'「エ」と口を横に開ける音\nアルファベットの名前は「イー」',words:[{w:'e',e:'🥚',m:'イー → エ（短母音）'},{w:'egg',e:'🥚',m:'たまご'},{w:'end',e:'🏁',m:'おわり'},{w:'elf',e:'🧝',m:'エルフ'},{w:'elm',e:'🌳',m:'にれの木'}]},
+  {lv:1,label:'i',emoji:'🦋',type:'vowel',sound:'i',hint:'「イ」と短く切る音\nアルファベットの名前は「アイ」',words:[{w:'i',e:'🦋',m:'アイ → イ（短母音）'},{w:'itch',e:'😣',m:'かゆい'},{w:'in',e:'📦',m:'なかに'},{w:'ink',e:'🖊️',m:'インク'},{w:'ill',e:'🤒',m:'びょうき'}]},
+  {lv:1,label:'o',emoji:'🐙',type:'vowel',sound:'o',hint:'「オ」と口を丸く開ける音\nアルファベットの名前は「オウ」',words:[{w:'o',e:'🐙',m:'オウ → オ（短母音）'},{w:'on',e:'💡',m:'オン'},{w:'odd',e:'🤔',m:'へんな'},{w:'ox',e:'🐂',m:'うし'},{w:'otter',e:'🦦',m:'カワウソ'}]},
+  {lv:1,label:'u',emoji:'☂️',type:'vowel',sound:'u',hint:'喉の奥から「ア」と出す音\nアルファベットの名前は「ユー」',words:[{w:'u',e:'☂️',m:'ユー → ア（短母音）'},{w:'up',e:'⬆️',m:'うえ'},{w:'us',e:'👫',m:'わたしたち'},{w:'under',e:'⬇️',m:'したに'},{w:'ugly',e:'😬',m:'みにくい'}]},
   // Lv1 短母音パターン
   {lv:2,label:'-at',emoji:'🐱',type:'pattern',words:[{w:'cat',e:'🐱',m:'ねこ'},{w:'bat',e:'🦇',m:'こうもり'},{w:'hat',e:'🎩',m:'ぼうし'},{w:'mat',e:'🟫',m:'マット'},{w:'rat',e:'🐀',m:'ねずみ'},{w:'sat',e:'🪑',m:'すわった'},{w:'fat',e:'🍖',m:'ふとい'},{w:'pat',e:'🤚',m:'なでる'}]},
   {lv:2,label:'-an',emoji:'💨',type:'pattern',words:[{w:'can',e:'🥫',m:'かん'},{w:'man',e:'🧑',m:'おとこ'},{w:'fan',e:'🌀',m:'うちわ'},{w:'ran',e:'🏃',m:'はしった'},{w:'pan',e:'🍳',m:'フライパン'},{w:'van',e:'🚐',m:'バン'}]},
@@ -358,6 +340,7 @@ const ALL=[
 const MASCOTS=['🐸','🦊','🐨','🐬','🦄','🐙','🐼','🦁'];
 let mascotIdx=0,curLv=0,curPat=0,isPlaying=false,lvPlay=false;
 let lvPatIdx=0,pauseMs=1200,stopFlag=false,voices=[],lapCount=0,dlgResolve=null;
+
 const SK='phonics_v5';
 let rec=(()=>{try{return JSON.parse(localStorage.getItem(SK)||'{}')}catch{return{}}})();
 if(!rec.days)rec.days=[];if(!rec.totalWords)rec.totalWords=0;if(!rec.todayWords)rec.todayWords=0;if(!rec.todayDate)rec.todayDate='';
@@ -368,42 +351,250 @@ function addWords(n){ensureToday();const b=rec.totalWords;rec.totalWords+=n;rec.
 function calcStreak(){if(!rec.days.length)return 0;const s=[...rec.days].sort().reverse();let c=0,d=new Date();for(const x of s){if(x===d.toISOString().slice(0,10)){c++;d.setDate(d.getDate()-1);}else break;}return c;}
 function checkTrophy(b,a){for(const t of TROPHIES){if(b<t.t&&a>=t.t){showTpop(t);break;}}}
 function showTpop(t){document.getElementById('tpopEmoji').textContent=t.e;document.getElementById('tpopTitle').textContent=t.l+' ゲット！';const el=document.getElementById('tpop');el.classList.add('show');setTimeout(()=>el.classList.remove('show'),2800);}
-function renderTrophies(){const tot=rec.totalWords||0;const earned=TROPHIES.filter(t=>tot>=t.t);document.getElementById('trophyItems').innerHTML=earned.length?earned.map(t=>`<span class="trophy-item" title="${t.l}">${t.e}</span>`).join(''):'<span style="font-size:11px;color:var(--muted)">100語できたら★がもらえるよ！</span>';document.getElementById('totalW').textContent=tot;const nx=TROPHIES.find(t=>tot<t.t);document.getElementById('nextGoal').textContent=nx?`つぎ: ${nx.t}語で${nx.e}`:'';}
+function renderTrophies(){const tot=rec.totalWords||0;const earned=TROPHIES.filter(t=>tot>=t.t);document.getElementById('trophyItems').innerHTML=earned.length?earned.map(t=>`<span class="trophy-item" title="${t.l}">${t.e}</span>`).join(''):'<span style="font-size:10px;color:var(--muted)">100語できたら★がもらえるよ！</span>';document.getElementById('totalW').textContent=tot;const nx=TROPHIES.find(t=>tot<t.t);document.getElementById('nextGoal').textContent=nx?`つぎ: ${nx.t}語で${nx.e}`:'';}
 function updateUI(){document.getElementById('sDays').textContent=calcStreak();document.getElementById('sToday').textContent=rec.todayWords||0;document.getElementById('sDayCount').textContent=rec.days.length;renderTrophies();renderCal();renderStreak();}
 function renderCal(){const now=new Date(),y=now.getFullYear(),m=now.getMonth();const days=new Date(y,m+1,0).getDate(),td=now.getDate();let h='';for(let d=1;d<=days;d++){const ds=`${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;h+=`<div class="cday${d===td?' today':rec.days.includes(ds)?' studied':''}">${d}</div>`;}document.getElementById('calGrid').innerHTML=h;}
 function renderStreak(){const s=calcStreak();const el=document.getElementById('streakMsg');if(s>=7)el.textContent='🔥 '+s+'日れんぞく！すごい！';else if(s>=3)el.textContent='⭐ '+s+'日れんぞく！がんばれ！';else if(s>=1)el.textContent='😊 きょうもがんばったね！';else el.textContent='まずは１日やってみよう！';}
+function toggleCal(){const b=document.getElementById('calBody');b.classList.toggle('open');document.getElementById('calArrow').textContent=b.classList.contains('open')?'▲':'▼';}
+function toggleHowto(){document.getElementById('howtoPanel').classList.toggle('open');}
+
 function loadVoices(){voices=speechSynthesis.getVoices();}
 loadVoices();speechSynthesis.onvoiceschanged=loadVoices;
 function getEnV(){return voices.find(v=>v.lang==='en-US'&&v.localService)||voices.find(v=>v.lang==='en-US')||voices.find(v=>v.lang.startsWith('en'))||null;}
 function speak(text,rate){return new Promise(res=>{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang='en-US';u.rate=rate||0.85;u.pitch=1.1;const v=getEnV();if(v)u.voice=v;u.onend=()=>res();u.onerror=()=>res();speechSynthesis.speak(u);});}
 function wait(ms){return new Promise(r=>setTimeout(r,ms));}
-function renderRepeatBar(lap){document.getElementById('repeatBar').innerHTML=[0,1,2].map(i=>{let c='rdot';if(i<lap)c+=' done';else if(i===lap)c+=' on';return`<div class="${c}"></div>`;}).join('');}
+function renderRepeatBar(lap){const el=document.getElementById('repeatBar');if(!el)return;el.innerHTML=[0,1,2].map(i=>{let c='rdot';if(i<lap)c+=' done';else if(i===lap)c+=' on';return`<div class="${c}"></div>`;}).join('');}
 function bounceMascot(){const el=document.getElementById('mascot');mascotIdx=(mascotIdx+1)%MASCOTS.length;el.textContent=MASCOTS[mascotIdx];el.style.animation='none';setTimeout(()=>{el.style.animation='bob 2s ease-in-out infinite';},10);}
+
 function lvPats(lv){return ALL.filter(p=>p.lv===lv);}
 function curPats(){return lvPats(curLv);}
-function renderLevelTabs(){document.getElementById('levelTabs').innerHTML=LEVELS.map((l,i)=>`<button class="ltab${i===curLv?' active':''}" data-lv="${i}" onclick="selectLevel(${i})">${l.name}</button>`).join('');}
-function renderPatterns(){const pats=curPats();document.getElementById('patternGrid').innerHTML=pats.map((p,i)=>{let cls='pat-btn';if(!lvPlay&&i===curPat)cls+=' active';if(lvPlay&&isPlaying&&i===lvPatIdx)cls+=' playing-now';return`<button class="${cls}" onclick="selectPat(${i})"><span class="pemoji">${p.emoji}</span><span class="plabel">${p.label}</span></button>`;}).join('');}
-function setStageNormal(wd,p){document.getElementById('stage').innerHTML=`<div class="word-emoji">${wd.e||''}</div><div class="big-word">${highlightWord(wd.w,p)}</div><div class="meaning">${wd.m||''}</div><div class="ex-word">${wd.ex||''}</div><div id="hintBox"></div><div class="repeat-bar" id="repeatBar"></div><div class="chips" id="wordList"></div>`;renderRepeatBar(lapCount);}
-function setStageConsonant(p){document.getElementById('stage').innerHTML=`<div class="word-emoji">${p.words[0].e}</div><div class="big-word" style="font-size:64px;color:var(--coral)">${p.label}</div><div class="meaning">${p.words[0].m}</div><div class="ex-word">${p.words[0].ex||''}</div><div class="hint-box">${p.hint||''}</div><div class="repeat-bar" id="repeatBar"></div><div class="chips" id="wordList"></div>`;renderRepeatBar(lapCount);}
-function setStageContrast(pair){const s=pair.short,l=pair.long;document.getElementById('stage').innerHTML=`<div style="font-size:12px;font-weight:900;color:var(--pink);margin-bottom:8px">✨ まほうのe！最後のeが母音を長くする！</div><div class="contrast-panel"><div class="contrast-card"><div class="contrast-emoji">${s.e}</div><div class="contrast-word">${s.w}</div><div class="contrast-meaning">${s.m}</div></div><div class="contrast-arrow">→</div><div class="contrast-card magic"><div class="contrast-emoji">${l.e}</div><div class="contrast-word">${l.w.slice(0,-1)}<span class="magic-e">e</span></div><div class="contrast-meaning">${l.m}</div></div></div><div class="repeat-bar" id="repeatBar"></div><div class="chips" id="wordList"></div>`;renderRepeatBar(lapCount);}
+function isConsLevel(){return curLv===0;}
+function getPatByIdx(pi){return isConsLevel()?ALL.filter(x=>x.lv===0)[pi]:curPats()[pi];}
+function totalPats(){return isConsLevel()?ALL.filter(x=>x.lv===0).length:curPats().length;}
+
+function renderLevelTabs(){
+  document.getElementById('levelTabs').innerHTML=LEVELS.map((l,i)=>
+    `<button class="ltab${i===curLv?' active':''}" data-lv="${i}" onclick="selectLevel(${i})">${l.name}</button>`
+  ).join('');
+}
+
+function renderPatterns(){
+  if(isConsLevel()){
+    document.getElementById('consGrid').style.display='grid';
+    document.getElementById('patternGrid').style.display='none';
+    const consPats=ALL.filter(x=>x.lv===0);
+    document.getElementById('consGrid').innerHTML=consPats.map((p,i)=>{
+      let cls='cons-cell';
+      if(!lvPlay&&i===curPat)cls+=' active';
+      if(lvPlay&&isPlaying&&i===lvPatIdx)cls+=' playing-now';
+      return`<div class="${cls}" onclick="selectPat(${i})">
+        <span class="cons-cell-emoji">${p.emoji}</span>
+        <span class="cons-cell-label">${p.label}</span>
+      </div>`;
+    }).join('');
+  } else {
+    document.getElementById('consGrid').style.display='none';
+    document.getElementById('patternGrid').style.display='grid';
+    const pats=curPats();
+    document.getElementById('patternGrid').innerHTML=pats.map((p,i)=>{
+      let cls='pat-btn';
+      if(!lvPlay&&i===curPat)cls+=' active';
+      if(lvPlay&&isPlaying&&i===lvPatIdx)cls+=' playing-now';
+      return`<button class="${cls}" onclick="selectPat(${i})"><span class="pemoji">${p.emoji}</span><span class="plabel">${p.label}</span></button>`;
+    }).join('');
+  }
+}
+
+function setStage(wd,p,isFirst){
+  if(p.type==='magic_e'&&isFirst){
+    const pair=p.pairs[0];
+    document.getElementById('stage').innerHTML=`
+      <div style="font-size:10px;font-weight:900;color:var(--pink);margin-bottom:5px">✨ まほうのe！最後のeが母音を長くする！</div>
+      <div class="contrast-panel">
+        <div class="contrast-card"><div class="contrast-emoji">${pair.short.e}</div><div class="contrast-word">${pair.short.w}</div><div class="contrast-meaning">${pair.short.m}</div></div>
+        <div class="contrast-arrow">→</div>
+        <div class="contrast-card magic"><div class="contrast-emoji">${pair.long.e}</div><div class="contrast-word">${pair.long.w.slice(0,-1)}<span class="magic-e">e</span></div><div class="contrast-meaning">${pair.long.m}</div></div>
+      </div>
+      <div class="repeat-bar" id="repeatBar"></div>
+      <div class="chips" id="wordList"></div>`;
+    renderRepeatBar(lapCount);return;
+  }
+  const isCons=p.type==='consonant'||p.type==='vowel';
+  const wordHtml=isCons&&isFirst
+    ?`<span style="font-size:56px;font-weight:900;color:var(--coral)">${p.label}</span>`
+    :`<span class="stage-word">${highlightWord(wd.w,p)}</span>`;
+  document.getElementById('stage').innerHTML=`
+    <div class="stage-main">
+      ${wordHtml}
+      <span class="stage-emoji">${wd.e||''}</span>
+    </div>
+    <div class="stage-meaning">${wd.m||''}</div>
+    ${isCons&&isFirst?`<div class="hint-box">${p.hint||''}</div>`:''}
+    <div class="repeat-bar" id="repeatBar"></div>
+    <div class="chips" id="wordList"></div>`;
+  renderRepeatBar(lapCount);
+}
+
 function highlightWord(w,p){if(!p)return w;const key=p.label.replace(/-/g,'').replace(/[→āīōū]/g,'').replace(/\//g,'|').replace(/[^a-zA-Z|]/g,'');if(!key)return w;try{return w.replace(new RegExp('('+key+')','i'),'<span class="hl">$1</span>');}catch{return w;}}
-function renderChips(ci,pi,rep){const p=curPats()[pi!==undefined?pi:curPat];if(!p)return;const start=(p.type==='consonant'||p.type==='vowel')?1:0;const el=document.getElementById('wordList');if(!el)return;el.innerHTML=(p.words||[]).slice(start).map((wd,i)=>{const ri=i+start;let cls='chip';if(ri<ci)cls+=' done';else if(ri===ci)cls+=rep?' rep':' cur';return`<span class="${cls}">${wd.w}</span>`;}).join('');}
-function initStage(p){if(p.type==='consonant'||p.type==='vowel'){setStageConsonant(p);renderChips(-1,curPat,false);}else if(p.type==='magic_e'){setStageContrast(p.pairs[0]);renderChips(-1,curPat,false);}else{setStageNormal(p.words[0],p);renderChips(-1,curPat,false);}}
-function selectLevel(lv){stopPlay();curLv=lv;curPat=0;lapCount=0;renderLevelTabs();renderPatterns();const p=curPats()[0];if(p)initStage(p);document.getElementById('status').textContent='';}
-function selectPat(i){stopPlay();lvPlay=false;curPat=i;lapCount=0;renderPatterns();initStage(curPats()[i]);document.getElementById('status').textContent='';}
+
+function renderChips(ci,pi,rep){
+  const p=getPatByIdx(pi);if(!p)return;
+  const start=(p.type==='consonant'||p.type==='vowel')?1:0;
+  const el=document.getElementById('wordList');if(!el)return;
+  el.innerHTML=(p.words||[]).slice(start).map((wd,i)=>{const ri=i+start;let cls='chip';if(ri<ci)cls+=' done';else if(ri===ci)cls+=rep?' rep':' cur';return`<span class="${cls}">${wd.w}</span>`;}).join('');
+}
+
+function initStage(p){setStage(p.words[0],p,true);renderChips(-1,curPat,false);}
+
+function selectLevel(lv){
+  stopPlay();curLv=lv;curPat=0;lapCount=0;
+  renderLevelTabs();renderPatterns();
+  const p=getPatByIdx(0);if(p)initStage(p);
+  document.getElementById('status').textContent='';
+}
+function selectPat(i){
+  stopPlay();lvPlay=false;curPat=i;lapCount=0;
+  renderPatterns();
+  const p=getPatByIdx(i);if(p)initStage(p);
+  document.getElementById('status').textContent='';
+}
+
 function togglePlay(){if(isPlaying)stopPlay();else startSingle();}
-function stopPlay(){stopFlag=true;isPlaying=false;speechSynthesis.cancel();document.getElementById('playBtn').textContent='▶ スタート';document.getElementById('playBtn').style.background='var(--mint)';document.getElementById('levelBtn').textContent='🌟 このレベルをながす';document.getElementById('levelBtn').style.background='var(--lav)';document.getElementById('status').textContent='';renderPatterns();}
+function stopPlay(){
+  stopFlag=true;isPlaying=false;speechSynthesis.cancel();
+  document.getElementById('playBtn').textContent='▶ スタート';
+  document.getElementById('playBtn').style.background='var(--mint)';
+  document.getElementById('levelBtn').textContent='🌟 このレベルをながす';
+  document.getElementById('levelBtn').style.background='var(--lav)';
+  document.getElementById('status').textContent='';
+  renderPatterns();
+}
 async function sayIntro(){await speak('Repeat after me!',0.9);await wait(300);}
-async function startSingle(){if(isPlaying)return;lvPlay=false;isPlaying=true;stopFlag=false;lapCount=0;document.getElementById('playBtn').textContent='⏸ やめる';document.getElementById('playBtn').style.background='var(--coral)';ensureToday();document.getElementById('status').textContent='Repeat after me!';await sayIntro();if(stopFlag)return;await playPat(curPat,true);if(!stopFlag)stopPlay();}
-async function toggleLevelPlay(){if(isPlaying){stopPlay();return;}lvPlay=true;isPlaying=true;stopFlag=false;document.getElementById('levelBtn').textContent='⏸ やめる';document.getElementById('levelBtn').style.background='var(--coral)';ensureToday();document.getElementById('status').textContent='Repeat after me!';await sayIntro();if(stopFlag)return;await playLevel();if(!stopFlag)stopPlay();}
+async function startSingle(){
+  if(isPlaying)return;
+  lvPlay=false;isPlaying=true;stopFlag=false;lapCount=0;
+  document.getElementById('playBtn').textContent='⏸ やめる';
+  document.getElementById('playBtn').style.background='var(--coral)';
+  ensureToday();
+  document.getElementById('status').textContent='Repeat after me!';
+  await sayIntro();if(stopFlag)return;
+  await playPat(curPat,true);
+  if(!stopFlag)stopPlay();
+}
+async function toggleLevelPlay(){
+  if(isPlaying){stopPlay();return;}
+  lvPlay=true;isPlaying=true;stopFlag=false;
+  document.getElementById('levelBtn').textContent='⏸ やめる';
+  document.getElementById('levelBtn').style.background='var(--coral)';
+  ensureToday();
+  document.getElementById('status').textContent='Repeat after me!';
+  await sayIntro();if(stopFlag)return;
+  await playLevel();
+  if(!stopFlag)stopPlay();
+}
 function showDialog(){return new Promise(res=>{dlgResolve=res;const emojis=['🎉','⭐','🌟','🏆'];document.getElementById('dlgEmoji').textContent=emojis[Math.floor(Math.random()*emojis.length)];document.getElementById('overlay').classList.add('show');});}
 function dialogChoice(c){document.getElementById('overlay').classList.remove('show');if(dlgResolve){dlgResolve(c);dlgResolve=null;}}
-async function playPat(pi,withLap){const p=curPats()[pi];if(!p)return;const isCons=p.type==='consonant'||p.type==='vowel';const isMagic=p.type==='magic_e';while(true){if(isCons){setStageConsonant(p);renderChips(-1,pi,false);document.getElementById('status').textContent='この文字の音は？';await speak(p.sound||p.label,0.75);if(stopFlag)return;document.getElementById('status').textContent='さあ、まねしてみよう！';await wait(pauseMs);if(stopFlag)return;}if(isMagic){for(const pair of p.pairs){if(stopFlag)return;setStageContrast(pair);renderChips(-1,pi,false);document.getElementById('status').textContent=pair.short.w+' → '+pair.long.w;await speak(pair.short.w);if(stopFlag)return;await wait(600);await speak(pair.long.w);addWords(2);if(stopFlag)return;document.getElementById('status').textContent='さあ、まねしてみよう！';await wait(pauseMs*1.2);if(stopFlag)return;}}const start=isCons?1:0;let wi=start;while(wi<p.words.length){if(stopFlag)return;const wd=p.words[wi];setStageNormal(wd,p);renderChips(wi,pi,false);renderRepeatBar(lapCount);document.getElementById('status').textContent=(wi-start+1)+' / '+(p.words.length-start);await speak(wd.w);addWords(1);if(stopFlag)return;renderChips(wi,pi,true);document.getElementById('status').textContent='さあ、まねしてみよう！';await wait(pauseMs);if(stopFlag)return;wi++;}lapCount++;bounceMascot();renderRepeatBar(Math.min(lapCount,3));if(withLap&&lapCount>=3){stopFlag=true;isPlaying=false;speechSynthesis.cancel();document.getElementById('playBtn').textContent='▶ スタート';document.getElementById('playBtn').style.background='var(--mint)';const c=await showDialog();if(c==='again'){lapCount=0;stopFlag=false;isPlaying=true;document.getElementById('playBtn').textContent='⏸ やめる';document.getElementById('playBtn').style.background='var(--coral)';await sayIntro();continue;}else if(c==='next'){lapCount=0;curPat=(curPat+1)%curPats().length;stopFlag=false;isPlaying=true;document.getElementById('playBtn').textContent='⏸ やめる';document.getElementById('playBtn').style.background='var(--coral)';renderPatterns();await sayIntro();await playPat(curPat,true);return;}else{stopPlay();return;}}await wait(800);}}
-async function playPatOnce(pi){const p=curPats()[pi];if(!p)return;const isCons=p.type==='consonant'||p.type==='vowel';const isMagic=p.type==='magic_e';if(isCons){setStageConsonant(p);document.getElementById('status').textContent='この文字の音は？';await speak(p.sound||p.label,0.75);if(stopFlag)return;document.getElementById('status').textContent='さあ、まねしてみよう！';await wait(pauseMs);if(stopFlag)return;}if(isMagic){for(const pair of p.pairs){if(stopFlag)return;setStageContrast(pair);document.getElementById('status').textContent=pair.short.w+' → '+pair.long.w;await speak(pair.short.w);if(stopFlag)return;await wait(500);await speak(pair.long.w);addWords(2);if(stopFlag)return;await wait(pauseMs);if(stopFlag)return;}}const start=isCons?1:0;let wi=start;while(wi<p.words.length){if(stopFlag)return;const wd=p.words[wi];setStageNormal(wd,p);renderChips(wi,pi,false);document.getElementById('status').textContent=p.label+' '+(wi-start+1)+'/'+(p.words.length-start);await speak(wd.w);addWords(1);if(stopFlag)return;renderChips(wi,pi,true);document.getElementById('status').textContent='さあ、まねしてみよう！';await wait(pauseMs);if(stopFlag)return;wi++;}}
-async function playLevel(){const pats=curPats();lvPatIdx=0;while(!stopFlag){renderPatterns();await playPatOnce(lvPatIdx);if(stopFlag)break;bounceMascot();await wait(800);lvPatIdx++;if(lvPatIdx>=pats.length){document.getElementById('status').textContent='レベルクリア！🎉';await wait(1200);lvPatIdx=0;}}}
-function prevPat(){const n=curPats().length;selectPat((curPat-1+n)%n);}
-function nextPat(){const n=curPats().length;selectPat((curPat+1)%n);}
+
+async function playPat(pi,withLap){
+  const p=getPatByIdx(pi);if(!p)return;
+  const isCons=p.type==='consonant'||p.type==='vowel';
+  const isMagic=p.type==='magic_e';
+  while(true){
+    if(isCons){
+      setStage(p.words[0],p,true);renderChips(-1,pi,false);
+      document.getElementById('status').textContent='この文字の音は？';
+      await speak(p.sound||p.label,0.75);if(stopFlag)return;
+      document.getElementById('status').textContent='さあ、まねしてみよう！';
+      await wait(pauseMs);if(stopFlag)return;
+    }
+    if(isMagic){
+      for(const pair of p.pairs){
+        if(stopFlag)return;
+        setStage(null,{...p,pairs:[pair]},true);renderChips(-1,pi,false);
+        document.getElementById('status').textContent=pair.short.w+' → '+pair.long.w;
+        await speak(pair.short.w);if(stopFlag)return;
+        await wait(600);
+        await speak(pair.long.w);addWords(2);if(stopFlag)return;
+        document.getElementById('status').textContent='さあ、まねしてみよう！';
+        await wait(pauseMs*1.2);if(stopFlag)return;
+      }
+    }
+    const start=isCons?1:0;let wi=start;
+    while(wi<p.words.length){
+      if(stopFlag)return;
+      const wd=p.words[wi];
+      setStage(wd,p,false);renderChips(wi,pi,false);renderRepeatBar(lapCount);
+      document.getElementById('status').textContent=(wi-start+1)+' / '+(p.words.length-start);
+      await speak(wd.w);addWords(1);if(stopFlag)return;
+      renderChips(wi,pi,true);
+      document.getElementById('status').textContent='さあ、まねしてみよう！';
+      await wait(pauseMs);if(stopFlag)return;
+      wi++;
+    }
+    lapCount++;bounceMascot();renderRepeatBar(Math.min(lapCount,3));
+    if(withLap&&lapCount>=3){
+      stopFlag=true;isPlaying=false;speechSynthesis.cancel();
+      document.getElementById('playBtn').textContent='▶ スタート';
+      document.getElementById('playBtn').style.background='var(--mint)';
+      const c=await showDialog();
+      if(c==='again'){lapCount=0;stopFlag=false;isPlaying=true;document.getElementById('playBtn').textContent='⏸ やめる';document.getElementById('playBtn').style.background='var(--coral)';await sayIntro();continue;}
+      else if(c==='next'){lapCount=0;curPat=(curPat+1)%totalPats();stopFlag=false;isPlaying=true;document.getElementById('playBtn').textContent='⏸ やめる';document.getElementById('playBtn').style.background='var(--coral)';renderPatterns();await sayIntro();await playPat(curPat,true);return;}
+      else{stopPlay();return;}
+    }
+    await wait(800);
+  }
+}
+
+async function playPatOnce(pi){
+  const p=getPatByIdx(pi);if(!p)return;
+  const isCons=p.type==='consonant'||p.type==='vowel';
+  const isMagic=p.type==='magic_e';
+  if(isCons){
+    setStage(p.words[0],p,true);
+    document.getElementById('status').textContent='この文字の音は？';
+    await speak(p.sound||p.label,0.75);if(stopFlag)return;
+    document.getElementById('status').textContent='さあ、まねしてみよう！';
+    await wait(pauseMs);if(stopFlag)return;
+  }
+  if(isMagic){
+    for(const pair of p.pairs){
+      if(stopFlag)return;
+      setStage(null,{...p,pairs:[pair]},true);
+      document.getElementById('status').textContent=pair.short.w+' → '+pair.long.w;
+      await speak(pair.short.w);if(stopFlag)return;
+      await wait(500);await speak(pair.long.w);addWords(2);if(stopFlag)return;
+      await wait(pauseMs);if(stopFlag)return;
+    }
+  }
+  const start=isCons?1:0;let wi=start;
+  while(wi<p.words.length){
+    if(stopFlag)return;
+    const wd=p.words[wi];
+    setStage(wd,p,false);renderChips(wi,pi,false);
+    document.getElementById('status').textContent=p.label+' '+(wi-start+1)+'/'+(p.words.length-start);
+    await speak(wd.w);addWords(1);if(stopFlag)return;
+    renderChips(wi,pi,true);
+    document.getElementById('status').textContent='さあ、まねしてみよう！';
+    await wait(pauseMs);if(stopFlag)return;
+    wi++;
+  }
+}
+
+async function playLevel(){
+  lvPatIdx=0;const total=totalPats();
+  while(!stopFlag){
+    renderPatterns();
+    await playPatOnce(lvPatIdx);if(stopFlag)break;
+    bounceMascot();await wait(800);
+    lvPatIdx++;
+    if(lvPatIdx>=total){document.getElementById('status').textContent='レベルクリア！🎉';await wait(1200);lvPatIdx=0;}
+  }
+}
+
+function prevPat(){selectPat((curPat-1+totalPats())%totalPats());}
+function nextPat(){selectPat((curPat+1)%totalPats());}
 function updatePause(v){pauseMs=parseInt(v);const ls={600:'はやい',800:'ふつう',1000:'ふつう',1200:'ゆっくり',1400:'ゆっくり',1600:'もっとゆっくり',2000:'リピートしやすい',2500:'たっぷり'};document.getElementById('pauseLabel').textContent=ls[pauseMs]||'ゆっくり';}
+
 renderLevelTabs();selectLevel(0);updateUI();
 </script>
 </body></html>
