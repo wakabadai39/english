@@ -25,7 +25,7 @@ body{background:var(--sky);font-family:'Nunito','Hiragino Sans',sans-serif;font-
 .howto-panel b{color:var(--coral)}
 
 /* レベルタブ */
-.level-tabs{display:flex;gap:4px;margin-bottom:.5rem;overflow-x:auto;padding-bottom:2px}
+.level-tabs{display:flex;gap:4px;margin-bottom:.5rem;flex-wrap:wrap}
 .ltab{flex-shrink:0;padding:5px 9px;border-radius:99px;border:none;font-family:inherit;font-size:10px;font-weight:900;cursor:pointer;background:var(--card);color:var(--muted);box-shadow:0 3px 0 var(--sh);white-space:nowrap}
 .ltab.active{color:#fff;box-shadow:0 3px 0 rgba(0,0,0,.15)}
 .ltab[data-lv="0"].active{background:#E879A0}
