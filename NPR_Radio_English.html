@@ -622,9 +622,13 @@ let masterSet = new Set(JSON.parse(localStorage.getItem('jiko50_master') || '[]'
 
 // ── Voice setup ───────────────────────────────────────────────────
 let enVoices = [];
+let voicesReady = false;
 
 function populateVoices() {
   const all = window.speechSynthesis.getVoices();
+  // Android では初回 getVoices() が空配列を返すので、空なら待機
+  if (!all.length) return;
+
   const okNames = new Set([
     'Microsoft Ava Online (Natural) - English (United States)',
     'Microsoft Andrew Online (Natural) - English (United States)',
@@ -659,8 +663,10 @@ function populateVoices() {
     'Microsoft Prabhat Online (Natural) - English (India)',
   ]);
   const whitelist = all.filter(v => okNames.has(v.name));
+  // Android にはMicrosoft音声がないので、必ずen系全体にフォールバック
   enVoices = whitelist.length ? whitelist : all.filter(v => v.lang.startsWith('en'));
-  if (!enVoices.length) enVoices = all;
+  if (!enVoices.length) enVoices = all; // en音声もなければ全音声を使用
+  voicesReady = true;
   applyVoicePref();
 }
 
@@ -684,9 +690,9 @@ function applyVoicePref() {
   enVoices = sorted;
 }
 
-populateVoices();
-if (window.speechSynthesis.onvoiceschanged !== undefined)
-  window.speechSynthesis.onvoiceschanged = populateVoices;
+// Android対応：onvoiceschanged を先に登録してから populateVoices を呼ぶ
+window.speechSynthesis.onvoiceschanged = populateVoices;
+populateVoices(); // PC/iPhone は初回で取得できる場合あり
 
 function getVoice() {
   const sel = document.getElementById('voice-select');
@@ -706,10 +712,12 @@ function stopKeepAlive() { if (keepAlive) { clearInterval(keepAlive); keepAlive 
 
 let isSpeaking = false;
 function speakOne(text, onEnd) {
-  window.speechSynthesis.cancel(); isSpeaking = false;
+  // cancel() の前に必ずフラグをリセット（Android でのフリーズ対策）
+  isSpeaking = false;
+  window.speechSynthesis.cancel();
   clearTimeout(speakOne._t);
   speakOne._t = setTimeout(() => {
-    if (isSpeaking) return; isSpeaking = true;
+    isSpeaking = true;
     const utt = new SpeechSynthesisUtterance(text);
     const v = getVoice();
     if (v) { utt.voice = v; utt.lang = v.lang; }
@@ -719,7 +727,7 @@ function speakOne(text, onEnd) {
     utt.onend   = () => { isSpeaking=false; stopKeepAlive(); if(onEnd) onEnd(); };
     utt.onerror = () => { isSpeaking=false; stopKeepAlive(); if(onEnd) onEnd(); };
     window.speechSynthesis.speak(utt);
-  }, 150);
+  }, 200); // Android では150msでは短すぎる場合があるため200msに
 }
 
 function stripTags(html) { return html.replace(/<[^>]+>/g,'').replace(/\s+/g,' ').trim(); }
@@ -754,7 +762,12 @@ function speakP() {
   return new Promise(resolve => {
     if (autoStopped) { resolve(); return; }
     const a = getActive(); if(!a.length) { resolve(); return; }
-    speakOne(getSpeechText(a[currentIndex]), resolve);
+    // Android では onend が発火しないケースがあるため、最大15秒のタイムアウト保険を設ける
+    let done = false;
+    const guard = setTimeout(() => { if (!done) { done = true; resolve(); } }, 15000);
+    speakOne(getSpeechText(a[currentIndex]), () => {
+      if (!done) { done = true; clearTimeout(guard); resolve(); }
+    });
   });
 }
 
