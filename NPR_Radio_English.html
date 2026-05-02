@@ -287,6 +287,12 @@ body {
 .gti { display:inline-block;padding:1px 7px;border-radius:99px;font-size:10px;font-weight:700;vertical-align:middle; }
 .gti-a { background:#fef3c7;color:#92400e; }
 .gti-b { background:#dbeafe;color:#1e40af; }
+/* Android ColorOS ダークモード強制適用対策 */
+.main-text   { color: #1e293b !important; }
+.answer-ja   { color: var(--accent) !important; }
+.answer-tip  { color: var(--green)  !important; }
+body         { background: #f0f9f4  !important; color: #1e293b !important; }
+.card        { background: #ffffff  !important; }
 </style>
 </head>
 <body>
@@ -343,7 +349,7 @@ body {
       <input type="checkbox" id="master-cb" onchange="toggleMaster(event)" onclick="event.stopPropagation()">
     </div>
   </div>
-  <div class="main-text" id="main-text">Loading...</div>
+  <div class="main-text" id="main-text"></div>
   <div class="answer-wrap" id="answer-wrap">
     <div class="answer-ja" id="answer-ja"></div>
     <div class="answer-tip" id="answer-tip" style="display:none"></div>
@@ -626,8 +632,7 @@ let voicesReady = false;
 
 function populateVoices() {
   const all = window.speechSynthesis.getVoices();
-  // Android では初回 getVoices() が空配列を返すので、空なら待機
-  if (!all.length) return;
+  if (!all.length) return false; // まだ準備できていない
 
   const okNames = new Set([
     'Microsoft Ava Online (Natural) - English (United States)',
@@ -663,11 +668,12 @@ function populateVoices() {
     'Microsoft Prabhat Online (Natural) - English (India)',
   ]);
   const whitelist = all.filter(v => okNames.has(v.name));
-  // Android にはMicrosoft音声がないので、必ずen系全体にフォールバック
+  // Android には Microsoft 音声がないので en 系全体にフォールバック
   enVoices = whitelist.length ? whitelist : all.filter(v => v.lang.startsWith('en'));
-  if (!enVoices.length) enVoices = all; // en音声もなければ全音声を使用
+  if (!enVoices.length) enVoices = all;
   voicesReady = true;
   applyVoicePref();
+  return true;
 }
 
 function applyVoicePref() {
@@ -690,9 +696,32 @@ function applyVoicePref() {
   enVoices = sorted;
 }
 
-// Android対応：onvoiceschanged を先に登録してから populateVoices を呼ぶ
-window.speechSynthesis.onvoiceschanged = populateVoices;
-populateVoices(); // PC/iPhone は初回で取得できる場合あり
+// ── Android対応：リトライ付き音声初期化 ──────────────────────────
+function initVoices() {
+  let attempts = 0;
+  const maxAttempts = 20; // 最大10秒（500ms × 20回）待機
+
+  const tryPopulate = () => {
+    const success = populateVoices();
+    if (success || attempts >= maxAttempts) {
+      // 音声準備完了（または諦め）後に画面を初期化
+      buildCatRows();
+      updateFilterLabel();
+      update();
+    } else {
+      attempts++;
+      setTimeout(tryPopulate, 500); // 0.5秒ごとに再試行
+    }
+  };
+
+  // onvoiceschanged を先に登録（Androidで遅延通知が来たときのために残す）
+  if ('onvoiceschanged' in window.speechSynthesis) {
+    window.speechSynthesis.onvoiceschanged = () => {
+      if (!voicesReady) populateVoices();
+    };
+  }
+  tryPopulate();
+}
 
 function getVoice() {
   const sel = document.getElementById('voice-select');
@@ -712,7 +741,7 @@ function stopKeepAlive() { if (keepAlive) { clearInterval(keepAlive); keepAlive 
 
 let isSpeaking = false;
 function speakOne(text, onEnd) {
-  // cancel() の前に必ずフラグをリセット（Android でのフリーズ対策）
+  // フラグを先にリセット（cancel後にリセットするとAndroidで競合することがある）
   isSpeaking = false;
   window.speechSynthesis.cancel();
   clearTimeout(speakOne._t);
@@ -727,7 +756,7 @@ function speakOne(text, onEnd) {
     utt.onend   = () => { isSpeaking=false; stopKeepAlive(); if(onEnd) onEnd(); };
     utt.onerror = () => { isSpeaking=false; stopKeepAlive(); if(onEnd) onEnd(); };
     window.speechSynthesis.speak(utt);
-  }, 200); // Android では150msでは短すぎる場合があるため200msに
+  }, 200); // Android は150msでは短すぎるケースがある
 }
 
 function stripTags(html) { return html.replace(/<[^>]+>/g,'').replace(/\s+/g,' ').trim(); }
@@ -762,11 +791,11 @@ function speakP() {
   return new Promise(resolve => {
     if (autoStopped) { resolve(); return; }
     const a = getActive(); if(!a.length) { resolve(); return; }
-    // Android では onend が発火しないケースがあるため、最大15秒のタイムアウト保険を設ける
-    let done = false;
-    const guard = setTimeout(() => { if (!done) { done = true; resolve(); } }, 15000);
+    // Android では onend が発火しないことがあるため15秒タイムアウト保険
+    let settled = false;
+    const guard = setTimeout(() => { if (!settled) { settled = true; resolve(); } }, 15000);
     speakOne(getSpeechText(a[currentIndex]), () => {
-      if (!done) { done = true; clearTimeout(guard); resolve(); }
+      if (!settled) { settled = true; clearTimeout(guard); resolve(); }
     });
   });
 }
@@ -1037,9 +1066,8 @@ function closeGuide() { document.getElementById('guide-overlay').classList.remov
 function handleOverlayClick(e) { if (e.target === document.getElementById('guide-overlay')) closeGuide(); }
 
 // ── Init ──────────────────────────────────────────────────────────
-buildCatRows();
-updateFilterLabel();
-update();
+// buildCatRows / updateFilterLabel / update は initVoices() 内で呼ばれる
+initVoices();
 </script>
 </body>
 </html>
