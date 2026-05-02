@@ -287,16 +287,40 @@ body {
 .gti { display:inline-block;padding:1px 7px;border-radius:99px;font-size:10px;font-weight:700;vertical-align:middle; }
 .gti-a { background:#fef3c7;color:#92400e; }
 .gti-b { background:#dbeafe;color:#1e40af; }
-/* Android ColorOS ダークモード強制適用対策 */
-.main-text   { color: #1e293b !important; }
-.answer-ja   { color: var(--accent) !important; }
-.answer-tip  { color: var(--green)  !important; }
-body         { background: #f0f9f4  !important; color: #1e293b !important; }
-.card        { background: #ffffff  !important; }
+/* LINE WebView 警告バナー */
+#line-warn {
+  display: none;
+  background: #06c755;
+  color: #fff;
+  text-align: center;
+  padding: 14px 16px;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.7;
+  border-radius: 0 0 14px 14px;
+  margin: -16px -12px 16px;
+  box-shadow: 0 4px 12px rgba(6,199,85,0.3);
+}
+#line-warn .warn-icon { font-size: 20px; display: block; margin-bottom: 4px; }
+#line-warn .warn-step {
+  display: inline-block;
+  background: rgba(255,255,255,0.25);
+  border-radius: 8px;
+  padding: 4px 10px;
+  margin-top: 6px;
+  font-size: 12px;
+}
 </style>
 </head>
 <body>
 <div class="container">
+
+<!-- LINE Android 警告バナー -->
+<div id="line-warn">
+  <span class="warn-icon">⚠️</span>
+  LINEから開くと画面がLoadingのまま動きません。<br>
+  <span class="warn-step">右上の「…」→「他のアプリで開く」→「Chrome」を選んでください</span>
+</div>
 
 <div class="header">
   <h2>📻 NPR Radio English</h2>
@@ -349,7 +373,7 @@ body         { background: #f0f9f4  !important; color: #1e293b !important; }
       <input type="checkbox" id="master-cb" onchange="toggleMaster(event)" onclick="event.stopPropagation()">
     </div>
   </div>
-  <div class="main-text" id="main-text"></div>
+  <div class="main-text" id="main-text">Loading...</div>
   <div class="answer-wrap" id="answer-wrap">
     <div class="answer-ja" id="answer-ja"></div>
     <div class="answer-tip" id="answer-tip" style="display:none"></div>
@@ -628,12 +652,9 @@ let masterSet = new Set(JSON.parse(localStorage.getItem('jiko50_master') || '[]'
 
 // ── Voice setup ───────────────────────────────────────────────────
 let enVoices = [];
-let voicesReady = false;
 
 function populateVoices() {
   const all = window.speechSynthesis.getVoices();
-  if (!all.length) return false; // まだ準備できていない
-
   const okNames = new Set([
     'Microsoft Ava Online (Natural) - English (United States)',
     'Microsoft Andrew Online (Natural) - English (United States)',
@@ -668,12 +689,9 @@ function populateVoices() {
     'Microsoft Prabhat Online (Natural) - English (India)',
   ]);
   const whitelist = all.filter(v => okNames.has(v.name));
-  // Android には Microsoft 音声がないので en 系全体にフォールバック
   enVoices = whitelist.length ? whitelist : all.filter(v => v.lang.startsWith('en'));
   if (!enVoices.length) enVoices = all;
-  voicesReady = true;
   applyVoicePref();
-  return true;
 }
 
 function applyVoicePref() {
@@ -696,32 +714,9 @@ function applyVoicePref() {
   enVoices = sorted;
 }
 
-// ── Android対応：リトライ付き音声初期化 ──────────────────────────
-function initVoices() {
-  let attempts = 0;
-  const maxAttempts = 20; // 最大10秒（500ms × 20回）待機
-
-  const tryPopulate = () => {
-    const success = populateVoices();
-    if (success || attempts >= maxAttempts) {
-      // 音声準備完了（または諦め）後に画面を初期化
-      buildCatRows();
-      updateFilterLabel();
-      update();
-    } else {
-      attempts++;
-      setTimeout(tryPopulate, 500); // 0.5秒ごとに再試行
-    }
-  };
-
-  // onvoiceschanged を先に登録（Androidで遅延通知が来たときのために残す）
-  if ('onvoiceschanged' in window.speechSynthesis) {
-    window.speechSynthesis.onvoiceschanged = () => {
-      if (!voicesReady) populateVoices();
-    };
-  }
-  tryPopulate();
-}
+populateVoices();
+if (window.speechSynthesis.onvoiceschanged !== undefined)
+  window.speechSynthesis.onvoiceschanged = populateVoices;
 
 function getVoice() {
   const sel = document.getElementById('voice-select');
@@ -741,12 +736,10 @@ function stopKeepAlive() { if (keepAlive) { clearInterval(keepAlive); keepAlive 
 
 let isSpeaking = false;
 function speakOne(text, onEnd) {
-  // フラグを先にリセット（cancel後にリセットするとAndroidで競合することがある）
-  isSpeaking = false;
-  window.speechSynthesis.cancel();
+  window.speechSynthesis.cancel(); isSpeaking = false;
   clearTimeout(speakOne._t);
   speakOne._t = setTimeout(() => {
-    isSpeaking = true;
+    if (isSpeaking) return; isSpeaking = true;
     const utt = new SpeechSynthesisUtterance(text);
     const v = getVoice();
     if (v) { utt.voice = v; utt.lang = v.lang; }
@@ -756,7 +749,7 @@ function speakOne(text, onEnd) {
     utt.onend   = () => { isSpeaking=false; stopKeepAlive(); if(onEnd) onEnd(); };
     utt.onerror = () => { isSpeaking=false; stopKeepAlive(); if(onEnd) onEnd(); };
     window.speechSynthesis.speak(utt);
-  }, 200); // Android は150msでは短すぎるケースがある
+  }, 150);
 }
 
 function stripTags(html) { return html.replace(/<[^>]+>/g,'').replace(/\s+/g,' ').trim(); }
@@ -791,12 +784,7 @@ function speakP() {
   return new Promise(resolve => {
     if (autoStopped) { resolve(); return; }
     const a = getActive(); if(!a.length) { resolve(); return; }
-    // Android では onend が発火しないことがあるため15秒タイムアウト保険
-    let settled = false;
-    const guard = setTimeout(() => { if (!settled) { settled = true; resolve(); } }, 15000);
-    speakOne(getSpeechText(a[currentIndex]), () => {
-      if (!settled) { settled = true; clearTimeout(guard); resolve(); }
-    });
+    speakOne(getSpeechText(a[currentIndex]), resolve);
   });
 }
 
@@ -1065,9 +1053,20 @@ function openGuide() { document.getElementById('guide-overlay').classList.add('s
 function closeGuide() { document.getElementById('guide-overlay').classList.remove('show'); }
 function handleOverlayClick(e) { if (e.target === document.getElementById('guide-overlay')) closeGuide(); }
 
+// ── LINE Android WebView 検出 ────────────────────────────────────
+(function() {
+  const ua = navigator.userAgent;
+  const isLine    = /Line\//i.test(ua);
+  const isAndroid = /Android/i.test(ua);
+  if (isLine && isAndroid) {
+    document.getElementById('line-warn').style.display = 'block';
+  }
+})();
+
 // ── Init ──────────────────────────────────────────────────────────
-// buildCatRows / updateFilterLabel / update は initVoices() 内で呼ばれる
-initVoices();
+buildCatRows();
+updateFilterLabel();
+update();
 </script>
 </body>
 </html>
