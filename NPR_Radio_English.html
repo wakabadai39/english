@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NPR Radio English 36</title>
+<title>NPR Radio English 82</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -104,10 +104,11 @@ body {
   display: flex;
   gap: 6px;
   justify-content: center;
+  flex-wrap: wrap;
 }
 .radio-tab {
   font-size: 11px;
-  padding: 6px 10px;
+  padding: 6px 12px;
   border-radius: 99px;
   border: 1px solid var(--border);
   background: var(--bg);
@@ -293,7 +294,7 @@ body {
 
 <div class="header">
   <h2>📻 NPR Radio English</h2>
-  <p>Fresh Air・Short Wave・経済ニュース — 本物のラジオ英語</p>
+  <p>Fresh Air・Short Wave・Economy — 本物のNPRラジオ英語</p>
   <button class="help-btn" onclick="openGuide()">❓ 使い方ガイド</button>
 </div>
 
@@ -494,50 +495,94 @@ body {
 <script>
 // ── Data ─────────────────────────────────────────────────────────
 const CATS = {
-  '📺 Fresh Air — 映画評': '#e85d26',
-  '🔬 Short Wave — コーヒー科学': '#7c3aed',
-  '🔬 Short Wave — 夢の研究': '#0891b2',
-  '🔬 Short Wave — サソリ研究': '#16a34a',
-  '📈 NPR経済ニュース': '#dc2626',
+  '📺 Fresh Air': '#e85d26',
+  '🔬 Short Wave': '#7c3aed',
+  '📈 NPR Economy': '#dc2626',
 };
 
 const phrases = [
-  {cat:'📺 Fresh Air — 映画評', en:'This is FRESH AIR. "The Devil Wears Prada 2," which opens wide today, is a sequel to the 2006 hit about an idealistic young journalist who goes to work for a tyrannical fashion magazine editor.', ja:'こちらはFRESH AIRです。本日全米公開の「プラダを着た悪魔2」は、横暴なファッション誌編集長のもとで働くことになる理想主義の若い記者を描いた2006年のヒット作の続編です。', tip:'opens wide = 全国公開される。tyrannical = 横暴な・専制的な。'},
-  {cat:'📺 Fresh Air — 映画評', en:'When "The Devil Wears Prada" hit theaters in 2006, I was the film critic at Vogue, the model for Runway, the fictional magazine in the movie.', ja:'「プラダを着た悪魔」が2006年に公開されたとき、私はVogueの映画評論家でした。Vogueは映画に登場する架空の雑誌Runwayのモデルです。', tip:'hit theaters = 映画館で公開される。fictional = 架空の。the model for = 〜のモデルとなった。'},
-  {cat:'📺 Fresh Air — 映画評', en:'Cleverly written by Aline Brosh McKenna, this fizzy sequel boasts the same expert cast, all as good as you\'d hope, not to mention the incomparable Meryl Streep.', ja:'アライン・ブロッシュ・マッケンナの巧みな脚本で、この軽快な続編は同じ豪華キャストを誇り、誰もが期待する通りの出来栄えです。比類なきメリル・ストリープは言うまでもありません。', tip:'fizzy = 軽快な・弾けるような。boasts = 〜を誇る。incomparable = 比類のない。not to mention = 〜は言うまでもなく。'},
-  {cat:'📺 Fresh Air — 映画評', en:'Anne Hathaway is back as smiley, wholesome Andy Sachs, who\'s risen from being Miranda\'s beleaguered assistant to become a successful journalist.', ja:'アン・ハサウェイが明るく健全なアンディ・サックスを再演。彼女はミランダの苦境に立たされたアシスタントから成功した記者へと成長しています。', tip:'wholesome = 健全な・好ましい。beleaguered = 苦境に立たされた・四面楚歌の。risen from = 〜から立ち上がった。'},
-  {cat:'📺 Fresh Air — 映画評', en:'Like any good sequel, the movie feels like a reunion. The elegant silver-haired Miranda - Streep is impeccable - greets the return of old colleagues with her trademark mix of graciousness and contempt.', ja:'良い続編らしく、映画は再会の雰囲気を醸し出しています。エレガントで銀髪のミランダ——ストリープは申し分ない——が、お得意の優雅さと軽蔑の混じった表情で旧同僚たちの帰還を迎えます。', tip:'impeccable = 申し分ない・非の打ちどころがない。trademark = お得意の・お馴染みの。graciousness = 優雅さ。contempt = 軽蔑。'},
-  {cat:'📺 Fresh Air — 映画評', en:'Now, the first "Devil Wears Prada," with its masterpiece of a title, was a pop fable about wealth and glamour. It tapped into our fantasies about the glamorous world of high fashion.', ja:'さて、傑作タイトルを持つ最初の「プラダを着た悪魔」は富と魅力についてのポップな寓話でした。ハイファッションの華やかな世界への私たちの幻想を刺激しました。', tip:'pop fable = 大衆的な寓話。tapped into = 〜に働きかけた・刺激した。glamour = 魅力・華やかさ。'},
-  {cat:'📺 Fresh Air — 映画評', en:'Back in 2006, Runway, like Vogue, was a juggernaut, with lavish expenditures and a September issue the size of a bank fault.', ja:'2006年当時、RunwayはVogueと同様に巨大な存在で、豪華な支出と銀行の金庫ほどの厚さの9月号を誇っていました。', tip:'juggernaut = 巨大で強力な存在・怪物的な組織。lavish = 豪華な・惜しみない。expenditures = 支出・出費。'},
-  {cat:'📺 Fresh Air — 映画評', en:'Andy does, which is why she fights to keep Runway afloat. She knows it\'s imperfect and often shallow, yet it\'s still better than the alternative.', ja:'アンディはそれを知っているから、Runwayを守るために戦います。完璧でなく浅薄なことも多いと知りながら、それでも代替案よりはましだと分かっています。', tip:'keep afloat = 存続させる・沈まないようにする。shallow = 浅薄な・表面的な。alternative = 代替案。'},
-  {cat:'🔬 Short Wave — コーヒー科学', en:'You\'re listening to Short Wave from NPR. We have updates for you on dream research and the science of coffee and scorpions.', ja:'NPRのShort Waveをお聴きです。夢の研究、コーヒーとサソリの科学についての最新情報をお伝えします。', tip:'updates = 最新情報。scorpions = サソリ。'},
-  {cat:'🔬 Short Wave — コーヒー科学', en:'Here\'s the thing about coffee. It\'s extremely variable. Visit the barista at your local fancy café, and they might tell you how they control things like water temperature and extraction time.', ja:'コーヒーについてこういうことがあります。非常にばらつきがあります。近所のおしゃれなカフェのバリスタに聞けば、水温や抽出時間などをどう管理しているか教えてくれるかもしれません。', tip:'variable = 変わりやすい・ばらつきがある。extraction = 抽出。barista = バリスタ（コーヒー職人）。'},
-  {cat:'🔬 Short Wave — コーヒー科学', en:'Even though there\'s a technique the industry uses to measure the concentration of coffee, it still doesn\'t capture all the variables that can affect taste.', ja:'業界ではコーヒーの濃度を測定する技術がありますが、それでも味に影響するすべての変数を捉えることはできません。', tip:'concentration = 濃度。capture = 捉える・把握する。variables = 変数・変動要因。'},
-  {cat:'🔬 Short Wave — コーヒー科学', en:'Scientists at the University of Oregon wanted to see if they could change that. They used a tool that\'s usually used to measure the charge in batteries to analyze coffee.', ja:'オレゴン大学の科学者たちはそれを変えられるか試みました。通常は電池の電荷を測定するために使うツールを使ってコーヒーを分析しました。', tip:'charge = 電荷。batteries = 電池。analyze = 分析する。'},
-  {cat:'🔬 Short Wave — コーヒー科学', en:'Basically, they could tell how strong the coffee was and how dark the roast was. You\'re just basically sticking two pieces of conductive metal into coffee, and then the coffee acts as a kind of battery.', ja:'基本的に、コーヒーの強さと焙煎の深さが分かります。導電性の金属を2つコーヒーに差し込むだけで、コーヒーが一種の電池として機能するのです。', tip:'conductive = 導電性の。roast = 焙煎。acts as = 〜として機能する。'},
-  {cat:'🔬 Short Wave — コーヒー科学', en:'This method was at least as good as human experts at telling when a roast was ready, or how strong a brew was.', ja:'この方法は、焙煎の仕上がりや抽出の強さを判断する点で、人間の専門家と少なくとも同等の精度でした。', tip:'at least as good as = 少なくとも〜と同等の。brew = 抽出したコーヒー。'},
-  {cat:'🔬 Short Wave — コーヒー科学', en:'In the beer industry, they have IBU, which is somehow inferring how hoppy a beer is going to be, and they put a number on it. The idea is, can we do something similar for coffee?', ja:'ビール業界にはIBUがあり、ビールのホップ感を数値化しています。コーヒーでも同じようなことができないか、というのがアイデアです。', tip:'IBU = International Bitterness Units（国際苦味単位）。inferring = 推測する。hoppy = ホップの香りが強い。'},
-  {cat:'🔬 Short Wave — 夢の研究', en:'A recent study in the journal Communication Psychology has some new insights for all of us dreamers on how our personalities shape our dreams.', ja:'Communication Psychology誌の最新研究が、私たちの性格がどのように夢を形成するかについて、夢を見る私たち全員に新たな知見をもたらしています。', tip:'insights = 知見・洞察。personalities = 性格。shape = 形成する。'},
-  {cat:'🔬 Short Wave — 夢の研究', en:'For two weeks, over 200 participants recorded voice memos of everything that was going through their minds, both when they were awake and when they woke up from sleep.', ja:'2週間にわたり、200人以上の参加者が起きているときも眠りから覚めたときも、頭の中を通り過ぎることを全て音声メモに録音しました。', tip:'voice memos = 音声メモ。participants = 参加者。going through their minds = 頭の中を通り過ぎる。'},
-  {cat:'🔬 Short Wave — 夢の研究', en:'Participants more prone to mind wandering tended to report more bizarre dreams. And more neurotic people also reported more negative dreams.', ja:'心が彷徨いやすい参加者はより奇妙な夢を報告する傾向がありました。神経質な人々はより否定的な夢を多く報告しました。', tip:'prone to = 〜しがちな。mind wandering = 心の彷徨い。neurotic = 神経質な。bizarre = 奇妙な。'},
-  {cat:'🔬 Short Wave — 夢の研究', en:'People who self-reported having better sleep quality also had more immersive, story-like dreams. Maybe the fact that we experience vivid dreams is a way of the brain to protect our sleep.', ja:'睡眠の質が良いと自己申告した人々はより没入感のある物語のような夢を見ていました。鮮明な夢を見るのは脳が睡眠を守る方法かもしれません。', tip:'self-reported = 自己申告の。immersive = 没入感のある。vivid = 鮮明な・生き生きとした。'},
-  {cat:'🔬 Short Wave — 夢の研究', en:'Record your thoughts the moment you wake up in the morning. A voice recording could actually be better than writing it down to get all those juicy details.', ja:'朝目が覚めた瞬間に思考を記録してください。あの豊かな詳細を全て捉えるには、書き留めるより音声録音の方が実際に優れているかもしれません。', tip:'the moment = 〜した瞬間に。juicy details = 豊かな詳細・生き生きとした細部。'},
-  {cat:'🔬 Short Wave — サソリ研究', en:'Scorpions have two weapons of choice—their stingers to inject their prey with venom or death by claw. And their claws and stingers actually contain metal.', ja:'サソリには2つの武器があります。毒を獲物に注入する毒針と、鋏による死です。そして鋏と毒針には実際に金属が含まれています。', tip:'stingers = 毒針。venom = 毒。prey = 獲物。claw = 鋏・爪。'},
-  {cat:'🔬 Short Wave — サソリ研究', en:'Some scorpions mostly hunt with their stingers, whereas others rely more on their claws. For example, scorpions with thicker claws tend to use their claws more.', ja:'毒針で主に狩りをするサソリがいる一方、鋏をより多く使うサソリもいます。例えば、鋏が太いサソリは鋏をより多く使う傾向があります。', tip:'whereas = 一方で（対比）。rely on = 〜に頼る。tend to = 〜する傾向がある。'},
-  {cat:'🔬 Short Wave — サソリ研究', en:'Scientists used microscopy and micro X-ray imaging to look at 18 species of scorpions. They found that iron was only found in scorpion claws, and manganese was only found in scorpion stingers.', ja:'科学者たちは顕微鏡とマイクロX線イメージングを使って18種のサソリを調べました。鉄はサソリの鋏にのみ、マンガンは毒針にのみ発見されました。', tip:'microscopy = 顕微鏡検査。micro X-ray imaging = マイクロX線撮影。manganese = マンガン（元素）。'},
-  {cat:'🔬 Short Wave — サソリ研究', en:'All of that could support the idea that different metals may be related to different hunting methods. Future research could look at thousands of scorpion species to understand this better.', ja:'これら全ては、異なる金属が異なる狩猟方法に関連している可能性を支持します。今後の研究では何千ものサソリの種を調べることでより深く理解できるでしょう。', tip:'support the idea that = 〜という考えを支持する。related to = 〜に関連した。'},
-  {cat:'📈 NPR経済ニュース', en:'Big tech companies are pouring money into artificial intelligence. That\'s propping up the stock market and the nation\'s economic output, even as other parts of the economy are struggling.', ja:'大手テクノロジー企業が人工知能に資金を注ぎ込んでいます。それが株式市場と国の経済産出を支えており、経済の他の部分が苦境に陥っている中でもそれが続いています。', tip:'pouring money into = 〜に資金を注ぎ込む。propping up = 支える・支持する。economic output = 経済産出。struggling = 苦境に陥っている。'},
-  {cat:'📈 NPR経済ニュース', en:'Anybody watching a stock ticker today would think the economy is roaring. But when you look at other economic indicators, it\'s a more mixed picture.', ja:'今日株価表示を見ている人は誰でも経済が好調だと思うでしょう。しかし他の経済指標を見ると、より複雑な状況が見えてきます。', tip:'stock ticker = 株価表示機。roaring = 好調な・盛んな。economic indicators = 経済指標。mixed picture = 複雑な状況。'},
-  {cat:'📈 NPR経済ニュース', en:'The stock market is enjoying a big rally that now jumped nearly 800 points today. A number of big tech companies reported strong earnings, fueled by demand for AI.', ja:'株式市場は本日800ポイント近く上昇する大きな上昇相場を享受しています。多くの大手テクノロジー企業がAI需要に支えられた好調な収益を報告しました。', tip:'rally = 上昇相場・反騰。earnings = 収益・利益。fueled by = 〜に支えられた・燃料を供給された。'},
-  {cat:'📈 NPR経済ニュース', en:'Even before the energy shock was fully felt, underlying growth was already quite weak.', ja:'エネルギーショックが完全に感じられる前から、基礎的な成長はすでにかなり弱かったのです。', tip:'energy shock = エネルギーショック。underlying = 根本的な・基礎的な。'},
-  {cat:'📈 NPR経済ニュース', en:'The energy shock he\'s talking about is the result of the tariffs that the Trump administration put on imports from most of the world.', ja:'彼が言うエネルギーショックは、トランプ政権が世界の大部分からの輸入品に課した関税の結果です。', tip:'tariffs = 関税。imports = 輸入品。administration = 政権・行政府。'},
-  {cat:'📈 NPR経済ニュース', en:'If people are paying so much more for gas, then what do we know about whether that means they\'re cutting back on other spending?', ja:'人々がガソリン代をそれほど多く払っているとしたら、それが他の支出の削減を意味するかどうかについて何が分かっていますか？', tip:'cutting back on = 〜を削減する。spending = 支出・消費。'},
-  {cat:'📈 NPR経済ニュース', en:'We\'re not seeing a whole lot of belt-tightening yet. Personal spending continued to climb in March, even as inflation was outpacing wage growth.', ja:'まだそれほど多くの節約は見られません。インフレが賃金上昇を上回っていたにもかかわらず、3月の個人消費は引き続き上昇しました。', tip:'belt-tightening = 節約・緊縮。outpacing = 〜を上回る。wage growth = 賃金上昇。'},
-  {cat:'📈 NPR経済ニュース', en:'When you get into May and June, especially if gas prices are still high, I think you will start to see consumers pulling back.', ja:'5月6月に入ったとき、特にガソリン価格がまだ高い場合、消費者が消費を控え始めるのが見えてくると思います。', tip:'pulling back = 引き下がる・消費を控える。consumers = 消費者。'},
-  {cat:'📈 NPR経済ニュース', en:'Today, the Commerce Department said the economy grew at an annual rate of just 0.3% in the first quarter, the weakest performance in three years.', ja:'本日、商務省は第1四半期の経済成長率が年率わずか0.3%だったと発表しました。3年間で最も弱いパフォーマンスです。', tip:'Commerce Department = 商務省。annual rate = 年率。first quarter = 第1四半期。'},
-  {cat:'📈 NPR経済ニュース', en:'For most of the last three years, average wages were actually going up faster than prices, so workers were seeing real gains in their purchasing power.', ja:'過去3年間のほとんどの期間、平均賃金は実際に物価より速く上昇していたので、労働者たちは購買力の実質的な向上を感じていました。', tip:'purchasing power = 購買力。real gains = 実質的な利得。'},
-  {cat:'📈 NPR経済ニュース', en:'The consumers at the top, they\'re comfortable spending. Gas prices go up to 4, 5, $6 a gallon, and a lot of them don\'t really notice.', ja:'上位の消費者たちは気軽に消費しています。ガロンあたり4ドル、5ドル、6ドルにガソリン価格が上がっても、多くの人はあまり気にしません。', tip:'at the top = 上位の・富裕層の。comfortable spending = 気軽に消費する。'},
-  {cat:'📈 NPR経済ニュース', en:'The number of people falling behind on credit card bills inched up a little bit this year, but it\'s not cause for alarm yet.', ja:'クレジットカードの支払いが遅れている人の数は今年少し増えましたが、まだ警戒するほどではありません。', tip:'falling behind on = 〜の支払いが遅れる。inched up = 少し増えた。cause for alarm = 警戒の理由。'},
+  {cat:'📺 Fresh Air', en:'This is FRESH AIR.', ja:'こちらはフレッシュ・エアです。', tip:'NPRの看板文化番組。映画・音楽・文学のレビューで知られる。'},
+  {cat:'📺 Fresh Air', en:'"The Devil Wears Prada 2," which opens wide today, is a sequel to the 2006 hit.', ja:'「プラダを着た悪魔2」が本日全国公開される。2006年のヒット作の続編だ。', tip:'opens wide = 全国公開される。sequel = 続編。'},
+  {cat:'📺 Fresh Air', en:'It\'s about an idealistic young journalist who goes to work for a tyrannical fashion magazine editor.', ja:'横暴なファッション誌の編集長のもとで働くことになる理想主義の若い記者の物語だ。', tip:'idealistic = 理想主義の。tyrannical = 横暴な・専制的な。'},
+  {cat:'📺 Fresh Air', en:'Both reprise their roles in this new film, as do Emily Blunt and Stanley Tucci.', ja:'2人はこの新作でも役を再演している。エミリー・ブラントとスタンリー・トゥッチも同様だ。', tip:'reprise = 再演する。as do = 〜も同様に。'},
+  {cat:'📺 Fresh Air', en:'Our critic-at-large, John Powers, says the film, if not quite as much a lark as the original, has plenty to say.', ja:'批評家のジョン・パワーズによれば、オリジナルほど気楽ではないが、この映画には言うべきことが十分ある。', tip:'critic-at-large = 主任批評家。lark = 気楽なもの・お遊び。has plenty to say = 言うべきことが多い。'},
+  {cat:'📺 Fresh Air', en:'When "The Devil Wears Prada" hit theaters in 2006, I was the film critic at Vogue, the model for Runway, the fictional magazine in the movie.', ja:'「プラダを着た悪魔」が2006年に公開されたとき、私はVogueの映画評論家だった。Vogueは映画に登場する架空の雑誌Runwayのモデルだ。', tip:'hit theaters = 劇場公開される。fictional = 架空の。the model for = 〜のモデルとなった。'},
+  {cat:'📺 Fresh Air', en:'Cleverly written by Aline Brosh McKenna, this fizzy sequel boasts the same expert cast, all as good as you\'d hope.', ja:'アライン・ブロッシュ・マッケンナの巧みな脚本で、この軽快な続編は期待通りの豪華キャストを誇っている。', tip:'fizzy = 軽快な・弾けるような。boasts = 〜を誇る。as good as you\'d hope = 期待通りの。'},
+  {cat:'📺 Fresh Air', en:'Not to mention the incomparable Meryl Streep.', ja:'比類なきメリル・ストリープは言うまでもない。', tip:'not to mention = 〜は言うまでもなく。incomparable = 比類のない・無比の。'},
+  {cat:'📺 Fresh Air', en:'Anne Hathaway is back as smiley, wholesome Andy Sachs, who\'s risen from being Miranda\'s beleaguered assistant to become a successful journalist.', ja:'アン・ハサウェイがミランダに苦しめられたアシスタントから成功した記者へと成長したアンディ・サックスを再演する。', tip:'wholesome = 健全な。beleaguered = 苦境に立たされた。risen from = 〜から立ち上がった。'},
+  {cat:'📺 Fresh Air', en:'Like any good sequel, the movie feels like a reunion.', ja:'良い続編らしく、映画は再会の雰囲気を醸し出している。', tip:'sequel = 続編。reunion = 再会・同窓会。feels like = 〜のような感じがする。'},
+  {cat:'📺 Fresh Air', en:'The elegant silver-haired Miranda - Streep is impeccable - greets the return of old colleagues with her trademark mix of graciousness and contempt.', ja:'エレガントで銀髪のミランダ——ストリープは申し分ない——が、お得意の優雅さと軽蔑の混じった表情で旧同僚たちを迎える。', tip:'impeccable = 申し分ない。trademark = お得意の。graciousness = 優雅さ。contempt = 軽蔑。'},
+  {cat:'📺 Fresh Air', en:'I am the new features editor at Runway.', ja:'私がRunwayの新しい特集編集長です。', tip:'features editor = 特集担当編集者。映画の台詞。'},
+  {cat:'📺 Fresh Air', en:'No, you\'re not. Are you serious? Wow. Wonders never cease.', ja:'そんなはずない。本当に？すごい。世の中何が起こるかわからないわね。', tip:'Wonders never cease. = 驚くことは尽きない（驚いたときの慣用句）。'},
+  {cat:'📺 Fresh Air', en:'I cannot actually get over this. It\'s really remarkable—a senior editor at Runway. You?', ja:'本当に信じられない。本当に驚きよ——Runwayのシニア編集者。あなたが？', tip:'get over = 乗り越える・受け入れる。remarkable = 驚くべき。'},
+  {cat:'📺 Fresh Air', en:'Now, the first "Devil Wears Prada," with its masterpiece of a title, was a pop fable about wealth and glamour.', ja:'さて、傑作タイトルを持つ最初の「プラダを着た悪魔」は、富と魅力についてのポップな寓話だった。', tip:'masterpiece of a title = 傑作とも言えるタイトル。pop fable = 大衆的な寓話。glamour = 魅力・華やかさ。'},
+  {cat:'📺 Fresh Air', en:'It tapped into our fantasies about the glamorous world of high fashion.', ja:'それはハイファッションの華やかな世界への私たちの幻想を刺激した。', tip:'tapped into = 〜に働きかけた・刺激した。fantasies = 幻想・空想。'},
+  {cat:'📺 Fresh Air', en:'Back in 2006, Runway, like Vogue, was a juggernaut, with lavish expenditures and a September issue the size of a bank vault.', ja:'2006年当時、RunwayはVogueと同様に巨大な力を持ち、豪華な支出と銀行の金庫ほどの厚さの9月号を誇っていた。', tip:'juggernaut = 圧倒的な力を持つ存在。lavish = 豪華な。expenditures = 支出。vault = 金庫。'},
+  {cat:'📺 Fresh Air', en:'Andy does, which is why she fights to keep Runway afloat.', ja:'アンディはそれを知っているから、Runwayを存続させるために戦う。', tip:'keep afloat = 沈まないよう維持する・存続させる。'},
+  {cat:'📺 Fresh Air', en:'She knows it\'s imperfect and often shallow, yet it\'s still better than the alternative.', ja:'完璧でなく浅薄なことも多いと知りながら、それでも代替案よりはましだと分かっている。', tip:'shallow = 浅薄な・表面的な。alternative = 代替案・別の選択肢。'},
+  {cat:'🔬 Short Wave', en:'You\'re listening to Short Wave from NPR.', ja:'NPRのShort Waveをお聴きです。', tip:'NPRの科学ポッドキャスト。週数回配信される。'},
+  {cat:'🔬 Short Wave', en:'Hey, Short Wavers, Emily Kwong here.', ja:'こんにちは、ショートウェーバーの皆さん。エミリー・クォンです。', tip:'Short Wavers = Short Waveのリスナーへの呼びかけ。番組の定番の挨拶。'},
+  {cat:'🔬 Short Wave', en:'And Rachel Carlson with our biweekly science news roundup.', ja:'そしてレイチェル・カールソンです。隔週の科学ニュースまとめをお届けします。', tip:'biweekly = 隔週の（または週2回の）。roundup = まとめ・総括。'},
+  {cat:'🔬 Short Wave', en:'This time with a special guest, our colleague Sacha Pfeiffer.', ja:'今回は特別ゲストとして同僚のサシャ・ファイファーをお迎えしています。', tip:'colleague = 同僚。NPR内の別番組のホストをゲストに迎えている。'},
+  {cat:'🔬 Short Wave', en:'I am married to a science teacher, so I would say that my love of science comes from that.', ja:'科学の先生と結婚しているので、科学への愛情はそこから来ていると言えます。', tip:'comes from = 〜から来ている・〜に由来する。'},
+  {cat:'🔬 Short Wave', en:'Question for you, is your husband or are you a coffee drinker?', ja:'質問ですが、ご主人またはあなた自身はコーヒーを飲みますか？', tip:'coffee drinker = コーヒーを飲む人。話題をコーヒーに切り替えるための質問。'},
+  {cat:'🔬 Short Wave', en:'He is. I am not. I try not to be dependent on it.', ja:'夫はそうです。私はそうではありません。依存しないようにしています。', tip:'dependent on = 〜に依存している。be not dependent on = 〜に頼らない。'},
+  {cat:'🔬 Short Wave', en:'And I also honestly need so much sugar in it that I just figure it\'s not worth it.', ja:'それに正直、入れる砂糖がとても多くて、飲む価値がないと思っています。', tip:'it\'s not worth it = 価値がない・割に合わない。'},
+  {cat:'🔬 Short Wave', en:'Emily and I both need coffee in the morning to function.', ja:'エミリーと私は二人とも朝のコーヒーがないと動けません。', tip:'to function = 機能するために・動くために。'},
+  {cat:'🔬 Short Wave', en:'Here\'s the thing about coffee. It\'s extremely variable.', ja:'コーヒーについてこういうことがあります。非常にばらつきがあるのです。', tip:'Here\'s the thing = ポイントはこうです。variable = 変わりやすい・ばらつきのある。'},
+  {cat:'🔬 Short Wave', en:'Visit the barista at your local fancy café, and they might tell you how they control things like water temperature and extraction time.', ja:'近所のおしゃれなカフェのバリスタに聞けば、水温や抽出時間などをどう管理しているか教えてくれるかもしれない。', tip:'barista = バリスタ（コーヒー職人）。extraction time = 抽出時間。'},
+  {cat:'🔬 Short Wave', en:'Even though there\'s a technique the industry uses to measure the concentration of coffee, it still doesn\'t capture all the variables that can affect taste.', ja:'業界にはコーヒーの濃度を測定する技術があるが、それでも味に影響する全ての変数を捉えることはできない。', tip:'concentration = 濃度。capture = 捉える・把握する。variables = 変数・変動要因。'},
+  {cat:'🔬 Short Wave', en:'Scientists at the University of Oregon wanted to see if they could change that.', ja:'オレゴン大学の科学者たちはそれを変えられるか試みた。', tip:'wanted to see if = 〜かどうか確かめたかった。'},
+  {cat:'🔬 Short Wave', en:'They used a tool that\'s usually used to measure the charge in batteries to analyze coffee.', ja:'彼らは通常は電池の電荷を測定するために使うツールを使ってコーヒーを分析した。', tip:'charge = 電荷。batteries = 電池。analyze = 分析する。'},
+  {cat:'🔬 Short Wave', en:'You\'re just basically sticking two pieces of conductive metal into coffee, and then the coffee acts as a kind of battery.', ja:'基本的に導電性の金属を2つコーヒーに差し込むだけで、コーヒーが一種の電池として機能する。', tip:'conductive = 導電性の。acts as = 〜として機能する。'},
+  {cat:'🔬 Short Wave', en:'Basically, they could tell how strong the coffee was and how dark the roast was.', ja:'基本的に、コーヒーの強さと焙煎の深さを判定できた。', tip:'roast = 焙煎。how dark the roast was = 焙煎がどれだけ深いか。'},
+  {cat:'🔬 Short Wave', en:'This method was at least as good as human experts at telling when a roast was ready, or how strong a brew was.', ja:'この方法は、焙煎の仕上がりや抽出の強さを判断する点で人間の専門家と少なくとも同等だった。', tip:'at least as good as = 少なくとも〜と同等の。brew = 抽出したコーヒー。'},
+  {cat:'🔬 Short Wave', en:'In the beer industry, they have IBU, which is somehow inferring how hoppy a beer is going to be, and they put a number on it.', ja:'ビール業界にはIBUがあり、ビールのホップ感をある程度推測して数値化している。', tip:'IBU = International Bitterness Units（国際苦味単位）。hoppy = ホップの香りが強い。'},
+  {cat:'🔬 Short Wave', en:'The idea is, can we do something similar for coffee?', ja:'アイデアは、コーヒーでも同じようなことができないか、というものだ。', tip:'The idea is = アイデア・考えの核心は〜だ。similar = 似たような。'},
+  {cat:'🔬 Short Wave', en:'I didn\'t know IBU existed, by the way.', ja:'ところで、IBUなんてものがあるとは知りませんでした。', tip:'by the way = ところで（話題を変えるときに使う）。existed = 存在した。'},
+  {cat:'🔬 Short Wave', en:'I didn\'t know there was a competitive coffee circuit. So all of us have some googling to do later.', ja:'コーヒーの競技大会があるとも知らなかった。後で皆でGoogle検索しないといけませんね。', tip:'competitive circuit = 競技大会のサーキット。googling = ネット検索すること。'},
+  {cat:'🔬 Short Wave', en:'A recent study in the journal Communication Psychology has some new insights for all of us dreamers on how our personalities shape our dreams.', ja:'Communication Psychology誌の最新研究が、性格がどのように夢を形成するかについて新たな知見を示している。', tip:'insights = 知見・洞察。personalities = 性格。shape = 形成する。'},
+  {cat:'🔬 Short Wave', en:'I definitely fall in the category of people who can wake up and having had just had a very intense dream.', ja:'私は確実に、非常に強烈な夢を見て目覚めることができる人たちの部類に入ります。', tip:'fall in the category of = 〜の部類に入る。intense = 強烈な・激しい。'},
+  {cat:'🔬 Short Wave', en:'For two weeks, over 200 participants recorded voice memos of everything that was going through their minds.', ja:'2週間にわたり、200人以上の参加者が頭の中を通り過ぎる全てを音声メモに録音した。', tip:'participants = 参加者。voice memos = 音声メモ。going through their minds = 頭の中を通り過ぎる。'},
+  {cat:'🔬 Short Wave', en:'Both when they were awake and when they woke up from sleep.', ja:'起きているときも眠りから覚めたときも、両方においてだ。', tip:'woke up from sleep = 眠りから目覚めた。both when... and when... = 〜のときも〜のときも。'},
+  {cat:'🔬 Short Wave', en:'Researchers analyzed all of this data to see if any patterns emerged.', ja:'研究者たちはこのデータ全てを分析し、何かパターンが浮かび上がるか調べた。', tip:'analyzed = 分析した。patterns emerged = パターンが現れた・浮かび上がった。'},
+  {cat:'🔬 Short Wave', en:'Participants more prone to mind wandering tended to report more bizarre dreams.', ja:'心が彷徨いやすい参加者はより奇妙な夢を報告する傾向があった。', tip:'prone to = 〜しがちな。mind wandering = 心の彷徨い・注意散漫。bizarre = 奇妙な。'},
+  {cat:'🔬 Short Wave', en:'And more neurotic people also reported more negative dreams.', ja:'そして神経質な人々はより否定的な夢を多く報告した。', tip:'neurotic = 神経質な・神経症的な。negative dreams = 否定的な・嫌な夢。'},
+  {cat:'🔬 Short Wave', en:'People who self-reported having better sleep quality also had more immersive, story-like dreams.', ja:'睡眠の質が良いと自己申告した人々はより没入感のある物語のような夢を見ていた。', tip:'self-reported = 自己申告の。immersive = 没入感のある。story-like = 物語のような。'},
+  {cat:'🔬 Short Wave', en:'Maybe the fact that we experience vivid dreams is a way of the brain to protect our sleep.', ja:'鮮明な夢を見るという事実は、脳が睡眠を守る方法なのかもしれない。', tip:'vivid = 鮮明な・生き生きとした。protect our sleep = 睡眠を守る。'},
+  {cat:'🔬 Short Wave', en:'Valentina also is the first to acknowledge that because the study depends on the reports of the participants, it has its limitations.', ja:'ヴァレンティナはまた、研究が参加者の報告に依存しているため限界があることを率先して認めている。', tip:'acknowledge = 認める。limitations = 限界・制約。depends on = 〜に依存する。'},
+  {cat:'🔬 Short Wave', en:'Did she have any advice, beyond just write it down quickly, how you can remember your dreams better?', ja:'すぐに書き留める以外に、夢をより良く覚えておくための何かアドバイスはありましたか？', tip:'beyond = 〜を超えて・〜以外に。remember your dreams = 夢を覚えておく。'},
+  {cat:'🔬 Short Wave', en:'Record your thoughts the moment you wake up in the morning.', ja:'朝目が覚めた瞬間に考えを記録しなさい。', tip:'the moment = 〜した瞬間に。Record your thoughts = 考えを記録する。'},
+  {cat:'🔬 Short Wave', en:'A voice recording could actually be better than writing it down to get all those juicy details.', ja:'あの豊かな詳細を全て捉えるには、書き留めるより音声録音の方が実際に優れているかもしれない。', tip:'voice recording = 音声録音。juicy details = 豊かな詳細・生き生きとした細部。'},
+  {cat:'🔬 Short Wave', en:'For our third item, something all of us hope will never be in our dreams—scorpions and their anatomical weaponry.', ja:'3つ目のニュースは、誰もが夢に出てきてほしくないもの——サソリとその解剖学的な武器についてです。', tip:'anatomical = 解剖学的な。weaponry = 武器・兵器類。'},
+  {cat:'🔬 Short Wave', en:'Scorpions have two weapons of choice—their stingers to inject their prey with venom, or death by claw.', ja:'サソリには2つの武器がある——獲物に毒を注入する毒針か、鋏による死だ。', tip:'stingers = 毒針。inject = 注入する。venom = 毒。prey = 獲物。claw = 鋏・爪。'},
+  {cat:'🔬 Short Wave', en:'And their claws and stingers actually contain metal, which gives them strength.', ja:'そして鋏と毒針には実際に金属が含まれており、それが強度を与えている。', tip:'contain = 含む。gives them strength = それらに強度を与える。'},
+  {cat:'🔬 Short Wave', en:'Some scorpions mostly hunt with their stingers, whereas others rely more on their claws.', ja:'毒針で主に狩りをするサソリがいる一方、鋏をより多く使うサソリもいる。', tip:'whereas = 一方で（対比）。rely on = 〜に頼る・依存する。'},
+  {cat:'🔬 Short Wave', en:'For example, scorpions with thicker claws tend to use their claws more.', ja:'例えば、鋏が太いサソリは鋏をより多く使う傾向がある。', tip:'tend to = 〜する傾向がある。thicker = より太い・より厚い。'},
+  {cat:'🔬 Short Wave', en:'Scientists used microscopy and micro X-ray imaging to look at 18 species of scorpions.', ja:'科学者たちは顕微鏡とマイクロX線イメージングを使って18種のサソリを調べた。', tip:'microscopy = 顕微鏡検査。micro X-ray imaging = マイクロX線撮影。species = 種。'},
+  {cat:'🔬 Short Wave', en:'They found that iron was only found in scorpion claws, and manganese was only found in scorpion stingers.', ja:'鉄はサソリの鋏にのみ、マンガンは毒針にのみ発見されたことが分かった。', tip:'iron = 鉄。manganese = マンガン（元素記号Mn）。'},
+  {cat:'🔬 Short Wave', en:'And all of that could support the idea that different metals may be related to different hunting methods.', ja:'そしてこれら全ては、異なる金属が異なる狩猟方法に関連しているという考えを支持する可能性がある。', tip:'support the idea that = 〜という考えを支持する。related to = 〜に関連した。'},
+  {cat:'🔬 Short Wave', en:'Future research could look at thousands of scorpion species to understand this better.', ja:'今後の研究では何千ものサソリの種を調べることでより深く理解できるだろう。', tip:'future research = 今後の研究。thousands of = 何千もの。'},
+  {cat:'🔬 Short Wave', en:'Do you find scorpions more exciting and cool or more terrifying?', ja:'サソリはどちらかというとワクワクしてかっこいいですか、それともより恐ろしいですか？', tip:'terrifying = 恐ろしい。exciting and cool = ワクワクしてかっこいい。'},
+  {cat:'🔬 Short Wave', en:'I\'m going to say equal parts of both, a good mixture of fear and respect.', ja:'両方が同等、恐れと尊重の良い混合だと言います。', tip:'equal parts of both = 両方が同等に。mixture of = 〜の混合。'},
+  {cat:'📈 NPR Economy', en:'Big tech companies are pouring money into artificial intelligence.', ja:'大手テクノロジー企業が人工知能に資金を注ぎ込んでいる。', tip:'pouring money into = 〜に資金を注ぎ込む。artificial intelligence = 人工知能（AI）。'},
+  {cat:'📈 NPR Economy', en:'That\'s propping up the stock market and the nation\'s economic output.', ja:'それが株式市場と国の経済産出を支えている。', tip:'propping up = 支える・支持する。economic output = 経済産出・GDP。'},
+  {cat:'📈 NPR Economy', en:'Even as other parts of the economy are struggling.', ja:'経済の他の部分が苦境に陥っている中でも、だ。', tip:'even as = 〜している中でも。struggling = 苦境に陥っている・もがいている。'},
+  {cat:'📈 NPR Economy', en:'Anybody watching a stock ticker today would think the economy is roaring.', ja:'今日株価表示を見ている人は誰でも経済が絶好調だと思うだろう。', tip:'stock ticker = 株価表示機。roaring = 好調な・勢いのある。'},
+  {cat:'📈 NPR Economy', en:'But when you look at other economic indicators, it\'s a more mixed picture.', ja:'しかし他の経済指標を見ると、より複雑な状況が見えてくる。', tip:'economic indicators = 経済指標。mixed picture = 複雑な・まちまちな状況。'},
+  {cat:'📈 NPR Economy', en:'The stock market is enjoying a big rally that now jumped nearly 800 points today.', ja:'株式市場は本日約800ポイント急上昇する大きな上昇相場を享受している。', tip:'rally = 上昇相場・反騰。jumped = 急上昇した。nearly = 約〜・ほぼ。'},
+  {cat:'📈 NPR Economy', en:'A number of big tech companies reported strong earnings, fueled by demand for AI.', ja:'多くの大手テクノロジー企業がAI需要に支えられた好調な収益を報告した。', tip:'earnings = 収益・利益。fueled by = 〜に支えられた・燃料を供給された。'},
+  {cat:'📈 NPR Economy', en:'Even before the energy shock was fully felt, underlying growth was already quite weak.', ja:'エネルギーショックが完全に感じられる前から、基礎的な成長はすでにかなり弱かった。', tip:'energy shock = エネルギーショック。underlying = 根本的な・基礎的な。'},
+  {cat:'📈 NPR Economy', en:'The energy shock he\'s talking about is the result of the tariffs that the Trump administration put on imports from most of the world.', ja:'彼が言うエネルギーショックは、トランプ政権が世界の大部分からの輸入品に課した関税の結果だ。', tip:'tariffs = 関税。imports = 輸入品。administration = 政権・行政府。'},
+  {cat:'📈 NPR Economy', en:'If people are paying so much more for gas, what do we know about whether that means they\'re cutting back on other spending?', ja:'人々がガソリン代をそれほど多く払っているとしたら、それが他の支出の削減を意味するかどうかについて何が分かっていますか？', tip:'cutting back on = 〜を削減する。spending = 支出・消費。'},
+  {cat:'📈 NPR Economy', en:'We\'re not seeing a whole lot of belt-tightening yet.', ja:'まだそれほど多くの節約は見られていない。', tip:'belt-tightening = 節約・緊縮生活。a whole lot of = 非常に多くの。'},
+  {cat:'📈 NPR Economy', en:'Personal spending continued to climb in March, even as inflation was outpacing wage growth.', ja:'インフレが賃金上昇を上回っていたにもかかわらず、3月の個人消費は引き続き上昇した。', tip:'outpacing = 〜を上回る・追い越す。wage growth = 賃金上昇。'},
+  {cat:'📈 NPR Economy', en:'When you get into May and June, especially if gas prices are still high, I think you will start to see consumers pulling back.', ja:'5月6月に入ったとき、特にガソリン価格がまだ高い場合、消費者が消費を控え始めるのが見えてくると思う。', tip:'pulling back = 引き下がる・消費を控える。consumers = 消費者。'},
+  {cat:'📈 NPR Economy', en:'And then that could be a drag on the broader economy.', ja:'そしてそれが経済全体への重しになりかねない。', tip:'a drag on = 〜への重し・足かせ。broader economy = より広い経済・経済全体。'},
+  {cat:'📈 NPR Economy', en:'Today, the Commerce Department said the economy grew at an annual rate of just 0.3% in the first quarter, the weakest performance in three years.', ja:'本日、商務省は第1四半期の経済成長率が年率わずか0.3%だったと発表した。3年間で最も弱いパフォーマンスだ。', tip:'Commerce Department = 商務省。annual rate = 年率。first quarter = 第1四半期（1〜3月）。'},
+  {cat:'📈 NPR Economy', en:'For most of the last three years, average wages were actually going up faster than prices, so workers were seeing real gains in their purchasing power.', ja:'過去3年間のほとんど、平均賃金は実際に物価より速く上昇していたため、労働者は購買力の実質的な向上を感じていた。', tip:'purchasing power = 購買力。real gains = 実質的な利得。'},
+  {cat:'📈 NPR Economy', en:'The consumers at the top, they\'re comfortable spending. Gas prices go up to $6 a gallon, and a lot of them don\'t really notice.', ja:'上位の消費者たちは気軽に消費している。ガロンあたり6ドルにガソリン価格が上がっても、多くの人はあまり気にしない。', tip:'at the top = 上位の・富裕層の。comfortable spending = 気軽に消費する。'},
+  {cat:'📈 NPR Economy', en:'The number of people falling behind on credit card bills inched up a little bit this year, but it\'s not cause for alarm yet.', ja:'クレジットカードの支払いが遅れている人の数は今年少し増えたが、まだ警戒するほどではない。', tip:'falling behind on = 〜の支払いが遅れる。inched up = 少し増えた。cause for alarm = 警戒の理由。'},
 ];
 
 
@@ -552,6 +597,24 @@ let activeCategory = 'all';
 let isAutoPlaying  = false;
 let isRepeating    = false;
 let repeatTimer    = null;
+
+const radioFiles = [
+  { src: 'the_devil_wears_prada_2.mp3', label: 'Fresh Air — The Devil Wears Prada 2' },
+  { src: 'ywr3ahjkcgo_10159785.mp3',    label: 'Short Wave — Science News Roundup' },
+  { src: '20260430_atc_economic_roundup.mp3', label: 'NPR — Economic Roundup' },
+];
+
+function switchRadio(idx) {
+  const audio  = document.getElementById('radio-audio');
+  const source = document.getElementById('radio-source');
+  const label  = document.getElementById('radio-label');
+  const tabs   = document.querySelectorAll('.radio-tab');
+  audio.pause();
+  source.src = radioFiles[idx].src;
+  label.textContent = radioFiles[idx].label;
+  audio.load();
+  tabs.forEach((t, i) => t.classList.toggle('active', i === idx));
+}
 let autoMode       = '';
 let autoStopped    = false;
 let autoTimeout    = null;
@@ -670,24 +733,6 @@ function speakRepeat(text) {
       if (isRepeating) { repeatTimer = setTimeout(() => speakRepeat(text), 300); }
     });
   }, 150);
-}
-
-const radioFiles = [
-  { src: 'the_devil_wears_prada_2.mp3', label: 'Fresh Air — The Devil Wears Prada 2' },
-  { src: 'ywr3ahjkcgo_10159785.mp3',    label: 'Short Wave — Science News Roundup' },
-  { src: '20260430_atc_economic_roundup.mp3', label: 'NPR — Economic Roundup' },
-];
-
-function switchRadio(idx) {
-  const audio = document.getElementById('radio-audio');
-  const source = document.getElementById('radio-source');
-  const label  = document.getElementById('radio-label');
-  const tabs   = document.querySelectorAll('.radio-tab');
-  audio.pause();
-  source.src = radioFiles[idx].src;
-  label.textContent = radioFiles[idx].label;
-  audio.load();
-  tabs.forEach((t, i) => t.classList.toggle('active', i === idx));
 }
 
 function toggleRepeat() {
