@@ -449,14 +449,13 @@ body {
     <button class="btn btn-secondary" onclick="prev()">← 戻る</button>
     <button class="btn btn-primary"   onclick="speakCurrent()">🔊 音声</button>
     <button class="btn btn-secondary" onclick="next()">次へ →</button>
+    <button class="btn btn-secondary" style="font-size:11px;padding:8px 6px;" onclick="switchMode()">🔄 英⇄日</button>
   </div>
-  <div class="btn-row">
-    <button class="btn btn-secondary" id="random-btn" onclick="toggleRandom()">🔀 ランダム: OFF</button>
-    <button class="btn btn-secondary" onclick="switchMode()">🔄 英⇄日</button>
-  </div>
-  <div class="btn-row">
-    <button class="btn btn-amber" onclick="startShadowing()">🗣️ シャドウイング</button>
-    <button class="btn btn-blue"  onclick="startContinuous()">▶ 連続再生</button>
+  <div class="btn-row" style="gap:4px;">
+    <button class="btn btn-secondary" style="font-size:11px;padding:7px 5px;" id="random-btn" onclick="toggleRandom()">🔀 ランダム</button>
+    <button class="btn btn-secondary" style="font-size:11px;padding:7px 5px;" id="repeat-btn" onclick="toggleRepeat()">🔁 繰り返し</button>
+    <button class="btn btn-blue"  style="font-size:11px;padding:7px 5px;" onclick="startContinuous()">▶ 連続再生</button>
+    <button class="btn btn-amber" style="font-size:11px;padding:7px 5px;" onclick="startShadowing()">🗣️ シャドウ</button>
   </div>
 </div>
 
@@ -631,9 +630,9 @@ const phrases = [
   {cat:'① 登校・朝の会話', en:'I didn\'t sleep well last night.', ja:'昨夜あまり眠れなかった。', tip:''},
   {cat:'① 登校・朝の会話', en:'I\'m excited for today.', ja:'今日楽しみ。', tip:''},
   {cat:'① 登校・朝の会話', en:'What class do we have first?', ja:'最初の授業は何？', tip:''},
-  {cat:'① 登校・朝の会話', en:'Where is our homeroom?', ja:'ホームルームはどこ？', tip:''},
+  {cat:'① 登校・朝の会話', en:'Where is our classroom?', ja:'教室はどこ？', tip:''},
   {cat:'① 登校・朝の会話', en:'Can you walk with me?', ja:'一緒に行こう？', tip:''},
-  {cat:'① 登校・朝の会話', en:'I forgot my ID card.', ja:'IDカード忘れた。', tip:''},
+  {cat:'① 登校・朝の会話', en:'I forgot my student card.', ja:'学生証を忘れた。', tip:''},
   {cat:'① 登校・朝の会話', en:'I\'m running a little late.', ja:'少し遅れそう。', tip:''},
   {cat:'① 登校・朝の会話', en:'I need to hurry.', ja:'急がないと。', tip:''},
   {cat:'④ 友達・人間関係', en:'Can I sit with you?', ja:'一緒に座っていい？', tip:''},
@@ -652,10 +651,10 @@ const phrases = [
   {cat:'④ 友達・人間関係', en:'I didn\'t mean to upset you.', ja:'傷つけるつもりじゃなかった。', tip:''},
   {cat:'④ 友達・人間関係', en:'Can we talk later?', ja:'あとで話せる？', tip:''},
   {cat:'④ 友達・人間関係', en:'I need some space.', ja:'少し一人になりたい。', tip:''},
-  {cat:'④ 友達・人間関係', en:'Let\'s solve this together.', ja:'一緒に解決しよう。', tip:''},
-  {cat:'④ 友達・人間関係', en:'That wasn\'t fair.', ja:'それは不公平だったよ。', tip:''},
+  {cat:'④ 友達・人間関係', en:'Let\'s figure this out together.', ja:'一緒に解決しよう。', tip:''},
+  {cat:'④ 友達・人間関係', en:'That\'s not fair!', ja:'それは不公平だよ！', tip:''},
   {cat:'⑤ 休み時間・遊び', en:'Do you want to play basketball?', ja:'バスケする？', tip:''},
-  {cat:'⑤ 休み時間・遊び', en:'Let\'s walk around.', ja:'散歩しよう。', tip:''},
+  {cat:'⑤ 休み時間・遊び', en:'Let\'s go for a walk.', ja:'散歩しよう。', tip:''},
   {cat:'⑤ 休み時間・遊び', en:'Let\'s sit in the shade.', ja:'日陰で座ろう。', tip:''},
   {cat:'⑤ 休み時間・遊び', en:'Can you wait for me?', ja:'ちょっと待って。', tip:''},
   {cat:'⑤ 休み時間・遊び', en:'Let\'s go together.', ja:'一緒に行こう。', tip:''},
@@ -683,9 +682,9 @@ const phrases = [
   {cat:'⑦ 体調・けが', en:'I think I have a fever.', ja:'熱があると思う。', tip:''},
   {cat:'⑦ 体調・けが', en:'I twisted my ankle.', ja:'足首をひねった。', tip:''},
   {cat:'⑦ 体調・けが', en:'I scraped my knee.', ja:'ひざをすりむいた。', tip:''},
-  {cat:'⑦ 体調・けが', en:'Can you take me to the nurse?', ja:'保健室に連れて行ってくれる？', tip:''},
+  {cat:'⑦ 体調・けが', en:'Can you walk me to the nurse\'s office?', ja:'保健室まで連れて行ってくれる？', tip:''},
   {cat:'⑦ 体調・けが', en:'I need to rest.', ja:'休みたい。', tip:''},
-  {cat:'⑦ 体調・けが', en:'I need water.', ja:'水が必要。', tip:''},
+  {cat:'⑦ 体調・けが', en:'Can I get some water?', ja:'水をもらえる？', tip:''},
   {cat:'⑦ 体調・けが', en:'I feel better now.', ja:'もう良くなった。', tip:''},
   {cat:'⑦ 体調・けが', en:'I need to call my mom.', ja:'お母さんに電話したい。', tip:''},
   {cat:'⑦ 体調・けが', en:'I want to go home.', ja:'家に帰りたい。', tip:''},
@@ -703,12 +702,12 @@ const phrases = [
   {cat:'⑫ 放課後・帰宅', en:'Do you want to walk together?', ja:'一緒に帰る？', tip:''},
   {cat:'⑫ 放課後・帰宅', en:'Are your parents picking you up?', ja:'迎え来る？', tip:''},
   {cat:'⑫ 放課後・帰宅', en:'I have an after-school activity.', ja:'放課後の活動がある。', tip:''},
-  {cat:'⑫ 放課後・帰宅', en:'I need to go to the bus.', ja:'バスに行かないと。', tip:''},
+  {cat:'⑫ 放課後・帰宅', en:'I need to catch the bus.', ja:'バスに乗らないと。', tip:''},
   {cat:'⑫ 放課後・帰宅', en:'See you tomorrow.', ja:'また明日。', tip:''},
   {cat:'⑫ 放課後・帰宅', en:'Text me later.', ja:'あとでメッセージして。', tip:''},
   {cat:'⑫ 放課後・帰宅', en:'Let\'s play this weekend.', ja:'週末遊ぼう。', tip:''},
   {cat:'⑫ 放課後・帰宅', en:'I had fun today.', ja:'今日は楽しかった。', tip:''},
-  {cat:'⑫ 放課後・帰宅', en:'Have a good evening.', ja:'良い夜を。', tip:''},
+  {cat:'⑫ 放課後・帰宅', en:'Have a good night!', ja:'良い夜を！', tip:''},
   {cat:'⑯ 緊急・安全', en:'I can\'t find my friend.', ja:'友達が見つからない。', tip:''},
   {cat:'⑯ 緊急・安全', en:'I\'m lost.', ja:'迷った。', tip:''},
   {cat:'⑯ 緊急・安全', en:'I feel unsafe.', ja:'安全じゃない気がする。', tip:''},
@@ -735,6 +734,8 @@ let isEnToJa      = true;
 let isRevealed    = false;
 let activeCategory = 'all';
 let isAutoPlaying  = false;
+let isRepeating    = false;
+let repeatTimer    = null;
 let autoMode       = '';   // 'shadow' | 'continuous'
 let autoStopped    = false;
 let autoTimeout    = null;
@@ -897,6 +898,33 @@ function getSpeechText(item) {
 function speakCurrent() {
   const a = getActive(); if(!a.length) return;
   speakOne(getSpeechText(a[currentIndex]));
+}
+
+function speakRepeat(text) {
+  if (!isRepeating) return;
+  window.speechSynthesis.cancel();
+  setTimeout(() => {
+    speakOne(text, () => {
+      if (isRepeating) {
+        repeatTimer = setTimeout(() => speakRepeat(text), 300);
+      }
+    });
+  }, 150);
+}
+
+function toggleRepeat() {
+  isRepeating = !isRepeating;
+  const btn = document.getElementById('repeat-btn');
+  btn.textContent = '🔁 繰り返し: ' + (isRepeating ? 'ON' : 'OFF');
+  btn.style.background = isRepeating ? 'var(--primary)' : '';
+  btn.style.color = isRepeating ? '#fff' : '';
+  if (isRepeating) {
+    const a = getActive(); if (!a.length) return;
+    speakRepeat(getSpeechText(a[currentIndex]));
+  } else {
+    if (repeatTimer) { clearTimeout(repeatTimer); repeatTimer = null; }
+    window.speechSynthesis.cancel();
+  }
 }
 
 function speakP() {
@@ -1117,6 +1145,8 @@ function toggleMasterList() {
 
 function next() {
   if (isAutoPlaying) return;
+  if (repeatTimer) { clearTimeout(repeatTimer); repeatTimer = null; }
+  window.speechSynthesis.cancel();
   const active = getActive(); if(!active.length) return;
   currentIndex = isRandom
     ? Math.floor(Math.random()*active.length)
@@ -1126,9 +1156,12 @@ function next() {
 
 function prev() {
   if (isAutoPlaying) return;
+  if (repeatTimer) { clearTimeout(repeatTimer); repeatTimer = null; }
+  window.speechSynthesis.cancel();
   const active = getActive(); if(!active.length) return;
   currentIndex = (currentIndex - 1 + active.length) % active.length;
   update();
+  if (isRepeating) setTimeout(() => { const a=getActive(); if(a.length) speakRepeat(getSpeechText(a[currentIndex])); }, 300);
 }
 
 function toggleRandom() {
