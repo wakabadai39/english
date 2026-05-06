@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>論理英語 250 — 中学文法 完全制覇</title>
+<title>論理英語 107 — 中学文法 完全制覇</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -356,7 +356,7 @@ body {
 <div class="container">
 
 <div class="header">
-  <h2>🧠 論理英語 250</h2>
+  <h2>🧠 論理英語 107</h2>
   <p>中学文法 完全制覇 — 不定詞・分詞・現在完了・関係詞・条件譲歩</p>
   <button class="help-btn" onclick="openGuide()">❓ 使い方ガイド</button>
 </div>
@@ -364,11 +364,11 @@ body {
 <div class="badges">
   <div class="badge" id="mode-badge">📖 英 → 日</div>
   <div class="badge" id="order-badge">順番通り</div>
-  <div class="badge green" id="master-badge">マスター: 0 / 43</div>
+  <div class="badge green" id="master-badge">マスター: 0 / 107</div>
 </div>
 
 <div class="progress-wrap"><div class="progress-bar" id="progress-bar" style="width:2%"></div></div>
-<div class="progress-label">カード <span id="cur-num">1</span> / <span id="tot-num">43</span></div>
+<div class="progress-label">カード <span id="cur-num">1</span> / <span id="tot-num">107</span></div>
 
 <div class="no-active" id="no-active">
   ✅ このカテゴリをすべてマスターしました！<br>
@@ -449,14 +449,13 @@ body {
     <button class="btn btn-secondary" onclick="prev()">← 戻る</button>
     <button class="btn btn-primary"   onclick="speakCurrent()">🔊 音声</button>
     <button class="btn btn-secondary" onclick="next()">次へ →</button>
+    <button class="btn btn-secondary" style="font-size:11px;padding:8px 6px;" onclick="switchMode()">🔄 英⇄日</button>
   </div>
-  <div class="btn-row">
-    <button class="btn btn-secondary" id="random-btn" onclick="toggleRandom()">🔀 ランダム: OFF</button>
-    <button class="btn btn-secondary" onclick="switchMode()">🔄 英⇄日</button>
-  </div>
-  <div class="btn-row">
-    <button class="btn btn-amber" onclick="startShadowing()">🗣️ シャドウイング</button>
-    <button class="btn btn-blue"  onclick="startContinuous()">▶ 連続再生</button>
+  <div class="btn-row" style="gap:4px;">
+    <button class="btn btn-secondary" style="font-size:11px;padding:7px 5px;" id="random-btn" onclick="toggleRandom()">🔀 ランダム</button>
+    <button class="btn btn-secondary" style="font-size:11px;padding:7px 5px;" id="repeat-btn" onclick="toggleRepeat()">🔁 繰り返し</button>
+    <button class="btn btn-blue"  style="font-size:11px;padding:7px 5px;" onclick="startContinuous()">▶ 連続再生</button>
+    <button class="btn btn-amber" style="font-size:11px;padding:7px 5px;" onclick="startShadowing()">🗣️ シャドウ</button>
   </div>
 </div>
 
@@ -620,275 +619,113 @@ const CATS = {
 };
 
 const phrases = [
-    // ══════════════════════════════════════
-    // 📌 不定詞（1–10, 51–60, 101–110, 151–160, 201–210）
-    // ══════════════════════════════════════
-    {cat:"📌 不定詞", en:"I collected more data to support my conclusion.", ja:"結論を裏付けるために、さらにデータを集めた。"},
-    {cat:"📌 不定詞", en:"It's difficult to determine whether the result is reliable.", ja:"その結果が信頼できるかどうか判断するのは難しい。"},
-    {cat:"📌 不定詞", en:"He stayed after class to ask additional questions.", ja:"追加の質問をするために、彼は授業後に残った。"},
-    {cat:"📌 不定詞", en:"This topic is too broad to cover in one lesson.", ja:"このトピックは広すぎて1回の授業では扱えない。"},
-    {cat:"📌 不定詞", en:"I need more examples to fully understand the concept.", ja:"その概念を完全に理解するには、もっと例が必要だ。"},
-    {cat:"📌 不定詞", en:"She grew up to become a specialist in marine biology.", ja:"彼女は成長して海洋生物学の専門家になった。"},
-    {cat:"📌 不定詞", en:"The data is too limited to draw a solid conclusion.", ja:"結論を出すにはデータが不十分だ。"},
-    {cat:"📌 不定詞", en:"I stayed up late to finish the report before the deadline.", ja:"締め切り前にレポートを終えるために夜更かしした。"},
-    {cat:"📌 不定詞", en:"It's important to identify the main variables first.", ja:"まず主要な変数を特定することが重要だ。"},
-    {cat:"📌 不定詞", en:"He paused to think about the implications of the result.", ja:"結果の意味を考えるために、彼は立ち止まった。"},
-    {cat:"📌 不定詞", en:"We need to collect more evidence to strengthen our argument.", ja:"主張を強めるために、もっと証拠を集める必要がある。"},
-    {cat:"📌 不定詞", en:"It's essential to identify the main factors before proceeding.", ja:"進める前に主要な要因を特定することが不可欠だ。"},
-    {cat:"📌 不定詞", en:"He paused to reconsider the consequences of his decision.", ja:"自分の決断の結果を考え直すために、彼は立ち止まった。"},
-    {cat:"📌 不定詞", en:"This issue is too complicated to explain in a single sentence.", ja:"この問題は複雑すぎて一文では説明できない。"},
-    {cat:"📌 不定詞", en:"I reviewed the notes again to avoid making the same mistake.", ja:"同じ間違いを避けるために、私はノートを再確認した。"},
-    {cat:"📌 不定詞", en:"She stayed after school to complete her group project.", ja:"グループプロジェクトを終えるために、彼女は放課後に残った。"},
-    {cat:"📌 不定詞", en:"It's hard to predict how the system will behave under pressure.", ja:"そのシステムが圧力下でどう動くか予測するのは難しい。"},
-    {cat:"📌 不定詞", en:"He worked overtime to meet the strict deadline.", ja:"厳しい締め切りに間に合わせるために、彼は残業した。"},
-    {cat:"📌 不定詞", en:"The task is simple enough to finish within an hour.", ja:"その作業は1時間以内に終えられるほど簡単だ。"},
-    {cat:"📌 不定詞", en:"I need more examples to apply this concept correctly.", ja:"この概念を正しく応用するには、もっと例が必要だ。"},
-    {cat:"📌 不定詞", en:"We need to examine the data closely to avoid misinterpretation.", ja:"誤解を避けるために、データを注意深く調べる必要がある。"},
-    {cat:"📌 不定詞", en:"It's challenging to estimate how long the process will take.", ja:"そのプロセスにどれくらい時間がかかるか見積もるのは難しい。"},
-    {cat:"📌 不定詞", en:"She stayed behind to revise her presentation slides.", ja:"彼女は発表スライドを修正するために残った。"},
-    {cat:"📌 不定詞", en:"This question is too vague to answer accurately.", ja:"この質問は曖昧すぎて正確に答えられない。"},
-    {cat:"📌 不定詞", en:"I reviewed the chapter again to clarify the key concepts.", ja:"重要な概念を明確にするために、その章を再度読み返した。"},
-    {cat:"📌 不定詞", en:"He paused to consider the long-term impact of the decision.", ja:"その決断の長期的な影響を考えるために、彼は立ち止まった。"},
-    {cat:"📌 不定詞", en:"It's necessary to gather more samples to confirm the trend.", ja:"傾向を確認するには、もっとサンプルを集める必要がある。"},
-    {cat:"📌 不定詞", en:"She practiced repeatedly to improve her accuracy.", ja:"正確さを高めるために、彼女は繰り返し練習した。"},
-    {cat:"📌 不定詞", en:"The task is too demanding to complete without assistance.", ja:"その作業は助けなしでは終えられないほど大変だ。"},
-    {cat:"📌 不定詞", en:"I need additional information to evaluate the situation properly.", ja:"状況を適切に評価するには、追加の情報が必要だ。"},
-    {cat:"📌 不定詞", en:"We need to compare multiple sources to verify the information.", ja:"情報を検証するために、複数の情報源を比較する必要がある。"},
-    {cat:"📌 不定詞", en:"It's difficult to predict how the system will react under stress.", ja:"そのシステムがストレス下でどう反応するか予測するのは難しい。"},
-    {cat:"📌 不定詞", en:"She stayed after class to refine her research outline.", ja:"研究のアウトラインを改善するために、彼女は授業後に残った。"},
-    {cat:"📌 不定詞", en:"This explanation is too brief to capture the full idea.", ja:"この説明は簡潔すぎて、全体の考えを捉えきれていない。"},
-    {cat:"📌 不定詞", en:"I reviewed the data again to ensure its accuracy.", ja:"正確さを確保するために、私はデータを再確認した。"},
-    {cat:"📌 不定詞", en:"He paused to evaluate the potential risks involved.", ja:"関係する潜在的なリスクを評価するために、彼は立ち止まった。"},
-    {cat:"📌 不定詞", en:"It's essential to identify the key variables before modeling.", ja:"モデル化する前に、主要な変数を特定することが不可欠だ。"},
-    {cat:"📌 不定詞", en:"She practiced repeatedly to improve her presentation skills.", ja:"プレゼンテーション能力を高めるために、彼女は繰り返し練習した。"},
-    {cat:"📌 不定詞", en:"The task is too complex to complete without proper guidance.", ja:"その作業は適切な指導なしでは終えられないほど複雑だ。"},
-    {cat:"📌 不定詞", en:"I need more context to interpret the results correctly.", ja:"結果を正しく解釈するには、もっと背景情報が必要だ。"},
-    {cat:"📌 不定詞", en:"We need to analyze the pattern carefully to avoid false conclusions.", ja:"誤った結論を避けるために、そのパターンを慎重に分析する必要がある。"},
-    {cat:"📌 不定詞", en:"It's difficult to estimate how the system will behave in extreme conditions.", ja:"そのシステムが極端な条件下でどう動くか見積もるのは難しい。"},
-    {cat:"📌 不定詞", en:"She stayed after school to finalize her research summary.", ja:"研究の要約を仕上げるために、彼女は放課後に残った。"},
-    {cat:"📌 不定詞", en:"This explanation is too general to be useful in practice.", ja:"この説明は一般的すぎて、実際には役に立たない。"},
-    {cat:"📌 不定詞", en:"I reviewed the entire chapter to understand the underlying logic.", ja:"根本的な論理を理解するために、その章全体を読み返した。"},
-    {cat:"📌 不定詞", en:"He paused to consider the ethical implications of the decision.", ja:"その決断の倫理的な影響を考えるために、彼は立ち止まった。"},
-    {cat:"📌 不定詞", en:"It's essential to define the objective clearly before starting.", ja:"始める前に目的を明確に定義することが不可欠だ。"},
-    {cat:"📌 不定詞", en:"She practiced repeatedly to improve the clarity of her explanation.", ja:"説明の明確さを高めるために、彼女は繰り返し練習した。"},
-    {cat:"📌 不定詞", en:"The task is too detailed to complete without proper planning.", ja:"その作業は適切な計画なしでは終えられないほど細かい。"},
-    {cat:"📌 不定詞", en:"I need more background information to evaluate the argument.", ja:"その主張を評価するには、もっと背景情報が必要だ。"},
-
-    // ══════════════════════════════════════
-    // 🔷 分詞（11–20, 61–70, 111–120, 161–170, 211–220）
-    // ══════════════════════════════════════
-    {cat:"🔷 分詞", en:"Confused by the instructions, the students asked for help.", ja:"指示に混乱した生徒たちは助けを求めた。"},
-    {cat:"🔷 分詞", en:"Feeling uncertain, I reviewed the data again.", ja:"不安を感じて、私はデータを再確認した。"},
-    {cat:"🔷 分詞", en:"Given the limited time, we focused on the essential steps.", ja:"時間が限られていたので、重要な手順に集中した。"},
-    {cat:"🔷 分詞", en:"Surprised by the outcome, the team repeated the experiment.", ja:"結果に驚いて、チームは実験をやり直した。"},
-    {cat:"🔷 分詞", en:"The samples collected last week showed unexpected changes.", ja:"先週採取したサンプルは予想外の変化を示した。"},
-    {cat:"🔷 分詞", en:"Having finished the analysis, we prepared the presentation.", ja:"分析を終えたので、私たちは発表の準備をした。"},
-    {cat:"🔷 分詞", en:"Considering the risks, we decided to modify the plan.", ja:"リスクを考慮して、計画を修正することにした。"},
-    {cat:"🔷 分詞", en:"Exhausted from the long discussion, we took a short break.", ja:"長い議論で疲れ果て、私たちは短い休憩を取った。"},
-    {cat:"🔷 分詞", en:"Built on previous research, this study explores new ideas.", ja:"先行研究に基づき、この研究は新しい考えを探求する。"},
-    {cat:"🔷 分詞", en:"Encouraged by the results, she continued her investigation.", ja:"結果に励まされて、彼女は調査を続けた。"},
-    {cat:"🔷 分詞", en:"Confused by the unexpected result, we checked the data again.", ja:"予想外の結果に混乱し、私たちはデータを再確認した。"},
-    {cat:"🔷 分詞", en:"Feeling confident, she presented her findings to the class.", ja:"自信を感じて、彼女はクラスに自分の発見を発表した。"},
-    {cat:"🔷 分詞", en:"Given the circumstances, we decided to adjust our approach.", ja:"状況を考慮して、私たちはアプローチを調整することにした。"},
-    {cat:"🔷 分詞", en:"Encouraged by the feedback, he continued improving his model.", ja:"フィードバックに励まされ、彼はモデルの改善を続けた。"},
-    {cat:"🔷 分詞", en:"Built on earlier theories, this idea offers a new perspective.", ja:"以前の理論に基づき、この考えは新しい視点を提供する。"},
-    {cat:"🔷 分詞", en:"Having completed the first stage, we moved on to the next.", ja:"第1段階を終え、私たちは次の段階に進んだ。"},
-    {cat:"🔷 分詞", en:"Surrounded by experts, she learned a great deal from them.", ja:"専門家に囲まれて、彼女は多くのことを学んだ。"},
-    {cat:"🔷 分詞", en:"Considering the complexity, the explanation was surprisingly clear.", ja:"複雑さを考えると、その説明は驚くほど明確だった。"},
-    {cat:"🔷 分詞", en:"Exhausted from the long experiment, we took a short break.", ja:"長い実験で疲れ果て、私たちは短い休憩を取った。"},
-    {cat:"🔷 分詞", en:"Inspired by the discovery, the team proposed a new hypothesis.", ja:"その発見に刺激され、チームは新しい仮説を提案した。"},
-    {cat:"🔷 分詞", en:"Confused by the conflicting results, we checked the method again.", ja:"矛盾する結果に混乱し、私たちは方法を再確認した。"},
-    {cat:"🔷 分詞", en:"Feeling uncertain, he asked for a second opinion.", ja:"不安を感じて、彼は別の意見を求めた。"},
-    {cat:"🔷 分詞", en:"Given the unexpected outcome, we reconsidered our hypothesis.", ja:"予想外の結果を受けて、私たちは仮説を再検討した。"},
-    {cat:"🔷 分詞", en:"Encouraged by the improvement, the team continued testing.", ja:"改善に励まされ、チームはテストを続けた。"},
-    {cat:"🔷 分詞", en:"Built on solid evidence, the argument became more convincing.", ja:"確かな証拠に基づき、その主張はより説得力を増した。"},
-    {cat:"🔷 分詞", en:"Having completed the survey, we analyzed the responses.", ja:"調査を終え、私たちは回答を分析した。"},
-    {cat:"🔷 分詞", en:"Surrounded by new ideas, she developed a fresh perspective.", ja:"新しいアイデアに囲まれて、彼女は新たな視点を得た。"},
-    {cat:"🔷 分詞", en:"Considering the limitations, the results were impressive.", ja:"制約を考えると、その結果は印象的だった。"},
-    {cat:"🔷 分詞", en:"Exhausted from the long meeting, we decided to continue tomorrow.", ja:"長い会議で疲れ果て、私たちは明日続けることにした。"},
-    {cat:"🔷 分詞", en:"Inspired by the feedback, he revised his entire approach.", ja:"フィードバックに刺激され、彼はアプローチ全体を見直した。"},
-    {cat:"🔷 分詞", en:"Confused by the sudden change, we reviewed the procedure again.", ja:"突然の変化に混乱し、私たちは手順を再確認した。"},
-    {cat:"🔷 分詞", en:"Feeling uncertain, she asked for additional clarification.", ja:"不安を感じて、彼女は追加の説明を求めた。"},
-    {cat:"🔷 分詞", en:"Given the unexpected findings, we revised our hypothesis.", ja:"予想外の発見を受けて、私たちは仮説を修正した。"},
-    {cat:"🔷 分詞", en:"Encouraged by the progress, the team expanded the study.", ja:"進展に励まされ、チームは研究を拡大した。"},
-    {cat:"🔷 分詞", en:"Built on previous experiments, this method offers new insights.", ja:"以前の実験に基づき、この方法は新たな洞察を提供する。"},
-    {cat:"🔷 分詞", en:"Having completed the initial analysis, we prepared the report.", ja:"初期分析を終え、私たちはレポートを準備した。"},
-    {cat:"🔷 分詞", en:"Surrounded by experts, he gained valuable knowledge.", ja:"専門家に囲まれて、彼は貴重な知識を得た。"},
-    {cat:"🔷 分詞", en:"Considering the challenges, the outcome was impressive.", ja:"困難を考えると、その結果は印象的だった。"},
-    {cat:"🔷 分詞", en:"Exhausted from the long discussion, we decided to continue later.", ja:"長い議論で疲れ果て、私たちは後で続けることにした。"},
-    {cat:"🔷 分詞", en:"Inspired by the discovery, she proposed a new approach.", ja:"その発見に刺激され、彼女は新しいアプローチを提案した。"},
-    {cat:"🔷 分詞", en:"Confused by the unexpected results, we checked the calculations again.", ja:"予想外の結果に混乱し、私たちは計算を再確認した。"},
-    {cat:"🔷 分詞", en:"Feeling uncertain, he reviewed the instructions once more.", ja:"不安を感じて、彼はもう一度指示を読み返した。"},
-    {cat:"🔷 分詞", en:"Given the limited resources, we simplified the experiment.", ja:"資源が限られていたので、私たちは実験を簡略化した。"},
-    {cat:"🔷 分詞", en:"Encouraged by the positive feedback, she expanded her research.", ja:"好意的なフィードバックに励まされ、彼女は研究を拡大した。"},
-    {cat:"🔷 分詞", en:"Built on earlier findings, this theory offers a new explanation.", ja:"以前の発見に基づき、この理論は新しい説明を提供する。"},
-    {cat:"🔷 分詞", en:"Having completed the initial draft, we revised the structure.", ja:"初稿を終え、私たちは構成を修正した。"},
-    {cat:"🔷 分詞", en:"Surrounded by new information, he reconsidered his assumptions.", ja:"新しい情報に囲まれて、彼は自分の仮定を再考した。"},
-    {cat:"🔷 分詞", en:"Considering the complexity, the solution was surprisingly elegant.", ja:"複雑さを考えると、その解決策は驚くほど洗練されていた。"},
-    {cat:"🔷 分詞", en:"Exhausted from the long analysis, we took a short break.", ja:"長い分析で疲れ果て、私たちは短い休憩を取った。"},
-    {cat:"🔷 分詞", en:"Inspired by the new data, the team proposed a revised model.", ja:"新しいデータに刺激され、チームは修正版のモデルを提案した。"},
-
-    // ══════════════════════════════════════
-    // ⏱ 現在完了（21–30, 71–80, 121–130, 171–180, 221–230）
-    // ══════════════════════════════════════
-    {cat:"⏱ 現在完了", en:"I've never encountered a theory as complex as this one.", ja:"これほど複雑な理論に出会ったことはない。"},
-    {cat:"⏱ 現在完了", en:"We've been analyzing the data for more than three hours.", ja:"私たちは3時間以上データを分析している。"},
-    {cat:"⏱ 現在完了", en:"The team has already identified several possible errors.", ja:"チームはすでにいくつかの誤りを特定している。"},
-    {cat:"⏱ 現在完了", en:"I've just realized that our assumption was incorrect.", ja:"仮定が間違っていたことに今気づいた。"},
-    {cat:"⏱ 現在完了", en:"She has visited many countries to conduct field research.", ja:"彼女は現地調査のために多くの国を訪れている。"},
-    {cat:"⏱ 現在完了", en:"We've confirmed that the pattern appears consistently.", ja:"そのパターンが一貫して現れることを確認した。"},
-    {cat:"⏱ 現在完了", en:"I've been trying to solve this equation since yesterday.", ja:"昨日からこの方程式を解こうとしている。"},
-    {cat:"⏱ 現在完了", en:"They've already completed the first stage of the project.", ja:"彼らはすでにプロジェクトの第一段階を終えている。"},
-    {cat:"⏱ 現在完了", en:"I've never seen such a rapid change in temperature.", ja:"これほど急激な温度変化を見たことがない。"},
-    {cat:"⏱ 現在完了", en:"We've been discussing the issue for the entire morning.", ja:"私たちは午前中ずっとその問題について議論している。"},
-    {cat:"⏱ 現在完了", en:"I've never analyzed a dataset this large before.", ja:"これほど大きなデータセットを分析したことはない。"},
-    {cat:"⏱ 現在完了", en:"We've been working on this project since last month.", ja:"私たちは先月からこのプロジェクトに取り組んでいる。"},
-    {cat:"⏱ 現在完了", en:"The group has already completed the initial draft.", ja:"グループはすでに最初の草稿を完成させている。"},
-    {cat:"⏱ 現在完了", en:"I've just noticed an error in the calculation.", ja:"計算に誤りがあることに今気づいた。"},
-    {cat:"⏱ 現在完了", en:"She has visited several laboratories to gather information.", ja:"彼女は情報収集のためにいくつかの研究所を訪れている。"},
-    {cat:"⏱ 現在完了", en:"We've confirmed that the results match our expectations.", ja:"結果が私たちの予想と一致することを確認した。"},
-    {cat:"⏱ 現在完了", en:"I've been trying to understand this concept for days.", ja:"私は数日間この概念を理解しようとしている。"},
-    {cat:"⏱ 現在完了", en:"They've already tested the new method multiple times.", ja:"彼らはすでに新しい方法を何度もテストしている。"},
-    {cat:"⏱ 現在完了", en:"I've never seen such a clear pattern in the data.", ja:"データにこれほど明確なパターンを見たことがない。"},
-    {cat:"⏱ 現在完了", en:"We've been discussing possible solutions all afternoon.", ja:"私たちは午後ずっと解決策について議論している。"},
-    {cat:"⏱ 現在完了", en:"I've never worked with such a complex system before.", ja:"これほど複雑なシステムを扱ったことはない。"},
-    {cat:"⏱ 現在完了", en:"We've been preparing for the presentation all week.", ja:"私たちは一週間ずっと発表の準備をしている。"},
-    {cat:"⏱ 現在完了", en:"The team has already identified the main variables.", ja:"チームはすでに主要な変数を特定している。"},
-    {cat:"⏱ 現在完了", en:"I've just realized that we overlooked an important detail.", ja:"重要な点を見落としていたことに今気づいた。"},
-    {cat:"⏱ 現在完了", en:"She has visited multiple institutions to gather reliable data.", ja:"彼女は信頼できるデータを集めるために複数の機関を訪れた。"},
-    {cat:"⏱ 現在完了", en:"We've confirmed that the results align with previous studies.", ja:"結果が先行研究と一致することを確認した。"},
-    {cat:"⏱ 現在完了", en:"I've been trying to refine this model for several days.", ja:"私は数日間このモデルを改良しようとしている。"},
-    {cat:"⏱ 現在完了", en:"They've already completed the second phase of the project.", ja:"彼らはすでにプロジェクトの第二段階を終えている。"},
-    {cat:"⏱ 現在完了", en:"I've never seen such a rapid improvement in performance.", ja:"これほど急速な性能向上を見たことがない。"},
-    {cat:"⏱ 現在完了", en:"We've been debating the issue since early this morning.", ja:"私たちは今朝早くからその問題について議論している。"},
-    {cat:"⏱ 現在完了", en:"I've never examined a dataset with so many variables.", ja:"これほど多くの変数を持つデータセットを調べたことはない。"},
-    {cat:"⏱ 現在完了", en:"We've been preparing for the debate all morning.", ja:"私たちは午前中ずっとディベートの準備をしている。"},
-    {cat:"⏱ 現在完了", en:"The team has already identified the major weaknesses.", ja:"チームはすでに主要な弱点を特定している。"},
-    {cat:"⏱ 現在完了", en:"I've just realized that we misinterpreted the instructions.", ja:"指示を誤解していたことに今気づいた。"},
-    {cat:"⏱ 現在完了", en:"She has visited several experts to gather reliable opinions.", ja:"彼女は信頼できる意見を集めるために複数の専門家を訪れた。"},
-    {cat:"⏱ 現在完了", en:"We've confirmed that the results follow the expected pattern.", ja:"結果が予想されたパターンに従っていることを確認した。"},
-    {cat:"⏱ 現在完了", en:"I've been trying to improve this model for weeks.", ja:"私は数週間このモデルを改善しようとしている。"},
-    {cat:"⏱ 現在完了", en:"They've already completed the final stage of the project.", ja:"彼らはすでにプロジェクトの最終段階を終えている。"},
-    {cat:"⏱ 現在完了", en:"I've never seen such a consistent trend across all samples.", ja:"すべてのサンプルでこれほど一貫した傾向を見たことがない。"},
-    {cat:"⏱ 現在完了", en:"We've been debating the implications since yesterday.", ja:"私たちは昨日からその意味について議論している。"},
-    {cat:"⏱ 現在完了", en:"I've never studied a topic with so many interconnected ideas.", ja:"これほど多くの関連した考えを持つテーマを学んだことはない。"},
-    {cat:"⏱ 現在完了", en:"We've been preparing for the group discussion all afternoon.", ja:"私たちは午後ずっとグループディスカッションの準備をしている。"},
-    {cat:"⏱ 現在完了", en:"The team has already identified the main challenges.", ja:"チームはすでに主要な課題を特定している。"},
-    {cat:"⏱ 現在完了", en:"I've just realized that we misread the instructions.", ja:"指示を読み間違えていたことに今気づいた。"},
-    {cat:"⏱ 現在完了", en:"She has visited several libraries to gather historical data.", ja:"彼女は歴史的データを集めるためにいくつかの図書館を訪れた。"},
-    {cat:"⏱ 現在完了", en:"We've confirmed that the results match the theoretical prediction.", ja:"結果が理論的予測と一致することを確認した。"},
-    {cat:"⏱ 現在完了", en:"I've been trying to simplify this explanation for days.", ja:"私は数日間この説明を簡潔にしようとしている。"},
-    {cat:"⏱ 現在完了", en:"They've already completed the final review of the project.", ja:"彼らはすでにプロジェクトの最終確認を終えている。"},
-    {cat:"⏱ 現在完了", en:"I've never seen such a dramatic shift in the data.", ja:"データにこれほど劇的な変化を見たことがない。"},
-    {cat:"⏱ 現在完了", en:"We've been debating the possible interpretations since yesterday.", ja:"私たちは昨日からその解釈の可能性について議論している。"},
-
-    // ══════════════════════════════════════
-    // 🔗 関係詞（31–40, 81–90, 131–140, 181–190, 231–240）
-    // ══════════════════════════════════════
-    {cat:"🔗 関係詞", en:"The method that we used yesterday turned out to be ineffective.", ja:"昨日使った方法は効果がないことがわかった。"},
-    {cat:"🔗 関係詞", en:"This is the point where most students get confused.", ja:"ここが多くの生徒が混乱するポイントだ。"},
-    {cat:"🔗 関係詞", en:"The reason why the experiment failed is still unclear.", ja:"実験が失敗した理由はまだ不明だ。"},
-    {cat:"🔗 関係詞", en:"The student who presented first explained the idea clearly.", ja:"最初に発表した生徒はその考えを明確に説明した。"},
-    {cat:"🔗 関係詞", en:"The experiment that I designed needs further testing.", ja:"私が設計した実験はさらなる検証が必要だ。"},
-    {cat:"🔗 関係詞", en:"The book that he recommended helped me understand the topic.", ja:"彼が勧めた本はそのテーマの理解に役立った。"},
-    {cat:"🔗 関係詞", en:"The place where the reaction occurred was carefully monitored.", ja:"反応が起きた場所は慎重に監視された。"},
-    {cat:"🔗 関係詞", en:"The reason why we repeated the test was to confirm accuracy.", ja:"正確さを確認するためにテストを繰り返した。"},
-    {cat:"🔗 関係詞", en:"The model that they developed is widely used in research.", ja:"彼らが開発したモデルは研究で広く使われている。"},
-    {cat:"🔗 関係詞", en:"The moment when the temperature dropped was recorded.", ja:"温度が下がった瞬間が記録された。"},
-    {cat:"🔗 関係詞", en:"The theory that he introduced changed the entire discussion.", ja:"彼が紹介した理論は議論全体を変えた。"},
-    {cat:"🔗 関係詞", en:"This is the stage where most experiments fail.", ja:"ここが多くの実験が失敗する段階だ。"},
-    {cat:"🔗 関係詞", en:"The reason why the data was inconsistent is still unknown.", ja:"データが不一致だった理由はまだ不明だ。"},
-    {cat:"🔗 関係詞", en:"The student who asked the question raised an important point.", ja:"質問した生徒は重要な点を指摘した。"},
-    {cat:"🔗 関係詞", en:"The model that we developed needs further refinement.", ja:"私たちが開発したモデルはさらなる改良が必要だ。"},
-    {cat:"🔗 関係詞", en:"The book that she recommended clarified many concepts.", ja:"彼女が勧めた本は多くの概念を明確にした。"},
-    {cat:"🔗 関係詞", en:"The moment when the reaction started was recorded precisely.", ja:"反応が始まった瞬間が正確に記録された。"},
-    {cat:"🔗 関係詞", en:"The place where the samples were stored was kept cool.", ja:"サンプルが保管されていた場所は冷却されていた。"},
-    {cat:"🔗 関係詞", en:"The explanation that he gave helped everyone understand.", ja:"彼がした説明は全員の理解を助けた。"},
-    {cat:"🔗 関係詞", en:"The experiment that failed yesterday succeeded today.", ja:"昨日失敗した実験が今日は成功した。"},
-    {cat:"🔗 関係詞", en:"The theory that she introduced offered a new explanation.", ja:"彼女が紹介した理論は新しい説明を提供した。"},
-    {cat:"🔗 関係詞", en:"This is the point where the argument becomes complicated.", ja:"ここが議論が複雑になるポイントだ。"},
-    {cat:"🔗 関係詞", en:"The reason why the pattern changed remains uncertain.", ja:"パターンが変化した理由は依然として不明だ。"},
-    {cat:"🔗 関係詞", en:"The student who summarized the chapter did an excellent job.", ja:"その章を要約した生徒は素晴らしい仕事をした。"},
-    {cat:"🔗 関係詞", en:"The model that we tested yesterday needs further revision.", ja:"昨日テストしたモデルはさらなる修正が必要だ。"},
-    {cat:"🔗 関係詞", en:"The explanation that he provided clarified the confusion.", ja:"彼が提供した説明は混乱を解消した。"},
-    {cat:"🔗 関係詞", en:"The moment when the system failed was recorded accurately.", ja:"システムが故障した瞬間が正確に記録された。"},
-    {cat:"🔗 関係詞", en:"The place where the samples were analyzed was temperature-controlled.", ja:"サンプルが分析された場所は温度管理されていた。"},
-    {cat:"🔗 関係詞", en:"The approach that they suggested improved the efficiency.", ja:"彼らが提案したアプローチは効率を改善した。"},
-    {cat:"🔗 関係詞", en:"The experiment that succeeded today will be repeated tomorrow.", ja:"今日成功した実験は明日再度行われる。"},
-    {cat:"🔗 関係詞", en:"The theory that he proposed changed our entire perspective.", ja:"彼が提案した理論は私たちの視点全体を変えた。"},
-    {cat:"🔗 関係詞", en:"This is the stage where most students struggle.", ja:"ここが多くの生徒が苦労する段階だ。"},
-    {cat:"🔗 関係詞", en:"The reason why the pattern shifted remains unclear.", ja:"パターンが変化した理由は依然として不明だ。"},
-    {cat:"🔗 関係詞", en:"The student who summarized the article did an excellent job.", ja:"その記事を要約した生徒は素晴らしい仕事をした。"},
-    {cat:"🔗 関係詞", en:"The model that we created requires further validation.", ja:"私たちが作成したモデルはさらなる検証が必要だ。"},
-    {cat:"🔗 関係詞", en:"The explanation that she gave resolved the confusion.", ja:"彼女がした説明は混乱を解消した。"},
-    {cat:"🔗 関係詞", en:"The moment when the system malfunctioned was recorded.", ja:"システムが故障した瞬間が記録された。"},
-    {cat:"🔗 関係詞", en:"The place where the samples were processed was kept sterile.", ja:"サンプルが処理された場所は無菌状態に保たれていた。"},
-    {cat:"🔗 関係詞", en:"The approach that they recommended improved the accuracy.", ja:"彼らが勧めたアプローチは正確さを改善した。"},
-    {cat:"🔗 関係詞", en:"The experiment that failed last week succeeded today.", ja:"先週失敗した実験が今日は成功した。"},
-    {cat:"🔗 関係詞", en:"The theory that she proposed challenged the traditional view.", ja:"彼女が提案した理論は従来の見解に異議を唱えた。"},
-    {cat:"🔗 関係詞", en:"This is the point where the argument becomes more complex.", ja:"ここが議論がより複雑になるポイントだ。"},
-    {cat:"🔗 関係詞", en:"The reason why the results differed remains unclear.", ja:"結果が異なった理由は依然として不明だ。"},
-    {cat:"🔗 関係詞", en:"The student who summarized the data did an excellent job.", ja:"データを要約した生徒は素晴らしい仕事をした。"},
-    {cat:"🔗 関係詞", en:"The model that we tested last week needs further refinement.", ja:"先週テストしたモデルはさらなる改良が必要だ。"},
-    {cat:"🔗 関係詞", en:"The explanation that he provided resolved the misunderstanding.", ja:"彼がした説明は誤解を解消した。"},
-    {cat:"🔗 関係詞", en:"The moment when the reaction started was recorded precisely.", ja:"反応が始まった瞬間が正確に記録された。"},
-    {cat:"🔗 関係詞", en:"The place where the samples were stored was carefully monitored.", ja:"サンプルが保管されていた場所は慎重に監視されていた。"},
-    {cat:"🔗 関係詞", en:"The approach that they recommended improved the overall efficiency.", ja:"彼らが勧めたアプローチは全体の効率を改善した。"},
-    {cat:"🔗 関係詞", en:"The experiment that succeeded today will be expanded tomorrow.", ja:"今日成功した実験は明日拡大される。"},
-
-    // ══════════════════════════════════════
-    // 💬 条件・譲歩・因果・主張（41–50, 91–100, 141–150, 191–200, 241–250）
-    // ══════════════════════════════════════
-    {cat:"💬 条件・譲歩・因果・主張", en:"If the temperature rises even slightly, the reaction changes.", ja:"温度がわずかに上がるだけで反応が変化する。"},
-    {cat:"💬 条件・譲歩・因果・主張", en:"Although the model seems simple, its application is difficult.", ja:"モデルは単純に見えるが、応用は難しい。"},
-    {cat:"💬 条件・譲歩・因果・主張", en:"Because the evidence was insufficient, the claim was rejected.", ja:"証拠が不十分だったため、その主張は却下された。"},
-    {cat:"💬 条件・譲歩・因果・主張", en:"Unless we check the data carefully, we may miss key details.", ja:"データを注意深く確認しなければ、重要な点を見落とすかもしれない。"},
-    {cat:"💬 条件・譲歩・因果・主張", en:"Since the results were inconsistent, we repeated the test.", ja:"結果が一貫していなかったので、テストを繰り返した。"},
-    {cat:"💬 条件・譲歩・因果・主張", en:"I believe the result is valid because the pattern is consistent.", ja:"パターンが一貫しているので、この結果は妥当だと思う。"},
-    {cat:"💬 条件・譲歩・因果・主張", en:"This suggests that the system is more stable than expected.", ja:"これはシステムが予想以上に安定していることを示している。"},
-    {cat:"💬 条件・譲歩・因果・主張", en:"For example, when the pressure increases, the volume decreases.", ja:"例えば、圧力が上がると体積は減少する。"},
-    {cat:"💬 条件・譲歩・因果・主張", en:"In my opinion, the data supports the original hypothesis.", ja:"私の考えでは、このデータは元の仮説を支持している。"},
-    {cat:"💬 条件・譲歩・因果・主張", en:"This finding indicates that further investigation is necessary.", ja:"この発見は、さらなる調査が必要であることを示している。"},
-    {cat:"💬 条件・譲歩・因果・主張", en:"If we adjust the variables slightly, the outcome may improve.", ja:"変数を少し調整すれば、結果が改善するかもしれない。"},
-    {cat:"💬 条件・譲歩・因果・主張", en:"Although the evidence is limited, the trend is noticeable.", ja:"証拠は限られているが、その傾向は明らかだ。"},
-    {cat:"💬 条件・譲歩・因果・主張", en:"Because the sample size was small, the conclusion is uncertain.", ja:"サンプル数が少なかったため、結論は不確かだ。"},
-    {cat:"💬 条件・譲歩・因果・主張", en:"Unless we repeat the test, we can't confirm the accuracy.", ja:"テストを繰り返さなければ、正確さを確認できない。"},
-    {cat:"💬 条件・譲歩・因果・主張", en:"Since the data was incomplete, we revised our hypothesis.", ja:"データが不完全だったので、仮説を修正した。"},
-    {cat:"💬 条件・譲歩・因果・主張", en:"I believe this approach is effective for complex problems.", ja:"このアプローチは複雑な問題に効果的だと思う。"},
-    {cat:"💬 条件・譲歩・因果・主張", en:"This indicates that the system is highly sensitive to change.", ja:"これは、そのシステムが変化に非常に敏感であることを示している。"},
-    {cat:"💬 条件・譲歩・因果・主張", en:"For instance, increasing the pressure speeds up the reaction.", ja:"例えば、圧力を上げると反応が速くなる。"},
-    {cat:"💬 条件・譲歩・因果・主張", en:"In my view, the results support the alternative explanation.", ja:"私の見解では、その結果は別の説明を支持している。"},
-    {cat:"💬 条件・譲歩・因果・主張", en:"This conclusion suggests that more research is required.", ja:"この結論は、さらなる研究が必要であることを示している。"},
-    {cat:"💬 条件・譲歩・因果・主張", en:"If we increase the sample size, the results may become clearer.", ja:"サンプル数を増やせば、結果がより明確になるかもしれない。"},
-    {cat:"💬 条件・譲歩・因果・主張", en:"Although the explanation was brief, it was easy to understand.", ja:"説明は簡潔だったが、理解しやすかった。"},
-    {cat:"💬 条件・譲歩・因果・主張", en:"Because the data was incomplete, we postponed the analysis.", ja:"データが不完全だったため、分析を延期した。"},
-    {cat:"💬 条件・譲歩・因果・主張", en:"Unless we verify the source, we can't trust the information.", ja:"出典を確認しなければ、その情報を信頼できない。"},
-    {cat:"💬 条件・譲歩・因果・主張", en:"Since the results were unexpected, we reviewed the procedure.", ja:"結果が予想外だったので、手順を見直した。"},
-    {cat:"💬 条件・譲歩・因果・主張", en:"I believe this method is suitable for advanced research.", ja:"この方法は高度な研究に適していると思う。"},
-    {cat:"💬 条件・譲歩・因果・主張", en:"This indicates that the system responds quickly to changes.", ja:"これは、そのシステムが変化に素早く反応することを示している。"},
-    {cat:"💬 条件・譲歩・因果・主張", en:"For instance, reducing the friction increases the speed.", ja:"例えば、摩擦を減らすと速度が上がる。"},
-    {cat:"💬 条件・譲歩・因果・主張", en:"In my view, the evidence supports the revised hypothesis.", ja:"私の見解では、その証拠は修正された仮説を支持している。"},
-    {cat:"💬 条件・譲歩・因果・主張", en:"This conclusion suggests that the model needs further testing.", ja:"この結論は、そのモデルにさらなる検証が必要であることを示している。"},
-    {cat:"💬 条件・譲歩・因果・主張", en:"If we adjust the parameters slightly, the outcome may change.", ja:"パラメータを少し調整すれば、結果が変わるかもしれない。"},
-    {cat:"💬 条件・譲歩・因果・主張", en:"Although the evidence is limited, the conclusion is reasonable.", ja:"証拠は限られているが、その結論は妥当だ。"},
-    {cat:"💬 条件・譲歩・因果・主張", en:"Because the data was inconsistent, we repeated the analysis.", ja:"データが不一致だったため、私たちは分析をやり直した。"},
-    {cat:"💬 条件・譲歩・因果・主張", en:"Unless we verify the calculations, we can't trust the results.", ja:"計算を確認しなければ、結果を信頼できない。"},
-    {cat:"💬 条件・譲歩・因果・主張", en:"Since the outcome was unexpected, we reviewed the method.", ja:"結果が予想外だったので、私たちは方法を見直した。"},
-    {cat:"💬 条件・譲歩・因果・主張", en:"I believe this strategy is effective for complex tasks.", ja:"この戦略は複雑な作業に効果的だと思う。"},
-    {cat:"💬 条件・譲歩・因果・主張", en:"This suggests that the system is highly sensitive to input changes.", ja:"これは、そのシステムが入力の変化に非常に敏感であることを示している。"},
-    {cat:"💬 条件・譲歩・因果・主張", en:"For instance, increasing the temperature speeds up the reaction.", ja:"例えば、温度を上げると反応が速くなる。"},
-    {cat:"💬 条件・譲歩・因果・主張", en:"In my view, the findings support the revised conclusion.", ja:"私の見解では、その発見は修正された結論を支持している。"},
-    {cat:"💬 条件・譲歩・因果・主張", en:"This result indicates that further investigation is necessary.", ja:"この結果は、さらなる調査が必要であることを示している。"},
-    {cat:"💬 条件・譲歩・因果・主張", en:"If we adjust the conditions slightly, the pattern may become clearer.", ja:"条件を少し調整すれば、パターンがより明確になるかもしれない。"},
-    {cat:"💬 条件・譲歩・因果・主張", en:"Although the explanation was detailed, some parts remained unclear.", ja:"説明は詳細だったが、一部は依然として不明瞭だった。"},
-    {cat:"💬 条件・譲歩・因果・主張", en:"Because the data was incomplete, we repeated the experiment.", ja:"データが不完全だったため、私たちは実験をやり直した。"},
-    {cat:"💬 条件・譲歩・因果・主張", en:"Unless we verify the assumptions, the conclusion may be unreliable.", ja:"仮定を確認しなければ、結論は信頼できないかもしれない。"},
-    {cat:"💬 条件・譲歩・因果・主張", en:"Since the results were unexpected, we reviewed the entire process.", ja:"結果が予想外だったので、私たちは全工程を見直した。"},
-    {cat:"💬 条件・譲歩・因果・主張", en:"I believe this method is effective for analyzing complex systems.", ja:"この方法は複雑なシステムを分析するのに効果的だと思う。"},
-    {cat:"💬 条件・譲歩・因果・主張", en:"This suggests that the system reacts differently under pressure.", ja:"これは、そのシステムが圧力下で異なる反応を示すことを示している。"},
-    {cat:"💬 条件・譲歩・因果・主張", en:"For instance, reducing the resistance increases the current.", ja:"例えば、抵抗を減らすと電流が増える。"},
-    {cat:"💬 条件・譲歩・因果・主張", en:"In my view, the evidence supports the alternative explanation.", ja:"私の見解では、その証拠は別の説明を支持している。"},
-    {cat:"💬 条件・譲歩・因果・主張", en:"This conclusion indicates that further research is necessary.", ja:"この結論は、さらなる研究が必要であることを示している。"},
+    {cat:"📌 不定詞", en:"To master English requires consistent daily effort.", ja:"英語をマスターするには、毎日の継続的な努力が必要だ。", tip:"To不定詞が主語になる名詞的用法。It is ... to の構文と言い換え可能。"},
+    {cat:"📌 不定詞", en:"My goal is to understand complex ideas clearly.", ja:"私の目標は、複雑な考えをはっきり理解することだ。", tip:"be動詞の補語になる名詞的用法。"},
+    {cat:"📌 不定詞", en:"She decided to revise her approach after reviewing the data.", ja:"彼女はデータを確認した後、方針を見直すことにした。", tip:"decide to ～：動詞の目的語になる名詞的用法。"},
+    {cat:"📌 不定詞", en:"I want to understand the logic behind each grammar rule.", ja:"それぞれの文法規則の背後にある論理を理解したい。", tip:"want to ～：動詞の目的語になる名詞的用法。"},
+    {cat:"📌 不定詞", en:"She has a strong desire to communicate in English.", ja:"彼女は英語でコミュニケーションしたいという強い欲求がある。", tip:"a desire to ～：名詞を後ろから修飾する形容詞的用法。"},
+    {cat:"📌 不定詞", en:"There is a lot of homework to finish before the deadline.", ja:"締め切りまでに終わらせるべき宿題がたくさんある。", tip:"homework to finish：名詞を修飾する形容詞的用法。「すべき・するための」と訳す。"},
+    {cat:"📌 不定詞", en:"He is the first student to solve this problem correctly.", ja:"彼はこの問題を正確に解いた最初の生徒だ。", tip:"the first ... to ～：序数や最上級と組み合わせる形容詞的用法。"},
+    {cat:"📌 不定詞", en:"I need something to drink after this long session.", ja:"この長いセッションの後、何か飲むものが必要だ。", tip:"something to drink：不定代名詞を修飾する形容詞的用法。"},
+    {cat:"📌 不定詞", en:"He paused to check whether his reasoning was correct.", ja:"自分の推論が正しいかどうか確認するために立ち止まった。", tip:"副詞的用法（目的）。in order to check とほぼ同義。"},
+    {cat:"📌 不定詞", en:"She stayed after class to ask a detailed question.", ja:"詳しい質問をするために放課後残った。", tip:"副詞的用法（目的）。"},
+    {cat:"📌 不定詞", en:"She studied hard, only to discover the exam had been postponed.", ja:"懸命に勉強したが、結果として試験が延期されたことを知った。", tip:"only to ～：期待に反する結果を表す副詞的用法（結果）。"},
+    {cat:"📌 不定詞", en:"He grew up to become a respected researcher.", ja:"彼は成長して尊敬される研究者になった。", tip:"grew up to become：成長の結果を表す副詞的用法（結果）。"},
+    {cat:"📌 不定詞", en:"The explanation was too brief to fully understand.", ja:"その説明は短すぎて完全には理解できなかった。", tip:"too + 形容詞 + to ～：「〜すぎて…できない」。"},
+    {cat:"📌 不定詞", en:"The task was too complex to complete without guidance.", ja:"その課題は複雑すぎて、指導なしには完成できなかった。", tip:"too ... to ～の構文。so complex that we couldn't ... と言い換え可能。"},
+    {cat:"📌 不定詞", en:"She is experienced enough to explain the concept clearly.", ja:"彼女はその概念を明確に説明できるくらい経験がある。", tip:"形容詞 + enough to ～：「〜するほど十分に…だ」。"},
+    {cat:"📌 不定詞", en:"He worked carefully enough to avoid any mistakes.", ja:"彼はミスを避けられるほど丁寧に作業した。", tip:"副詞 + enough to ～：enough は修飾する語の後ろに置く。"},
+    {cat:"📌 不定詞", en:"She was so kind as to explain the rule twice.", ja:"彼女はとても親切で、そのルールを2回説明してくれた。", tip:"so + 形容詞 + as to ～：「〜するほど親切だ」などの慣用表現。"},
+    {cat:"📌 不定詞", en:"In order to improve accuracy, we repeated the test.", ja:"正確さを高めるために、テストを繰り返した。", tip:"in order to ～：目的をより明示的に表す。文頭でも文中でも使える。"},
+    {cat:"📌 不定詞", en:"She took notes carefully so as not to miss any detail.", ja:"細部を見逃さないよう、丁寧にメモを取った。", tip:"so as not to ～：否定の目的を表す。in order not to とほぼ同義。"},
+    {cat:"📌 不定詞", en:"The results seem to support our original hypothesis.", ja:"その結果は、元の仮説を支持しているようだ。", tip:"seem to ～：「〜のようだ」。It seems that ... と言い換え可能。"},
+    {cat:"📌 不定詞", en:"He appears to understand the topic well.", ja:"彼はそのトピックをよく理解しているようだ。", tip:"appear to ～：seem to とほぼ同義だがやや客観的なニュアンス。"},
+    {cat:"📌 不定詞", en:"It is important for students to review their notes daily.", ja:"生徒たちが毎日ノートを復習することが重要だ。", tip:"for + 人 + to ～：不定詞の意味上の主語を for で明示する。"},
+    {cat:"📌 不定詞", en:"It was difficult for me to follow the discussion at first.", ja:"最初は議論についていくのが私には難しかった。", tip:"for me to ～：It is ... for 人 to の構文で不定詞の主語を明示。"},
+    {cat:"🔷 分詞", en:"This is a growing concern among researchers worldwide.", ja:"これは世界中の研究者の間で高まっている懸念だ。", tip:"growing：名詞を前から修飾する現在分詞（前置）。「増大している」という進行の意味。"},
+    {cat:"🔷 分詞", en:"The rising pressure changed the outcome of the experiment.", ja:"上昇する圧力が実験の結果を変えた。", tip:"rising：現在分詞が名詞を前から修飾。"},
+    {cat:"🔷 分詞", en:"The student sitting in the front row explained the concept.", ja:"前列に座っている生徒がその概念を説明した。", tip:"sitting in the front row：名詞を後ろから修飾する現在分詞（後置）。"},
+    {cat:"🔷 分詞", en:"The data showing a clear trend supported our hypothesis.", ja:"明確な傾向を示すデータが、私たちの仮説を支持した。", tip:"showing a clear trend：現在分詞句が名詞を後置修飾。"},
+    {cat:"🔷 分詞", en:"The samples collected last week showed unexpected results.", ja:"先週採取されたサンプルは予想外の結果を示した。", tip:"collected last week：過去分詞句が名詞を後置修飾。受け身の意味を含む。"},
+    {cat:"🔷 分詞", en:"The method developed by the team proved highly effective.", ja:"そのチームが開発した方法は非常に効果的であることが証明された。", tip:"developed by the team：過去分詞句による後置修飾。"},
+    {cat:"🔷 分詞", en:"Confused by the conflicting data, we revised our hypothesis.", ja:"矛盾するデータに混乱して、私たちは仮説を修正した。", tip:"Confused by ...：分詞構文（理由）。Being confused by ... の Being が省略された形。"},
+    {cat:"🔷 分詞", en:"Encouraged by the initial results, the team continued the experiment.", ja:"最初の結果に励まされ、チームは実験を続けた。", tip:"Encouraged by ...：過去分詞の分詞構文（受け身の理由）。"},
+    {cat:"🔷 分詞", en:"Exhausted from the long session, she decided to rest for a while.", ja:"長いセッションで疲れ果て、彼女はしばらく休むことにした。", tip:"Exhausted from ...：感情・状態を表す過去分詞の分詞構文。"},
+    {cat:"🔷 分詞", en:"Inspired by the lecture, he started researching the topic independently.", ja:"その講義に触発されて、彼は独自にそのテーマを研究し始めた。", tip:"Inspired by ...：受け身の意味を含む過去分詞の分詞構文。"},
+    {cat:"🔷 分詞", en:"Considering the limited data, we should avoid drawing firm conclusions.", ja:"限られたデータを考慮すると、確固たる結論を出すのは避けるべきだ。", tip:"Considering ...：「〜を考慮すると」。慣用的な分詞構文として独立して使われる。"},
+    {cat:"🔷 分詞", en:"Given the complexity of the topic, a simple answer is unlikely.", ja:"トピックの複雑さを考えると、単純な答えは期待できない。", tip:"Given ...：「〜を考慮すると」。慣用的な分詞構文。条件・前提を表す。"},
+    {cat:"🔷 分詞", en:"Having reviewed the feedback, she made significant improvements.", ja:"フィードバックを確認してから、彼女は大幅な改善を行った。", tip:"Having + 過去分詞：完了分詞構文。主節の動作より前に完了した動作を表す。"},
+    {cat:"🔷 分詞", en:"Having completed the analysis, we prepared the final report.", ja:"分析を完了してから、最終レポートを作成した。", tip:"Having completed ...：完了分詞構文。「〜してから」「〜した後で」という時間関係を示す。"},
+    {cat:"🔷 分詞", en:"I heard her explaining the theory to the other students.", ja:"彼女が他の生徒たちにその理論を説明しているのが聞こえた。", tip:"hear + O + doing：知覚動詞＋現在分詞。動作が進行中であることを強調。"},
+    {cat:"🔷 分詞", en:"We noticed the pattern changing as the temperature rose.", ja:"温度が上がるにつれて、パターンが変化しているのに気づいた。", tip:"notice + O + doing：知覚動詞＋現在分詞。変化が進行中の状況を知覚する表現。"},
+    {cat:"🔷 分詞", en:"She sat at her desk, reviewing her notes with great care.", ja:"彼女は机に座り、丁寧にノートを見直していた。", tip:"with + 名詞 + 分詞（または主文に後続する分詞）：付帯状況。「〜しながら」という同時動作。"},
+    {cat:"🔷 分詞", en:"He stood at the front, with his hands pointing at the diagram.", ja:"彼は前に立ち、図を指差しながら話した。", tip:"with + 名詞 + 分詞：with構文の付帯状況。"},
+    {cat:"🔷 分詞", en:"Weather permitting, we will conduct the experiment outdoors.", ja:"天気が許せば、実験を屋外で行う予定だ。", tip:"独立分詞構文：分詞の意味上の主語が主節と異なる場合、主語を分詞の前に置く。"},
+    {cat:"🔷 分詞", en:"All things considered, the experiment was a great success.", ja:"すべてを考慮すると、この実験は大成功だった。", tip:"All things considered：慣用的な独立分詞構文。「総合的に考えると」という意味。"},
+    {cat:"🔷 分詞", en:"Feeling uncertain about the result, she checked the data again.", ja:"結果に確信が持てず、彼女は再度データを確認した。", tip:"Feeling ...：現在分詞の分詞構文（理由・状況）。"},
+    {cat:"🔷 分詞", en:"Satisfied with the outcome, the team submitted the final report.", ja:"結果に満足して、チームは最終レポートを提出した。", tip:"Satisfied with ...：過去分詞の分詞構文。感情や状態を表す。"},
+    {cat:"⏱ 現在完了", en:"I have just realized that my initial assumption was incorrect.", ja:"最初の仮定が誤っていたことに気がついたところだ。", tip:"have just + 過去分詞：「〜したところだ」完了用法。just は have と過去分詞の間に置く。"},
+    {cat:"⏱ 現在完了", en:"She has already submitted the revised draft.", ja:"彼女はすでに修正稿を提出した。", tip:"have already + 過去分詞：「すでに〜した」完了用法。"},
+    {cat:"⏱ 現在完了", en:"Have you finished reviewing the report yet?", ja:"もうレポートの確認は終わりましたか？", tip:"yet：疑問文では「もう」、否定文では「まだ」。文末に置く。"},
+    {cat:"⏱ 現在完了", en:"I haven't started the analysis yet.", ja:"まだ分析を始めていない。", tip:"haven't ... yet：「まだ〜していない」現在完了の否定＋yet。"},
+    {cat:"⏱ 現在完了", en:"Have you ever visited a research institute?", ja:"研究機関を訪れたことがありますか？", tip:"Have you ever + 過去分詞？：「〜したことがありますか？」経験用法。ever は過去分詞の前。"},
+    {cat:"⏱ 現在完了", en:"I have never encountered such a complex problem before.", ja:"これほど複雑な問題に出会ったことは一度もない。", tip:"have never + 過去分詞：「一度も〜したことがない」経験用法。"},
+    {cat:"⏱ 現在完了", en:"This is the first time that I have seen such a clear result.", ja:"これほど明確な結果を見たのは初めてだ。", tip:"This is the first time that + 現在完了：「〜するのは初めてだ」定型表現。"},
+    {cat:"⏱ 現在完了", en:"She has visited three different countries to study environmental issues.", ja:"環境問題を研究するために、彼女は3つの異なる国を訪れたことがある。", tip:"have visited：経験用法。「訪れたことがある」という過去の経験を表す。"},
+    {cat:"⏱ 現在完了", en:"We have been working on this project for six months.", ja:"私たちはこのプロジェクトに6ヶ月間取り組んでいる。", tip:"現在完了進行形：have been + doing。今も継続中の動作を表す。for + 期間。"},
+    {cat:"⏱ 現在完了", en:"She has been studying the topic since she joined the program.", ja:"彼女はプログラムに参加してからずっとそのテーマを研究している。", tip:"現在完了進行形：since + 起点の時点。その時点から今も続いていることを示す。"},
+    {cat:"⏱ 現在完了", en:"The team has been collecting data all week.", ja:"チームは一週間ずっとデータを収集している。", tip:"現在完了進行形。all week（一週間ずっと）も継続を表す表現。"},
+    {cat:"⏱ 現在完了", en:"I have known about this problem for a long time.", ja:"私はこの問題について長い間知っている。", tip:"状態動詞（know）は進行形にできないため、現在完了（継続）を使う。"},
+    {cat:"⏱ 現在完了", en:"The team has already identified the source of the error.", ja:"チームはすでにエラーの原因を特定した。", tip:"have identified：結果用法。「特定した（今もその結果が残っている）」というニュアンス。"},
+    {cat:"⏱ 現在完了", en:"We have confirmed that the method is reliable.", ja:"その方法が信頼できることを確認した。", tip:"have confirmed：「確認した（その確認結果が今も有効）」結果用法。"},
+    {cat:"⏱ 現在完了", en:"I lost my draft yesterday. I have lost all my notes this week.", ja:"昨日、下書きをなくした。今週はすべてのメモをなくしてしまった。", tip:"過去形：yesterday など明確な過去の時点がある。現在完了：this week など「今」につながる期間。"},
+    {cat:"⏱ 現在完了", en:"Did you finish the report? — Yes, I finished it an hour ago. / Yes, I have just finished it.", ja:"レポートは終わりましたか？—はい、1時間前に終えました。/ ちょうど終えたところです。", tip:"an hour ago（過去形） vs just（現在完了）：過去の時点が明確なら過去形、今との関連なら現在完了。"},
+    {cat:"⏱ 現在完了", en:"It is one of the most fascinating studies I have ever read.", ja:"これは私が今まで読んだ中で最も興味深い研究の一つだ。", tip:"最上級 + I have ever + 過去分詞：「今まで〜した中で最も…」定型表現。"},
+    {cat:"⏱ 現在完了", en:"I have been trying to understand this concept for weeks.", ja:"何週間もこの概念を理解しようとしている。", tip:"現在完了進行形：過去から今も続けている努力・試みを表す。"},
+    {cat:"⏱ 現在完了", en:"They have been analyzing the results since the experiment ended.", ja:"実験が終わってから、彼らはずっと結果を分析している。", tip:"現在完了進行形 + since：過去の起点から今も継続中。"},
+    {cat:"🔗 関係詞", en:"The student who asked the most questions made the best progress.", ja:"最も多く質問した生徒が最も大きな進歩を遂げた。", tip:"who：先行詞が人の場合の主格関係代名詞。"},
+    {cat:"🔗 関係詞", en:"The researcher who presented the data explained it clearly.", ja:"データを発表した研究者は、それを明確に説明した。", tip:"who + 動詞：主格。先行詞が人。"},
+    {cat:"🔗 関係詞", en:"The method that produced the clearest results will be adopted.", ja:"最も明確な結果を出した方法が採用される。", tip:"that：先行詞が物の場合の主格関係代名詞。"},
+    {cat:"🔗 関係詞", en:"The explanation that he gave resolved the confusion immediately.", ja:"彼がした説明は、すぐに混乱を解消した。", tip:"that：目的格の関係代名詞。he gave の目的語が省略されている。"},
+    {cat:"🔗 関係詞", en:"The model which they developed is now widely used in research.", ja:"彼らが開発したモデルは、現在研究で広く使われている。", tip:"which：先行詞が物。that と置き換え可能だが、前置詞の後では which を使う。"},
+    {cat:"🔗 関係詞", en:"The book (that) she recommended helped me understand the topic.", ja:"彼女が勧めた本は、そのテーマの理解に役立った。", tip:"目的格の関係代名詞は省略できる。(that) が省略されている。"},
+    {cat:"🔗 関係詞", en:"The theory (that) he introduced changed the entire discussion.", ja:"彼が紹介した理論は、議論全体を変えた。", tip:"関係代名詞（目的格）の省略。省略すると会話的なスタイルになる。"},
+    {cat:"🔗 関係詞", en:"This is the point where most students get confused.", ja:"ここが多くの生徒が混乱するポイントだ。", tip:"where：場所を表す先行詞に使う関係副詞。at which と言い換え可能。"},
+    {cat:"🔗 関係詞", en:"The moment when the result changed was carefully recorded.", ja:"結果が変わった瞬間が丁寧に記録された。", tip:"when：時を表す先行詞に使う関係副詞。at which とほぼ同義。"},
+    {cat:"🔗 関係詞", en:"The reason why the experiment failed is still unclear.", ja:"実験が失敗した理由はまだ不明だ。", tip:"why：reason を先行詞にとる関係副詞。for which と言い換え可能。"},
+    {cat:"🔗 関係詞", en:"The result was positive, which surprised the entire team.", ja:"結果は良好で、それはチーム全体を驚かせた。", tip:"非制限用法：コンマ + which。前の文全体または名詞を補足説明する。制限用法のthatは使えない。"},
+    {cat:"🔗 関係詞", en:"He submitted the report on time, which impressed the teacher.", ja:"彼はレポートを時間通りに提出し、それが先生を感心させた。", tip:"コンマ + which：前の節全体を先行詞とする非制限用法。"},
+    {cat:"🔗 関係詞", en:"The student whose essay was selected presented it to the class.", ja:"エッセイが選ばれた生徒がクラスに発表した。", tip:"whose：所有格の関係代名詞。「〜の」という所有関係を表す。先行詞は人・物どちらでも可。"},
+    {cat:"🔗 関係詞", en:"We need a model whose predictions are accurate and consistent.", ja:"予測が正確で一貫したモデルが必要だ。", tip:"whose：先行詞が物（model）の場合にも使う所有格関係代名詞。"},
+    {cat:"🔗 関係詞", en:"This is the topic about which we argued most strongly.", ja:"これは私たちが最も強く議論したトピックだ。", tip:"前置詞 + which：フォーマルな表現。about which = which ... about。"},
+    {cat:"🔗 関係詞", en:"The condition under which the experiment succeeded was unusual.", ja:"実験が成功した条件は異例だった。", tip:"under which：前置詞＋関係代名詞。「その条件の下で」という意味。"},
+    {cat:"🔗 関係詞", en:"What surprised us most was the consistency of the results.", ja:"私たちを最も驚かせたのは、結果の一貫性だった。", tip:"what = the thing(s) that：先行詞を含む関係代名詞。主語・目的語・補語になる。"},
+    {cat:"🔗 関係詞", en:"I understand what you are trying to explain.", ja:"あなたが説明しようとしていることは理解できる。", tip:"what：目的語節を導く。「〜すること・もの」と訳す。"},
+    {cat:"🔗 関係詞", en:"Whoever works hardest will improve the most.", ja:"最も一生懸命努力する人が最も成長するだろう。", tip:"whoever = anyone who：複合関係代名詞。先行詞を含み「〜する人は誰でも」という意味。"},
+    {cat:"🔗 関係詞", en:"You can use whatever method works best for you.", ja:"あなたに最も合う方法であれば、何でも使っていい。", tip:"whatever = anything that：「何でも〜するもの」。名詞節または譲歩節を導く。"},
+    {cat:"💬 条件・譲歩・因果・主張", en:"If the temperature rises even slightly, the reaction changes.", ja:"温度がわずかに上がるだけで反応が変化する。", tip:"If + 現在形, 主語 + 現在形：一般的事実・科学的法則を表す条件節。"},
+    {cat:"💬 条件・譲歩・因果・主張", en:"If we increase the sample size, the results may become clearer.", ja:"サンプル数を増やせば、結果がより明確になるかもしれない。", tip:"If + 現在形, 主語 + will/may：未来の可能性を表す条件節。"},
+    {cat:"💬 条件・譲歩・因果・主張", en:"If I had more time, I would analyze this problem more carefully.", ja:"もっと時間があれば、この問題をより丁寧に分析するのだが。", tip:"仮定法過去：If + 過去形, would + 動詞原形。現在の事実と異なる仮定を表す。"},
+    {cat:"💬 条件・譲歩・因果・主張", en:"If she knew the answer, she would explain it right away.", ja:"もし彼女が答えを知っていれば、すぐに説明するのだが。", tip:"仮定法過去：現実には答えを知らないことを暗示する。"},
+    {cat:"💬 条件・譲歩・因果・主張", en:"If we had checked the data carefully, we wouldn't have missed the error.", ja:"データを丁寧に確認していたら、エラーを見逃さなかっただろう。", tip:"仮定法過去完了：If + had + 過去分詞, would have + 過去分詞。過去の事実と異なる仮定を表す。"},
+    {cat:"💬 条件・譲歩・因果・主張", en:"If she had started earlier, she would have finished on time.", ja:"もっと早く始めていれば、時間通りに終わっていただろう。", tip:"仮定法過去完了：過去の後悔・反事実を表す。"},
+    {cat:"💬 条件・譲歩・因果・主張", en:"Unless we verify the data carefully, we can't draw a reliable conclusion.", ja:"データを丁寧に確認しなければ、信頼できる結論は出せない。", tip:"Unless = if ... not：「〜しなければ」という否定の条件を表す。"},
+    {cat:"💬 条件・譲歩・因果・主張", en:"Although the evidence is limited, the trend is clearly noticeable.", ja:"証拠は限られているが、その傾向は明らかに見られる。", tip:"Although + 節：「〜にもかかわらず」譲歩を表す接続詞。文頭でも文中でも使える。"},
+    {cat:"💬 条件・譲歩・因果・主張", en:"Even though the explanation was brief, it was very effective.", ja:"説明は簡潔だったにもかかわらず、とても効果的だった。", tip:"Even though：although より強調的な譲歩。「〜であっても」「〜にもかかわらず」。"},
+    {cat:"💬 条件・譲歩・因果・主張", en:"While the first method was faster, the second was more accurate.", ja:"最初の方法は速かったが、2番目の方法はより正確だった。", tip:"While：対比を表す接続詞。「〜である一方で」という比較・対照の意味。"},
+    {cat:"💬 条件・譲歩・因果・主張", en:"Because the sample size was too small, the conclusion remains uncertain.", ja:"サンプル数が少なすぎたため、結論は依然として不確かだ。", tip:"Because + 節：直接的な原因・理由。最も強調度が高い。"},
+    {cat:"💬 条件・譲歩・因果・主張", en:"Since the results were unexpected, we reviewed the entire procedure.", ja:"結果が予想外だったので、全手順を見直した。", tip:"Since：すでに知っている理由を述べるときに使う。Because より柔らかいニュアンス。"},
+    {cat:"💬 条件・譲歩・因果・主張", en:"The data was inconsistent; therefore, we repeated the analysis.", ja:"データが不一致だった。そのため、分析をやり直した。", tip:"therefore：「それゆえに・したがって」論理的な結果を示す接続副詞。セミコロン + therefore が典型的。"},
+    {cat:"💬 条件・譲歩・因果・主張", en:"The experiment failed twice. As a result, we redesigned the procedure.", ja:"実験は2回失敗した。その結果、手順を再設計した。", tip:"As a result：「その結果として」結果を導く表現。新しい文の冒頭に置く。"},
+    {cat:"💬 条件・譲歩・因果・主張", en:"The model seemed reliable; however, the results were inconsistent.", ja:"そのモデルは信頼できるように見えた。しかし、結果は一貫していなかった。", tip:"however：「しかし・それでも」逆接の接続副詞。セミコロンまたはピリオドの後に使う。"},
+    {cat:"💬 条件・譲歩・因果・主張", en:"The first approach was simple. On the other hand, the second required more steps.", ja:"最初のアプローチはシンプルだった。一方、2番目はより多くのステップを必要とした。", tip:"On the other hand：「一方で」2つの事柄を対比する表現。"},
+    {cat:"💬 条件・譲歩・因果・主張", en:"We simplified the model so that it would be easier to test.", ja:"検証しやすくなるように、モデルを簡素化した。", tip:"so that + 主語 + can/will/may：「〜するために・〜できるように」目的を表す。"},
+    {cat:"💬 条件・譲歩・因果・主張", en:"She explained each step clearly so that everyone could follow.", ja:"全員がついてこられるように、彼女は各ステップをわかりやすく説明した。", tip:"so that everyone could：仮定法的なニュアンスで全員への配慮を表す。"},
+    {cat:"💬 条件・譲歩・因果・主張", en:"I believe this approach is more effective than the traditional method.", ja:"このアプローチは従来の方法より効果的だと思う。", tip:"I believe + that節：「〜だと思う・信じる」主張を表す定型表現。"},
+    {cat:"💬 条件・譲歩・因果・主張", en:"In my view, the evidence strongly supports the revised hypothesis.", ja:"私の見解では、その証拠は修正された仮説を強く支持している。", tip:"In my view / In my opinion：「私の見解では」主観的な意見を述べるフレーズ。"},
+    {cat:"💬 条件・譲歩・因果・主張", en:"For example, when pressure increases, the volume of gas decreases.", ja:"例えば、圧力が上がると気体の体積は減少する。", tip:"For example / For instance：「例えば」具体例を導く表現。"},
+    {cat:"💬 条件・譲歩・因果・主張", en:"This finding suggests that further investigation is necessary.", ja:"この発見は、さらなる調査が必要であることを示している。", tip:"suggest that ～：「〜を示唆する」帰結・提案を表す動詞。that節内は仮定法現在も可。"},
+    {cat:"💬 条件・譲歩・因果・主張", en:"This result indicates that the system is highly sensitive to change.", ja:"この結果は、そのシステムが変化に非常に敏感であることを示している。", tip:"indicate that ～：「〜であることを示す」データや結果から結論を導くフォーマルな表現。"},
 ];
 
 const TOTAL = phrases.length;
@@ -900,10 +737,12 @@ let isEnToJa      = true;
 let isRevealed    = false;
 let activeCategory = 'all';
 let isAutoPlaying  = false;
+let isRepeating    = false;
+let repeatTimer    = null;
 let autoMode       = '';   // 'shadow' | 'continuous'
 let autoStopped    = false;
 let autoTimeout    = null;
-let masterSet = new Set(JSON.parse(localStorage.getItem('logic250_master') || '[]'));
+let masterSet = new Set(JSON.parse(localStorage.getItem('logic107_master') || '[]'));
 
 // ── Voice setup ───────────────────────────────────────────────────
 let enVoices = [];
@@ -1064,6 +903,33 @@ function speakCurrent() {
   speakOne(getSpeechText(a[currentIndex]));
 }
 
+function speakRepeat(text) {
+  if (!isRepeating) return;
+  window.speechSynthesis.cancel();
+  setTimeout(() => {
+    speakOne(text, () => {
+      if (isRepeating) {
+        repeatTimer = setTimeout(() => speakRepeat(text), 300);
+      }
+    });
+  }, 150);
+}
+
+function toggleRepeat() {
+  isRepeating = !isRepeating;
+  const btn = document.getElementById('repeat-btn');
+  btn.textContent = '🔁 繰り返し: ' + (isRepeating ? 'ON' : 'OFF');
+  btn.style.background = isRepeating ? 'var(--primary)' : '';
+  btn.style.color = isRepeating ? '#fff' : '';
+  if (isRepeating) {
+    const a = getActive(); if (!a.length) return;
+    speakRepeat(getSpeechText(a[currentIndex]));
+  } else {
+    if (repeatTimer) { clearTimeout(repeatTimer); repeatTimer = null; }
+    window.speechSynthesis.cancel();
+  }
+}
+
 function speakP() {
   return new Promise(resolve => {
     if (autoStopped) { resolve(); return; }
@@ -1121,7 +987,7 @@ function getActive() {
 }
 
 function saveMaster() {
-  localStorage.setItem('logic250_master', JSON.stringify([...masterSet]));
+  localStorage.setItem('logic107_master', JSON.stringify([...masterSet]));
 }
 
 // ── Update UI ─────────────────────────────────────────────────────
@@ -1282,6 +1148,8 @@ function toggleMasterList() {
 
 function next() {
   if (isAutoPlaying) return;
+  if (repeatTimer) { clearTimeout(repeatTimer); repeatTimer = null; }
+  window.speechSynthesis.cancel();
   const active = getActive(); if(!active.length) return;
   currentIndex = isRandom
     ? Math.floor(Math.random()*active.length)
@@ -1291,9 +1159,12 @@ function next() {
 
 function prev() {
   if (isAutoPlaying) return;
+  if (repeatTimer) { clearTimeout(repeatTimer); repeatTimer = null; }
+  window.speechSynthesis.cancel();
   const active = getActive(); if(!active.length) return;
   currentIndex = (currentIndex - 1 + active.length) % active.length;
   update();
+  if (isRepeating) setTimeout(() => { const a=getActive(); if(a.length) speakRepeat(getSpeechText(a[currentIndex])); }, 300);
 }
 
 function toggleRandom() {
