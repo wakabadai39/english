@@ -601,14 +601,14 @@ function next() {
   if (isRandom) currentIndex = Math.floor(Math.random() * active.length);
   else currentIndex = (currentIndex + 1) % active.length;
   update();
-  if (isRepeating) setTimeout(() => { const a=getActive(); if(a.length) speakRepeat(getSpeechText(a[currentIndex])); }, 300);
+  if (isRepeating) { window.speechSynthesis.cancel(); isSpeaking=false; stopKeepAlive(); clearTimeout(speakRepeat._t); setTimeout(() => { const a=getActive(); if(a.length) speakRepeat(getSpeechText(a[currentIndex])); }, 150); }
 }
 
 function prev() {
   const active = getActive(); if (!active.length) return;
   currentIndex = (currentIndex - 1 + active.length) % active.length;
   update();
-  if (isRepeating) setTimeout(() => { const a=getActive(); if(a.length) speakRepeat(getSpeechText(a[currentIndex])); }, 300);
+  if (isRepeating) { window.speechSynthesis.cancel(); isSpeaking=false; stopKeepAlive(); clearTimeout(speakRepeat._t); setTimeout(() => { const a=getActive(); if(a.length) speakRepeat(getSpeechText(a[currentIndex])); }, 150); }
 }
 
 function toggleRandom() {
