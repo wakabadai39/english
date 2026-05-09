@@ -903,16 +903,15 @@ function speakCurrent() {
   speakOne(getSpeechText(a[currentIndex]));
 }
 
-function speakRepeat(text) {
-  if (!isRepeating) return;
-  window.speechSynthesis.cancel();
-  setTimeout(() => {
-    speakOne(text, () => {
-      if (isRepeating) {
-        repeatTimer = setTimeout(() => speakRepeat(text), 300);
-      }
-    });
-  }, 150);
+function speakRepeat() {
+  if (!isRepeating || isAutoPlaying) return;
+  const _a = getActive(); if (!_a.length) return;
+  const _t = getSpeechText(_a[currentIndex]);
+  speakOne(_t, () => {
+    if (isRepeating && !isAutoPlaying) {
+      repeatTimer = setTimeout(() => speakRepeat(), 300);
+    }
+  });
 }
 
 function toggleRepeat() {
@@ -923,7 +922,7 @@ function toggleRepeat() {
   btn.style.color = isRepeating ? '#fff' : '';
   if (isRepeating) {
     const a = getActive(); if (!a.length) return;
-    speakRepeat(getSpeechText(a[currentIndex]));
+    speakRepeat();
   } else {
     if (repeatTimer) { clearTimeout(repeatTimer); repeatTimer = null; }
     window.speechSynthesis.cancel();
@@ -1155,7 +1154,7 @@ function next() {
     ? Math.floor(Math.random()*active.length)
     : (currentIndex+1) % active.length;
   update();
-  if (isRepeating) setTimeout(() => { const a=getActive(); if(a.length) speakRepeat(getSpeechText(a[currentIndex])); }, 150);
+  if (isRepeating) { isRepeating=false; window.speechSynthesis.cancel(); if(repeatTimer){clearTimeout(repeatTimer);repeatTimer=null;} const btn=document.getElementById('repeat-btn'); btn.textContent='🔁 繰り返し: OFF'; btn.style.background=''; btn.style.color=''; }
 }
 
 function prev() {
@@ -1165,7 +1164,7 @@ function prev() {
   const active = getActive(); if(!active.length) return;
   currentIndex = (currentIndex - 1 + active.length) % active.length;
   update();
-  if (isRepeating) setTimeout(() => { const a=getActive(); if(a.length) speakRepeat(getSpeechText(a[currentIndex])); }, 150);
+  if (isRepeating) { isRepeating=false; window.speechSynthesis.cancel(); if(repeatTimer){clearTimeout(repeatTimer);repeatTimer=null;} const btn=document.getElementById('repeat-btn'); btn.textContent='🔁 繰り返し: OFF'; btn.style.background=''; btn.style.color=''; }
 }
 
 function toggleRandom() {

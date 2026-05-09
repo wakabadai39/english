@@ -498,10 +498,11 @@ function speakP() {
 
 function speakCurrent() { const active = getActive(); if (!active.length) return; speakOne(getSpeechText(active[currentIndex])); }
 
-function speakRepeat(text) {
+function speakRepeat() {
   if (!isRepeating || isAutoPlaying) return;
-  speakOne(text, () => {
-    if (isRepeating && !isAutoPlaying) { clearTimeout(speakRepeat._t); speakRepeat._t = setTimeout(() => speakRepeat(text), 1200); }
+  const _a=getActive();if(!_a.length)return;const _t=getSpeechText(_a[currentIndex]);
+  speakOne(_t, () => {
+    if (isRepeating && !isAutoPlaying) { clearTimeout(speakRepeat._t); speakRepeat._t = setTimeout(() => speakRepeat(), 300); }
   });
 }
 speakRepeat._t = null;
@@ -511,7 +512,7 @@ function toggleRepeat() {
   const btn = document.getElementById('repeat-btn');
   btn.textContent = isRepeating ? '🔁 繰り返し: ON' : '🔁 繰り返し';
   btn.className   = isRepeating ? 'btn btn-on' : 'btn btn-secondary';
-  if (isRepeating) { const a = getActive(); if (a.length) speakRepeat(getSpeechText(a[currentIndex])); }
+  if (isRepeating) { const a = getActive(); if (a.length) speakRepeat(); }
   else { window.speechSynthesis.cancel(); isSpeaking = false; stopKeepAlive(); clearTimeout(speakRepeat._t); }
 }
 
@@ -601,14 +602,14 @@ function next() {
   if (isRandom) currentIndex = Math.floor(Math.random() * active.length);
   else currentIndex = (currentIndex + 1) % active.length;
   update();
-  if (isRepeating) { window.speechSynthesis.cancel(); isSpeaking=false; stopKeepAlive(); clearTimeout(speakRepeat._t); setTimeout(() => { const a=getActive(); if(a.length) speakRepeat(getSpeechText(a[currentIndex])); }, 150); }
+  if (isRepeating) { isRepeating=false; window.speechSynthesis.cancel(); clearTimeout(speakRepeat._t); const btn=document.getElementById('repeat-btn'); btn.textContent='🔁 繰り返し'; btn.className='btn btn-secondary'; }
 }
 
 function prev() {
   const active = getActive(); if (!active.length) return;
   currentIndex = (currentIndex - 1 + active.length) % active.length;
   update();
-  if (isRepeating) { window.speechSynthesis.cancel(); isSpeaking=false; stopKeepAlive(); clearTimeout(speakRepeat._t); setTimeout(() => { const a=getActive(); if(a.length) speakRepeat(getSpeechText(a[currentIndex])); }, 150); }
+  if (isRepeating) { isRepeating=false; window.speechSynthesis.cancel(); clearTimeout(speakRepeat._t); const btn=document.getElementById('repeat-btn'); btn.textContent='🔁 繰り返し'; btn.className='btn btn-secondary'; }
 }
 
 function toggleRandom() {
