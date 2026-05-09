@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DUO 3.0 — No. 251〜300</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f0f8ff;--surface:#ffffff;--primary:#1d4ed8;--primary-light:#eff6ff;
+  --accent:#0891b2;--green:#16a34a;--green-light:#dcfce7;--amber:#d97706;--amber-light:#fef3c7;
+  --red:#e11d48;--text:#1e293b;--muted:#64748b;--border:#93c5fd;
+  --shadow:0 4px 24px rgba(30,64,175,0.10);--radius:18px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);min-height:100vh;padding:16px 12px 48px;color:var(--text);}
+.container{max-width:560px;margin:auto;}
+.header{text-align:center;margin-bottom:14px;}
+.header h2{font-size:18px;font-weight:900;color:var(--primary);}
+.header p{font-size:12px;color:var(--muted);margin-top:2px;}
+.badges{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-bottom:10px;}
+.badge{display:inline-flex;align-items:center;gap:4px;padding:4px 12px;border-radius:99px;font-size:11px;font-weight:700;background:var(--primary-light);color:var(--primary);border:1px solid var(--border);}
+.badge.green{background:var(--green-light);color:var(--green);border-color:#86efac;}
+.progress-wrap{background:#bfdbfe;border-radius:99px;height:6px;margin-bottom:4px;overflow:hidden;}
+.progress-bar{height:100%;background:var(--primary);border-radius:99px;transition:width 0.4s ease;}
+.progress-label{text-align:center;font-size:12px;color:var(--muted);margin-bottom:10px;}
+.tap-hint{font-size:11px;color:var(--muted);margin-bottom:6px;text-align:center;}
+.card{background:var(--surface);border-radius:var(--radius);padding:28px 20px 20px;box-shadow:var(--shadow);margin-bottom:12px;position:relative;border:2px solid var(--border);min-height:160px;cursor:pointer;user-select:none;transition:transform .1s,border-color .2s;}
+.card.tappable:active{transform:scale(0.985);}
+.card.revealed{border-color:var(--primary);}
+.card.no-tap{cursor:default;}
+.card-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+.card-num{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);}
+.cat-label{font-size:11px;font-weight:700;letter-spacing:.06em;color:var(--primary);text-align:center;flex:1;}
+.master-wrap{display:flex;align-items:center;gap:4px;font-size:11px;color:var(--muted);}
+.master-wrap input[type=checkbox]{width:17px;height:17px;accent-color:var(--green);cursor:pointer;}
+.master-wrap.disabled{opacity:.3;pointer-events:none;}
+.main-text{font-size:clamp(14px,3.8vw,18px);font-weight:700;line-height:1.65;text-align:center;margin-bottom:14px;}
+.answer-wrap{opacity:0;transform:translateY(5px);transition:opacity .25s,transform .25s;pointer-events:none;}
+.answer-wrap.show{opacity:1;transform:translateY(0);pointer-events:auto;}
+.answer-ja{font-size:clamp(13px,3.5vw,15px);font-weight:700;color:var(--accent);text-align:center;line-height:1.6;background:#f0f9ff;border-radius:10px;padding:10px 14px;margin-bottom:8px;}
+.answer-tip{font-size:12px;font-weight:600;color:var(--green);text-align:left;padding:0 4px;line-height:1.6;}
+.answer-tip::before{content:'💡 ';}
+.master-badge{display:none;text-align:center;margin-top:8px;background:var(--green-light);color:var(--green);padding:2px 10px;border-radius:99px;font-size:10px;font-weight:700;}
+.master-badge.show{display:block;}
+.no-active{background:var(--amber-light);border-radius:12px;padding:16px;text-align:center;font-size:14px;color:var(--amber);font-weight:700;display:none;margin-bottom:12px;}
+.no-active.show{display:block;}
+.auto-panel{background:var(--surface);border-radius:var(--radius);padding:14px 18px;box-shadow:var(--shadow);margin-bottom:12px;display:none;border-left:4px solid var(--primary);}
+.auto-panel.show{display:block;}
+.auto-step-title{font-size:12px;font-weight:900;color:var(--primary);margin-bottom:4px;}
+.auto-instruction{font-size:14px;font-weight:700;color:var(--text);line-height:1.5;}
+.auto-count{font-family:'DM Mono',monospace;font-size:12px;color:var(--muted);margin-top:4px;}
+.filter-panel{background:var(--surface);border-radius:var(--radius);padding:14px 16px;box-shadow:var(--shadow);margin-bottom:12px;}
+.filter-header{display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none;}
+.filter-header-left{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;}
+.filter-current{font-size:12px;font-weight:700;color:var(--primary);background:var(--primary-light);padding:3px 10px;border-radius:99px;border:1px solid var(--border);max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.filter-toggle-icon{font-size:12px;color:var(--muted);transition:transform .2s;margin-left:6px;}
+.filter-toggle-icon.open{transform:rotate(180deg);}
+.filter-chips-wrap{display:none;margin-top:10px;}
+.filter-chips-wrap.open{display:block;}
+.chip-all{display:block;width:100%;padding:8px 14px;margin-bottom:8px;border-radius:10px;font-size:12px;font-weight:700;cursor:pointer;border:2px solid var(--border);background:#fff;color:var(--muted);text-align:left;font-family:'Noto Sans JP',sans-serif;transition:all .15s;}
+.chip-all.active{background:var(--primary-light);color:var(--primary);border-color:var(--primary);}
+.cat-row{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:10px;cursor:pointer;border:2px solid transparent;background:#fff;margin-bottom:5px;transition:all .15s;user-select:none;}
+.cat-row.active{background:var(--primary-light);border-color:var(--primary);}
+.cat-row-name{flex:1;font-size:13px;font-weight:700;color:var(--text);}
+.cat-row.active .cat-row-name{color:var(--primary);}
+.cat-row-count{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);background:#f1f5f9;padding:2px 8px;border-radius:99px;font-weight:600;}
+.cat-row.active .cat-row-count{background:#fff;color:var(--primary);}
+.cat-dot{width:8px;height:8px;border-radius:50%;background:#e2e8f0;flex-shrink:0;}
+.cat-dot.done{background:var(--green);}
+.panel{background:var(--surface);border-radius:var(--radius);padding:14px 16px;box-shadow:var(--shadow);margin-bottom:12px;}
+.panel-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.panel-row+.panel-row{margin-top:8px;}
+.panel label{font-size:12px;color:var(--muted);font-weight:700;white-space:nowrap;}
+.panel select{flex:1;font-size:12px;border:1px solid var(--border);border-radius:8px;padding:4px 8px;background:#fff;color:var(--text);font-family:'Noto Sans JP',sans-serif;}
+.panel input[type=range]{flex:1;min-width:80px;accent-color:var(--primary);}
+.speed-val{font-family:'DM Mono',monospace;font-size:13px;font-weight:600;color:var(--primary);min-width:32px;}
+.btn-row{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:10px;}
+.btn{border:none;border-radius:99px;padding:10px 18px;font-size:13px;font-weight:700;font-family:'Noto Sans JP',sans-serif;cursor:pointer;transition:opacity .15s,transform .1s;display:inline-flex;align-items:center;gap:5px;}
+.btn:active{transform:scale(0.94);opacity:.85;}
+.btn-primary{background:var(--primary);color:#fff;}
+.btn-secondary{background:#e2e8f0;color:var(--text);}
+.btn-red{background:var(--red);color:#fff;}
+.btn-amber{background:var(--amber);color:#fff;}
+.btn-blue{background:#2563eb;color:#fff;}
+.btn-on{background:var(--green);color:#fff;}
+.master-summary{background:var(--green-light);border-radius:12px;padding:10px 14px;font-size:12px;color:var(--green);font-weight:700;text-align:center;margin-bottom:10px;display:none;cursor:pointer;user-select:none;}
+.master-summary.show{display:block;}
+.help-btn{display:inline-flex;align-items:center;gap:5px;padding:5px 14px;border-radius:99px;border:1px solid var(--border);background:var(--primary-light);color:var(--primary);font-size:12px;font-weight:700;cursor:pointer;margin-top:8px;font-family:'Noto Sans JP',sans-serif;}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="header">
+  <h2>🌟 DUO 3.0 — No. 251〜300</h2>
+  <p>自然災害・現代社会・ビジネス・構文A</p>
+  <button class="help-btn" onclick="alert('👆カードタップで答え表示\n🔊音声再生\n🗣️シャドウイング4ステップ\n▶連続再生\n🔄英⇄日モード切替\nマスターチェックで次へ')">❓ 使い方</button>
+</div>
+<div class="badges">
+  <div class="badge" id="mode-badge">📖 英 → 日</div>
+  <div class="badge" id="order-badge">順番通り</div>
+  <div class="badge green" id="master-badge-top">マスター: 0 / 50</div>
+</div>
+<div class="progress-wrap"><div class="progress-bar" id="progress-bar" style="width:2%"></div></div>
+<div class="progress-label">カード <span id="cur-num">1</span> / <span id="tot-num">50</span></div>
+<div class="no-active" id="no-active">✅ このカテゴリをすべてマスターしました！</div>
+<div class="auto-panel" id="auto-panel">
+  <div class="auto-step-title" id="auto-step-title">STEP 1</div>
+  <div class="auto-instruction" id="auto-instruction">音声を聴いてください。</div>
+  <div class="auto-count" id="auto-count"></div>
+</div>
+<div class="tap-hint" id="tap-hint">👆 カードをタップして日本語訳・解説を表示</div>
+<div class="card tappable" id="main-card" onclick="handleTap()">
+  <div class="card-top">
+    <div class="card-num" id="card-num">251</div>
+    <div class="cat-label" id="card-cat"></div>
+    <div class="master-wrap" id="master-wrap">
+      <span>マスター</span>
+      <input type="checkbox" id="master-cb" onchange="toggleMaster(event)" onclick="event.stopPropagation()">
+    </div>
+  </div>
+  <div class="main-text" id="main-text">Loading...</div>
+  <div class="answer-wrap" id="answer-wrap">
+    <div class="answer-ja" id="answer-ja"></div>
+    <div class="answer-tip" id="answer-tip" style="display:none"></div>
+  </div>
+  <div class="master-badge" id="mastered-badge">✔ マスター済</div>
+</div>
+<div class="master-summary" id="master-summary" onclick="toggleMasterList()"></div>
+<div id="master-list-wrap" style="display:none;margin-bottom:12px;">
+  <div style="background:#fff;border-radius:16px;padding:14px 16px;box-shadow:var(--shadow);">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+      <span style="font-size:13px;font-weight:900;color:var(--green);">✅ マスター済みリスト</span>
+      <button class="btn btn-secondary" style="padding:4px 12px;font-size:11px;" onclick="clearAllMaster()">全解除</button>
+    </div>
+    <div id="master-list"></div>
+  </div>
+</div>
+<div class="filter-panel">
+  <div class="filter-header" onclick="toggleFilterPanel()">
+    <div class="filter-header-left">📂 カテゴリを選ぶ</div>
+    <div style="display:flex;align-items:center;gap:4px;">
+      <div class="filter-current" id="filter-current-label">すべて</div>
+      <span class="filter-toggle-icon" id="filter-toggle-icon">▼</span>
+    </div>
+  </div>
+  <div class="filter-chips-wrap" id="filter-chips-wrap">
+    <button class="chip-all active" id="chip-all" onclick="selectCategory('all')">🎯 すべて表示</button>
+    <div id="cat-rows"></div>
+  </div>
+</div>
+<div class="panel">
+  <div class="panel-row" style="margin-bottom:8px;">
+    <label>🔊 音声優先</label>
+    <select id="voice-pref" onchange="applyVoicePref()"><option value="US">🇺🇸 US優先</option><option value="GB">🇬🇧 GB優先</option></select>
+    <select id="voice-select" style="flex:2;"></select>
+  </div>
+  <div class="panel-row">
+    <label>速度</label>
+    <input type="range" id="rate-slider" min="0.5" max="1.5" step="0.1" value="1.0" oninput="updateRate()">
+    <span class="speed-val" id="rate-val">1.0×</span>
+  </div>
+</div>
+<div id="normal-controls">
+  <div class="btn-row">
+    <button class="btn btn-secondary" onclick="prev()">← 戻る</button>
+    <button class="btn btn-primary" onclick="speakCurrent()">🔊 音声</button>
+    <button class="btn btn-secondary" onclick="next()">次へ →</button>
+    <button class="btn btn-secondary" style="font-size:11px;padding:8px 6px;" onclick="switchMode()">🔄 英⇄日</button>
+  </div>
+  <div class="btn-row" style="gap:4px;">
+    <button class="btn btn-secondary" style="font-size:11px;padding:7px 5px;" id="random-btn" onclick="toggleRandom()">🔀 ランダム</button>
+    <button class="btn btn-secondary" style="font-size:11px;padding:7px 5px;" id="repeat-btn" onclick="toggleRepeat()">🔁 繰り返し</button>
+    <button class="btn btn-blue" style="font-size:11px;padding:7px 5px;" onclick="startContinuous()">▶ 連続再生</button>
+    <button class="btn btn-amber" style="font-size:11px;padding:7px 5px;" onclick="startShadowing()">🗣️ シャドウ</button>
+  </div>
+</div>
+<div id="auto-controls" style="display:none;">
+  <div class="btn-row"><button class="btn btn-red" onclick="stopAutoPlay()">⏹ 停止</button></div>
+</div>
+</div>
+<script>
+const OFFSET=251;
+const CATS={'🌍 自然・災害':'#dc2626','🏙️ 現代社会・技術':'#2563eb','💼 ビジネス・経済':'#16a34a','✏️ 構文・慣用表現A':'#7c3aed'};
+const phrases=[
+  {cat:'🌍 自然・災害', en:'A devastating earthquake hit the state capital, leaving tens of thousands of residents homeless.', ja:'壊滅的な規模の地震が州都を襲い、数万人の住民が家を失った。', tip:'devastating＝壊滅的な・破壊的な。state capital＝州都。leave A B＝AをBの状態にする（付帯状況）。tens of thousands of＝数万の。homeless＝家を失った。'},
+  {cat:'🌍 自然・災害', en:'"Watch out! The ceiling is giving way!"', ja:'「気をつけろ！天井が崩れかけてるぞ！」', tip:'watch out!＝気をつけろ！（= look out!）。ceiling＝天井（floor は床）。give way＝崩れる・陥没する・屈服する（慣用句）。'},
+  {cat:'🌍 自然・災害', en:'The weather forecast says the typhoon is likely to accelerate and approach the coast.', ja:'台風は速度を上げて沿岸に接近しそうだと天気予報では言っている。', tip:'weather forecast＝天気予報。be likely to＝〜しそうだ（= probably will）。accelerate＝加速する。approach＝〜に近づく。coast＝海岸・沿岸。'},
+  {cat:'🌍 自然・災害', en:'"It's still up in the air whether the game will be called off or not." "So what? It makes no difference to me."', ja:'「試合が中止になるかどうか、まだ決まらないんだ。」「それがどうしたの？私にとっては、どうでもいいことだわ。」', tip:'up in the air＝未決定の・宙ぶらりんの（慣用句）。call off＝〜を中止する（= cancel）。make no difference＝関係ない・どうでもよい。'},
+  {cat:'🌍 自然・災害', en:'"It's foggy, isn't it?" "It sure is. But chances are it'll clear up later on."', ja:'「霧が濃いわね。」「本当ね。でも、たぶんこのあとは晴れるわ。」', tip:'foggy＝霧が濃い（fog＝霧）。chances are (that)＝おそらく〜だろう（慣用句）。clear up＝（天気が）晴れる・（問題が）解決する。later on＝この後・後ほど。'},
+  {cat:'🏙️ 現代社会・技術', en:'For the most part, modernization is identified with westernization.', ja:'ほとんどの場合、近代化は西欧化と同一のものと見なされる。', tip:'for the most part＝ほとんどの場合・大部分は。modernization＝近代化。be identified with＝〜と同一視される・同じものとみなされる。westernization＝西欧化。'},
+  {cat:'🏙️ 現代社会・技術', en:'Urban culture appears to be attractive to many people, in particular, to younger people.', ja:'都会の文化は多くの人々の目には魅力的に映る。とりわけ、若者にとっては。', tip:'urban＝都市の（rural は農村の）。appear to be＝〜のように見える。attractive＝魅力的な。in particular＝とりわけ・特に（= especially）。'},
+  {cat:'🏙️ 現代社会・技術', en:'"AI" stands for "artificial intelligence."', ja:'AIは人工知能の略です。', tip:'stand for＝〜の略である・〜を表す（= represent）。artificial＝人工の・人為的な（natural の反対）。intelligence＝知能・情報（インテリジェンス）。'},
+  {cat:'🏙️ 現代社会・技術', en:'Household appliances are becoming more convenient day by day.', ja:'家庭用の電化製品は日に日に便利になっている。', tip:'household＝家庭の・世帯の。appliance＝（家庭用）電化製品。day by day＝日に日に・日々（= gradually）。convenient＝便利な。'},
+  {cat:'💼 ビジネス・経済', en:"My income is not adequate to provide for my family of four, but we have to make the best of it.", ja:'私の収入は四人家族を養うには十分ではないけれど、それで何とかやっていくしかない。', tip:'income＝収入・所得。adequate＝十分な・適切な（= sufficient）。provide for＝〜を養う・〜に備える。make the best of＝〜を最大限に活用する・〜で何とかやっていく（慣用句）。'},
+  {cat:'🏙️ 現代社会・技術', en:'The popularity of a website depends on its content.', ja:'ホームページの人気は内容次第。', tip:'popularity＝人気・知名度。depend on＝〜次第である・〜に依存する。content＝内容・コンテンツ（不可算名詞として使うことも多い）。'},
+  {cat:'🏙️ 現代社会・技術', en:"You've got to keep up with it. Once you fall behind, it's hard to catch up.", ja:'遅れずについていかなくちゃ。一度遅れをとったら追い付くのは大変だよ。', tip:'keep up with＝〜に遅れずついていく。fall behind＝遅れをとる・後れをとる（= lag behind）。catch up＝追いつく（catch up with も同義）。'},
+  {cat:'🏙️ 現代社会・技術', en:"As technology rapidly advances, it's tough to keep pace with it.", ja:'技術は急速に進歩するので、遅れを取らずについていくのは大変だ。', tip:'rapidly＝急速に。advance＝進歩する・前進する。tough＝大変な・きつい（口語）。keep pace with＝〜に遅れずついていく（keep up with と同義）。'},
+  {cat:'🏙️ 現代社会・技術', en:'More and more people are rushing to make use of the interactive nature of the medium.', ja:'ますます多くの人々が、その媒体の双方向的な性質を利用しようと躍起になっている。', tip:'more and more＝ますます多くの。rush to do＝〜しようと急ぐ・躍起になる。make use of＝〜を利用する（= utilize）。interactive＝双方向の・インタラクティブな。medium＝媒体（複数形はmedia）。'},
+  {cat:'🏙️ 現代社会・技術', en:'Innovation has something to do with the ability to notice unusual phenomena.', ja:'革新的なものを生み出すこと、それは変わった現象を見逃さない能力と何らかの関係がある。', tip:'innovation＝革新・イノベーション。have something to do with＝〜と何らかの関係がある（have nothing to do with は無関係）。phenomenon＝現象（複数形はphenomena）。'},
+  {cat:'💼 ビジネス・経済', en:'A bunch of other companies are imitating our excellent methods.', ja:'多くの他社が我々の優れた方法を真似している。', tip:'a bunch of＝たくさんの（口語）。imitate＝〜を真似する・模倣する。excellent＝優れた・卓越した。method＝方法・手法。'},
+  {cat:'🏙️ 現代社会・技術', en:'The once desolate valley was transformed into a thriving hub of hi-tech business.', ja:'かつての荒涼とした盆地が、繁栄を謳歌するハイテクビジネスの中心地に変貌した。', tip:'desolate＝荒涼とした・寂しい。be transformed into＝〜に変貌する。thriving＝繁栄している・盛んな。hub＝中心地・ハブ。hi-tech＝ハイテクの。'},
+  {cat:'💼 ビジネス・経済', en:"Although there's still plenty of room for improvement, his invention is superior to conventional equipment in every respect.", ja:'まだ改善の余地はたくさんあるけれど、彼の発明品はあらゆる点で従来の機器よりも優れている。', tip:'room for improvement＝改善の余地。be superior to＝〜より優れている（inferior to は劣っている）。conventional＝従来の・慣習的な。in every respect＝あらゆる点で。'},
+  {cat:'💼 ビジネス・経済', en:"The strength of the firm is attributed to its unique and future-oriented strategies.", ja:'その会社の強さは、他社にない未来志向の戦略によって生み出されている。', tip:'firm＝会社・企業（= company）。be attributed to＝〜に起因する・〜のせいである（attribute A to B＝AをBのせいにする）。unique＝独自の・ユニークな。strategy＝戦略（複数形はstrategies）。'},
+  {cat:'💼 ビジネス・経済', en:"SONY has integrated a wide range of functions into this cool gadget. It's catching on from coast to coast.", ja:'ソニーはこのスゴイ機器に多岐にわたる機能を統合させた。全米で評判になり始めている商品だ。', tip:'integrate A into B＝AをBに統合する。a wide range of＝多岐にわたる・幅広い。gadget＝機器・ガジェット（小型電子機器）。catch on＝流行する・人気が出る。from coast to coast＝全国で（米国：東海岸から西海岸まで）。'},
+  {cat:'🏙️ 現代社会・技術', en:"This tool comes in handy, so I always keep it close at hand.", ja:'この道具は何かと便利だから、いつも手元に置いています。', tip:'come in handy＝役に立つ・便利である（慣用句）。close at hand＝手元に・身近に（= within reach）。'},
+  {cat:'💼 ビジネス・経済', en:'"In general, consumers prefer quantity to quality." "It's the other way around today."', ja:'「一般的に、消費者は質よりも量を選びます。」「今は全く逆です。」', tip:'in general＝一般的に（= generally）。prefer A to B＝BよりAを好む（語順注意）。quantity＝量（quality は質）。the other way around＝逆・反対（慣用句）。'},
+  {cat:'💼 ビジネス・経済', en:'Obviously, the advertisement is aimed at teenagers.', ja:'明らかにその広告は10代の若者層をターゲットにしている。', tip:'obviously＝明らかに・明白に。advertisement＝広告（= ad）。be aimed at＝〜をターゲットにしている・〜に向けられている。teenager＝10代の若者。'},
+  {cat:'💼 ビジネス・経済', en:'The factory now under construction will assemble 1,000 VCR units per day.', ja:'現在建設中のその工場は、一日当たり1,000台のビデオデッキを組み立てることになる。', tip:'under construction＝建設中。assemble＝〜を組み立てる（disassemble は分解する）。per day＝一日あたり（per＝〜につき）。'},
+  {cat:'💼 ビジネス・経済', en:'Efficient machinery replaced manual labor.', ja:'効率的な機械が、肉体労働に取って代わった。', tip:'efficient＝効率的な（efficiency＝効率）。machinery＝機械類（集合名詞）。replace＝〜に取って代わる。manual labor＝肉体労働・手作業（manual＝手の・手動の）。'},
+  {cat:'💼 ビジネス・経済', en:'In those days, the gigantic corporation had a virtual monopoly over internal commerce.', ja:'当時、その巨大企業が国内の商業を事実上独占していた。', tip:'in those days＝当時・昔は。gigantic＝巨大な（= enormous）。virtual＝事実上の・実質的な（virtually＝事実上）。monopoly＝独占・モノポリー。internal commerce＝国内商業。'},
+  {cat:'💼 ビジネス・経済', en:'With restrictions removed, thousands of new enterprises have come into being.', ja:'制限が解除され、数千の新しい企業が誕生した。', tip:'restriction＝制限・規制。remove＝〜を取り除く。enterprise＝企業・事業（= company・venture）。come into being＝生まれる・誕生する（= come into existence）。'},
+  {cat:'💼 ビジネス・経済', en:'As a result of his ridiculous venture, he is in danger of going bankrupt.', ja:'ばかげた新事業の結果、彼は破産の危機に瀕している。', tip:'ridiculous＝ばかげた・馬鹿らしい。venture＝新事業・ベンチャー。in danger of＝〜の危機に。go bankrupt＝破産する（bankrupt＝破産した）。'},
+  {cat:'💼 ビジネス・経済', en:"Compared to the previous year, business is looking up in terms of sales. However, we haven't made any profit yet.", ja:'昨年と比べて、売上の数字だけを見れば事業は上向いている。しかしながら、利益はまだ全く出ていない。', tip:'compared to＝〜と比べて。look up＝上向く・好転する（look down は悪化する）。in terms of＝〜の点では・〜に関して。profit＝利益・利潤（loss は損失）。'},
+  {cat:'💼 ビジネス・経済', en:'"I'm going to be transferred to an overseas branch." "Oh, I'll miss you. Please drop me a line."', ja:'「海外の支店に転勤することになったよ。」「えっ。寂しくなるわ。手紙でも下さいね。」', tip:'be transferred to＝〜に転勤・転属になる。overseas＝海外の。miss＝〜がいなくて寂しい。drop a line＝（短い）手紙やメールを送る（慣用句）。'},
+  {cat:'💼 ビジネス・経済', en:"While he was away on business, his wife gave birth to a baby boy.", ja:'彼が出張中に、奥さんが男の子の赤ちゃんを出産した。', tip:'away on business＝出張中で。give birth to＝〜を出産する（重要表現）。baby boy＝男の子（baby girl は女の子）。'},
+  {cat:'💼 ビジネス・経済', en:"Apparently, Nick wasn't willing to take on the task because it would just add to his burdens.", ja:"どうやらニックは、自分の負担が増えるからその仕事を引き受けたがらなかったようだ。", tip:"apparently＝どうやら・見たところ。be willing to＝進んで〜する（be not willing to は〜したがらない）。take on＝〜を引き受ける。add to＝〜を増やす・加重する。burden＝負担・重荷。"},
+  {cat:'💼 ビジネス・経済', en:"Bob had intended to take her out tonight, but he had to work overtime.", ja:"ボブは今夜、彼女とデートするつもりだったが、残業になってしまった。", tip:"intend to＝〜するつもりだ（had intended to＝するつもりだったが→できなかった）。take out＝〜を連れ出す・デートする。work overtime＝残業する（overtime＝時間外）。"},
+  {cat:'💼 ビジネス・経済', en:'"Please estimate the losses by Friday at the latest." "I'll manage it somehow."', ja:'「遅くとも金曜日までには損失の見積もりを出して下さい。」「何とかやってみましょう。」', tip:"estimate＝〜を見積もる（estimate the losses＝損失を見積もる）。at the latest＝遅くとも（at the earliest は早くとも）。manage to do＝何とか〜する（I'll manage it somehow＝何とかやります）。"},
+  {cat:'💼 ビジネス・経済', en:'"Nick, I'm counting on you." "OK, I'll see to it." "Thanks, I appreciate it." "Don't mention it."', ja:'「頼りにしてるわ、ニック。」「大丈夫、きちんとやっておきます。」「ありがとう。感謝するわ。」「いいんですよ。」', tip:"count on＝〜を頼りにする・当てにする。see to it (that)＝〜するように取り計らう（see to it＝きちんとやる）。appreciate＝〜に感謝する。Don't mention it.＝どういたしまして（= You're welcome）。"},
+  {cat:'💼 ビジネス・経済', en:"He pretends to be enthusiastic when his boss is around.", ja:"彼は上司がそばにいる時は熱心なふりをする。", tip:"pretend to＝〜のふりをする。enthusiastic＝熱心な・熱狂的な（enthusiasm＝熱意）。when ... is around＝〜がそばにいるとき。"},
+  {cat:'💼 ビジネス・経済', en:"He got promoted at the expense of his colleagues. He should be ashamed of himself.", ja:"彼は同僚を踏み台にして出世した。恥を知るべきだ。", tip:"get promoted＝昇進する。at the expense of＝〜を犠牲にして・〜を踏み台にして（慣用句）。colleague＝同僚。be ashamed of oneself＝恥じる・恥を知る。"},
+  {cat:'💼 ビジネス・経済', en:"As the recession set in, temporary employees were laid off one after another.", ja:"景気の後退が始まると、短期契約社員たちは次々に一時解雇を言い渡された。", tip:"recession＝不況・景気後退。set in＝始まる・到来する（悪い状況が始まるイメージ）。temporary employee＝臨時・契約社員。lay off＝〜を一時解雇する。one after another＝次々に。"},
+  {cat:'💼 ビジネス・経済', en:"Nowadays, many people are out of work against their will. Who is responsible for that?", ja:"最近では、多くの人々が職に就きたくても就けないでいる。誰の責任だろう？", tip:"out of work＝失業している（= unemployed）。against one's will＝意に反して・不本意ながら。be responsible for＝〜に責任がある（responsible＝責任ある）。"},
+  {cat:'💼 ビジネス・経済', en:"I've gotten pessimistic, and I'm worried about something I would never have been concerned about before.", ja:"私も悲観的になってきて、以前は決して気にならなかったことに不安を感じている。", tip:"pessimistic＝悲観的な（optimistic は楽観的）。be concerned about＝〜について心配する（= worry about）。would never have＝仮定法過去完了（以前の自分なら〜しなかったのに）。"},
+  {cat:'💼 ビジネス・経済', en:"Today, even white-collar workers are confronted with great hardships.", ja:"今日では、サラリーマンでさえ大変な苦難に直面している。", tip:"white-collar＝ホワイトカラー・事務職の（blue-collar は肉体労働）。be confronted with＝〜に直面している（= be faced with）。hardship＝苦難・困難（複数形hardshipsで使うことも）。"},
+  {cat:'💼 ビジネス・経済', en:"The authorities are striving in vain to stabilize the currency.", ja:"当局は通貨を安定させようと懸命だが、どうにもならない。", tip:"authorities＝当局・行政機関（複数形）。strive＝懸命に努力する（strive-strove-striven）。in vain＝無駄に・むなしく（= without success）。stabilize＝〜を安定させる。currency＝通貨。"},
+  {cat:'💼 ビジネス・経済', en:"We've come to the conclusion that nothing is more urgent than reducing Japan's huge deficit.", ja:"日本の膨大な赤字を削減することが何よりも緊急を要することだ、という結論に我々は達した。", tip:"come to the conclusion＝〜という結論に達する。urgent＝緊急の・差し迫った。reduce＝〜を削減する・減らす。deficit＝赤字・財政赤字（surplus は黒字）。"},
+  {cat:'✏️ 構文・慣用表現A', en:"The questionnaires were distributed at random.", ja:"アンケート用紙が無作為に配布された。", tip:"questionnaire＝アンケート用紙・質問票。distribute＝〜を配布する・分配する。at random＝無作為に・でたらめに（randomlyと同義）。"},
+  {cat:'✏️ 構文・慣用表現A', en:"All you have to do is fill in the blanks below.", ja:"以下の空欄部分にご記入いただくだけで結構です。", tip:"All you have to do is do＝〜するだけでよい（重要構文。isの後は原形）。fill in＝〜に記入する（fill out も同義）。blank＝空欄・ブランク。"},
+  {cat:'✏️ 構文・慣用表現A', en:"In addition to a 10% discount, you can pick out an optional excursion for free.", ja:"10%の割引に加えて、無料のオプションツアーを一つ選択できます。", tip:"in addition to＝〜に加えて（= besides）。discount＝割引。pick out＝〜を選ぶ・選び出す（= choose）。optional＝任意の・選択可能な。excursion＝小旅行・遠足（= day trip）。for free＝無料で（= free of charge）。"},
+  {cat:'✏️ 構文・慣用表現A', en:"Round-trip fares to each destination are as follows.", ja:"各目的地までの往復料金は下記の通りです。", tip:"round trip＝往復（one-way は片道）。fare＝運賃・料金（交通機関の料金）。destination＝目的地。as follows＝以下の通り（列挙の前に使う定型表現）。"},
+  {cat:'✏️ 構文・慣用表現A', en:'"Don't forget to confirm your reservation in advance." "I won't."', ja:'「事前に予約の確認をするのを忘れないでね。」「ええ、わかった。」', tip:"confirm＝〜を確認する・確定する。reservation＝予約（= booking）。in advance＝事前に・あらかじめ（= beforehand）。I won't.＝（忘れ）ません（won't forget の省略）。"},
+  {cat:'✏️ 構文・慣用表現A', en:"Be sure to check in at least 45 minutes prior to departure time.", ja:"遅くとも出発時刻の45分前には搭乗手続きを必ず完了させて下さい。", tip:"be sure to＝必ず〜しなさい（= make sure to）。check in＝チェックインする・搭乗手続きをする。at least＝少なくとも。prior to＝〜の前に（= before。格式的）。departure＝出発（arrival は到着）。"},
+  {cat:'✏️ 構文・慣用表現A', en:"I attached my name tag to my baggage, but it soon came off.", ja:"自分の荷物に名札を付けたけれども、すぐに取れてしまった。", tip:"attach A to B＝AをBに取り付ける・添付する。name tag＝名札・名前タグ。baggage＝手荷物（= luggage。不可算名詞）。come off＝取れる・はがれる（= fall off）。"},
+  {cat:'✏️ 構文・慣用表現A', en:"On average, these packages weigh two pounds.", ja:"これらの小包の重さは平均すると2ポンドです。", tip:"on average＝平均して・平均すると（= on the average）。package＝小包・パッケージ。weigh＝〜の重さがある（weight は名詞）。pound＝ポンド（約450g）。"},
+  {cat:'✏️ 構文・慣用表現A', en:"This plastic garbage bag is free of hazardous chemicals.", ja:"このビニール製のゴミ袋は有害な化学物質を含んでいません。", tip:"free of＝〜を含まない・〜がない（= without）。garbage bag＝ゴミ袋。hazardous＝有害な・危険な（= dangerous）。chemical＝化学物質（形容詞では「化学的な」）。"},
+  {cat:'✏️ 構文・慣用表現A', en:"This flashlight is getting dim. It needs new batteries.", ja:"この懐中電灯は明かりが弱くなってきた。電池を入れ替えないと。", tip:"flashlight＝懐中電灯（米語。英語はtorch）。get dim＝暗くなる・薄暗くなる（dim＝薄暗い）。battery＝電池（複数形batteries）。"},
+];
+let currentIndex=0,isEnToJa=true,isRandom=false,isRepeating=false;
+let mastered=new Set(),activeCategory='all';
+let isAutoPlaying=false,autoStopped=false,autoTimeout=null;
+let isSpeaking=false,keepAliveTimer=null,speechRate=1.0,voices=[],voicePref='US';
+function getActive(){return phrases.filter((p,i)=>{if(activeCategory!=='all'&&p.cat!==activeCategory)return false;if(mastered.has(i))return false;return true;});}
+function buildCatRows(){const wrap=document.getElementById('cat-rows');wrap.innerHTML='';Object.keys(CATS).forEach(cat=>{const total=phrases.filter(p=>p.cat===cat).length;const mc=phrases.filter((p,i)=>p.cat===cat&&mastered.has(i)).length;const row=document.createElement('div');row.className='cat-row'+(activeCategory===cat?' active':'');row.innerHTML=`<div class="cat-dot${mc===total?' done':''}"></div><div class="cat-row-name">${cat}</div><div class="cat-row-count">${mc}/${total}</div>`;row.onclick=()=>selectCategory(cat);wrap.appendChild(row);});}
+function selectCategory(cat){activeCategory=cat;currentIndex=0;document.getElementById('chip-all').className='chip-all'+(cat==='all'?' active':'');buildCatRows();updateFilterLabel();update();document.getElementById('filter-chips-wrap').classList.remove('open');document.getElementById('filter-toggle-icon').classList.remove('open');}
+function updateFilterLabel(){document.getElementById('filter-current-label').textContent=activeCategory==='all'?'すべて':activeCategory;}
+function toggleFilterPanel(){document.getElementById('filter-chips-wrap').classList.toggle('open');document.getElementById('filter-toggle-icon').classList.toggle('open');}
+function loadVoices(){voices=window.speechSynthesis.getVoices();const sel=document.getElementById('voice-select');sel.innerHTML='';voices.forEach((v,i)=>{const o=document.createElement('option');o.value=i;o.textContent=`${v.name} (${v.lang})`;sel.appendChild(o);});applyVoicePref();}
+window.speechSynthesis.onvoiceschanged=loadVoices;
+function applyVoicePref(){voicePref=document.getElementById('voice-pref').value;const sel=document.getElementById('voice-select');const kw=voicePref==='US'?'en-US':'en-GB';const fb=voicePref==='US'?'en-GB':'en-US';let idx=voices.findIndex(v=>v.lang===kw);if(idx<0)idx=voices.findIndex(v=>v.lang===fb);if(idx>=0)sel.value=idx;}
+function getVoice(){return voices[parseInt(document.getElementById('voice-select').value)]||null;}
+function updateRate(){speechRate=parseFloat(document.getElementById('rate-slider').value);document.getElementById('rate-val').textContent=speechRate.toFixed(1)+'×';}
+function startKeepAlive(){stopKeepAlive();keepAliveTimer=setInterval(()=>{if(window.speechSynthesis.speaking)window.speechSynthesis.pause(),window.speechSynthesis.resume();},10000);}
+function stopKeepAlive(){if(keepAliveTimer){clearInterval(keepAliveTimer);keepAliveTimer=null;}}
+function speakOne(text,onEnd){window.speechSynthesis.cancel();isSpeaking=false;clearTimeout(speakOne._t);speakOne._t=setTimeout(()=>{const utt=new SpeechSynthesisUtterance(text);utt.voice=getVoice();utt.rate=speechRate;utt.lang='en-US';utt.onend=()=>{isSpeaking=false;stopKeepAlive();if(onEnd)onEnd();};utt.onerror=()=>{isSpeaking=false;stopKeepAlive();if(onEnd)onEnd();};isSpeaking=true;startKeepAlive();window.speechSynthesis.speak(utt);},80);}
+speakOne._t=null;
+function speakP(){return new Promise(r=>{const a=getActive();if(!a.length){r();return;}speakOne(a[currentIndex].en,r);});}
+function speakCurrent(){const a=getActive();if(!a.length)return;speakOne(a[currentIndex].en);}
+function speakRepeat(text){if(!isRepeating||isAutoPlaying)return;speakOne(text,()=>{if(isRepeating&&!isAutoPlaying){clearTimeout(speakRepeat._t);speakRepeat._t=setTimeout(()=>speakRepeat(text),1200);}}); }
+speakRepeat._t=null;
+function toggleRepeat(){isRepeating=!isRepeating;const btn=document.getElementById('repeat-btn');btn.textContent=isRepeating?'🔁 繰り返し: ON':'🔁 繰り返し';btn.className=isRepeating?'btn btn-on':'btn btn-secondary';if(isRepeating){const a=getActive();if(a.length)speakRepeat(a[currentIndex].en);}else{window.speechSynthesis.cancel();isSpeaking=false;stopKeepAlive();clearTimeout(speakRepeat._t);}}
+function update(){const active=getActive();const noEl=document.getElementById('no-active');if(!active.length){noEl.classList.add('show');document.getElementById('main-card').style.display='none';document.getElementById('tap-hint').style.display='none';updateMasterBadge();buildCatRows();return;}noEl.classList.remove('show');document.getElementById('main-card').style.display='';document.getElementById('tap-hint').style.display='';if(currentIndex>=active.length)currentIndex=0;const item=active[currentIndex];const realIdx=phrases.indexOf(item);document.getElementById('card-num').textContent=String(realIdx+OFFSET).padStart(3,'0');document.getElementById('card-cat').textContent=item.cat;document.getElementById('cur-num').textContent=currentIndex+1;document.getElementById('tot-num').textContent=active.length;const pct=active.length>1?((currentIndex/(active.length-1))*100).toFixed(0):100;document.getElementById('progress-bar').style.width=pct+'%';if(isEnToJa){document.getElementById('main-text').innerHTML=item.en;document.getElementById('answer-ja').textContent=item.ja;}else{document.getElementById('main-text').innerHTML=item.ja;document.getElementById('answer-ja').textContent=item.en;}const tipEl=document.getElementById('answer-tip');if(item.tip){tipEl.textContent=item.tip;tipEl.style.display='';}else{tipEl.style.display='none';}document.getElementById('mode-badge').textContent=isEnToJa?'📖 英 → 日':'📖 日 → 英';document.getElementById('answer-wrap').classList.remove('show');document.getElementById('main-card').classList.remove('revealed');const cb=document.getElementById('master-cb');cb.checked=mastered.has(realIdx);if(mastered.has(realIdx))document.getElementById('mastered-badge').classList.add('show');else document.getElementById('mastered-badge').classList.remove('show');updateMasterBadge();buildCatRows();}
+function updateMasterBadge(){const cnt=mastered.size;document.getElementById('master-badge-top').textContent=`マスター: ${cnt} / ${phrases.length}`;const sumEl=document.getElementById('master-summary');if(cnt>0){sumEl.classList.add('show');sumEl.textContent=`✅ マスター済み: ${cnt}件 — タップしてリスト表示`;renderMasterList();}else sumEl.classList.remove('show');}
+function renderMasterList(){const listEl=document.getElementById('master-list');listEl.innerHTML='';[...mastered].sort((a,b)=>a-b).forEach(idx=>{const item=phrases[idx];const d=document.createElement('div');d.style.cssText='padding:8px 0;border-bottom:1px solid #f8fafc;font-size:12px;';d.innerHTML=`<span style="font-family:monospace;font-size:10px;color:#64748b;">${String(idx+OFFSET).padStart(3,'0')}</span> ${item.en.substring(0,55)}...`;listEl.appendChild(d);});}
+function toggleMasterList(){const w=document.getElementById('master-list-wrap');w.style.display=w.style.display==='none'?'':'none';}
+function clearAllMaster(){if(!confirm('マスター済みをすべて解除しますか？'))return;mastered.clear();currentIndex=0;update();document.getElementById('master-list-wrap').style.display='none';}
+function handleTap(){if(isAutoPlaying)return;const wrap=document.getElementById('answer-wrap');if(!wrap.classList.contains('show')){wrap.classList.add('show');document.getElementById('main-card').classList.add('revealed');}}
+function toggleMaster(e){const active=getActive();if(!active.length)return;const item=active[currentIndex];const realIdx=phrases.indexOf(item);if(e.target.checked){mastered.add(realIdx);document.getElementById('mastered-badge').classList.add('show');setTimeout(()=>{next();},400);}else{mastered.delete(realIdx);document.getElementById('mastered-badge').classList.remove('show');}updateMasterBadge();buildCatRows();}
+function next(){const a=getActive();if(!a.length)return;if(isRandom)currentIndex=Math.floor(Math.random()*a.length);else currentIndex=(currentIndex+1)%a.length;update();if(isRepeating)setTimeout(()=>{const b=getActive();if(b.length)speakRepeat(b[currentIndex].en);},300);}
+function prev(){const a=getActive();if(!a.length)return;currentIndex=(currentIndex-1+a.length)%a.length;update();if(isRepeating)setTimeout(()=>{const b=getActive();if(b.length)speakRepeat(b[currentIndex].en);},300);}
+function toggleRandom(){isRandom=!isRandom;const btn=document.getElementById('random-btn');btn.textContent=isRandom?'🔀 ランダム: ON':'🔀 ランダム: OFF';btn.className=isRandom?'btn btn-on':'btn btn-secondary';document.getElementById('order-badge').textContent=isRandom?'ランダム':'順番通り';}
+function switchMode(){if(isAutoPlaying)return;isEnToJa=!isEnToJa;update();}
+function delayP(ms){return new Promise(r=>{if(autoStopped){r();return;}autoTimeout=setTimeout(r,ms);});}
+function setAutoPanel(s,i,c){document.getElementById('auto-step-title').textContent=s;document.getElementById('auto-instruction').textContent=i;document.getElementById('auto-count').textContent=c;}
+function enterAutoUI(){isAutoPlaying=true;autoStopped=false;document.getElementById('normal-controls').style.display='none';document.getElementById('auto-controls').style.display='';document.getElementById('auto-panel').classList.add('show');document.getElementById('tap-hint').style.display='none';document.getElementById('master-wrap').classList.add('disabled');document.getElementById('main-card').classList.remove('tappable');document.getElementById('main-card').classList.add('no-tap');}
+function exitAutoUI(){autoStopped=true;isAutoPlaying=false;window.speechSynthesis.cancel();isSpeaking=false;stopKeepAlive();clearTimeout(speakOne._t);if(autoTimeout){clearTimeout(autoTimeout);autoTimeout=null;}document.getElementById('normal-controls').style.display='';document.getElementById('auto-controls').style.display='none';document.getElementById('auto-panel').classList.remove('show');document.getElementById('tap-hint').style.display='';document.getElementById('master-wrap').classList.remove('disabled');document.getElementById('main-card').classList.add('tappable');document.getElementById('main-card').classList.remove('no-tap');}
+function stopAutoPlay(){exitAutoUI();update();}
+function showHidden(){document.getElementById('main-text').textContent='？？？';document.getElementById('answer-wrap').classList.remove('show');document.getElementById('main-card').classList.remove('revealed');}
+function showAll(){const a=getActive();if(!a.length)return;document.getElementById('main-text').innerHTML=a[currentIndex].en;document.getElementById('answer-wrap').classList.add('show');document.getElementById('main-card').classList.add('revealed');}
+async function runShadowing(){const active=getActive();if(!active.length){stopAutoPlay();return;}const si=currentIndex;for(let i=0;i<active.length;i++){if(autoStopped)break;currentIndex=(si+i)%active.length;update();const n=i+1,tot=active.length;showHidden();setAutoPanel(`カード ${n}/${tot} — STEP 1`,'👂 発話せずに2回聴いてください。','1/2回目…');await speakP();if(autoStopped)break;await delayP(350);if(autoStopped)break;setAutoPanel(`カード ${n}/${tot} — STEP 1`,'👂 発話せずに2回聴いてください。','2/2回目…');await speakP();if(autoStopped)break;await delayP(450);if(autoStopped)break;showHidden();setAutoPanel(`カード ${n}/${tot} — STEP 2`,'🗣️ 音声に合わせてシャドウイングしてください。','1/2回目…');await speakP();if(autoStopped)break;await delayP(350);if(autoStopped)break;setAutoPanel(`カード ${n}/${tot} — STEP 2`,'🗣️ 音声に合わせてシャドウイングしてください。','2/2回目…');await speakP();if(autoStopped)break;await delayP(450);if(autoStopped)break;showAll();setAutoPanel(`カード ${n}/${tot} — STEP 3`,'📖 英文・日本語訳を見ながら2回シャドウイング。','1/2回目…');await speakP();if(autoStopped)break;await delayP(350);if(autoStopped)break;setAutoPanel(`カード ${n}/${tot} — STEP 3`,'📖 英文・日本語訳を見ながら2回シャドウイング。','2/2回目…');await speakP();if(autoStopped)break;await delayP(450);if(autoStopped)break;showHidden();setAutoPanel(`カード ${n}/${tot} — STEP 4`,'🙈 何も見ずに2回シャドウイングしてください。','1/2回目…');await speakP();if(autoStopped)break;await delayP(350);if(autoStopped)break;setAutoPanel(`カード ${n}/${tot} — STEP 4`,'🙈 何も見ずに2回シャドウイングしてください。','2/2回目…');await speakP();if(autoStopped)break;await delayP(700);}if(!autoStopped){setAutoPanel('完了！','🎉 シャドウイング完了しました！','');await delayP(2000);stopAutoPlay();}}
+function startShadowing(){if(!getActive().length){alert('出題できるカードがありません。');return;}enterAutoUI();runShadowing();}
+async function runContinuous(){let lc=0;while(!autoStopped){const active=getActive();if(!active.length){stopAutoPlay();return;}lc++;const si=currentIndex;for(let i=0;i<active.length;i++){if(autoStopped)break;currentIndex=(si+i)%active.length;update();document.getElementById('answer-wrap').classList.add('show');document.getElementById('main-card').classList.add('revealed');setAutoPanel(`連続再生 ${i+1}/${active.length}（${lc}周目）`,'▶ 英語音声を再生中 — ⏹ 停止ボタンで終了','');await speakP();if(autoStopped)break;await delayP(500);}if(!autoStopped)currentIndex=0;}}
+function startContinuous(){if(!getActive().length){alert('出題できるカードがありません。');return;}enterAutoUI();runContinuous();}
+buildCatRows();updateFilterLabel();update();
+</script>
+</body>
+</html>

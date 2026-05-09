@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DUO 3.0 — No. 301〜350</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#fdf2f8;--surface:#ffffff;--primary:#9d174d;--primary-light:#fdf2f8;--accent:#0891b2;--green:#16a34a;--green-light:#dcfce7;--amber:#d97706;--amber-light:#fef3c7;--red:#e11d48;--text:#1e293b;--muted:#64748b;--border:#f9a8d4;--shadow:0 4px 24px rgba(157,23,77,0.10);--radius:18px;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);min-height:100vh;padding:16px 12px 48px;color:var(--text);}
+.container{max-width:560px;margin:auto;}
+.header{text-align:center;margin-bottom:14px;}
+.header h2{font-size:18px;font-weight:900;color:var(--primary);}
+.header p{font-size:12px;color:var(--muted);margin-top:2px;}
+.badges{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-bottom:10px;}
+.badge{display:inline-flex;align-items:center;gap:4px;padding:4px 12px;border-radius:99px;font-size:11px;font-weight:700;background:var(--primary-light);color:var(--primary);border:1px solid var(--border);}
+.badge.green{background:var(--green-light);color:var(--green);border-color:#86efac;}
+.progress-wrap{background:#fbcfe8;border-radius:99px;height:6px;margin-bottom:4px;overflow:hidden;}
+.progress-bar{height:100%;background:var(--primary);border-radius:99px;transition:width 0.4s ease;}
+.progress-label{text-align:center;font-size:12px;color:var(--muted);margin-bottom:10px;}
+.tap-hint{font-size:11px;color:var(--muted);margin-bottom:6px;text-align:center;}
+.card{background:var(--surface);border-radius:var(--radius);padding:28px 20px 20px;box-shadow:var(--shadow);margin-bottom:12px;position:relative;border:2px solid var(--border);min-height:160px;cursor:pointer;user-select:none;transition:transform .1s,border-color .2s;}
+.card.tappable:active{transform:scale(0.985);}
+.card.revealed{border-color:var(--primary);}
+.card.no-tap{cursor:default;}
+.card-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+.card-num{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);}
+.cat-label{font-size:11px;font-weight:700;letter-spacing:.06em;color:var(--primary);text-align:center;flex:1;}
+.master-wrap{display:flex;align-items:center;gap:4px;font-size:11px;color:var(--muted);}
+.master-wrap input[type=checkbox]{width:17px;height:17px;accent-color:var(--green);cursor:pointer;}
+.master-wrap.disabled{opacity:.3;pointer-events:none;}
+.main-text{font-size:clamp(14px,3.8vw,18px);font-weight:700;line-height:1.65;text-align:center;margin-bottom:14px;}
+.answer-wrap{opacity:0;transform:translateY(5px);transition:opacity .25s,transform .25s;pointer-events:none;}
+.answer-wrap.show{opacity:1;transform:translateY(0);pointer-events:auto;}
+.answer-ja{font-size:clamp(13px,3.5vw,15px);font-weight:700;color:var(--accent);text-align:center;line-height:1.6;background:#f0f9ff;border-radius:10px;padding:10px 14px;margin-bottom:8px;}
+.answer-tip{font-size:12px;font-weight:600;color:var(--green);text-align:left;padding:0 4px;line-height:1.6;}
+.answer-tip::before{content:'💡 ';}
+.master-badge{display:none;text-align:center;margin-top:8px;background:var(--green-light);color:var(--green);padding:2px 10px;border-radius:99px;font-size:10px;font-weight:700;}
+.master-badge.show{display:block;}
+.no-active{background:var(--amber-light);border-radius:12px;padding:16px;text-align:center;font-size:14px;color:var(--amber);font-weight:700;display:none;margin-bottom:12px;}
+.no-active.show{display:block;}
+.auto-panel{background:var(--surface);border-radius:var(--radius);padding:14px 18px;box-shadow:var(--shadow);margin-bottom:12px;display:none;border-left:4px solid var(--primary);}
+.auto-panel.show{display:block;}
+.auto-step-title{font-size:12px;font-weight:900;color:var(--primary);margin-bottom:4px;}
+.auto-instruction{font-size:14px;font-weight:700;color:var(--text);line-height:1.5;}
+.auto-count{font-family:'DM Mono',monospace;font-size:12px;color:var(--muted);margin-top:4px;}
+.filter-panel{background:var(--surface);border-radius:var(--radius);padding:14px 16px;box-shadow:var(--shadow);margin-bottom:12px;}
+.filter-header{display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none;}
+.filter-header-left{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;}
+.filter-current{font-size:12px;font-weight:700;color:var(--primary);background:var(--primary-light);padding:3px 10px;border-radius:99px;border:1px solid var(--border);max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.filter-toggle-icon{font-size:12px;color:var(--muted);transition:transform .2s;margin-left:6px;}
+.filter-toggle-icon.open{transform:rotate(180deg);}
+.filter-chips-wrap{display:none;margin-top:10px;}
+.filter-chips-wrap.open{display:block;}
+.chip-all{display:block;width:100%;padding:8px 14px;margin-bottom:8px;border-radius:10px;font-size:12px;font-weight:700;cursor:pointer;border:2px solid var(--border);background:#fff;color:var(--muted);text-align:left;font-family:'Noto Sans JP',sans-serif;transition:all .15s;}
+.chip-all.active{background:var(--primary-light);color:var(--primary);border-color:var(--primary);}
+.cat-row{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:10px;cursor:pointer;border:2px solid transparent;background:#fff;margin-bottom:5px;transition:all .15s;user-select:none;}
+.cat-row.active{background:var(--primary-light);border-color:var(--primary);}
+.cat-row-name{flex:1;font-size:13px;font-weight:700;color:var(--text);}
+.cat-row.active .cat-row-name{color:var(--primary);}
+.cat-row-count{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);background:#f1f5f9;padding:2px 8px;border-radius:99px;font-weight:600;}
+.cat-row.active .cat-row-count{background:#fff;color:var(--primary);}
+.cat-dot{width:8px;height:8px;border-radius:50%;background:#e2e8f0;flex-shrink:0;}
+.cat-dot.done{background:var(--green);}
+.panel{background:var(--surface);border-radius:var(--radius);padding:14px 16px;box-shadow:var(--shadow);margin-bottom:12px;}
+.panel-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.panel-row+.panel-row{margin-top:8px;}
+.panel label{font-size:12px;color:var(--muted);font-weight:700;white-space:nowrap;}
+.panel select{flex:1;font-size:12px;border:1px solid var(--border);border-radius:8px;padding:4px 8px;background:#fff;color:var(--text);font-family:'Noto Sans JP',sans-serif;}
+.panel input[type=range]{flex:1;min-width:80px;accent-color:var(--primary);}
+.speed-val{font-family:'DM Mono',monospace;font-size:13px;font-weight:600;color:var(--primary);min-width:32px;}
+.btn-row{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:10px;}
+.btn{border:none;border-radius:99px;padding:10px 18px;font-size:13px;font-weight:700;font-family:'Noto Sans JP',sans-serif;cursor:pointer;transition:opacity .15s,transform .1s;display:inline-flex;align-items:center;gap:5px;}
+.btn:active{transform:scale(0.94);opacity:.85;}
+.btn-primary{background:var(--primary);color:#fff;}
+.btn-secondary{background:#e2e8f0;color:var(--text);}
+.btn-red{background:var(--red);color:#fff;}
+.btn-amber{background:var(--amber);color:#fff;}
+.btn-blue{background:#2563eb;color:#fff;}
+.btn-on{background:var(--green);color:#fff;}
+.master-summary{background:var(--green-light);border-radius:12px;padding:10px 14px;font-size:12px;color:var(--green);font-weight:700;text-align:center;margin-bottom:10px;display:none;cursor:pointer;user-select:none;}
+.master-summary.show{display:block;}
+.help-btn{display:inline-flex;align-items:center;gap:5px;padding:5px 14px;border-radius:99px;border:1px solid var(--border);background:var(--primary-light);color:var(--primary);font-size:12px;font-weight:700;cursor:pointer;margin-top:8px;font-family:'Noto Sans JP',sans-serif;}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="header">
+  <h2>💗 DUO 3.0 — No. 301〜350</h2>
+  <p>生活・日常・構文B・否定・不定詞</p>
+  <button class="help-btn" onclick="alert('👆カードタップで答え表示\n🔊音声再生\n🗣️シャドウイング4ステップ\n▶連続再生\n🔄英⇄日モード切替\nマスターチェックで次へ')">❓ 使い方</button>
+</div>
+<div class="badges">
+  <div class="badge" id="mode-badge">📖 英 → 日</div>
+  <div class="badge" id="order-badge">順番通り</div>
+  <div class="badge green" id="master-badge-top">マスター: 0 / 50</div>
+</div>
+<div class="progress-wrap"><div class="progress-bar" id="progress-bar" style="width:2%"></div></div>
+<div class="progress-label">カード <span id="cur-num">1</span> / <span id="tot-num">50</span></div>
+<div class="no-active" id="no-active">✅ このカテゴリをすべてマスターしました！</div>
+<div class="auto-panel" id="auto-panel">
+  <div class="auto-step-title" id="auto-step-title">STEP 1</div>
+  <div class="auto-instruction" id="auto-instruction">音声を聴いてください。</div>
+  <div class="auto-count" id="auto-count"></div>
+</div>
+<div class="tap-hint" id="tap-hint">👆 カードをタップして日本語訳・解説を表示</div>
+<div class="card tappable" id="main-card" onclick="handleTap()">
+  <div class="card-top">
+    <div class="card-num" id="card-num">301</div>
+    <div class="cat-label" id="card-cat"></div>
+    <div class="master-wrap" id="master-wrap">
+      <span>マスター</span>
+      <input type="checkbox" id="master-cb" onchange="toggleMaster(event)" onclick="event.stopPropagation()">
+    </div>
+  </div>
+  <div class="main-text" id="main-text">Loading...</div>
+  <div class="answer-wrap" id="answer-wrap">
+    <div class="answer-ja" id="answer-ja"></div>
+    <div class="answer-tip" id="answer-tip" style="display:none"></div>
+  </div>
+  <div class="master-badge" id="mastered-badge">✔ マスター済</div>
+</div>
+<div class="master-summary" id="master-summary" onclick="toggleMasterList()"></div>
+<div id="master-list-wrap" style="display:none;margin-bottom:12px;">
+  <div style="background:#fff;border-radius:16px;padding:14px 16px;box-shadow:var(--shadow);">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+      <span style="font-size:13px;font-weight:900;color:var(--green);">✅ マスター済みリスト</span>
+      <button class="btn btn-secondary" style="padding:4px 12px;font-size:11px;" onclick="clearAllMaster()">全解除</button>
+    </div>
+    <div id="master-list"></div>
+  </div>
+</div>
+<div class="filter-panel">
+  <div class="filter-header" onclick="toggleFilterPanel()">
+    <div class="filter-header-left">📂 カテゴリを選ぶ</div>
+    <div style="display:flex;align-items:center;gap:4px;">
+      <div class="filter-current" id="filter-current-label">すべて</div>
+      <span class="filter-toggle-icon" id="filter-toggle-icon">▼</span>
+    </div>
+  </div>
+  <div class="filter-chips-wrap" id="filter-chips-wrap">
+    <button class="chip-all active" id="chip-all" onclick="selectCategory('all')">🎯 すべて表示</button>
+    <div id="cat-rows"></div>
+  </div>
+</div>
+<div class="panel">
+  <div class="panel-row" style="margin-bottom:8px;">
+    <label>🔊 音声優先</label>
+    <select id="voice-pref" onchange="applyVoicePref()"><option value="US">🇺🇸 US優先</option><option value="GB">🇬🇧 GB優先</option></select>
+    <select id="voice-select" style="flex:2;"></select>
+  </div>
+  <div class="panel-row">
+    <label>速度</label>
+    <input type="range" id="rate-slider" min="0.5" max="1.5" step="0.1" value="1.0" oninput="updateRate()">
+    <span class="speed-val" id="rate-val">1.0×</span>
+  </div>
+</div>
+<div id="normal-controls">
+  <div class="btn-row">
+    <button class="btn btn-secondary" onclick="prev()">← 戻る</button>
+    <button class="btn btn-primary" onclick="speakCurrent()">🔊 音声</button>
+    <button class="btn btn-secondary" onclick="next()">次へ →</button>
+    <button class="btn btn-secondary" style="font-size:11px;padding:8px 6px;" onclick="switchMode()">🔄 英⇄日</button>
+  </div>
+  <div class="btn-row" style="gap:4px;">
+    <button class="btn btn-secondary" style="font-size:11px;padding:7px 5px;" id="random-btn" onclick="toggleRandom()">🔀 ランダム</button>
+    <button class="btn btn-secondary" style="font-size:11px;padding:7px 5px;" id="repeat-btn" onclick="toggleRepeat()">🔁 繰り返し</button>
+    <button class="btn btn-blue" style="font-size:11px;padding:7px 5px;" onclick="startContinuous()">▶ 連続再生</button>
+    <button class="btn btn-amber" style="font-size:11px;padding:7px 5px;" onclick="startShadowing()">🗣️ シャドウ</button>
+  </div>
+</div>
+<div id="auto-controls" style="display:none;">
+  <div class="btn-row"><button class="btn btn-red" onclick="stopAutoPlay()">⏹ 停止</button></div>
+</div>
+</div>
+<script>
+const OFFSET=301;
+const CATS={'🏠 生活・日常':'#9d174d','👁️ 知覚動詞 see の用法':'#0891b2','❌ 否定・強調表現':'#7c3aed','📐 重要構文B':'#d97706'};
+const phrases=[
+  {cat:'🏠 生活・日常',en:'"Can you see to it that the kids get to school?" "Sure, I\'ll see to it."',ja:'「子供たちを学校に送り届けてくれる？」「いいよ、やっておくよ。」',tip:'see to it that＝〜するように取り計らう・確実に〜する（重要表現。see to+名詞は「〜の面倒を見る」）。'},
+  {cat:'🏠 生活・日常',en:'It was dark when I arrived, but I could see several people in the distance.',ja:'私が着いたとき辺りは暗かったが、遠くに何人かの人が見えた。',tip:'in the distance＝遠くに・遠方に。could see＝（自然に）見えた（see は知覚動詞で能動的でなく受動的に「見える」）。'},
+  {cat:'🏠 生活・日常',en:'The museum was closed, so we had to see the exhibits from the outside.',ja:'美術館が閉まっていたので、私たちは外から展示物を見なければならなかった。',tip:'museum＝美術館・博物館。exhibit＝展示物・展示品（exhibition は展覧会）。from the outside＝外から。'},
+  {cat:'👁️ 知覚動詞 see の用法',en:'I saw a cat cross the street.',ja:'猫が通りを横切るのを見た。',tip:'see + O + 原形不定詞＝Oが〜するのを見た（一部始終を見た）。cf. see + O + -ing＝〜しているのを見た（途中を見た）。'},
+  {cat:'👁️ 知覚動詞 see の用法',en:'I saw a girl being teased by her classmates.',ja:'女の子がクラスメートにいじめられているのを見た。',tip:'see + O + being done＝Oが〜されているのを見た（受け身の進行）。tease＝〜をからかう・いじめる。'},
+  {cat:'👁️ 知覚動詞 see の用法',en:'I saw at a glance that she was very disappointed.',ja:'彼女がひどく落胆しているのが一目でわかった。',tip:'at a glance＝一目で・ちらっと見て（= at first sight）。disappointed＝落胆した・がっかりした（disappointing は「がっかりさせる」）。'},
+  {cat:'👁️ 知覚動詞 see の用法',en:'I could see that he was serious.',ja:'彼が本気だということが私にはわかった。',tip:'I could see that ...＝〜ということがわかった（seeは「理解する・わかる」の意味でも使われる重要用法）。serious＝本気の・真剣な。'},
+  {cat:'👁️ 知覚動詞 see の用法',en:"I'll go and see if the mail has arrived.",ja:'郵便が届いているかどうか見てくるよ。',tip:'see if ...＝〜かどうか確認する（check ifと同義）。go and see＝行って確認する（go and + 動詞の原形）。'},
+  {cat:'👁️ 知覚動詞 see の用法',en:'He is widely seen as a successor to the chairperson.',ja:'彼は会長の後継者だと広く見なされている。',tip:'be seen as＝〜と見なされている（= be regarded as）。widely＝広く・一般的に。successor＝後継者・後任（succeed＝継承する）。'},
+  {cat:'👁️ 知覚動詞 see の用法',en:'See to it that you are not late for the meeting.',ja:'会議に遅れないように気をつけなさい。',tip:'see to it that＝〜するように気をつける・確実に〜する。be late for＝〜に遅刻する。命令文で使う重要表現。'},
+  {cat:'❌ 否定・強調表現',en:'He is anything but a genius.',ja:'彼は天才どころか、決してそうではない。',tip:'anything but＝決して〜でない（= far from。nothing but は「〜だけ」と意味が逆になるので注意）。'},
+  {cat:'❌ 否定・強調表現',en:'I am not in the least surprised at the news.',ja:'私はそのニュースを聞いても少しも驚かない。',tip:'not in the least＝少しも〜ない（= not at all。in the least は疑問・否定文で使う）。be surprised at＝〜に驚く。'},
+  {cat:'❌ 否定・強調表現',en:'The results were by no means satisfactory.',ja:'その結果は決して満足のいくものではなかった。',tip:'by no means＝決して〜ない（= not ... at all。格式的な否定強調表現）。satisfactory＝満足のいく・十分な。'},
+  {cat:'❌ 否定・強調表現',en:'The problem is by no means easy.',ja:'その問題は決して容易ではない。',tip:'by no means＝決して〜ない（繰り返し練習で確実に定着させたい重要表現）。easy の反対は difficult/hard。'},
+  {cat:'❌ 否定・強調表現',en:'His report is far from perfect.',ja:'彼のレポートは完璧とはほど遠い。',tip:'far from＝〜とはほど遠い・全く〜でない（= anything but）。perfect＝完璧な。far from perfect＝完璧にはほど遠い。'},
+  {cat:'❌ 否定・強調表現',en:'I failed to grasp the main point of his lecture.',ja:'彼の講義の要点をつかみ損ねた。',tip:'fail to do＝〜できない・〜し損ねる（= be unable to do）。grasp＝〜をつかむ・理解する。main point＝要点・主旨。'},
+  {cat:'❌ 否定・強調表現',en:'He never fails to keep his word.',ja:'彼は必ず約束を守る。',tip:'never fail to do＝必ず〜する（二重否定で強い肯定：「〜しないことは決してない」）。keep one\'s word＝約束を守る。'},
+  {cat:'❌ 否定・強調表現',en:'He is the last person to tell a lie.',ja:'彼は決して嘘をつくような人ではない。',tip:'the last person to do＝最も〜しそうにない人（= the least likely person to do）。tell a lie＝嘘をつく（= lie）。'},
+  {cat:'❌ 否定・強調表現',en:'It is next to impossible to finish the work in a day.',ja:'一日でその仕事を終えるのは、ほとんど不可能だ。',tip:'next to impossible＝ほとんど不可能な（next to + 形容詞で「ほとんど〜」）。next to nothing＝ほとんど何もない。'},
+  {cat:'❌ 否定・強調表現',en:'He is no more a genius than I am.',ja:'彼が天才でないのは、私が天才でないのと同じだ。',tip:'A is no more B than C is D＝CがDでないのと同様にAもBでない（クジラ構文）。比較で否定を強調する重要構文。'},
+  {cat:'❌ 否定・強調表現',en:'I have no more than 1,000 yen.',ja:'私はたった1,000円しか持っていない。',tip:'no more than＝〜しか…ない・たった〜（= only。少なさを強調）。cf. no less than＝〜も（多さを強調）。'},
+  {cat:'❌ 否定・強調表現',en:'I have not more than 1,000 yen.',ja:'私はせいぜい1,000円しか持っていない。',tip:'not more than＝せいぜい〜・〜以下（= at most）。no more than との違いに注意（感情は中立的）。'},
+  {cat:'❌ 否定・強調表現',en:'I have no less than 1,000 yen.',ja:'私は1,000円も持っている。',tip:'no less than＝〜も（多さ・多いことへの驚き強調）。cf. no more than＝たった〜しか（少なさ強調）。'},
+  {cat:'❌ 否定・強調表現',en:'I have not less than 1,000 yen.',ja:'私は少なくとも1,000円は持っている。',tip:'not less than＝少なくとも〜（= at least）。no less than との違い：感情的強調がなく「少なくとも」の意味。'},
+  {cat:'📐 重要構文B',en:'I cannot help but laugh at his joke.',ja:'彼のジョークには笑わずにはいられない。',tip:'cannot help but do＝〜せずにはいられない（= cannot help doing）。help butのbutは「〜せずに」の意味。'},
+  {cat:'📐 重要構文B',en:'I cannot help feeling sorry for her.',ja:'彼女のことを気の毒に思わずにはいられない。',tip:'cannot help doing＝〜せずにはいられない（= cannot help but do）。feel sorry for＝〜を気の毒に思う・同情する。'},
+  {cat:'📐 重要構文B',en:'It is no use crying over spilt milk.',ja:'こぼれたミルクを悔やんでも無駄だ（覆水盆に返らず）。',tip:'It is no use doing＝〜しても無駄だ（重要構文）。cry over spilt milk＝こぼれたミルクを嘆く（ことわざ）。'},
+  {cat:'📐 重要構文B',en:'There is no telling what will happen next.',ja:'次に何が起こるか知る由もない。',tip:'There is no doing＝〜することはできない（= It is impossible to do）。tell＝〜を知る・判断する（この用法重要）。'},
+  {cat:'📐 重要構文B',en:'There is no accounting for taste.',ja:'好みを説明することはできない（十人十色）。',tip:'There is no accounting for taste.＝好みは説明できない（= De gustibus non est disputandum。英語のことわざ）。account for＝説明する。'},
+  {cat:'📐 重要構文B',en:'It goes without saying that health is above wealth.',ja:'健康が富に勝るのは言うまでもないことだ。',tip:'it goes without saying that＝〜は言うまでもない（= needless to say）。above＝〜より上・〜より重要（比較の意味）。'},
+  {cat:'📐 重要構文B',en:'I feel like going for a walk.',ja:'散歩に行きたい気分だ。',tip:'feel like doing＝〜したい気分だ・〜したい（重要表現）。go for a walk＝散歩に行く。I don\'t feel like it.＝気が乗らない。'},
+  {cat:'📐 重要構文B',en:'I made a point of keeping a diary.',ja:'私は日記をつけることにしている。',tip:'make a point of doing＝〜することにしている・〜を習慣とする（= make it a rule to do）。keep a diary＝日記をつける。'},
+  {cat:'📐 重要構文B',en:'I am on the point of leaving home.',ja:'今まさに家を出ようとしているところだ。',tip:'be on the point of doing＝まさに〜しようとしているところだ（= be about to do）。on the pointは「〜する直前」。'},
+  {cat:'📐 重要構文B',en:'I am looking forward to seeing you.',ja:'あなたにお会いできるのを楽しみにしています。',tip:'look forward to doing＝〜することを楽しみにしている（toの後は名詞・動名詞）。seeing youのseeingが動名詞。'},
+  {cat:'📐 重要構文B',en:'I am used to getting up early.',ja:'私は早起きに慣れている。',tip:'be used to doing＝〜することに慣れている（toは前置詞→動名詞）。cf. used to do＝以前は〜したものだ（助動詞）。'},
+  {cat:'📐 重要構文B',en:'I had difficulty in solving the problem.',ja:'その問題を解くのに苦労した。',tip:'have difficulty (in) doing＝〜するのに苦労する・困難がある（重要構文）。have trouble doing も同義。'},
+  {cat:'📐 重要構文B',en:'He did nothing but cry all day.',ja:'彼は一日中泣いてばかりいた。',tip:'do nothing but do＝〜するだけだ・〜ばかりしている（butの後は原形）。all day＝一日中（= all day long）。'},
+  {cat:'📐 重要構文B',en:'She is, as it were, a walking dictionary.',ja:'彼女はいわば歩く辞書だ。',tip:'as it were＝いわば・言うなれば（= so to speak）。walking dictionary＝歩く辞書（博識な人のたとえ）。'},
+  {cat:'📐 重要構文B',en:'These days, many people are forced to live on the street.',ja:'最近では、多くの人々が路上生活を余儀なくされている。',tip:'be forced to do＝〜することを余儀なくされる（= be compelled to do）。live on the street＝路上生活をする（homeless）。'},
+  {cat:'📐 重要構文B',en:'I was so tired that I could not so much as take off my shoes.',ja:'私はとても疲れていたので、靴を脱ぐことさえできなかった。',tip:'not so much as do＝〜することさえしない（= not even do）。so ... that ...＝とても〜なので…。take off＝〜を脱ぐ・外す。'},
+  {cat:'📐 重要構文B',en:"I'll be glad to help you, provided that you don't tell anyone.",ja:'誰にも言わないという条件なら、喜んであなたを助けましょう。',tip:'provided (that)＝〜という条件で・〜さえすれば（= if only）。be glad to do＝喜んで〜する。'},
+  {cat:'📐 重要構文B',en:'He has no friend to talk with.',ja:'彼には話し相手になる友達がいない。',tip:'no + 名詞 + to do＝〜するための…がない。talk with＝〜と話す（前置詞の位置に注意：no friend with whom to talk も可）。'},
+  {cat:'📐 重要構文B',en:'There is no reason why I should apologize to you.',ja:'私があなたに謝罪しなければならない理由などない。',tip:'There is no reason why ...＝〜する理由はない（should は「〜すべき理由」のニュアンス）。apologize to＝〜に謝罪する。'},
+  {cat:'📐 重要構文B',en:"This is the very book I've been looking for.",ja:'これこそが、私がずっと探していた本だ。',tip:'the very + 名詞＝まさに〜・〜そのもの（強調のvery。形容詞ではなく強調語として使う）。look for＝〜を探す。'},
+  {cat:'📐 重要構文B',en:"It won't be long before your dream comes true.",ja:'まもなくあなたの夢は叶うでしょう。',tip:'It won\'t be long before ...＝まもなく〜する（before節は現在形）。come true＝実現する・夢が叶う（重要表現）。'},
+  {cat:'📐 重要構文B',en:'It is ten years since my father passed away.',ja:'父が亡くなってから10年になります。',tip:'It is + 時間 + since ...＝〜してから…が経つ（sinceの後は過去形）。pass away＝亡くなる（= die の婉曲表現）。'},
+  {cat:'📐 重要構文B',en:'Time flies like an arrow.',ja:'光陰矢の如し（月日が経つのは早いものだ）。',tip:'Time flies.＝時間が経つのは早い（有名なことわざ）。like an arrow＝矢のように（= quickly）。Tempus fugit はラテン語の原文。'},
+  {cat:'📐 重要構文B',en:'"What do you think of his new novel?" "It\'s anything but interesting."',ja:'「彼の新しい小説をどう思う？」「おもしろいなんてとんでもない。」',tip:'What do you think of ...?＝〜についてどう思う？（= What is your opinion of ...?）。anything but＝決して〜でない。'},
+  {cat:'📐 重要構文B',en:'It is worth while visiting the museum.',ja:'その美術館を訪れる価値はある。',tip:'It is worthwhile doing＝〜する価値がある（= It is worth doing）。worth と worthwhile の違いに注意。'},
+  {cat:'📐 重要構文B',en:'It is no use trying to persuade him.',ja:'彼を説得しようとしても無駄だ。',tip:'It is no use doing＝〜しても無駄だ（重要構文。no good doing も同義）。persuade＝〜を説得する（convince と同義）。'},
+  {cat:'📐 重要構文B',en:'I make it a rule to take a walk every morning.',ja:'私は毎朝散歩することにしている。',tip:'make it a rule to do＝〜することにしている（= make a point of doing）。take a walk＝散歩する（= go for a walk）。'},
+];
+let currentIndex=0,isEnToJa=true,isRandom=false,isRepeating=false;
+let mastered=new Set(),activeCategory='all';
+let isAutoPlaying=false,autoStopped=false,autoTimeout=null;
+let isSpeaking=false,keepAliveTimer=null,speechRate=1.0,voices=[],voicePref='US';
+function getActive(){return phrases.filter((p,i)=>{if(activeCategory!=='all'&&p.cat!==activeCategory)return false;if(mastered.has(i))return false;return true;});}
+function buildCatRows(){const wrap=document.getElementById('cat-rows');wrap.innerHTML='';Object.keys(CATS).forEach(cat=>{const total=phrases.filter(p=>p.cat===cat).length;const mc=phrases.filter((p,i)=>p.cat===cat&&mastered.has(i)).length;const row=document.createElement('div');row.className='cat-row'+(activeCategory===cat?' active':'');row.innerHTML=`<div class="cat-dot${mc===total?' done':''}"></div><div class="cat-row-name">${cat}</div><div class="cat-row-count">${mc}/${total}</div>`;row.onclick=()=>selectCategory(cat);wrap.appendChild(row);});}
+function selectCategory(cat){activeCategory=cat;currentIndex=0;document.getElementById('chip-all').className='chip-all'+(cat==='all'?' active':'');buildCatRows();updateFilterLabel();update();document.getElementById('filter-chips-wrap').classList.remove('open');document.getElementById('filter-toggle-icon').classList.remove('open');}
+function updateFilterLabel(){document.getElementById('filter-current-label').textContent=activeCategory==='all'?'すべて':activeCategory;}
+function toggleFilterPanel(){document.getElementById('filter-chips-wrap').classList.toggle('open');document.getElementById('filter-toggle-icon').classList.toggle('open');}
+function loadVoices(){voices=window.speechSynthesis.getVoices();const sel=document.getElementById('voice-select');sel.innerHTML='';voices.forEach((v,i)=>{const o=document.createElement('option');o.value=i;o.textContent=`${v.name} (${v.lang})`;sel.appendChild(o);});applyVoicePref();}
+window.speechSynthesis.onvoiceschanged=loadVoices;
+function applyVoicePref(){voicePref=document.getElementById('voice-pref').value;const sel=document.getElementById('voice-select');const kw=voicePref==='US'?'en-US':'en-GB';const fb=voicePref==='US'?'en-GB':'en-US';let idx=voices.findIndex(v=>v.lang===kw);if(idx<0)idx=voices.findIndex(v=>v.lang===fb);if(idx>=0)sel.value=idx;}
+function getVoice(){return voices[parseInt(document.getElementById('voice-select').value)]||null;}
+function updateRate(){speechRate=parseFloat(document.getElementById('rate-slider').value);document.getElementById('rate-val').textContent=speechRate.toFixed(1)+'×';}
+function startKeepAlive(){stopKeepAlive();keepAliveTimer=setInterval(()=>{if(window.speechSynthesis.speaking)window.speechSynthesis.pause(),window.speechSynthesis.resume();},10000);}
+function stopKeepAlive(){if(keepAliveTimer){clearInterval(keepAliveTimer);keepAliveTimer=null;}}
+function speakOne(text,onEnd){window.speechSynthesis.cancel();isSpeaking=false;clearTimeout(speakOne._t);speakOne._t=setTimeout(()=>{const utt=new SpeechSynthesisUtterance(text);utt.voice=getVoice();utt.rate=speechRate;utt.lang='en-US';utt.onend=()=>{isSpeaking=false;stopKeepAlive();if(onEnd)onEnd();};utt.onerror=()=>{isSpeaking=false;stopKeepAlive();if(onEnd)onEnd();};isSpeaking=true;startKeepAlive();window.speechSynthesis.speak(utt);},80);}
+speakOne._t=null;
+function speakP(){return new Promise(r=>{const a=getActive();if(!a.length){r();return;}speakOne(a[currentIndex].en,r);});}
+function speakCurrent(){const a=getActive();if(!a.length)return;speakOne(a[currentIndex].en);}
+function speakRepeat(text){if(!isRepeating||isAutoPlaying)return;speakOne(text,()=>{if(isRepeating&&!isAutoPlaying){clearTimeout(speakRepeat._t);speakRepeat._t=setTimeout(()=>speakRepeat(text),1200);}});}
+speakRepeat._t=null;
+function toggleRepeat(){isRepeating=!isRepeating;const btn=document.getElementById('repeat-btn');btn.textContent=isRepeating?'🔁 繰り返し: ON':'🔁 繰り返し';btn.className=isRepeating?'btn btn-on':'btn btn-secondary';if(isRepeating){const a=getActive();if(a.length)speakRepeat(a[currentIndex].en);}else{window.speechSynthesis.cancel();isSpeaking=false;stopKeepAlive();clearTimeout(speakRepeat._t);}}
+function update(){const active=getActive();const noEl=document.getElementById('no-active');if(!active.length){noEl.classList.add('show');document.getElementById('main-card').style.display='none';document.getElementById('tap-hint').style.display='none';updateMasterBadge();buildCatRows();return;}noEl.classList.remove('show');document.getElementById('main-card').style.display='';document.getElementById('tap-hint').style.display='';if(currentIndex>=active.length)currentIndex=0;const item=active[currentIndex];const realIdx=phrases.indexOf(item);document.getElementById('card-num').textContent=String(realIdx+301).padStart(3,'0');document.getElementById('card-cat').textContent=item.cat;document.getElementById('cur-num').textContent=currentIndex+1;document.getElementById('tot-num').textContent=active.length;const pct=active.length>1?((currentIndex/(active.length-1))*100).toFixed(0):100;document.getElementById('progress-bar').style.width=pct+'%';if(isEnToJa){document.getElementById('main-text').innerHTML=item.en;document.getElementById('answer-ja').textContent=item.ja;}else{document.getElementById('main-text').innerHTML=item.ja;document.getElementById('answer-ja').textContent=item.en;}const tipEl=document.getElementById('answer-tip');if(item.tip){tipEl.textContent=item.tip;tipEl.style.display='';}else{tipEl.style.display='none';}document.getElementById('mode-badge').textContent=isEnToJa?'📖 英 → 日':'📖 日 → 英';document.getElementById('answer-wrap').classList.remove('show');document.getElementById('main-card').classList.remove('revealed');const cb=document.getElementById('master-cb');cb.checked=mastered.has(realIdx);if(mastered.has(realIdx))document.getElementById('mastered-badge').classList.add('show');else document.getElementById('mastered-badge').classList.remove('show');updateMasterBadge();buildCatRows();}
+function updateMasterBadge(){const cnt=mastered.size;document.getElementById('master-badge-top').textContent=`マスター: ${cnt} / ${phrases.length}`;const sumEl=document.getElementById('master-summary');if(cnt>0){sumEl.classList.add('show');sumEl.textContent=`✅ マスター済み: ${cnt}件 — タップしてリスト表示`;renderMasterList();}else sumEl.classList.remove('show');}
+function renderMasterList(){const listEl=document.getElementById('master-list');listEl.innerHTML='';[...mastered].sort((a,b)=>a-b).forEach(idx=>{const item=phrases[idx];const d=document.createElement('div');d.style.cssText='padding:8px 0;border-bottom:1px solid #fdf2f8;font-size:12px;';d.innerHTML=`<span style="font-family:monospace;font-size:10px;color:#64748b;">${String(idx+301).padStart(3,'0')}</span> ${item.en.substring(0,55)}...`;listEl.appendChild(d);});}
+function toggleMasterList(){const w=document.getElementById('master-list-wrap');w.style.display=w.style.display==='none'?'':'none';}
+function clearAllMaster(){if(!confirm('マスター済みをすべて解除しますか？'))return;mastered.clear();currentIndex=0;update();document.getElementById('master-list-wrap').style.display='none';}
+function handleTap(){if(isAutoPlaying)return;const wrap=document.getElementById('answer-wrap');if(!wrap.classList.contains('show')){wrap.classList.add('show');document.getElementById('main-card').classList.add('revealed');}}
+function toggleMaster(e){const active=getActive();if(!active.length)return;const item=active[currentIndex];const realIdx=phrases.indexOf(item);if(e.target.checked){mastered.add(realIdx);document.getElementById('mastered-badge').classList.add('show');setTimeout(()=>{next();},400);}else{mastered.delete(realIdx);document.getElementById('mastered-badge').classList.remove('show');}updateMasterBadge();buildCatRows();}
+function next(){const a=getActive();if(!a.length)return;if(isRandom)currentIndex=Math.floor(Math.random()*a.length);else currentIndex=(currentIndex+1)%a.length;update();if(isRepeating)setTimeout(()=>{const b=getActive();if(b.length)speakRepeat(b[currentIndex].en);},300);}
+function prev(){const a=getActive();if(!a.length)return;currentIndex=(currentIndex-1+a.length)%a.length;update();if(isRepeating)setTimeout(()=>{const b=getActive();if(b.length)speakRepeat(b[currentIndex].en);},300);}
+function toggleRandom(){isRandom=!isRandom;const btn=document.getElementById('random-btn');btn.textContent=isRandom?'🔀 ランダム: ON':'🔀 ランダム: OFF';btn.className=isRandom?'btn btn-on':'btn btn-secondary';document.getElementById('order-badge').textContent=isRandom?'ランダム':'順番通り';}
+function switchMode(){if(isAutoPlaying)return;isEnToJa=!isEnToJa;update();}
+function delayP(ms){return new Promise(r=>{if(autoStopped){r();return;}autoTimeout=setTimeout(r,ms);});}
+function setAutoPanel(s,i,c){document.getElementById('auto-step-title').textContent=s;document.getElementById('auto-instruction').textContent=i;document.getElementById('auto-count').textContent=c;}
+function enterAutoUI(){isAutoPlaying=true;autoStopped=false;document.getElementById('normal-controls').style.display='none';document.getElementById('auto-controls').style.display='';document.getElementById('auto-panel').classList.add('show');document.getElementById('tap-hint').style.display='none';document.getElementById('master-wrap').classList.add('disabled');document.getElementById('main-card').classList.remove('tappable');document.getElementById('main-card').classList.add('no-tap');}
+function exitAutoUI(){autoStopped=true;isAutoPlaying=false;window.speechSynthesis.cancel();isSpeaking=false;stopKeepAlive();clearTimeout(speakOne._t);if(autoTimeout){clearTimeout(autoTimeout);autoTimeout=null;}document.getElementById('normal-controls').style.display='';document.getElementById('auto-controls').style.display='none';document.getElementById('auto-panel').classList.remove('show');document.getElementById('tap-hint').style.display='';document.getElementById('master-wrap').classList.remove('disabled');document.getElementById('main-card').classList.add('tappable');document.getElementById('main-card').classList.remove('no-tap');}
+function stopAutoPlay(){exitAutoUI();update();}
+function showHidden(){document.getElementById('main-text').textContent='？？？';document.getElementById('answer-wrap').classList.remove('show');document.getElementById('main-card').classList.remove('revealed');}
+function showAll(){const a=getActive();if(!a.length)return;document.getElementById('main-text').innerHTML=a[currentIndex].en;document.getElementById('answer-wrap').classList.add('show');document.getElementById('main-card').classList.add('revealed');}
+async function runShadowing(){const active=getActive();if(!active.length){stopAutoPlay();return;}const si=currentIndex;for(let i=0;i<active.length;i++){if(autoStopped)break;currentIndex=(si+i)%active.length;update();const n=i+1,tot=active.length;showHidden();setAutoPanel(`カード ${n}/${tot} — STEP 1`,'👂 発話せずに2回聴いてください。','1/2回目…');await speakP();if(autoStopped)break;await delayP(350);if(autoStopped)break;setAutoPanel(`カード ${n}/${tot} — STEP 1`,'👂 発話せずに2回聴いてください。','2/2回目…');await speakP();if(autoStopped)break;await delayP(450);if(autoStopped)break;showHidden();setAutoPanel(`カード ${n}/${tot} — STEP 2`,'🗣️ 音声に合わせてシャドウイングしてください。','1/2回目…');await speakP();if(autoStopped)break;await delayP(350);if(autoStopped)break;setAutoPanel(`カード ${n}/${tot} — STEP 2`,'🗣️ 音声に合わせてシャドウイングしてください。','2/2回目…');await speakP();if(autoStopped)break;await delayP(450);if(autoStopped)break;showAll();setAutoPanel(`カード ${n}/${tot} — STEP 3`,'📖 英文・日本語訳を見ながら2回シャドウイング。','1/2回目…');await speakP();if(autoStopped)break;await delayP(350);if(autoStopped)break;setAutoPanel(`カード ${n}/${tot} — STEP 3`,'📖 英文・日本語訳を見ながら2回シャドウイング。','2/2回目…');await speakP();if(autoStopped)break;await delayP(450);if(autoStopped)break;showHidden();setAutoPanel(`カード ${n}/${tot} — STEP 4`,'🙈 何も見ずに2回シャドウイングしてください。','1/2回目…');await speakP();if(autoStopped)break;await delayP(350);if(autoStopped)break;setAutoPanel(`カード ${n}/${tot} — STEP 4`,'🙈 何も見ずに2回シャドウイングしてください。','2/2回目…');await speakP();if(autoStopped)break;await delayP(700);}if(!autoStopped){setAutoPanel('完了！','🎉 シャドウイング完了しました！','');await delayP(2000);stopAutoPlay();}}
+function startShadowing(){if(!getActive().length){alert('出題できるカードがありません。');return;}enterAutoUI();runShadowing();}
+async function runContinuous(){let lc=0;while(!autoStopped){const active=getActive();if(!active.length){stopAutoPlay();return;}lc++;const si=currentIndex;for(let i=0;i<active.length;i++){if(autoStopped)break;currentIndex=(si+i)%active.length;update();document.getElementById('answer-wrap').classList.add('show');document.getElementById('main-card').classList.add('revealed');setAutoPanel(`連続再生 ${i+1}/${active.length}（${lc}周目）`,'▶ 英語音声を再生中 — ⏹ 停止ボタンで終了','');await speakP();if(autoStopped)break;await delayP(500);}if(!autoStopped)currentIndex=0;}}
+function startContinuous(){if(!getActive().length){alert('出題できるカードがありません。');return;}enterAutoUI();runContinuous();}
+buildCatRows();updateFilterLabel();update();
+</script>
+</body>
+</html>

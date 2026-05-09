@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DUO 3.0 — No. 351〜402</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f8f9fa;--surface:#ffffff;--primary:#374151;--primary-light:#f3f4f6;--accent:#0891b2;--green:#16a34a;--green-light:#dcfce7;--amber:#d97706;--amber-light:#fef3c7;--red:#e11d48;--text:#1e293b;--muted:#64748b;--border:#9ca3af;--shadow:0 4px 24px rgba(55,65,81,0.10);--radius:18px;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);min-height:100vh;padding:16px 12px 48px;color:var(--text);}
+.container{max-width:560px;margin:auto;}
+.header{text-align:center;margin-bottom:14px;}
+.header h2{font-size:18px;font-weight:900;color:var(--primary);}
+.header p{font-size:12px;color:var(--muted);margin-top:2px;}
+.badges{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-bottom:10px;}
+.badge{display:inline-flex;align-items:center;gap:4px;padding:4px 12px;border-radius:99px;font-size:11px;font-weight:700;background:var(--primary-light);color:var(--primary);border:1px solid var(--border);}
+.badge.green{background:var(--green-light);color:var(--green);border-color:#86efac;}
+.progress-wrap{background:#d1d5db;border-radius:99px;height:6px;margin-bottom:4px;overflow:hidden;}
+.progress-bar{height:100%;background:var(--primary);border-radius:99px;transition:width 0.4s ease;}
+.progress-label{text-align:center;font-size:12px;color:var(--muted);margin-bottom:10px;}
+.tap-hint{font-size:11px;color:var(--muted);margin-bottom:6px;text-align:center;}
+.card{background:var(--surface);border-radius:var(--radius);padding:28px 20px 20px;box-shadow:var(--shadow);margin-bottom:12px;position:relative;border:2px solid var(--border);min-height:160px;cursor:pointer;user-select:none;transition:transform .1s,border-color .2s;}
+.card.tappable:active{transform:scale(0.985);}
+.card.revealed{border-color:var(--primary);}
+.card.no-tap{cursor:default;}
+.card-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+.card-num{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);}
+.cat-label{font-size:11px;font-weight:700;letter-spacing:.06em;color:var(--primary);text-align:center;flex:1;}
+.master-wrap{display:flex;align-items:center;gap:4px;font-size:11px;color:var(--muted);}
+.master-wrap input[type=checkbox]{width:17px;height:17px;accent-color:var(--green);cursor:pointer;}
+.master-wrap.disabled{opacity:.3;pointer-events:none;}
+.main-text{font-size:clamp(14px,3.8vw,18px);font-weight:700;line-height:1.65;text-align:center;margin-bottom:14px;}
+.answer-wrap{opacity:0;transform:translateY(5px);transition:opacity .25s,transform .25s;pointer-events:none;}
+.answer-wrap.show{opacity:1;transform:translateY(0);pointer-events:auto;}
+.answer-ja{font-size:clamp(13px,3.5vw,15px);font-weight:700;color:var(--accent);text-align:center;line-height:1.6;background:#f0f9ff;border-radius:10px;padding:10px 14px;margin-bottom:8px;}
+.answer-tip{font-size:12px;font-weight:600;color:var(--green);text-align:left;padding:0 4px;line-height:1.6;}
+.answer-tip::before{content:'💡 ';}
+.master-badge{display:none;text-align:center;margin-top:8px;background:var(--green-light);color:var(--green);padding:2px 10px;border-radius:99px;font-size:10px;font-weight:700;}
+.master-badge.show{display:block;}
+.no-active{background:var(--amber-light);border-radius:12px;padding:16px;text-align:center;font-size:14px;color:var(--amber);font-weight:700;display:none;margin-bottom:12px;}
+.no-active.show{display:block;}
+.auto-panel{background:var(--surface);border-radius:var(--radius);padding:14px 18px;box-shadow:var(--shadow);margin-bottom:12px;display:none;border-left:4px solid var(--primary);}
+.auto-panel.show{display:block;}
+.auto-step-title{font-size:12px;font-weight:900;color:var(--primary);margin-bottom:4px;}
+.auto-instruction{font-size:14px;font-weight:700;color:var(--text);line-height:1.5;}
+.auto-count{font-family:'DM Mono',monospace;font-size:12px;color:var(--muted);margin-top:4px;}
+.filter-panel{background:var(--surface);border-radius:var(--radius);padding:14px 16px;box-shadow:var(--shadow);margin-bottom:12px;}
+.filter-header{display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none;}
+.filter-header-left{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;}
+.filter-current{font-size:12px;font-weight:700;color:var(--primary);background:var(--primary-light);padding:3px 10px;border-radius:99px;border:1px solid var(--border);max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.filter-toggle-icon{font-size:12px;color:var(--muted);transition:transform .2s;margin-left:6px;}
+.filter-toggle-icon.open{transform:rotate(180deg);}
+.filter-chips-wrap{display:none;margin-top:10px;}
+.filter-chips-wrap.open{display:block;}
+.chip-all{display:block;width:100%;padding:8px 14px;margin-bottom:8px;border-radius:10px;font-size:12px;font-weight:700;cursor:pointer;border:2px solid var(--border);background:#fff;color:var(--muted);text-align:left;font-family:'Noto Sans JP',sans-serif;transition:all .15s;}
+.chip-all.active{background:var(--primary-light);color:var(--primary);border-color:var(--primary);}
+.cat-row{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:10px;cursor:pointer;border:2px solid transparent;background:#fff;margin-bottom:5px;transition:all .15s;user-select:none;}
+.cat-row.active{background:var(--primary-light);border-color:var(--primary);}
+.cat-row-name{flex:1;font-size:13px;font-weight:700;color:var(--text);}
+.cat-row.active .cat-row-name{color:var(--primary);}
+.cat-row-count{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);background:#f1f5f9;padding:2px 8px;border-radius:99px;font-weight:600;}
+.cat-row.active .cat-row-count{background:#fff;color:var(--primary);}
+.cat-dot{width:8px;height:8px;border-radius:50%;background:#e2e8f0;flex-shrink:0;}
+.cat-dot.done{background:var(--green);}
+.panel{background:var(--surface);border-radius:var(--radius);padding:14px 16px;box-shadow:var(--shadow);margin-bottom:12px;}
+.panel-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.panel-row+.panel-row{margin-top:8px;}
+.panel label{font-size:12px;color:var(--muted);font-weight:700;white-space:nowrap;}
+.panel select{flex:1;font-size:12px;border:1px solid var(--border);border-radius:8px;padding:4px 8px;background:#fff;color:var(--text);font-family:'Noto Sans JP',sans-serif;}
+.panel input[type=range]{flex:1;min-width:80px;accent-color:var(--primary);}
+.speed-val{font-family:'DM Mono',monospace;font-size:13px;font-weight:600;color:var(--primary);min-width:32px;}
+.btn-row{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:10px;}
+.btn{border:none;border-radius:99px;padding:10px 18px;font-size:13px;font-weight:700;font-family:'Noto Sans JP',sans-serif;cursor:pointer;transition:opacity .15s,transform .1s;display:inline-flex;align-items:center;gap:5px;}
+.btn:active{transform:scale(0.94);opacity:.85;}
+.btn-primary{background:var(--primary);color:#fff;}
+.btn-secondary{background:#e2e8f0;color:var(--text);}
+.btn-red{background:var(--red);color:#fff;}
+.btn-amber{background:var(--amber);color:#fff;}
+.btn-blue{background:#2563eb;color:#fff;}
+.btn-on{background:var(--green);color:#fff;}
+.master-summary{background:var(--green-light);border-radius:12px;padding:10px 14px;font-size:12px;color:var(--green);font-weight:700;text-align:center;margin-bottom:10px;display:none;cursor:pointer;user-select:none;}
+.master-summary.show{display:block;}
+.help-btn{display:inline-flex;align-items:center;gap:5px;padding:5px 14px;border-radius:99px;border:1px solid var(--border);background:var(--primary-light);color:var(--primary);font-size:12px;font-weight:700;cursor:pointer;margin-top:8px;font-family:'Noto Sans JP',sans-serif;}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="header">
+  <h2>📗 DUO 3.0 — No. 351〜402</h2>
+  <p>不定詞・接続詞・比較・分詞構文・重要構文C</p>
+  <button class="help-btn" onclick="alert('👆カードタップで答え表示\n🔊音声再生\n🗣️シャドウイング4ステップ\n▶連続再生\n🔄英⇄日モード切替\nマスターチェックで次へ')">❓ 使い方</button>
+</div>
+<div class="badges">
+  <div class="badge" id="mode-badge">📖 英 → 日</div>
+  <div class="badge" id="order-badge">順番通り</div>
+  <div class="badge green" id="master-badge-top">マスター: 0 / 52</div>
+</div>
+<div class="progress-wrap"><div class="progress-bar" id="progress-bar" style="width:2%"></div></div>
+<div class="progress-label">カード <span id="cur-num">1</span> / <span id="tot-num">52</span></div>
+<div class="no-active" id="no-active">✅ このカテゴリをすべてマスターしました！</div>
+<div class="auto-panel" id="auto-panel">
+  <div class="auto-step-title" id="auto-step-title">STEP 1</div>
+  <div class="auto-instruction" id="auto-instruction">音声を聴いてください。</div>
+  <div class="auto-count" id="auto-count"></div>
+</div>
+<div class="tap-hint" id="tap-hint">👆 カードをタップして日本語訳・解説を表示</div>
+<div class="card tappable" id="main-card" onclick="handleTap()">
+  <div class="card-top">
+    <div class="card-num" id="card-num">351</div>
+    <div class="cat-label" id="card-cat"></div>
+    <div class="master-wrap" id="master-wrap">
+      <span>マスター</span>
+      <input type="checkbox" id="master-cb" onchange="toggleMaster(event)" onclick="event.stopPropagation()">
+    </div>
+  </div>
+  <div class="main-text" id="main-text">Loading...</div>
+  <div class="answer-wrap" id="answer-wrap">
+    <div class="answer-ja" id="answer-ja"></div>
+    <div class="answer-tip" id="answer-tip" style="display:none"></div>
+  </div>
+  <div class="master-badge" id="mastered-badge">✔ マスター済</div>
+</div>
+<div class="master-summary" id="master-summary" onclick="toggleMasterList()"></div>
+<div id="master-list-wrap" style="display:none;margin-bottom:12px;">
+  <div style="background:#fff;border-radius:16px;padding:14px 16px;box-shadow:var(--shadow);">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+      <span style="font-size:13px;font-weight:900;color:var(--green);">✅ マスター済みリスト</span>
+      <button class="btn btn-secondary" style="padding:4px 12px;font-size:11px;" onclick="clearAllMaster()">全解除</button>
+    </div>
+    <div id="master-list"></div>
+  </div>
+</div>
+<div class="filter-panel">
+  <div class="filter-header" onclick="toggleFilterPanel()">
+    <div class="filter-header-left">📂 カテゴリを選ぶ</div>
+    <div style="display:flex;align-items:center;gap:4px;">
+      <div class="filter-current" id="filter-current-label">すべて</div>
+      <span class="filter-toggle-icon" id="filter-toggle-icon">▼</span>
+    </div>
+  </div>
+  <div class="filter-chips-wrap" id="filter-chips-wrap">
+    <button class="chip-all active" id="chip-all" onclick="selectCategory('all')">🎯 すべて表示</button>
+    <div id="cat-rows"></div>
+  </div>
+</div>
+<div class="panel">
+  <div class="panel-row" style="margin-bottom:8px;">
+    <label>🔊 音声優先</label>
+    <select id="voice-pref" onchange="applyVoicePref()"><option value="US">🇺🇸 US優先</option><option value="GB">🇬🇧 GB優先</option></select>
+    <select id="voice-select" style="flex:2;"></select>
+  </div>
+  <div class="panel-row">
+    <label>速度</label>
+    <input type="range" id="rate-slider" min="0.5" max="1.5" step="0.1" value="1.0" oninput="updateRate()">
+    <span class="speed-val" id="rate-val">1.0×</span>
+  </div>
+</div>
+<div id="normal-controls">
+  <div class="btn-row">
+    <button class="btn btn-secondary" onclick="prev()">← 戻る</button>
+    <button class="btn btn-primary" onclick="speakCurrent()">🔊 音声</button>
+    <button class="btn btn-secondary" onclick="next()">次へ →</button>
+    <button class="btn btn-secondary" style="font-size:11px;padding:8px 6px;" onclick="switchMode()">🔄 英⇄日</button>
+  </div>
+  <div class="btn-row" style="gap:4px;">
+    <button class="btn btn-secondary" style="font-size:11px;padding:7px 5px;" id="random-btn" onclick="toggleRandom()">🔀 ランダム</button>
+    <button class="btn btn-secondary" style="font-size:11px;padding:7px 5px;" id="repeat-btn" onclick="toggleRepeat()">🔁 繰り返し</button>
+    <button class="btn btn-blue" style="font-size:11px;padding:7px 5px;" onclick="startContinuous()">▶ 連続再生</button>
+    <button class="btn btn-amber" style="font-size:11px;padding:7px 5px;" onclick="startShadowing()">🗣️ シャドウ</button>
+  </div>
+</div>
+<div id="auto-controls" style="display:none;">
+  <div class="btn-row"><button class="btn btn-red" onclick="stopAutoPlay()">⏹ 停止</button></div>
+</div>
+</div>
+<script>
+const OFFSET=351;
+const CATS={'📐 不定詞・目的・結果':'#374151','🔗 接続詞・比較':'#0891b2','🗂️ 分詞構文・慣用表現':'#7c3aed','⏱️ 時・接続の構文':'#16a34a'};
+const phrases=[
+  {cat:'📐 不定詞・目的・結果',en:'It is natural that he should be angry.',ja:'彼が怒るのも当然だ。',tip:'It is + 形容詞 + that S should do＝Sが〜するのは…だ（shouldを使う形容詞：natural, strange, right, wrong, necessary など）。'},
+  {cat:'📐 不定詞・目的・結果',en:'I was surprised to hear the news.',ja:'私はそのニュースを聞いて驚いた。',tip:'be surprised to do＝〜して驚く（感情を表す形容詞＋to不定詞：to不定詞が原因・理由を表す）。'},
+  {cat:'📐 不定詞・目的・結果',en:'He was kind enough to show me the way.',ja:'彼は親切にも道を教えてくれた。',tip:'be kind enough to do＝親切にも〜してくれる（= be so kind as to do）。形容詞 + enough + to不定詞の重要構文。'},
+  {cat:'📐 不定詞・目的・結果',en:'He was so kind as to show me the way.',ja:'彼は親切にも道を教えてくれた。',tip:'be so + 形容詞 + as to do＝〜するほど…だ・親切にも〜する（= be 形容詞 enough to do と同意）。'},
+  {cat:'📐 不定詞・目的・結果',en:'She is too wise to do such a thing.',ja:'彼女はとても賢いので、そんなことはしない。',tip:'too + 形容詞 + to do＝〜すぎて…できない（= so ... that ... cannot）。too wise to do＝賢すぎてそんなことはしない。'},
+  {cat:'🔗 接続詞・比較',en:'He works hard so that his family may live in comfort.',ja:'彼は家族が快適に暮らせるように一生懸命働いている。',tip:'so that S may do＝Sが〜できるように（目的を表す接続詞）。in comfort＝快適に・楽に（= comfortably）。'},
+  {cat:'🔗 接続詞・比較',en:'I got up early so as to be in time for the train.',ja:'私は電車に間に合うように早く起きた。',tip:'so as to do＝〜するために（= in order to do）。be in time for＝〜に間に合う（on time は時間通り）。'},
+  {cat:'🔗 接続詞・比較',en:'You must be careful not to make the same mistake.',ja:'同じ間違いをしないように気をつけなければならない。',tip:'be careful not to do＝〜しないように気をつける（not to は否定の不定詞）。make a mistake＝間違いをする。'},
+  {cat:'🔗 接続詞・比較',en:'She is more a teacher than a singer.',ja:'彼女は歌手というよりはむしろ教師だ。',tip:'more A than B＝BよりもAだ（= not so much B as A）。比較級を使った「〜というよりむしろ」の重要表現。'},
+  {cat:'🔗 接続詞・比較',en:'He is as brave as any man in the world.',ja:'彼は世界の誰にも劣らず勇敢だ。',tip:'as + 形容詞 + as any＝誰にも劣らず〜だ（= the bravest man in the world と同意）。最上級の意味を原級で表す重要表現。'},
+  {cat:'🔗 接続詞・比較',en:'No other mountain in Japan is so high as Mt. Fuji.',ja:'日本には富士山ほど高い山はない。',tip:'No other + 名詞 + is so ... as A＝Aほど〜なものはない（= A is the most ...）。最上級の意味を原級で表す重要構文。'},
+  {cat:'🔗 接続詞・比較',en:'Mt. Fuji is higher than any other mountain in Japan.',ja:'富士山は日本の他のどの山よりも高い。',tip:'比較級 + than any other + 単数名詞＝他のどの〜より…だ（最上級の意味を比較級で表す重要表現）。'},
+  {cat:'🔗 接続詞・比較',en:'I like him all the better for his faults.',ja:'彼には欠点があるからこそ、かえって私は彼が好きだ。',tip:'all the + 比較級 + for ...＝〜だからこそかえって…だ（= all the better because of ...）。faults＝欠点・短所。'},
+  {cat:'🔗 接続詞・比較',en:'She is as beautiful as can be.',ja:'彼女はこの上なく美しい。',tip:'as + 形容詞 + as can be＝この上なく〜・最高に〜（= as ... as possible のインパクトある表現）。'},
+  {cat:'🗂️ 分詞構文・慣用表現',en:"To tell the truth, I don't like him.",ja:'実を言うと、私は彼が好きではない。',tip:'To tell the truth＝実を言うと（独立不定詞の慣用句。to be honest と同義）。'},
+  {cat:'🗂️ 分詞構文・慣用表現',en:'Strange to say, the light went out of itself.',ja:'不思議なことに、明かりが勝手に消えた。',tip:'Strange to say＝不思議なことに（独立不定詞の慣用表現）。go out＝（明かりが）消える。of itself＝ひとりでに・自然に。'},
+  {cat:'🗂️ 分詞構文・慣用表現',en:'To make matters worse, it began to rain.',ja:'さらに悪いことに、雨が降り出した。',tip:'To make matters worse＝さらに悪いことに（慣用句。= to make things worse）。'},
+  {cat:'🗂️ 分詞構文・慣用表現',en:'Needless to say, he is a great artist.',ja:'言うまでもなく、彼は偉大な芸術家だ。',tip:'Needless to say＝言うまでもなく（= it goes without saying that）。独立不定詞の重要慣用表現。'},
+  {cat:'🗂️ 分詞構文・慣用表現',en:"To be frank with you, your plan is not practical.",ja:'率直に言って、君の計画は実用的ではない。',tip:'To be frank with you＝率直に言って（= frankly speaking）。practical＝実用的な・現実的な。'},
+  {cat:'📐 不定詞・目的・結果',en:'I am sorry to have kept you waiting so long.',ja:'大変お待たせして申し訳ありません。',tip:'be sorry to have done＝〜してしまって申し訳ない（完了不定詞：主節より前の行為）。keep A waiting＝Aを待たせる。'},
+  {cat:'📐 不定詞・目的・結果',en:'He is sure to win the game.',ja:'彼はきっと試合に勝つだろう。',tip:'be sure to do＝きっと〜する（= certainly will do）。cf. be sure that ...＝〜だと確信している。'},
+  {cat:'📐 不定詞・目的・結果',en:'He is likely to come here.',ja:'彼はここに来そうだ。',tip:'be likely to do＝〜しそうだ（= probably will do）。cf. be unlikely to do＝〜しそうにない。'},
+  {cat:'📐 不定詞・目的・結果',en:'The problem is hard to solve.',ja:'その問題は解くのが難しい。',tip:'A is + 形容詞 + to do＝Aは〜するのが…だ（不定詞の意味上の目的語がAになる重要構文）。'},
+  {cat:'📐 不定詞・目的・結果',en:'He has a large family to provide for.',ja:'彼には養うべき大家族がいる。',tip:'名詞 + to + 動詞＝〜するべき名詞（形容詞的用法）。provide for の for が残る点に注意。'},
+  {cat:'🔗 接続詞・比較',en:"It doesn't matter who does it.",ja:'誰がそれをやっても大した問題ではない。',tip:"It doesn't matter + 疑問詞節＝〜してもかまわない・〜は問題でない（重要構文）。"},
+  {cat:'🔗 接続詞・比較',en:'It makes no difference to me whether you go or stay.',ja:'君が行こうが残ろうが、私にはどちらでも同じことだ。',tip:'make no difference (to)＝〜には関係ない（= not matter to）。whether A or B＝AであろうとBであろうと。'},
+  {cat:'🔗 接続詞・比較',en:'It is no wonder that he should be proud of his son.',ja:'彼が息子を自慢するのも不思議ではない。',tip:'It is no wonder that＝〜するのも不思議ではない（= No wonder that ...）。be proud of＝〜を誇りに思う。'},
+  {cat:'🗂️ 分詞構文・慣用表現',en:'It occurred to me that I had forgotten my umbrella.',ja:'傘を忘れたことにふと気がついた。',tip:'It occurs to A that ...＝Aに〜という考えが浮かぶ・気がつく（重要構文）。'},
+  {cat:'🗂️ 分詞構文・慣用表現',en:'It seems that he is ill.',ja:'彼は病気であるようだ。',tip:'It seems that ...＝〜のようだ（= S + seems to do）。He seems to be ill. と書き換え可能。'},
+  {cat:'🗂️ 分詞構文・慣用表現',en:'It happened that I was out when he called.',ja:'彼が電話をくれたとき、たまたま私は外出していた。',tip:'It happened that＝たまたま〜だった（= by chance）。I happened to be out. と書き換え可能。'},
+  {cat:'🗂️ 分詞構文・慣用表現',en:'It is said that he is very rich.',ja:'彼はとても金持ちだと言われている。',tip:'It is said that ...＝〜と言われている（= He is said to be very rich.）。受動態を使った伝聞表現。'},
+  {cat:'🗂️ 分詞構文・慣用表現',en:'It took me three hours to finish the work.',ja:'その仕事を終えるのに3時間かかった。',tip:'It takes + 人 + 時間 + to do＝〜するのに（人が）時間がかかる（重要構文）。'},
+  {cat:'🗂️ 分詞構文・慣用表現',en:'It cost me 10,000 yen to repair the watch.',ja:'時計を修理するのに1万円かかった。',tip:'It costs + 人 + お金 + to do＝〜するのに（人が）お金がかかる。cost の過去形はcost（不規則変化）。'},
+  {cat:'🗂️ 分詞構文・慣用表現',en:'To be sure, he is old, but he is still healthy.',ja:'なるほど彼は年をとっているが、まだ健康だ。',tip:'To be sure＝なるほど・確かに（= admittedly）。独立不定詞の慣用表現。逆接のbut と一緒に使う。'},
+  {cat:'🗂️ 分詞構文・慣用表現',en:'He is, as it were, a child.',ja:'彼はいわば子供だ。',tip:'as it were＝いわば・言うなれば（= so to speak）。コンマで挟む重要慣用表現。'},
+  {cat:'🗂️ 分詞構文・慣用表現',en:'He can speak French, not to mention English.',ja:'彼は英語はもちろんのこと、フランス語も話せる。',tip:'not to mention＝〜はもちろんのこと（= not to speak of / to say nothing of）。'},
+  {cat:'🗂️ 分詞構文・慣用表現',en:'He is not so much a scholar as a writer.',ja:'彼は学者というよりはむしろ作家だ。',tip:'not so much A as B＝AというよりむしろB（= more B than A）。重要な比較の慣用表現。'},
+  {cat:'🗂️ 分詞構文・慣用表現',en:'He is, so to speak, a human computer.',ja:'彼はいわば人間のコンピューターだ。',tip:'so to speak＝いわば・言ってみれば（= as it were）。コンマで挟む慣用表現。'},
+  {cat:'🗂️ 分詞構文・慣用表現',en:'As far as I know, he is an honest man.',ja:'私の知る限りでは、彼は正直な男だ。',tip:'as far as I know＝私の知る限りでは（= to the best of my knowledge）。'},
+  {cat:'🗂️ 分詞構文・慣用表現',en:'As far as I am concerned, I have no objection.',ja:'私に関する限り、異議はありません。',tip:'as far as I am concerned＝私に関する限り・私としては（= for my part）。objection＝異議・反対。'},
+  {cat:'🗂️ 分詞構文・慣用表現',en:"I'll help you as far as I can.",ja:'できる限りのお手伝いをしましょう。',tip:'as far as I can＝できる限り（= as much as possible）。as far as の「〜の限り」の用法。'},
+  {cat:'📐 不定詞・目的・結果',en:'He is not a person who would tell a lie.',ja:'彼は嘘をつくような人ではない。',tip:'who would do＝〜するような人（関係代名詞節で性格・傾向を表す。wouldは「〜するような傾向」）。'},
+  {cat:'⏱️ 時・接続の構文',en:"I'll do it as soon as I can.",ja:'できるだけ早くそれをやります。',tip:'as soon as I can＝できるだけ早く（= as soon as possible）。副詞節では未来のことも現在形で表す。'},
+  {cat:'⏱️ 時・接続の構文',en:'As soon as he saw me, he ran away.',ja:'私を見るとすぐに、彼は逃げ出した。',tip:'as soon as＝〜するとすぐに（= the moment / the instant）。過去の瞬間を表す重要接続詞。'},
+  {cat:'⏱️ 時・接続の構文',en:'No sooner had he seen me than he ran away.',ja:'私を見るとすぐに、彼は逃げ出した。',tip:'No sooner + 過去完了 ... than + 過去形＝〜するとすぐに（倒置構文）。Hardly ... when も同義。'},
+  {cat:'⏱️ 時・接続の構文',en:'Hardly had he seen me when he ran away.',ja:'私を見るとすぐに、彼は逃げ出した。',tip:'Hardly + 過去完了 ... when + 過去形＝〜するとすぐに（= No sooner ... than）。Hardlyが文頭→倒置。'},
+  {cat:'⏱️ 時・接続の構文',en:'Scarcely had he seen me before he ran away.',ja:'私を見るとすぐに、彼は逃げ出した。',tip:'Scarcely + 過去完了 ... before + 過去形＝〜するとすぐに（= Hardly ... when）。Scarcelyが文頭→倒置。'},
+  {cat:'⏱️ 時・接続の構文',en:'He had no sooner seen me than he ran away.',ja:'私を見るとすぐに、彼は逃げ出した。',tip:'had no sooner done ... than ...＝〜するとすぐに（No sooner の倒置なし形）。4つの類似表現をセットで覚えよう。'},
+  {cat:'🗂️ 分詞構文・慣用表現',en:'He is, as it were, a child.',ja:'彼はいわば子供だ。',tip:'as it were＝いわば（重要慣用句）。so to speak と同義。'},
+  {cat:'🔗 接続詞・比較',en:'She is more a teacher than a singer.',ja:'彼女は歌手というよりはむしろ教師だ。',tip:'more A than B＝BというよりもA（= not so much B as A）。'},
+  {cat:'📐 不定詞・目的・結果',en:'I am sorry to have kept you waiting so long.',ja:'大変お待たせして申し訳ありません。',tip:'完了不定詞 to have done＝主節より前の行為を表す。keep A waiting＝Aを待たせる。'},
+];
+let currentIndex=0,isEnToJa=true,isRandom=false,isRepeating=false;
+let mastered=new Set(),activeCategory='all';
+let isAutoPlaying=false,autoStopped=false,autoTimeout=null;
+let isSpeaking=false,keepAliveTimer=null,speechRate=1.0,voices=[],voicePref='US';
+function getActive(){return phrases.filter((p,i)=>{if(activeCategory!=='all'&&p.cat!==activeCategory)return false;if(mastered.has(i))return false;return true;});}
+function buildCatRows(){const wrap=document.getElementById('cat-rows');wrap.innerHTML='';Object.keys(CATS).forEach(cat=>{const total=phrases.filter(p=>p.cat===cat).length;const mc=phrases.filter((p,i)=>p.cat===cat&&mastered.has(i)).length;const row=document.createElement('div');row.className='cat-row'+(activeCategory===cat?' active':'');row.innerHTML=`<div class="cat-dot${mc===total?' done':''}"></div><div class="cat-row-name">${cat}</div><div class="cat-row-count">${mc}/${total}</div>`;row.onclick=()=>selectCategory(cat);wrap.appendChild(row);});}
+function selectCategory(cat){activeCategory=cat;currentIndex=0;document.getElementById('chip-all').className='chip-all'+(cat==='all'?' active':'');buildCatRows();updateFilterLabel();update();document.getElementById('filter-chips-wrap').classList.remove('open');document.getElementById('filter-toggle-icon').classList.remove('open');}
+function updateFilterLabel(){document.getElementById('filter-current-label').textContent=activeCategory==='all'?'すべて':activeCategory;}
+function toggleFilterPanel(){document.getElementById('filter-chips-wrap').classList.toggle('open');document.getElementById('filter-toggle-icon').classList.toggle('open');}
+function loadVoices(){voices=window.speechSynthesis.getVoices();const sel=document.getElementById('voice-select');sel.innerHTML='';voices.forEach((v,i)=>{const o=document.createElement('option');o.value=i;o.textContent=`${v.name} (${v.lang})`;sel.appendChild(o);});applyVoicePref();}
+window.speechSynthesis.onvoiceschanged=loadVoices;
+function applyVoicePref(){voicePref=document.getElementById('voice-pref').value;const sel=document.getElementById('voice-select');const kw=voicePref==='US'?'en-US':'en-GB';const fb=voicePref==='US'?'en-GB':'en-US';let idx=voices.findIndex(v=>v.lang===kw);if(idx<0)idx=voices.findIndex(v=>v.lang===fb);if(idx>=0)sel.value=idx;}
+function getVoice(){return voices[parseInt(document.getElementById('voice-select').value)]||null;}
+function updateRate(){speechRate=parseFloat(document.getElementById('rate-slider').value);document.getElementById('rate-val').textContent=speechRate.toFixed(1)+'×';}
+function startKeepAlive(){stopKeepAlive();keepAliveTimer=setInterval(()=>{if(window.speechSynthesis.speaking)window.speechSynthesis.pause(),window.speechSynthesis.resume();},10000);}
+function stopKeepAlive(){if(keepAliveTimer){clearInterval(keepAliveTimer);keepAliveTimer=null;}}
+function speakOne(text,onEnd){window.speechSynthesis.cancel();isSpeaking=false;clearTimeout(speakOne._t);speakOne._t=setTimeout(()=>{const utt=new SpeechSynthesisUtterance(text);utt.voice=getVoice();utt.rate=speechRate;utt.lang='en-US';utt.onend=()=>{isSpeaking=false;stopKeepAlive();if(onEnd)onEnd();};utt.onerror=()=>{isSpeaking=false;stopKeepAlive();if(onEnd)onEnd();};isSpeaking=true;startKeepAlive();window.speechSynthesis.speak(utt);},80);}
+speakOne._t=null;
+function speakP(){return new Promise(r=>{const a=getActive();if(!a.length){r();return;}speakOne(a[currentIndex].en,r);});}
+function speakCurrent(){const a=getActive();if(!a.length)return;speakOne(a[currentIndex].en);}
+function speakRepeat(text){if(!isRepeating||isAutoPlaying)return;speakOne(text,()=>{if(isRepeating&&!isAutoPlaying){clearTimeout(speakRepeat._t);speakRepeat._t=setTimeout(()=>speakRepeat(text),1200);}});}
+speakRepeat._t=null;
+function toggleRepeat(){isRepeating=!isRepeating;const btn=document.getElementById('repeat-btn');btn.textContent=isRepeating?'🔁 繰り返し: ON':'🔁 繰り返し';btn.className=isRepeating?'btn btn-on':'btn btn-secondary';if(isRepeating){const a=getActive();if(a.length)speakRepeat(a[currentIndex].en);}else{window.speechSynthesis.cancel();isSpeaking=false;stopKeepAlive();clearTimeout(speakRepeat._t);}}
+function update(){const active=getActive();const noEl=document.getElementById('no-active');if(!active.length){noEl.classList.add('show');document.getElementById('main-card').style.display='none';document.getElementById('tap-hint').style.display='none';updateMasterBadge();buildCatRows();return;}noEl.classList.remove('show');document.getElementById('main-card').style.display='';document.getElementById('tap-hint').style.display='';if(currentIndex>=active.length)currentIndex=0;const item=active[currentIndex];const realIdx=phrases.indexOf(item);document.getElementById('card-num').textContent=String(realIdx+OFFSET).padStart(3,'0');document.getElementById('card-cat').textContent=item.cat;document.getElementById('cur-num').textContent=currentIndex+1;document.getElementById('tot-num').textContent=active.length;const pct=active.length>1?((currentIndex/(active.length-1))*100).toFixed(0):100;document.getElementById('progress-bar').style.width=pct+'%';if(isEnToJa){document.getElementById('main-text').innerHTML=item.en;document.getElementById('answer-ja').textContent=item.ja;}else{document.getElementById('main-text').innerHTML=item.ja;document.getElementById('answer-ja').textContent=item.en;}const tipEl=document.getElementById('answer-tip');if(item.tip){tipEl.textContent=item.tip;tipEl.style.display='';}else{tipEl.style.display='none';}document.getElementById('mode-badge').textContent=isEnToJa?'📖 英 → 日':'📖 日 → 英';document.getElementById('answer-wrap').classList.remove('show');document.getElementById('main-card').classList.remove('revealed');const cb=document.getElementById('master-cb');cb.checked=mastered.has(realIdx);if(mastered.has(realIdx))document.getElementById('mastered-badge').classList.add('show');else document.getElementById('mastered-badge').classList.remove('show');updateMasterBadge();buildCatRows();}
+function updateMasterBadge(){const cnt=mastered.size;document.getElementById('master-badge-top').textContent=`マスター: ${cnt} / ${phrases.length}`;const sumEl=document.getElementById('master-summary');if(cnt>0){sumEl.classList.add('show');sumEl.textContent=`✅ マスター済み: ${cnt}件 — タップしてリスト表示`;renderMasterList();}else sumEl.classList.remove('show');}
+function renderMasterList(){const listEl=document.getElementById('master-list');listEl.innerHTML='';[...mastered].sort((a,b)=>a-b).forEach(idx=>{const item=phrases[idx];const d=document.createElement('div');d.style.cssText='padding:8px 0;border-bottom:1px solid #f8f9fa;font-size:12px;';d.innerHTML=`<span style="font-family:monospace;font-size:10px;color:#64748b;">${String(idx+OFFSET).padStart(3,'0')}</span> ${item.en.substring(0,55)}...`;listEl.appendChild(d);});}
+function toggleMasterList(){const w=document.getElementById('master-list-wrap');w.style.display=w.style.display==='none'?'':'none';}
+function clearAllMaster(){if(!confirm('マスター済みをすべて解除しますか？'))return;mastered.clear();currentIndex=0;update();document.getElementById('master-list-wrap').style.display='none';}
+function handleTap(){if(isAutoPlaying)return;const wrap=document.getElementById('answer-wrap');if(!wrap.classList.contains('show')){wrap.classList.add('show');document.getElementById('main-card').classList.add('revealed');}}
+function toggleMaster(e){const active=getActive();if(!active.length)return;const item=active[currentIndex];const realIdx=phrases.indexOf(item);if(e.target.checked){mastered.add(realIdx);document.getElementById('mastered-badge').classList.add('show');setTimeout(()=>{next();},400);}else{mastered.delete(realIdx);document.getElementById('mastered-badge').classList.remove('show');}updateMasterBadge();buildCatRows();}
+function next(){const a=getActive();if(!a.length)return;if(isRandom)currentIndex=Math.floor(Math.random()*a.length);else currentIndex=(currentIndex+1)%a.length;update();if(isRepeating)setTimeout(()=>{const b=getActive();if(b.length)speakRepeat(b[currentIndex].en);},300);}
+function prev(){const a=getActive();if(!a.length)return;currentIndex=(currentIndex-1+a.length)%a.length;update();if(isRepeating)setTimeout(()=>{const b=getActive();if(b.length)speakRepeat(b[currentIndex].en);},300);}
+function toggleRandom(){isRandom=!isRandom;const btn=document.getElementById('random-btn');btn.textContent=isRandom?'🔀 ランダム: ON':'🔀 ランダム: OFF';btn.className=isRandom?'btn btn-on':'btn btn-secondary';document.getElementById('order-badge').textContent=isRandom?'ランダム':'順番通り';}
+function switchMode(){if(isAutoPlaying)return;isEnToJa=!isEnToJa;update();}
+function delayP(ms){return new Promise(r=>{if(autoStopped){r();return;}autoTimeout=setTimeout(r,ms);});}
+function setAutoPanel(s,i,c){document.getElementById('auto-step-title').textContent=s;document.getElementById('auto-instruction').textContent=i;document.getElementById('auto-count').textContent=c;}
+function enterAutoUI(){isAutoPlaying=true;autoStopped=false;document.getElementById('normal-controls').style.display='none';document.getElementById('auto-controls').style.display='';document.getElementById('auto-panel').classList.add('show');document.getElementById('tap-hint').style.display='none';document.getElementById('master-wrap').classList.add('disabled');document.getElementById('main-card').classList.remove('tappable');document.getElementById('main-card').classList.add('no-tap');}
+function exitAutoUI(){autoStopped=true;isAutoPlaying=false;window.speechSynthesis.cancel();isSpeaking=false;stopKeepAlive();clearTimeout(speakOne._t);if(autoTimeout){clearTimeout(autoTimeout);autoTimeout=null;}document.getElementById('normal-controls').style.display='';document.getElementById('auto-controls').style.display='none';document.getElementById('auto-panel').classList.remove('show');document.getElementById('tap-hint').style.display='';document.getElementById('master-wrap').classList.remove('disabled');document.getElementById('main-card').classList.add('tappable');document.getElementById('main-card').classList.remove('no-tap');}
+function stopAutoPlay(){exitAutoUI();update();}
+function showHidden(){document.getElementById('main-text').textContent='？？？';document.getElementById('answer-wrap').classList.remove('show');document.getElementById('main-card').classList.remove('revealed');}
+function showAll(){const a=getActive();if(!a.length)return;document.getElementById('main-text').innerHTML=a[currentIndex].en;document.getElementById('answer-wrap').classList.add('show');document.getElementById('main-card').classList.add('revealed');}
+async function runShadowing(){const active=getActive();if(!active.length){stopAutoPlay();return;}const si=currentIndex;for(let i=0;i<active.length;i++){if(autoStopped)break;currentIndex=(si+i)%active.length;update();const n=i+1,tot=active.length;showHidden();setAutoPanel(`カード ${n}/${tot} — STEP 1`,'👂 発話せずに2回聴いてください。','1/2回目…');await speakP();if(autoStopped)break;await delayP(350);if(autoStopped)break;setAutoPanel(`カード ${n}/${tot} — STEP 1`,'👂 発話せずに2回聴いてください。','2/2回目…');await speakP();if(autoStopped)break;await delayP(450);if(autoStopped)break;showHidden();setAutoPanel(`カード ${n}/${tot} — STEP 2`,'🗣️ 音声に合わせてシャドウイングしてください。','1/2回目…');await speakP();if(autoStopped)break;await delayP(350);if(autoStopped)break;setAutoPanel(`カード ${n}/${tot} — STEP 2`,'🗣️ 音声に合わせてシャドウイングしてください。','2/2回目…');await speakP();if(autoStopped)break;await delayP(450);if(autoStopped)break;showAll();setAutoPanel(`カード ${n}/${tot} — STEP 3`,'📖 英文・日本語訳を見ながら2回シャドウイング。','1/2回目…');await speakP();if(autoStopped)break;await delayP(350);if(autoStopped)break;setAutoPanel(`カード ${n}/${tot} — STEP 3`,'📖 英文・日本語訳を見ながら2回シャドウイング。','2/2回目…');await speakP();if(autoStopped)break;await delayP(450);if(autoStopped)break;showHidden();setAutoPanel(`カード ${n}/${tot} — STEP 4`,'🙈 何も見ずに2回シャドウイングしてください。','1/2回目…');await speakP();if(autoStopped)break;await delayP(350);if(autoStopped)break;setAutoPanel(`カード ${n}/${tot} — STEP 4`,'🙈 何も見ずに2回シャドウイングしてください。','2/2回目…');await speakP();if(autoStopped)break;await delayP(700);}if(!autoStopped){setAutoPanel('完了！','🎉 シャドウイング完了しました！','');await delayP(2000);stopAutoPlay();}}
+function startShadowing(){if(!getActive().length){alert('出題できるカードがありません。');return;}enterAutoUI();runShadowing();}
+async function runContinuous(){let lc=0;while(!autoStopped){const active=getActive();if(!active.length){stopAutoPlay();return;}lc++;const si=currentIndex;for(let i=0;i<active.length;i++){if(autoStopped)break;currentIndex=(si+i)%active.length;update();document.getElementById('answer-wrap').classList.add('show');document.getElementById('main-card').classList.add('revealed');setAutoPanel(`連続再生 ${i+1}/${active.length}（${lc}周目）`,'▶ 英語音声を再生中 — ⏹ 停止ボタンで終了','');await speakP();if(autoStopped)break;await delayP(500);}if(!autoStopped)currentIndex=0;}}
+function startContinuous(){if(!getActive().length){alert('出題できるカードがありません。');return;}enterAutoUI();runContinuous();}
+buildCatRows();updateFilterLabel();update();
+</script>
+</body>
+</html>
