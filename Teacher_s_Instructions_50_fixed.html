@@ -630,9 +630,9 @@ const phrases = [
     {cat:"Beginning", en:"We are going to cover Chapter 3 today.", ja:"今日は第3章を扱います。"},
     {cat:"Beginning", en:"Today's learning objective is...", ja:"今日の学習目標は……。"},
     {cat:"Beginning", en:"Check your email for the link.", ja:"メールでリンクを確認してください。"},
-    {cat:"Instruction", en:"Work on your own for 10 minutes.", ja:"10分間、個人ワークをしてください。"},
+    {cat:"Instruction", en:"Work by yourself for 10 minutes.", ja:"10分間、個人ワークをしてください。"},
     {cat:"Instruction", en:"Discuss this with your shoulder partner.", ja:"隣の人とこれについて話し合って。"},
-    {cat:"Instruction", en:"Get into groups of four.", ja:"4人1組になって。"},
+    {cat:"Instruction", en:"Get into groups of four.", ja:"4人1組になって。", tip:"「Get into groups of ○」で「○人グループになって」。人数を変えるだけで応用できます。"},
     {cat:"Instruction", en:"Brainstorm some ideas in your notebook.", ja:"ノートにアイデアを書き出して。"},
     {cat:"Instruction", en:"Make sure to cite your sources.", ja:"必ず出典を明記してください。"},
     {cat:"Instruction", en:"Don't forget to save your work.", ja:"作業内容を保存するのを忘れないで。"},
@@ -648,7 +648,7 @@ const phrases = [
     {cat:"Q&A", en:"Give it a try, even if you're not sure.", ja:"自信がなくても、やってみて。"},
     {cat:"Q&A", en:"Could you speak up a little, please?", ja:"もう少し大きな声で話して。"},
     {cat:"Q&A", en:"Let's hear from someone else.", ja:"他の人の意見も聞こう。"},
-    {cat:"Q&A", en:"Come to the front and show us.", ja:"前へ来て、私たちに見せて。"},
+    {cat:"Q&A", en:"Come to the front and present your work.", ja:"前に出て、発表してください。"},
     {cat:"Q&A", en:"I'll give you a hint.", ja:"ヒントをあげましょう。"},
     {cat:"Assessment", en:"The deadline is this Friday at 4 PM.", ja:"締め切りは今週金曜の午後4時です。"},
     {cat:"Assessment", en:"This will be graded.", ja:"これは成績（評価）に入ります。"},
@@ -657,7 +657,7 @@ const phrases = [
     {cat:"Assessment", en:"You have 5 minutes left.", ja:"残り5分です。"},
     {cat:"Assessment", en:"Time is up. Pens down.", ja:"時間終了。ペンを置いて。"},
     {cat:"Assessment", en:"Pass your papers to the front.", ja:"答案用紙を前へ回して。"},
-    {cat:"Assessment", en:"This is a formative assessment.", ja:"これは練習用の小テスト（評価対象外）です。"},
+    {cat:"Assessment", en:"This is a formative assessment.", ja:"これは学習確認テストです。"},
     {cat:"Assessment", en:"Your final project is due next month.", ja:"最終プロジェクトは来月提出です。"},
     {cat:"Assessment", en:"I'll give you some feedback later.", ja:"後でフィードバックをします。"},
     {cat:"Management", en:"Please stop talking and listen.", ja:"喋るのをやめて聞いてください。"},
@@ -677,6 +677,7 @@ const TOTAL = phrases.length;
 // ── State ────────────────────────────────────────────────────────
 let currentIndex  = 0;
 let isRandom      = false;
+let isRepeating   = false;
 let isEnToJa      = true;
 let isRevealed    = false;
 let activeCategory = 'all';
@@ -843,6 +844,31 @@ function getSpeechText(item) {
 function speakCurrent() {
   const a = getActive(); if(!a.length) return;
   speakOne(getSpeechText(a[currentIndex]));
+}
+
+function speakRepeat() {
+  if (!isRepeating || isAutoPlaying) return;
+  const _a = getActive(); if (!_a.length) return;
+  const _t = getSpeechText(_a[currentIndex]);
+  speakOne(_t, () => {
+    if (isRepeating && !isAutoPlaying) {
+      speakRepeat._t = setTimeout(() => speakRepeat(), 300);
+    }
+  });
+}
+speakRepeat._t = null;
+
+function toggleRepeat() {
+  isRepeating = !isRepeating;
+  const btn = document.getElementById('repeat-btn');
+  btn.textContent = isRepeating ? '🔁 繰り返し: ON' : '🔁 繰り返し';
+  btn.className   = isRepeating ? 'btn btn-on' : 'btn btn-secondary';
+  if (isRepeating) {
+    speakRepeat();
+  } else {
+    window.speechSynthesis.cancel();
+    clearTimeout(speakRepeat._t);
+  }
 }
 
 function speakP() {
@@ -1063,6 +1089,14 @@ function toggleMasterList() {
 
 function next() {
   if (isAutoPlaying) return;
+  if (isRepeating) {
+    isRepeating = false;
+    window.speechSynthesis.cancel();
+    clearTimeout(speakRepeat._t);
+    const btn = document.getElementById('repeat-btn');
+    btn.textContent = '🔁 繰り返し';
+    btn.className   = 'btn btn-secondary';
+  }
   const active = getActive(); if(!active.length) return;
   currentIndex = isRandom
     ? Math.floor(Math.random()*active.length)
@@ -1072,6 +1106,14 @@ function next() {
 
 function prev() {
   if (isAutoPlaying) return;
+  if (isRepeating) {
+    isRepeating = false;
+    window.speechSynthesis.cancel();
+    clearTimeout(speakRepeat._t);
+    const btn = document.getElementById('repeat-btn');
+    btn.textContent = '🔁 繰り返し';
+    btn.className   = 'btn btn-secondary';
+  }
   const active = getActive(); if(!active.length) return;
   currentIndex = (currentIndex - 1 + active.length) % active.length;
   update();
