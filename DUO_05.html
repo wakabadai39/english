@@ -350,8 +350,8 @@ function toggleMasterList(){const w=document.getElementById('master-list-wrap');
 function clearAllMaster(){if(!confirm('マスター済みをすべて解除しますか？'))return;mastered.clear();currentIndex=0;update();document.getElementById('master-list-wrap').style.display='none';}
 function handleTap(){if(isAutoPlaying)return;const wrap=document.getElementById('answer-wrap');if(!wrap.classList.contains('show')){wrap.classList.add('show');document.getElementById('main-card').classList.add('revealed');}}
 function toggleMaster(e){const active=getActive();if(!active.length)return;const item=active[currentIndex];const realIdx=phrases.indexOf(item);if(e.target.checked){mastered.add(realIdx);document.getElementById('mastered-badge').classList.add('show');setTimeout(()=>{next();},400);}else{mastered.delete(realIdx);document.getElementById('mastered-badge').classList.remove('show');}updateMasterBadge();buildCatRows();}
-function next(){const a=getActive();if(!a.length)return;if(isRepeating){isRepeating=false;window.speechSynthesis.cancel();clearTimeout(speakRepeat._t);const btn=document.getElementById('repeat-btn');btn.textContent='🔁 繰り返し';btn.className='btn btn-secondary';}if(isRandom)currentIndex=Math.floor(Math.random()*a.length);else currentIndex=(currentIndex+1)%a.length;update();}
-function prev(){const a=getActive();if(!a.length)return;if(isRepeating){isRepeating=false;window.speechSynthesis.cancel();clearTimeout(speakRepeat._t);const btn=document.getElementById('repeat-btn');btn.textContent='🔁 繰り返し';btn.className='btn btn-secondary';}currentIndex=(currentIndex-1+a.length)%a.length;update();}
+function next(){const a=getActive();if(!a.length)return;if(isRandom)currentIndex=Math.floor(Math.random()*a.length);else currentIndex=(currentIndex+1)%a.length;update();if(isRepeating){clearTimeout(speakRepeat._t);speakRepeat();}}
+function prev(){const a=getActive();if(!a.length)return;currentIndex=(currentIndex-1+a.length)%a.length;update();if(isRepeating){clearTimeout(speakRepeat._t);speakRepeat();}}
 function toggleRandom(){isRandom=!isRandom;const btn=document.getElementById('random-btn');btn.textContent=isRandom?'🔀 ランダム: ON':'🔀 ランダム: OFF';btn.className=isRandom?'btn btn-on':'btn btn-secondary';document.getElementById('order-badge').textContent=isRandom?'ランダム':'順番通り';}
 function switchMode(){if(isAutoPlaying)return;isEnToJa=!isEnToJa;update();}
 function delayP(ms){return new Promise(r=>{if(autoStopped){r();return;}autoTimeout=setTimeout(r,ms);});}
@@ -369,6 +369,24 @@ function openGuide(){document.getElementById('guide-overlay').classList.add('sho
 function closeGuide(){document.getElementById('guide-overlay').classList.remove('show');}
 function handleOverlayClick(e){if(e.target===document.getElementById('guide-overlay'))closeGuide();}
 buildCatRows();updateFilterLabel();update();
+</script>
+<script>
+// スワイプ機能
+(function() {
+  var startX = 0, startY = 0;
+  document.addEventListener('touchstart', function(e) {
+    startX = e.touches[0].clientX;
+    startY = e.touches[0].clientY;
+  }, { passive: true });
+  document.addEventListener('touchend', function(e) {
+    var dx = e.changedTouches[0].clientX - startX;
+    var dy = e.changedTouches[0].clientY - startY;
+    if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 50) {
+      if (dx < 0) next();
+      else prev();
+    }
+  }, { passive: true });
+})();
 </script>
 </body>
 </html>
