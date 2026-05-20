@@ -449,14 +449,13 @@ body {
     <button class="btn btn-secondary" onclick="prev()">← 戻る</button>
     <button class="btn btn-primary"   onclick="speakCurrent()">🔊 音声</button>
     <button class="btn btn-secondary" onclick="next()">次へ →</button>
+    <button class="btn btn-secondary" style="font-size:11px;padding:8px 6px;" onclick="switchMode()">🔄 英⇄日</button>
   </div>
-  <div class="btn-row">
-    <button class="btn btn-secondary" id="random-btn" onclick="toggleRandom()">🔀 ランダム: OFF</button>
-    <button class="btn btn-secondary" onclick="switchMode()">🔄 英⇄日</button>
-  </div>
-  <div class="btn-row">
-    <button class="btn btn-amber" onclick="startShadowing()">🗣️ シャドウイング</button>
-    <button class="btn btn-blue"  onclick="startContinuous()">▶ 連続再生</button>
+  <div class="btn-row" style="gap:4px;">
+    <button class="btn btn-secondary" style="font-size:11px;padding:7px 5px;" id="random-btn" onclick="toggleRandom()">🔀 ランダム</button>
+    <button class="btn btn-secondary" style="font-size:11px;padding:7px 5px;" id="repeat-btn" onclick="toggleRepeat()">🔁 繰り返し</button>
+    <button class="btn btn-blue"  style="font-size:11px;padding:7px 5px;" onclick="startContinuous()">▶ 連続再生</button>
+    <button class="btn btn-amber" style="font-size:11px;padding:7px 5px;" onclick="startShadowing()">🗣️ シャドウ</button>
   </div>
 </div>
 
@@ -601,6 +600,20 @@ body {
         <div class="g-step">
           <div class="g-step-num">2</div>
           <div class="g-step-text">速度スライダーで<strong>0.5倍〜1.5倍</strong>に調整できます。最初は<strong>0.8×</strong>くらいのゆっくりめがおすすめです。慣れてきたら1.0×に戻しましょう。</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ⑦ 推奨環境 -->
+    <div class="g-section">
+      <div class="g-head"><span>🖥️</span> 推奨環境</div>
+      <div class="g-body">
+        <div style="font-size:14px; line-height:1.7; margin-bottom:10px;">
+          <strong>🖥️ 推奨環境：Windows 11 + Microsoft Edge</strong><br>
+          音声の選択肢が豊富で、読み上げの自然さ・正確さともに最も優れています。
+        </div>
+        <div style="font-size:11px; color:#888; line-height:1.6;">
+          ⚠️ iPhone・iPadではAppleの仕様により、文脈によっては一部の単語が誤った発音になるケースが指摘されています。気になる箇所はWindowsのEdgeでご確認ください。
         </div>
       </div>
     </div>
@@ -855,6 +868,8 @@ let isEnToJa      = true;
 let isRevealed    = false;
 let activeCategory = 'all';
 let isAutoPlaying  = false;
+let isRepeating    = false;
+let repeatTimer    = null;
 let autoMode       = '';   // 'shadow' | 'continuous'
 let autoStopped    = false;
 let autoTimeout    = null;
@@ -1017,6 +1032,33 @@ function getSpeechText(item) {
 function speakCurrent() {
   const a = getActive(); if(!a.length) return;
   speakOne(getSpeechText(a[currentIndex]));
+}
+
+function speakRepeat(text) {
+  if (!isRepeating) return;
+  window.speechSynthesis.cancel();
+  setTimeout(() => {
+    speakOne(text, () => {
+      if (isRepeating) {
+        repeatTimer = setTimeout(() => speakRepeat(text), 300);
+      }
+    });
+  }, 150);
+}
+
+function toggleRepeat() {
+  isRepeating = !isRepeating;
+  const btn = document.getElementById('repeat-btn');
+  btn.textContent = '🔁 繰り返し: ' + (isRepeating ? 'ON' : 'OFF');
+  btn.style.background = isRepeating ? 'var(--primary)' : '';
+  btn.style.color = isRepeating ? '#fff' : '';
+  if (isRepeating) {
+    const a = getActive(); if (!a.length) return;
+    speakRepeat(getSpeechText(a[currentIndex]));
+  } else {
+    if (repeatTimer) { clearTimeout(repeatTimer); repeatTimer = null; }
+    window.speechSynthesis.cancel();
+  }
 }
 
 function speakP() {
@@ -1237,6 +1279,8 @@ function toggleMasterList() {
 
 function next() {
   if (isAutoPlaying) return;
+  if (repeatTimer) { clearTimeout(repeatTimer); repeatTimer = null; }
+  window.speechSynthesis.cancel();
   const active = getActive(); if(!active.length) return;
   currentIndex = isRandom
     ? Math.floor(Math.random()*active.length)
@@ -1246,9 +1290,12 @@ function next() {
 
 function prev() {
   if (isAutoPlaying) return;
+  if (repeatTimer) { clearTimeout(repeatTimer); repeatTimer = null; }
+  window.speechSynthesis.cancel();
   const active = getActive(); if(!active.length) return;
   currentIndex = (currentIndex - 1 + active.length) % active.length;
   update();
+  if (isRepeating) setTimeout(() => { const a=getActive(); if(a.length) speakRepeat(getSpeechText(a[currentIndex])); }, 300);
 }
 
 function toggleRandom() {
@@ -1445,6 +1492,24 @@ function handleOverlayClick(e) {
 buildCatRows();
 updateFilterLabel();
 update();
+</script>
+<script>
+// スワイプ機能
+(function() {
+  let startX = 0, startY = 0;
+  document.addEventListener('touchstart', e => {
+    startX = e.touches[0].clientX;
+    startY = e.touches[0].clientY;
+  }, { passive: true });
+  document.addEventListener('touchend', e => {
+    const dx = e.changedTouches[0].clientX - startX;
+    const dy = e.changedTouches[0].clientY - startY;
+    if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 50) {
+      if (dx < 0) next();
+      else prev();
+    }
+  }, { passive: true });
+})();
 </script>
 </body>
 </html>

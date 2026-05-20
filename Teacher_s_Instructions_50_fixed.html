@@ -454,8 +454,8 @@ body {
   <div class="btn-row" style="gap:4px;">
     <button class="btn btn-secondary" style="font-size:11px;padding:7px 5px;" id="random-btn" onclick="toggleRandom()">🔀 ランダム</button>
     <button class="btn btn-secondary" style="font-size:11px;padding:7px 5px;" id="repeat-btn" onclick="toggleRepeat()">🔁 繰り返し</button>
-    <button class="btn btn-blue"      style="font-size:11px;padding:7px 5px;" onclick="startContinuous()">▶ 連続再生</button>
-    <button class="btn btn-amber"     style="font-size:11px;padding:7px 5px;" onclick="startShadowing()">🗣️ シャドウ</button>
+    <button class="btn btn-blue"  style="font-size:11px;padding:7px 5px;" onclick="startContinuous()">▶ 連続再生</button>
+    <button class="btn btn-amber" style="font-size:11px;padding:7px 5px;" onclick="startShadowing()">🗣️ シャドウ</button>
   </div>
 </div>
 
@@ -604,6 +604,20 @@ body {
       </div>
     </div>
 
+    <!-- ⑦ 推奨環境 -->
+    <div class="g-section">
+      <div class="g-head"><span>🖥️</span> 推奨環境</div>
+      <div class="g-body">
+        <div style="font-size:14px; line-height:1.7; margin-bottom:10px;">
+          <strong>🖥️ 推奨環境：Windows 11 + Microsoft Edge</strong><br>
+          音声の選択肢が豊富で、読み上げの自然さ・正確さともに最も優れています。
+        </div>
+        <div style="font-size:11px; color:#888; line-height:1.6;">
+          ⚠️ iPhone・iPadではAppleの仕様により、文脈によっては一部の単語が誤った発音になるケースが指摘されています。気になる箇所はWindowsのEdgeでご確認ください。
+        </div>
+      </div>
+    </div>
+
   </div><!-- /guide-body -->
 </div><!-- /guide-modal -->
 </div><!-- /guide-overlay -->
@@ -626,44 +640,44 @@ const phrases = [
     {cat:"Beginning", en:"Does everyone have the handout?", ja:"プリントは全員持っていますか？"},
     {cat:"Beginning", en:"I'll take the attendance now.", ja:"出席を取ります。"},
     {cat:"Beginning", en:"Who is absent today?", ja:"今日、欠席している人は誰？"},
-    {cat:"Beginning", en:"We are going to cover Chapter 3 today.", ja:"今日は第3章を扱います。"},
-    {cat:"Beginning", en:"Today's learning objective is to practice speaking English naturally in everyday classroom situations.", ja:"今日の学習目標は、日常的な授業の場面で自然な英語を使って話す練習をすることです。", tip:"'learning objective'（学習目標）は授業の冒頭でよく使うフレーズ。'to practice speaking'のように後ろにto不定詞を続けて目標を説明します。"},
+    {cat:"Beginning", en:"We are going to cover Chapter 3 today.", ja:"今日は第3章を扱います。", tip:"cover（カバー）＝授業で取り上げる・学ぶという意味。「今日はここを勉強します」というニュアンス。"},
+    {cat:"Beginning", en:"Today's learning objective is...", ja:"今日の学習目標は……。", tip:"learning objective（ラーニング・オブジェクティブ）＝学習目標。その授業で何を学ぶかを示したもの。授業の最初に板書されることが多い。"},
     {cat:"Beginning", en:"Check your email for the link.", ja:"メールでリンクを確認してください。"},
-    {cat:"Instruction", en:"Work by yourself for 10 minutes.", ja:"10分間、個人ワークをしてください。"},
-    {cat:"Instruction", en:"Discuss this with your shoulder partner.", ja:"隣の人とこれについて話し合って。"},
-    {cat:"Instruction", en:"Get into groups of four.", ja:"4人1組になって。", tip:"「Get into groups of ○」で「○人グループになって」。人数を変えるだけで応用できます。"},
+    {cat:"Instruction", en:"Work on your own for 10 minutes.", ja:"10分間、個人ワークをしてください。"},
+    {cat:"Instruction", en:"Discuss this with your shoulder partner.", ja:"隣の人とこれについて話し合って。", tip:"shoulder partner（ショルダー・パートナー）＝隣の席の人。インターの授業でよく使われる表現です。"},
+    {cat:"Instruction", en:"Get into groups of four.", ja:"4人1組になって。"},
     {cat:"Instruction", en:"Brainstorm some ideas in your notebook.", ja:"ノートにアイデアを書き出して。"},
-    {cat:"Instruction", en:"Make sure to cite your sources.", ja:"必ず出典を明記してください。"},
+    {cat:"Instruction", en:"Make sure to cite your sources.", ja:"必ず出典を明記してください。", tip:"cite your sources（サイト・ユア・ソーシーズ）＝参考文献・引用元を書くこと。レポートや発表で必ず求められます。"},
     {cat:"Instruction", en:"Don't forget to save your work.", ja:"作業内容を保存するのを忘れないで。"},
     {cat:"Instruction", en:"Follow the instructions on the screen.", ja:"画面上の指示に従ってください。"},
     {cat:"Instruction", en:"Scroll down to the bottom of the page.", ja:"ページの一番下までスクロールして。"},
-    {cat:"Instruction", en:"Highlight the key terms in the text.", ja:"テキストの重要用語にハイライトを引いて。"},
+    {cat:"Instruction", en:"Highlight the key terms in the text.", ja:"テキストの重要用語にハイライトを引いて。", tip:"highlight（ハイライト）＝蛍光ペンや下線で重要語を目立たせること。key terms＝重要用語・キーワード。"},
     {cat:"Instruction", en:"Turn to page 45, please.", ja:"45ページを開いて。"},
     {cat:"Q&A", en:"Does that make sense to you?", ja:"理解できましたか？"},
     {cat:"Q&A", en:"Any questions so far?", ja:"ここまでのところで質問は？"},
     {cat:"Q&A", en:"Raise your hand if you need help.", ja:"助けが必要なら手を挙げて。"},
     {cat:"Q&A", en:"Who wants to share their thoughts?", ja:"考えを発表したい人は？"},
-    {cat:"Q&A", en:"What's your take on this?", ja:"これについて、あなたはどう思う？"},
+    {cat:"Q&A", en:"What's your take on this?", ja:"これについて、あなたはどう思う？", tip:"take（テイク）＝意見・見解。「これについてどう思う？」という口語表現。your opinion と同じ意味。"},
     {cat:"Q&A", en:"Give it a try, even if you're not sure.", ja:"自信がなくても、やってみて。"},
     {cat:"Q&A", en:"Could you speak up a little, please?", ja:"もう少し大きな声で話して。"},
     {cat:"Q&A", en:"Let's hear from someone else.", ja:"他の人の意見も聞こう。"},
-    {cat:"Q&A", en:"Come to the front and present your work.", ja:"前に出て、発表してください。"},
+    {cat:"Q&A", en:"Come to the front and show us.", ja:"前へ来て、私たちに見せて。"},
     {cat:"Q&A", en:"I'll give you a hint.", ja:"ヒントをあげましょう。"},
     {cat:"Assessment", en:"The deadline is this Friday at 4 PM.", ja:"締め切りは今週金曜の午後4時です。"},
     {cat:"Assessment", en:"This will be graded.", ja:"これは成績（評価）に入ります。"},
-    {cat:"Assessment", en:"Submit your assignment via ManageBac.", ja:"ManageBac経由で課題を提出して。"},
-    {cat:"Assessment", en:"Check the rubric before you start.", ja:"始める前に評価基準(ルーブリック)を確認して。"},
+    {cat:"Assessment", en:"Submit your assignment via ManageBac.", ja:"ManageBac経由で課題を提出して。", tip:"ManageBac（マネージバック）＝シンガポールをはじめ多くのインターで使われる課題・成績管理システム。課題の提出や成績確認に使います。"},
+    {cat:"Assessment", en:"Check the rubric before you start.", ja:"始める前に評価基準(ルーブリック)を確認して。", tip:"rubric（ルーブリック）＝採点基準表。何点満点でどう評価されるかが書いてある表。始める前に必ず確認しよう。"},
     {cat:"Assessment", en:"You have 5 minutes left.", ja:"残り5分です。"},
-    {cat:"Assessment", en:"Time is up. Pens down.", ja:"時間終了。ペンを置いて。"},
-    {cat:"Assessment", en:"Pass your papers to the front.", ja:"答案用紙を前へ回して。"},
-    {cat:"Assessment", en:"This is a formative assessment.", ja:"これは学習確認テストです。"},
+    {cat:"Assessment", en:"Time is up. Pens down.", ja:"時間終了。ペンを置いて。", tip:"Pens down（ペンズ・ダウン）＝試験・作業終了の合図。ペンを置いてそれ以上書かないこと。"},
+    {cat:"Assessment", en:"Pass your papers to the front.", ja:"答案用紙を前へ回して。", tip:"Pass your papers to the front（パス・ユア・ペーパーズ・トゥ・ザ・フロント）＝答案用紙を列の前の人に順番に渡していくこと。"},
+    {cat:"Assessment", en:"This is a formative assessment.", ja:"これは練習用の小テスト（評価対象外）です。", tip:"formative assessment（フォーマティブ・アセスメント）＝成績に直接影響しない理解度確認のテストや課題。本番の試験はsummative assessment（サマティブ）という。"},
     {cat:"Assessment", en:"Your final project is due next month.", ja:"最終プロジェクトは来月提出です。"},
-    {cat:"Assessment", en:"I'll give you some feedback later.", ja:"後でフィードバックをします。"},
+    {cat:"Assessment", en:"I'll give you some feedback later.", ja:"後でフィードバックをします。", tip:"feedback（フィードバック）＝先生からの改善点や評価コメント。自分の作業のどこが良くてどこを直すべきか教えてもらえる。"},
     {cat:"Management", en:"Please stop talking and listen.", ja:"喋るのをやめて聞いてください。"},
     {cat:"Management", en:"Put your phones in your bags.", ja:"スマホはカバンにしまって。"},
     {cat:"Management", en:"Pack up your things.", ja:"片付けをしてください。"},
     {cat:"Management", en:"No food or drinks in the lab.", ja:"ラボ内は飲食禁止です。"},
-    {cat:"Management", en:"Make sure to tidy up your desk.", ja:"必ず机の上を整理しておいて。"},
+    {cat:"Management", en:"Make sure to tidy up your desk.", ja:"机の上を整理しておいて。"},
     {cat:"Management", en:"You may go to your next class now.", ja:"次の授業に行っていいですよ。"},
     {cat:"Management", en:"Don't be late for the next lesson.", ja:"次の授業に遅れないように。"},
     {cat:"Management", en:"Wait for the bell to ring.", ja:"チャイムが鳴るまで待って。"},
@@ -676,11 +690,12 @@ const TOTAL = phrases.length;
 // ── State ────────────────────────────────────────────────────────
 let currentIndex  = 0;
 let isRandom      = false;
-let isRepeating   = false;
 let isEnToJa      = true;
 let isRevealed    = false;
 let activeCategory = 'all';
 let isAutoPlaying  = false;
+let isRepeating    = false;
+let repeatTimer    = null;
 let autoMode       = '';   // 'shadow' | 'continuous'
 let autoStopped    = false;
 let autoTimeout    = null;
@@ -845,28 +860,30 @@ function speakCurrent() {
   speakOne(getSpeechText(a[currentIndex]));
 }
 
-function speakRepeat() {
-  if (!isRepeating || isAutoPlaying) return;
-  const _a = getActive(); if (!_a.length) return;
-  const _t = getSpeechText(_a[currentIndex]);
-  speakOne(_t, () => {
-    if (isRepeating && !isAutoPlaying) {
-      speakRepeat._t = setTimeout(() => speakRepeat(), 300);
-    }
-  });
+function speakRepeat(text) {
+  if (!isRepeating) return;
+  window.speechSynthesis.cancel();
+  setTimeout(() => {
+    speakOne(text, () => {
+      if (isRepeating) {
+        repeatTimer = setTimeout(() => speakRepeat(text), 300);
+      }
+    });
+  }, 150);
 }
-speakRepeat._t = null;
 
 function toggleRepeat() {
   isRepeating = !isRepeating;
   const btn = document.getElementById('repeat-btn');
-  btn.textContent = isRepeating ? '🔁 繰り返し: ON' : '🔁 繰り返し';
-  btn.className   = isRepeating ? 'btn btn-on' : 'btn btn-secondary';
+  btn.textContent = '🔁 繰り返し: ' + (isRepeating ? 'ON' : 'OFF');
+  btn.style.background = isRepeating ? 'var(--primary)' : '';
+  btn.style.color = isRepeating ? '#fff' : '';
   if (isRepeating) {
-    speakRepeat();
+    const a = getActive(); if (!a.length) return;
+    speakRepeat(getSpeechText(a[currentIndex]));
   } else {
+    if (repeatTimer) { clearTimeout(repeatTimer); repeatTimer = null; }
     window.speechSynthesis.cancel();
-    clearTimeout(speakRepeat._t);
   }
 }
 
@@ -1088,14 +1105,8 @@ function toggleMasterList() {
 
 function next() {
   if (isAutoPlaying) return;
-  if (isRepeating) {
-    isRepeating = false;
-    window.speechSynthesis.cancel();
-    clearTimeout(speakRepeat._t);
-    const btn = document.getElementById('repeat-btn');
-    btn.textContent = '🔁 繰り返し';
-    btn.className   = 'btn btn-secondary';
-  }
+  if (repeatTimer) { clearTimeout(repeatTimer); repeatTimer = null; }
+  window.speechSynthesis.cancel();
   const active = getActive(); if(!active.length) return;
   currentIndex = isRandom
     ? Math.floor(Math.random()*active.length)
@@ -1105,17 +1116,12 @@ function next() {
 
 function prev() {
   if (isAutoPlaying) return;
-  if (isRepeating) {
-    isRepeating = false;
-    window.speechSynthesis.cancel();
-    clearTimeout(speakRepeat._t);
-    const btn = document.getElementById('repeat-btn');
-    btn.textContent = '🔁 繰り返し';
-    btn.className   = 'btn btn-secondary';
-  }
+  if (repeatTimer) { clearTimeout(repeatTimer); repeatTimer = null; }
+  window.speechSynthesis.cancel();
   const active = getActive(); if(!active.length) return;
   currentIndex = (currentIndex - 1 + active.length) % active.length;
   update();
+  if (isRepeating) setTimeout(() => { const a=getActive(); if(a.length) speakRepeat(getSpeechText(a[currentIndex])); }, 300);
 }
 
 function toggleRandom() {
@@ -1312,6 +1318,24 @@ function handleOverlayClick(e) {
 buildCatRows();
 updateFilterLabel();
 update();
+</script>
+<script>
+// スワイプ機能
+(function() {
+  let startX = 0, startY = 0;
+  document.addEventListener('touchstart', e => {
+    startX = e.touches[0].clientX;
+    startY = e.touches[0].clientY;
+  }, { passive: true });
+  document.addEventListener('touchend', e => {
+    const dx = e.changedTouches[0].clientX - startX;
+    const dy = e.changedTouches[0].clientY - startY;
+    if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 50) {
+      if (dx < 0) next();
+      else prev();
+    }
+  }, { passive: true });
+})();
 </script>
 </body>
 </html>

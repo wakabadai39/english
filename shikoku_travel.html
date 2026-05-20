@@ -3,24 +3,24 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Shikoku Travel — Reading Cards</title>
+<title>四国・岡山 旅行英会話 90</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #f0f4ff;
+  --bg: #f0f9f4;
   --surface: #ffffff;
-  --primary: #3b5bdb;
-  --primary-light: #e7edff;
-  --accent: #1971c2;
-  --green: #2f9e44;
-  --green-light: #d3f9d8;
-  --amber: #e67700;
-  --amber-light: #fff3bf;
-  --red: #e03131;
+  --primary: #0369a1;
+  --primary-light: #dbeafe;
+  --accent: #0891b2;
+  --green: #16a34a;
+  --green-light: #dcfce7;
+  --amber: #d97706;
+  --amber-light: #fef3c7;
+  --red: #e11d48;
   --text: #1e293b;
   --muted: #64748b;
-  --border: #a5b4fc;
-  --shadow: 0 4px 24px rgba(59,91,219,0.10);
+  --border: #86efac;
+  --shadow: 0 4px 24px rgba(22,163,74,0.10);
   --radius: 18px;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -32,7 +32,7 @@ body {
   padding: 16px 12px 48px;
   color: var(--text);
 }
-.container { max-width: 580px; margin: auto; }
+.container { max-width: 560px; margin: auto; }
 .header { text-align: center; margin-bottom: 14px; }
 .header h2 { font-size: 18px; font-weight: 900; color: var(--primary); }
 .header p  { font-size: 12px; color: var(--muted); margin-top: 2px; }
@@ -43,8 +43,9 @@ body {
   background: var(--primary-light); color: var(--primary);
   border: 1px solid var(--border);
 }
-.badge.green { background: var(--green-light); color: var(--green); border-color: #74c476; }
-.progress-wrap { background: #c5cffa; border-radius: 99px; height: 6px; margin-bottom: 4px; overflow: hidden; }
+.badge.green { background: var(--green-light); color: var(--green); border-color: #86efac; }
+.badge.amber { background: var(--amber-light); color: var(--amber); border-color: #fcd34d; }
+.progress-wrap { background: #bfdbfe; border-radius: 99px; height: 6px; margin-bottom: 4px; overflow: hidden; }
 .progress-bar  { height: 100%; background: var(--primary); border-radius: 99px; transition: width 0.4s ease; }
 .progress-label { text-align: center; font-size: 12px; color: var(--muted); margin-bottom: 10px; }
 .tap-hint { font-size: 11px; color: var(--muted); margin-bottom: 6px; text-align: center; }
@@ -70,11 +71,11 @@ body {
   color: var(--primary); text-align: center; flex: 1;
 }
 .master-wrap { display: flex; align-items: center; gap: 4px; font-size: 11px; color: var(--muted); }
-.master-wrap input[type=checkbox] { width: 17px; height: 17px; accent-color: var(--primary); cursor: pointer; }
+.master-wrap input[type=checkbox] { width: 17px; height: 17px; accent-color: var(--green); cursor: pointer; }
 .master-wrap.disabled { opacity: .3; pointer-events: none; }
 .main-text {
-  font-size: clamp(14px, 3.8vw, 17px); font-weight: 700;
-  line-height: 1.75; text-align: left; margin-bottom: 14px;
+  font-size: clamp(15px, 4vw, 19px); font-weight: 700;
+  line-height: 1.65; text-align: center; margin-bottom: 14px;
 }
 .answer-wrap {
   opacity: 0; transform: translateY(5px);
@@ -83,13 +84,13 @@ body {
 }
 .answer-wrap.show { opacity: 1; transform: translateY(0); pointer-events: auto; }
 .answer-ja {
-  font-size: clamp(12px, 3.2vw, 14px); font-weight: 700;
-  color: var(--accent); text-align: left; line-height: 1.75;
-  background: #eff6ff; border-radius: 10px; padding: 10px 14px; margin-bottom: 8px;
+  font-size: clamp(13px, 3.5vw, 15px); font-weight: 700;
+  color: var(--accent); text-align: center; line-height: 1.6;
+  background: #f0f9ff; border-radius: 10px; padding: 10px 14px; margin-bottom: 8px;
 }
 .answer-tip {
-  font-size: 11px; font-weight: 600; color: var(--green);
-  text-align: left; padding: 0 4px; line-height: 1.65;
+  font-size: 12px; font-weight: 600; color: var(--green);
+  text-align: left; padding: 0 4px; line-height: 1.6;
 }
 .answer-tip::before { content: '💡 '; }
 .master-badge {
@@ -122,7 +123,7 @@ body {
 .filter-current {
   font-size: 12px; font-weight: 700; color: var(--primary);
   background: var(--primary-light); padding: 3px 10px; border-radius: 99px;
-  border: 1px solid var(--border); max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  border: 1px solid var(--border); max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
 .filter-toggle-icon { font-size: 12px; color: var(--muted); transition: transform .2s; margin-left: 6px; }
 .filter-toggle-icon.open { transform: rotate(180deg); }
@@ -176,7 +177,7 @@ body {
 .btn-secondary { background: #e2e8f0; color: var(--text); }
 .btn-red       { background: var(--red); color: #fff; }
 .btn-amber     { background: var(--amber); color: #fff; }
-.btn-blue      { background: #1971c2; color: #fff; }
+.btn-blue      { background: #2563eb; color: #fff; }
 .btn-on        { background: var(--green); color: #fff; }
 .master-summary {
   background: var(--green-light); border-radius: 12px; padding: 10px 14px;
@@ -200,7 +201,7 @@ body {
 .guide-overlay.show { display: block; }
 .guide-modal {
   background: var(--bg); max-width: 520px; margin: 0 auto;
-  min-height: 100vh; padding: 0 0 60px;
+  min-height: 100vh; padding: 0 0 60px; position: relative;
 }
 .guide-modal-header {
   position: sticky; top: 0; z-index: 10;
@@ -215,8 +216,8 @@ body {
   cursor: pointer; font-family: 'Noto Sans JP', sans-serif;
 }
 .guide-body { padding: 14px 14px 20px; }
-.g-section { background: #fff; border-radius: 14px; border: 1px solid #c5cffa; margin-bottom: 10px; overflow: hidden; }
-.g-head { padding: 11px 14px; background: #eef1ff; border-bottom: 1px solid #c5cffa; display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 700; color: var(--text); }
+.g-section { background: #fff; border-radius: 14px; border: 1px solid #d1fae5; margin-bottom: 10px; overflow: hidden; }
+.g-head { padding: 11px 14px; background: #f0fdf4; border-bottom: 1px solid #d1fae5; display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 700; color: var(--text); }
 .g-body { padding: 14px; }
 .g-text { font-size: 12px; color: var(--muted); line-height: 1.8; margin-bottom: 10px; }
 .g-text:last-child { margin-bottom: 0; }
@@ -226,32 +227,35 @@ body {
 .g-step-num { min-width: 22px; height: 22px; border-radius: 50%; background: var(--primary-light); color: var(--primary); font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
 .g-step-text { font-size: 12px; color: var(--muted); line-height: 1.8; }
 .g-step-text strong { color: var(--text); font-weight: 700; }
-.g-method { border-left: 3px solid var(--border); padding: 8px 12px; margin-bottom: 9px; border-radius: 0 8px 8px 0; background: #eef1ff; }
+.g-method { border-left: 3px solid var(--border); padding: 8px 12px; margin-bottom: 9px; border-radius: 0 8px 8px 0; background: #f0fdf4; }
+.g-method:last-child { margin-bottom: 0; }
 .g-method-title { font-size: 12px; font-weight: 700; color: var(--primary); margin-bottom: 4px; }
+.g-method-body { font-size: 12px; color: var(--muted); line-height: 1.8; }
 .g-amber { border-left-color: #fcd34d; background: #fffbeb; }
 .g-amber .g-method-title { color: #92400e; }
 .g-blue  { border-left-color: #93c5fd; background: #eff6ff; }
 .g-blue  .g-method-title { color: #1e40af; }
-.g-shadow-steps { background: #eef1ff; border-radius: 10px; padding: 10px 12px; margin-top: 8px; }
+.g-blue  .g-method-body  { color: #1e3a8a; }
+.g-shadow-steps { background: #f0fdf4; border-radius: 10px; padding: 10px 12px; margin-top: 8px; }
 .g-s-step { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 7px; }
 .g-s-step:last-child { margin-bottom: 0; }
 .g-s-badge { min-width: 52px; padding: 2px 0; text-align: center; border-radius: 99px; font-size: 10px; font-weight: 700; flex-shrink: 0; margin-top: 2px; }
-.gsb-g { background: var(--primary-light); color: var(--primary); }
+.gsb-g { background: var(--primary-light); color: #166534; }
 .gsb-b { background: #dbeafe; color: #1e40af; }
 .g-s-text { font-size: 11px; color: var(--muted); line-height: 1.75; }
 .g-s-text strong { color: var(--text); font-weight: 700; }
 .g-flow { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin: 10px 0 6px; }
 .g-flow-tag { padding: 4px 11px; border-radius: 99px; font-size: 11px; font-weight: 700; }
-.gft-blue  { background: var(--primary-light); color: var(--primary); border: 1px solid var(--border); }
+.gft-green { background: var(--primary-light); color: #166534; border: 1px solid #86efac; }
 .gft-amber { background: #fef3c7; color: #92400e; border: 1px solid #fcd34d; }
-.gft-green { background: var(--green-light); color: var(--green); border: 1px solid #74c476; }
+.gft-blue  { background: #dbeafe; color: #1e40af; border: 1px solid #93c5fd; }
 .g-flow-arr { color: var(--muted); font-size: 13px; }
 .gbd { display:inline-flex;align-items:center;gap:4px;padding:5px 12px;border-radius:99px;font-size:11px;font-weight:700;border:none;margin:3px; }
 .gbd-sec { background:#e2e8f0;color:#1e293b; }
-.gbd-pri { background:var(--primary);color:#fff; }
+.gbd-pri { background:#16a34a;color:#fff; }
 .gbd-amb { background:#d97706;color:#fff; }
-.gbd-blue { background:#1971c2;color:#fff; }
-.g-note { background: #eef1ff; border: 1px solid var(--border); border-radius: 10px; padding: 10px 12px; font-size: 12px; color: var(--primary); line-height: 1.8; margin-top: 10px; }
+.gbd-blue { background:#2563eb;color:#fff; }
+.g-note { background: #f0fdf4; border: 1px solid #86efac; border-radius: 10px; padding: 10px 12px; font-size: 12px; color: #166534; line-height: 1.8; margin-top: 10px; }
 .g-note strong { font-weight: 700; }
 .gti { display:inline-block;padding:1px 7px;border-radius:99px;font-size:10px;font-weight:700;vertical-align:middle; }
 .gti-a { background:#fef3c7;color:#92400e; }
@@ -262,8 +266,8 @@ body {
 <div class="container">
 
 <div class="header">
-  <h2>✈️ Shikoku Travel — Reading Cards</h2>
-  <p>英文を読んで・聴いて・声に出す練習</p>
+  <h2>✈️ 四国・岡山 旅行英会話</h2>
+  <p>実体験から生まれた自然な旅行英会話90フレーズ</p>
   <button class="help-btn" onclick="openGuide()">❓ 使い方ガイド</button>
 </div>
 
@@ -292,7 +296,7 @@ body {
 <div class="card tappable" id="main-card" onclick="handleTap()">
   <div class="card-top">
     <div class="card-num" id="card-num">01</div>
-    <div class="cat-label" id="card-cat"></div>
+    <div class="cat-label" id="card-cat">好きな科目</div>
     <div class="master-wrap" id="master-wrap">
       <span>マスター</span>
       <input type="checkbox" id="master-cb" onchange="toggleMaster(event)" onclick="event.stopPropagation()">
@@ -352,14 +356,13 @@ body {
     <button class="btn btn-secondary" onclick="prev()">← 戻る</button>
     <button class="btn btn-primary"   onclick="speakCurrent()">🔊 音声</button>
     <button class="btn btn-secondary" onclick="next()">次へ →</button>
+    <button class="btn btn-secondary" style="font-size:11px;padding:8px 6px;" onclick="switchMode()">🔄 英⇄日</button>
   </div>
-  <div class="btn-row">
-    <button class="btn btn-secondary" id="random-btn" onclick="toggleRandom()">🔀 ランダム: OFF</button>
-    <button class="btn btn-secondary" onclick="switchMode()">🔄 英⇄日</button>
-  </div>
-  <div class="btn-row">
-    <button class="btn btn-amber" onclick="startShadowing()">🗣️ シャドウイング</button>
-    <button class="btn btn-blue"  onclick="startContinuous()">▶ 連続再生</button>
+  <div class="btn-row" style="gap:4px;">
+    <button class="btn btn-secondary" style="font-size:11px;padding:7px 5px;" id="random-btn" onclick="toggleRandom()">🔀 ランダム</button>
+    <button class="btn btn-secondary" style="font-size:11px;padding:7px 5px;" id="repeat-btn" onclick="toggleRepeat()">🔁 繰り返し</button>
+    <button class="btn btn-blue"  style="font-size:11px;padding:7px 5px;" onclick="startContinuous()">▶ 連続再生</button>
+    <button class="btn btn-amber" style="font-size:11px;padding:7px 5px;" onclick="startShadowing()">🗣️ シャドウ</button>
   </div>
 </div>
 
@@ -375,16 +378,10 @@ body {
 <div class="guide-overlay" id="guide-overlay" onclick="handleOverlayClick(event)">
 <div class="guide-modal">
   <div class="guide-modal-header">
-    <h2>❓ 使い方ガイド</h2>
+    <h2>✈️ 四国・岡山 旅行英会話</h2>
     <button class="guide-close" onclick="closeGuide()">✕ 閉じる</button>
   </div>
   <div class="guide-body">
-    <div class="g-section">
-      <div class="g-head"><span>📖</span> このアプリについて</div>
-      <div class="g-body">
-        <p class="g-text">四国旅行の英文エッセイを、1文ずつカードで学習します。英語を読んで・聴いて・声に出すことで、<strong>リーディング・リスニング・スピーキング</strong>を同時に鍛えられます。</p>
-      </div>
-    </div>
     <div class="g-section">
       <div class="g-head"><span>🔘</span> 各ボタンの説明</div>
       <div class="g-body">
@@ -394,28 +391,27 @@ body {
         </div>
         <div style="margin-bottom:12px">
           <div><span class="gbd gbd-amb">🗣️ シャドウイング</span><span class="gbd gbd-blue">▶ 連続再生</span></div>
-          <p class="g-text" style="margin-top:6px"><span class="gti gti-a">シャドウイング</span> 4ステップの反復練習を自動で進めます。<br><span class="gti gti-b">連続再生</span> 全カードを英語音声で通して流します。</p>
+          <p class="g-text" style="margin-top:6px"><span class="gti gti-a">シャドウイング</span> 4ステップの反復練習を自動で進めます。<br><span class="gti gti-b">連続再生</span> 全カードを英語音声で流し聴きします。</p>
         </div>
         <div>
           <div><span class="gbd gbd-sec">🔀 ランダム: OFF</span><span class="gbd gbd-sec">🔄 英⇄日</span></div>
-          <p class="g-text" style="margin-top:6px">ランダムでカードをシャッフルします。<strong>英⇄日</strong>で日本語を見て英語を言う練習になります。</p>
+          <p class="g-text" style="margin-top:6px">ランダムでカードをシャッフルします。<strong>英⇄日</strong>で日本語を見て英語を答えるスピーキング練習になります。</p>
         </div>
       </div>
     </div>
     <div class="g-section">
-      <div class="g-head"><span>👆</span> 基本の練習法</div>
+      <div class="g-head"><span>👆</span> まずは1枚ずつ — 基本の練習法</div>
       <div class="g-body">
         <div class="g-method">
           <div class="g-method-title">手順</div>
           <div class="g-method-body">
-            <div class="g-step"><div class="g-step-num">1</div><div class="g-step-text"><strong>英文を声に出して読む</strong> — まず自分で音読してみます。</div></div>
-            <div class="g-step"><div class="g-step-num">2</div><div class="g-step-text"><strong>音声を聴く</strong> — 「🔊 音声」を押してネイティブの発音を確認します。</div></div>
-            <div class="g-step"><div class="g-step-num">3</div><div class="g-step-text"><strong>カードをタップ</strong> — 日本語訳で意味を確認します。</div></div>
-            <div class="g-step"><div class="g-step-num">4</div><div class="g-step-text"><strong>もう一度音声に合わせて音読</strong> — 2〜3回繰り返します。</div></div>
-            <div class="g-step"><div class="g-step-num">5</div><div class="g-step-text">完璧に言えたら<strong>マスターにチェック</strong>を入れます。</div></div>
+            <div class="g-step"><div class="g-step-num">1</div><div class="g-step-text"><strong>音声を聴く</strong> — 「🔊 音声」を押し、意味を考えながら聴きます。</div></div>
+            <div class="g-step"><div class="g-step-num">2</div><div class="g-step-text"><strong>カードをタップ</strong> — 日本語訳を確認します。</div></div>
+            <div class="g-step"><div class="g-step-num">3</div><div class="g-step-text"><strong>もう一度音声を聴く</strong> → 自分で声に出して2〜3回繰り返します。</div></div>
+            <div class="g-step"><div class="g-step-num">4</div><div class="g-step-text">覚えたら<strong>右上のマスターにチェック</strong> → 自動で次のカードへ進みます。</div></div>
           </div>
         </div>
-        <div class="g-note">慣れてきたら<strong>シャドウイング</strong>や<strong>連続再生</strong>で仕上げましょう！</div>
+        <div class="g-note">慣れてきたらシャドウイングに挑戦しましょう！</div>
       </div>
     </div>
     <div class="g-section">
@@ -433,6 +429,18 @@ body {
       </div>
     </div>
     <div class="g-section">
+      <div class="g-head"><span>🔁</span> おすすめの学習サイクル</div>
+      <div class="g-body">
+        <div class="g-flow">
+          <span class="g-flow-tag gft-green">1枚ずつ練習</span><span class="g-flow-arr">→</span>
+          <span class="g-flow-tag gft-green">マスターにチェック</span><span class="g-flow-arr">→</span>
+          <span class="g-flow-tag gft-amber">シャドウイング</span><span class="g-flow-arr">→</span>
+          <span class="g-flow-tag gft-blue">連続再生で復習</span>
+        </div>
+        <div class="g-note"><strong>スピーキング練習も忘れずに。</strong> 「🔄 英⇄日」ボタンで日本語表示モードに切り替え、英語を声に出す練習をしましょう。</div>
+      </div>
+    </div>
+    <div class="g-section">
       <div class="g-head"><span>🔊</span> 音声・速度の設定</div>
       <div class="g-body">
         <div class="g-step"><div class="g-step-num">1</div><div class="g-step-text"><strong>US優先 / GB優先</strong>でアクセントを切り替えられます。</div></div>
@@ -446,89 +454,105 @@ body {
 <script>
 // ── Data ─────────────────────────────────────────────────────────
 const CATS = {
-  '① 旅の始まり':       '#3b5bdb',
-  '② 金刀比羅宮':       '#7048e8',
-  '③ 785段の石段':      '#c2255c',
-  '④ 達成と感動':       '#d97706',
-  '⑤ 高松の夜':         '#2f9e44',
-  '⑥ 鮨のコース':       '#0891b2',
-  '⑦ 鳴門の渦潮①':     '#e85d26',
-  '⑧ 鳴門の渦潮②':     '#9333ea',
+  '旅行の話題': '#0369a1',
+  '四国旅行': '#16a34a',
+  '高松の夜・最終日': '#d97706',
+  '飛行機トラブル・岡山': '#dc2626',
 };
 
 const phrases = [
-  // ① 旅の始まり
-  {cat:"① 旅の始まり", en:"I recently traveled to Shikoku with my wife.", ja:"最近、妻と一緒に四国へ旅行しました。"},
-  {cat:"① 旅の始まり", en:"It takes just over an hour to fly from Haneda Airport to Takamatsu, making it a surprisingly easy getaway from Tokyo.", ja:"羽田空港から高松まではフライトで1時間少々で、東京から驚くほど気軽に行ける旅先です。", tip:"getaway：気軽な小旅行・逃避行。「surprisingly easy getaway」でこんなに行きやすいとは！というニュアンス。"},
-  {cat:"① 旅の始まり", en:"Our destination was Konpira-san, a place I had missed on a previous visit and had long wanted to experience.", ja:"目的地は金刀比羅さんで、以前の旅行で行き逃していて、ずっと行きたいと思っていた場所でした。", tip:"had missed / had long wanted：過去完了形。以前の出来事より「さらに前」からの願望を表しています。"},
-
-  // ② 金刀比羅宮
-  {cat:"② 金刀比羅宮", en:'"Konpira-san" is the familiar nickname for Kotohira-gu Shrine, one of Japan\'s most revered Shinto shrines.', ja:"「金刀比羅さん」は、日本で最も崇敬される神社のひとつ、金刀比羅宮の親しみやすい愛称です。", tip:"revered：深く尊敬・崇敬されている。revere（崇める）の過去分詞形容詞。"},
-  {cat:"② 金刀比羅宮", en:"For centuries, it has been a place of pilgrimage, especially for those seeking protection for seafarers and safe journeys.", ja:"何世紀もの間、特に船乗りの守護や旅の安全を祈る人々の巡礼地となってきました。", tip:"pilgrimage：巡礼。seafarers：船乗り・航海者。for centuries：何百年もの間。"},
-  {cat:"② 金刀比羅宮", en:"Even today, visitors from all over Japan continue to come here, giving the shrine a timeless and spiritual atmosphere.", ja:"今日でも、日本全国から参拝者が訪れ続け、神社に時を超えた神聖な雰囲気をもたらしています。", tip:"timeless：時代を超えた・不変の。giving the shrine...は分詞構文で「その結果として〜を与えている」の意味。"},
-
-  // ③ 785段の石段
-  {cat:"③ 785段の石段", en:"What makes this shrine truly unique is the approach.", ja:"この神社を本当にユニークにしているのは、参道です。", tip:"What makes...is：「〜を...にしているのは〜だ」という強調構文。approach：参道・アプローチ。"},
-  {cat:"③ 785段の石段", en:"To reach the main hall, you must climb 785 stone steps.", ja:"本殿に到達するには、785段の石段を登らなければなりません。"},
-  {cat:"③ 785段の石段", en:"The path is lined with traditional shops, small restaurants, and rest spots, allowing you to pause, take in the scenery, and feel the gradual transition from the everyday world to a sacred space.", ja:"参道沿いには昔ながらの店、小さな食事処、休憩所が並び、立ち止まって景色を楽しみながら、日常の世界から神聖な空間へと少しずつ移り変わっていくのを感じることができます。", tip:"lined with：〜が並んでいる。take in the scenery：景色を楽しむ。transition：移り変わり・変遷。"},
-  {cat:"③ 785段の石段", en:"As you climb higher, the air becomes quieter, and the view over the town of Kotohira grows more and more beautiful.", ja:"登るにつれて空気は静かになり、琴平の町を見渡す眺めはどんどん美しくなっていきます。", tip:"As you climb higher：登るにつれて。grows more and more：〜がどんどん増していく。"},
-
-  // ④ 達成と感動
-  {cat:"④ 達成と感動", en:"At 77 years old, I found the climb quite demanding.", ja:"77歳の私には、この登りはかなりきつく感じました。", tip:"found + O + C：「〜を…と感じた」。demanding：体力・精神力が要求される・きつい。"},
-  {cat:"④ 達成と感動", en:"There were moments when I wondered if I should turn back.", ja:"引き返すべきかと思う瞬間もありました。", tip:"wondered if：〜かどうか迷った。turn back：引き返す。"},
-  {cat:"④ 達成と感動", en:"But step by step, encouraged by the atmosphere and the determination to reach the top, I finally made it.", ja:"しかし一歩一歩、その雰囲気と頂上への決意に励まされながら、ついにやり遂げました。", tip:"step by step：一歩一歩。encouraged by：〜に励まされて（分詞構文）。made it：やり遂げた・成功した。"},
-  {cat:"④ 達成と感動", en:"Standing at the main shrine after such an effort brought a deep sense of accomplishment and calm that is difficult to describe.", ja:"それだけの努力の末に本殿に立つことで、言葉にするのが難しいほど深い達成感と静けさが生まれました。", tip:"a sense of accomplishment：達成感。that is difficult to describe：言葉では表しにくいほどの（関係代名詞節）。"},
-  {cat:"④ 達成と感動", en:"Even now, four days later, I am still feeling the effects in my muscles—but strangely, it feels like a small badge of honor.", ja:"今でも、4日後の今も、まだ筋肉にその影響を感じています——でも不思議なことに、それが小さな勲章のように感じられます。", tip:"badge of honor：名誉の証・勲章。strangely：不思議なことに。"},
-  {cat:"④ 達成と感動", en:"The entire visit took about two hours at a relaxed pace.", ja:"参拝全体はゆっくりとしたペースで約2時間かかりました。"},
-  {cat:"④ 達成と感動", en:"While the climb can be challenging, especially for those not used to physical activity, I believe the experience is well worth it.", ja:"特に運動習慣のない方には登りがきつく感じられることもありますが、その体験は十分に価値があると思います。", tip:"well worth it：十分に価値がある。those not used to：〜に慣れていない人たち。"},
-  {cat:"④ 達成と感動", en:"It is not just a visit to a shrine, but a journey—one that connects you with Japan's history, spirituality, and your own perseverance.", ja:"それは単なる神社参拝ではなく、日本の歴史・精神性、そして自分自身の粘り強さとつながる旅です。", tip:"spirituality：精神性・霊性。perseverance：粘り強さ・忍耐力。not just A but B：Aだけでなく Bでもある。"},
-  {cat:"④ 達成と感動", en:"If you do decide to go, take your time, enjoy the climb, and make it your own pilgrimage.", ja:"もし行くと決めたなら、急がず、登りを楽しみ、自分だけの巡礼にしてください。", tip:"do decide：doを強調に使った「ぜひ決めたなら」のニュアンス。make it your own：自分のものにする。"},
-
-  // ⑤ 高松の夜
-  {cat:"⑤ 高松の夜", en:"After that, we picked up a rental car and headed to our hotel in Takamatsu.", ja:"その後、レンタカーを借りて高松のホテルへと向かいました。", tip:"picked up a rental car：レンタカーを受け取った。headed to：〜へと向かった。"},
-  {cat:"⑤ 高松の夜", en:"It was a small, unpretentious place, but it had a warm and welcoming atmosphere that made us feel immediately at ease—sometimes those are the best kinds of hotels.", ja:"小さくて飾り気のない宿でしたが、温かくて居心地のよい雰囲気があり、すぐにくつろげました——そういうホテルが最高なこともあります。", tip:"unpretentious：気取らない・飾り気のない。at ease：くつろいで・安心して。"},
-  {cat:"⑤ 高松の夜", en:"That evening, we went to a sushi restaurant we had reserved in advance.", ja:"その夜、事前に予約しておいた鮨屋へ行きました。", tip:"had reserved：過去完了形。夕食に行った時点より前に予約していたことを示します。"},
-  {cat:"⑤ 高松の夜", en:"To be honest, I had modest expectations, but what we experienced completely exceeded them.", ja:"正直に言うと、あまり期待していなかったのですが、実際に体験したことはその期待をはるかに上回りました。", tip:"modest expectations：控えめな期待。exceeded：超えた・上回った。what we experienced：私たちが体験したこと（関係代名詞節が主語）。"},
-  {cat:"⑤ 高松の夜", en:"In Tokyo, a meal of this quality would easily cost three times as much.", ja:"東京なら、これほどの質の食事は軽く3倍の値段になるでしょう。", tip:"would cost：仮定法的な推量。three times as much：3倍の金額。"},
-  {cat:"⑤ 高松の夜", en:"We chose the chef's omakase course, and the dishes kept coming like a beautifully choreographed performance.", ja:"料理長のおまかせコースを選んだところ、料理は美しく演出されたパフォーマンスのように次々と運ばれてきました。", tip:"omakase：お任せ（日本語がそのまま使われています）。choreographed：振り付けされた→ここでは「見事に構成された」のニュアンス。"},
-
-  // ⑥ 鮨のコース
-  {cat:"⑥ 鮨のコース", en:"It began with a selection of seasonal small plates, delicate and refined.", ja:"季節の小皿料理の盛り合わせから始まり、繊細で上品な味わいでした。", tip:"delicate and refined：繊細で洗練された。selection：選りすぐり・盛り合わせ。"},
-  {cat:"⑥ 鮨のコース", en:"Then came a luxurious assortment of sashimi from the Seto Inland Sea—each piece incredibly fresh and full of flavor.", ja:"次に瀬戸内海の豪華なお刺身の盛り合わせが登場し、一切れ一切れが信じられないほど新鮮で旨みに溢れていました。", tip:"luxurious assortment：豪華な盛り合わせ。Seto Inland Sea：瀬戸内海。full of flavor：旨みに満ちた。"},
-  {cat:"⑥ 鮨のコース", en:"One of the highlights was the blue crab, with all the meat carefully removed and presented for easy enjoyment.", ja:"ハイライトの一つは渡り蟹で、身がすべて丁寧に取り出されて、食べやすく盛り付けられていました。", tip:"highlight：目玉・見どころ。with all the meat carefully removed：肉がすべて丁寧に取り出された状態で（付帯状況のwith構文）。"},
-  {cat:"⑥ 鮨のコース", en:"It was simply exquisite.", ja:"それはただ、絶品でした。", tip:"exquisite：この上なく美しい・絶品の。simplyは「ただ〜だ」という強調。"},
-  {cat:"⑥ 鮨のコース", en:"Next was grilled nodoguro, a premium fish known for its rich taste, followed by a gently simmered dish that was both comforting and elegant.", ja:"次は脂の乗った高級魚として知られるのどぐろの焼き物で、その後にほっとするような上品な煮物が続きました。", tip:"nodoguro：のどぐろ（アカムツ）。simmered：煮込んだ。comforting：ほっとする・温かみのある。"},
-  {cat:"⑥ 鮨のコース", en:"The grilled turban shell added a touch of the sea's wild character.", ja:"焼きサザエが、海の野性的な風味をほんの少し加えていました。", tip:"turban shell：サザエ。added a touch of：〜の風味をほんの少し加えた。wild character：野性的な個性・風味。"},
-  {cat:"⑥ 鮨のコース", en:"Finally, we were served a gorgeous assortment of sushi: fatty tuna, medium fatty tuna, sea bream, pufferfish, flounder, octopus, and more—eight pieces in total, each crafted with precision and care.", ja:"最後に、大トロ・中トロ・鯛・ふぐ・ひらめ・たこなど計8貫の豪華なにぎり鮨が供され、どれも丁寧に精巧な技で作られていました。", tip:"fatty tuna：大トロ。medium fatty tuna：中トロ。sea bream：鯛。pufferfish：ふぐ。crafted with precision and care：精密さと丁寧さで作られた。"},
-  {cat:"⑥ 鮨のコース", en:"Dessert provided a perfect, gentle ending to the meal.", ja:"デザートは食事に完璧で穏やかな締めくくりをもたらしてくれました。"},
-  {cat:"⑥ 鮨のコース", en:"We also enjoyed some sake—about two servings—and the total bill came to under 20,000 yen.", ja:"日本酒も2杯ほどいただき、お会計は合計2万円以下でした。", tip:"came to：合計〜になった。under 20,000 yen：2万円未満。servings：（飲食物の）一人前・一杯分。"},
-  {cat:"⑥ 鮨のコース", en:"I almost felt like I should double-check the receipt.", ja:"思わずレシートを二度見したくなるほどでした。", tip:"double-check：二重確認する・念のために確認する。almost felt like：〜したくなるほどだった。"},
-  {cat:"⑥ 鮨のコース", en:"I would wholeheartedly recommend this place… but if I say too much, it might become impossible for me to get a reservation next time.", ja:"心からおすすめしたい場所ですが……あまり言いすぎると、次回予約が取れなくなるかもしれません。", tip:"wholeheartedly：心から・全力で。might become impossible：〜が不可能になるかもしれない。"},
-  {cat:"⑥ 鮨のコース", en:"It was, without exaggeration, a moment of pure happiness—one of those meals you remember long after the journey ends.", ja:"誇張なく、純粋な幸福の一瞬でした——旅が終わってからもずっと記憶に残る食事のひとつです。", tip:"without exaggeration：誇張なしに。pure happiness：純粋な幸福。one of those meals...：〜するような食事のひとつ。"},
-
-  // ⑦ 鳴門の渦潮①
-  {cat:"⑦ 鳴門の渦潮①", en:"The next day, we decided to venture a little farther and went to see the famous Naruto whirlpools.", ja:"翌日、もう少し足を延ばして有名な鳴門の渦潮を見に行くことにしました。", tip:"venture a little farther：もう少し冒険して遠くへ行く。whirlpools：渦潮。"},
-  {cat:"⑦ 鳴門の渦潮①", en:'From the Shikoku side, we walked along "Uzu no Michi," a pedestrian path built beneath the Onaruto Bridge.', ja:"四国側からは、大鳴門橋の下に設けられた遊歩道「渦の道」を歩きました。", tip:"pedestrian path：歩行者専用通路・遊歩道。beneath：〜の下に。"},
-  {cat:"⑦ 鳴門の渦潮①", en:"The views were spectacular—endless sea stretching out in every direction—but I must admit, it was also quite frightening.", ja:"眺めは壮観で、あらゆる方向に海が広がっていましたが、正直に言うと、かなり怖かったです。", tip:"spectacular：壮観な・素晴らしい。I must admit：正直に言わなければならない。stretching out：広がっている（分詞構文）。"},
-  {cat:"⑦ 鳴門の渦潮①", en:"At several points, parts of the floor were made of transparent panels, allowing you to look straight down at the swirling currents below.", ja:"何か所かで床の一部が透明なパネルになっており、真下の渦巻く海流を見下ろすことができました。", tip:"transparent panels：透明なパネル。swirling currents：渦巻く海流。allowing you to：〜することを可能にする（分詞構文）。"},
-  {cat:"⑦ 鳴門の渦潮①", en:"I found it surprisingly difficult to step onto them.", ja:"そこに踏み込むのが驚くほど難しく感じました。", tip:"found it difficult to：〜するのが難しいと感じた（仮目的語it）。step onto：〜の上に踏み出す。"},
-  {cat:"⑦ 鳴門の渦潮①", en:"While others walked across without hesitation, I carefully avoided those spots whenever I could.", ja:"他の人たちが躊躇なく渡っている中、私はできる限りそれらの場所を避けて通りました。", tip:"without hesitation：躊躇なく。whenever I could：できる限り・可能な時はいつも。"},
-  {cat:"⑦ 鳴門の渦潮①", en:"In the end, I made my way rather quickly to the far end and back again, trying not to look down too much.", ja:"結局、あまり下を見ないようにしながら、かなり足早に端まで行って戻ってきました。", tip:"made my way：（努力して）進んだ。rather quickly：かなり速く。trying not to：〜しないようにしながら（分詞構文）。"},
-  {cat:"⑦ 鳴門の渦潮①", en:"Beautiful, yes—but undeniably nerve-racking.", ja:"美しい、確かに——しかし否定しようのないほど神経をすり減らす体験でした。", tip:"undeniably：否定しようのないほど・間違いなく。nerve-racking：神経をすり減らす・ハラハラする。"},
-
-  // ⑧ 鳴門の渦潮②
-  {cat:"⑧ 鳴門の渦潮②", en:"After that, we crossed over to Awaji Island and headed to a place called Fukura, where we boarded a sightseeing boat to get closer to the whirlpools.", ja:"その後、淡路島へ渡り、福良という場所へ向かい、そこで渦潮に近づくための観光船に乗りました。", tip:"crossed over to：〜へ渡った。boarded：乗船した。sightseeing boat：観光船。"},
-  {cat:"⑧ 鳴門の渦潮②", en:"Before the cruise, we stopped for lunch at a small, rather old-fashioned restaurant at the terminal.", ja:"クルーズの前に、ターミナルにある小さくてやや古めかしいレストランで昼食をとりました。", tip:"old-fashioned：古めかしい・昔ながらの。terminal：ターミナル・発着場。"},
-  {cat:"⑧ 鳴門の渦潮②", en:"To be honest, I wasn't expecting much.", ja:"正直なところ、あまり期待していませんでした。", tip:"To be honest：正直に言うと。wasn't expecting much：あまり期待していなかった。"},
-  {cat:"⑧ 鳴門の渦潮②", en:"It looked simple, almost forgotten by time.", ja:"見た目はシンプルで、時代に取り残されたようでした。", tip:"forgotten by time：時代に忘れられた。almost：まるで〜のように（ほぼ〜）。"},
-  {cat:"⑧ 鳴門の渦潮②", en:"And yet, what we were served turned out to be one of the most memorable meals of my life.", ja:"それでも、出てきたものは人生で最も印象に残る食事のひとつとなりました。", tip:"And yet：それでも・にもかかわらず。turned out to be：〜だと判明した・結果的に〜だった。memorable：忘れられない・印象的な。"},
-  {cat:"⑧ 鳴門の渦潮②", en:"The sashimi set meal was astonishing—exceptionally fresh, incredibly flavorful, and served in portions so generous that we could hardly believe it.", ja:"刺身定食は驚くほどで——格別に新鮮で、信じられないほど旨く、量もとても多くてにわかには信じられないほどでした。", tip:"astonishing：驚くほどの。exceptionally：格別に・並外れて。portions so generous that...：〜なほど量が多い（so...that構文）。"},
-  {cat:"⑧ 鳴門の渦潮②", en:"This is one place I will not keep secret: if you ever go there, you must try it.", ja:"ここは秘密にしておかない場所のひとつです：もし行く機会があれば、ぜひ食べてみてください。", tip:"keep secret：秘密にしておく。if you ever go there：もし行く機会があれば。"},
-  {cat:"⑧ 鳴門の渦潮②", en:"Then came the highlight—the whirlpools themselves.", ja:"そしてハイライトがやってきました——渦潮そのものです。", tip:"Then came the highlight：倒置法。「そしてハイライトが来た」。the whirlpools themselves：渦潮そのもの（themselvesで強調）。"},
-  {cat:"⑧ 鳴門の渦潮②", en:"The timing was perfect, as we arrived at high tide, when the currents are at their strongest.", ja:"タイミングも完璧で、満潮時に到着したため、海流が最も強い時間帯でした。", tip:"high tide：満潮。at their strongest：最も強い状態で（所有格＋最上級）。"},
-  {cat:"⑧ 鳴門の渦潮②", en:"From the boat, we could see the powerful spirals forming and disappearing in the sea, a dynamic and mesmerizing display of nature's force.", ja:"船上から、力強い渦が海に生まれては消えていくのが見え、自然の力の躍動的で目を奪うような光景でした。", tip:"spirals forming and disappearing：渦が生まれては消える（現在分詞）。mesmerizing：目を奪う・催眠術のような。"},
-  {cat:"⑧ 鳴門の渦潮②", en:"It was an unforgettable experience—both thrilling and, at times, just a little bit humbling.", ja:"忘れられない体験でした——スリリングであり、時に少しばかり自分の小ささを感じさせるものでした。", tip:"thrilling：スリリングな・わくわくする。humbling：謙虚にさせる・自分の小ささを感じさせる。at times：時に・ときおり。"},
+  {cat:'旅行の話題', en:'Do you like traveling?', ja:'旅行はお好きですか？', tip:''},
+  {cat:'旅行の話題', en:'Well… I suppose I do, if I had to say.', ja:'そうですね……どちらかと言えば好きだと思います。', tip:''},
+  {cat:'旅行の話題', en:'That sounds a bit vague—what do you mean by that?', ja:'少し曖昧ですね。どういう意味ですか？', tip:''},
+  {cat:'旅行の話題', en:'I\'m 77 now, you see, and at this age, planning trips starts to feel like a hassle.', ja:'私は今77歳でして、この年になると旅行の計画が面倒に感じ始めるんです。', tip:''},
+  {cat:'旅行の話題', en:'Yes, but when we do travel, it gives my wife a break from all the housework, and she\'s really happy about that.', ja:'でも旅行すると、妻が家事から解放されてとても喜ぶんです。', tip:''},
+  {cat:'旅行の話題', en:'Seeing her enjoy herself makes me happy too—that\'s the main reason I still like traveling.', ja:'妻が楽しんでいるのを見ると私も嬉しい。それが今でも旅行が好きな主な理由です。', tip:''},
+  {cat:'旅行の話題', en:'What kind of places do you usually go to? Do you travel abroad as well?', ja:'どんな場所によく行かれますか？海外旅行もされますか？', tip:''},
+  {cat:'旅行の話題', en:'We used to go overseas quite often, but after everything that happened with COVID, we stopped completely.', ja:'以前はよく海外に行っていましたが、コロナのことがあってからは完全に止まってしまいました。', tip:''},
+  {cat:'旅行の話題', en:'COVID has mostly settled down now, though. Why not start traveling abroad again?', ja:'でも今はコロナもほぼ落ち着いていますよね。また海外旅行を再開されてはどうですか？', tip:''},
+  {cat:'旅行の話題', en:'Well, during the pandemic, the Japanese yen weakened quite a lot, as you\'ve probably noticed.', ja:'パンデミックの間に円が大幅に弱くなりましたよね、ご存知かと思いますが。', tip:''},
+  {cat:'旅行の話題', en:'On top of that, Japan has had deflation while other countries experienced inflation.', ja:'その上、日本はデフレが続く一方で他の国ではインフレが起きました。', tip:''},
+  {cat:'旅行の話題', en:'So even if we try to go to the same places as before, it ends up costing three or four times as much as it used to.', ja:'ですから以前と同じ場所に行こうとしても、以前の3〜4倍かかってしまうんです。', tip:''},
+  {cat:'旅行の話題', en:'Ah, that\'s true—the yen has really dropped in value.', ja:'ああ、確かに——円は本当に価値が下がりましたね。', tip:''},
+  {cat:'旅行の話題', en:'That\'s right. And when you add travel insurance, higher airfare, and hotel prices, it just doesn\'t feel as easy as it used to.', ja:'その通りです。旅行保険、高くなった航空運賃、ホテル代を合わせると、以前ほど気軽に行けなくなりました。', tip:''},
+  {cat:'旅行の話題', en:'I see. So do you mainly travel within Japan now?', ja:'なるほど。では今は主に国内旅行をされているんですか？', tip:''},
+  {cat:'旅行の話題', en:'Yes, mostly domestic trips these days. It\'s simpler, and honestly, Japan still has so many beautiful places I haven\'t seen yet.', ja:'はい、最近はほとんど国内旅行です。シンプルですし、正直まだ見ていない日本の美しい場所がたくさんありますので。', tip:''},
+  {cat:'旅行の話題', en:'That\'s true. Where have you been recently?', ja:'それは確かですね。最近はどこに行かれましたか？', tip:''},
+  {cat:'旅行の話題', en:'We went to Kyoto not long ago. It was crowded, of course, but the temples and gardens were still as beautiful as ever.', ja:'少し前に京都に行きました。もちろん混んでいましたが、お寺や庭園は相変わらず美しかったです。', tip:''},
+  {cat:'旅行の話題', en:'Kyoto is always popular. Do you prefer places with history?', ja:'京都はいつも人気ですね。歴史のある場所がお好きですか？', tip:''},
+  {cat:'旅行の話題', en:'I think so. At my age, I enjoy slower, quieter trips—walking through old streets, visiting temples, sitting down for a nice meal.', ja:'そう思います。この年になると、ゆっくり静かな旅が好きで——古い街並みを歩いたり、お寺を訪ねたり、ゆっくり食事したり。', tip:''},
+  {cat:'旅行の話題', en:'I\'m not really interested in rushed sightseeing anymore.', ja:'せかせかした観光にはもう興味がありません。', tip:''},
+  {cat:'旅行の話題', en:'That makes sense. Do you plan everything in advance?', ja:'なるほど。全て事前に計画されますか？', tip:''},
+  {cat:'旅行の話題', en:'Not as much as I used to. These days, I just book a hotel and decide the rest as we go. It\'s less stressful that way.', ja:'以前ほどではありません。最近はホテルだけ予約して、後は行き当たりばったりです。その方がストレスが少ないので。', tip:''},
+  {cat:'旅行の話題', en:'That actually sounds nice—more relaxed.', ja:'それはいいですね——もっとリラックスできますね。', tip:''},
+  {cat:'旅行の話題', en:'Exactly. Traveling should be enjoyable, not tiring.', ja:'その通りです。旅行は楽しいものであるべきで、疲れるものであってはいけません。', tip:''},
+  {cat:'旅行の話題', en:'Do you have any place you\'d still like to visit someday?', ja:'いつか行ってみたい場所はありますか？', tip:''},
+  {cat:'旅行の話題', en:'Hmm… maybe somewhere in Hokkaido. I\'ve been there before, but I\'d like to go again, take it slow, enjoy the scenery.', ja:'うーん……北海道のどこかかな。以前行ったことがありますが、またゆっくりと景色を楽しみながら行きたいです。', tip:''},
+  {cat:'旅行の話題', en:'Yes, as long as we can travel at our own pace, I think I\'ll keep enjoying it for a while longer.', ja:'はい、自分たちのペースで旅できる限り、もうしばらくは楽しめると思います。', tip:''},
+  {cat:'四国旅行', en:'In fact, I recently went to Takamatsu in Shikoku for a two-night stay.', ja:'実は最近、四国の高松に2泊で行ってきました。', tip:''},
+  {cat:'四国旅行', en:'Oh, Takamatsu! How was it?', ja:'おお、高松！どうでしたか？', tip:''},
+  {cat:'四国旅行', en:'On the first day, we went straight to Kotohira Shrine—you know, "Konpira-san." It has more than 700 steps, and honestly, it was pretty tough!', ja:'初日は金刀比羅宮——「こんぴらさん」に直行しました。700段以上の階段があって、正直かなりきつかったです！', tip:''},
+  {cat:'四国旅行', en:'But when we finally made it to the top, it felt really rewarding.', ja:'でも頂上にたどり着いたときは、本当に達成感がありました。', tip:''},
+  {cat:'四国旅行', en:'700 steps? That\'s impressive! You must have been exhausted.', ja:'700段？すごいですね！きっとへとへとだったでしょう。', tip:''},
+  {cat:'四国旅行', en:'I was! After that, we checked into our hotel and had yakiniku for dinner. We chose a slightly upscale place.', ja:'そうでした！その後ホテルにチェックインして、夕食は焼き肉にしました。少し上質なお店を選びました。', tip:''},
+  {cat:'四国旅行', en:'I hadn\'t had wagyu in quite a while, so I was really looking forward to it.', ja:'和牛はしばらく食べていなかったので、本当に楽しみにしていました。', tip:''},
+  {cat:'四国旅行', en:'I love yakiniku, but sometimes the smoke is a bit much.', ja:'焼き肉は大好きですが、時々煙がちょっとつらいですよね。', tip:''},
+  {cat:'四国旅行', en:'Exactly! I was worried about that too, but surprisingly, the restaurant had very modern equipment. There was almost no smoke at all, which really impressed me.', ja:'その通りです！私も心配していましたが、驚いたことにそのお店はとても近代的な設備で。煙がほとんど出なくて、本当に感心しました。', tip:''},
+  {cat:'四国旅行', en:'That\'s great. What did you do the next day?', ja:'それは良かったですね。翌日は何をされましたか？', tip:''},
+  {cat:'四国旅行', en:'We rented a car and drove out to the Naruto Bridge. On the Shikoku side, you can actually walk underneath the bridge, right above the whirlpools.', ja:'レンタカーを借りて鳴門大橋まで行きました。四国側では橋の下を実際に歩けて、渦潮のすぐ上を通れるんです。', tip:''},
+  {cat:'四国旅行', en:'Is that the place with the glass floors?', ja:'そこはガラス張りの床のあるところですか？', tip:''},
+  {cat:'四国旅行', en:'Yes! Parts of the floor are made of transparent acrylic panels so you can see straight down.', ja:'そうです！床の一部が透明なアクリルパネルになっていて、真下が見えるんです。', tip:''},
+  {cat:'四国旅行', en:'A lot of people were walking across them casually, but honestly, my wife and I were too scared—we couldn\'t make it all the way to the end!', ja:'多くの人が平気で歩いていましたが、正直私と妻は怖くて——端まで行けませんでした！', tip:''},
+  {cat:'四国旅行', en:'(Laughs) I don\'t blame you! I\'d be hesitant too.', ja:'（笑）無理もないですよ！私でも躊躇します。', tip:''},
+  {cat:'四国旅行', en:'Still, the view was fantastic. It was thrilling, the walking distance was just right, and it wasn\'t too crowded.', ja:'それでも景色は素晴らしかったです。スリルがあって、歩く距離もちょうど良く、あまり混んでもいませんでした。', tip:''},
+  {cat:'四国旅行', en:'However, the facility itself felt a bit... inconvenient.', ja:'ただ施設自体は少し……使いにくい感じがしました。', tip:''},
+  {cat:'四国旅行', en:'In what way?', ja:'どんな点でですか？', tip:''},
+  {cat:'四国旅行', en:'It\'s likely run by the local government, and it didn\'t feel designed with tourists in mind.', ja:'おそらく地方自治体が運営していて、観光客のことを考えて設計されていない感じでした。', tip:''},
+  {cat:'四国旅行', en:'For instance, the parking lot was quite far away. It gave me the impression of, "Well, if you really want to come, go ahead."', ja:'例えば、駐車場がかなり遠かったです。「まあ、本当に来たいなら来てください」という印象を受けました。', tip:''},
+  {cat:'四国旅行', en:'That\'s a bit of a shame. Did you see the whirlpools from the boat too?', ja:'それは少し残念ですね。船からも渦潮を見ましたか？', tip:''},
+  {cat:'四国旅行', en:'Yes, after that we drove across to Awaji Island and went to Fukura Port. We took a sightseeing boat, and we happened to go right at the peak of high tide.', ja:'はい、その後淡路島に渡って福良港に行きました。観光船に乗って、ちょうど満潮のピークに当たりました。', tip:''},
+  {cat:'四国旅行', en:'Was the current strong?', ja:'潮流は強かったですか？', tip:''},
+  {cat:'四国旅行', en:'Very! It was spectacular. Seeing multiple whirlpools forming in the fast-moving water was quite a sight.', ja:'とても！壮観でした。速い潮流の中でいくつもの渦潮が生まれるのを見るのは、なかなかの光景でした。', tip:''},
+  {cat:'四国旅行', en:'Did you find a good place for lunch afterward?', ja:'その後、お昼ご飯は良いお店が見つかりましたか？', tip:''},
+  {cat:'四国旅行', en:'We did. We found a small, old-fashioned restaurant near the port. To be honest, looking at it from the outside, it didn\'t look very promising at all.', ja:'見つかりました。港の近くに小さな昔ながらのお店を見つけました。正直、外から見るとあまり期待できそうではありませんでした。', tip:''},
+  {cat:'四国旅行', en:'Sometimes those are the best places, though.', ja:'でもそういうお店が一番良かったりしますよね。', tip:''},
+  {cat:'四国旅行', en:'You\'re right! The sashimi set meal we had there was one of the best I\'ve ever eaten.', ja:'その通りでした！そこでいただいたお造り定食は、今まで食べた中でも最高の部類でした。', tip:''},
+  {cat:'四国旅行', en:'My wife loves sashimi, and she was absolutely delighted—she had a big smile on her face the whole time.', ja:'妻はお刺身が大好きで、もう大喜びで——ずっと満面の笑みでした。', tip:''},
+  {cat:'四国旅行', en:'It sounds like the perfect trip—great views and even better food.', ja:'素晴らしい旅ですね——絶景と、それ以上の美食と。', tip:''},
+  {cat:'高松の夜・最終日', en:'So, what did you do for dinner that night?', ja:'その夜の夕食はどうされましたか？', tip:''},
+  {cat:'高松の夜・最終日', en:'We headed back to Takamatsu and went to a sushi restaurant. We chose the chef\'s omakase course, and it turned out to be excellent.', ja:'高松に戻ってお寿司屋さんに行きました。おまかせコースにしたのですが、素晴らしかったです。', tip:''},
+  {cat:'高松の夜・最終日', en:'Local sushi in Shikoku sounds amazing! Was it quite expensive?', ja:'四国の地元のお寿司、美味しそうですね！かなり高かったですか？', tip:''},
+  {cat:'高松の夜・最終日', en:'To be honest, I wasn\'t sure what to expect for the price—it was about 8,000 yen.', ja:'正直、値段がどのくらいか分からなかったのですが——8,000円くらいでした。', tip:''},
+  {cat:'高松の夜・最終日', en:'In Tokyo, you usually wouldn\'t get anything special at that price, but this was completely different.', ja:'東京ではその値段では大したものは食べられませんが、ここは全然違いました。', tip:''},
+  {cat:'高松の夜・最終日', en:'8,000 yen? That sounds like a great deal for high-quality sushi.', ja:'8,000円？高品質なお寿司にしてはとても良い値段ですね。', tip:''},
+  {cat:'高松の夜・最終日', en:'It really was. It felt more like a refined kaiseki meal than just a sushi dinner.', ja:'本当にそうでした。ただのお寿司というより、洗練された懐石料理のような感じでした。', tip:''},
+  {cat:'高松の夜・最終日', en:'The quality was so high that it probably would have cost three times as much in Tokyo.', ja:'質がとても高くて、東京だったらおそらく3倍はしたでしょう。', tip:''},
+  {cat:'高松の夜・最終日', en:'And once again, my wife looked very happy, which is always the best part for me.', ja:'そしてまた妻がとても嬉しそうで、それが私にとっては常に一番の部分です。', tip:''},
+  {cat:'高松の夜・最終日', en:'It sounds like the perfect final evening. Was the last day more relaxed?', ja:'完璧な最後の夜ですね。最終日はもっとのんびりできましたか？', tip:''},
+  {cat:'高松の夜・最終日', en:'Well, it started out that way. Our flight wasn\'t until the afternoon, so we took a quiet walk around the ruins of Takamatsu Castle in the morning.', ja:'まあ、最初はそうでした。フライトが午後まで無かったので、午前中は高松城跡をのんびり散策しました。', tip:''},
+  {cat:'高松の夜・最終日', en:'It was very peaceful... but then, while we were having coffee at a café, I checked our flight status and saw it was "Cancelled."', ja:'とても穏やかでした……ところがカフェでコーヒーを飲んでいるときにフライト状況を確認したら「欠航」と出たんです。', tip:''},
+  {cat:'飛行機トラブル・岡山', en:'Cancelled? Not just delayed, but completely cancelled?', ja:'欠航？遅延ではなく、完全に欠航ですか？', tip:''},
+  {cat:'飛行機トラブル・岡山', en:'Exactly. We headed to the airport anyway after returning the rental car, and they told us it was due to a system failure at the control tower.', ja:'その通りです。レンタカーを返してとにかく空港に向かったら、管制塔のシステム障害が原因だと言われました。', tip:''},
+  {cat:'飛行機トラブル・岡山', en:'That\'s terrible! Did they put you on another flight right away?', ja:'それは大変！すぐに別の便に振り替えてもらえましたか？', tip:''},
+  {cat:'飛行機トラブル・岡山', en:'That was the frustrating part. They told me everything was full and the next available seat was the following morning.', ja:'それが困った部分でした。全て満席で、次に空きがあるのは翌朝だと言われました。', tip:''},
+  {cat:'飛行機トラブル・岡山', en:'I told them I needed to get back that day, but they didn\'t offer any other options. So, a bit reluctantly, I booked a seat for the next day.', ja:'その日中に帰らないといけないと伝えましたが、他の選択肢は提示されませんでした。それで、少し渋々ながら翌日の便を予約しました。', tip:''},
+  {cat:'飛行機トラブル・岡山', en:'Could you at least get a refund for the trouble?', ja:'せめて迷惑料として払い戻しはしてもらえましたか？', tip:''},
+  {cat:'飛行機トラブル・岡山', en:'I found out later that I could have asked for one. Since I used miles, I wouldn\'t have gotten cash back, but I could have gotten the miles returned.', ja:'後で分かったのですが、請求できたんです。マイルを使っていたので現金は戻りませんが、マイルを返してもらえたはずでした。', tip:''},
+  {cat:'飛行機トラブル・岡山', en:'At the time, though, I was so focused on the flight change that it didn\'t even occur to me to ask. It was a learning experience, I suppose!', ja:'でもその時は便の変更のことで頭がいっぱいで、聞くことすら思いつきませんでした。良い勉強になりましたね！', tip:''},
+  {cat:'飛行機トラブル・岡山', en:'So, did you end up staying at the airport?', ja:'それで、空港に泊まることになったんですか？', tip:''},
+  {cat:'飛行機トラブル・岡山', en:'No, we decided not to wait. We chose to go back by train instead, crossing the Seto Ohashi Bridge toward Okayama.', ja:'いいえ、待たないことにしました。代わりに電車で瀬戸大橋を渡って岡山に向かうことにしました。', tip:''},
+  {cat:'飛行機トラブル・岡山', en:'We figured, why not stay one night there? So we booked a hotel near Okayama Station and headed out.', ja:'せっかくだから一泊しようということになって、岡山駅近くのホテルを予約して出発しました。', tip:''},
+  {cat:'飛行機トラブル・岡山', en:'The view from the train on that bridge is famous, isn\'t it?', ja:'その橋からの電車の景色は有名ですよね？', tip:''},
+  {cat:'飛行機トラブル・岡山', en:'It was absolutely beautiful. We spent most of the journey just looking out at the Seto Inland Sea together.', ja:'本当に美しかったです。道中のほとんどを二人で瀬戸内海を眺めて過ごしました。', tip:''},
+  {cat:'飛行機トラブル・岡山', en:'Did you see anything in Okayama since it was your first time?', ja:'岡山は初めてでしたか？何か観光されましたか？', tip:''},
+  {cat:'飛行機トラブル・岡山', en:'Yes, we visited Korakuen Garden—one of the three most famous gardens in Japan—and Okayama Castle.', ja:'はい、後楽園——日本三名園の一つ——と岡山城を訪れました。', tip:''},
+  {cat:'飛行機トラブル・岡山', en:'For dinner, we found a casual izakaya. It was a bit more laid-back than our usual style, but the food was quite good and we were very satisfied.', ja:'夕食はカジュアルな居酒屋を見つけました。いつものスタイルよりちょっとくだけた感じでしたが、料理はとても美味しくて大満足でした。', tip:''},
+  {cat:'飛行機トラブル・岡山', en:'It sounds like you turned a stressful situation into a bonus vacation!', ja:'ストレスな状況をボーナス旅行に変えてしまったんですね！', tip:''},
+  {cat:'飛行機トラブル・岡山', en:'That\'s a good way to put it. We took the Shinkansen home the next morning.', ja:'うまい言い方ですね。翌朝は新幹線で帰宅しました。', tip:''},
+  {cat:'飛行機トラブル・岡山', en:'There were some unexpected troubles, but overall, it turned out to be a very enjoyable trip.', ja:'予期せぬトラブルはありましたが、全体的にとても楽しい旅になりました。', tip:''},
+  {cat:'飛行機トラブル・岡山', en:'I still wish I\'d known about the refund option, but well… that\'s all part of the experience!', ja:'払い戻しの件を知っていれば良かったとは思いますが、まあ……それも経験の一つですね！', tip:''},
 ];
+
 
 const TOTAL = phrases.length;
 
@@ -539,10 +563,12 @@ let isEnToJa       = true;
 let isRevealed     = false;
 let activeCategory = 'all';
 let isAutoPlaying  = false;
+let isRepeating    = false;
+let repeatTimer    = null;
 let autoMode       = '';
 let autoStopped    = false;
 let autoTimeout    = null;
-let masterSet = new Set(JSON.parse(localStorage.getItem('shikoku_master') || '[]'));
+let masterSet = new Set(JSON.parse(localStorage.getItem('jiko50_master') || '[]'));
 
 // ── Voice setup ───────────────────────────────────────────────────
 let enVoices = [];
@@ -567,6 +593,7 @@ function populateVoices() {
     'Microsoft Emma Multilingual Online (Natural) - English (United States)',
     'Microsoft Brian Multilingual Online (Natural) - English (United States)',
     'Microsoft Hazel - English (United Kingdom)',
+    'Microsoft Susan - English (United Kingdom)',
     'Microsoft George - English (United Kingdom)',
     'Microsoft Libby Online (Natural) - English (United Kingdom)',
     'Microsoft Maisie Online (Natural) - English (United Kingdom)',
@@ -579,6 +606,7 @@ function populateVoices() {
     'Microsoft Liam Online (Natural) - English (Canada)',
     'Microsoft Luna Online (Natural) - English (Singapore)',
     'Microsoft Neerja Online (Natural) - English (India)',
+    'Microsoft Prabhat Online (Natural) - English (India)',
   ]);
   const whitelist = all.filter(v => okNames.has(v.name));
   enVoices = whitelist.length ? whitelist : all.filter(v => v.lang.startsWith('en'));
@@ -647,6 +675,31 @@ function speakOne(text, onEnd) {
 function stripTags(html) { return html.replace(/<[^>]+>/g,'').replace(/\s+/g,' ').trim(); }
 function getSpeechText(item) { return item.speech || stripTags(item.en); }
 function speakCurrent() { const a = getActive(); if(!a.length) return; speakOne(getSpeechText(a[currentIndex])); }
+function speakRepeat(text) {
+  if (!isRepeating) return;
+  window.speechSynthesis.cancel();
+  setTimeout(() => {
+    speakOne(text, () => {
+      if (isRepeating) { repeatTimer = setTimeout(() => speakRepeat(text), 300); }
+    });
+  }, 150);
+}
+
+function toggleRepeat() {
+  isRepeating = !isRepeating;
+  const btn = document.getElementById('repeat-btn');
+  btn.textContent = '🔁 繰り返し: ' + (isRepeating ? 'ON' : 'OFF');
+  btn.style.background = isRepeating ? 'var(--primary)' : '';
+  btn.style.color = isRepeating ? '#fff' : '';
+  if (isRepeating) {
+    const a = getActive(); if (!a.length) return;
+    speakRepeat(a[currentIndex].speech || stripTags(a[currentIndex].en));
+  } else {
+    if (repeatTimer) { clearTimeout(repeatTimer); repeatTimer = null; }
+    window.speechSynthesis.cancel();
+  }
+}
+
 function speakP() {
   return new Promise(resolve => {
     if (autoStopped) { resolve(); return; }
@@ -662,7 +715,7 @@ function buildCatRows() {
   const wrap = document.getElementById('cat-rows'); wrap.innerHTML = '';
   allCats.forEach(cat => {
     const total    = phrases.filter(p => p.cat === cat).length;
-    const mastered = phrases.filter((p,i) => p.cat===cat && masterSet.has(i)).length;
+    const mastered = phrases.filter((p,i)=>p.cat===cat && masterSet.has(i)).length;
     const done     = total > 0 && mastered === total;
     const row = document.createElement('div');
     row.className = 'cat-row' + (cat===activeCategory?' active':'');
@@ -698,7 +751,7 @@ function getActive() {
     .map((p,i) => ({...p, globalIdx:i}))
     .filter(p => !masterSet.has(p.globalIdx) && (activeCategory==='all' || p.cat===activeCategory));
 }
-function saveMaster() { localStorage.setItem('shikoku_master', JSON.stringify([...masterSet])); }
+function saveMaster() { localStorage.setItem('jiko50_master', JSON.stringify([...masterSet])); }
 
 // ── Update UI ─────────────────────────────────────────────────────
 function update() {
@@ -708,13 +761,13 @@ function update() {
   const tapHint  = document.getElementById('tap-hint');
   document.getElementById('master-badge').textContent = `マスター: ${masterSet.size} / ${TOTAL}`;
   if (!active.length) {
-    noActive.classList.add('show'); mainCard.style.display='none'; tapHint.style.display='none';
+    noActive.classList.add('show'); mainCard.style.display = 'none'; tapHint.style.display = 'none';
     updateMasterUI(); buildCatRows(); updateFilterLabel(); return;
   }
-  noActive.classList.remove('show'); mainCard.style.display=''; tapHint.style.display='';
+  noActive.classList.remove('show'); mainCard.style.display = ''; tapHint.style.display = '';
   if (currentIndex >= active.length) currentIndex = 0;
   const item  = active[currentIndex];
-  const color = CATS[item.cat] || '#3b5bdb';
+  const color = CATS[item.cat] || '#16a34a';
   document.getElementById('cur-num').textContent = currentIndex + 1;
   document.getElementById('tot-num').textContent = active.length;
   document.getElementById('progress-bar').style.width = ((currentIndex+1)/active.length*100)+'%';
@@ -726,7 +779,7 @@ function update() {
   document.getElementById('main-text').innerHTML   = displayHTML;
   document.getElementById('answer-ja').innerHTML   = isEnToJa ? item.ja : item.en;
   const tipEl = document.getElementById('answer-tip');
-  if (item.tip) { tipEl.textContent = item.tip; tipEl.style.display=''; } else tipEl.style.display='none';
+  if (item.tip) { tipEl.textContent = item.tip; tipEl.style.display=''; } else tipEl.style.display = 'none';
   document.getElementById('mode-badge').textContent = isEnToJa ? '📖 英 → 日' : '📖 日 → 英';
   isRevealed = false;
   document.getElementById('answer-wrap').classList.remove('show');
@@ -747,11 +800,11 @@ function updateMasterUI() {
     [...masterSet].sort((a,b)=>a-b).forEach(idx => {
       const p = phrases[idx]; if(!p) return;
       const row = document.createElement('div');
-      row.style.cssText = 'display:flex;align-items:flex-start;gap:8px;padding:6px 0;border-bottom:1px solid #e2e8f0;font-size:12px;';
-      row.innerHTML = `<span style="flex:1;line-height:1.6;"><span style="color:${CATS[p.cat]};font-weight:800;">${p.cat}</span><br>${stripTags(p.en).substring(0,60)}…</span><button onclick="removeMaster(${idx})" style="border:none;background:#e11d48;color:#fff;border-radius:99px;padding:3px 10px;font-size:11px;font-weight:700;cursor:pointer;flex-shrink:0;">解除</button>`;
+      row.style.cssText = 'display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid #e2e8f0;font-size:12px;';
+      row.innerHTML = `<span style="flex:1;line-height:1.5;"><span style="color:${CATS[p.cat]};font-weight:800;">${p.cat}</span><br>${stripTags(p.en)}</span><button onclick="removeMaster(${idx})" style="border:none;background:#e11d48;color:#fff;border-radius:99px;padding:3px 10px;font-size:11px;font-weight:700;cursor:pointer;">解除</button>`;
       listEl.appendChild(row);
     });
-  } else { summary.classList.remove('show'); listWrap.style.display='none'; }
+  } else { summary.classList.remove('show'); listWrap.style.display = 'none'; }
 }
 
 // ── Actions ───────────────────────────────────────────────────────
@@ -763,6 +816,7 @@ function handleTap() {
     document.getElementById('main-card').classList.add('revealed');
   }
 }
+
 function toggleMaster(e) {
   if (isAutoPlaying) return;
   const active = getActive(); if(!active.length) return;
@@ -784,134 +838,163 @@ function toggleMaster(e) {
     document.getElementById('master-badge').textContent = `マスター: ${masterSet.size} / ${TOTAL}`;
   }
 }
-function removeMaster(idx) { masterSet.delete(idx); saveMaster(); if(!masterSet.size) document.getElementById('master-list-wrap').style.display='none'; update(); }
+
+function removeMaster(idx) { masterSet.delete(idx); saveMaster(); if (!masterSet.size) document.getElementById('master-list-wrap').style.display='none'; update(); }
+
 function clearAllMasterStep1() {
-  const btn = document.getElementById('clear-all-btn'); if(!btn) return;
-  btn.textContent='本当に全解除？'; btn.style.background='#e11d48'; btn.style.color='#fff'; btn.onclick=clearAllMasterStep2;
-  setTimeout(()=>{ if(btn.textContent==='本当に全解除？'){ btn.textContent='全解除'; btn.style.background=''; btn.style.color=''; btn.onclick=clearAllMasterStep1; } },3000);
+  const btn = document.getElementById('clear-all-btn'); if (!btn) return;
+  btn.textContent = '本当に全解除？'; btn.style.background = '#e11d48'; btn.style.color = '#fff'; btn.onclick = clearAllMasterStep2;
+  setTimeout(() => { if (btn.textContent === '本当に全解除？') { btn.textContent = '全解除'; btn.style.background = ''; btn.style.color = ''; btn.onclick = clearAllMasterStep1; } }, 3000);
 }
 function clearAllMasterStep2() {
-  masterSet.clear(); saveMaster(); document.getElementById('master-list-wrap').style.display='none';
-  const btn=document.getElementById('clear-all-btn');
-  if(btn){ btn.textContent='全解除'; btn.style.background=''; btn.style.color=''; btn.onclick=clearAllMasterStep1; }
+  masterSet.clear(); saveMaster(); document.getElementById('master-list-wrap').style.display = 'none';
+  const btn = document.getElementById('clear-all-btn');
+  if (btn) { btn.textContent = '全解除'; btn.style.background = ''; btn.style.color = ''; btn.onclick = clearAllMasterStep1; }
   update();
 }
-function toggleMasterList() { if(!masterSet.size) return; const w=document.getElementById('master-list-wrap'); w.style.display=w.style.display==='none'?'':'none'; }
+function toggleMasterList() { if (!masterSet.size) return; const w = document.getElementById('master-list-wrap'); w.style.display = w.style.display==='none' ? '' : 'none'; }
+
 function next() {
-  if(isAutoPlaying) return;
-  const active=getActive(); if(!active.length) return;
-  currentIndex=isRandom?Math.floor(Math.random()*active.length):(currentIndex+1)%active.length;
+  if (isAutoPlaying) return;
+  if (repeatTimer) { clearTimeout(repeatTimer); repeatTimer = null; }
+  window.speechSynthesis.cancel();
+  const active = getActive(); if(!active.length) return;
+  currentIndex = isRandom ? Math.floor(Math.random()*active.length) : (currentIndex+1) % active.length;
   update();
 }
 function prev() {
-  if(isAutoPlaying) return;
-  const active=getActive(); if(!active.length) return;
-  currentIndex=(currentIndex-1+active.length)%active.length;
+  if (isAutoPlaying) return;
+  if (repeatTimer) { clearTimeout(repeatTimer); repeatTimer = null; }
+  window.speechSynthesis.cancel();
+  const active = getActive(); if(!active.length) return;
+  currentIndex = (currentIndex - 1 + active.length) % active.length;
   update();
 }
 function toggleRandom() {
-  isRandom=!isRandom;
-  const btn=document.getElementById('random-btn');
-  btn.textContent=isRandom?'🔀 ランダム: ON':'🔀 ランダム: OFF';
-  btn.className=isRandom?'btn btn-on':'btn btn-secondary';
-  document.getElementById('order-badge').textContent=isRandom?'ランダム':'順番通り';
+  isRandom = !isRandom;
+  const btn = document.getElementById('random-btn');
+  btn.textContent = isRandom ? '🔀 ランダム: ON' : '🔀 ランダム: OFF';
+  btn.className   = isRandom ? 'btn btn-on' : 'btn btn-secondary';
+  document.getElementById('order-badge').textContent = isRandom ? 'ランダム' : '順番通り';
 }
-function switchMode() { if(isAutoPlaying) return; isEnToJa=!isEnToJa; update(); }
+function switchMode() { if (isAutoPlaying) return; isEnToJa = !isEnToJa; update(); }
 
 // ── Auto-play helpers ─────────────────────────────────────────────
-function delayP(ms){ return new Promise(r=>{ if(autoStopped){r();return;} autoTimeout=setTimeout(r,ms); }); }
-function setAutoPanel(step,instr,count){
-  document.getElementById('auto-step-title').textContent=step;
-  document.getElementById('auto-instruction').textContent=instr;
-  document.getElementById('auto-count').textContent=count;
+function delayP(ms) { return new Promise(r => { if (autoStopped) { r(); return; } autoTimeout = setTimeout(r, ms); }); }
+function setAutoPanel(step, instr, count) {
+  document.getElementById('auto-step-title').textContent  = step;
+  document.getElementById('auto-instruction').textContent = instr;
+  document.getElementById('auto-count').textContent       = count;
 }
-function enterAutoUI(){
-  isAutoPlaying=true; autoStopped=false;
-  document.getElementById('normal-controls').style.display='none';
-  document.getElementById('auto-controls').style.display='';
+function enterAutoUI() {
+  isAutoPlaying = true; autoStopped = false;
+  document.getElementById('normal-controls').style.display = 'none';
+  document.getElementById('auto-controls').style.display   = '';
   document.getElementById('auto-panel').classList.add('show');
-  document.getElementById('tap-hint').style.display='none';
+  document.getElementById('tap-hint').style.display        = 'none';
   document.getElementById('master-wrap').classList.add('disabled');
   document.getElementById('main-card').classList.remove('tappable');
   document.getElementById('main-card').classList.add('no-tap');
 }
-function exitAutoUI(){
-  autoStopped=true; isAutoPlaying=false;
-  window.speechSynthesis.cancel(); isSpeaking=false; stopKeepAlive();
+function exitAutoUI() {
+  autoStopped = true; isAutoPlaying = false;
+  window.speechSynthesis.cancel(); isSpeaking = false; stopKeepAlive();
   clearTimeout(speakOne._t);
-  if(autoTimeout){clearTimeout(autoTimeout);autoTimeout=null;}
-  document.getElementById('normal-controls').style.display='';
-  document.getElementById('auto-controls').style.display='none';
+  if (autoTimeout) { clearTimeout(autoTimeout); autoTimeout = null; }
+  document.getElementById('normal-controls').style.display = '';
+  document.getElementById('auto-controls').style.display   = 'none';
   document.getElementById('auto-panel').classList.remove('show');
-  document.getElementById('tap-hint').style.display='';
+  document.getElementById('tap-hint').style.display        = '';
   document.getElementById('master-wrap').classList.remove('disabled');
   document.getElementById('main-card').classList.add('tappable');
   document.getElementById('main-card').classList.remove('no-tap');
 }
-function stopAutoPlay(){ exitAutoUI(); update(); }
+function stopAutoPlay() { exitAutoUI(); update(); }
 
-function showHidden(){ document.getElementById('main-text').textContent='？？？'; document.getElementById('answer-wrap').classList.remove('show'); document.getElementById('main-card').classList.remove('revealed'); }
-function showAll(){ const a=getActive(); if(!a.length) return; const item=a[currentIndex]; document.getElementById('main-text').innerHTML=item.en; document.getElementById('answer-wrap').classList.add('show'); document.getElementById('main-card').classList.add('revealed'); }
+// ── Shadowing ─────────────────────────────────────────────────────
+function showHidden() { document.getElementById('main-text').textContent = '？？？'; document.getElementById('answer-wrap').classList.remove('show'); document.getElementById('main-card').classList.remove('revealed'); }
+function showAll() { const a=getActive(); if(!a.length) return; const item=a[currentIndex]; document.getElementById('main-text').innerHTML=item.en; document.getElementById('answer-wrap').classList.add('show'); document.getElementById('main-card').classList.add('revealed'); }
 
-async function runShadowing(){
-  const active=getActive(); if(!active.length){stopAutoPlay();return;}
-  const startIdx=currentIndex;
-  for(let i=0;i<active.length;i++){
-    if(autoStopped) break;
-    currentIndex=(startIdx+i)%active.length; update();
-    const n=i+1,tot=active.length;
+async function runShadowing() {
+  const active = getActive(); if (!active.length) { stopAutoPlay(); return; }
+  const startIdx = currentIndex;
+  for (let i = 0; i < active.length; i++) {
+    if (autoStopped) break;
+    currentIndex = (startIdx + i) % active.length; update();
+    const n = i+1, tot = active.length;
     showHidden();
     setAutoPanel(`カード ${n}/${tot} — STEP 1`,'👂 発話せずに2回聴いてください。','1/2回目…');
-    await speakP(); if(autoStopped) break; await delayP(400); if(autoStopped) break;
+    await speakP(); if(autoStopped) break; await delayP(350); if(autoStopped) break;
     setAutoPanel(`カード ${n}/${tot} — STEP 1`,'👂 発話せずに2回聴いてください。','2/2回目…');
-    await speakP(); if(autoStopped) break; await delayP(500); if(autoStopped) break;
+    await speakP(); if(autoStopped) break; await delayP(450); if(autoStopped) break;
     showHidden();
     setAutoPanel(`カード ${n}/${tot} — STEP 2`,'🗣️ 音声に合わせてシャドウイングしてください。','1/2回目…');
-    await speakP(); if(autoStopped) break; await delayP(400); if(autoStopped) break;
+    await speakP(); if(autoStopped) break; await delayP(350); if(autoStopped) break;
     setAutoPanel(`カード ${n}/${tot} — STEP 2`,'🗣️ 音声に合わせてシャドウイングしてください。','2/2回目…');
-    await speakP(); if(autoStopped) break; await delayP(500); if(autoStopped) break;
+    await speakP(); if(autoStopped) break; await delayP(450); if(autoStopped) break;
     showAll();
     setAutoPanel(`カード ${n}/${tot} — STEP 3`,'📖 英文・日本語訳を見ながら2回シャドウイングしてください。','1/2回目…');
-    await speakP(); if(autoStopped) break; await delayP(400); if(autoStopped) break;
+    await speakP(); if(autoStopped) break; await delayP(350); if(autoStopped) break;
     setAutoPanel(`カード ${n}/${tot} — STEP 3`,'📖 英文・日本語訳を見ながら2回シャドウイングしてください。','2/2回目…');
-    await speakP(); if(autoStopped) break; await delayP(500); if(autoStopped) break;
+    await speakP(); if(autoStopped) break; await delayP(450); if(autoStopped) break;
     showHidden();
     setAutoPanel(`カード ${n}/${tot} — STEP 4`,'🙈 何も見ずに2回シャドウイングしてください。','1/2回目…');
-    await speakP(); if(autoStopped) break; await delayP(400); if(autoStopped) break;
+    await speakP(); if(autoStopped) break; await delayP(350); if(autoStopped) break;
     setAutoPanel(`カード ${n}/${tot} — STEP 4`,'🙈 何も見ずに2回シャドウイングしてください。','2/2回目…');
-    await speakP(); if(autoStopped) break; await delayP(800);
+    await speakP(); if(autoStopped) break; await delayP(700);
   }
-  if(!autoStopped){setAutoPanel('完了！','🎉 シャドウイング完了しました！',''); await delayP(2000); stopAutoPlay();}
+  if (!autoStopped) { setAutoPanel('完了！', '🎉 シャドウイング完了しました！', ''); await delayP(2000); stopAutoPlay(); }
 }
-function startShadowing(){ if(!getActive().length){alert('出題できるカードがありません。');return;} autoMode='shadow'; enterAutoUI(); runShadowing(); }
+function startShadowing() { if (!getActive().length) { alert('出題できるカードがありません。'); return; } autoMode = 'shadow'; enterAutoUI(); runShadowing(); }
 
-async function runContinuous(){
-  let loopCount=0;
-  while(!autoStopped){
-    const active=getActive(); if(!active.length){stopAutoPlay();return;}
+// ── Continuous play ───────────────────────────────────────────────
+async function runContinuous() {
+  let loopCount = 0;
+  while (!autoStopped) {
+    const active = getActive(); if (!active.length) { stopAutoPlay(); return; }
     loopCount++;
-    const startIdx=currentIndex;
-    for(let i=0;i<active.length;i++){
-      if(autoStopped) break;
-      currentIndex=(startIdx+i)%active.length; update();
+    const startIdx = currentIndex;
+    for (let i = 0; i < active.length; i++) {
+      if (autoStopped) break;
+      currentIndex = (startIdx + i) % active.length; update();
       document.getElementById('answer-wrap').classList.add('show');
       document.getElementById('main-card').classList.add('revealed');
-      setAutoPanel(`連続再生 ${i+1}/${active.length}（${loopCount}周目）`,'▶ 英語音声を再生中 — ⏹ 停止ボタンで終了','');
-      await speakP(); if(autoStopped) break; await delayP(600);
+      const n = i+1, tot = active.length;
+      setAutoPanel(`連続再生 ${n}/${tot}（${loopCount}周目）`, '▶ 英語音声を再生中 — ⏹ 停止ボタンで終了', '');
+      await speakP(); if(autoStopped) break; await delayP(500);
     }
-    if(!autoStopped) currentIndex=0;
+    if (!autoStopped) currentIndex = 0;
   }
 }
-function startContinuous(){ if(!getActive().length){alert('出題できるカードがありません。');return;} autoMode='continuous'; enterAutoUI(); runContinuous(); }
+function startContinuous() { if (!getActive().length) { alert('出題できるカードがありません。'); return; } autoMode = 'continuous'; enterAutoUI(); runContinuous(); }
 
-function openGuide(){ document.getElementById('guide-overlay').classList.add('show'); document.getElementById('guide-overlay').scrollTop=0; }
-function closeGuide(){ document.getElementById('guide-overlay').classList.remove('show'); }
-function handleOverlayClick(e){ if(e.target===document.getElementById('guide-overlay')) closeGuide(); }
+// ── Guide modal ───────────────────────────────────────────────────
+function openGuide() { document.getElementById('guide-overlay').classList.add('show'); document.getElementById('guide-overlay').scrollTop = 0; }
+function closeGuide() { document.getElementById('guide-overlay').classList.remove('show'); }
+function handleOverlayClick(e) { if (e.target === document.getElementById('guide-overlay')) closeGuide(); }
 
 // ── Init ──────────────────────────────────────────────────────────
 buildCatRows();
 updateFilterLabel();
 update();
+</script>
+<script>
+// スワイプ機能
+(function() {
+  let startX = 0, startY = 0;
+  document.addEventListener('touchstart', e => {
+    startX = e.touches[0].clientX;
+    startY = e.touches[0].clientY;
+  }, { passive: true });
+  document.addEventListener('touchend', e => {
+    const dx = e.changedTouches[0].clientX - startX;
+    const dy = e.changedTouches[0].clientY - startY;
+    if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 50) {
+      if (dx < 0) next();
+      else prev();
+    }
+  }, { passive: true });
+})();
 </script>
 </body>
 </html>

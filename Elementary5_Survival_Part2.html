@@ -650,7 +650,7 @@ const phrases = [
   {cat:'③ 理科・社会・ICT', en:'How do we present our project?', ja:'プロジェクトはどう発表するの？', tip:''},
   {cat:'③ 理科・社会・ICT', en:'Can we use slides?', ja:'スライド使っていい？', tip:''},
   {cat:'③ 理科・社会・ICT', en:'How long should the presentation be?', ja:'発表はどれくらい？', tip:''},
-  {cat:'③ 理科・社会・ICT', en:'Do we need to include sources?', ja:'出典は必要？', tip:''},
+  {cat:'③ 理科・社会・ICT', en:'Do we need to cite sources?', ja:'出典は必要？', tip:''},
   {cat:'③ 理科・社会・ICT', en:'Where can I find more information?', ja:'どこで情報探せる？', tip:''},
   {cat:'⑨ グループワーク', en:'What\'s our topic?', ja:'テーマは何？', tip:''},
   {cat:'⑨ グループワーク', en:'How should we divide the work?', ja:'どう分担する？', tip:''},
@@ -668,7 +668,7 @@ const phrases = [
   {cat:'⑪ トラブル対応', en:'That wasn\'t nice.', ja:'それは優しくなかったよ。', tip:''},
   {cat:'⑪ トラブル対応', en:'Can we talk privately?', ja:'二人で話せる？', tip:''},
   {cat:'⑪ トラブル対応', en:'I didn\'t mean to upset you.', ja:'怒らせるつもりじゃなかった。', tip:''},
-  {cat:'⑪ トラブル対応', en:'Let\'s work this out together.', ja:'一緒に解決しよう。', tip:''},
+  {cat:'⑪ トラブル対応', en:'Let\'s fix this together.', ja:'一緒に直そう。', tip:''},
   {cat:'⑪ トラブル対応', en:'I think this is a misunderstanding.', ja:'誤解だと思う。', tip:''},
   {cat:'⑪ トラブル対応', en:'I\'m sorry for what I said.', ja:'言ったことは謝る。', tip:''},
   {cat:'⑪ トラブル対応', en:'Can we start over?', ja:'やり直せる？', tip:''},
@@ -689,8 +689,8 @@ const phrases = [
   {cat:'⑭ 自己紹介', en:'I like art.', ja:'アートが好きです。', tip:''},
   {cat:'⑭ 自己紹介', en:'I\'m a little shy.', ja:'少し恥ずかしがり屋です。', tip:''},
   {cat:'⑭ 自己紹介', en:'I\'m usually calm.', ja:'普段は落ち着いています。', tip:''},
-  {cat:'⑭ 自己紹介', en:'I try to be responsible.', ja:'責任感を持つようにしています。', tip:''},
-  {cat:'⑭ 自己紹介', en:'I\'m always curious about new things.', ja:'いつも新しいことに興味があります。', tip:''},
+  {cat:'⑭ 自己紹介', en:'I\'m responsible.', ja:'責任感があります。', tip:''},
+  {cat:'⑭ 自己紹介', en:'I\'m curious.', ja:'好奇心が強いです。', tip:''},
   {cat:'⑭ 自己紹介', en:'I want to improve my English.', ja:'英語を上達させたいです。', tip:''},
   {cat:'⑭ 自己紹介', en:'I\'m interested in technology.', ja:'テクノロジーに興味があります。', tip:''},
   {cat:'⑭ 自己紹介', en:'I want to be more confident.', ja:'もっと自信を持ちたいです。', tip:''},
@@ -701,9 +701,9 @@ const phrases = [
   {cat:'⑭ 自己紹介', en:'I speak Japanese at home.', ja:'家では日本語を話します。', tip:''},
   {cat:'⑭ 自己紹介', en:'I like helping people.', ja:'人を助けるのが好きです。', tip:''},
   {cat:'⑭ 自己紹介', en:'I want to make more friends.', ja:'もっと友達を作りたいです。', tip:''},
-  {cat:'⑭ 自己紹介', en:'I want to push myself this year.', ja:'今年は自分を高めたいです。', tip:''},
+  {cat:'⑭ 自己紹介', en:'I want to challenge myself this year.', ja:'今年は自分に挑戦したいです。', tip:''},
   {cat:'⑮ 高度なコミュニケーション', en:'I appreciate your help.', ja:'手伝ってくれて感謝してる。', tip:''},
-  {cat:'⑮ 高度なコミュニケーション', en:'That\'s so sweet of you!', ja:'優しいね！', tip:''},
+  {cat:'⑮ 高度なコミュニケーション', en:'That\'s very thoughtful of you.', ja:'優しいね。', tip:''},
   {cat:'⑮ 高度なコミュニケーション', en:'I understand how you feel.', ja:'気持ちわかるよ。', tip:''},
   {cat:'⑮ 高度なコミュニケーション', en:'I didn\'t expect that.', ja:'それは予想してなかった。', tip:''},
   {cat:'⑮ 高度なコミュニケーション', en:'That makes sense.', ja:'なるほど。', tip:''},
@@ -1357,6 +1357,24 @@ function handleOverlayClick(e) {
 buildCatRows();
 updateFilterLabel();
 update();
+</script>
+<script>
+// スワイプ機能
+(function() {
+  let startX = 0, startY = 0;
+  document.addEventListener('touchstart', e => {
+    startX = e.touches[0].clientX;
+    startY = e.touches[0].clientY;
+  }, { passive: true });
+  document.addEventListener('touchend', e => {
+    const dx = e.changedTouches[0].clientX - startX;
+    const dy = e.changedTouches[0].clientY - startY;
+    if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 50) {
+      if (dx < 0) next();
+      else prev();
+    }
+  }, { passive: true });
+})();
 </script>
 </body>
 </html>
