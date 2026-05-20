@@ -3,14 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🇫🇷 フランス語カード 段階４</title>
+<title>中2 Arts & PE：実技と対話の100フレーズ</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root {
   --bg: #f0f9f4;
   --surface: #ffffff;
-  --primary: #7c3aed;
-  --primary-light: #7c3aed22;
+  --primary: #16a34a;
+  --primary-light: #dcfce7;
   --accent: #0891b2;
   --green: #16a34a;
   --green-light: #dcfce7;
@@ -51,7 +51,7 @@ body {
 .badge.amber { background: var(--amber-light); color: var(--amber); border-color: #fcd34d; }
 
 /* ── Progress ── */
-.progress-wrap { background: #7c3aed33; border-radius: 99px; height: 6px; margin-bottom: 4px; overflow: hidden; }
+.progress-wrap { background: #bbf7d0; border-radius: 99px; height: 6px; margin-bottom: 4px; overflow: hidden; }
 .progress-bar  { height: 100%; background: var(--primary); border-radius: 99px; transition: width 0.4s ease; }
 .progress-label { text-align: center; font-size: 12px; color: var(--muted); margin-bottom: 10px; }
 
@@ -108,16 +108,6 @@ body {
 }
 .answer-tip::before { content: '💡 '; }
 
-.pronunciation-text {
-  font-size: clamp(12px,3.2vw,14px); color: var(--primary);
-  font-style: italic; text-align: center; line-height: 1.5;
-  padding: 3px 8px 2px; font-weight: 600; margin-bottom: 4px;
-}
-.pronunciation-text {
-  font-size: clamp(12px,3.2vw,14px); color: var(--primary);
-  font-style: italic; text-align: center; line-height: 1.5;
-  padding: 3px 8px 2px; font-weight: 600; margin-bottom: 4px;
-}
 .master-badge {
   display: none; text-align: center; margin-top: 8px;
   background: var(--green-light); color: var(--green);
@@ -366,8 +356,8 @@ body {
 <div class="container">
 
 <div class="header">
-  <h2>🇫🇷 フランス語カード 段階４</h2>
-  <p>接続法・イディオム・ことわざ — 自然な会話表現</p>
+  <h2>🎨🏃 中2 Arts & PE：実技と対話の100フレーズ</h2>
+  <p>制作・練習・分析・フィードバックで使える英語</p>
   <button class="help-btn" onclick="openGuide()">❓ 使い方ガイド</button>
 </div>
 
@@ -403,8 +393,6 @@ body {
     </div>
   </div>
   <div class="main-text" id="main-text">Loading...</div>
-  <div class="pronunciation-text" id="pronunciation-text"></div>
-  <div class="pronunciation-text" id="pronunciation-text"></div>
   <div class="answer-wrap" id="answer-wrap">
     <div class="answer-ja" id="answer-ja"></div>
     <div class="answer-tip" id="answer-tip" style="display:none"></div>
@@ -441,10 +429,10 @@ body {
 <!-- Voice / speed panel -->
 <div class="panel">
   <div class="panel-row" style="margin-bottom:8px;">
-    <label>🔊 フランス語音声</label>
+    <label>🔊 音声優先</label>
     <select id="voice-pref" onchange="applyVoicePref()">
-      <option value="FR">🇫🇷 フランス優先</option>
-      <option value="CA">🇨🇦 カナダ優先</option>
+      <option value="US">🇺🇸 US優先</option>
+      <option value="GB">🇬🇧 GB優先</option>
     </select>
     <select id="voice-select" style="flex:2;"></select>
   </div>
@@ -461,14 +449,13 @@ body {
     <button class="btn btn-secondary" onclick="prev()">← 戻る</button>
     <button class="btn btn-primary"   onclick="speakCurrent()">🔊 音声</button>
     <button class="btn btn-secondary" onclick="next()">次へ →</button>
+    <button class="btn btn-secondary" style="font-size:11px;padding:8px 6px;" onclick="switchMode()">🔄 英⇄日</button>
   </div>
-  <div class="btn-row">
-    <button class="btn btn-secondary" id="random-btn" onclick="toggleRandom()">🔀 ランダム: OFF</button>
-    <button class="btn btn-secondary" onclick="switchMode()">🔄 仏⇄日</button>
-  </div>
-  <div class="btn-row">
-    <button class="btn btn-amber" onclick="startShadowing()">🗣️ シャドウイング</button>
-    <button class="btn btn-blue"  onclick="startContinuous()">▶ 連続再生</button>
+  <div class="btn-row" style="gap:4px;">
+    <button class="btn btn-secondary" style="font-size:11px;padding:7px 5px;" id="random-btn" onclick="toggleRandom()">🔀 ランダム</button>
+    <button class="btn btn-secondary" style="font-size:11px;padding:7px 5px;" id="repeat-btn" onclick="toggleRepeat()">🔁 繰り返し</button>
+    <button class="btn btn-blue"  style="font-size:11px;padding:7px 5px;" onclick="startContinuous()">▶ 連続再生</button>
+    <button class="btn btn-amber" style="font-size:11px;padding:7px 5px;" onclick="startShadowing()">🗣️ シャドウ</button>
   </div>
 </div>
 
@@ -486,7 +473,7 @@ body {
 <div class="guide-modal" id="guide-modal">
 
   <div class="guide-modal-header">
-    <h2>🇫🇷 フランス語カード 段階４</h2>
+    <h2>❓ 使い方ガイド</h2>
     <button class="guide-close" onclick="closeGuide()">✕ 閉じる</button>
   </div>
 
@@ -508,7 +495,7 @@ body {
           </p>
         </div>
         <div>
-          <div><span class="gbd gbd-sec">🔀 ランダム: OFF</span><span class="gbd gbd-mode">🔄 仏⇄日</span></div>
+          <div><span class="gbd gbd-sec">🔀 ランダム: OFF</span><span class="gbd gbd-mode">🔄 英⇄日</span></div>
           <p class="g-text" style="margin-top:6px">ランダムでカードをシャッフルします。<strong>英⇄日</strong>で日本語を見て英語を答えるスピーキング練習モードになります。</p>
         </div>
       </div>
@@ -598,7 +585,7 @@ body {
           <span class="g-flow-tag gft-blue">連続再生で復習</span>
         </div>
         <p class="g-text">まず1枚ずつじっくり取り組んでカードに慣れる → 覚えたものをマスターに → シャドウイングで発音と定着を強化 → 連続再生で総復習。このサイクルを繰り返すことで着実に力がつきます。</p>
-        <div class="g-note"><strong>スピーキング練習も忘れずに。</strong> 「🔄 仏⇄日」ボタンで日本語表示モードに切り替え、日本語を見て英語を声に出す練習をすると、さらに効果的です。</div>
+        <div class="g-note"><strong>スピーキング練習も忘れずに。</strong> 「🔄 英⇄日」ボタンで日本語表示モードに切り替え、日本語を見て英語を声に出す練習をすると、さらに効果的です。</div>
       </div>
     </div>
 
@@ -617,6 +604,20 @@ body {
       </div>
     </div>
 
+    <!-- ⑦ 推奨環境 -->
+    <div class="g-section">
+      <div class="g-head"><span>🖥️</span> 推奨環境</div>
+      <div class="g-body">
+        <div style="font-size:14px; line-height:1.7; margin-bottom:10px;">
+          <strong>🖥️ 推奨環境：Windows 11 + Microsoft Edge</strong><br>
+          音声の選択肢が豊富で、読み上げの自然さ・正確さともに最も優れています。
+        </div>
+        <div style="font-size:11px; color:#888; line-height:1.6;">
+          ⚠️ iPhone・iPadではAppleの仕様により、文脈によっては一部の単語が誤った発音になるケースが指摘されています。気になる箇所はWindowsのEdgeでご確認ください。
+        </div>
+      </div>
+    </div>
+
   </div><!-- /guide-body -->
 </div><!-- /guide-modal -->
 </div><!-- /guide-overlay -->
@@ -624,124 +625,115 @@ body {
 <script>
 // ── Data ──────────────────────────────────────────────────────────
 const CATS = {
-  '接続法': '#b45309',
-  '受動態・分詞': '#7c3aed',
-  '代名詞の活用': '#0369a1',
-  '豊かな表現': '#16a34a',
-  '文化・社会表現': '#d97706',
-  '仕事・学習': '#e85d26',
-  'ニュアンス表現': '#9333ea',
-  '芸術・エンタメ': '#dc2626',
-  '総合会話': '#0891b2',
-  '社交・感情': '#065f46',
-  '議論・説明': '#c2410c',
-  '自然・環境': '#6d28d9',
+  'Arts': '#e85d26',
+  'PE': '#2563c4',
 };
 
 const phrases = [
-  {cat:'接続法', en:'Il faut que vous fassiez attention.', speech:'Il faut que vous fassiez attention.', ja:'気をつけなければなりません。', tip:'【発音】イル フォ ク ヴ ファスィエ アタンスィオン｜"il faut que + 接続法" は「〜しなければならない」。"fassiez" は "faire" の接続法（活用が不規則）。"faire attention" は「気をつける」。'},
-  {cat:'接続法', en:'Je suis content(e) que vous soyez là.', speech:'Je suis content que vous soyez là.', ja:'あなたがここにいてくれて嬉しいです。', tip:'【発音】ジュ スイ コンタン ク ヴ ソワイエ ラ｜感情を表す動詞の後は接続法。"soyez" は "être" の接続法二人称複数形。"là" は「そこに・ここに」。'},
-  {cat:'接続法', en:'Je doute qu\'il vienne ce soir.', speech:'Je doute qu\'il vienne ce soir.', ja:'今夜彼が来るとは思いません。', tip:'【発音】ジュ ドゥット キル ヴィエンヌ ス ソワール｜"douter que + 接続法" は「〜だとは思わない」。"vienne" は "venir" の接続法（不規則）。疑念・不確実さの後は接続法。'},
-  {cat:'接続法', en:'Je cherche quelqu\'un qui puisse m\'aider.', speech:'Je cherche quelqu\'un qui puisse m\'aider.', ja:'手伝ってくれる人を探しています。', tip:'【発音】ジュ シェルシュ ケルカン キ ピュイス メデ｜先行詞が不定・仮定の場合、関係節に接続法を使う。"puisse" は "pouvoir" の接続法。"quelqu\'un" は「誰か」。'},
-  {cat:'接続法', en:'Quoiqu\'il soit tard, je vais continuer.', speech:'Quoiqu\'il soit tard, je vais continuer.', ja:'遅くても、続けます。', tip:'【発音】クワキル ソワ タール ジュ ヴェ コンティニュエ｜"quoique + 接続法" は「〜にもかかわらず」。"bien que" と同義。"soit" は "être" の接続法三人称単数。'},
-  {cat:'受動態・分詞', en:'Ce tableau a été peint par Monet.', speech:'Ce tableau a été peint par Monet.', ja:'この絵はモネによって描かれました。', tip:'【発音】ス タブロー ア エテ パン パール モネ｜受動態は "être + 過去分詞 + par"。"peint" は "peindre（描く）" の過去分詞。フランス語の受動態は英語より少し使用頻度が低い。'},
-  {cat:'受動態・分詞', en:'Les billets seront envoyés par email.', speech:'Les billets seront envoyés par email.', ja:'チケットはメールで送られます。', tip:'【発音】レ ビエ スロン ザンヴォワイェ パール イーメール｜未来の受動態 "seront + 過去分詞"。"envoyés" は "envoyer" の過去分詞（複数形に一致）。'},
-  {cat:'受動態・分詞', en:'En entrant dans le musée, j\'ai été impressionné(e).', speech:'En entrant dans le musée, j\'ai été impressionné.', ja:'美術館に入ると、感動しました。', tip:'【発音】アン アントラン ダン ル ミュゼ ジェ エテ アンプレスィオネ｜"en + 現在分詞" は「〜しながら・〜すると同時に」（ジェロンディフ）。"impressionné" は「感銘を受けた」。'},
-  {cat:'代名詞の活用', en:'Je lui ai envoyé un message hier soir.', speech:'Je lui ai envoyé un message hier soir.', ja:'昨夜、彼（彼女）にメッセージを送りました。', tip:'【発音】ジュ リュイ エ アンヴォワイェ アン メサージュ イエール ソワール｜"lui" は三人称単数の間接目的語代名詞（彼/彼女に）。直接目的語なら "le/la"。動詞の前に置く。'},
-  {cat:'代名詞の活用', en:'Je n\'en ai pas besoin, merci.', speech:'Je n\'en ai pas besoin, merci.', ja:'それは必要ありません、ありがとう。', tip:'【発音】ジュ ナン ネ パ ブゾワン メルスィ｜"en" は "de + 名詞" を受ける代名詞。"avoir besoin de" → "en" で置き換え。"Je n\'en veux pas" も同様。'},
-  {cat:'代名詞の活用', en:'On y va ensemble ?', speech:'On y va ensemble ?', ja:'一緒に行きましょうか？', tip:'【発音】オン ニ ヴァ アンサンブル｜"y" は "à + 場所" を受ける代名詞（そこに・そこへ）。"on" は「私たち・人々」の意。"y aller" は「行く」の日常的な表現。'},
-  {cat:'代名詞の活用', en:'Je m\'en souviens très bien.', speech:'Je m\'en souviens très bien.', ja:'それをよく覚えています。', tip:'【発音】ジュ マン スヴィヤン トレ ビヤン｜"se souvenir de" は「〜を覚えている」（再帰動詞）。"en" が "de + 名詞" を置き換え。再帰動詞 + en の組み合わせ。'},
-  {cat:'豊かな表現', en:'Ce paysage m\'a coupé le souffle.', speech:'Ce paysage m\'a coupé le souffle.', ja:'その景色は息をのむほど美しかったです。', tip:'【発音】ス ペイザージュ マ クペ ル スフル｜"couper le souffle" は「息を切らせる・息をのむ」（イディオム）。"paysage" は「風景・景色」（男性名詞）。'},
-  {cat:'豊かな表現', en:'Je suis tombé(e) amoureux/amoureuse de cette ville.', speech:'Je suis tombé amoureux de cette ville.', ja:'この街に恋をしてしまいました。', tip:'【発音】ジュ スイ トンベ アムルー ドゥ セット ヴィル｜"tomber amoureux/amoureuse de" は「〜に恋する」。"tomber" は移動動詞なので複合過去は "être" を使う。'},
-  {cat:'豊かな表現', en:'Ça m\'a beaucoup touché(e).', speech:'Ça m\'a beaucoup touché.', ja:'それはとても感動しました。', tip:'【発音】サ マ ボクー トゥシェ｜"toucher" は「触れる・感動させる」。"m\'a touché(e)" は複合過去で、主語（ça）が感動を与えた側。感情表現の定番。'},
-  {cat:'豊かな表現', en:'Je n\'ai jamais rien vu d\'aussi beau.', speech:'Je n\'ai jamais rien vu d\'aussi beau.', ja:'こんなに美しいものを見たことがありません。', tip:'【発音】ジュ ネ ジャメ リヤン ヴュ ドスィ ボ｜二重否定 "ne... jamais rien" は「決して何も〜ない」。"d\'aussi beau" は「これほど美しいもの」。強い感嘆の表現。'},
-  {cat:'豊かな表現', en:'Tout compte fait, ce voyage valait vraiment la peine.', speech:'Tout compte fait, ce voyage valait vraiment la peine.', ja:'すべてを考えると、この旅は本当に価値がありました。', tip:'【発音】トゥ コント フェ ス ヴォワヤージュ ヴァレ ヴレマン ラ ペーヌ｜"tout compte fait" は「すべてを考えると」（イディオム）。"valait" は "valoir" の半過去「価値があった」。'},
-  {cat:'文化・社会表現', en:'En France, on dîne généralement vers vingt heures.', speech:'En France, on dîne généralement vers vingt heures.', ja:'フランスでは一般的に20時頃夕食をとります。', tip:'【発音】アン フランス オン ディーヌ ジェネラルマン ヴェール ヴァン ウール｜"dîner" は「夕食をとる」。"généralement" は「一般的に」。"vers" は「〜頃」（おおよその時間）。'},
-  {cat:'文化・社会表現', en:'La bise est une façon de se saluer en France.', speech:'La bise est une façon de se saluer en France.', ja:'ビズ（頬のキス）はフランスでの挨拶の習慣です。', tip:'【発音】ラ ビーズ エ ユン ファソン ドゥ ス サリュエ アン フランス｜"la bise" は頬を合わせる挨拶。"façon de" は「〜する方法」。"se saluer" は再帰動詞「挨拶し合う」。'},
-  {cat:'文化・社会表現', en:'Il est impoli d\'arriver en retard à un dîner.', speech:'Il est impoli d\'arriver en retard à un dîner.', ja:'夕食に遅刻するのは失礼です。', tip:'【発音】イル エ アンポリ ダリヴェ アン ルタール ア アン ディネ｜"il est + 形容詞 + de + 不定詞" は「〜することは〜だ」（非人称構文）。"impoli" は「失礼な・無礼な」。'},
-  {cat:'文化・社会表現', en:'Les Français apprécient beaucoup leur patrimoine culturel.', speech:'Les Français apprécient beaucoup leur patrimoine culturel.', ja:'フランス人は自国の文化遺産をとても大切にしています。', tip:'【発音】レ フランセ アプレスィ ボクー ルール パトリモワン キュルテュレル｜"apprécier" は「評価する・大切にする」。"patrimoine" は「遺産・財産」。"culturel" は形容詞「文化的な」。'},
-  {cat:'仕事・学習', en:'Je travaille dans le domaine de l\'informatique.', speech:'Je travaille dans le domaine de l\'informatique.', ja:'私はIT分野で働いています。', tip:'【発音】ジュ トラヴァイユ ダン ル ドメーヌ ドゥ ランフォルマティック｜"domaine" は「分野・領域」。"informatique" は「情報技術・IT」（女性名詞）。自己紹介で仕事を説明する表現。'},
-  {cat:'仕事・学習', en:'J\'apprends le français depuis six mois.', speech:'J\'apprends le français depuis six mois.', ja:'6ヶ月前からフランス語を学んでいます。', tip:'【発音】ジャプラン ル フランセ ドゥピュイ スィ モワ｜"apprendre" は「学ぶ」（不規則動詞）。"depuis + 期間" + 現在形で「〜から（今も）続けている」。'},
-  {cat:'仕事・学習', en:'Mon objectif est de parler couramment français.', speech:'Mon objectif est de parler couramment français.', ja:'私の目標は流暢にフランス語を話すことです。', tip:'【発音】モン オブジェクティフ エ ドゥ パルレ クラマン フランセ｜"objectif" は「目標」（男性名詞）。"couramment" は「流暢に」（副詞）。"de + 不定詞" で目標の内容を表す。'},
-  {cat:'仕事・学習', en:'Est-ce que vous pouvez corriger mes erreurs ?', speech:'Est-ce que vous pouvez corriger mes erreurs ?', ja:'間違いを直していただけますか？', tip:'【発音】エス ク ヴ プヴェ コリジェ メ ゼルール｜"corriger" は「訂正する」。"erreur" は「間違い・エラー」（女性名詞）。言語学習で使う実用的な表現。'},
-  {cat:'仕事・学習', en:'Je lis des livres en français pour m\'améliorer.', speech:'Je lis des livres en français pour m\'améliorer.', ja:'上達するためにフランス語の本を読んでいます。', tip:'【発音】ジュ リ デ リーヴル アン フランセ プール マメリオレ｜"pour + 不定詞" は「〜するために」（目的）。"s\'améliorer" は再帰動詞「上達する」。"lire" の現在形 "lis"。'},
-  {cat:'ニュアンス表現', en:'Honnêtement, je ne sais pas quoi dire.', speech:'Honnêtement, je ne sais pas quoi dire.', ja:'正直なところ、何を言えばいいか分かりません。', tip:'【発音】オネットマン ジュ ヌ セ パ クワ ディール｜"honnêtement" は「正直に言うと」。"quoi dire" は "quoi" + 不定詞「何を言えばよいか」（間接疑問の簡略形）。'},
-  {cat:'ニュアンス表現', en:'En fait, c\'est plus compliqué que ça.', speech:'En fait, c\'est plus compliqué que ça.', ja:'実は、それより複雑なのです。', tip:'【発音】アン フェ セ プリュ コンプリケ ク サ｜"en fait" は「実は・実際には」。会話でよく使う。"compliqué" は「複雑な」。"que ça" は「それより」（比較）。'},
-  {cat:'ニュアンス表現', en:'Ça dépend de la situation.', speech:'Ça dépend de la situation.', ja:'状況によります。', tip:'【発音】サ デパン ドゥ ラ スィテュアスィオン｜"dépendre de" は「〜による・〜次第だ」。会話で非常によく使う表現。"situation" は「状況」（女性名詞）。'},
-  {cat:'ニュアンス表現', en:'Dans un sens, vous avez raison.', speech:'Dans un sens, vous avez raison.', ja:'ある意味では、あなたは正しいです。', tip:'【発音】ダン ザン サン ヴ ザヴェ レゾン｜"dans un sens" は「ある意味では」。"avoir raison" は「正しい」（動詞 "avoir" を使う！英語の "be right" と異なる）。'},
-  {cat:'ニュアンス表現', en:'Je vois ce que vous voulez dire.', speech:'Je vois ce que vous voulez dire.', ja:'おっしゃりたいことはわかります。', tip:'【発音】ジュ ヴォワ ス ク ヴ ヴレ ディール｜"je vois" は「見る」だが会話では「わかる・理解する」の意。"ce que vous voulez dire" は「あなたが言いたいこと」（関係代名詞 que）。'},
-  {cat:'ニュアンス表現', en:'Ce n\'est pas grave, ne vous inquiétez pas.', speech:'Ce n\'est pas grave, ne vous inquiétez pas.', ja:'大丈夫ですよ、心配しないでください。', tip:'【発音】ス ネ パ グラーヴ ヌ ヴ アンキエテ パ｜"ce n\'est pas grave" は「大したことない」。命令形の否定は "ne + 動詞（命令形）+ pas"。"s\'inquiéter" は「心配する」。'},
-  {cat:'芸術・エンタメ', en:'Avez-vous des billets pour la soirée de demain ?', speech:'Avez-vous des billets pour la soirée de demain ?', ja:'明日の夜のチケットはありますか？', tip:'【発音】アヴェ ヴ デ ビエ プール ラ ソワレ ドゥ ドゥマン｜"soirée" は「夜の催し・パーティー」（"soir" より時間的広がりを持つ）。コンサートや公演のチケット購入に使う。'},
-  {cat:'芸術・エンタメ', en:'Je cherche un bon film français à regarder.', speech:'Je cherche un bon film français à regarder.', ja:'良いフランス映画を探しています。', tip:'【発音】ジュ シェルシュ アン ボン フィルム フランセ ア ルガルデ｜"à + 不定詞" で「〜するための」（形容詞的用法）。"regarder" は「見る」。"film" は男性名詞なので "bon"（女性形 bonne）。'},
-  {cat:'芸術・エンタメ', en:'La littérature française m\'intéresse beaucoup.', speech:'La littérature française m\'intéresse beaucoup.', ja:'フランス文学はとても興味があります。', tip:'【発音】ラ リテラテュール フランセーズ マンテレス ボクー｜"intéresser" は「〜の興味を引く」。"m\'intéresse" の "m\'" は直接目的語「私を」。"française" は "français" の女性形（"littérature" が女性名詞）。'},
-  {cat:'芸術・エンタメ', en:'Quel est votre auteur français préféré ?', speech:'Quel est votre auteur français préféré ?', ja:'お気に入りのフランス人作家は誰ですか？', tip:'【発音】ケル エ ヴォットル オトゥール フランセ プレフェレ｜"auteur" は「作家・著者」（伝統的に男女とも男性名詞）。"préféré" は「お気に入りの」（"préférer" の過去分詞が形容詞化）。'},
-  {cat:'総合会話', en:'Ce voyage a vraiment changé ma façon de voir les choses.', speech:'Ce voyage a vraiment changé ma façon de voir les choses.', ja:'この旅行は本当に物事の見方を変えてくれました。', tip:'【発音】ス ヴォワヤージュ ア ヴレマン シャンジェ マ ファソン ドゥ ヴォワール レ ショーズ｜"façon de voir" は「物の見方」。"les choses" は「物事・こと」（複数）。旅行の感想を述べる豊かな表現。'},
-  {cat:'総合会話', en:'J\'espère pouvoir revenir un jour.', speech:'J\'espère pouvoir revenir un jour.', ja:'いつかまた戻ってこれることを願っています。', tip:'【発音】ジェスペール プヴォワール ルヴニール アン ジュール｜"espérer + 不定詞" は「〜することを望む」（同一主語の場合、接続法不要）。"un jour" は「いつか」。'},
-  {cat:'総合会話', en:'Grâce à vous, j\'ai passé un séjour inoubliable.', speech:'Grâce à vous, j\'ai passé un séjour inoubliable.', ja:'おかげさまで、忘れられない滞在を過ごせました。', tip:'【発音】グラース ア ヴ ジェ パセ アン セジュール イヌブリアーブル｜"grâce à" は「〜のおかげで」。"séjour" は「滞在・旅行期間」。"inoubliable" は「忘れられない」（"oublier（忘れる）" の否定形容詞）。'},
-  {cat:'総合会話', en:'Permettez-moi de vous offrir quelque chose.', speech:'Permettez-moi de vous offrir quelque chose.', ja:'何かお礼をさせてください。', tip:'【発音】ペルメテ モワ ドゥ ヴ オフリール ケルク ショーズ｜"Permettez-moi de + 不定詞" は「〜させてください」（命令形の丁寧表現）。"offrir" は「贈る・ごちそうする」。'},
-  {cat:'総合会話', en:'Si vous venez au Japon, je serai ravi(e) de vous accueillir.', speech:'Si vous venez au Japon, je serai ravi de vous accueillir.', ja:'日本にいらっしゃることがあれば、ぜひお迎えします。', tip:'【発音】スィ ヴ ヴネ オ ジャポン ジュ スレ ラヴィ ドゥ ヴ ザクイイール｜"ravi(e) de + 不定詞" は「〜できてとても嬉しい」。"accueillir" は「迎える・もてなす」（不規則動詞）。'},
-  {cat:'総合会話', en:'Je garderai un excellent souvenir de ce voyage.', speech:'Je garderai un excellent souvenir de ce voyage.', ja:'この旅の素晴らしい思い出をずっと大切にします。', tip:'【発音】ジュ ガルドレ アン エクセラン スヴニール ドゥ ス ヴォワヤージュ｜"garder" は「保つ・大切にする」。"souvenir" は「思い出・お土産」（男性名詞）。"garderai" は単純未来形。'},
-  {cat:'社交・感情', en:'Ça fait longtemps qu\'on ne s\'est pas vus !', speech:'Ça fait longtemps qu\'on ne s\'est pas vus !', ja:'久しぶりですね！', tip:'【発音】サ フェ ロンタン コン ヌ ス エ パ ヴュ｜"ça fait longtemps que" は「〜してから久しい」。"se voir" の複合過去（再帰動詞）。日常会話でよく使うイディオム。'},
-  {cat:'社交・感情', en:'Je vous souhaite un bon voyage !', speech:'Je vous souhaite un bon voyage !', ja:'良い旅を！', tip:'【発音】ジュ ヴ スウェット アン ボン ヴォワヤージュ｜"souhaiter" は「願う・望む」。"bon voyage" はフランス語のまま多くの言語で使われている表現。お見送りの言葉。'},
-  {cat:'社交・感情', en:'Je suis de tout cœur avec vous.', speech:'Je suis de tout cœur avec vous.', ja:'心から応援しています。', tip:'【発音】ジュ スイ ドゥ トゥ クール アヴェック ヴ｜"de tout cœur" は「心から」（イディオム）。"cœur" は「心・心臓」（男性名詞）。"œ" は特殊な文字（o + e の合字）。'},
-  {cat:'社交・感情', en:'Félicitations ! Vous l\'avez bien mérité.', speech:'Félicitations ! Vous l\'avez bien mérité.', ja:'おめでとうございます！よくやりました。', tip:'【発音】フェリスィタスィオン ヴ ラヴェ ビヤン メリテ｜"félicitations" は「おめでとう」（常に複数形）。"mériter" は「値する・ふさわしい」。"bien mérité" で「当然の報い」。'},
-  {cat:'社交・感情', en:'Je vous présente ma collègue, Sophie.', speech:'Je vous présente ma collègue, Sophie.', ja:'同僚のソフィーを紹介します。', tip:'【発音】ジュ ヴ プレザント マ コレーグ ソフィー｜"présenter" は「紹介する・プレゼンする」。"collègue" は男女同形（男性も女性も同じ綴り）。'},
-  {cat:'社交・感情', en:'Avec plaisir ! J\'en serais ravi(e).', speech:'Avec plaisir ! J\'en serais ravi.', ja:'喜んで！とても嬉しいです。', tip:'【発音】アヴェック プレジール ジャン スレ ラヴィ｜"avec plaisir" は「喜んで」。"j\'en serais ravi(e)" は条件法で丁寧に喜びを表す。"en" は前述の事柄を受ける。'},
-  {cat:'議論・説明', en:'Pour résumer, il y a trois points importants.', speech:'Pour résumer, il y a trois points importants.', ja:'まとめると、3つの重要なポイントがあります。', tip:'【発音】プール レジュメ イリヤ トロワ ポワン アンポルタン｜"pour résumer" は「要約すると」。"point" は「点・ポイント」（男性名詞）。プレゼンや説明でよく使う構文。'},
-  {cat:'議論・説明', en:'C\'est-à-dire que je ne suis pas disponible demain.', speech:'C\'est-à-dire que je ne suis pas disponible demain.', ja:'つまり、明日は都合がつかないということです。', tip:'【発音】セ タ ディール ク ジュ ヌ スイ パ ディスポニブル ドゥマン｜"c\'est-à-dire" は「つまり・すなわち」（英語の "that is to say"）。説明や言い換えに使う。'},
-  {cat:'議論・説明', en:'D\'une part... d\'autre part...', speech:'D\'une part, d\'autre part.', ja:'一方では…、他方では…', tip:'【発音】デュン パール ドートル パール｜"d\'une part... d\'autre part" は「一方では〜、他方では〜」（対比の接続表現）。論理的な説明や意見述べに使う。'},
-  {cat:'議論・説明', en:'Il convient de mentionner que les règles ont changé.', speech:'Il convient de mentionner que les règles ont changé.', ja:'規則が変わったことに言及する必要があります。', tip:'【発音】イル コンヴィヤン ドゥ マンスィオネ ク レ レーグル オン シャンジェ｜"il convient de + 不定詞" は「〜することが適切だ」（フォーマルな非人称表現）。"mentionner" は「言及する」。'},
-  {cat:'自然・環境', en:'Il est important de protéger l\'environnement.', speech:'Il est important de protéger l\'environnement.', ja:'環境を守ることは大切です。', tip:'【発音】イル エ アンポルタン ドゥ プロテジェ ランヴィロンマン｜"protéger" は「守る・保護する」（語幹変化動詞）。"environnement" は「環境」（男性名詞）。'},
-  {cat:'自然・環境', en:'La vue sur les Alpes est époustouflante.', speech:'La vue sur les Alpes est époustouflante.', ja:'アルプスの眺めは息をのむほど素晴らしいです。', tip:'【発音】ラ ヴュ シュール レ ザルプ エ エプストゥフランテ｜"époustouflant(e)" は「驚くほど素晴らしい」（口語的に強い表現）。"vue sur" は「〜の眺め」。'},
-  {cat:'自然・環境', en:'Je préfère la campagne à la ville.', speech:'Je préfère la campagne à la ville.', ja:'都会より田舎の方が好きです。', tip:'【発音】ジュ プレフェール ラ カンパーニュ ア ラ ヴィル｜"préférer A à B" は「BよりAを好む」。"campagne" は「田舎・農村」（女性名詞）。'},
-  {cat:'接続法', en:'Il est temps que nous partions.', speech:'Il est temps que nous partions.', ja:'そろそろ出発する時間です。', tip:'【発音】イル エ タン ク ヌ パルティオン｜"il est temps que + 接続法" は「〜する時間だ」。"partions" は "partir" の接続法一人称複数。時間の切迫を丁寧に伝える。'},
-  {cat:'接続法', en:'Je veux que tu saches la vérité.', speech:'Je veux que tu saches la vérité.', ja:'あなたに真実を知ってほしいです。', tip:'【発音】ジュ ヴ ク テュ サッシュ ラ ヴェリテ｜"vouloir que + 接続法" は「〜してほしい」（意志・欲求）。"saches" は "savoir" の接続法（不規則）。'},
-  {cat:'接続法', en:'À moins qu\'il ne pleuve, on sortira.', speech:'À moins qu\'il ne pleuve, on sortira.', ja:'雨が降らなければ、外出します。', tip:'【発音】ア モワン キル ヌ プルーヴ オン ソルティラ｜"à moins que + 接続法" は「〜でない限り」。"ne" は意味を持たない虚辞（否定ではない）。'},
-  {cat:'接続法', en:'Bien qu\'elle soit petite, elle est très courageuse.', speech:'Bien qu\'elle soit petite, elle est très courageuse.', ja:'小さいけれど、彼女はとても勇気があります。', tip:'【発音】ビヤン ケル ソワ プティット エル エ トレ クラジューズ｜"bien que + 接続法" の逆接。"courageuse" は "courageux" の女性形。形容詞の性一致。'},
-  {cat:'受動態・分詞', en:'La décision a été prise à l\'unanimité.', speech:'La décision a été prise à l\'unanimité.', ja:'決定は全会一致で行われました。', tip:'【発音】ラ デスィスィオン ア エテ プリーズ ア リュナニミテ｜"prise" は "prendre" の女性過去分詞（"décision" が女性名詞のため一致）。"à l\'unanimité" は「全会一致で」。'},
-  {cat:'受動態・分詞', en:'Ce roman a été traduit en vingt langues.', speech:'Ce roman a été traduit en vingt langues.', ja:'この小説は20の言語に翻訳されました。', tip:'【発音】ス ロマン ア エテ トラデュイ アン ヴァン ラング｜"traduit" は "traduire" の過去分詞。"langue" は「言語」（女性名詞）。"en + 言語数" は「〜の言語に」。'},
-  {cat:'代名詞の活用', en:'Dis-le-lui toi-même.', speech:'Dis-le-lui toi-même.', ja:'あなた自身で彼（女）に言いなさい。', tip:'【発音】ディ ル ルイ トワ メーム｜命令形での代名詞の順序: 動詞-直接目的語-間接目的語。"toi-même" は「あなた自身」（強調形）。'},
-  {cat:'代名詞の活用', en:'Je les leur ai tous envoyés.', speech:'Je les leur ai tous envoyés.', ja:'それらをすべて彼らに送りました。', tip:'【発音】ジュ レ ルール エ トゥ ザンヴォワイェ｜"les" (直接目的語)+ "leur" (間接目的語)の語順。複数なので過去分詞 "envoyés" も複数形に一致。'},
-  {cat:'豊かな表現', en:'La France m\'a conquis le cœur dès le premier jour.', speech:'La France m\'a conquis le cœur dès le premier jour.', ja:'フランスは初日から私の心を虜にしました。', tip:'【発音】ラ フランス マ コンキ ル クール デ ル プルミエ ジュール｜"conquérir le cœur" は「心を征服する・虜にする」（イディオム）。"dès" は「〜から（最初の瞬間から）」。'},
-  {cat:'豊かな表現', en:'C\'est une expérience qui restera gravée dans ma mémoire.', speech:'C\'est une expérience qui restera gravée dans ma mémoire.', ja:'それは記憶に刻み込まれる体験です。', tip:'【発音】セ ユン エクスペリアンス キ レストラ グラヴェ ダン マ メモワール｜"gravé(e)" は「刻まれた」（"graver" の過去分詞）。"restera" は単純未来。"mémoire" は「記憶」（女性名詞）。'},
-  {cat:'豊かな表現', en:'Paris ne s\'est pas fait en un jour.', speech:'Paris ne s\'est pas fait en un jour.', ja:'ローマは一日にして成らず（パリ版）。', tip:'【発音】パリ ヌ セ パ フェ アン ザン ジュール｜フランス語の慣用句（"Rome ne s\'est pas faite en un jour" の変形）。"se faire" は「作られる」。'},
-  {cat:'豊かな表現', en:'Chaque chose en son temps.', speech:'Chaque chose en son temps.', ja:'物事にはそれぞれの時機がある。（急いては事を仕損じる）', tip:'【発音】シャーク ショーズ アン ソン タン｜フランスのことわざ。"chaque" は「それぞれの」（形容詞）。"en son temps" は「その時期に」。'},
-  {cat:'文化・社会表現', en:'Il ne faut pas juger un livre à sa couverture.', speech:'Il ne faut pas juger un livre à sa couverture.', ja:'本を表紙で判断してはいけない。（外見で判断するな）', tip:'【発音】イル ヌ フォ パ ジュジェ アン リーヴル ア サ クヴェルテュール｜フランス語のことわざ。英語の "Don\'t judge a book by its cover" に相当。"couverture" は「表紙・カバー」。'},
-  {cat:'文化・社会表現', en:'Mieux vaut prévenir que guérir.', speech:'Mieux vaut prévenir que guérir.', ja:'治療するより予防する方がよい。（備えあれば憂いなし）', tip:'【発音】ミュ ヴォ プレヴニール ク ゲリール｜フランスのことわざ。"mieux vaut + 不定詞" は「〜する方がよい」。"prévenir" は「予防する」、"guérir" は「治す」。'},
-  {cat:'仕事・学習', en:'Je suis en train de me perfectionner en français.', speech:'Je suis en train de me perfectionner en français.', ja:'今フランス語の完成度を高めているところです。', tip:'【発音】ジュ スイ アン トラン ドゥ ム ペルフェクスィオネ アン フランセ｜"être en train de + 不定詞" は「ちょうど〜しているところだ」（進行中を強調）。"se perfectionner" は「上達する」。'},
-  {cat:'仕事・学習', en:'Ce stage m\'a beaucoup apporté sur le plan professionnel.', speech:'Ce stage m\'a beaucoup apporté sur le plan professionnel.', ja:'このインターンシップは職業的に多くをもたらしてくれました。', tip:'【発音】ス スタージュ マ ボクー アポルテ シュール ル プラン プロフェスィオネル｜"stage" は「インターンシップ・研修」（男性名詞）。"apporter" は「もたらす」。"sur le plan de" は「〜の面では」。'},
-  {cat:'ニュアンス表現', en:'Il y a quelque chose qui ne tourne pas rond.', speech:'Il y a quelque chose qui ne tourne pas rond.', ja:'何かがうまくいっていません。', tip:'【発音】イリヤ ケルク ショーズ キ ヌ トゥールヌ パ ロン｜"ne pas tourner rond" は「うまく回らない・おかしい」（口語的イディオム）。機械や状況がおかしいときに使う。'},
-  {cat:'ニュアンス表現', en:'Ça ne m\'étonne pas du tout.', speech:'Ça ne m\'étonne pas du tout.', ja:'それは全く驚きません。（そうだろうと思っていました）', tip:'【発音】サ ヌ メトン パ デュ トゥ｜"étonner" は「驚かせる」。"ne... pas du tout" は「全く〜ない」（強い否定）。"ça ne m\'étonne pas" で「驚かない」。'},
-  {cat:'ニュアンス表現', en:'Je n\'y suis pour rien.', speech:'Je n\'y suis pour rien.', ja:'私には何も関係ありません。（私のせいではありません）', tip:'【発音】ジュ ニ スイ プール リヤン｜"n\'y être pour rien" は「〜に全く関係ない」（イディオム）。"y" は前述の状況を受ける。'},
-  {cat:'芸術・エンタメ', en:'Cette exposition m\'a vraiment ouvert les yeux.', speech:'Cette exposition m\'a vraiment ouvert les yeux.', ja:'この展覧会は本当に目を開かせてくれました。', tip:'【発音】セット エクスポズィスィオン マ ヴレマン ウーヴェール レ ズィユ｜"ouvrir les yeux" は「目を開かせる・気づかせる」（イディオム）。"exposition" は「展覧会・展示」。'},
-  {cat:'芸術・エンタメ', en:'J\'ai été touché(e) par la profondeur de ce film.', speech:'J\'ai été touché par la profondeur de ce film.', ja:'この映画の深さに感動しました。', tip:'【発音】ジェ エテ トゥシェ パール ラ プロフォンドゥール ドゥ ス フィルム｜"profondeur" は「深さ・深み」（女性名詞）。"être touché par" は「〜に感動する」（受動表現）。'},
-  {cat:'総合会話', en:'Cette expérience a renforcé mon désir d\'apprendre le français.', speech:'Cette expérience a renforcé mon désir d\'apprendre le français.', ja:'この体験はフランス語を学びたいという気持ちを強くしました。', tip:'【発音】セット エクスペリアンス ア ランフォルセ モン デジール ダプランドル ル フランセ｜"renforcer" は「強化する」。"désir de + 不定詞" は「〜したいという欲求」。"d\'apprendre" は "de + apprendre"。'},
-  {cat:'総合会話', en:'Je ne regrette pas d\'être venu(e) ici.', speech:'Je ne regrette pas d\'être venu ici.', ja:'ここに来たことを後悔していません。', tip:'【発音】ジュ ヌ ルグレット パ デットル ヴニュ イスィ｜"regretter de + 不定詞" は「〜したことを後悔する」（否定で「後悔しない」）。"d\'être venu" は完了不定詞。'},
-  {cat:'社交・感情', en:'Je vous souhaite tout le bonheur du monde.', speech:'Je vous souhaite tout le bonheur du monde.', ja:'世界中の幸せをお祈りしています。', tip:'【発音】ジュ ヴ スウェット トゥ ル ボヌール デュ モンド｜"tout le bonheur du monde" は「世界中の幸福」。"souhaiter" は「願う・祈る」。誕生日や特別なときに使う。'},
-  {cat:'社交・感情', en:'On s\'est bien amusé(e)s ensemble, n\'est-ce pas ?', speech:'On s\'est bien amusé ensemble, n\'est-ce pas ?', ja:'一緒に楽しみましたね？', tip:'【発音】オン セ ビヤン ナミュゼ アンサンブル ネス パ｜"s\'amuser" は「楽しむ」（再帰動詞）。"n\'est-ce pas ?" は「〜ですよね？」（付加疑問文）。会話の締めくくりに使う。'},
-  {cat:'議論・説明', en:'En d\'autres termes, la qualité prime sur la quantité.', speech:'En d\'autres termes, la qualité prime sur la quantité.', ja:'言い換えれば、質は量に勝ります。', tip:'【発音】アン ドートル テルム ラ カリテ プリーム シュール ラ カンティテ｜"en d\'autres termes" は「言い換えれば」。"primer sur" は「〜より優先する」（フォーマル）。'},
-  {cat:'議論・説明', en:'Prenons l\'exemple de Paris pour illustrer ce point.', speech:'Prenons l\'exemple de Paris pour illustrer ce point.', ja:'この点を説明するためにパリの例を挙げてみましょう。', tip:'【発音】プルノン レグザンプル ドゥ パリ プール イリュストレ ス ポワン｜"prenons" は "prendre" の命令形一人称複数「〜しましょう」。"illustrer" は「例示する・説明する」。'},
-  {cat:'自然・環境', en:'Le changement climatique affecte aussi la France.', speech:'Le changement climatique affecte aussi la France.', ja:'気候変動はフランスにも影響を与えています。', tip:'【発音】ル シャンジュマン クリマティック アフェクト オスィ ラ フランス｜"changement climatique" は「気候変動」。"affecter" は「影響する」。現代の重要テーマを語る表現。'},
-  {cat:'自然・環境', en:'Je fais attention à réduire mes déchets.', speech:'Je fais attention à réduire mes déchets.', ja:'ゴミを減らすよう心がけています。', tip:'【発音】ジュ フェ アタンスィオン ア レデュイール メ デシェ｜"faire attention à + 不定詞" は「〜するよう気をつける」。"déchets" は「ゴミ・廃棄物」（男性複数名詞）。'},
-  {cat:'自然・環境', en:'Nous avons la responsabilité de protéger la nature.', speech:'Nous avons la responsabilité de protéger la nature.', ja:'私たちには自然を守る責任があります。', tip:'【発音】ヌ ザヴォン ラ レスポンサビリテ ドゥ プロテジェ ラ ナテュール｜"responsabilité" は「責任」（女性名詞）。"avoir la responsabilité de" は「〜する責任がある」。'},
-  {cat:'接続法', en:'Pourvu que tout se passe bien !', speech:'Pourvu que tout se passe bien !', ja:'すべてうまくいくといいですね！', tip:'【発音】プルヴュ ク トゥ ス パス ビヤン｜"pourvu que + 接続法" は強い願望「〜であればよい」。"se passer" は「起こる・進む」。'},
-  {cat:'豊かな表現', en:'On n\'a qu\'une seule vie, autant en profiter.', speech:'On n\'a qu\'une seule vie, autant en profiter.', ja:'人生は一度きり、思いきり楽しみましょう。', tip:'【発音】オン ナ キュン スール ヴィ オタン アン プロフィテ｜"on n\'a qu\'une seule vie" は「人生は一度きり」。"autant + 不定詞" は「〜した方がよい」（控えめな提案）。'},
-  {cat:'文化・社会表現', en:'La gastronomie française est inscrite au patrimoine de l\'UNESCO.', speech:'La gastronomie française est inscrite au patrimoine de l\'UNESCO.', ja:'フランスの食文化はユネスコの遺産に登録されています。', tip:'【発音】ラ ガストロノミ フランセーズ エ アンスクリット オ パトリモワン ドゥ リュネスコ｜"inscrit(e)" は「登録された」（受動態）。"patrimoine" は「遺産」。フランス食文化はユネスコ無形文化遺産（2010年）。'},
-  {cat:'仕事・学習', en:'La pratique régulière est la clé du succès.', speech:'La pratique régulière est la clé du succès.', ja:'定期的な練習が成功の鍵です。', tip:'【発音】ラ プラティック レギュリエール エ ラ クレ デュ シュクセ｜"régulier/régulière" は「定期的な」（形容詞）。"la clé de" は「〜の鍵」。"succès" は「成功」（男性名詞）。'},
-  {cat:'ニュアンス表現', en:'C\'est une question de point de vue.', speech:'C\'est une question de point de vue.', ja:'それは見方の問題です。', tip:'【発音】セ ユン ケスティオン ドゥ ポワン ドゥ ヴュ｜"point de vue" は「見地・視点」（男性名詞）。"une question de" は「〜の問題」。意見の相違を穏やかに表現。'},
-  {cat:'芸術・エンタメ', en:'Le théâtre est un miroir de la société.', speech:'Le théâtre est un miroir de la société.', ja:'演劇は社会の鏡です。', tip:'【発音】ル テアートル エ アン ミロワール ドゥ ラ ソスィエテ｜"miroir" は「鏡」（男性名詞）。"théâtre" は「劇場・演劇」。フランスでは演劇・映画が非常に重視される文化がある。'},
-  {cat:'総合会話', en:'Tout ce qui brille n\'est pas or.', speech:'Tout ce qui brille n\'est pas or.', ja:'輝くものすべてが金ではない。（外見にだまされるな）', tip:'【発音】トゥ ス キ ブリーユ ネ パ ゾール｜フランスのことわざ（"All that glitters is not gold" に相当）。"briller" は「輝く」。"or" は「金・黄金」。'},
-  {cat:'社交・感情', en:'Je suis de tout cœur avec vous dans cette épreuve.', speech:'Je suis de tout cœur avec vous dans cette épreuve.', ja:'この試練の中で心からあなたを支持しています。', tip:'【発音】ジュ スイ ドゥ トゥ クール アヴェック ヴ ダン セット エプルーヴ｜"épreuve" は「試練・テスト」（女性名詞）。"de tout cœur" は「心から」（イディオム）。辛いときの支持表現。'},
-  {cat:'議論・説明', en:'Il convient de nuancer cette affirmation.', speech:'Il convient de nuancer cette affirmation.', ja:'この主張を少し和らげる必要があります。', tip:'【発音】イル コンヴィヤン ドゥ ニュアンセ セット アフィルマスィオン｜"nuancer" は「ニュアンスをつける・和らげる」（英語由来）。"affirmation" は「主張・断言」。知的な議論での表現。'},
-  {cat:'自然・環境', en:'Le mistral est un vent fort qui souffle dans le sud de la France.', speech:'Le mistral est un vent fort qui souffle dans le sud de la France.', ja:'ミストラルはフランス南部に吹く強い風です。', tip:'【発音】ル ミストラル エ アン ヴァン フォール キ スフル ダン ル シュッド ドゥ ラ フランス｜"mistral" はプロヴァンス地方の有名な北風。"souffler" は「吹く」。フランスの地域的特徴を語る表現。'},
-  {cat:'接続法', en:'Je suis surpris(e) qu\'elle n\'ait pas encore répondu.', speech:'Je suis surpris qu\'elle n\'ait pas encore répondu.', ja:'彼女がまだ返事をしていないことに驚いています。', tip:'【発音】ジュ スイ シュルプリ ケル ネ パ アンコール レポンデュ｜感情形容詞 "surpris" の後は接続法。"n\'ait pas répondu" は接続法過去（過去の出来事への感情）。'},
-  {cat:'豊かな表現', en:'Les voyages forment la jeunesse.', speech:'Les voyages forment la jeunesse.', ja:'旅は若者を育てる。（旅は百の学問に値する）', tip:'【発音】レ ヴォワヤージュ フォルム ラ ジュネス｜フランスの格言（モンテーニュに由来）。"former" は「形成する・育てる」。"jeunesse" は「若さ・若者」（女性名詞）。'},
-  {cat:'総合会話', en:'Au fond, c\'est l\'expérience humaine qui compte.', speech:'Au fond, c\'est l\'expérience humaine qui compte.', ja:'つまるところ、大切なのは人間的な体験です。', tip:'【発音】オ フォン セ レクスペリアンス ユメーヌ キ コント｜"au fond" は「つまるところ・根本的には」。"humain(e)" は「人間的な」。"ce qui compte" は「大切なこと」（関係代名詞の強調構文）。'},
-  {cat:'社交・感情', en:'Je vous garderai toujours dans mon cœur.', speech:'Je vous garderai toujours dans mon cœur.', ja:'いつも心の中に大切にします。', tip:'【発音】ジュ ヴ ガルドレ トゥジュール ダン モン クール｜"garder dans son cœur" は「心に大切にしまう」（詩的表現）。"toujours" は「いつも・常に」。別れの言葉として使える。'},
-  {cat:'ニュアンス表現', en:'On ne peut pas plaire à tout le monde.', speech:'On ne peut pas plaire à tout le monde.', ja:'誰もを喜ばせることはできない。（十人十色）', tip:'【発音】オン ヌ プ パ プレール ア トゥ ル モンド｜"plaire à" は「〜を喜ばせる・気に入られる」。"tout le monde" は「全員」。失敗を気にしすぎないときの慰めの言葉。'},
+    // ── Arts: Process & Dialogue (1–50) ──
+    {cat:"Arts", group:"art", en:"What's the main concept behind this piece?",             ja:"この作品のメインコンセプトは何？"},
+    {cat:"Arts", group:"art", en:"I'm trying to express \"loneliness\" through blue tones.", ja:"青いトーンで「孤独」を表現しようとしています。"},
+    {cat:"Arts", group:"art", en:"How does the perspective affect the focal point?",       ja:"遠近法が焦点にどう影響しているかな？"},
+    {cat:"Arts", group:"art", en:"It draws the viewer's eye toward the horizon.",          ja:"観客の目を水平線の方へ引きつけます。"},
+    {cat:"Arts", group:"art", en:"The values here are a bit too flat.",                    ja:"ここの明暗（バリュー）が少し平坦すぎるね。"},
+    {cat:"Arts", group:"art", en:"Should I add more graphite for deeper shadows?",        ja:"もっと鉛筆をのせて影を深くすべきですか？"},
+    {cat:"Arts", group:"art", en:"Notice how the negative space balances the subject.",   ja:"余白が主題とどうバランスをとっているか注目して。"},
+    {cat:"Arts", group:"art", en:"I see what you mean; it feels less crowded now.",       ja:"なるほど、圧迫感がなくなりました。"},
+    {cat:"Arts", group:"art", en:"Experiment with the opacity of your layers.",           ja:"レイヤーの不透明度で実験してみて。"},
+    {cat:"Arts", group:"art", en:"Can I use a dry brush to create this texture?",         ja:"この質感を出すのにドライブラシを使ってもいいですか？"},
+    {cat:"Arts", group:"art", en:"Your brushwork shows a lot of confidence.",             ja:"筆致にすごく自信が表れているね。"},
+    {cat:"Arts", group:"art", en:"I was inspired by Van Gogh's stippling technique.",     ja:"ゴッホの点描技法にインスパイアされました。"},
+    {cat:"Arts", group:"art", en:"Is this composition following the rule of thirds?",     ja:"この構図は三分割法に従っているかな？"},
+    {cat:"Arts", group:"art", en:"I'm placing the subject slightly off-center.",          ja:"主題を少し中心からずらして配置しています。"},
+    {cat:"Arts", group:"art", en:"The transition between colors is very smooth.",         ja:"色の移り変わりがとてもスムーズだね。"},
+    {cat:"Arts", group:"art", en:"How can I make this red more vibrant?",                 ja:"この赤をもっと鮮やかにするにはどうすればいいですか？"},
+    {cat:"Arts", group:"art", en:"Try adding a tiny bit of its complement, green.",       ja:"補色である緑をほんの少し足してみて。"},
+    {cat:"Arts", group:"art", en:"The anatomy of the hand looks slightly off.",           ja:"手の解剖学的な構造が少しズレているみたい。"},
+    {cat:"Arts", group:"art", en:"I'm struggling with the proportions of the fingers.",   ja:"指のプロポーション（比率）に苦戦しています。"},
+    {cat:"Arts", group:"art", en:"Step back and look at it from a distance.",             ja:"一度離れて、遠くから見てごらん。"},
+    {cat:"Arts", group:"art", en:"It looks different when I change my eye level.",        ja:"目の高さを変えると違って見えますね。"},
+    {cat:"Arts", group:"art", en:"What kind of mood does this palette evoke?",            ja:"この配色はどんなムードを喚起すると思う？"},
+    {cat:"Arts", group:"art", en:"It feels nostalgic and somewhat melancholic.",          ja:"懐かしく、どこか物悲しい感じがします。"},
+    {cat:"Arts", group:"art", en:"Your use of cross-hatching adds great depth.",          ja:"クロスハッチングの使い方が奥行きを出しているね。"},
+    {cat:"Arts", group:"art", en:"Is the horizon line at the correct height?",            ja:"水平線の高さはこれで合っていますか？"},
+    {cat:"Arts", group:"art", en:"Let's discuss the symbolism in your work.",             ja:"君の作品における象徴性について話そう。"},
+    {cat:"Arts", group:"art", en:"This bird represents freedom in my culture.",           ja:"この鳥は私の文化では自由を象徴しています。"},
+    {cat:"Arts", group:"art", en:"Don't overwork this specific area.",                    ja:"この部分はあまりいじりすぎないように。"},
+    {cat:"Arts", group:"art", en:"I'll leave some white space for the highlights.",       ja:"ハイライトのために白を少し残しておきます。"},
+    {cat:"Arts", group:"art", en:"What medium would best suit this idea?",                ja:"このアイデアにはどの画材が一番合うかな？"},
+    {cat:"Arts", group:"art", en:"I'm thinking of mixing charcoal and pastels.",          ja:"木炭とパステルを混ぜてみようと思っています。"},
+    {cat:"Arts", group:"art", en:"The scaling of the background is impressive.",          ja:"背景のスケール感が素晴らしいね。"},
+    {cat:"Arts", group:"art", en:"How did you achieve this metallic texture?",            ja:"この金属的な質感はどうやって出したの？"},
+    {cat:"Arts", group:"art", en:"I used a palette knife to scrape the paint.",           ja:"パレットナイフで絵具を削って表現しました。"},
+    {cat:"Arts", group:"art", en:"The visual flow leads to the top right corner.",        ja:"視線の流れが右上の角に向かっていますね。"},
+    {cat:"Arts", group:"art", en:"Think about the historical context of this style.",     ja:"この様式の歴史的背景を考えてみて。"},
+    {cat:"Arts", group:"art", en:"It reminds me of the Impressionist movement.",          ja:"印象派の運動を思い出させます。"},
+    {cat:"Arts", group:"art", en:"The symmetry gives a sense of stability.",              ja:"対称性が安定感を与えているね。"},
+    {cat:"Arts", group:"art", en:"I want to break the symmetry to add tension.",          ja:"緊張感を出すために、あえて対称性を崩したいです。"},
+    {cat:"Arts", group:"art", en:"Does this piece meet the project criteria?",            ja:"この作品はプロジェクトの評価基準を満たしていますか？"},
+    {cat:"Arts", group:"art", en:"You've demonstrated excellent technical skill.",        ja:"優れた技術的スキルを示せているよ。"},
+    {cat:"Arts", group:"art", en:"I need to refine the details of the foreground.",       ja:"近景のディテールをもっと研ぎ澄ます必要があります。"},
+    {cat:"Arts", group:"art", en:"What was the most challenging part for you?",           ja:"一番難しかった部分はどこ？"},
+    {cat:"Arts", group:"art", en:"Capturing the transparency of the glass was hard.",     ja:"ガラスの透明感を捉えるのが難しかったです。"},
+    {cat:"Arts", group:"art", en:"Your reflection shows a lot of growth.",               ja:"振り返り（リフレクション）に成長がよく表れているね。"},
+    {cat:"Arts", group:"art", en:"Use a fixative before you submit your portfolio.",      ja:"ポートフォリオを提出する前に定着液を使って。"},
+    {cat:"Arts", group:"art", en:"Could you give me some feedback on this?",              ja:"これについてフィードバックをいただけますか？"},
+    {cat:"Arts", group:"art", en:"Maybe adjust the saturation of the sky.",               ja:"空の彩度を少し調整してみたらどうかな。"},
+    {cat:"Arts", group:"art", en:"I like how you challenged the traditional form.",       ja:"伝統的な形に挑戦しているところが良いね。"},
+    {cat:"Arts", group:"art", en:"Art is about communicating your own vision.",           ja:"アートは自分自身のビジョンを伝えるものだよ。"},
+
+    // ── PE: Strategy & Body Mechanics (51–100) ──
+    {cat:"PE", group:"pe", en:"Let's analyze the team's defensive formation.",            ja:"チームの守備フォーメーションを分析しよう。"},
+    {cat:"PE", group:"pe", en:"We need to close the gap between the defenders.",          ja:"ディフェンダー間のギャップを埋める必要があるね。"},
+    {cat:"PE", group:"pe", en:"How can we improve our offensive transition?",             ja:"攻撃の切り替え（トランジション）をどう改善できる？"},
+    {cat:"PE", group:"pe", en:"We should move the ball faster to the wings.",             ja:"もっと素早くサイド（ウィング）にボールを動かすべきです。"},
+    {cat:"PE", group:"pe", en:"Focus on your core stability during the jump.",            ja:"ジャンプの間、体幹の安定に集中して。"},
+    {cat:"PE", group:"pe", en:"My balance is off; I keep leaning forward.",               ja:"バランスが崩れています。前に突っ込んでしまうんです。"},
+    {cat:"PE", group:"pe", en:"Check your heart rate after this sprint.",                 ja:"このスプリントの後、心拍数を確認して。"},
+    {cat:"PE", group:"pe", en:"I'm already in the anaerobic zone.",                       ja:"もうすでに無酸素運動ゾーンに入っています。"},
+    {cat:"PE", group:"pe", en:"Why is hydration so important for performance?",           ja:"なぜ水分補給がパフォーマンスに重要なのかな？"},
+    {cat:"PE", group:"pe", en:"It prevents muscle cramps and heat exhaustion.",           ja:"筋肉の痙攣や熱中症を防ぐためです。"},
+    {cat:"PE", group:"pe", en:"Your follow-through needs more extension.",                ja:"フォロースルーをもっとしっかり伸ばして。"},
+    {cat:"PE", group:"pe", en:"I'll try to rotate my hips more for power.",               ja:"パワーを出すためにもっと腰を回してみます。"},
+    {cat:"PE", group:"pe", en:"What's the rule for a double dribble?",                    ja:"ダブルドリブルのルールは何だっけ？"},
+    {cat:"PE", group:"pe", en:"You can't dribble again after stopping.",                  ja:"一度止まったら、もう一度ドリブルしてはいけません。"},
+    {cat:"PE", group:"pe", en:"Maintain your spatial awareness on the court.",            ja:"コート上での空間認識能力を維持して。"},
+    {cat:"PE", group:"pe", en:"I didn't see the open player on my left.",                 ja:"左側にフリーの選手がいるのが見えませんでした。"},
+    {cat:"PE", group:"pe", en:"Use your peripheral vision while dribbling.",              ja:"ドリブルしながら周辺視野を使って。"},
+    {cat:"PE", group:"pe", en:"The biomechanics of your swing is improving.",             ja:"スイングのバイオメカニクス（生体力学）が良くなっているよ。"},
+    {cat:"PE", group:"pe", en:"I'm trying to keep my elbows tucked in.",                  ja:"肘を脇に締めるように意識しています。"},
+    {cat:"PE", group:"pe", en:"How does gravity affect the ball's trajectory?",           ja:"重力はボールの軌道にどう影響する？"},
+    {cat:"PE", group:"pe", en:"It creates a parabolic curve toward the goal.",            ja:"ゴールに向かって放物線を描きます。"},
+    {cat:"PE", group:"pe", en:"Good sportsmanship is as important as winning.",           ja:"スポーツマンシップは勝つことと同じくらい重要だ。"},
+    {cat:"PE", group:"pe", en:"Sorry, that was my fault. Nice try!",                      ja:"ごめん、今の僕のミスだ。ドンマイ！"},
+    {cat:"PE", group:"pe", en:"We should implement a zone defense.",                      ja:"ゾーンディフェンスを導入すべきだよ。"},
+    {cat:"PE", group:"pe", en:"Watch out for the opponent's fast break.",                 ja:"相手の速攻（ファストブレイク）に気をつけて。"},
+    {cat:"PE", group:"pe", en:"My reaction time is slower than usual today.",             ja:"今日はいつもより反応速度が遅いです。"},
+    {cat:"PE", group:"pe", en:"Make sure you complete the dynamic warm-up.",              ja:"必ず動的ウォームアップを完了させてね。"},
+    {cat:"PE", group:"pe", en:"I can feel my hamstrings getting tighter.",                ja:"ハムストリングスが張ってきているのを感じます。"},
+    {cat:"PE", group:"pe", en:"Is this movement using aerobic energy?",                   ja:"この動きは有酸素エネルギーを使っているかな？"},
+    {cat:"PE", group:"pe", en:"Yes, since it's a steady, long-distance run.",             ja:"はい、一定ペースの長距離走なので。"},
+    {cat:"PE", group:"pe", en:"Focus on the technical form, not just speed.",             ja:"スピードだけでなく、技術的なフォームに集中して。"},
+    {cat:"PE", group:"pe", en:"My center of gravity feels too high.",                     ja:"重心が高すぎる気がします。"},
+    {cat:"PE", group:"pe", en:"Lower your hips to gain more stability.",                  ja:"もっと安定させるために腰を落として。"},
+    {cat:"PE", group:"pe", en:"What's the referee's signal for a foul?",                  ja:"ファウルの時の審判の合図は何？"},
+    {cat:"PE", group:"pe", en:"He blew the whistle and pointed to the spot.",             ja:"笛を吹いて、その地点を指差しました。"},
+    {cat:"PE", group:"pe", en:"Excellent teamwork in that last play!",                    ja:"今のプレー、素晴らしいチームワークだったよ！"},
+    {cat:"PE", group:"pe", en:"We communicated well to find the open space.",             ja:"空いているスペースを見つけるためにうまく声を掛け合えました。"},
+    {cat:"PE", group:"pe", en:"Analyze the flaws in your current technique.",             ja:"今のテクニックの欠点を分析してみて。"},
+    {cat:"PE", group:"pe", en:"I need to improve my explosive power.",                    ja:"爆発的なパワーを改善する必要があります。"},
+    {cat:"PE", group:"pe", en:"Try these plyometric exercises for agility.",              ja:"アジリティのためにこのプライオメトリック運動を試して。"},
+    {cat:"PE", group:"pe", en:"Don't lock your knees during the landing.",                ja:"着地の時に膝をピンと張らないで。"},
+    {cat:"PE", group:"pe", en:"I'll try to land softly on the balls of my feet.",         ja:"母指球で柔らかく着地するようにします。"},
+    {cat:"PE", group:"pe", en:"Keep your back straight and chest up.",                   ja:"背中をまっすぐにして、胸を張って。"},
+    {cat:"PE", group:"pe", en:"The transition from offense was seamless.",                ja:"攻守の切り替えがシームレスだったね。"},
+    {cat:"PE", group:"pe", en:"How do you feel about your personal best?",               ja:"自己ベストについてどう思う？"},
+    {cat:"PE", group:"pe", en:"I'm proud of my progress this semester.",                  ja:"今学期の自分の成長を誇りに思います。"},
+    {cat:"PE", group:"pe", en:"Consistency is the key to athletic success.",              ja:"継続こそがスポーツでの成功の鍵だよ。"},
+    {cat:"PE", group:"pe", en:"Take time for a proper cool-down stretch.",               ja:"適切なクールダウンのストレッチに時間をかけて。"},
+    {cat:"PE", group:"pe", en:"Let's reflect on today's learning outcomes.",              ja:"今日の学習成果を振り返ろう。"},
+    {cat:"PE", group:"pe", en:"Great effort everyone! See you next time.",               ja:"みんなよく頑張ったね！また次回。"}
 ];
-
-
 
 const TOTAL = phrases.length;
 
@@ -752,24 +744,91 @@ let isEnToJa      = true;
 let isRevealed    = false;
 let activeCategory = 'all';
 let isAutoPlaying  = false;
+let isRepeating    = false;
+let repeatTimer    = null;
 let autoMode       = '';   // 'shadow' | 'continuous'
 let autoStopped    = false;
 let autoTimeout    = null;
-let masterSet = new Set(JSON.parse(localStorage.getItem('fr_basic_master') || '[]'));
+let masterSet = new Set(JSON.parse(localStorage.getItem('artspe_mid2_master') || '[]'));
 
 // ── Voice setup ───────────────────────────────────────────────────
 let enVoices = [];
 
 function populateVoices() {
   const all = window.speechSynthesis.getVoices();
-  enVoices = all.filter(v => v.lang.startsWith('fr'));
+  // 動作確認済みの完全な音声名リスト（完全一致）
+  const okNames = new Set([
+    // en-US
+    'Microsoft Ava Online (Natural) - English (United States)',
+    'Microsoft Andrew Online (Natural) - English (United States)',
+    'Microsoft Emma Online (Natural) - English (United States)',
+    'Microsoft Brian Online (Natural) - English (United States)',
+    'Microsoft Jenny Online (Natural) - English (United States)',
+    'Microsoft Guy Online (Natural) - English (United States)',
+    'Microsoft Aria Online (Natural) - English (United States)',
+    'Microsoft Ana Online (Natural) - English (United States)',
+    'Microsoft Christopher Online (Natural) - English (United States)',
+    'Microsoft Eric Online (Natural) - English (United States)',
+    'Microsoft Michelle Online (Natural) - English (United States)',
+    'Microsoft Steffan Online (Natural) - English (United States)',
+    'Microsoft Ava Multilingual Online (Natural) - English (United States)',
+    'Microsoft Andrew Multilingual Online (Natural) - English (United States)',
+    'Microsoft Emma Multilingual Online (Natural) - English (United States)',
+    'Microsoft Brian Multilingual Online (Natural) - English (United States)',
+    // en-GB
+    'Microsoft Hazel - English (United Kingdom)',
+    'Microsoft Susan - English (United Kingdom)',
+    'Microsoft George - English (United Kingdom)',
+    'Microsoft Libby Online (Natural) - English (United Kingdom)',
+    'Microsoft Maisie Online (Natural) - English (United Kingdom)',
+    'Microsoft Thomas Online (Natural) - English (United Kingdom)',
+    'Microsoft Sonia Online (Natural) - English (United Kingdom)',
+    'Microsoft Ryan Online (Natural) - English (United Kingdom)',
+    // en-AU
+    'Microsoft William Online (Natural) - English (Australia)',
+    'Microsoft Natasha Online (Natural) - English (Australia)',
+    // en-CA
+    'Microsoft Clara Online (Natural) - English (Canada)',
+    'Microsoft Liam Online (Natural) - English (Canada)',
+    // en-ZA
+    'Microsoft Leah Online (Natural) - English (South Africa)',
+    'Microsoft Luke Online (Natural) - English (South Africa)',
+    // en-IE
+    'Microsoft Emily Online (Natural) - English (Ireland)',
+    'Microsoft Connor Online (Natural) - English (Ireland)',
+    // en-HK
+    'Microsoft Yan Online (Natural) - English (Hong Kong SAR)',
+    'Microsoft Sam Online (Natural) - English (Hong Kong SAR)',
+    // en-KE
+    'Microsoft Asilia Online (Natural) - English (Kenya)',
+    'Microsoft Chilemba Online (Natural) - English (Kenya)',
+    // en-NG
+    'Microsoft Ezinne Online (Natural) - English (Nigeria)',
+    'Microsoft Abeo Online (Natural) - English (Nigeria)',
+    // en-NZ
+    'Microsoft Molly Online (Natural) - English (New Zealand)',
+    // en-SG
+    'Microsoft Luna Online (Natural) - English (Singapore)',
+    // en-TZ
+    'Microsoft Imani Online (Natural) - English (Tanzania)',
+    'Microsoft Elimu Online (Natural) - English (Tanzania)',
+    // en-PH
+    'Microsoft James Online (Natural) - English (Philippines)',
+    // en-IN
+    'Microsoft Neerja Online (Natural) - English (India)',
+    'Microsoft Prabhat Online (Natural) - English (India)',
+  ]);
+  const whitelist = all.filter(v => okNames.has(v.name));
+  enVoices = whitelist.length ? whitelist : all.filter(v => v.lang.startsWith('en'));
   if (!enVoices.length) enVoices = all;
   applyVoicePref();
 }
 
 function applyVoicePref() {
   const pref = document.getElementById('voice-pref').value;
-  const preferred = pref === 'FR' ? ['fr-FR','fr-BE','fr-CH','fr-CA'] : ['fr-CA','fr-FR','fr-BE','fr-CH'];
+  const preferred = pref === 'US'
+    ? ['en-US','en-GB','en-AU','en-SG']
+    : ['en-GB','en-US','en-AU','en-SG'];
   const sorted = [...enVoices].sort((a,b) => {
     const ai = preferred.findIndex(p => a.lang.startsWith(p));
     const bi = preferred.findIndex(p => b.lang.startsWith(p));
@@ -824,11 +883,11 @@ function speakOne(text, onEnd) {
     const v = getVoice();
     if (v) {
       utt.voice = v;
-      utt.lang = v.lang || 'fr-FR';  // 音声のlangを明示的に設定
+      utt.lang  = v.lang;  // 音声のlangを明示的に設定
     } else {
       // フォールバック：voice-prefの設定に応じてlangを設定
       const pref = document.getElementById('voice-pref').value;
-      utt.lang = 'fr-FR';
+      utt.lang = pref === 'US' ? 'en-US' : 'en-GB';
     }
     utt.rate = getRate();
     utt.onstart = startKeepAlive;
@@ -840,16 +899,49 @@ function speakOne(text, onEnd) {
 
 function stripTags(html) { return html.replace(/<[^>]+>/g,'').replace(/\s+/g,' ').trim(); }
 
+function getSpeechText(item) {
+  // speech: フィールドがあればそちらを優先、なければ en: のタグを除去して読む
+  if (item.speech) return item.speech;
+  return stripTags(item.en);
+}
+
 function speakCurrent() {
   const a = getActive(); if(!a.length) return;
-  speakOne(a[currentIndex].speech || stripTags(a[currentIndex].en));
+  speakOne(getSpeechText(a[currentIndex]));
+}
+
+function speakRepeat(text) {
+  if (!isRepeating) return;
+  window.speechSynthesis.cancel();
+  setTimeout(() => {
+    speakOne(text, () => {
+      if (isRepeating) {
+        repeatTimer = setTimeout(() => speakRepeat(text), 300);
+      }
+    });
+  }, 150);
+}
+
+function toggleRepeat() {
+  isRepeating = !isRepeating;
+  const btn = document.getElementById('repeat-btn');
+  btn.textContent = '🔁 繰り返し: ' + (isRepeating ? 'ON' : 'OFF');
+  btn.style.background = isRepeating ? 'var(--primary)' : '';
+  btn.style.color = isRepeating ? '#fff' : '';
+  if (isRepeating) {
+    const a = getActive(); if (!a.length) return;
+    speakRepeat(getSpeechText(a[currentIndex]));
+  } else {
+    if (repeatTimer) { clearTimeout(repeatTimer); repeatTimer = null; }
+    window.speechSynthesis.cancel();
+  }
 }
 
 function speakP() {
   return new Promise(resolve => {
     if (autoStopped) { resolve(); return; }
     const a = getActive(); if(!a.length) { resolve(); return; }
-    speakOne(a[currentIndex].speech || stripTags(a[currentIndex].en), resolve);
+    speakOne(getSpeechText(a[currentIndex]), resolve);
   });
 }
 
@@ -902,7 +994,7 @@ function getActive() {
 }
 
 function saveMaster() {
-  localStorage.setItem('fr_basic_master', JSON.stringify([...masterSet]));
+  localStorage.setItem('artspe_mid2_master', JSON.stringify([...masterSet]));
 }
 
 // ── Update UI ─────────────────────────────────────────────────────
@@ -942,19 +1034,13 @@ function update() {
 
   // content
   const displayHTML = isEnToJa ? item.en : item.ja;
-  document.getElementById('main-text').innerHTML = displayHTML;
-  const pronEl = document.getElementById('pronunciation-text');
-  if (pronEl) {
-    const tipText = item.tip || '';
-    const pronMatch = tipText.match(/【発音】([^｜]+)/);
-    pronEl.textContent = (pronMatch && isEnToJa) ? '[ ' + pronMatch[1].trim() + ' ]' : '';
-  }
+  document.getElementById('main-text').innerHTML   = displayHTML;
   document.getElementById('answer-ja').innerHTML   = isEnToJa ? item.ja : item.en;
   const tipEl = document.getElementById('answer-tip');
-  if (item.tip) { const t = item.tip.replace(/【発音】[^｜]+｜?/, ''); tipEl.textContent = t; tipEl.style.display = t ? '' : 'none'; }
+  if (item.tip) { tipEl.textContent = item.tip; tipEl.style.display=''; }
   else tipEl.style.display = 'none';
 
-  document.getElementById('mode-badge').textContent = isEnToJa ? '📖 仏 → 日' : '📖 日 → 仏';
+  document.getElementById('mode-badge').textContent = isEnToJa ? '📖 英 → 日' : '📖 日 → 英';
 
   // reset reveal
   isRevealed = false;
@@ -1069,6 +1155,8 @@ function toggleMasterList() {
 
 function next() {
   if (isAutoPlaying) return;
+  if (repeatTimer) { clearTimeout(repeatTimer); repeatTimer = null; }
+  window.speechSynthesis.cancel();
   const active = getActive(); if(!active.length) return;
   currentIndex = isRandom
     ? Math.floor(Math.random()*active.length)
@@ -1078,9 +1166,12 @@ function next() {
 
 function prev() {
   if (isAutoPlaying) return;
+  if (repeatTimer) { clearTimeout(repeatTimer); repeatTimer = null; }
+  window.speechSynthesis.cancel();
   const active = getActive(); if(!active.length) return;
   currentIndex = (currentIndex - 1 + active.length) % active.length;
   update();
+  if (isRepeating) setTimeout(() => { const a=getActive(); if(a.length) speakRepeat(getSpeechText(a[currentIndex])); }, 300);
 }
 
 function toggleRandom() {

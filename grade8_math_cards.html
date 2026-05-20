@@ -465,14 +465,13 @@ body {
     <button class="btn btn-secondary" onclick="prev()">← 戻る</button>
     <button class="btn btn-primary"   onclick="speakCurrent()">🔊 音声</button>
     <button class="btn btn-secondary" onclick="next()">次へ →</button>
+    <button class="btn btn-secondary" style="font-size:11px;padding:8px 6px;" onclick="switchMode()">🔄 英⇄日</button>
   </div>
-  <div class="btn-row">
-    <button class="btn btn-secondary" id="random-btn" onclick="toggleRandom()">🔀 ランダム: OFF</button>
-    <button class="btn btn-secondary" onclick="switchMode()">🔄 英⇄日</button>
-  </div>
-  <div class="btn-row">
-    <button class="btn btn-amber" onclick="startShadowing()">🗣️ シャドウイング</button>
-    <button class="btn btn-blue"  onclick="startContinuous()">▶ 連続再生</button>
+  <div class="btn-row" style="gap:4px;">
+    <button class="btn btn-secondary" style="font-size:11px;padding:7px 5px;" id="random-btn" onclick="toggleRandom()">🔀 ランダム</button>
+    <button class="btn btn-secondary" style="font-size:11px;padding:7px 5px;" id="repeat-btn" onclick="toggleRepeat()">🔁 繰り返し</button>
+    <button class="btn btn-blue"  style="font-size:11px;padding:7px 5px;" onclick="startContinuous()">▶ 連続再生</button>
+    <button class="btn btn-amber" style="font-size:11px;padding:7px 5px;" onclick="startShadowing()">🗣️ シャドウ</button>
   </div>
 </div>
 
@@ -640,9 +639,9 @@ const phrases = [
   {cat:'代数・方程式', en:'Expand: (x + 3)(x + 5) = <mark>x² + 8x + 15</mark>.', speech:'Expand: open bracket x plus 3 close bracket times open bracket x plus 5 close bracket equals x squared plus 8x plus 15.', ja:'展開: (x + 3)(x + 5) = x² + 8x + 15 です。', tip:'"expand" ＝ 展開する。括弧は "bracket"（英）または "parenthesis"（米）'},
   {cat:'代数・方程式', en:'Expand: (2x − 3)² = <mark>4x² − 12x + 9</mark>.', speech:'Expand: open bracket 2x minus 3 close bracket squared equals 4x squared minus 12x plus 9.', ja:'(2x − 3)² を展開すると 4x² − 12x + 9 です。', tip:'"perfect square" ＝ 完全平方式'},
   {cat:'代数・方程式', en:'Factorise: x² + 7x + 12 = <mark>(x + 3)(x + 4)</mark>.', speech:'Factorise: x squared plus 7x plus 12 equals open bracket x plus 3 close bracket times open bracket x plus 4 close bracket.', ja:'x² + 7x + 12 を因数分解すると (x + 3)(x + 4) です。', tip:'積が 12、和が 7 になる 2 数を探す → 3 と 4'},
-  {cat:'代数・方程式', en:'Factorise: x² − 25 = <mark>(x + 5)(x − 5)</mark>. Difference of two squares.', speech:'Factorise: x squared minus 25 equals open bracket x plus 5 close bracket times open bracket x minus 5 close bracket. Difference of two squares.', ja:'x² − 25 = (x + 5)(x − 5)。「2 乗の差」の因数分解です。', tip:'"difference of two squares" ＝ 2 乗の差'},
-  {cat:'代数・方程式', en:'Solve quadratic: x² − 5x + 6 = 0 → <mark>x = 2 or x = 3</mark>.', speech:'Solve: x squared minus 5x plus 6 equals 0. Factorise: open bracket x minus 2 close bracket times open bracket x minus 3 close bracket equals 0. x equals 2 or x equals 3.', ja:'二次方程式 x² − 5x + 6 = 0 → x = 2 または x = 3', tip:'"quadratic equation" ＝ 二次方程式'},
-  {cat:'代数・方程式', en:'Quadratic formula for ax² + bx + c = 0: x = (−b ± √(b²−4ac)) / 2a. Solve 2x² + 3x − 2 = 0: a=2, b=3, c=−2 → <mark>x = 1/2 or x = −2</mark>.', speech:'Quadratic formula for a x squared plus b x plus c equals 0: x equals open bracket negative b plus or minus the square root of open bracket b squared minus 4ac close bracket close bracket over 2a. Solve 2x squared plus 3x minus 2 equals 0: a equals 2, b equals 3, c equals negative 2. x equals 1 over 2 or x equals negative 2.', ja:'解の公式: ax²+bx+c=0 → x=(−b±√(b²−4ac))/2a。2x²+3x−2=0 の解は x=1/2 または x=−2', tip:'解の公式は係数 a・b・c を公式に代入して使う。判別式 b²−4ac が正なら 2 つの実数解がある'},
+  {cat:'代数・方程式', en:'Factorise: x² − 25 = <mark>(x + 5)(x − 5)</mark>. Difference of two squares.', speech:'Factorise: x squared minus 25 equals open bracket x plus 5 close bracket times open bracket x minus 5 close bracket.\nDifference of two squares.', ja:'x² − 25 = (x + 5)(x − 5)。「2 乗の差」の因数分解です。', tip:'"difference of two squares" ＝ 2 乗の差'},
+  {cat:'代数・方程式', en:'Solve quadratic: x² − 5x + 6 = 0 → <mark>x = 2 or x = 3</mark>.', speech:'Solve: x squared minus 5x plus 6 equals 0.\nFactorise: open bracket x minus 2 close bracket times open bracket x minus 3 close bracket equals 0. x equals 2 or x equals 3.', ja:'二次方程式 x² − 5x + 6 = 0 → x = 2 または x = 3', tip:'"quadratic equation" ＝ 二次方程式'},
+  {cat:'代数・方程式', en:'Quadratic formula for ax² + bx + c = 0: x = (−b ± √(b²−4ac)) / 2a. Solve 2x² + 3x − 2 = 0: a=2, b=3, c=−2 → <mark>x = 1/2 or x = −2</mark>.', speech:'Quadratic formula for a x squared plus b x plus c equals 0: x equals open bracket negative b plus or minus the square root of open bracket b squared minus 4ac close bracket close bracket over 2a.\nSolve 2x squared plus 3x minus 2 equals 0: a equals 2, b equals 3, c equals negative 2. x equals 1 over 2 or x equals negative 2.', ja:'解の公式: ax²+bx+c=0 → x=(−b±√(b²−4ac))/2a。2x²+3x−2=0 の解は x=1/2 または x=−2', tip:'解の公式は係数 a・b・c を公式に代入して使う。判別式 b²−4ac が正なら 2 つの実数解がある'},
   {cat:'代数・方程式', en:'Simultaneous equations: 2x + y = 7 and x − y = 2 → <mark>x = 3, y = 1</mark>.', speech:'Simultaneous equations: 2x plus y equals 7 and x minus y equals 2. x equals 3, y equals 1.', ja:'連立方程式 → x = 3、y = 1', tip:'"simultaneous equations" ＝ 連立方程式'},
   {cat:'代数・方程式', en:'Elimination method: add equations to eliminate y. 3x = 9 → x = 3.', speech:'Elimination method: add equations to eliminate y. 3x equals 9. x equals 3.', ja:'加減法: 2 式を足して y を消去 → x = 3', tip:'"elimination method" ＝ 加減法'},
   {cat:'代数・方程式', en:'Simplify: (x² − 4) / (x + 2) = <mark>x − 2</mark>.', speech:'Simplify: open bracket x squared minus 4 close bracket over open bracket x plus 2 close bracket equals x minus 2.', ja:'代数分数: (x² − 4)/(x + 2) = x − 2 です。', tip:'"algebraic fraction" ＝ 代数分数'},
@@ -650,43 +649,43 @@ const phrases = [
   {cat:'関数・グラフ', en:'Equation of a straight line: y = mx + c.', speech:'Equation of a straight line: y equals m x plus c.', ja:'直線の方程式は y = mx + c です。', tip:'"gradient" ＝ 傾き、"y-intercept" ＝ y 切片'},
   {cat:'関数・グラフ', en:'Line through (2, 5), gradient 3: y = <mark>3x − 1</mark>.', speech:'Line through 2, 5, gradient 3: y equals 3x minus 1.', ja:'点 (2, 5)、傾き 3 の直線: y = 3x − 1', tip:'"point-slope form" ＝ 点傾き形式'},
   {cat:'関数・グラフ', en:'Parallel lines have the same gradient. y = 3x + 1 ∥ y = 3x − 4.', speech:'Parallel lines have the same gradient. y equals 3x plus 1 is parallel to y equals 3x minus 4.', ja:'傾きが同じなら 2 直線は平行です。', tip:'perpendicular（垂直）の場合、傾きの積 = −1'},
-  {cat:'関数・グラフ', en:'Sketch y = x² − 4x + 3. Minimum point at (2, −1).', speech:'Sketch y equals x squared minus 4x plus 3. Minimum point at 2, negative 1.', ja:'二次関数 y = x² − 4x + 3。最小値は (2, −1) です。', tip:'"turning point / vertex" ＝ 頂点'},
+  {cat:'関数・グラフ', en:'Sketch y = x² − 4x + 3. Minimum point at (2, −1).', speech:'Sketch y equals x squared minus 4x plus 3.\nMinimum point at 2, negative 1.', ja:'二次関数 y = x² − 4x + 3。最小値は (2, −1) です。', tip:'"turning point / vertex" ＝ 頂点'},
   {cat:'関数・グラフ', en:'y = x² is a parabola with line of symmetry x = 0.', speech:'y equals x squared is a parabola with line of symmetry x equals 0.', ja:'y = x² のグラフは放物線で、対称軸は x = 0 です。', tip:'"parabola" ＝ 放物線'},
   {cat:'関数・グラフ', en:'x-intercepts of y = x² − x − 6: x = <mark>3 or −2</mark>.', speech:'x-intercepts of y equals x squared minus x minus 6: x equals 3 or negative 2.', ja:'y = x² − x − 6 の x 切片: x = 3 または −2', tip:'"x-intercept" ＝ x 切片'},
-  {cat:'関数・グラフ', en:'Complete the square: x² + 6x + 11 = (x + 3)² + 2. Min = <mark>2</mark>.', speech:'Complete the square: x squared plus 6x plus 11 equals open bracket x plus 3 close bracket squared plus 2. Minimum value is 2.', ja:'平方完成: x² + 6x + 11 = (x + 3)² + 2。最小値は 2 です。', tip:'"complete the square" ＝ 平方完成'},
+  {cat:'関数・グラフ', en:'Complete the square: x² + 6x + 11 = (x + 3)² + 2. Min = <mark>2</mark>.', speech:'Complete the square: x squared plus 6x plus 11 equals open bracket x plus 3 close bracket squared plus 2.\nMinimum value is 2.', ja:'平方完成: x² + 6x + 11 = (x + 3)² + 2。最小値は 2 です。', tip:'"complete the square" ＝ 平方完成'},
   {cat:'関数・グラフ', en:'A one-to-one function: each input has exactly one output.', speech:'A one-to-one function: each input has exactly one output.', ja:'1 対 1 関数: 入力と出力が 1 対 1 対応します。', tip:'"function" ＝ 関数'},
-  {cat:'関数・グラフ', en:'Solve graphically: draw y = 2x + 1 and y = x² − 3. Find intersections.', speech:'Solve graphically: draw y equals 2x plus 1 and y equals x squared minus 3. Find intersections.', ja:'グラフで解く: y = 2x+1 と y = x²−3 の交点を求める。', tip:'"point of intersection" ＝ 交点'},
+  {cat:'関数・グラフ', en:'Solve graphically: draw y = 2x + 1 and y = x² − 3. Find intersections.', speech:'Solve graphically: draw y equals 2x plus 1 and y equals x squared minus 3.\nFind intersections.', ja:'グラフで解く: y = 2x+1 と y = x²−3 の交点を求める。', tip:'"point of intersection" ＝ 交点'},
   {cat:'関数・グラフ', en:'Midpoint of (1, 3) and (5, 7) = <mark>(3, 5)</mark>.', speech:'Midpoint of 1, 3 and 5, 7 equals 3, 5.', ja:'(1, 3) と (5, 7) の中点 = (3, 5)', tip:'"midpoint formula" ＝ 中点の公式'},
   {cat:'図形・三角法', en:'sin θ = opposite / hypotenuse.', speech:'Sine theta equals opposite over hypotenuse.', ja:'直角三角形: sin θ = 対辺 ÷ 斜辺 です。', tip:'SOH-CAH-TOA: Sin=Opposite/Hypotenuse, Cos=Adjacent/Hypotenuse, Tan=Opposite/Adjacent'},
-  {cat:'図形・三角法', en:'cos 40° = adjacent / 10. Adjacent ≈ <mark>7.66 cm</mark>.', speech:'Cosine 40 degrees equals adjacent over 10. Adjacent approximately equals 7.66 centimetres.', ja:'cos 40° = 隣辺 ÷ 10 → 隣辺 ≈ 7.66 cm', tip:'"adjacent" ＝ 隣辺、"opposite" ＝ 対辺'},
-  {cat:'図形・三角法', en:'tan θ = 5/12. θ = tan⁻¹(5/12) ≈ <mark>22.6°</mark>.', speech:'Tan theta equals 5 over 12. Theta equals inverse tan of 5 over 12, approximately 22.6 degrees.', ja:'tan θ = 5/12 → θ ≈ 22.6° です。', tip:'"inverse tan" ＝ tan⁻¹'},
+  {cat:'図形・三角法', en:'cos 40° = adjacent / 10. Adjacent ≈ <mark>7.66 cm</mark>.', speech:'Cosine 40 degrees equals adjacent over 10.\nAdjacent approximately equals 7.66 centimetres.', ja:'cos 40° = 隣辺 ÷ 10 → 隣辺 ≈ 7.66 cm', tip:'"adjacent" ＝ 隣辺、"opposite" ＝ 対辺'},
+  {cat:'図形・三角法', en:'tan θ = 5/12. θ = tan⁻¹(5/12) ≈ <mark>22.6°</mark>.', speech:'Tan theta equals 5 over 12.\nTheta equals inverse tan of 5 over 12, approximately 22.6 degrees.', ja:'tan θ = 5/12 → θ ≈ 22.6° です。', tip:'"inverse tan" ＝ tan⁻¹'},
   {cat:'図形・三角法', en:'Pythagoras: a² + b² = c². a=6, b=8 → c = <mark>10</mark>.', speech:'Pythagoras: a squared plus b squared equals c squared. a equals 6, b equals 8. c equals 10.', ja:'三平方の定理: 6² + 8² = c² → c = 10 です。', tip:'"hypotenuse" ＝ 斜辺'},
-  {cat:'図形・三角法', en:'Angle of elevation: 20 m away, tree 15 m tall. tan θ = 15/20 → θ ≈ <mark>36.9°</mark>.', speech:'Angle of elevation: 20 metres away, tree 15 metres tall. Tan theta equals 15 over 20. Theta approximately equals 36.9 degrees.', ja:'仰角: 20m 離れ、高さ 15m の木 → θ ≈ 36.9°', tip:'"angle of elevation" ＝ 仰角'},
-  {cat:'図形・三角法', en:'Arc length = (θ/360) × 2πr. r=6, θ=60° → arc = <mark>2π cm</mark>.', speech:'Arc length equals theta over 360 times 2 pi r. r equals 6, theta equals 60 degrees. Arc equals 2 pi centimetres.', ja:'弧の長さ = (θ/360) × 2πr → 2π cm', tip:'"sector" ＝ 扇形、"arc" ＝ 弧'},
-  {cat:'図形・三角法', en:'Area of sector = (θ/360) × πr². r=5, θ=90° → <mark>25π/4 cm²</mark>.', speech:'Area of a sector equals theta over 360 times pi r squared. r equals 5, theta equals 90 degrees. Area equals 25 pi over 4 centimetres squared.', ja:'扇形の面積 → 25π/4 cm²', tip:'"leave in terms of pi" ＝ π を使った形で'},
-  {cat:'図形・三角法', en:'Volume of cone: V = ⅓πr²h. r=4, h=9 → V = <mark>48π cm³</mark>.', speech:'Volume of a cone: V equals one third pi r squared times h. r equals 4, h equals 9. V equals 48 pi centimetres cubed.', ja:'円錐の体積 = ⅓πr²h = 48π cm³', tip:'"cone" ＝ 円錐'},
-  {cat:'図形・三角法', en:'Surface area of sphere = 4πr². r=3 → SA = <mark>36π cm²</mark>.', speech:'Surface area of a sphere equals 4 pi r squared. r equals 3. SA equals 36 pi centimetres squared.', ja:'球の表面積 = 4πr² = 36π cm²', tip:'Volume of a sphere = four thirds pi r cubed'},
+  {cat:'図形・三角法', en:'Angle of elevation: 20 m away, tree 15 m tall. tan θ = 15/20 → θ ≈ <mark>36.9°</mark>.', speech:'Angle of elevation: 20 metres away, tree 15 metres tall.\nTan theta equals 15 over 20.\nTheta approximately equals 36.9 degrees.', ja:'仰角: 20m 離れ、高さ 15m の木 → θ ≈ 36.9°', tip:'"angle of elevation" ＝ 仰角'},
+  {cat:'図形・三角法', en:'Arc length = (θ/360) × 2πr. r=6, θ=60° → arc = <mark>2π cm</mark>.', speech:'Arc length equals theta over 360 times 2 pi r. r equals 6, theta equals 60 degrees.\nArc equals 2 pi centimetres.', ja:'弧の長さ = (θ/360) × 2πr → 2π cm', tip:'"sector" ＝ 扇形、"arc" ＝ 弧'},
+  {cat:'図形・三角法', en:'Area of sector = (θ/360) × πr². r=5, θ=90° → <mark>25π/4 cm²</mark>.', speech:'Area of a sector equals theta over 360 times pi r squared. r equals 5, theta equals 90 degrees.\nArea equals 25 pi over 4 centimetres squared.', ja:'扇形の面積 → 25π/4 cm²', tip:'"leave in terms of pi" ＝ π を使った形で'},
+  {cat:'図形・三角法', en:'Volume of cone: V = ⅓πr²h. r=4, h=9 → V = <mark>48π cm³</mark>.', speech:'Volume of a cone: V equals one third pi r squared times h. r equals 4, h equals 9.\nV equals 48 pi centimetres cubed.', ja:'円錐の体積 = ⅓πr²h = 48π cm³', tip:'"cone" ＝ 円錐'},
+  {cat:'図形・三角法', en:'Surface area of sphere = 4πr². r=3 → SA = <mark>36π cm²</mark>.', speech:'Surface area of a sphere equals 4 pi r squared. r equals 3.\nSA equals 36 pi centimetres squared.', ja:'球の表面積 = 4πr² = 36π cm²', tip:'Volume of a sphere = four thirds pi r cubed'},
   {cat:'図形・三角法', en:'Rotation of 90° clockwise about the origin.', speech:'Rotation of 90 degrees clockwise about the origin.', ja:'原点を中心に 90° 時計回りに回転させます。', tip:'"clockwise" ＝ 時計回り'},
   {cat:'数と指数', en:'Index law: x³ × x⁵ = <mark>x⁸</mark>.', speech:'Index law: x cubed times x to the 5 equals x to the 8.', ja:'指数法則: x³ × x⁵ = x⁸ です。', tip:'aᵐ × aⁿ = aᵐ⁺ⁿ'},
   {cat:'数と指数', en:'x⁶ ÷ x² = <mark>x⁴</mark>.', speech:'x to the 6 divided by x squared equals x to the 4.', ja:'x⁶ ÷ x² = x⁴ です。', tip:'aᵐ ÷ aⁿ = aᵐ⁻ⁿ'},
   {cat:'数と指数', en:'(x³)⁴ = <mark>x¹²</mark>.', speech:'Open bracket x cubed close bracket to the power of 4 equals x to the 12.', ja:'(x³)⁴ = x¹² です。', tip:'"power of a power" ＝ 累乗の累乗'},
   {cat:'数と指数', en:'x⁰ = <mark>1</mark> for any non-zero x.', speech:'x to the power of zero equals 1 for any non-zero x.', ja:'0 でない数の 0 乗は 1 です。例: 7⁰ = 1', tip:'"zero index" ＝ 0 乗'},
   {cat:'数と指数', en:'x⁻² = 1/x². Example: 3⁻² = <mark>1/9</mark>.', speech:'x to the power of negative 2 equals 1 over x squared. 3 to the power of negative 2 equals 1 over 9.', ja:'x⁻² = 1/x²。例: 3⁻² = 1/9 です。', tip:'"negative index" ＝ 負の指数'},
-  {cat:'数と指数', en:'27^(1/3) = ∛27 = <mark>3</mark>. Fractional index.', speech:'27 to the power of one third equals the cube root of 27, equals 3. Fractional index.', ja:'27^(1/3) = 3 です。分数の指数。', tip:'"fractional index" ＝ 分数の指数'},
+  {cat:'数と指数', en:'27^(1/3) = ∛27 = <mark>3</mark>. Fractional index.', speech:'27 to the power of one third equals the cube root of 27, equals 3.\nFractional index.', ja:'27^(1/3) = 3 です。分数の指数。', tip:'"fractional index" ＝ 分数の指数'},
   {cat:'数と指数', en:'3.74 × 10⁴ = <mark>37,400</mark>.', speech:'3.74 times 10 to the 4 equals 37,400.', ja:'3.74 × 10⁴ = 37,400 です。', tip:'"standard form" ＝ 標準形'},
   {cat:'数と指数', en:'(2.4 × 10³) × (3.0 × 10²) = <mark>7.2 × 10⁵</mark>.', speech:'2.4 times 10 cubed, times 3.0 times 10 squared, equals 7.2 times 10 to the 5.', ja:'(2.4 × 10³) × (3.0 × 10²) = 7.2 × 10⁵ です。', tip:'数字どうし・指数どうしを別々に計算する'},
-  {cat:'数と指数', en:'√50 = <mark>5√2</mark>. Surd.', speech:'The square root of 50 equals 5 times the square root of 2. Surd.', ja:'√50 = 5√2 です（surd = 無理数の平方根）。', tip:'"surd" ＝ 無理数の平方根'},
-  {cat:'数と指数', en:'1/√3 = √3/3. Rationalise the denominator.', speech:'1 over the square root of 3 equals the square root of 3 over 3. Rationalise the denominator.', ja:'1/√3 の分母を有理化 → √3/3 です。', tip:'"rationalise the denominator" ＝ 分母を有理化する'},
+  {cat:'数と指数', en:'√50 = <mark>5√2</mark>. Surd.', speech:'The square root of 50 equals 5 times the square root of 2.\nSurd.', ja:'√50 = 5√2 です（surd = 無理数の平方根）。', tip:'"surd" ＝ 無理数の平方根'},
+  {cat:'数と指数', en:'1/√3 = √3/3. Rationalise the denominator.', speech:'1 over the square root of 3 equals the square root of 3 over 3.\nRationalise the denominator.', ja:'1/√3 の分母を有理化 → √3/3 です。', tip:'"rationalise the denominator" ＝ 分母を有理化する'},
   {cat:'統計・確率', en:'IQR = Q3 − Q1 = 15 − 7 = <mark>8</mark>.', speech:'IQR equals Q3 minus Q1, equals 15 minus 7, equals 8.', ja:'四分位範囲 (IQR) = Q3 − Q1 = 8 です。', tip:'"interquartile range" ＝ 四分位範囲'},
   {cat:'統計・確率', en:'Box-and-whisker plot: median = 12, Q1 = 8, Q3 = 16.', speech:'Box-and-whisker plot: median equals 12, Q1 equals 8, Q3 equals 16.', ja:'箱ひげ図: 中央値 12、Q1 = 8、Q3 = 16 です。', tip:'"box-and-whisker plot" ＝ 箱ひげ図'},
   {cat:'統計・確率', en:'P(A and B) = P(A) × P(B) for independent events.', speech:'P of A and B equals P of A times P of B for independent events.', ja:'独立な 2 事象: P(A かつ B) = P(A) × P(B) です。', tip:'"independent events" ＝ 独立な事象'},
   {cat:'統計・確率', en:'Tree diagram: P(HH) = 0.5 × 0.5 = <mark>0.25</mark>.', speech:'Tree diagram: P of H H equals 0.5 times 0.5 equals 0.25.', ja:'樹形図: P(HH) = 0.5 × 0.5 = 0.25 です。', tip:'"tree diagram" ＝ 樹形図'},
   {cat:'統計・確率', en:'P(A or B) = P(A) + P(B) − P(A and B).', speech:'P of A or B equals P of A plus P of B minus P of A and B.', ja:'P(A または B) = P(A) + P(B) − P(A かつ B)', tip:'"mutually exclusive" なら P(A and B) = 0'},
-  {cat:'統計・確率', en:'P(A|B) = P(A and B) / P(B). Conditional probability.', speech:'P of A given B equals P of A and B divided by P of B. Conditional probability.', ja:'条件付き確率 P(A|B) = P(A かつ B) ÷ P(B)', tip:'"conditional probability" ＝ 条件付き確率'},
+  {cat:'統計・確率', en:'P(A|B) = P(A and B) / P(B). Conditional probability.', speech:'P of A given B equals P of A and B divided by P of B.\nConditional probability.', ja:'条件付き確率 P(A|B) = P(A かつ B) ÷ P(B)', tip:'"conditional probability" ＝ 条件付き確率'},
   {cat:'統計・確率', en:'Scatter diagram shows strong positive correlation.', speech:'Scatter diagram shows strong positive correlation.', ja:'散布図: 強い正の相関があります。', tip:'"strong positive correlation" ＝ 強い正の相関'},
-  {cat:'授業表現', en:'The discriminant is negative → no real solutions.', speech:'The discriminant is negative. No real solutions.', ja:'判別式が負なので、実数解はありません。', tip:'"no real solutions" ＝ 実数解なし'},
+  {cat:'授業表現', en:'The discriminant is negative → no real solutions.', speech:'The discriminant is negative.\nNo real solutions.', ja:'判別式が負なので、実数解はありません。', tip:'"no real solutions" ＝ 実数解なし'},
   {cat:'授業表現', en:'By inspection, y-intercept of y = 3x − 7 is −7.', speech:'By inspection, y-intercept of y equals 3x minus 7 is negative 7.', ja:'一目見て、y = 3x − 7 の y 切片は −7 です。', tip:'"by inspection" ＝ 見てすぐわかる方法で'},
-  {cat:'授業表現', en:'Write down the value of x. No working needed.', speech:'Write down the value of x. No working needed.', ja:'x の値を書きなさい（途中式は不要）。', tip:'"write down" ＝ 答えを書くだけでよい'},
+  {cat:'授業表現', en:'Write down the value of x. No working needed.', speech:'Write down the value of x.\nNo working needed.', ja:'x の値を書きなさい（途中式は不要）。', tip:'"write down" ＝ 答えを書くだけでよい'},
   {cat:'授業表現', en:'Prove that x² + 2x + 5 is always positive.', speech:'Prove that x squared plus 2x plus 5 is always positive.', ja:'x² + 2x + 5 が常に正であることを証明しなさい。', tip:'"prove" ＝ 証明する'},
   {cat:'授業表現', en:'Hence or otherwise, solve the equation.', speech:'Hence or otherwise, solve the equation.', ja:'したがって、あるいは別の方法で、方程式を解きなさい。', tip:'"hence or otherwise" ＝ 前問を使っても別解でもよい'},
   {cat:'授業表現', en:'Give your answer in exact form: x = 3 + √5.', speech:'Give your answer in exact form: x equals 3 plus the square root of 5.', ja:'正確な形で答えなさい: x = 3 + √5', tip:'"exact form" ＝ 近似しない正確な値'},
@@ -702,6 +701,8 @@ let isEnToJa      = true;
 let isRevealed    = false;
 let activeCategory = 'all';
 let isAutoPlaying  = false;
+let isRepeating    = false;
+let repeatTimer    = null;
 let autoMode       = '';   // 'shadow' | 'continuous'
 let autoStopped    = false;
 let autoTimeout    = null;
@@ -856,21 +857,60 @@ function speakOne(text, onEnd) {
 function stripTags(html) { return html.replace(/<[^>]+>/g,'').replace(/\s+/g,' ').trim(); }
 
 function getSpeechText(item) {
-  // speech: フィールドがあればそちらを優先、なければ en: のタグを除去して読む
   if (item.speech) return item.speech;
   return stripTags(item.en);
 }
 
+function speakWithPause(text, pauseMs, onEnd) {
+  // 文区切りに改行を挿入してTTSにポーズを取らせる
+  let result = '';
+  for (let i = 0; i < text.length; i++) {
+    result += text[i];
+    if ((/[?.!]/).test(text[i]) &&
+        i + 1 < text.length && text[i+1] === ' ' &&
+        i + 2 < text.length && (/[A-Z]/).test(text[i+2])) {
+      result += '\n';
+    }
+  }
+  speakOne(result, onEnd);
+}
 function speakCurrent() {
   const a = getActive(); if(!a.length) return;
-  speakOne(getSpeechText(a[currentIndex]));
+  speakWithPause(getSpeechText(a[currentIndex]), 900);
+}
+
+function speakRepeat(text) {
+  if (!isRepeating) return;
+  window.speechSynthesis.cancel();
+  setTimeout(() => {
+    speakOne(text, () => {
+      if (isRepeating) {
+        repeatTimer = setTimeout(() => speakRepeat(text), 300);
+      }
+    });
+  }, 150);
+}
+
+function toggleRepeat() {
+  isRepeating = !isRepeating;
+  const btn = document.getElementById('repeat-btn');
+  btn.textContent = '🔁 繰り返し: ' + (isRepeating ? 'ON' : 'OFF');
+  btn.style.background = isRepeating ? 'var(--primary)' : '';
+  btn.style.color = isRepeating ? '#fff' : '';
+  if (isRepeating) {
+    const a = getActive(); if (!a.length) return;
+    speakRepeat(getSpeechText(a[currentIndex]));
+  } else {
+    if (repeatTimer) { clearTimeout(repeatTimer); repeatTimer = null; }
+    window.speechSynthesis.cancel();
+  }
 }
 
 function speakP() {
   return new Promise(resolve => {
     if (autoStopped) { resolve(); return; }
     const a = getActive(); if(!a.length) { resolve(); return; }
-    speakOne(getSpeechText(a[currentIndex]), resolve);
+    speakWithPause(getSpeechText(a[currentIndex]), 900, resolve);
   });
 }
 
@@ -1090,6 +1130,8 @@ function toggleMasterList() {
 
 function next() {
   if (isAutoPlaying) return;
+  if (repeatTimer) { clearTimeout(repeatTimer); repeatTimer = null; }
+  window.speechSynthesis.cancel();
   const active = getActive(); if(!active.length) return;
   currentIndex = isRandom
     ? Math.floor(Math.random()*active.length)
@@ -1099,9 +1141,12 @@ function next() {
 
 function prev() {
   if (isAutoPlaying) return;
+  if (repeatTimer) { clearTimeout(repeatTimer); repeatTimer = null; }
+  window.speechSynthesis.cancel();
   const active = getActive(); if(!active.length) return;
   currentIndex = (currentIndex - 1 + active.length) % active.length;
   update();
+  if (isRepeating) setTimeout(() => { const a=getActive(); if(a.length) speakRepeat(getSpeechText(a[currentIndex])); }, 300);
 }
 
 function toggleRandom() {
@@ -1298,6 +1343,24 @@ function handleOverlayClick(e) {
 buildCatRows();
 updateFilterLabel();
 update();
+</script>
+<script>
+// スワイプ機能
+(function() {
+  let startX = 0, startY = 0;
+  document.addEventListener('touchstart', e => {
+    startX = e.touches[0].clientX;
+    startY = e.touches[0].clientY;
+  }, { passive: true });
+  document.addEventListener('touchend', e => {
+    const dx = e.changedTouches[0].clientX - startX;
+    const dy = e.changedTouches[0].clientY - startY;
+    if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 50) {
+      if (dx < 0) next();
+      else prev();
+    }
+  }, { passive: true });
+})();
 </script>
 </body>
 </html>

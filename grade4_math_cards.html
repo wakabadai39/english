@@ -465,14 +465,13 @@ body {
     <button class="btn btn-secondary" onclick="prev()">← 戻る</button>
     <button class="btn btn-primary"   onclick="speakCurrent()">🔊 音声</button>
     <button class="btn btn-secondary" onclick="next()">次へ →</button>
+    <button class="btn btn-secondary" style="font-size:11px;padding:8px 6px;" onclick="switchMode()">🔄 英⇄日</button>
   </div>
-  <div class="btn-row">
-    <button class="btn btn-secondary" id="random-btn" onclick="toggleRandom()">🔀 ランダム: OFF</button>
-    <button class="btn btn-secondary" onclick="switchMode()">🔄 英⇄日</button>
-  </div>
-  <div class="btn-row">
-    <button class="btn btn-amber" onclick="startShadowing()">🗣️ シャドウイング</button>
-    <button class="btn btn-blue"  onclick="startContinuous()">▶ 連続再生</button>
+  <div class="btn-row" style="gap:4px;">
+    <button class="btn btn-secondary" style="font-size:11px;padding:7px 5px;" id="random-btn" onclick="toggleRandom()">🔀 ランダム</button>
+    <button class="btn btn-secondary" style="font-size:11px;padding:7px 5px;" id="repeat-btn" onclick="toggleRepeat()">🔁 繰り返し</button>
+    <button class="btn btn-blue"  style="font-size:11px;padding:7px 5px;" onclick="startContinuous()">▶ 連続再生</button>
+    <button class="btn btn-amber" style="font-size:11px;padding:7px 5px;" onclick="startShadowing()">🗣️ シャドウ</button>
   </div>
 </div>
 
@@ -637,57 +636,57 @@ const CATS = {
 };
 
 const phrases = [
-  {cat:'四則演算', en:'What is <mark>246 plus 389</mark>? The answer is <mark>635</mark>.', speech:'What is 246 plus 389? The answer is 635.', ja:'246 足す 389 はいくつ？ → 答えは 635 です。', tip:'足し算は "plus" / "add"。答えは "The answer is …" または "It equals …"'},
-  {cat:'四則演算', en:'Subtract <mark>157 from 500</mark>. You get <mark>343</mark>.', speech:'Subtract 157 from 500. You get 343.', ja:'500 から 157 を引く → 343 になります。', tip:'"subtract A from B" ＝ B − A。順番に注意！'},
-  {cat:'四則演算', en:'Multiply <mark>24 by 6</mark>. The product is <mark>144</mark>.', speech:'Multiply 24 by 6. The product is 144.', ja:'24 かける 6。積は 144 です。', tip:'かけ算の答えは "product（積）"と言う'},
-  {cat:'四則演算', en:'Divide <mark>96 by 8</mark>. The quotient is <mark>12</mark>.', speech:'Divide 96 by 8. The quotient is 12.', ja:'96 割る 8。商は 12 です。', tip:'わり算の答えは "quotient（商）"'},
-  {cat:'四則演算', en:'What are the <mark>factors</mark> of 12? They are 1, 2, 3, 4, 6, and 12.', speech:'What are the factors of 12? They are 1, 2, 3, 4, 6, and 12.', ja:'12 の約数は何ですか？ → 1, 2, 3, 4, 6, 12 です。', tip:'"factors" ＝ 約数'},
+  {cat:'四則演算', en:'What is <mark>246 plus 389</mark>? The answer is <mark>635</mark>.', speech:'What is 246 plus 389?\nThe answer is 635.', ja:'246 足す 389 はいくつ？ → 答えは 635 です。', tip:'足し算は "plus" / "add"。答えは "The answer is …" または "It equals …"'},
+  {cat:'四則演算', en:'Subtract <mark>157 from 500</mark>. You get <mark>343</mark>.', speech:'Subtract 157 from 500.\nYou get 343.', ja:'500 から 157 を引く → 343 になります。', tip:'"subtract A from B" ＝ B − A。順番に注意！'},
+  {cat:'四則演算', en:'Multiply <mark>24 by 6</mark>. The product is <mark>144</mark>.', speech:'Multiply 24 by 6.\nThe product is 144.', ja:'24 かける 6。積は 144 です。', tip:'かけ算の答えは "product（積）"と言う'},
+  {cat:'四則演算', en:'Divide <mark>96 by 8</mark>. The quotient is <mark>12</mark>.', speech:'Divide 96 by 8.\nThe quotient is 12.', ja:'96 割る 8。商は 12 です。', tip:'わり算の答えは "quotient（商）"'},
+  {cat:'四則演算', en:'What are the <mark>factors</mark> of 12? They are 1, 2, 3, 4, 6, and 12.', speech:'What are the factors of 12?\nThey are 1, 2, 3, 4, 6, and 12.', ja:'12 の約数は何ですか？ → 1, 2, 3, 4, 6, 12 です。', tip:'"factors" ＝ 約数'},
   {cat:'四則演算', en:'List the first five <mark>multiples</mark> of 7: 7, 14, 21, 28, 35.', speech:'List the first five multiples of 7: 7, 14, 21, 28, 35.', ja:'7 の最初の 5 つの倍数は？ → 7, 14, 21, 28, 35', tip:'"multiples" ＝ 倍数'},
-  {cat:'四則演算', en:'Round <mark>3,847</mark> to the nearest hundred. The answer is <mark>3,800</mark>.', speech:'Round 3,847 to the nearest hundred. The answer is 3,800.', ja:'3,847 を百の位に四捨五入すると 3,800 です。', tip:'"round to the nearest …" ＝ 〜の位に四捨五入'},
-  {cat:'四則演算', en:'What is the <mark>remainder</mark> when 29 is divided by 4? The remainder is <mark>1</mark>.', speech:'What is the remainder when 29 is divided by 4? The remainder is 1.', ja:'29 ÷ 4 のあまりはいくつ？ → あまりは 1 です。', tip:'"remainder" ＝ あまり。"29 ÷ 4 = 7 remainder 1"'},
+  {cat:'四則演算', en:'Round <mark>3,847</mark> to the nearest hundred. The answer is <mark>3,800</mark>.', speech:'Round 3,847 to the nearest hundred.\nThe answer is 3,800.', ja:'3,847 を百の位に四捨五入すると 3,800 です。', tip:'"round to the nearest …" ＝ 〜の位に四捨五入'},
+  {cat:'四則演算', en:'What is the <mark>remainder</mark> when 29 is divided by 4? The remainder is <mark>1</mark>.', speech:'What is the remainder when 29 is divided by 4?\nThe remainder is 1.', ja:'29 ÷ 4 のあまりはいくつ？ → あまりは 1 です。', tip:'"remainder" ＝ あまり。"29 ÷ 4 = 7 remainder 1"'},
   {cat:'四則演算', en:'The <mark>sum</mark> of 56 and 78 is <mark>134</mark>.', speech:'The sum of 56 and 78 is 134.', ja:'56 と 78 の和は 134 です。', tip:'"sum" ＝ 和（足し算の答え）'},
   {cat:'四則演算', en:'The <mark>difference</mark> between 200 and 75 is <mark>125</mark>.', speech:'The difference between 200 and 75 is 125.', ja:'200 と 75 の差は 125 です。', tip:'"difference" ＝ 差（引き算の答え）'},
   {cat:'分数・小数', en:'Write <mark>three-quarters</mark> as a fraction: <mark>3/4</mark>.', speech:'Write three-quarters as a fraction: 3/4.', ja:'「4 分の 3」を分数で書くと 3/4 です。', tip:'"numerator（分子）" / "denominator（分母）"'},
   {cat:'分数・小数', en:'Which fraction is larger, <mark>2/3</mark> or <mark>3/5</mark>? <mark>2/3</mark> is larger.', speech:'Which fraction is larger, 2/3 or 3/5? 2/3 is larger.', ja:'2/3 と 3/5 はどちらが大きい？ → 2/3 の方が大きい。', tip:'Compare fractions by finding a common denominator（通分）'},
   {cat:'分数・小数', en:'<mark>1/2</mark> plus <mark>1/4</mark> equals <mark>3/4</mark>.', speech:'1/2 plus 1/4 equals 3/4.', ja:'1/2 足す 1/4 は 3/4 です。'},
-  {cat:'分数・小数', en:'Convert <mark>1/2</mark> to a <mark>decimal</mark>. It equals <mark>0.5</mark>.', speech:'Convert 1/2 to a decimal. It equals 0.5.', ja:'1/2 を小数に変換すると 0.5 です。', tip:'"decimal" ＝ 小数。"decimal point" ＝ 小数点'},
-  {cat:'分数・小数', en:'What is <mark>0.7</mark> as a fraction? It is <mark>7/10</mark>.', speech:'What is 0.7 as a fraction? It is 7/10.', ja:'0.7 を分数にすると 7/10 です。'},
-  {cat:'分数・小数', en:'Add <mark>1.35</mark> and <mark>2.6</mark>. The sum is <mark>3.95</mark>.', speech:'Add 1.35 and 2.6. The sum is 3.95.', ja:'1.35 + 2.6 の答えは 3.95 です。', tip:'小数の足し算は小数点をそろえて計算する'},
+  {cat:'分数・小数', en:'Convert <mark>1/2</mark> to a <mark>decimal</mark>. It equals <mark>0.5</mark>.', speech:'Convert 1/2 to a decimal.\nIt equals 0.5.', ja:'1/2 を小数に変換すると 0.5 です。', tip:'"decimal" ＝ 小数。"decimal point" ＝ 小数点'},
+  {cat:'分数・小数', en:'What is <mark>0.7</mark> as a fraction? It is <mark>7/10</mark>.', speech:'What is 0.7 as a fraction?\nIt is 7/10.', ja:'0.7 を分数にすると 7/10 です。'},
+  {cat:'分数・小数', en:'Add <mark>1.35</mark> and <mark>2.6</mark>. The sum is <mark>3.95</mark>.', speech:'Add 1.35 and 2.6.\nThe sum is 3.95.', ja:'1.35 + 2.6 の答えは 3.95 です。', tip:'小数の足し算は小数点をそろえて計算する'},
   {cat:'分数・小数', en:'Write <mark>3/4</mark> as a <mark>percentage</mark>: <mark>75%</mark>.', speech:'Write 3/4 as a percentage: 75%.', ja:'3/4 をパーセントで表すと 75% です。', tip:'"percent" ＝ パーセント。「per hundred（100 分の）」の意味'},
   {cat:'分数・小数', en:'<mark>Equivalent fractions</mark>: 1/2 = 2/4 = 4/8.', speech:'Equivalent fractions: 1/2 equals 2/4 equals 4/8.', ja:'等しい分数（同値分数）: 1/2 = 2/4 = 4/8', tip:'"equivalent fractions" ＝ 等しい分数（同値分数）'},
   {cat:'分数・小数', en:'Simplify <mark>6/8</mark> to its <mark>lowest terms</mark>: <mark>3/4</mark>.', speech:'Simplify 6/8 to its lowest terms: 3/4.', ja:'6/8 を最も簡単な分数にすると 3/4 です。', tip:'"simplify / reduce to lowest terms" ＝ 約分する'},
-  {cat:'分数・小数', en:'What is 25% of 80? It is <mark>20</mark>.', speech:'What is 25% of 80? It is 20.', ja:'80 の 25% はいくつ？ → 20 です。', tip:'"percent of" ＝ 〜の何パーセント'},
+  {cat:'分数・小数', en:'What is 25% of 80? It is <mark>20</mark>.', speech:'What is 25% of 80?\nIt is 20.', ja:'80 の 25% はいくつ？ → 20 です。', tip:'"percent of" ＝ 〜の何パーセント'},
   {cat:'図形', en:'A <mark>rectangle</mark> has two pairs of <mark>parallel</mark> sides.', speech:'A rectangle has two pairs of parallel sides.', ja:'長方形は 2 組の平行な辺を持ちます。', tip:'"parallel" ＝ 平行、"perpendicular" ＝ 垂直'},
   {cat:'図形', en:'The <mark>area</mark> of a rectangle is <mark>length × width</mark>.', speech:'The area of a rectangle is length times width.', ja:'長方形の面積 ＝ 縦 × 横 です。', tip:'"area" ＝ 面積。単位は cm² や m²（"square centimeters"）'},
-  {cat:'図形', en:'Find the area of a rectangle with length 9 cm and width 5 cm. The area is <mark>45 cm²</mark>.', speech:'Find the area of a rectangle with length 9 cm and width 5 cm. The area is 45 cm².', ja:'縦 9cm・横 5cm の長方形の面積 → 45 cm²'},
+  {cat:'図形', en:'Find the area of a rectangle with length 9 cm and width 5 cm. The area is <mark>45 cm²</mark>.', speech:'Find the area of a rectangle with length 9 cm and width 5 cm.\nThe area is 45 cm².', ja:'縦 9cm・横 5cm の長方形の面積 → 45 cm²'},
   {cat:'図形', en:'The <mark>perimeter</mark> is the total distance around a shape.', speech:'The perimeter is the total distance around a shape.', ja:'周の長さ（perimeter）は図形の周りの長さの合計です。', tip:'"perimeter" ＝ 周の長さ。"area" と混同しないように！'},
   {cat:'図形', en:'A <mark>right angle</mark> measures exactly <mark>90 degrees</mark>.', speech:'A right angle measures exactly 90 degrees.', ja:'直角はちょうど 90 度です。', tip:'"right angle" ＝ 直角。"degree(s)" ＝ 度'},
-  {cat:'図形', en:'An <mark>acute angle</mark> is less than 90°. An <mark>obtuse angle</mark> is greater than 90°.', speech:'An acute angle is less than 90°. An obtuse angle is greater than 90°.', ja:'鋭角は 90° より小さく、鈍角は 90° より大きい角度です。', tip:'acute（鋭い）/ obtuse（鈍い）'},
+  {cat:'図形', en:'An <mark>acute angle</mark> is less than 90°. An <mark>obtuse angle</mark> is greater than 90°.', speech:'An acute angle is less than 90°.\nAn obtuse angle is greater than 90°.', ja:'鋭角は 90° より小さく、鈍角は 90° より大きい角度です。', tip:'acute（鋭い）/ obtuse（鈍い）'},
   {cat:'図形', en:'A <mark>triangle</mark> has three sides and three <mark>angles</mark> that add up to <mark>180°</mark>.', speech:'A triangle has three sides and three angles that add up to 180°.', ja:'三角形は 3 辺・3 角を持ち、角の合計は 180° です。'},
-  {cat:'図形', en:'Name the <mark>line of symmetry</mark> in this shape. It divides the shape into two equal halves.', speech:'Name the line of symmetry in this shape. It divides the shape into two equal halves.', ja:'この図形の対称の軸を答えなさい。図形を 2 つの等しい部分に分けます。', tip:'"line of symmetry" ＝ 対称の軸、"symmetrical" ＝ 対称な'},
+  {cat:'図形', en:'Name the <mark>line of symmetry</mark> in this shape. It divides the shape into two equal halves.', speech:'Name the line of symmetry in this shape.\nIt divides the shape into two equal halves.', ja:'この図形の対称の軸を答えなさい。図形を 2 つの等しい部分に分けます。', tip:'"line of symmetry" ＝ 対称の軸、"symmetrical" ＝ 対称な'},
   {cat:'図形', en:'A <mark>quadrilateral</mark> is any polygon with four sides.', speech:'A quadrilateral is any polygon with four sides.', ja:'四角形（quadrilateral）は 4 辺を持つ多角形のことです。', tip:'"polygon" ＝ 多角形'},
-  {cat:'図形', en:'Plot the <mark>coordinates</mark> (3, 5) on the grid. Move 3 along the x-axis, then 5 up the y-axis.', speech:'Plot the coordinates (3, 5) on the grid. Move 3 along the x-axis, then 5 up the y-axis.', ja:'グリッド上に座標 (3, 5) を打ちましょう。x 軸を 3 進み、y 軸を 5 上がります。', tip:'"coordinates" ＝ 座標。(x, y) の順'},
-  {cat:'測定・単位', en:'Convert <mark>3 kilometres</mark> to metres. There are <mark>3,000 metres</mark> in 3 kilometres.', speech:'Convert 3 kilometres to metres. There are 3,000 metres in 3 kilometres.', ja:'3 キロメートルをメートルに変換 → 3,000 m です。', tip:'1 km = 1,000 m。"convert" ＝ 変換する'},
-  {cat:'測定・単位', en:'What is <mark>2.5 litres</mark> in millilitres? It is <mark>2,500 ml</mark>.', speech:'What is 2.5 litres in millilitres? It is 2,500 ml.', ja:'2.5 リットルをミリリットルに → 2,500 ml です。', tip:'1 L = 1,000 mL'},
+  {cat:'図形', en:'Plot the <mark>coordinates</mark> (3, 5) on the grid. Move 3 along the x-axis, then 5 up the y-axis.', speech:'Plot the coordinates (3, 5) on the grid.\nMove 3 along the x-axis, then 5 up the y-axis.', ja:'グリッド上に座標 (3, 5) を打ちましょう。x 軸を 3 進み、y 軸を 5 上がります。', tip:'"coordinates" ＝ 座標。(x, y) の順'},
+  {cat:'測定・単位', en:'Convert <mark>3 kilometres</mark> to metres. There are <mark>3,000 metres</mark> in 3 kilometres.', speech:'Convert 3 kilometres to metres.\nThere are 3,000 metres in 3 kilometres.', ja:'3 キロメートルをメートルに変換 → 3,000 m です。', tip:'1 km = 1,000 m。"convert" ＝ 変換する'},
+  {cat:'測定・単位', en:'What is <mark>2.5 litres</mark> in millilitres? It is <mark>2,500 ml</mark>.', speech:'What is 2.5 litres in millilitres?\nIt is 2,500 ml.', ja:'2.5 リットルをミリリットルに → 2,500 ml です。', tip:'1 L = 1,000 mL'},
   {cat:'測定・単位', en:'The <mark>mass</mark> of the bag is <mark>1.2 kilograms</mark> or <mark>1,200 grams</mark>.', speech:'The mass of the bag is 1.2 kilograms or 1,200 grams.', ja:'バッグの質量は 1.2 kg、つまり 1,200 g です。', tip:'"mass" ＝ 重さ（質量）。1 kg = 1,000 g'},
-  {cat:'測定・単位', en:'The film starts at <mark>2:45 pm</mark> and lasts <mark>1 hour 30 minutes</mark>. It ends at <mark>4:15 pm</mark>.', speech:'The film starts at 2:45 pm and lasts 1 hour 30 minutes. It ends at 4:15 pm.', ja:'映画は午後 2:45 に始まり 1 時間 30 分続く → 4:15 pm に終わります。', tip:'時間の計算も大切な測定のトピック'},
-  {cat:'測定・単位', en:'Measure the line to the nearest <mark>millimetre</mark>. It is <mark>7.4 cm</mark>.', speech:'Measure the line to the nearest millimetre. It is 7.4 cm.', ja:'この線をミリメートル単位で測ると 7.4 cm です。'},
+  {cat:'測定・単位', en:'The film starts at <mark>2:45 pm</mark> and lasts <mark>1 hour 30 minutes</mark>. It ends at <mark>4:15 pm</mark>.', speech:'The film starts at 2:45 pm and lasts 1 hour 30 minutes.\nIt ends at 4:15 pm.', ja:'映画は午後 2:45 に始まり 1 時間 30 分続く → 4:15 pm に終わります。', tip:'時間の計算も大切な測定のトピック'},
+  {cat:'測定・単位', en:'Measure the line to the nearest <mark>millimetre</mark>. It is <mark>7.4 cm</mark>.', speech:'Measure the line to the nearest millimetre.\nIt is 7.4 cm.', ja:'この線をミリメートル単位で測ると 7.4 cm です。'},
   {cat:'測定・単位', en:'The <mark>perimeter</mark> of the square is 4 × 6 cm = <mark>24 cm</mark>.', speech:'The perimeter of the square is 4 times 6 cm equals 24 cm.', ja:'正方形の周の長さは 4 × 6cm = 24 cm です。'},
-  {cat:'測定・単位', en:'What is the <mark>elapsed time</mark> from 9:20 am to 11:05 am? It is <mark>1 hour 45 minutes</mark>.', speech:'What is the elapsed time from 9:20 am to 11:05 am? It is 1 hour 45 minutes.', ja:'9:20 am から 11:05 am までの経過時間 → 1 時間 45 分です。', tip:'"elapsed time" ＝ 経過時間'},
-  {cat:'文章題', en:'Sara has <mark>48 stickers</mark>. She gives <mark>12</mark> to her friend. How many does she have left? She has <mark>36</mark> left.', speech:'Sara has 48 stickers. She gives 12 to her friend. How many does she have left? She has 36 left.', ja:'サラは 48 枚のシールを持っています。12 枚を友達にあげました。残りは何枚？ → 36 枚です。', tip:'"left" ＝ 残り。引き算の合図ワード'},
-  {cat:'文章題', en:'There are 6 boxes with 24 crayons each. How many crayons <mark>in all</mark>? There are <mark>144</mark> crayons in all.', speech:'There are 6 boxes with 24 crayons each. How many crayons in all? There are 144 crayons in all.', ja:'24 本入りの箱が 6 箱 → 全部で 144 本のクレヨンがあります。', tip:'"in all / altogether / in total" ＝ 全部で'},
-  {cat:'文章題', en:'A book costs $8.50. Tom pays with $20. How much <mark>change</mark> does he get? He gets <mark>$11.50</mark> change.', speech:'A book costs $8.50. Tom pays with $20. How much change does he get? He gets $11.50 change.', ja:'$8.50 の本に $20 出す → おつりは $11.50 です。', tip:'"change" ＝ おつり'},
+  {cat:'測定・単位', en:'What is the <mark>elapsed time</mark> from 9:20 am to 11:05 am? It is <mark>1 hour 45 minutes</mark>.', speech:'What is the elapsed time from 9:20 am to 11:05 am?\nIt is 1 hour 45 minutes.', ja:'9:20 am から 11:05 am までの経過時間 → 1 時間 45 分です。', tip:'"elapsed time" ＝ 経過時間'},
+  {cat:'文章題', en:'Sara has <mark>48 stickers</mark>. She gives <mark>12</mark> to her friend. How many does she have left? She has <mark>36</mark> left.', speech:'Sara has 48 stickers.\nShe gives 12 to her friend.\nHow many does she have left?\nShe has 36 left.', ja:'サラは 48 枚のシールを持っています。12 枚を友達にあげました。残りは何枚？ → 36 枚です。', tip:'"left" ＝ 残り。引き算の合図ワード'},
+  {cat:'文章題', en:'There are 6 boxes with 24 crayons each. How many crayons <mark>in all</mark>? There are <mark>144</mark> crayons in all.', speech:'There are 6 boxes with 24 crayons each.\nHow many crayons in all?\nThere are 144 crayons in all.', ja:'24 本入りの箱が 6 箱 → 全部で 144 本のクレヨンがあります。', tip:'"in all / altogether / in total" ＝ 全部で'},
+  {cat:'文章題', en:'A book costs $8.50. Tom pays with $20. How much <mark>change</mark> does he get? He gets <mark>$11.50</mark> change.', speech:'A book costs $8.50.\nTom pays with $20.\nHow much change does he get?\nHe gets $11.50 change.', ja:'$8.50 の本に $20 出す → おつりは $11.50 です。', tip:'"change" ＝ おつり'},
   {cat:'文章題', en:'<mark>Twice</mark> as many as 15 is <mark>30</mark>.', speech:'Twice as many as 15 is 30.', ja:'15 の 2 倍は 30 です。', tip:'"twice" ＝ 2 倍、"three times" ＝ 3 倍'},
-  {cat:'文章題', en:'The ratio of boys to girls is <mark>3:2</mark>. If there are 30 boys, how many girls are there? There are <mark>20</mark> girls.', speech:'The ratio of boys to girls is 3:2. If there are 30 boys, how many girls are there? There are 20 girls.', ja:'男女比が 3:2 で男子 30 人なら女子は 20 人です。', tip:'"ratio" ＝ 比。Grade 4 から登場する重要語'},
-  {cat:'文章題', en:'Lucy earns $12 per hour. She works for 7 hours. How much does she earn <mark>altogether</mark>? She earns <mark>$84</mark>.', speech:'Lucy earns $12 per hour. She works for 7 hours. How much does she earn altogether? She earns $84.', ja:'1 時間 $12 で 7 時間働く → 合計 $84 稼ぎます。'},
+  {cat:'文章題', en:'The ratio of boys to girls is <mark>3:2</mark>. If there are 30 boys, how many girls are there? There are <mark>20</mark> girls.', speech:'The ratio of boys to girls is 3:2.\nIf there are 30 boys, how many girls are there?\nThere are 20 girls.', ja:'男女比が 3:2 で男子 30 人なら女子は 20 人です。', tip:'"ratio" ＝ 比。Grade 4 から登場する重要語'},
+  {cat:'文章題', en:'Lucy earns $12 per hour. She works for 7 hours. How much does she earn <mark>altogether</mark>? She earns <mark>$84</mark>.', speech:'Lucy earns $12 per hour.\nShe works for 7 hours.\nHow much does she earn altogether?\nShe earns $84.', ja:'1 時間 $12 で 7 時間働く → 合計 $84 稼ぎます。'},
   {cat:'文章題', en:'A number is <mark>divisible by</mark> 3 if the sum of its digits is divisible by 3.', speech:'A number is divisible by 3 if the sum of its digits is divisible by 3.', ja:'各桁の和が 3 で割り切れるとき、その数は 3 で割り切れます。', tip:'"divisible by" ＝ 〜で割り切れる'},
-  {cat:'文章題', en:'Show your <mark>working</mark>. Write the equation: 7 × 9 = 63.', speech:'Show your working. Write the equation: 7 times 9 equals 63.', ja:'途中式を書きましょう。式: 7 × 9 = 63', tip:'"show your working" ＝ 途中の計算を書く。テストで必ず求められる！'},
+  {cat:'文章題', en:'Show your <mark>working</mark>. Write the equation: 7 × 9 = 63.', speech:'Show your working.\nWrite the equation: 7 times 9 equals 63.', ja:'途中式を書きましょう。式: 7 × 9 = 63', tip:'"show your working" ＝ 途中の計算を書く。テストで必ず求められる！'},
   {cat:'授業表現', en:"Could you please <mark>repeat</mark> that? I didn't understand.", ja:'もう一度言っていただけますか？わかりませんでした。'},
   {cat:'授業表現', en:'I think the answer is <mark>36</mark>, because 4 × 9 = 36.', speech:'I think the answer is 36, because 4 times 9 equals 36.', ja:'答えは 36 だと思います。なぜなら 4 × 9 = 36 だからです。', tip:'"because" で理由をつなぐ習慣をつけよう'},
   {cat:'授業表現', en:'Can I use a <mark>calculator</mark> for this problem?', speech:'Can I use a calculator for this problem?', ja:'この問題に電卓を使ってもいいですか？'},
-  {cat:'授業表現', en:'I need to <mark>check my work</mark>. Let me solve it again.', speech:'I need to check my work. Let me solve it again.', ja:'見直しをします。もう一度解いてみます。', tip:'"check your work" ＝ 答えを確認する'},
-  {cat:'授業表現', en:'I got a <mark>different answer</mark>. My answer is 48, not 84.', speech:'I got a different answer. My answer is 48, not 84.', ja:'私は違う答えになりました。84 ではなく 48 です。'},
-  {cat:'授業表現', en:'Please <mark>estimate</mark> before you calculate. About how big is the answer?', speech:'Please estimate before you calculate. About how big is the answer?', ja:'計算する前に見当をつけましょう。答えはだいたいいくつですか？', tip:'"estimate" ＝ 見積もる・概算する'},
+  {cat:'授業表現', en:'I need to <mark>check my work</mark>. Let me solve it again.', speech:'I need to check my work.\nLet me solve it again.', ja:'見直しをします。もう一度解いてみます。', tip:'"check your work" ＝ 答えを確認する'},
+  {cat:'授業表現', en:'I got a <mark>different answer</mark>. My answer is 48, not 84.', speech:'I got a different answer.\nMy answer is 48, not 84.', ja:'私は違う答えになりました。84 ではなく 48 です。'},
+  {cat:'授業表現', en:'Please <mark>estimate</mark> before you calculate. About how big is the answer?', speech:'Please estimate before you calculate.\nAbout how big is the answer?', ja:'計算する前に見当をつけましょう。答えはだいたいいくつですか？', tip:'"estimate" ＝ 見積もる・概算する'},
   {cat:'授業表現', en:'Write your answer in a <mark>complete sentence</mark>: "There are 24 apples in total."', speech:'Write your answer in a complete sentence: "There are 24 apples in total."', ja:'答えを文章で書きましょう。「全部で 24 個のリンゴがあります。」', tip:'文章題では answer sentence が求められることが多い'},
 ];
 
@@ -700,6 +699,8 @@ let isEnToJa      = true;
 let isRevealed    = false;
 let activeCategory = 'all';
 let isAutoPlaying  = false;
+let isRepeating    = false;
+let repeatTimer    = null;
 let autoMode       = '';   // 'shadow' | 'continuous'
 let autoStopped    = false;
 let autoTimeout    = null;
@@ -854,64 +855,50 @@ function speakOne(text, onEnd) {
 function stripTags(html) { return html.replace(/<[^>]+>/g,'').replace(/\s+/g,' ').trim(); }
 
 function speakWithPause(text, pauseMs, onEnd) {
-  // iOS WebKit対応：onendに頼らず時間ベースで管理
-  const sentences = [];
-  let buf = '';
+  // 文区切りに改行を挿入してTTSにポーズを取らせる
+  let result = '';
   for (let i = 0; i < text.length; i++) {
-    buf += text[i];
+    result += text[i];
     if ((/[?.!]/).test(text[i]) &&
         i + 1 < text.length && text[i+1] === ' ' &&
         i + 2 < text.length && (/[A-Z]/).test(text[i+2])) {
-      sentences.push(buf.trim());
-      buf = '';
-      i++;
+      result += '\n';
     }
   }
-  if (buf.trim()) sentences.push(buf.trim());
-  if (sentences.length <= 1) { speakOne(text, onEnd); return; }
-
-  const rate = getRate();
-  // 文字数から読み上げ時間を推定（英語は約1文字=60ms / rate）
-  function estimateMs(s) {
-    return Math.max(800, Math.round(s.length * 65 / rate));
-  }
-
-  let si = 0;
-  function nextSentence() {
-    if (si >= sentences.length) { if (onEnd) onEnd(); return; }
-    const s = sentences[si++];
-    const last = si >= sentences.length;
-    // utteranceを作成してキューに積む
-    const utt = new SpeechSynthesisUtterance(s);
-    const v = getVoice();
-    if (v) { utt.voice = v; utt.lang = v.lang; }
-    else {
-      const pref = document.getElementById('voice-pref') ?
-        document.getElementById('voice-pref').value : 'US';
-      utt.lang = pref === 'US' ? 'en-US' : 'en-GB';
-    }
-    utt.rate = rate;
-    window.speechSynthesis.speak(utt);
-    // onendとタイマーの両方で次へ進む（早い方が勝つ）
-    let advanced = false;
-    function advance() {
-      if (advanced) return;
-      advanced = true;
-      if (last) { if (onEnd) onEnd(); }
-      else { setTimeout(nextSentence, pauseMs); }
-    }
-    utt.onend = advance;
-    utt.onerror = advance;
-    // フォールバック：推定時間後に強制的に次へ
-    setTimeout(advance, estimateMs(s) + pauseMs);
-  }
-  nextSentence();
+  speakOne(result, onEnd);
 }
 function speakCurrent() {
   const a = getActive(); if(!a.length) return;
   const item = a[currentIndex];
   const text = item.speech || stripTags(item.en);
   speakWithPause(text, 900);
+}
+
+function speakRepeat(text) {
+  if (!isRepeating) return;
+  window.speechSynthesis.cancel();
+  setTimeout(() => {
+    speakOne(text, () => {
+      if (isRepeating) {
+        repeatTimer = setTimeout(() => speakRepeat(text), 300);
+      }
+    });
+  }, 150);
+}
+
+function toggleRepeat() {
+  isRepeating = !isRepeating;
+  const btn = document.getElementById('repeat-btn');
+  btn.textContent = '🔁 繰り返し: ' + (isRepeating ? 'ON' : 'OFF');
+  btn.style.background = isRepeating ? 'var(--primary)' : '';
+  btn.style.color = isRepeating ? '#fff' : '';
+  if (isRepeating) {
+    const a = getActive(); if (!a.length) return;
+    speakRepeat(a[currentIndex].speech || stripTags(a[currentIndex].en));
+  } else {
+    if (repeatTimer) { clearTimeout(repeatTimer); repeatTimer = null; }
+    window.speechSynthesis.cancel();
+  }
 }
 
 function speakP() {
@@ -1140,6 +1127,8 @@ function toggleMasterList() {
 
 function next() {
   if (isAutoPlaying) return;
+  if (repeatTimer) { clearTimeout(repeatTimer); repeatTimer = null; }
+  window.speechSynthesis.cancel();
   const active = getActive(); if(!active.length) return;
   currentIndex = isRandom
     ? Math.floor(Math.random()*active.length)
@@ -1149,9 +1138,12 @@ function next() {
 
 function prev() {
   if (isAutoPlaying) return;
+  if (repeatTimer) { clearTimeout(repeatTimer); repeatTimer = null; }
+  window.speechSynthesis.cancel();
   const active = getActive(); if(!active.length) return;
   currentIndex = (currentIndex - 1 + active.length) % active.length;
   update();
+  if (isRepeating) setTimeout(() => { const a=getActive(); if(a.length) speakRepeat(a[currentIndex].speech || stripTags(a[currentIndex].en)); }, 300);
 }
 
 function toggleRandom() {
@@ -1348,6 +1340,24 @@ function handleOverlayClick(e) {
 buildCatRows();
 updateFilterLabel();
 update();
+</script>
+<script>
+// スワイプ機能
+(function() {
+  let startX = 0, startY = 0;
+  document.addEventListener('touchstart', e => {
+    startX = e.touches[0].clientX;
+    startY = e.touches[0].clientY;
+  }, { passive: true });
+  document.addEventListener('touchend', e => {
+    const dx = e.changedTouches[0].clientX - startX;
+    const dy = e.changedTouches[0].clientY - startY;
+    if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 50) {
+      if (dx < 0) next();
+      else prev();
+    }
+  }, { passive: true });
+})();
 </script>
 </body>
 </html>

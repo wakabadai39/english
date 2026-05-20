@@ -9,8 +9,8 @@
 :root {
   --bg: #f0f9f4;
   --surface: #ffffff;
-  --primary: #0369a1;
-  --primary-light: #0369a122;
+  --primary: #7c3aed;
+  --primary-light: #7c3aed22;
   --accent: #0891b2;
   --green: #16a34a;
   --green-light: #dcfce7;
@@ -51,7 +51,7 @@ body {
 .badge.amber { background: var(--amber-light); color: var(--amber); border-color: #fcd34d; }
 
 /* ── Progress ── */
-.progress-wrap { background: #0369a133; border-radius: 99px; height: 6px; margin-bottom: 4px; overflow: hidden; }
+.progress-wrap { background: #7c3aed33; border-radius: 99px; height: 6px; margin-bottom: 4px; overflow: hidden; }
 .progress-bar  { height: 100%; background: var(--primary); border-radius: 99px; transition: width 0.4s ease; }
 .progress-label { text-align: center; font-size: 12px; color: var(--muted); margin-bottom: 10px; }
 
@@ -108,6 +108,11 @@ body {
 }
 .answer-tip::before { content: '💡 '; }
 
+.pronunciation-text {
+  font-size: clamp(12px,3.2vw,14px); color: var(--primary);
+  font-style: italic; text-align: center; line-height: 1.5;
+  padding: 3px 8px 2px; font-weight: 600; margin-bottom: 4px;
+}
 .pronunciation-text {
   font-size: clamp(12px,3.2vw,14px); color: var(--primary);
   font-style: italic; text-align: center; line-height: 1.5;
@@ -398,6 +403,7 @@ body {
     </div>
   </div>
   <div class="main-text" id="main-text">Loading...</div>
+  <div class="pronunciation-text" id="pronunciation-text"></div>
   <div class="pronunciation-text" id="pronunciation-text"></div>
   <div class="answer-wrap" id="answer-wrap">
     <div class="answer-ja" id="answer-ja"></div>
@@ -734,6 +740,7 @@ const phrases = [
 ];
 
 
+
 const TOTAL = phrases.length;
 
 // ── State ────────────────────────────────────────────────────────
@@ -746,7 +753,7 @@ let isAutoPlaying  = false;
 let autoMode       = '';   // 'shadow' | 'continuous'
 let autoStopped    = false;
 let autoTimeout    = null;
-let masterSet = new Set(JSON.parse(localStorage.getItem('fr_lv2_master') || '[]'));
+let masterSet = new Set(JSON.parse(localStorage.getItem('fr_basic_master') || '[]'));
 
 // ── Voice setup ───────────────────────────────────────────────────
 let enVoices = [];
@@ -893,7 +900,7 @@ function getActive() {
 }
 
 function saveMaster() {
-  localStorage.setItem('fr_lv2_master', JSON.stringify([...masterSet]));
+  localStorage.setItem('fr_basic_master', JSON.stringify([...masterSet]));
 }
 
 // ── Update UI ─────────────────────────────────────────────────────
@@ -1268,6 +1275,24 @@ function handleOverlayClick(e) {
 buildCatRows();
 updateFilterLabel();
 update();
+</script>
+<script>
+// スワイプ機能
+(function() {
+  let startX = 0, startY = 0;
+  document.addEventListener('touchstart', e => {
+    startX = e.touches[0].clientX;
+    startY = e.touches[0].clientY;
+  }, { passive: true });
+  document.addEventListener('touchend', e => {
+    const dx = e.changedTouches[0].clientX - startX;
+    const dy = e.changedTouches[0].clientY - startY;
+    if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 50) {
+      if (dx < 0) next();
+      else prev();
+    }
+  }, { passive: true });
+})();
 </script>
 </body>
 </html>
