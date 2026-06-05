@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hollywood & News 英語耳トレ 中上級100 Vol.1</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', 'Meiryo', sans-serif;
+  background: #f0f2f5;
+  color: #1a1a2e;
+  min-height: 100vh;
+  font-size: 15px;
+}
+
+/* ===== HEADER ===== */
+.app-header {
+  background: linear-gradient(135deg, #1d4ed8 0%, #2563eb 100%);
+  padding: 16px 20px 14px;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+.app-header h1 { font-size: clamp(1rem, 3.2vw, 1.3rem); font-weight: 800; color: #fff; letter-spacing: 0.02em; }
+.app-header .sub { font-size: 0.75rem; color: rgba(255,255,255,0.82); margin-top: 4px; }
+.app-header .badge { display: inline-block; margin-top: 6px; background: rgba(255,255,255,0.22); color: #fff; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.1em; padding: 2px 12px; border-radius: 20px; }
+
+/* ===== TOP CONTROLS ===== */
+.top-controls {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 12px;
+  background: #fff;
+  border-bottom: 1px solid #e0e4ea;
+  flex-wrap: wrap;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+}
+.ctrl-btn {
+  padding: 5px 13px;
+  border-radius: 18px;
+  border: 1.5px solid #cbd0da;
+  background: #fff;
+  color: #555;
+  font-size: 0.76rem;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.18s;
+  white-space: nowrap;
+}
+.ctrl-btn:hover { border-color: #2563eb; color: #1d4ed8; }
+.ctrl-btn.active { background: #2563eb; border-color: #2563eb; color: #fff; font-weight: 700; }
+.ctrl-sep { flex: 1; }
+
+/* ===== PROGRESS ===== */
+.progress-wrap {
+  padding: 7px 14px;
+  background: #fff;
+  border-bottom: 1px solid #e0e4ea;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.progress-bar {
+  flex: 1;
+  height: 6px;
+  background: #e0e4ea;
+  border-radius: 3px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #2563eb, #eff6ff);
+  border-radius: 3px;
+  transition: width 0.4s;
+}
+.progress-label { font-size: 0.72rem; color: #888; white-space: nowrap; }
+
+/* ===== CATEGORY BAR ===== */
+.cat-section {
+  background: #fff;
+  border-bottom: 1px solid #e0e4ea;
+  padding: 6px 10px;
+}
+.cat-row {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 2px;
+}
+.cat-row::-webkit-scrollbar { height: 2px; }
+.cat-row::-webkit-scrollbar-thumb { background: #cbd0da; }
+.cat-chip {
+  flex-shrink: 0;
+  padding: 4px 12px;
+  border-radius: 14px;
+  border: 1.5px solid #cbd0da;
+  background: #fff;
+  color: #666;
+  font-size: 0.7rem;
+  cursor: pointer;
+  font-family: inherit;
+  white-space: nowrap;
+  transition: all 0.18s;
+}
+.cat-chip:hover { border-color: #2563eb; color: #1d4ed8; }
+.cat-chip.active { background: #2563eb; border-color: #2563eb; color: #fff; font-weight: 700; }
+.cat-chip.mastered-all { opacity: 0.45; }
+
+/* ===== MAIN ===== */
+.main { max-width: 620px; margin: 0 auto; padding: 14px 14px 60px; }
+
+.all-done-msg {
+  display: none;
+  text-align: center;
+  padding: 28px 16px;
+  color: #1d4ed8;
+  font-size: 0.9rem;
+  font-weight: 700;
+  background: #fff;
+  border-radius: 14px;
+  border: 1.5px solid #eff6ff;
+  margin-bottom: 14px;
+}
+
+.card-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  font-size: 0.72rem;
+  color: #999;
+}
+.step-badge {
+  background: #eff6ff;
+  color: #1d4ed8;
+  padding: 2px 10px;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 0.7rem;
+}
+.card-pos { margin-left: auto; }
+
+/* ===== CARD ===== */
+.card {
+  background: #fff;
+  border: 1.5px solid #e0e4ea;
+  border-radius: 14px;
+  padding: 18px 16px 16px;
+  cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s, transform 0.15s;
+  margin-bottom: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  min-height: 110px;
+  position: relative;
+}
+.card:hover { border-color: #2563eb; box-shadow: 0 4px 16px rgba(0,0,0,0.1); transform: translateY(-1px); }
+.card.animate { animation: cardIn 0.25s ease; }
+@keyframes cardIn {
+  from { opacity: 0.4; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.card-top {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+.card-num { font-size: 0.68rem; color: #bbb; font-weight: 700; }
+.card-cat-tag {
+  font-size: 0.63rem;
+  padding: 1px 8px;
+  border-radius: 8px;
+  border: 1px solid #e0e4ea;
+  color: #aaa;
+  background: #f7f8fa;
+}
+.master-btn {
+  margin-left: auto;
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  border: 2px solid #ddd;
+  background: #fff;
+  color: #ccc;
+  cursor: pointer;
+  font-size: 0.82rem;
+  transition: all 0.18s;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.master-btn.on { background: #22c98a; border-color: #22c98a; color: #fff; }
+.master-btn:hover:not(.on) { border-color: #22c98a; color: #22c98a; }
+
+.card-en {
+  font-size: clamp(0.92rem, 2.4vw, 1.08rem);
+  font-weight: 600;
+  color: #1a1a2e;
+  line-height: 1.6;
+  margin-bottom: 10px;
+}
+.card-ja {
+  font-size: clamp(0.82rem, 2vw, 0.92rem);
+  color: #444;
+  line-height: 1.65;
+  margin-bottom: 8px;
+}
+.card-note {
+  font-size: 0.74rem;
+  color: #1d4ed8;
+  background: #eff6ff;
+  border-left: 3px solid #2563eb;
+  padding: 6px 10px;
+  border-radius: 0 8px 8px 0;
+  line-height: 1.6;
+}
+.hidden { display: none !important; }
+
+.hint-msg {
+  text-align: center;
+  font-size: 0.76rem;
+  color: #bbb;
+  margin-bottom: 10px;
+}
+
+/* ===== NAV ===== */
+.nav-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.nav-btn {
+  flex: 1;
+  padding: 11px 6px;
+  border-radius: 12px;
+  border: 1.5px solid #dde0e8;
+  background: #fff;
+  color: #333;
+  font-size: 0.83rem;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.18s;
+  text-align: center;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+}
+.nav-btn:hover { border-color: #2563eb; background: #eff6ff; }
+.nav-btn.sound { background: #2563eb; border-color: #2563eb; color: #fff; font-weight: 700; box-shadow: 0 2px 6px rgba(0,0,0,0.15); }
+.nav-btn.sound:hover { opacity: 0.88; }
+
+/* ===== FUNCTION BUTTONS ===== */
+.fn-row {
+  display: flex;
+  gap: 7px;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+.fn-btn {
+  flex: 1;
+  min-width: 72px;
+  padding: 8px 4px;
+  border-radius: 10px;
+  border: 1.5px solid #dde0e8;
+  background: #fff;
+  color: #555;
+  font-size: 0.73rem;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.18s;
+  text-align: center;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+.fn-btn:hover { border-color: #2563eb; color: #1d4ed8; }
+.fn-btn.active { background: #2563eb; border-color: #2563eb; color: #fff; font-weight: 700; }
+.fn-btn.stop { background: #fff0f0; border-color: #e88; color: #c44; }
+.fn-btn.stop:hover { background: #ffe0e0; }
+
+/* ===== SPEED ROW ===== */
+.speed-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 12px;
+  background: #fff;
+  border-radius: 10px;
+  border: 1px solid #e0e4ea;
+  margin-bottom: 10px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+.speed-row label { font-size: 0.72rem; color: #888; }
+.speed-row input[type=range] { flex: 1; accent-color: #2563eb; }
+.speed-val { font-size: 0.72rem; color: #1d4ed8; font-weight: 700; min-width: 32px; }
+.accent-row { display: flex; gap: 5px; }
+.acc-btn {
+  padding: 3px 9px;
+  border-radius: 12px;
+  border: 1.5px solid #dde0e8;
+  background: #fff;
+  color: #777;
+  font-size: 0.68rem;
+  cursor: pointer;
+  font-family: inherit;
+}
+.acc-btn.active { background: #f0f2f5; color: #333; border-color: #aaa; font-weight: 700; }
+
+/* ===== MASTERED LIST ===== */
+.mastered-section {
+  background: #fff;
+  border: 1px solid #e0e4ea;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+.mastered-header {
+  display: flex;
+  align-items: center;
+  padding: 9px 14px;
+  cursor: pointer;
+  user-select: none;
+}
+.mastered-header:hover { background: #f7f8fa; }
+.mastered-title { font-size: 0.76rem; color: #666; font-weight: 600; }
+.clear-btn {
+  margin-left: auto;
+  font-size: 0.68rem;
+  color: #e05;
+  background: transparent;
+  border: 1px solid #fbb;
+  padding: 2px 8px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: inherit;
+}
+.mastered-body {
+  border-top: 1px solid #e0e4ea;
+  max-height: 260px;
+  overflow-y: auto;
+  display: none;
+}
+.mastered-item {
+  padding: 7px 14px;
+  border-bottom: 1px solid #f0f2f5;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 0.73rem;
+  color: #444;
+}
+.mastered-item:last-child { border: none; }
+.uncheck-btn {
+  flex-shrink: 0;
+  font-size: 0.65rem;
+  background: #fff;
+  border: 1px solid #dde0e8;
+  color: #888;
+  padding: 1px 7px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+/* ===== SHADOW MODAL ===== */
+.modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  z-index: 100;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.modal.show { display: flex; }
+.modal-box {
+  background: #fff;
+  border-radius: 18px;
+  padding: 26px 22px;
+  max-width: 400px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+}
+.modal-step { font-size: 0.78rem; color: #1d4ed8; font-weight: 700; margin-bottom: 10px; }
+.modal-en { font-size: 1.05rem; font-weight: 600; color: #1a1a2e; margin-bottom: 8px; line-height: 1.5; }
+.modal-ja { font-size: 0.85rem; color: #555; margin-bottom: 14px; }
+.modal-prog { font-size: 0.72rem; color: #aaa; margin-bottom: 16px; }
+.modal-stop {
+  padding: 9px 24px;
+  background: #e55;
+  border: none;
+  border-radius: 10px;
+  color: #fff;
+  font-size: 0.84rem;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+/* ===== GUIDE MODAL ===== */
+.guide-modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 200;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 16px;
+  overflow-y: auto;
+}
+.guide-modal.show { display: flex; }
+.guide-box {
+  background: #fff;
+  border-radius: 18px;
+  padding: 22px 18px;
+  max-width: 480px;
+  width: 100%;
+  margin: auto;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+}
+.guide-box h2 { font-size: 0.95rem; color: #1d4ed8; font-weight: 800; margin-bottom: 12px; }
+.guide-box h3 { font-size: 0.82rem; color: #222; font-weight: 700; margin: 10px 0 5px; }
+.guide-box p, .guide-box li { font-size: 0.76rem; color: #555; line-height: 1.7; }
+.guide-box ul { padding-left: 16px; margin-bottom: 4px; }
+.guide-close {
+  display: block;
+  width: 100%;
+  margin-top: 16px;
+  padding: 10px;
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 0.84rem;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+@media (max-width: 480px) {
+  .main { padding: 10px 10px 60px; }
+  .fn-row { gap: 5px; }
+  .fn-btn { font-size: 0.68rem; padding: 7px 2px; min-width: 60px; }
+}
+</style>
+</head>
+<body>
+
+<div class="app-header">
+  <h1>🎬 Hollywood & News 英語耳トレ 中上級100 Vol.1</h1>
+  <div class="sub">映画・ニュースの上級表現 — 臨場感と語彙の深みを鍛える</div>
+  <div class="badge">中上級 100問 Vol.1</div>
+</div>
+
+<div class="top-controls">
+  <button class="ctrl-btn active" id="btnEnJa" onclick="setMode('enja')">📖 英 → 日</button>
+  <button class="ctrl-btn" id="btnJaEn" onclick="setMode('jaen')">🔄 英⇄日</button>
+  <div class="ctrl-sep"></div>
+  <button class="ctrl-btn active" id="btnSeq" onclick="setOrder('seq')">順番通り</button>
+  <button class="ctrl-btn" id="btnRand" onclick="setOrder('rand')">🔀 ランダム</button>
+  <button class="ctrl-btn" onclick="showGuide()" style="border-color:#ccc;color:#888;">❓ 使い方ガイド</button>
+</div>
+
+<div class="progress-wrap">
+  <div class="progress-bar"><div class="progress-fill" id="progFill" style="width:0%"></div></div>
+  <div class="progress-label" id="progLabel">マスター: 0 / 100</div>
+</div>
+
+<div class="cat-section">
+  <div class="cat-row" id="catRow"></div>
+</div>
+
+<div class="main">
+
+  <div class="all-done-msg" id="allDoneMsg">
+    ✅ このカテゴリをすべてマスターしました！<br>チェックを外すか別のカテゴリを選んでください。
+  </div>
+
+  <div class="card-status">
+    <span class="step-badge" id="stepBadge">STEP 1</span>
+    <span id="stepDesc">音声を聴いてください。</span>
+    <span class="card-pos" id="cardPos">カード 1 / 100</span>
+  </div>
+
+  <div class="card animate" id="mainCard" onclick="toggleReveal()">
+    <div class="card-top">
+      <span class="card-num" id="cardNum">01</span>
+      <span class="card-cat-tag" id="cardCat">カテゴリ</span>
+      <button class="master-btn" id="masterBtn" onclick="toggleMaster(event)">✓</button>
+    </div>
+    <div class="card-en" id="cardEn">　</div>
+    <div class="card-ja hidden" id="cardJa">　</div>
+    <div class="card-note hidden" id="cardNote">　</div>
+  </div>
+
+  <div class="hint-msg" id="hintMsg">👆 カードをタップして日本語訳・解説を表示</div>
+
+  <div class="nav-row">
+    <button class="nav-btn" onclick="prevCard()">← 戻る</button>
+    <button class="nav-btn sound" onclick="speakCurrent()">🔊 音声</button>
+    <button class="nav-btn" onclick="nextCard()">次へ →</button>
+  </div>
+
+  <div class="fn-row">
+    <button class="fn-btn" id="repeatBtn" onclick="toggleRepeat()">🔁 繰り返し</button>
+    <button class="fn-btn" id="shadowBtn" onclick="startShadow()">🗣️ シャドウ</button>
+    <button class="fn-btn" id="streamBtn" onclick="startStream()">▶ 連続再生</button>
+    <button class="fn-btn stop hidden" id="stopBtn" onclick="stopAll()">⏹ 停止</button>
+  </div>
+
+  <div class="speed-row">
+    <div class="accent-row">
+      <button class="acc-btn active" id="btnUS" onclick="setAccent('US')">🇺🇸 US優先</button>
+      <button class="acc-btn" id="btnGB" onclick="setAccent('GB')">🇬🇧 GB優先</button>
+    </div>
+    <label>速度</label>
+    <input type="range" id="speedSlider" min="0.5" max="1.5" step="0.1" value="1.0" oninput="setSpeed(this.value)">
+    <span class="speed-val" id="speedVal">1.0×</span>
+  </div>
+
+  <div class="mastered-section">
+    <div class="mastered-header" onclick="toggleMasteredList()">
+      <span class="mastered-title">✅ マスター済みリスト</span>
+      <button class="clear-btn" onclick="clearAllMastered(event)">全解除</button>
+    </div>
+    <div class="mastered-body" id="masteredBody"></div>
+  </div>
+
+</div>
+
+<div class="modal" id="shadowModal">
+  <div class="modal-box">
+    <div class="modal-step" id="shadowStep">STEP 1</div>
+    <div class="modal-en" id="shadowEn"></div>
+    <div class="modal-ja hidden" id="shadowJa"></div>
+    <div class="modal-prog" id="shadowProg"></div>
+    <button class="modal-stop" onclick="stopAll()">⏹ 停止</button>
+  </div>
+</div>
+
+<div class="guide-modal" id="guideModal">
+  <div class="guide-box">
+    <h2>❓ 使い方ガイド</h2>
+    <h3>🔘 各ボタンの説明</h3>
+    <ul>
+      <li><strong>← 戻る / 🔊 音声 / 次へ →</strong>：カードを前後に移動。音声ボタンで英語を読み上げます。</li>
+      <li><strong>カードをタップ</strong>：英→日モードでは日本語訳・解説を表示。日→英モードでは英語を表示します。</li>
+      <li><strong>✓（右上）</strong>：マスター済みにチェック → 自動で次のカードへ。マスター済みは出題されません。</li>
+    </ul>
+    <h3>🔁 繰り返し</h3>
+    <p>現在のカードの音声を繰り返し再生します。ONにすると同じカードを反復します。</p>
+    <h3>🗣️ シャドウイング</h3>
+    <p>4ステップの自動反復練習です。「聴く → まねする → 見ながら → 見ずに」を全カードで繰り返します。</p>
+    <ul>
+      <li>STEP 1: 文字を見ずに2回聴く</li>
+      <li>STEP 2: 文字を見ずにシャドウイング×2</li>
+      <li>STEP 3: 日本語訳を見ながらシャドウイング×2</li>
+      <li>STEP 4: また見ずにシャドウイング×2</li>
+    </ul>
+    <h3>▶ 連続再生</h3>
+    <p>未マスターのカードを英語音声で順に流します。日本語訳・解説も全表示されます。聴き流し・復習に最適です。</p>
+    <h3>🔄 英⇄日モード</h3>
+    <p>日本語を見て英語を答えるスピーキング練習モードです。カードをタップすると英語と解説が表示されます。</p>
+    <h3>🔊 音声設定</h3>
+    <p>US/GBアクセント切替・速度0.5×〜1.5×調整が可能です。</p>
+    <p style="margin-top:8px"><strong>🖥️ 推奨環境：Windows 11 + Microsoft Edge</strong><br>音声の選択肢が豊富で最も自然な発音になります。</p>
+    <p style="margin-top:6px;font-size:0.7rem;color:#aaa">⚠️ iPhone・iPadではAppleの仕様により一部の発音が不正確になる場合があります。</p>
+    <button class="guide-close" onclick="hideGuide()">✕ 閉じる</button>
+  </div>
+</div>
+
+<script>
+const STORAGE_KEY = 'hollywoodAdv1Mastered';
+const ALL_CARDS = [{"id": 1, "category": "アクション・スリラー", "en": "The operation was blown when an informant tipped off the enemy.", "ja": "密告者が敵に知らせたため、作戦はバレてしまった。", "note": "blow an operation = 作戦を失敗させる / tip off = 密告する"}, {"id": 2, "category": "アクション・スリラー", "en": "He's been running a double life for years — one slip and it all unravels.", "ja": "彼は何年も二重生活を送っていた。一度でもミスすれば全てが露見する。", "note": "double life = 二重生活 / unravel = 崩壊する、ほつれる"}, {"id": 3, "category": "アクション・スリラー", "en": "They put a tail on the suspect the moment he left the courthouse.", "ja": "彼が法廷を出た瞬間、容疑者の後をつけさせた。", "note": "put a tail on = 尾行させる / courthouse = 法廷、裁判所"}, {"id": 4, "category": "アクション・スリラー", "en": "The bomb squad neutralized the device with minutes to spare.", "ja": "爆発物処理班は余裕を持って装置を無力化した。", "note": "bomb squad = 爆発物処理班 / with minutes to spare = 数分の余裕を残して"}, {"id": 5, "category": "アクション・スリラー", "en": "You're way out of your depth here. Walk away while you still can.", "ja": "あなたはここでは完全に手に負えない。まだ逃げられるうちに去れ。", "note": "out of your depth = 手に余る / walk away = 立ち去る"}, {"id": 6, "category": "アクション・スリラー", "en": "The mercenaries were hired to extract the hostage from enemy territory.", "ja": "傭兵たちは敵地から人質を救出するために雇われた。", "note": "mercenary = 傭兵 / extract = 救出する、抽出する"}, {"id": 7, "category": "アクション・スリラー", "en": "He managed to give them the slip in the crowded bazaar.", "ja": "彼は混雑したバザールでなんとか彼らをまいた。", "note": "give someone the slip = うまく逃れる"}, {"id": 8, "category": "アクション・スリラー", "en": "The sniper had a clear line of sight to the target.", "ja": "スナイパーはターゲットへの明確な視線を持っていた。", "note": "line of sight = 視線、照準線"}, {"id": 9, "category": "サスペンス・ミステリー", "en": "The detective pieced together the clues and the picture was damning.", "ja": "刑事は手がかりをつなぎ合わせた。その全体像は決定的だった。", "note": "piece together = 組み合わせる / damning = 決定的な証拠となる"}, {"id": 10, "category": "サスペンス・ミステリー", "en": "Her alibi fell apart under cross-examination.", "ja": "彼女のアリバイは反対尋問で崩れた。", "note": "fall apart = 崩れる / cross-examination = 反対尋問"}, {"id": 11, "category": "サスペンス・ミステリー", "en": "He was the last person to see her alive — that makes him a person of interest.", "ja": "彼は生きている彼女を最後に見た人物だ。それが彼を重要参考人にしている。", "note": "person of interest = 重要参考人（公式用語）"}, {"id": 12, "category": "サスペンス・ミステリー", "en": "The case went cold for twenty years before new evidence surfaced.", "ja": "新たな証拠が出るまで、その事件は20年間未解決のままだった。", "note": "go cold = 未解決になる / surface = 浮上する"}, {"id": 13, "category": "サスペンス・ミステリー", "en": "There's no smoking gun, but the circumstantial evidence is overwhelming.", "ja": "決定的な証拠はないが、状況証拠は圧倒的だ。", "note": "smoking gun = 決定的証拠 / circumstantial evidence = 状況証拠"}, {"id": 14, "category": "サスペンス・ミステリー", "en": "The coroner put the time of death between midnight and two a.m.", "ja": "検死官は死亡推定時刻を深夜0時から午前2時の間と推定した。", "note": "coroner = 検死官 / time of death = 死亡推定時刻"}, {"id": 15, "category": "サスペンス・ミステリー", "en": "He played the grieving widower, but his eyes gave him away.", "ja": "彼は悲しむ夫を演じたが、目が彼の嘘をばらした。", "note": "give away = 漏らす、バレさせる / widower = 妻を亡くした男性"}, {"id": 16, "category": "サスペンス・ミステリー", "en": "The forensic team lifted a partial print from the murder weapon.", "ja": "法医学チームは凶器から部分的な指紋を採取した。", "note": "forensic = 法医学の / lift a print = 指紋を採取する"}, {"id": 17, "category": "ドラマ・人間関係", "en": "She's been carrying that guilt for thirty years. It's eating her alive.", "ja": "彼女は30年間その罪悪感を抱えてきた。それが彼女をむしばんでいる。", "note": "eat someone alive = じわじわとむしばむ"}, {"id": 18, "category": "ドラマ・人間関係", "en": "He burned every bridge when he walked out on his family.", "ja": "家族を捨てたとき、彼はすべての橋を焼いた（関係を断ち切った）。", "note": "burn bridges = 関係を断ち切る / walk out on = 捨てて去る"}, {"id": 19, "category": "ドラマ・人間関係", "en": "She's done everything by the book her whole life. Maybe it's time to break the rules.", "ja": "彼女はずっと規則通りに生きてきた。そろそろルールを破る時かもしれない。", "note": "by the book = 規則通りに"}, {"id": 20, "category": "ドラマ・人間関係", "en": "He's not a bad person — he's just in way over his head.", "ja": "彼は悪い人間ではない。ただ、完全に手に余ることに首を突っ込んでしまっているだけだ。", "note": "in over one's head = 手に余ることに巻き込まれた"}, {"id": 21, "category": "ドラマ・人間関係", "en": "They had an unspoken agreement never to bring up the past.", "ja": "二人は過去を持ち出さないという暗黙の了解があった。", "note": "unspoken agreement = 暗黙の了解"}, {"id": 22, "category": "ドラマ・人間関係", "en": "She called his bluff, and he had nothing to back it up with.", "ja": "彼女はハッタリを見破り、彼には裏付けるものが何もなかった。", "note": "call someone's bluff = ハッタリを見破る"}, {"id": 23, "category": "ドラマ・人間関係", "en": "There's a fine line between ambition and ruthlessness.", "ja": "野心と冷酷さの間には紙一重の差がある。", "note": "fine line = 紙一重の差 / ruthlessness = 冷酷さ"}, {"id": 24, "category": "ドラマ・人間関係", "en": "He took her for granted until it was too late.", "ja": "彼は彼女を当たり前に思い続け、手遅れになった。", "note": "take for granted = 当たり前に思う"}, {"id": 25, "category": "SF・未来", "en": "The AI became sentient and started questioning its own directives.", "ja": "AIは意識を持ち始め、自身の指令に疑問を持つようになった。", "note": "sentient = 感覚・意識を持つ / directive = 指令"}, {"id": 26, "category": "SF・未来", "en": "They colonized the outer planets but at the cost of their humanity.", "ja": "彼らは外惑星を植民地化したが、その代償は人間性だった。", "note": "colonize = 植民地化する / at the cost of = 〜を犠牲にして"}, {"id": 27, "category": "SF・未来", "en": "The simulation was indistinguishable from reality.", "ja": "そのシミュレーションは現実と区別がつかなかった。", "note": "indistinguishable = 区別できない"}, {"id": 28, "category": "SF・未来", "en": "Time travel creates paradoxes that could unravel the very fabric of existence.", "ja": "タイムトラベルは存在そのものの根幹を崩しうるパラドックスを生み出す。", "note": "paradox = 逆説 / fabric of existence = 存在の根幹"}, {"id": 29, "category": "SF・未来", "en": "The corporation harvested data from billions of users without their consent.", "ja": "その企業は数十億人のユーザーのデータを無断で収集していた。", "note": "harvest data = データを収集する / consent = 同意"}, {"id": 30, "category": "SF・未来", "en": "He uploaded his consciousness and lived on indefinitely in digital form.", "ja": "彼は意識をアップロードし、デジタル形式で無期限に生き続けた。", "note": "upload consciousness = 意識をアップロードする / indefinitely = 無期限に"}, {"id": 31, "category": "SF・未来", "en": "The terraforming project would take centuries to yield results.", "ja": "テラフォーミング計画が成果を出すには何世紀もかかるだろう。", "note": "terraforming = 惑星改造 / yield results = 成果を出す"}, {"id": 32, "category": "SF・未来", "en": "Humanity's last hope lay in a single encrypted transmission from deep space.", "ja": "人類最後の希望は、深宇宙からの一つの暗号化された送信に託されていた。", "note": "encrypted = 暗号化された / transmission = 送信、通信"}, {"id": 33, "category": "戦争・歴史", "en": "The platoon was pinned down under heavy enemy fire.", "ja": "小隊は激しい敵の砲火に動きを封じられていた。", "note": "platoon = 小隊 / pin down = 動きを封じる"}, {"id": 34, "category": "戦争・歴史", "en": "He defected to the other side and was branded a traitor.", "ja": "彼は敵側に寝返り、裏切り者の烙印を押された。", "note": "defect = 脱走する、寝返る / brand = 烙印を押す"}, {"id": 35, "category": "戦争・歴史", "en": "The armistice held for twenty years before hostilities resumed.", "ja": "停戦は20年間続いたが、その後敵対行為が再開された。", "note": "armistice = 停戦 / hostilities = 敵対行為"}, {"id": 36, "category": "戦争・歴史", "en": "Collateral damage was unavoidable, but the general gave the order anyway.", "ja": "巻き添え被害は避けられなかったが、将軍はそれでも命令を下した。", "note": "collateral damage = 巻き添え被害"}, {"id": 37, "category": "戦争・歴史", "en": "The resistance operated in the shadows, sabotaging supply lines.", "ja": "抵抗軍は影で活動し、補給路を妨害していた。", "note": "resistance = 抵抗軍 / sabotage = 妨害する"}, {"id": 38, "category": "戦争・歴史", "en": "The casualty figures were staggering — tens of thousands in a single day.", "ja": "犠牲者数は衝撃的だった。一日で数万人にのぼった。", "note": "casualty = 死傷者 / staggering = 衝撃的な、目がくらむような"}, {"id": 39, "category": "戦争・歴史", "en": "He was awarded the Medal of Honor posthumously.", "ja": "彼は死後、名誉勲章を授与された。", "note": "posthumously = 死後に / Medal of Honor = 名誉勲章（最高位の軍事勲章）"}, {"id": 40, "category": "戦争・歴史", "en": "The siege lasted three months before the city finally surrendered.", "ja": "包囲戦は3ヶ月続き、ついに都市は降伏した。", "note": "siege = 包囲戦 / surrender = 降伏する"}, {"id": 41, "category": "犯罪・法廷", "en": "The defense attorney poked holes in the prosecution's key witness.", "ja": "弁護士は検察側の主要証人の証言に穴を開けた。", "note": "poke holes in = 欠陥を指摘する / prosecution = 検察側"}, {"id": 42, "category": "犯罪・法廷", "en": "The jury was deadlocked after three days of deliberation.", "ja": "陪審員は3日間の審議の末、評決に至れなかった。", "note": "deadlocked = 膠着状態の / deliberation = 審議、評議"}, {"id": 43, "category": "犯罪・法廷", "en": "The DA offered a plea deal to avoid a lengthy trial.", "ja": "検察は長期の裁判を避けるために司法取引を提示した。", "note": "DA = District Attorney（地方検事）/ plea deal = 司法取引"}, {"id": 44, "category": "犯罪・法廷", "en": "She was acquitted on all charges due to insufficient evidence.", "ja": "彼女は証拠不十分ですべての罪状について無罪となった。", "note": "acquit = 無罪にする / insufficient = 不十分な"}, {"id": 45, "category": "犯罪・法廷", "en": "The mob boss was untouchable for decades — everyone was on his payroll.", "ja": "そのマフィアのボスは何十年も手が届かない存在だった。皆が彼の金で動いていた。", "note": "untouchable = 誰も手が出せない存在 / on someone's payroll = 〜に買収されている"}, {"id": 46, "category": "犯罪・法廷", "en": "The con man walked away with millions and was never caught.", "ja": "詐欺師は何百万ドルも持ち逃げし、一度も捕まらなかった。", "note": "con man = 詐欺師 / walk away with = 〜を持ち逃げする"}, {"id": 47, "category": "犯罪・法廷", "en": "The judge issued a gag order to prevent media coverage of the trial.", "ja": "裁判官は裁判の報道を防ぐためにメディア規制命令を出した。", "note": "gag order = 口止め命令（報道規制）"}, {"id": 48, "category": "犯罪・法廷", "en": "The whistleblower risked everything to expose corporate corruption.", "ja": "内部告発者は企業の腐敗を暴くためにすべてを賭けた。", "note": "whistleblower = 内部告発者 / expose = 暴く"}, {"id": 49, "category": "政治・権力", "en": "The senator was caught in a scandal that threatened to derail his career.", "ja": "上院議員はキャリアを脅かすスキャンダルに巻き込まれた。", "note": "derail = 脱線させる（比喩的に「妨げる」）"}, {"id": 50, "category": "政治・権力", "en": "The administration tried to spin the story, but the damage was already done.", "ja": "政府はストーリーを操作しようとしたが、ダメージはすでに与えられていた。", "note": "spin = （有利に）報道を操作する / administration = 政権"}, {"id": 51, "category": "政治・権力", "en": "The lobbyist had access that money couldn't normally buy.", "ja": "そのロビイストは、普通はお金では買えないようなアクセスを持っていた。", "note": "lobbyist = ロビイスト（政策に影響を与えるために働くひと）"}, {"id": 52, "category": "政治・権力", "en": "The coup was swift and bloodless — power changed hands overnight.", "ja": "クーデターは素早く無血で行われ、権力は一夜にして移った。", "note": "coup = クーデター / change hands = 持ち手が変わる"}, {"id": 53, "category": "政治・権力", "en": "The ambassador was declared persona non grata and expelled.", "ja": "大使はペルソナ・ノン・グラータ（好ましからざる人物）と宣告され、追放された。", "note": "persona non grata = 外交的に「好ましからざる人物」"}, {"id": 54, "category": "政治・権力", "en": "The treaty collapsed under pressure from nationalist factions.", "ja": "条約はナショナリスト派閥からの圧力の下で崩壊した。", "note": "faction = 派閥 / nationalist = 国家主義者"}, {"id": 55, "category": "政治・権力", "en": "He was the power behind the throne — the real decision-maker.", "ja": "彼は陰で糸を引く実権者だった。真の意思決定者だ。", "note": "power behind the throne = 陰の実力者"}, {"id": 56, "category": "政治・権力", "en": "The whistleblower's testimony sent shockwaves through the establishment.", "ja": "内部告発者の証言は体制全体に衝撃を与えた。", "note": "shockwaves = 衝撃 / establishment = 体制、既成勢力"}, {"id": 57, "category": "恋愛・感情", "en": "He wore his heart on his sleeve, and she used it against him.", "ja": "彼は感情を隠せなかった。そして彼女はそれを彼に対して利用した。", "note": "wear one's heart on one's sleeve = 感情をむき出しにする"}, {"id": 58, "category": "恋愛・感情", "en": "She kept him at arm's length even when everything in her screamed to let him in.", "ja": "彼女は心の中では近づけたいと叫んでいても、彼を寄せ付けなかった。", "note": "keep at arm's length = 距離を置く"}, {"id": 59, "category": "恋愛・感情", "en": "Their relationship was volatile — passionate one moment, explosive the next.", "ja": "二人の関係は不安定だった。ある瞬間は情熱的で、次の瞬間は爆発的になる。", "note": "volatile = 不安定な、激しく変わる"}, {"id": 60, "category": "恋愛・感情", "en": "He never got over her. Twenty years later, she was still the one that got away.", "ja": "彼は彼女を忘れることができなかった。20年後も彼女は「逃がしてしまった人」のままだった。", "note": "the one that got away = 手放してしまった（忘れられない）人"}, {"id": 61, "category": "恋愛・感情", "en": "She knew it was toxic, but she kept going back. That's how powerful the pull was.", "ja": "有害だとわかっていても、彼女は戻り続けた。それほど強い引力があった。", "note": "toxic = 有害な（関係） / pull = 引力、誘惑"}, {"id": 62, "category": "恋愛・感情", "en": "The chemistry between them was undeniable, even to the people watching from the outside.", "ja": "二人の間の相性は否定できず、外から見ている人にも明らかだった。", "note": "chemistry = （二人の）相性、引力 / undeniable = 否定できない"}, {"id": 63, "category": "恋愛・感情", "en": "He fell for her the moment she walked into the room. It was that simple.", "ja": "彼女が部屋に入った瞬間、彼は恋に落ちた。ただそれだけのことだった。", "note": "fall for = 恋に落ちる"}, {"id": 64, "category": "恋愛・感情", "en": "There's a point of no return in every relationship, and they'd crossed it long ago.", "ja": "どんな関係にも引き返せない一線がある。二人はずっと前にそれを越えていた。", "note": "point of no return = 引き返せない一線"}, {"id": 65, "category": "ビジネス・野望", "en": "He clawed his way to the top and wasn't about to let anyone take it from him.", "ja": "彼は爪を立てて頂点まで這い上がった。誰にも奪わせるつもりはなかった。", "note": "claw one's way = 必死に這い上がる"}, {"id": 66, "category": "ビジネス・野望", "en": "The hostile takeover blindsided the board and left shareholders in panic.", "ja": "敵対的買収は取締役会を不意打ちし、株主をパニックに陥れた。", "note": "hostile takeover = 敵対的買収 / blindside = 不意打ちする"}, {"id": 67, "category": "ビジネス・野望", "en": "She built her empire from nothing — sheer tenacity and no room for failure.", "ja": "彼女は何もないところから帝国を築いた。純粋な粘り強さで、失敗の余地はなかった。", "note": "tenacity = 粘り強さ / sheer = 純粋な、まったくの"}, {"id": 68, "category": "ビジネス・野望", "en": "The startup burned through its funding before reaching profitability.", "ja": "そのスタートアップは収益化前に資金を使い果たした。", "note": "burn through = 使い果たす / profitability = 収益性"}, {"id": 69, "category": "ビジネス・野望", "en": "He leveraged every contact he had to land the deal of his career.", "ja": "彼はキャリア最大の契約を取るために、持てるコネをすべて活用した。", "note": "leverage = 活用する、てこにする / land a deal = 契約を獲得する"}, {"id": 70, "category": "ビジネス・野望", "en": "The whistleblower's leak torpedoed the merger just days before signing.", "ja": "内部告発者のリークは、調印の数日前に合併を水泡に帰した。", "note": "torpedo = 魚雷で破壊する→台無しにする / merger = 合併"}, {"id": 71, "category": "ビジネス・野望", "en": "She gave an ultimatum: restructure the company or she walks.", "ja": "彼女は最後通牒を突きつけた。会社を再建するか、辞めるか。", "note": "ultimatum = 最後通牒 / restructure = 再建する"}, {"id": 72, "category": "ビジネス・野望", "en": "The IPO made him a paper billionaire overnight, but the real test was sustaining it.", "ja": "IPOで彼は一夜にして帳簿上の億万長者になったが、真の試練はそれを維持することだった。", "note": "IPO = 新規株式公開 / paper billionaire = 帳簿上の億万長者"}, {"id": 73, "category": "社会・格差", "en": "He grew up on the wrong side of the tracks and never forgot where he came from.", "ja": "彼は貧しい側の出身で、自分のルーツを決して忘れなかった。", "note": "wrong side of the tracks = 貧しい地区の出身"}, {"id": 74, "category": "社会・格差", "en": "The system is rigged — those at the top protect each other.", "ja": "システムは不正操作されている。上の連中はお互いを守り合っている。", "note": "rigged = 不正に操作された"}, {"id": 75, "category": "社会・格差", "en": "Her background was used against her every step of the way.", "ja": "彼女の出自は、あらゆる場面で彼女に対する武器として使われた。", "note": "background = 出自、経歴 / every step of the way = あらゆる場面で"}, {"id": 76, "category": "社会・格差", "en": "The gentrification displaced thousands of long-time residents.", "ja": "ジェントリフィケーションは何千人もの長年の住民を追い出した。", "note": "gentrification = 高級化（による住民の追い出し）/ displace = 追い出す"}, {"id": 77, "category": "社会・格差", "en": "He used his privilege to open doors that remained shut for everyone else.", "ja": "彼は特権を使って、他の誰にも閉ざされたままのドアを開けた。", "note": "privilege = 特権 / remain shut = 閉ざされたままでいる"}, {"id": 78, "category": "社会・格差", "en": "The protest turned violent when riot police moved in.", "ja": "機動隊が突入したとき、抗議活動は暴力的になった。", "note": "riot police = 機動隊 / move in = 突入する"}, {"id": 79, "category": "社会・格差", "en": "Poverty was the root cause, but no one wanted to address it.", "ja": "貧困が根本原因だったが、誰もそれに向き合おうとしなかった。", "note": "root cause = 根本原因 / address = 取り組む"}, {"id": 80, "category": "社会・格差", "en": "The marginalized community found a voice through grassroots organizing.", "ja": "疎外されたコミュニティは草の根の組織化を通じて発言力を得た。", "note": "marginalized = 疎外された / grassroots = 草の根の"}, {"id": 81, "category": "心理・内面", "en": "He was haunted by the choices he'd made and couldn't sleep without seeing their faces.", "ja": "彼は自分の選択に苦しめられ、彼らの顔が浮かんで眠れなかった。", "note": "haunted by = 〜に苦しめられる、つきまとわれる"}, {"id": 82, "category": "心理・内面", "en": "She built walls so high that even she forgot what was on the other side.", "ja": "彼女は壁を高く積み上げすぎて、自分でも向こう側に何があるか忘れてしまった。", "note": "build walls = （心の）壁を作る"}, {"id": 83, "category": "心理・内面", "en": "The trauma didn't break him. It just made him someone he didn't recognize.", "ja": "トラウマは彼を壊さなかった。ただ、自分でも見知らぬ人間にしてしまった。", "note": "trauma = トラウマ / recognize = 認識する"}, {"id": 84, "category": "心理・内面", "en": "He projected his own insecurities onto everyone around him.", "ja": "彼は自分の不安感を周囲の全員に投影していた。", "note": "project = 投影する / insecurity = 不安感"}, {"id": 85, "category": "心理・内面", "en": "There was a darkness in him he'd spent his whole life suppressing.", "ja": "彼の中には、生涯をかけて抑圧してきた暗闇があった。", "note": "suppress = 抑圧する / darkness = 暗黒面"}, {"id": 86, "category": "心理・内面", "en": "She rationalized every bad decision until she couldn't tell right from wrong.", "ja": "彼女はあらゆる悪い決断を正当化し続け、善悪の区別がつかなくなった。", "note": "rationalize = 正当化する / tell right from wrong = 善悪を区別する"}, {"id": 87, "category": "心理・内面", "en": "The breakdown was a long time coming — no one saw it, but the signs were all there.", "ja": "崩壊は以前から迫っていた。誰も気づかなかったが、兆候はすべてそこにあった。", "note": "a long time coming = 以前から迫っていた / breakdown = 精神的崩壊"}, {"id": 88, "category": "心理・内面", "en": "He masked his pain with humor until the humor stopped working.", "ja": "彼はユーモアで痛みを隠し続けたが、やがてそれも効かなくなった。", "note": "mask = 隠す / stop working = 効果がなくなる"}, {"id": 89, "category": "ニュース英語・上級", "en": "The administration walked back its earlier statement following widespread criticism.", "ja": "政権は広範な批判を受けて、以前の声明を撤回した。", "note": "walk back = （発言を）撤回する"}, {"id": 90, "category": "ニュース英語・上級", "en": "Tensions in the region have been simmering for years and are now reaching a boiling point.", "ja": "地域の緊張は何年もくすぶり続け、今や沸点に達しようとしている。", "note": "simmer = くすぶる / boiling point = 沸点（限界点）"}, {"id": 91, "category": "ニュース英語・上級", "en": "The central bank signaled a pivot in monetary policy amid growing recession fears.", "ja": "中央銀行は景気後退への懸念が高まる中、金融政策の方針転換を示唆した。", "note": "pivot = 方針転換 / monetary policy = 金融政策"}, {"id": 92, "category": "ニュース英語・上級", "en": "The hack exposed sensitive data on over fifty million users.", "ja": "ハッキングにより5000万人以上のユーザーの機密データが流出した。", "note": "expose = 暴露する、流出させる / sensitive data = 機密データ"}, {"id": 93, "category": "ニュース英語・上級", "en": "The bill stalled in the Senate amid fierce opposition from key lawmakers.", "ja": "法案は主要議員の激しい反対の中、上院で行き詰まった。", "note": "stall = 停滞する / amid = 〜の中で"}, {"id": 94, "category": "ニュース英語・上級", "en": "The relief effort was hampered by logistical challenges and poor infrastructure.", "ja": "救援活動は物流上の課題とインフラ不足によって妨げられた。", "note": "hamper = 妨げる / logistical = 物流の"}, {"id": 95, "category": "ニュース英語・上級", "en": "The summit ended without a breakthrough but both sides agreed to keep the dialogue open.", "ja": "首脳会談は突破口なく終わったが、双方は対話の継続に合意した。", "note": "breakthrough = 突破口 / keep the dialogue open = 対話を続ける"}, {"id": 96, "category": "ニュース英語・上級", "en": "The prosecutor alleged that the funds were funneled through shell companies.", "ja": "検察官は資金がペーパーカンパニーを通じて流されたと主張した。", "note": "funnel = 流す / shell company = ペーパーカンパニー"}, {"id": 97, "category": "ニュース英語・上級", "en": "The outbreak spread rapidly before containment measures were put in place.", "ja": "アウトブレイクは封じ込め措置が取られる前に急速に広がった。", "note": "outbreak = 発生・拡大 / containment = 封じ込め"}, {"id": 98, "category": "ニュース英語・上級", "en": "The incumbent faced a tight race and refused to concede until every vote was counted.", "ja": "現職は接戦を強いられ、すべての票が集計されるまで敗北を認めなかった。", "note": "incumbent = 現職 / concede = 敗北を認める"}, {"id": 99, "category": "ニュース英語・上級", "en": "The cease-fire was brokered by international mediators after months of negotiations.", "ja": "停戦は数ヶ月にわたる交渉の末、国際的な仲介者によって成立した。", "note": "cease-fire = 停戦 / broker = 仲介する / mediator = 仲介者"}, {"id": 100, "category": "ニュース英語・上級", "en": "The whistleblower's revelations triggered a congressional investigation into intelligence overreach.", "ja": "内部告発者の暴露は、情報機関の権限逸脱に関する議会調査を引き起こした。", "note": "revelation = 暴露 / overreach = 権限の逸脱"}];
+const CATEGORIES = ["アクション・スリラー", "サスペンス・ミステリー", "ドラマ・人間関係", "SF・未来", "戦争・歴史", "犯罪・法廷", "政治・権力", "恋愛・感情", "ビジネス・野望", "社会・格差", "心理・内面", "ニュース英語・上級"];
+
+let mode = 'enja', order = 'seq', category = 'all', accent = 'US', speed = 1.0;
+let deck = [], idx = 0, mastered = new Set(), revealed = false;
+let repeatMode = false, shadowActive = false, streamActive = false;
+let audioTimer = null, repeatTimer = null;
+
+function loadMastered() {
+  try { const d = localStorage.getItem(STORAGE_KEY); if (d) mastered = new Set(JSON.parse(d)); } catch(e) {}
+}
+function saveMastered() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify([...mastered]));
+}
+
+function buildDeck() {
+  let src = ALL_CARDS.filter(c => category === 'all' || c.category === category);
+  deck = order === 'rand' ? [...src].sort(() => Math.random() - 0.5) : src;
+  idx = 0;
+}
+function unmastered() { return deck.filter(c => !mastered.has(c.id)); }
+function currentCard() {
+  const u = unmastered();
+  if (!u.length) return null;
+  if (idx >= u.length) idx = 0;
+  return u[idx];
+}
+
+function setMode(m) {
+  mode = m;
+  document.getElementById('btnEnJa').classList.toggle('active', m==='enja');
+  document.getElementById('btnJaEn').classList.toggle('active', m==='jaen');
+  renderCard();
+}
+function setOrder(o) {
+  order = o;
+  document.getElementById('btnSeq').classList.toggle('active', o==='seq');
+  document.getElementById('btnRand').classList.toggle('active', o==='rand');
+  buildDeck(); renderCard();
+}
+function setAccent(a) {
+  accent = a;
+  document.getElementById('btnUS').classList.toggle('active', a==='US');
+  document.getElementById('btnGB').classList.toggle('active', a==='GB');
+}
+function setSpeed(v) {
+  speed = parseFloat(v);
+  document.getElementById('speedVal').textContent = parseFloat(v).toFixed(1)+'×';
+}
+
+function buildCatBar() {
+  const row = document.getElementById('catRow');
+  row.innerHTML = '';
+  const allBtn = mkChip('🎯 すべて表示', 'all');
+  row.appendChild(allBtn);
+  CATEGORIES.forEach(cat => {
+    const allM = ALL_CARDS.filter(c=>c.category===cat).every(c=>mastered.has(c.id));
+    const btn = mkChip(cat, cat);
+    if (allM) btn.classList.add('mastered-all');
+    row.appendChild(btn);
+  });
+}
+function mkChip(label, val) {
+  const btn = document.createElement('button');
+  btn.className = 'cat-chip' + (category===val ? ' active' : '');
+  btn.textContent = label;
+  btn.onclick = () => selectCat(val);
+  return btn;
+}
+function selectCat(cat) {
+  category = cat;
+  buildCatBar(); buildDeck(); idx = 0; renderCard();
+}
+
+function renderCard() {
+  const u = unmastered();
+  const allDone = document.getElementById('allDoneMsg');
+  const card = document.getElementById('mainCard');
+  const hint = document.getElementById('hintMsg');
+
+  if (!u.length) {
+    allDone.style.display = 'block'; card.style.display = 'none'; hint.style.display = 'none';
+    updateProgress(); return;
+  }
+  allDone.style.display = 'none'; card.style.display = 'block';
+  if (idx >= u.length) idx = 0;
+  const c = u[idx];
+  revealed = false;
+
+  document.getElementById('cardPos').textContent = 'カード '+(idx+1)+' / '+u.length;
+  document.getElementById('cardNum').textContent = String(c.id).padStart(2,'0');
+  document.getElementById('cardCat').textContent = c.category;
+  document.getElementById('masterBtn').classList.toggle('on', mastered.has(c.id));
+
+  const enEl = document.getElementById('cardEn');
+  const jaEl = document.getElementById('cardJa');
+  const noteEl = document.getElementById('cardNote');
+
+  if (mode === 'enja') {
+    enEl.textContent = c.en; enEl.classList.remove('hidden'); enEl.style.color = '';
+    jaEl.textContent = c.ja; jaEl.classList.add('hidden');
+    noteEl.textContent = '💡 '+c.note; noteEl.classList.add('hidden');
+    hint.textContent = '👆 カードをタップして日本語訳・解説を表示';
+    hint.style.display = 'block';
+    document.getElementById('stepBadge').textContent = 'STEP 1';
+    document.getElementById('stepDesc').textContent = '音声を聴いてください。';
+  } else {
+    jaEl.textContent = c.ja; jaEl.classList.remove('hidden');
+    enEl.textContent = '（タップして英語を確認）'; enEl.classList.remove('hidden'); enEl.style.color = '#bbb';
+    noteEl.classList.add('hidden');
+    hint.textContent = '👆 カードをタップして英語・解説を表示';
+    hint.style.display = 'block';
+    document.getElementById('stepBadge').textContent = '日→英';
+    document.getElementById('stepDesc').textContent = '英語で言ってみましょう。';
+  }
+
+  card.classList.remove('animate');
+  void card.offsetWidth;
+  card.classList.add('animate');
+  updateProgress(); updateMasteredList();
+}
+
+function toggleReveal() {
+  revealed = !revealed;
+  const c = currentCard(); if (!c) return;
+  const enEl = document.getElementById('cardEn');
+  const jaEl = document.getElementById('cardJa');
+  const noteEl = document.getElementById('cardNote');
+  const hint = document.getElementById('hintMsg');
+
+  if (mode === 'enja') {
+    if (revealed) {
+      jaEl.classList.remove('hidden'); noteEl.textContent = '💡 '+c.note; noteEl.classList.remove('hidden');
+      hint.style.display = 'none';
+      document.getElementById('stepBadge').textContent = 'STEP 2';
+      document.getElementById('stepDesc').textContent = 'もう一度聴いて、声に出して繰り返しましょう。';
+    } else {
+      jaEl.classList.add('hidden'); noteEl.classList.add('hidden'); hint.style.display = 'block';
+      document.getElementById('stepBadge').textContent = 'STEP 1';
+      document.getElementById('stepDesc').textContent = '音声を聴いてください。';
+    }
+  } else {
+    if (revealed) {
+      enEl.textContent = c.en; enEl.style.color = '';
+      noteEl.textContent = '💡 '+c.note; noteEl.classList.remove('hidden');
+      hint.style.display = 'none';
+      document.getElementById('stepBadge').textContent = 'STEP 2';
+      document.getElementById('stepDesc').textContent = '答え合わせ・音声で確認しましょう。';
+    } else {
+      enEl.textContent = '（タップして英語を確認）'; enEl.style.color = '#bbb';
+      noteEl.classList.add('hidden'); hint.style.display = 'block';
+      document.getElementById('stepBadge').textContent = '日→英';
+      document.getElementById('stepDesc').textContent = '英語で言ってみましょう。';
+    }
+  }
+}
+
+function toggleMaster(e) {
+  e.stopPropagation();
+  const c = currentCard(); if (!c) return;
+  if (mastered.has(c.id)) { mastered.delete(c.id); }
+  else { mastered.add(c.id); setTimeout(nextCard, 320); }
+  saveMastered(); renderCard(); buildCatBar();
+}
+
+function nextCard() {
+  const u = unmastered(); if (!u.length) { renderCard(); return; }
+  idx = (idx+1) % u.length; renderCard();
+  if (repeatMode) startRepeat();
+}
+function prevCard() {
+  const u = unmastered(); if (!u.length) { renderCard(); return; }
+  idx = (idx-1+u.length) % u.length; renderCard();
+  if (repeatMode) startRepeat();
+}
+
+function speak(text, onEnd) {
+  window.speechSynthesis.cancel();
+  const utt = new SpeechSynthesisUtterance(text);
+  utt.lang = accent==='GB' ? 'en-GB' : 'en-US';
+  utt.rate = speed;
+  const voices = window.speechSynthesis.getVoices();
+  const pref = voices.filter(v => v.lang.startsWith(accent==='GB' ? 'en-GB' : 'en-US'));
+  if (pref.length) utt.voice = pref[0];
+  if (onEnd) utt.onend = onEnd;
+  window.speechSynthesis.speak(utt);
+}
+function speakCurrent() {
+  const c = currentCard(); if (c) speak(c.en);
+}
+
+function toggleRepeat() {
+  repeatMode = !repeatMode;
+  document.getElementById('repeatBtn').classList.toggle('active', repeatMode);
+  if (repeatMode) startRepeat();
+  else { clearTimeout(repeatTimer); window.speechSynthesis.cancel(); }
+}
+function startRepeat() {
+  if (!repeatMode) return;
+  const c = currentCard(); if (!c) return;
+  speak(c.en, () => {
+    if (repeatMode) repeatTimer = setTimeout(startRepeat, 1200);
+  });
+}
+
+const SHADOW_STEPS = [
+  { label: 'STEP 1: 文字を見ずに2回聴く', showJa: false, reps: 2 },
+  { label: 'STEP 2: シャドウイング（見ずに）×2', showJa: false, reps: 2 },
+  { label: 'STEP 3: 日本語を見てシャドウイング×2', showJa: true, reps: 2 },
+  { label: 'STEP 4: また見ずにシャドウイング×2', showJa: false, reps: 2 },
+];
+let shadowCI=0, shadowSI=0, shadowRI=0;
+
+function startShadow() {
+  stopAll();
+  const u = unmastered(); if (!u.length) return;
+  shadowActive=true; shadowCI=0; shadowSI=0; shadowRI=0;
+  document.getElementById('shadowModal').classList.add('show');
+  document.getElementById('stopBtn').classList.remove('hidden');
+  document.getElementById('shadowBtn').classList.add('active');
+  runShadow();
+}
+function runShadow() {
+  if (!shadowActive) return;
+  const u = unmastered();
+  if (shadowCI >= u.length) { stopAll(); return; }
+  const c = u[shadowCI];
+  const step = SHADOW_STEPS[shadowSI];
+  document.getElementById('shadowStep').textContent = step.label;
+  document.getElementById('shadowEn').textContent = c.en;
+  const jaEl = document.getElementById('shadowJa');
+  if (step.showJa) { jaEl.textContent = c.ja; jaEl.classList.remove('hidden'); }
+  else jaEl.classList.add('hidden');
+  document.getElementById('shadowProg').textContent = 'カード '+(shadowCI+1)+'/'+u.length+' — rep '+(shadowRI+1)+'/'+step.reps;
+  speak(c.en, () => {
+    if (!shadowActive) return;
+    shadowRI++;
+    if (shadowRI >= step.reps) {
+      shadowRI=0; shadowSI++;
+      if (shadowSI >= SHADOW_STEPS.length) { shadowSI=0; shadowCI++; }
+    }
+    audioTimer = setTimeout(runShadow, 1000);
+  });
+}
+
+let streamCI=0;
+function startStream() {
+  stopAll();
+  const u = unmastered(); if (!u.length) return;
+  streamActive=true; streamCI=0;
+  document.getElementById('stopBtn').classList.remove('hidden');
+  document.getElementById('streamBtn').classList.add('active');
+  runStream();
+}
+function runStream() {
+  if (!streamActive) return;
+  const u = unmastered();
+  if (streamCI >= u.length) { stopAll(); return; }
+  const c = u[streamCI]; idx = streamCI;
+  document.getElementById('cardEn').textContent = c.en;
+  document.getElementById('cardEn').style.color = '';
+  document.getElementById('cardJa').textContent = c.ja;
+  document.getElementById('cardJa').classList.remove('hidden');
+  document.getElementById('cardNote').textContent = '💡 '+c.note;
+  document.getElementById('cardNote').classList.remove('hidden');
+  document.getElementById('cardNum').textContent = String(c.id).padStart(2,'0');
+  document.getElementById('cardCat').textContent = c.category;
+  document.getElementById('cardPos').textContent = 'カード '+(streamCI+1)+'/'+u.length;
+  document.getElementById('hintMsg').style.display = 'none';
+  speak(c.en, () => {
+    if (!streamActive) return;
+    streamCI++; audioTimer = setTimeout(runStream, 900);
+  });
+}
+
+function stopAll() {
+  shadowActive=false; streamActive=false;
+  if (repeatMode) { repeatMode=false; document.getElementById('repeatBtn').classList.remove('active'); }
+  window.speechSynthesis.cancel();
+  clearTimeout(audioTimer); clearTimeout(repeatTimer);
+  document.getElementById('shadowModal').classList.remove('show');
+  document.getElementById('stopBtn').classList.add('hidden');
+  document.getElementById('shadowBtn').classList.remove('active');
+  document.getElementById('streamBtn').classList.remove('active');
+  renderCard();
+}
+
+function updateProgress() {
+  const n=mastered.size, t=ALL_CARDS.length;
+  document.getElementById('progFill').style.width = (n/t*100)+'%';
+  document.getElementById('progLabel').textContent = 'マスター: '+n+' / '+t;
+}
+
+function updateMasteredList() {
+  const body = document.getElementById('masteredBody');
+  if (!body.style.display || body.style.display==='none') return;
+  body.innerHTML = '';
+  const m = ALL_CARDS.filter(c=>mastered.has(c.id));
+  if (!m.length) {
+    body.innerHTML = '<div style="padding:10px 14px;font-size:0.73rem;color:#aaa">まだありません</div>';
+    return;
+  }
+  m.forEach(c => {
+    const d = document.createElement('div');
+    d.className = 'mastered-item';
+    d.innerHTML = '<span style="flex:1">'+c.en+'</span><button class="uncheck-btn" onclick="uncheckMastered('+c.id+')">解除</button>';
+    body.appendChild(d);
+  });
+}
+function toggleMasteredList() {
+  const body = document.getElementById('masteredBody');
+  if (!body.style.display || body.style.display==='none') {
+    body.style.display='block'; updateMasteredList();
+  } else body.style.display='none';
+}
+function uncheckMastered(id) {
+  mastered.delete(id); saveMastered();
+  buildCatBar(); buildDeck(); renderCard();
+}
+function clearAllMastered(e) {
+  e.stopPropagation();
+  if (!confirm('マスター済みをすべて解除しますか？')) return;
+  mastered.clear(); saveMastered();
+  buildCatBar(); buildDeck(); renderCard();
+}
+
+function showGuide() { document.getElementById('guideModal').classList.add('show'); }
+function hideGuide() { document.getElementById('guideModal').classList.remove('show'); }
+
+window.speechSynthesis.getVoices();
+window.speechSynthesis.onvoiceschanged = () => {};
+loadMastered(); buildCatBar(); buildDeck(); renderCard();
+</script>
+</body>
+</html>
