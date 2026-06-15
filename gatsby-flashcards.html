@@ -1,0 +1,1064 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Great Gatsby 語彙カード</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap');
+
+  :root{
+    --bg: #e9e9e6;
+    --bg-deep: #dcdcd8;
+    --ink: #2b2b2b;
+    --ink-soft: #6b6b68;
+    --line: #c7c7c2;
+    --card: #f4f3ef;
+    --accent: #b3422e;
+    --accent-soft: #d98f7e;
+    --done: #7c8a6e;
+  }
+
+  *{ box-sizing: border-box; }
+
+  body{
+    margin:0;
+    min-height:100vh;
+    background: var(--bg);
+    background-image:
+      radial-gradient(circle at 15% 20%, rgba(0,0,0,0.02) 0%, transparent 40%),
+      radial-gradient(circle at 85% 80%, rgba(0,0,0,0.02) 0%, transparent 40%);
+    color: var(--ink);
+    font-family: 'Inter', 'Noto Sans JP', sans-serif;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    padding: 28px 16px 60px;
+  }
+
+  .topbar{
+    width:100%;
+    max-width:480px;
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+    margin-bottom: 6px;
+  }
+
+  .title{
+    font-family:'Spectral', serif;
+    font-weight:600;
+    font-size: 1.5rem;
+    letter-spacing: 0.01em;
+  }
+  .title .accent{ color: var(--accent); font-style: italic; }
+
+  .topbar-right{
+    display:flex;
+    align-items:center;
+    gap: 10px;
+  }
+
+  .pos-label{
+    font-size: 0.78rem;
+    color: var(--ink-soft);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .lang-toggle{
+    border: 1px solid var(--line);
+    background: var(--card);
+    color: var(--ink);
+    font-family:'Inter', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 999px;
+    cursor:pointer;
+    transition: background 0.2s, border-color 0.2s;
+  }
+  .lang-toggle:hover{ border-color: var(--ink-soft); }
+
+  .progress-label{
+    font-size: 0.78rem;
+    color: var(--ink-soft);
+    font-variant-numeric: tabular-nums;
+    text-align:right;
+  }
+
+  .progress-track{
+    width:100%;
+    max-width:480px;
+    height: 3px;
+    background: var(--line);
+    border-radius: 2px;
+    margin: 10px 0 28px;
+    overflow:hidden;
+  }
+  .progress-fill{
+    height:100%;
+    background: var(--accent);
+    transition: width 0.4s ease;
+  }
+
+  .stage{
+    width:100%;
+    max-width:480px;
+    position:relative;
+    height: 340px;
+    perspective: 1200px;
+  }
+
+  .card{
+    position:absolute;
+    inset:0;
+    border-radius: 14px;
+    background: var(--card);
+    border: 1px solid var(--line);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 12px 28px -16px rgba(0,0,0,0.18);
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    padding: 28px 26px;
+    cursor:pointer;
+    transition: transform 0.45s cubic-bezier(.22,.61,.36,1), opacity 0.3s ease, box-shadow 0.3s;
+    backface-visibility:hidden;
+    user-select:none;
+  }
+
+  .card.behind{
+    transform: scale(0.96) translateY(10px);
+    box-shadow: none;
+    z-index: 0;
+    opacity: 0.6;
+  }
+
+  .card.front{ z-index: 1; }
+
+  .card.flipping{
+    transform: rotateY(90deg) scale(0.96);
+    opacity: 0;
+  }
+
+  .card.exit-left{
+    transform: translateX(-130%) rotate(-8deg);
+    opacity: 0;
+  }
+
+  .card.exit-right{
+    transform: translateX(130%) rotate(8deg);
+    opacity: 0;
+  }
+
+  .card.shake{
+    animation: shake 0.3s ease;
+  }
+
+  @keyframes shake{
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-6px); }
+    75% { transform: translateX(6px); }
+  }
+
+  .eyebrow{
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin-bottom: 18px;
+  }
+
+  .word{
+    font-family:'Spectral', serif;
+    font-weight: 600;
+    font-size: 2.4rem;
+    line-height: 1.15;
+    margin: 0 0 18px;
+    word-break: break-word;
+  }
+
+  .speak-btn{
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    border: 1px solid var(--line);
+    background: #fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    transition: background 0.2s, transform 0.15s, border-color 0.2s;
+    flex-shrink:0;
+  }
+  .speak-btn:hover{ border-color: var(--accent-soft); }
+  .speak-btn:active{ transform: scale(0.92); }
+  .speak-btn svg{ width:20px; height:20px; fill: var(--accent); }
+  .speak-btn.speaking svg{ animation: pulse 0.6s ease infinite alternate; }
+  .speak-btn.looping{ background: var(--accent); border-color: var(--accent); }
+  .speak-btn.looping svg{ fill: #fff; animation: pulse 0.6s ease infinite alternate; }
+  @keyframes pulse{ from{ opacity:1; } to{ opacity:0.45; } }
+
+  .word-row{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap: 14px;
+    margin-bottom: 6px;
+  }
+
+  .tap-hint{
+    font-size: 0.78rem;
+    color: var(--ink-soft);
+    margin-top: 16px;
+  }
+
+  .hint-block{
+    width:100%;
+  }
+  .hint-label{
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 10px;
+  }
+  .hint-text{
+    font-size: 1.15rem;
+    font-weight: 500;
+    margin-bottom: 22px;
+    line-height: 1.6;
+  }
+  .example-label{
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin-bottom: 8px;
+  }
+  .example-text{
+    font-family:'Spectral', serif;
+    font-style: italic;
+    font-size: 1.05rem;
+    line-height: 1.6;
+    color: var(--ink);
+  }
+  .example-text.clickable{
+    cursor:pointer;
+    border-radius: 6px;
+    padding: 4px 6px;
+    margin: -4px -6px;
+    transition: background 0.2s, color 0.2s;
+  }
+  .example-text.clickable:hover{
+    background: var(--bg-deep);
+  }
+  .example-text.clickable.looping{
+    background: var(--accent);
+    color: #fff;
+    animation: pulse 0.6s ease infinite alternate;
+  }
+  .example-hint{
+    text-transform: none;
+    letter-spacing: normal;
+    font-size: 0.7rem;
+    opacity: 0.7;
+  }
+
+  .controls{
+    width:100%;
+    max-width:480px;
+    display:flex;
+    gap: 8px;
+    margin-top: 26px;
+  }
+
+  .btn{
+    flex:1;
+    border: 1px solid var(--line);
+    background: var(--card);
+    color: var(--ink);
+    font-family:'Inter', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 500;
+    padding: 12px 8px;
+    border-radius: 10px;
+    cursor:pointer;
+    transition: background 0.2s, border-color 0.2s, transform 0.1s;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap: 6px;
+    white-space: nowrap;
+  }
+  .btn:active{ transform: scale(0.98); }
+  .btn.skip:hover{ border-color: var(--ink-soft); }
+
+  .btn.nav{
+    background: transparent;
+    color: var(--ink-soft);
+    font-size: 0.8rem;
+    flex: 0.8;
+  }
+  .btn.nav:hover{ border-color: var(--accent-soft); color: var(--accent); }
+  .btn.nav:disabled{
+    opacity: 0.35;
+    cursor: default;
+  }
+  .btn.nav:disabled:hover{ border-color: var(--line); color: var(--ink-soft); }
+
+  .btn.master.is-mastered{
+    background: var(--card);
+    color: var(--done);
+    border-color: var(--done);
+  }
+  .btn.master.is-mastered:hover{ background: var(--card); }
+
+  .btn.master{
+    background: var(--done);
+    color: #fff;
+    border-color: var(--done);
+  }
+  .btn.master:hover{ background: #6c7a5e; }
+  .btn.master:disabled,
+  .btn.skip:disabled{
+    opacity: 0.4;
+    cursor: default;
+  }
+  .btn.master:disabled:hover{ background: var(--done); }
+  .btn.skip:disabled:hover{ border-color: var(--line); }
+
+  .empty-state{
+    width:100%;
+    max-width:480px;
+    height: 340px;
+    border-radius:14px;
+    border: 1px dashed var(--line);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding: 30px;
+    gap: 14px;
+  }
+  .empty-state .word{ font-size: 1.6rem; }
+  .empty-state p{
+    color: var(--ink-soft);
+    font-size: 0.92rem;
+    line-height: 1.7;
+    margin:0;
+  }
+
+  .footer-row{
+    width:100%;
+    max-width:480px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-top: 30px;
+    font-size: 0.78rem;
+    color: var(--ink-soft);
+  }
+
+  .reset-link{
+    color: var(--ink-soft);
+    text-decoration: underline;
+    text-decoration-color: var(--line);
+    cursor:pointer;
+    background:none;
+    border:none;
+    font-family:inherit;
+    font-size: inherit;
+    padding:0;
+  }
+  .reset-link:hover{ color: var(--accent); }
+
+  .checkmark-flash{
+    position:absolute;
+    top: 16px;
+    right: 16px;
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--done);
+    opacity:0;
+    transition: opacity 0.3s;
+  }
+  .checkmark-flash.show{ opacity:1; }
+
+  @media (max-width: 380px){
+    .word{ font-size: 1.9rem; }
+    .stage{ height: 320px; }
+  }
+
+  .card.flipped-card{
+    padding: 24px 24px;
+    overflow-y: auto;
+    align-items: stretch;
+    text-align: left;
+  }
+
+  .back-scroll{
+    width:100%;
+    overflow-y: auto;
+    max-height: 100%;
+    padding-right: 4px;
+  }
+
+  .general-block{
+    background: var(--bg-deep);
+    border-radius: 8px;
+    padding: 10px 12px;
+    margin-bottom: 16px;
+  }
+  .general-label{
+    font-size: 0.68rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin-bottom: 6px;
+  }
+  .general-text{
+    font-size: 0.92rem;
+    line-height: 1.6;
+    color: var(--ink);
+  }
+
+  .example-ja-text{
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: var(--ink-soft);
+    margin-top: 6px;
+  }
+
+  .note-block{
+    margin-top: 18px;
+    border-top: 1px dashed var(--line);
+    padding-top: 14px;
+  }
+  .note-label{
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 8px;
+  }
+  .note-text{
+    font-size: 0.9rem;
+    line-height: 1.7;
+    color: var(--ink);
+  }
+
+  .back-tap-hint{
+    text-align:center;
+    margin-top: 18px;
+  }
+
+  /* Mastered list panel */
+  .panel-toggle{
+    width:100%;
+    max-width:480px;
+    display:flex;
+    justify-content:flex-end;
+    margin-top: 10px;
+  }
+  .mastered-panel{
+    width:100%;
+    max-width:480px;
+    margin-top: 14px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: var(--card);
+    padding: 16px;
+    display:none;
+  }
+  .mastered-panel.open{ display:block; }
+  .mastered-panel h3{
+    font-family:'Spectral', serif;
+    font-size: 1.05rem;
+    font-weight: 600;
+    margin: 0 0 12px;
+  }
+  .mastered-list{
+    list-style:none;
+    margin:0;
+    padding:0;
+    max-height: 280px;
+    overflow-y:auto;
+    display:flex;
+    flex-direction:column;
+    gap: 6px;
+  }
+  .mastered-list li{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap: 10px;
+    padding: 8px 10px;
+    background: var(--bg-deep);
+    border-radius: 8px;
+    font-size: 0.92rem;
+  }
+  .mastered-list li .m-word{
+    font-family:'Spectral', serif;
+    font-weight: 500;
+  }
+  .restore-btn{
+    border: 1px solid var(--line);
+    background: #fff;
+    color: var(--ink);
+    font-size: 0.78rem;
+    padding: 6px 10px;
+    border-radius: 8px;
+    cursor:pointer;
+    flex-shrink:0;
+    white-space: nowrap;
+  }
+  .restore-btn:hover{ border-color: var(--accent-soft); color: var(--accent); }
+  .mastered-empty{
+    color: var(--ink-soft);
+    font-size: 0.88rem;
+    text-align:center;
+    padding: 10px 0;
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="title" id="appTitle">Gatsby <span class="accent">語彙カード</span></div>
+  <div class="topbar-right">
+    <span class="pos-label" id="posLabel">1 / 300</span>
+    <button class="lang-toggle" id="langToggleBtn">EN</button>
+  </div>
+</div>
+
+<div class="progress-track">
+  <div class="progress-fill" id="progressFill" style="width:0%"></div>
+</div>
+<div class="progress-label" id="progressLabel" style="text-align:center;margin:4px 0 8px;">0 / 300 習得</div>
+
+<div class="stage" id="stage"></div>
+
+<div class="controls" id="controls">
+  <button class="btn nav" id="prevBtn">← 前へ</button>
+  <button class="btn skip" id="skipBtn">次へ →</button>
+  <button class="btn master" id="masterBtn">習得済み ✓</button>
+  <button class="btn nav" id="restartBtn">⟲ 最初</button>
+</div>
+
+<div class="footer-row">
+  <span id="remainingLabel"></span>
+  <button class="reset-link" id="resetBtn">すべてリセット</button>
+</div>
+
+<div class="panel-toggle">
+  <button class="reset-link" id="masteredToggleBtn">習得済み一覧 ▾</button>
+</div>
+
+<div class="mastered-panel" id="masteredPanel">
+  <h3 id="masteredHeading">習得済みの単語</h3>
+  <ul class="mastered-list" id="masteredList"></ul>
+</div>
+
+<script>
+const WORDS = [{"word": "mansion", "hint": "大邸宅(ギャツビーの豪邸を指す)", "general": "非常に大きく豪華な家", "example": "Gatsby's mansion was lit up every weekend for his extravagant parties.", "example_ja": "ギャツビーの大邸宅は、週末になるたびに彼の豪華なパーティーのために明かりが灯された。", "note": "a luxurious mansion のように使う。本書では富の象徴として繰り返し登場する。"}, {"word": "extravagant", "hint": "贅沢な、度を超えた", "general": "必要以上にお金や手間をかけている、派手な", "example": "His extravagant parties were the talk of the entire town.", "example_ja": "彼の贅沢なパーティーは、町中の話題になった。", "note": "extravagant lifestyle/party のように使う。"}, {"word": "lavish", "hint": "豪華な、惜しみない", "general": "惜しみなく豪華に、過剰に与える様子の", "example": "The lavish decorations seemed designed to impress everyone who arrived.", "example_ja": "その豪華な装飾は、訪れる者全員に感銘を与えるよう作られているようだった。", "note": "lavish on someone(惜しみなく与える)のように動詞でも使う。"}, {"word": "wealth", "hint": "富、財産", "general": "大量のお金や資産", "example": "His wealth seemed to have no limit, though no one knew where it came from.", "example_ja": "彼の富には限りがないように見えたが、それがどこから来たのか誰も知らなかった。", "note": "形容詞wealthy。great wealth のように使う。"}, {"word": "fortune", "hint": "財産、富", "general": "非常に大きな金額のお金", "example": "He had made a fortune in just a few years, somehow.", "example_ja": "彼はどうにかして、わずか数年で財産を築いていた。", "note": "make a fortune / a small fortune のように使う。"}, {"word": "luxurious", "hint": "豪華な、贅沢な", "general": "非常に高価で快適な性質の", "example": "Every room in the house felt impossibly luxurious.", "example_ja": "その家のどの部屋も、信じられないほど豪華に感じられた。", "note": "a luxurious car/hotel のように使う。"}, {"word": "elegant", "hint": "上品な、優雅な", "general": "美しく、洗練された様子の", "example": "The women at the party wore elegant dresses that shimmered under the lights.", "example_ja": "パーティーの女性たちは、明かりの下できらめく上品なドレスを身につけていた。", "note": "an elegant gown / elegant manners のように使う。"}, {"word": "glamorous", "hint": "魅惑的な、華やかな", "general": "魅力的で刺激的、贅沢な印象を与える性質の", "example": "Everything about Gatsby's world seemed glamorous from the outside.", "example_ja": "ギャツビーの世界は、外から見ると何もかもが華やかに見えた。", "note": "a glamorous lifestyle のように使う。名詞glamour。"}, {"word": "sophisticated", "hint": "洗練された、世慣れた", "general": "経験豊富で、上品で複雑な趣味を持つ", "example": "He tried to sound sophisticated, but his words felt rehearsed.", "example_ja": "彼は洗練されているように聞こえようとしたが、その言葉は練習されたもののように感じられた。", "note": "a sophisticated person/taste のように使う。"}, {"word": "upper class", "hint": "上流階級", "general": "社会的・経済的に最も高い地位にある人々の集団", "example": "He had spent his whole life trying to enter the upper class.", "example_ja": "彼は人生をかけて、上流階級に入ろうとしてきた。", "note": "the upper class / upper-class society のように使う。"}, {"word": "old money", "hint": "古い財産、世襲の富(代々続く家系の財産)", "general": "長い世代にわたって受け継がれてきた富、またそれを持つ人々", "example": "Daisy's family represented old money, while Gatsby's wealth was new and unproven.", "example_ja": "デイジーの家族は世襲の富を象徴していたが、ギャツビーの富は新しく、出自が確かでなかった。", "note": "old money(世襲の富)とnew money(新興の富)の対比は本書の中心的テーマの一つ。"}, {"word": "new money", "hint": "新興の富、成り上がりの財産", "general": "最近になって急に得られた富、またそれを持つ人々(しばしば見下した含みを持つ)", "example": "To people like Tom, Gatsby's new money would never be quite respectable.", "example_ja": "トムのような人々にとって、ギャツビーの新興の富は決して本当の意味で立派なものにはなりえなかった。", "note": "old moneyとの対比で使われる、階級意識を表す重要語句。"}, {"word": "aristocracy", "hint": "貴族階級、上流社会", "general": "高い社会的地位や血統を持つ人々の集団", "example": "They spoke and moved as if born into the aristocracy.", "example_ja": "彼らは、まるで貴族階級に生まれたかのように話し、振る舞った。", "note": "形容詞aristocratic。やや硬い語。"}, {"word": "snob", "hint": "俗物、見下す人", "general": "自分が他人より優れていると思い、それを示す人", "example": "Some of the guests were nothing more than snobs in expensive suits.", "example_ja": "客の中には、高価なスーツを着ただけの俗物にすぎない者たちもいた。", "note": "形容詞snobbish。a snob about ~ のように使う。"}, {"word": "prestige", "hint": "威信、名声", "general": "社会的に高い評価や尊重を受けている状態", "example": "Owning such a house gave him a kind of prestige he had never had before.", "example_ja": "そのような家を所有することは、彼に今までになかった一種の威信を与えた。", "note": "a position of prestige / social prestige のように使う。"}, {"word": "status", "hint": "地位、身分", "general": "社会の中での人の位置づけ", "example": "His social status had changed overnight, but his reputation hadn't caught up.", "example_ja": "彼の社会的地位は一夜にして変わったが、評判はそれに追いついていなかった。", "note": "social status / status symbol のように使う。"}, {"word": "chauffeur", "hint": "運転手(専属の)", "general": "雇われて自動車を運転する人", "example": "A chauffeur waited outside in one of his many cars.", "example_ja": "運転手が、彼の所有する数多くの車のうちの一台で外で待っていた。", "note": "フランス語由来の語。本書では富の象徴として登場する。"}, {"word": "butler", "hint": "執事", "general": "邸宅の使用人を取りまとめる責任者", "example": "The butler announced each guest as they arrived.", "example_ja": "執事は、客が到着するたびにその名を告げた。", "note": "大邸宅における使用人の最上位職を指す。"}, {"word": "servant", "hint": "使用人、召使い", "general": "家庭で雇われ、家事などを行う人", "example": "An army of servants worked through the night to prepare for the party.", "example_ja": "使用人たちの一団が、パーティーの準備のために夜通し働いた。", "note": "household servant のように使う。"}, {"word": "orchestra", "hint": "オーケストラ、楽団", "general": "様々な楽器の演奏者からなる音楽グループ", "example": "A full orchestra played late into the night for the guests.", "example_ja": "客のために、フルオーケストラが夜遅くまで演奏した。", "note": "hire an orchestra のように使う。"}, {"word": "champagne", "hint": "シャンパン", "general": "発泡性の白ワイン、祝祭の象徴", "example": "Glasses of champagne were handed out as soon as guests stepped through the door.", "example_ja": "客がドアをくぐるとすぐに、シャンパングラスが配られた。", "note": "a glass of champagne のように使う。"}, {"word": "cocktail", "hint": "カクテル", "general": "複数のお酒を混ぜて作る飲み物", "example": "Waiters moved through the crowd carrying trays of cocktails.", "example_ja": "ウェイターたちは、カクテルを載せたトレイを持って群衆の中を移動した。", "note": "a cocktail party のように複合語でもよく使われる。"}, {"word": "gossip", "hint": "うわさ、ゴシップ", "general": "他人についての、しばしば真偽不明の話", "example": "Gossip about Gatsby's past spread quickly among the guests.", "example_ja": "ギャツビーの過去についてのうわさは、客たちの間にすぐに広まった。", "note": "spread gossip / gossip about someone のように使う。"}, {"word": "rumor", "hint": "うわさ、噂", "general": "確認されていない情報が広まること", "example": "Rumors about how he made his money were endless.", "example_ja": "彼がどのようにお金を稼いだのかについてのうわさは、絶えなかった。", "note": "a rumor that ~ / spread a rumor のように使う。"}, {"word": "acquaintance", "hint": "知り合い", "general": "親しい友人ではないが、知っている人", "example": "He claimed to have hundreds of acquaintances but few real friends.", "example_ja": "彼は数百人の知り合いがいると言っていたが、本当の友人はほとんどいなかった。", "note": "a mere acquaintance / make someone's acquaintance のように使う。"}, {"word": "host", "hint": "主催者、もてなす人", "general": "パーティーや行事を開く人", "example": "Strangely, the host himself was rarely seen at his own parties.", "example_ja": "奇妙なことに、主催者自身は自分のパーティーにほとんど姿を現さなかった。", "note": "host a party のように動詞でも使う。"}, {"word": "uninvited", "hint": "招待されていない", "general": "許可や招待を受けずに来た", "example": "Half the people at his parties were completely uninvited.", "example_ja": "彼のパーティーに来た人々の半分は、まったく招待されていなかった。", "note": "反対語はinvited。an uninvited guest のように使う。"}, {"word": "socialite", "hint": "社交界の名士", "general": "上流社会の社交活動に積極的に参加する人", "example": "She was a well-known socialite, always at the center of attention.", "example_ja": "彼女は有名な社交界の名士で、常に注目の中心にいた。", "note": "social + -iteの複合語。"}, {"word": "reputation", "hint": "評判、名声", "general": "人々がある人物についてどう思っているか", "example": "His reputation grew stranger with each new rumor that spread.", "example_ja": "広まる新たなうわさのたびに、彼の評判はより奇妙なものになっていった。", "note": "have a reputation for ~ / a bad/good reputation のように使う。"}, {"word": "scandal", "hint": "醜聞、スキャンダル", "general": "人々を驚かせ、評判を傷つける不道徳な出来事", "example": "There was always a hint of scandal surrounding his name.", "example_ja": "彼の名前には常に、何らかの醜聞の気配があった。", "note": "a scandal involving ~ / cause a scandal のように使う。"}, {"word": "mysterious", "hint": "謎めいた、不思議な", "general": "説明されておらず、よく分からない様子の", "example": "No one seemed to know anything definite about his mysterious past.", "example_ja": "彼の謎めいた過去について、誰も確かなことを知らないようだった。", "note": "a mysterious figure/past のように使う。名詞mystery。"}, {"word": "speculate", "hint": "推測する、思い巡らす", "general": "確かな情報なしに、何かについて考えること", "example": "Guests speculated endlessly about where his money had come from.", "example_ja": "客たちは、彼のお金がどこから来たのかについて、延々と推測し合った。", "note": "speculate about/on ~ の形。名詞speculation。"}, {"word": "impeccable", "hint": "完璧な、欠点のない", "general": "間違いや欠点がまったくない様子の", "example": "His manners were impeccable, almost too perfect to be natural.", "example_ja": "彼の振る舞いは完璧で、自然とは思えないほど見事だった。", "note": "impeccable taste/manners のように使う、やや硬い語。"}, {"word": "polished", "hint": "洗練された、磨かれた", "general": "上品で、欠点なく仕上げられている様子の", "example": "He had a polished way of speaking that made people trust him instantly.", "example_ja": "彼には、人々をすぐに信頼させるような洗練された話し方があった。", "note": "polished manner/performance のように比喩的に使う。"}, {"word": "pretentious", "hint": "見せかけの、もったいぶった", "general": "実際以上に重要や知的に見せようとする様子の", "example": "Some thought his enormous library was pretentious, since the books had never been read.", "example_ja": "その膨大な蔵書は一度も読まれたことがなかったため、もったいぶったものだと考える人もいた。", "note": "pretentious display のように使う。名詞pretense。"}, {"word": "facade", "hint": "(虚飾としての)外見、見せかけ", "general": "建物の正面、または比喩的に「真実を隠す表面的な様子」", "example": "Behind the glittering facade of the parties, his life felt strangely empty.", "example_ja": "パーティーのきらびやかな見せかけの裏で、彼の人生は奇妙なほど空虚に感じられた。", "note": "建築用語(正面)から比喩的意味(虚飾)に広がった語。"}, {"word": "illusion", "hint": "幻想、思い違い", "general": "実際とは異なる、誤った印象や信念", "example": "He had built his entire life around the illusion that the past could be repeated.", "example_ja": "彼は、過去を繰り返せるという幻想を中心に、自分の人生全体を築き上げていた。", "note": "under the illusion that ~ / live in an illusion のように使う。"}, {"word": "yearning", "hint": "あこがれ、強い願望", "general": "何かを切実に望む気持ち", "example": "There was a yearning in his voice that he tried hard to hide.", "example_ja": "彼の声には、彼が必死に隠そうとしているあこがれがあった。", "note": "a yearning for ~ のように使う。動詞yearn。"}, {"word": "longing", "hint": "切望、思いこがれること", "general": "何かや誰かを強く欲する気持ち", "example": "His longing for the past shaped every decision he made.", "example_ja": "過去への切望が、彼が下すすべての決断を形作っていた。", "note": "a longing for ~ / a look of longing のように使う。"}, {"word": "nostalgia", "hint": "郷愁、懐かしさ", "general": "過去の出来事や時代を懐かしく思う気持ち", "example": "A wave of nostalgia hit him as he remembered the way things used to be.", "example_ja": "昔の様子を思い出すと、郷愁の波が彼を襲った。", "note": "a sense of nostalgia / nostalgia for ~ のように使う。"}, {"word": "obsession", "hint": "執着、強迫観念", "general": "何かに対する過度で、抑えられない関心", "example": "His obsession with Daisy had never really faded over the years.", "example_ja": "デイジーへの彼の執着は、長年経っても本当には消えていなかった。", "note": "an obsession with ~ のように使う。動詞obsess。"}, {"word": "devotion", "hint": "献身、深い愛情", "general": "誰かや何かに対する強く揺るがない愛情や忠誠", "example": "His devotion to a single idea had cost him everything else.", "example_ja": "一つの考えへの彼の献身は、他のすべてを彼に犠牲にさせた。", "note": "devotion to ~ のように使う。形容詞devoted。"}, {"word": "idealize", "hint": "理想化する", "general": "実際よりも完璧で素晴らしいものとして思い描くこと", "example": "He had idealized her for so long that the real woman could never live up to it.", "example_ja": "彼は長い間、彼女を理想化していたので、現実の彼女がそれに見合うことは決してなかった。", "note": "idealize someone/something の形。名詞ideal。"}, {"word": "unattainable", "hint": "到達できない、手に入らない", "general": "努力しても手に入れることができない性質の", "example": "What he wanted most had always been unattainable.", "example_ja": "彼が最も欲していたものは、常に手に入らないものだった。", "note": "反対語attainable。an unattainable goal のように使う。"}, {"word": "disillusioned", "hint": "幻滅した", "general": "以前信じていたものが実際には期待通りでないと気づいて失望した状態", "example": "By the end of the summer, he felt completely disillusioned.", "example_ja": "その夏の終わりには、彼は完全に幻滅していた。", "note": "disillusioned with/by ~ の形。名詞disillusionment。"}, {"word": "shallow", "hint": "浅はかな、表面的な", "general": "深さや誠実さに欠ける性質の", "example": "Their conversations often felt shallow, full of empty compliments.", "example_ja": "彼らの会話はしばしば浅はかに感じられ、空虚な褒め言葉に満ちていた。", "note": "a shallow person/conversation のように使う。反対語deep/profound。"}, {"word": "superficial", "hint": "表面的な、浅薄な", "general": "見た目や表面だけで、深さや実質を欠く性質の", "example": "The friendships he made there were mostly superficial.", "example_ja": "そこで彼が作った友情のほとんどは、表面的なものだった。", "note": "shallowとほぼ同義だが、よりやや硬い語。"}, {"word": "hollow", "hint": "虚しい、空っぽの", "general": "内容や実質を欠いている性質の(比喩的にも使われる)", "example": "All the laughter and music suddenly felt hollow to him.", "example_ja": "すべての笑い声と音楽が、彼にはふと虚しく感じられた。", "note": "a hollow feeling/laugh のように比喩的に使われることが多い。"}, {"word": "corrupt", "hint": "堕落した、不正な", "general": "道徳的に腐敗している、または不正な手段を用いる性質の", "example": "Some believed his fortune had been built through corrupt deals.", "example_ja": "彼の財産は不正な取引によって築かれたのだと、一部の人々は信じていた。", "note": "corrupt business/official のように使う。名詞corruption。"}, {"word": "bootlegging", "hint": "密造酒の製造・販売(禁酒法時代の違法行為)", "general": "禁止された酒類を不法に作ったり売ったりすること", "example": "Rumors suggested his money came from bootlegging during Prohibition.", "example_ja": "彼のお金は禁酒法時代の密造酒販売から来ているのではないかといううわさがあった。", "note": "1920年代アメリカの禁酒法(Prohibition)時代特有の語。本書の時代背景を理解する上で重要。"}, {"word": "Prohibition", "hint": "禁酒法(時代)", "general": "アメリカで酒類の製造・販売・運搬が法律で禁じられていた時代(1920-1933)", "example": "During Prohibition, illegal alcohol flowed freely at parties like his.", "example_ja": "禁酒法時代、彼のようなパーティーでは違法な酒が自由に流れていた。", "note": "本書の時代背景を理解するための重要な歴史的背景知識。"}, {"word": "affair", "hint": "不倫、(秘密の)関係", "general": "配偶者以外との恋愛関係、または出来事一般", "example": "Everyone in their social circle seemed to know about the affair except the people involved.", "example_ja": "彼らの社交界では、関係者を除く誰もがその不倫について知っているようだった。", "note": "have an affair with someone の形。複数の意味があるため文脈に注意。"}, {"word": "infidelity", "hint": "不貞、浮気", "general": "配偶者やパートナーに対して誠実でないこと", "example": "His infidelity was something she had learned to live with.", "example_ja": "彼の不貞は、彼女が共に生きることを学んできたものだった。", "note": "形容詞unfaithful。やや硬い語。"}, {"word": "mistress", "hint": "愛人(主に女性)", "general": "既婚男性の恋愛関係にある、結婚していない女性", "example": "He kept an apartment in the city for his mistress.", "example_ja": "彼は愛人のために、市内にアパートを借りていた。", "note": "keep a mistress のように使う、やや古風な語。"}, {"word": "estranged", "hint": "疎遠になった、不仲になった", "general": "以前は親しかったが、今は関係が断たれている状態の", "example": "They had become estranged over the years, though neither admitted it.", "example_ja": "二人は長年の間に疎遠になっていたが、どちらもそれを認めなかった。", "note": "estranged from someone / an estranged couple のように使う。"}, {"word": "reunite", "hint": "再会する、再び結びつく", "general": "離れていた人々が再び一緒になること", "example": "He had spent five years dreaming of this reunion.", "example_ja": "彼は五年間、この再会を夢見て過ごした。", "note": "reunite with someone / a reunion のように使う。"}, {"word": "infatuation", "hint": "のぼせ上がり、一時的な熱中", "general": "理性を欠いた、強く一時的な恋愛感情", "example": "What he called love might have only been infatuation from the start.", "example_ja": "彼が愛と呼んでいたものは、最初から単なるのぼせ上がりに過ぎなかったのかもしれない。", "note": "an infatuation with someone のように使う。loveより浅く一時的なニュアンス。"}, {"word": "charisma", "hint": "カリスマ、魅力", "general": "人を惹きつける特別な魅力や存在感", "example": "He had a quiet charisma that drew people toward him without effort.", "example_ja": "彼には、努力せずとも人々を引き寄せる静かなカリスマがあった。", "note": "形容詞charismatic。"}, {"word": "charming", "hint": "魅力的な、チャーミングな", "general": "親しみやすく、人を惹きつける性質の", "example": "Everyone agreed he was charming, even those who didn't trust him.", "example_ja": "彼を信用していない者たちでさえ、彼が魅力的であることには同意した。", "note": "a charming smile/person のように使う。"}, {"word": "smitten", "hint": "心を奪われた、惚れ込んだ", "general": "突然、強く恋愛感情を抱いている状態", "example": "He had been smitten with her from the very first time they met.", "example_ja": "二人が初めて会った時から、彼は彼女に心を奪われていた。", "note": "smitten with someone の形。"}, {"word": "adoration", "hint": "敬愛、熱愛", "general": "誰かを深く愛し、崇拝するような気持ち", "example": "He looked at her with a kind of adoration that hadn't faded in years.", "example_ja": "彼は、何年経っても消えない一種の熱愛をもって彼女を見つめた。", "note": "動詞adore。a look of adoration のように使う。"}, {"word": "heartbroken", "hint": "心が傷ついた、失恋した", "general": "深い悲しみや失望によって心が傷ついている状態", "example": "He looked heartbroken when she didn't even glance his way.", "example_ja": "彼女が彼の方を一瞥もしなかった時、彼は失恋したように見えた。", "note": "feel heartbroken / a heartbroken look のように使う。"}, {"word": "betray", "hint": "裏切る", "general": "信頼していた人を欺くこと", "example": "She felt betrayed when she learned the truth.", "example_ja": "真実を知った時、彼女は裏切られたと感じた。", "note": "betray someone's trust のように使う。名詞betrayal。"}, {"word": "deceive", "hint": "欺く、騙す", "general": "誤った情報を信じさせること", "example": "He had deceived almost everyone about who he really was.", "example_ja": "彼は、自分が本当は何者なのかについて、ほぼ全員を欺いていた。", "note": "deceive someone into ~ing の形。名詞deception。"}, {"word": "hypocrisy", "hint": "偽善", "general": "自分が信じていることと違う行動をすること", "example": "The hypocrisy of their social circle became impossible to ignore.", "example_ja": "彼らの社交界の偽善は、無視することができないものになっていった。", "note": "形容詞hypocritical。a sense of hypocrisy のように使う。"}, {"word": "indifferent", "hint": "無関心な、冷淡な", "general": "関心や興味を示さない性質の", "example": "He acted indifferent, but everyone could tell he cared deeply.", "example_ja": "彼は無関心を装ったが、誰もが彼が深く気にかけていることを見抜いていた。", "note": "indifferent to ~ の形。名詞indifference。"}, {"word": "careless", "hint": "不注意な、無頓着な", "general": "結果を考えずに行動する性質の", "example": "They were careless people, leaving wreckage behind them wherever they went.", "example_ja": "彼らは無頓着な人々で、行く先々に残骸を残していった。", "note": "careless about/with ~ の形。本書のテーマに関わる重要語。"}, {"word": "reckless", "hint": "無謀な、軽率な", "general": "危険を顧みず行動する性質の", "example": "His reckless driving that night would change everything.", "example_ja": "その夜の彼の無謀な運転が、すべてを変えてしまうことになった。", "note": "reckless behavior/driving のように使う。"}, {"word": "composure", "hint": "平静、落ち着き", "general": "動揺せず、落ち着いている状態", "example": "She managed to keep her composure even as the room fell silent.", "example_ja": "部屋が静まり返っても、彼女は平静を保つことができた。", "note": "lose/regain one's composure のように使う。"}, {"word": "restless", "hint": "落ち着かない、じっとしていられない", "general": "不安や満たされない気持ちで、動きたくなっている状態", "example": "He had always been restless, never satisfied with where he was.", "example_ja": "彼はいつも落ち着かず、自分がいる場所に満足したことがなかった。", "note": "feel restless / a restless mind のように使う。"}, {"word": "melancholy", "hint": "憂愁、物悲しさ", "general": "理由のはっきりしない、深い悲しみの感情", "example": "There was a melancholy in his voice whenever he spoke of the past.", "example_ja": "過去について話す時、彼の声にはいつも憂愁があった。", "note": "a sense of melancholy / a melancholy mood のように使う。やや文学的な語。"}, {"word": "wistful", "hint": "物思いにふけるような、切ない", "general": "何かを懐かしんだり、望んだりするような表情や様子の", "example": "She gave a wistful smile and looked away.", "example_ja": "彼女は切なげな笑みを浮かべ、目をそらした。", "note": "a wistful look/smile のように使う。"}, {"word": "anguish", "hint": "苦悩、激しい苦痛", "general": "深い精神的・身体的な苦しみ", "example": "His anguish was clear, even though he said nothing.", "example_ja": "彼が何も言わなくても、その苦悩は明らかだった。", "note": "in anguish / a cry of anguish のように使う。"}, {"word": "despair", "hint": "絶望", "general": "希望を完全に失った状態", "example": "For the first time, he allowed himself a moment of despair.", "example_ja": "初めて、彼は自分自身に絶望の瞬間を許した。", "note": "in despair / sink into despair のように使う。"}, {"word": "bitterness", "hint": "恨み、苦々しさ", "general": "不公平な扱いを受けたことに対する、長く続く怒りや恨みの感情", "example": "There was bitterness in his voice that he couldn't quite hide.", "example_ja": "彼の声には、完全には隠せない苦々しさがあった。", "note": "形容詞bitter。a sense of bitterness のように使う。"}, {"word": "resentment", "hint": "憤り、恨み", "general": "不当に扱われたと感じることによる怒りの感情", "example": "Years of quiet resentment finally came to the surface that night.", "example_ja": "その夜、長年の静かな憤りがついに表面化した。", "note": "resentment toward someone のように使う。動詞resent。"}, {"word": "jealousy", "hint": "嫉妬", "general": "他人の持つものや関係を羨ましく思う気持ち", "example": "Jealousy flickered across his face before he could hide it.", "example_ja": "彼が隠す前に、嫉妬の表情が彼の顔をよぎった。", "note": "a flash of jealousy / out of jealousy のように使う。"}, {"word": "suspicion", "hint": "疑い、疑念", "general": "何かが真実でない、または間違っているという感覚", "example": "A growing suspicion told her that something was wrong.", "example_ja": "募る疑念が、何かがおかしいと彼女に告げていた。", "note": "suspicion that ~ / under suspicion のように使う。"}, {"word": "confront", "hint": "対峙する、直面する", "general": "困難な状況や人に正面から向き合うこと", "example": "He finally decided to confront the man face to face.", "example_ja": "彼はついに、その男と面と向かって対峙することを決めた。", "note": "confront someone about/with ~ の形。"}, {"word": "accusation", "hint": "非難、告発", "general": "誰かが間違ったことをしたと言うこと", "example": "The accusation hung in the air, and no one moved.", "example_ja": "その非難が空気の中に漂い、誰も動かなかった。", "note": "make an accusation / face an accusation のように使う。動詞accuse。"}, {"word": "denial", "hint": "否定、拒絶", "general": "何かが真実であることを認めないこと", "example": "His denial only made things worse.", "example_ja": "彼の否定は、事態をさらに悪化させるだけだった。", "note": "in denial / a flat denial のように使う。動詞deny。"}, {"word": "ultimatum", "hint": "最終通告", "general": "最後の要求であり、応じなければ重大な結果になるという通告", "example": "She gave him an ultimatum he wasn't prepared for.", "example_ja": "彼女は、彼が想定していなかった最終通告を彼に突きつけた。", "note": "give/issue an ultimatum のように使う、やや硬い語。"}, {"word": "breakup", "hint": "破局、関係の終わり", "general": "恋愛関係や結婚が終わること", "example": "The breakup left both of them changed in ways neither expected.", "example_ja": "その破局は、二人とも予想しなかった形で互いを変えてしまった。", "note": "break up(別れる)という動詞表現の名詞形。"}, {"word": "reconciliation", "hint": "和解", "general": "対立していた関係が再び良くなること", "example": "He had hoped for a reconciliation, but it was already too late.", "example_ja": "彼は和解を望んでいたが、もうすでに遅すぎた。", "note": "動詞reconcile。a reconciliation between ~ のように使う。"}, {"word": "intimacy", "hint": "親密さ", "general": "近しく、深い感情的なつながりがある状態", "example": "There was an intimacy in the way they spoke that surprised him.", "example_ja": "二人が話す様子には、彼を驚かせるような親密さがあった。", "note": "形容詞intimate。a sense of intimacy のように使う。"}, {"word": "vulnerable", "hint": "弱い、傷つきやすい", "general": "心理的または身体的に傷つきやすい状態", "example": "For once, she looked completely vulnerable.", "example_ja": "今回だけは、彼女は完全に弱々しく見えた。", "note": "feel vulnerable / vulnerable to ~ のように使う。"}, {"word": "fragile", "hint": "もろい、はかない", "general": "簡単に壊れたり崩れたりする性質の", "example": "Their happiness felt fragile, as if it could shatter at any moment.", "example_ja": "二人の幸福は、いつ崩れてもおかしくないほどはかなく感じられた。", "note": "a fragile relationship/peace のように比喩的にも使われる。"}, {"word": "tension", "hint": "緊張、緊迫感", "general": "対立や不安によって生じる、張りつめた状態", "example": "The tension at the table was almost unbearable.", "example_ja": "テーブルでの緊張感は、ほとんど耐えられないほどだった。", "note": "tension between ~ / rising tension のように使う。"}, {"word": "awkward", "hint": "気まずい、ぎこちない", "general": "不自然で、不快な感じを与える状況や態度", "example": "There was an awkward silence after he spoke.", "example_ja": "彼が話した後、気まずい沈黙が訪れた。", "note": "an awkward silence/moment のように使う。"}, {"word": "flirt", "hint": "いちゃつく、誘いかける", "general": "恋愛的な興味を、軽い態度で示すこと", "example": "She flirted with several men that evening without much thought.", "example_ja": "その晩、彼女は深く考えずに何人もの男性といちゃついた。", "note": "flirt with someone の形。名詞でも使う。"}, {"word": "seduce", "hint": "誘惑する", "general": "恋愛的・性的な関係に誘い込むこと", "example": "It wasn't clear who had seduced whom, in the end.", "example_ja": "結局、誰が誰を誘惑したのかは明らかではなかった。", "note": "seduce someone into ~ing の形。名詞seduction。"}, {"word": "glance", "hint": "ちらりと見る、一瞥", "general": "短く、すばやく見ること", "example": "They exchanged a glance that said more than words could.", "example_ja": "二人は、言葉よりも多くを伝える一瞥を交わした。", "note": "glance at ~ / a quick glance のように使う。"}, {"word": "gaze", "hint": "見つめる、じっと見ること", "general": "長い間、じっと何かを見ること", "example": "His gaze stayed fixed on the green light across the water.", "example_ja": "彼の視線は、水の向こうの緑色の光に固定されたままだった。", "note": "gaze at ~ / a steady gaze のように使う。glanceより長く見るニュアンス。"}, {"word": "murmur", "hint": "つぶやく、ささやくように言う", "general": "低く、はっきりしない声で話すこと", "example": "She murmured something he couldn't quite hear.", "example_ja": "彼女は、彼には聞き取れない何かをつぶやいた。", "note": "murmur something to someone の形。動詞・名詞両方で使う。"}, {"word": "whisper", "hint": "ささやく", "general": "非常に小さな声で話すこと", "example": "They whispered to each other so the others wouldn't hear.", "example_ja": "他の人々に聞かれないように、二人は互いにささやき合った。", "note": "whisper to someone / a whisper のように使う。"}, {"word": "sigh", "hint": "ため息をつく", "general": "安堵や悲しみ、疲れなどから深く息を吐くこと", "example": "He sighed and looked away, as if the conversation had exhausted him.", "example_ja": "彼はため息をついて目をそらした。まるで話すことに疲れたかのように。", "note": "sigh with relief/exhaustion のように使う。"}, {"word": "trembling", "hint": "震えている", "general": "恐怖や緊張、興奮で体が小刻みに揺れている状態", "example": "Her hands were trembling as she lit her cigarette.", "example_ja": "タバコに火をつける彼女の手は震えていた。", "note": "動詞tremble。with trembling hands のように使う。"}, {"word": "flushed", "hint": "顔が赤くなった、ほてった", "general": "感情や熱によって顔が赤くなっている状態", "example": "His face was flushed with excitement as he showed off his house.", "example_ja": "自分の家を見せながら、彼の顔は興奮で赤らんでいた。", "note": "flushed with anger/excitement のように使う。"}, {"word": "pale", "hint": "青白い、顔色が悪い", "general": "通常よりも色が薄く、不健康に見える", "example": "He went pale when he heard what had happened.", "example_ja": "何が起こったのかを聞いて、彼は青ざめた。", "note": "turn pale / look pale のように使う。"}, {"word": "breathless", "hint": "息をのむ、息切れした", "general": "驚きや興奮、運動などで呼吸が乱れている状態", "example": "She seemed almost breathless with anticipation.", "example_ja": "彼女は期待で、ほとんど息をのむほどに見えた。", "note": "breathless with ~ の形。"}, {"word": "trance", "hint": "恍惚状態、夢心地", "general": "周囲のことを意識しない、ぼんやりとした状態", "example": "He stared at the light as if in a trance.", "example_ja": "彼はまるで夢心地であるかのように、その光を見つめていた。", "note": "in a trance / go into a trance のように使う。"}, {"word": "reverie", "hint": "夢想、空想にふけること", "general": "楽しい考えに浸り、現実から離れている状態", "example": "He was lost in reverie, barely hearing what she said.", "example_ja": "彼は夢想にとらわれ、彼女の言葉をほとんど聞いていなかった。", "note": "lost in reverie のように使う、やや文学的な語。"}, {"word": "unspoken", "hint": "言葉にされていない、暗黙の", "general": "言葉では表されていないが、理解されている", "example": "There was an unspoken understanding between them.", "example_ja": "二人の間には、言葉にされない理解があった。", "note": "an unspoken rule/agreement のように使う。"}, {"word": "languid", "hint": "だるい、ものぐさな", "general": "動きが遅く、活力が感じられない様子", "example": "She gave a languid wave of her hand and said nothing more.", "example_ja": "彼女はだるそうに手を振り、それ以上何も言わなかった。", "note": "a languid gesture/voice のように使う。"}, {"word": "supercilious", "hint": "高慢な、見下した", "general": "自分を他人より優れていると考え、軽蔑する態度", "example": "He answered with a supercilious smile that made her angry.", "example_ja": "彼は高慢な笑みを浮かべて答え、それが彼女を怒らせた。", "note": "a supercilious smile/manner のように使う、硬い語。"}, {"word": "incoherent", "hint": "とりとめのない、まとまりのない", "general": "考えや話が、つながりがなく理解しにくい様子", "example": "His explanation grew increasingly incoherent as the evening went on.", "example_ja": "その夜が進むにつれ、彼の説明はますますとりとめのないものになっていった。", "note": "an incoherent explanation/mumble のように使う。"}, {"word": "naive", "hint": "純朴な、世間知らずな", "general": "経験不足で、物事を単純に信じやすい性質の", "example": "Looking back, he realized how naive he had been about these people.", "example_ja": "振り返ってみると、彼はこれらの人々についていかに世間知らずだったかを思い知った。", "note": "naive about ~ のように使う。名詞naivety。"}, {"word": "cynical", "hint": "皮肉な、冷笑的な", "general": "人の動機や行動を疑い、信用しない性質の", "example": "By the end of the story, he had grown far more cynical about wealth.", "example_ja": "物語の終わりまでに、彼は富というものについて、はるかに皮肉な見方をするようになっていた。", "note": "cynical about ~ のように使う。名詞cynicism。"}, {"word": "unfathomable", "hint": "計り知れない、底知れない", "general": "理解や測定が、不可能なほど深い性質", "example": "There was something unfathomable in the way he looked at the water.", "example_ja": "彼が水を見るその様子には、何か計り知れないものがあった。", "note": "unfathomable depths/sadness のように使う、文学的な語。"}, {"word": "discern", "hint": "見分ける、識別する", "general": "はっきりとは見えないものを、注意深く認識すること", "example": "From across the lawn, he could just discern the figure standing alone.", "example_ja": "庭の向こうから、彼は一人で立っている人影をかろうじて見分けることができた。", "note": "discern something のように使う、やや硬い語。"}, {"word": "detached", "hint": "距離を置いた、無関心な", "general": "感情的に関わらず、客観的な態度を取る性質の", "example": "He tried to remain detached, observing rather than participating.", "example_ja": "彼は距離を置こうとし、参加するのではなく観察する側に立とうとした。", "note": "detached from ~ / a detached observer のように使う。"}, {"word": "observe", "hint": "観察する、気づく", "general": "注意深く見たり、何かに気づくこと", "example": "He spent most evenings simply observing the people around him.", "example_ja": "彼はほとんどの晩を、周りの人々を観察することだけに費やした。", "note": "observe someone/something の形。名詞observation。"}, {"word": "reflect", "hint": "反映する、振り返る", "general": "何かを示す、または過去について深く考えること", "example": "Their behavior reflected the careless attitude of their entire world.", "example_ja": "彼らの行動は、彼らの世界全体の無頓着な態度を反映していた。", "note": "reflect on ~(振り返る) / reflect something(反映する)の両方の意味がある。"}, {"word": "contradiction", "hint": "矛盾", "general": "互いに一致しない二つの事柄", "example": "There was a contradiction between what he said and how he lived.", "example_ja": "彼の言うことと、その生き方の間には矛盾があった。", "note": "a contradiction between ~ / a sense of contradiction のように使う。"}, {"word": "incandescent", "hint": "白熱した、輝くような", "general": "非常に強く、明るく光る性質", "example": "The windows glowed with an incandescent light against the dark sky.", "example_ja": "その窓は、暗い空に対して白熱したような光で輝いていた。", "note": "incandescent light のように使う。"}, {"word": "ambiguous", "hint": "曖昧な、はっきりしない", "general": "複数の意味や解釈が可能で、明確でない性質の", "example": "His feelings about the whole situation remained ambiguous.", "example_ja": "その状況全体についての彼の気持ちは、曖昧なままだった。", "note": "反対語clear/definite。名詞ambiguity。"}, {"word": "contortion", "hint": "ねじれ、ゆがみ", "general": "体や表情などが、不自然に曲がったりねじれたりすること", "example": "His face went through a strange contortion before settling into a smile.", "example_ja": "彼の顔は、笑顔に落ち着く前に奇妙にゆがんだ。", "note": "a contortion of the face のように使う。"}, {"word": "contrast", "hint": "対照、対比", "general": "二つのものの間にある明確な違い", "example": "The contrast between the two houses said everything about their owners.", "example_ja": "二つの家の対照は、その所有者についてすべてを物語っていた。", "note": "in contrast to ~ / a sharp contrast のように使う。"}, {"word": "veneer", "hint": "うわべ、表面的な層(比喩的に「見せかけ」)", "general": "内面の真実を覆い隠す、薄い表面的な層", "example": "Beneath the veneer of friendliness, something colder seemed to be hiding.", "example_ja": "親しみやすさという表面の下に、何かもっと冷たいものが隠れているようだった。", "note": "元は「(家具などの)薄板」の意味だが、比喩的に「上っ面の見せかけ」として使われる。"}, {"word": "appearance", "hint": "外見、見せかけ", "general": "物事や人がどのように見えるか(実態とは異なる場合がある)", "example": "Appearances mattered more to them than anything underneath.", "example_ja": "彼らにとっては、その下にあるものよりも、外見の方が重要だった。", "note": "keep up appearances(体面を保つ)という表現も重要。"}, {"word": "reality", "hint": "現実", "general": "実際に存在する事柄、想像や見せかけと対になる概念", "example": "The gap between his dream and reality was wider than he had ever admitted.", "example_ja": "彼の夢と現実の間のギャップは、彼が今まで認めてきたよりも大きかった。", "note": "in reality / face reality のように使う。"}, {"word": "perception", "hint": "認識、知覚", "general": "物事をどう見るか、理解するか", "example": "His perception of her changed completely after that night.", "example_ja": "その夜以降、彼女に対する彼の認識は完全に変わった。", "note": "a perception of ~ / public perception のように使う。"}, {"word": "misjudge", "hint": "誤って判断する、見誤る", "general": "人や状況について間違った評価をすること", "example": "He realized he had misjudged almost everyone that summer.", "example_ja": "彼は、その夏に出会ったほぼ全員の人物を見誤っていたことに気づいた。", "note": "misjudge someone/something の形。"}, {"word": "assumption", "hint": "思い込み、前提", "general": "証拠なしに真実だと考えること", "example": "His whole plan rested on the assumption that nothing had changed.", "example_ja": "彼の計画全体は、何も変わっていないという思い込みの上に成り立っていた。", "note": "make an assumption / an assumption about ~ のように使う。"}, {"word": "presumption", "hint": "思い上がり、推定", "general": "根拠のない自信に基づく考えや行動", "example": "There was a kind of presumption in the way he assumed she would come back.", "example_ja": "彼女が戻ってくるだろうと彼が決め込んでいた様子には、ある種の思い上がりがあった。", "note": "動詞presume。やや硬い語。"}, {"word": "moral", "hint": "道徳的な、教訓", "general": "善悪に関する基準や価値観に関わる", "example": "He found himself questioning his own moral standards that summer.", "example_ja": "その夏、彼は自分自身の道徳基準に疑問を持つようになった。", "note": "moral standards / a moral dilemma のように使う。"}, {"word": "corruption", "hint": "腐敗、堕落", "general": "道徳的・社会的な不正、堕落した状態", "example": "Beneath the glittering surface lay a deep sense of corruption.", "example_ja": "きらびやかな表面の下には、深い腐敗の気配があった。", "note": "動詞corrupt。moral corruption のように使う。"}, {"word": "decay", "hint": "衰退、腐敗", "general": "物事の質や状態が徐々に悪くなっていくこと", "example": "There was a sense of decay hidden beneath all that glamour.", "example_ja": "あの華やかさの下には、衰退の気配が隠れていた。", "note": "動詞decay。moral decay / decay over time のように使う。"}, {"word": "recklessness", "hint": "無謀さ", "general": "結果を考えずに行動する性質", "example": "Their recklessness affected everyone around them, but never seemed to touch them.", "example_ja": "彼らの無謀さは周りの誰にも影響を与えたが、彼ら自身には決して及ばないようだった。", "note": "形容詞reckless。"}, {"word": "consequence", "hint": "結果、影響", "general": "ある行動や出来事の結果として起こること", "example": "He never seemed to think about the consequences of what he did.", "example_ja": "彼は、自分のしたことの結果について考えたことがないようだった。", "note": "face the consequences / as a consequence のように使う。"}, {"word": "privilege", "hint": "特権、恵まれた立場", "general": "一部の人だけが持つ特別な権利や利益", "example": "Their privilege let them walk away from almost anything.", "example_ja": "彼らの特権は、ほとんど何からでも歩いて立ち去ることを彼らに許していた。", "note": "a position of privilege / privilege to ~ のように使う。"}, {"word": "entitlement", "hint": "権利意識、当然の権利", "general": "何かを当然手にすべきだという感覚", "example": "There was an entitlement in the way they spoke about other people's lives.", "example_ja": "他人の人生について彼らが話す様子には、当然の権利意識があった。", "note": "a sense of entitlement のように使う。形容詞entitled。"}, {"word": "recklessly", "hint": "無謀に", "general": "結果を考えずに行動する様子で", "example": "They moved through life recklessly, leaving others to clean up after them.", "example_ja": "彼らは無謀に人生を駆け抜け、後始末は他人に任せた。", "note": "recklessの副詞形。"}, {"word": "vanity", "hint": "うぬぼれ、虚栄", "general": "自分の外見や地位を過度に気にする性質", "example": "His vanity made it impossible for him to admit he had been wrong.", "example_ja": "彼の虚栄心は、自分が間違っていたと認めることを不可能にしていた。", "note": "形容詞vain。a touch of vanity のように使う。"}, {"word": "ego", "hint": "自我、自尊心", "general": "自分自身についての感覚や評価", "example": "His enormous ego left little room for anyone else's feelings.", "example_ja": "彼の巨大な自我は、他人の感情のための余地をほとんど残さなかった。", "note": "a huge ego / bruise someone's ego のように使う。"}, {"word": "self-made", "hint": "自力で成功した", "general": "他人の助けなしに、自分の努力で成功や富を得た", "example": "He liked to be seen as a self-made man, even if the truth was more complicated.", "example_ja": "真実はもっと複雑だったとしても、彼は自力で成功した人物として見られたかった。", "note": "a self-made man/millionaire のように使う。"}, {"word": "ambition", "hint": "野心、大志", "general": "成功や権力などを強く望む気持ち", "example": "His ambition had carried him a long way from where he started.", "example_ja": "彼の野心は、彼を出発点から遠く離れた場所まで連れて行った。", "note": "have ambition / an ambition to ~ のように使う。"}, {"word": "transform", "hint": "変える、変貌させる", "general": "何かを大きく異なる形や状態に変えること", "example": "He had transformed himself completely, name and all.", "example_ja": "彼は自分自身を、名前まで含めて完全に変貌させていた。", "note": "transform into ~ / transform oneself のように使う。"}, {"word": "reinvent", "hint": "再生する、新しく作り直す", "general": "自分自身や物事を新しい形に作り直すこと", "example": "He had reinvented himself so thoroughly that almost nothing of his old life remained.", "example_ja": "彼は自分自身を非常に徹底的に作り直していたので、以前の人生のものはほとんど何も残っていなかった。", "note": "reinvent oneself のように使う。"}, {"word": "identity", "hint": "アイデンティティ、正体", "general": "自分が誰であるかという感覚や、その特徴", "example": "His true identity was something he had buried long ago.", "example_ja": "彼の本当の正体は、彼が遠い昔に埋めてしまったものだった。", "note": "a sense of identity / hide one's identity のように使う。"}, {"word": "opulent", "hint": "豪華な、富裕な", "general": "非常に豪華で、贅沢な性質", "example": "The rooms were opulent in a way that felt almost theatrical.", "example_ja": "その部屋は、ほとんど芝居がかっているほど豪華だった。", "note": "an opulent room/lifestyle のように使う。"}, {"word": "legitimate", "hint": "正当な、合法的な", "general": "法律や規則に従っている、または正しいとされる", "example": "He always insisted his business was perfectly legitimate.", "example_ja": "彼は自分の事業が完全に合法的だと、常に主張していた。", "note": "a legitimate business/reason のように使う。反対語illegitimate。"}, {"word": "shady", "hint": "いかがわしい、怪しい", "general": "不正直または違法かもしれない性質の(口語)", "example": "There was something shady about the way he avoided certain questions.", "example_ja": "特定の質問を避ける彼の様子には、何か怪しいものがあった。", "note": "shady business/deal のように使う、口語的な語。"}, {"word": "underworld", "hint": "裏社会", "general": "犯罪に関わる人々の社会", "example": "His connections to the underworld were never confirmed, only whispered about.", "example_ja": "彼の裏社会との繋がりは決して確認されず、ただ噂されただけだった。", "note": "the criminal underworld のように使う。"}, {"word": "acquaintanceship", "hint": "知り合い程度の関係", "general": "親しくはないが、互いを知っている関係", "example": "What began as a brief acquaintanceship grew into something more complicated.", "example_ja": "ちょっとした知り合い程度の関係として始まったものが、もっと複雑なものへと発展していった。", "note": "acquaintanceの抽象名詞形。"}, {"word": "bystander", "hint": "傍観者、その場にいた人", "general": "出来事に直接関わらず、その場にいただけの人", "example": "He became, almost without choosing to, a bystander to everything that happened.", "example_ja": "彼は、選んだわけでもないのに、起こったことすべての傍観者となった。", "note": "an innocent bystander のように使われることが多い。"}, {"word": "outsider", "hint": "よそ者、部外者", "general": "集団やグループに属していない人", "example": "No matter how close he got, he always felt like an outsider.", "example_ja": "どれだけ近づいても、彼は常によそ者であるように感じていた。", "note": "feel like an outsider / an outsider to ~ のように使う。"}, {"word": "belong", "hint": "所属する、なじむ", "general": "ある場所や集団の一員であると感じること、または実際にそうであること", "example": "He never quite felt like he belonged, even in his own house.", "example_ja": "彼は自分の家にいてさえ、自分がそこに属しているとは決して感じられなかった。", "note": "belong to ~ / feel like one belongs のように使う。"}, {"word": "effusive", "hint": "あふれるような、大げさな(感情表現)", "general": "感情や賛辞を、過剰に表現する性質", "example": "Her effusive greeting seemed to embarrass everyone in the room.", "example_ja": "彼女の大げさな挨拶は、その部屋の全員を恥ずかしくさせるように見えた。", "note": "an effusive greeting/welcome のように使う。"}, {"word": "sardonic", "hint": "皮肉な、嘲るような", "general": "軽蔑や皮肉を込めた、苦笑いのような様子", "example": "He gave a sardonic laugh and looked away.", "example_ja": "彼は皮肉な笑いを浮かべ、目をそらした。", "note": "a sardonic laugh/smile のように使う。"}, {"word": "ostentatious", "hint": "見せびらかすような、派手な", "general": "富や成功を、わざと目立つように見せる性質", "example": "The whole party felt ostentatious, as if it had been staged for someone's benefit.", "example_ja": "そのパーティー全体が、誰かのために演出されたかのように見せびらかすような感じがした。", "note": "ostentatious wealth/display のように使う。"}, {"word": "furtive", "hint": "こそこそした、密かな", "general": "見つからないように、隠れて行う様子", "example": "He cast a furtive glance toward the door before speaking.", "example_ja": "彼は話す前に、ドアの方へこそこそとした視線を投げた。", "note": "a furtive glance/look のように使う。"}, {"word": "unfaltering", "hint": "揺るがない、確固とした", "general": "動揺や疑いを見せない、しっかりとした性質", "example": "His voice remained unfaltering, even as the room fell silent.", "example_ja": "部屋が静まる中でも、彼の声は揺るがないままだった。", "note": "an unfaltering voice/gaze のように使う、文学的な語。"}, {"word": "transient", "hint": "一時的な、つかの間の", "general": "短期間だけ続く、または存在する性質", "example": "The whole evening had a transient, almost dreamlike quality.", "example_ja": "その夜全体が、一時的で、ほとんど夢のような性質を持っていた。", "note": "a transient feeling/state のように使う、硬い語。"}, {"word": "glimmering", "hint": "ちらちら光る", "general": "弱く、断続的に光る様子", "example": "The lights across the bay were glimmering faintly through the mist.", "example_ja": "湾の向こうの明かりは、霧の中でかすかにちらちらと光っていた。", "note": "a glimmering light のように使う。"}, {"word": "derisive", "hint": "あざけるような、嘲笑的な", "general": "軽蔑を込めて、笑ったり言ったりする性質", "example": "A derisive murmur passed through the small crowd.", "example_ja": "あざけるようなざわめきが、その小さな集団を通り抜けた。", "note": "a derisive laugh/murmur のように使う。"}, {"word": "feverish", "hint": "熱に浮かされたような、興奮した", "general": "興奮や緊張で、落ち着きを失っている様子", "example": "There was something feverish about the way everyone talked that night.", "example_ja": "その夜、みんなが話す様子には何か熱に浮かされたようなものがあった。", "note": "feverish excitement/activity のように使う。"}, {"word": "convulsive", "hint": "発作的な、急激な", "general": "短く、急に激しく起こる動きや反応", "example": "He gave a convulsive little laugh and turned away.", "example_ja": "彼は発作的な小さな笑いを漏らし、向きを変えた。", "note": "a convulsive laugh/movement のように使う、やや硬い語。"}, {"word": "interminable", "hint": "終わりのない、果てしなく長い", "general": "非常に長く続き、終わりが見えないように感じられる性質", "example": "The party seemed interminable, though it had only just begun.", "example_ja": "そのパーティーは、始まったばかりなのに、終わりのないように感じられた。", "note": "an interminable wait/silence のように使う。"}, {"word": "vivacious", "hint": "活気のある、生き生きした", "general": "明るく、エネルギーに満ちた性質", "example": "She was vivacious in a way that drew everyone's attention.", "example_ja": "彼女は、皆の注目を集めるような活気に満ちていた。", "note": "a vivacious personality/manner のように使う。"}, {"word": "buoyant", "hint": "浮き浮きした、楽天的な", "general": "軽やかで、明るく前向きな性質", "example": "His mood was buoyant, almost careless in its lightness.", "example_ja": "彼の気分は浮き浮きとしていて、その軽さはほとんど無頓着なほどだった。", "note": "a buoyant mood のように使う。"}, {"word": "querulous", "hint": "不満げな、すぐ文句を言う", "general": "小さなことについて、不満を言いがちな性質", "example": "Her querulous tone suggested she had been waiting for hours.", "example_ja": "彼女の不満げな口調は、何時間も待っていたことを示していた。", "note": "a querulous tone/voice のように使う。"}, {"word": "vivid", "hint": "鮮やかな、生き生きとした", "general": "非常に明確で、強い印象を与える様子の", "example": "His descriptions of the parties were vivid enough to feel real.", "example_ja": "パーティーについての彼の描写は、現実のように感じられるほど鮮やかだった。", "note": "a vivid description/memory のように使う。"}, {"word": "glitter", "hint": "きらめき、輝き", "general": "小さく、明るく光る様子", "example": "The glitter of the party lights faded as the night went on.", "example_ja": "パーティーの灯りのきらめきは、夜が深まるにつれて消えていった。", "note": "glitter and glamour のように使う。動詞でも使う。"}, {"word": "shimmer", "hint": "きらきら光る、揺らめく", "general": "光が反射して柔らかく揺れるように光ること", "example": "The water shimmered under the lights from the house.", "example_ja": "その水面は、家から漏れる明かりの下できらきらと光った。", "note": "shimmer in the light のように使う。動詞・名詞両方で使う。"}, {"word": "gleam", "hint": "かすかに光る、光", "general": "短く、鋭い光", "example": "A gleam of something metallic caught his eye across the lawn.", "example_ja": "芝生の向こうで、何か金属的なもののきらめきが彼の目を引いた。", "note": "a gleam of ~ / gleam in the dark のように使う。"}, {"word": "glow", "hint": "(柔らかい)輝き、輝く", "general": "穏やかで、暖かみのある光", "example": "A warm glow came from the windows of the house.", "example_ja": "その家の窓からは、暖かい輝きが漏れていた。", "note": "a faint glow / glow in the dark のように使う。"}, {"word": "radiant", "hint": "輝くような、光り輝く", "general": "強い光や喜びで輝いている様子の", "example": "She looked radiant, even though her smile didn't quite reach her eyes.", "example_ja": "彼女は輝くように見えたが、その笑顔は目元までは届いていなかった。", "note": "radiant smile/light のように使う。"}, {"word": "dim", "hint": "薄暗い、ぼんやりした", "general": "光が弱く、はっきりと見えない様子の", "example": "The room was dim, lit only by a single lamp.", "example_ja": "その部屋は薄暗く、たった一つのランプだけが灯っていた。", "note": "a dim light/room のように使う。動詞でも使う(dim the lights)。"}, {"word": "twilight", "hint": "夕暮れ、薄明", "general": "日が沈んだ後の、薄暗い時間帯", "example": "They sat on the porch until twilight settled over the lawn.", "example_ja": "二人は、薄暮が芝生を覆うまでポーチに座っていた。", "note": "at twilight のように使う、やや文学的な語。"}, {"word": "horizon", "hint": "水平線、地平線", "general": "地面や海と空が出会って見える線", "example": "He watched the lights along the horizon, thinking of everything he had lost.", "example_ja": "彼は、自分が失ったすべてのことを考えながら、地平線に沿った光を見つめていた。", "note": "on the horizon / along the horizon のように使う。"}, {"word": "bay", "hint": "湾", "general": "陸地に囲まれた、海の一部", "example": "Their houses sat on opposite sides of the bay.", "example_ja": "二人の家は、湾の向かい合う側にあった。", "note": "across the bay のように使う。"}, {"word": "lawn", "hint": "芝生", "general": "家の周りなどに整備された草地", "example": "Cars were parked all over the lawn during his parties.", "example_ja": "彼のパーティーの間、車が芝生のあちこちに停められていた。", "note": "a lawn / mow the lawn のように使う。"}, {"word": "terrace", "hint": "テラス", "general": "建物に隣接した、屋外の平らな場所", "example": "They stood on the terrace, looking out over the water.", "example_ja": "二人はテラスに立ち、水の向こうを眺めていた。", "note": "on the terrace のように使う。"}, {"word": "veranda", "hint": "ベランダ、縁側", "general": "家の側面に作られた、屋根のある屋外スペース", "example": "They spent the hot afternoon on the shaded veranda.", "example_ja": "二人は、日陰になったベランダで暑い午後を過ごした。", "note": "アメリカ南部の屋敷でよく見られる構造。porchとほぼ同義。"}, {"word": "oppressive", "hint": "重苦しい、息が詰まるような", "general": "非常に強く、重く感じられる(天候・雰囲気など)性質の", "example": "The heat that afternoon was oppressive, almost unbearable.", "example_ja": "その日の午後の暑さは重苦しく、ほとんど耐えられないほどだった。", "note": "oppressive heat/atmosphere のように使う。"}, {"word": "stifling", "hint": "息が詰まるような、むっとする", "general": "空気が動かず、暑く不快な様子の", "example": "The stifling heat made everyone short-tempered.", "example_ja": "息が詰まるような暑さは、みんなを短気にした。", "note": "stifling heat のように使う、oppressiveに近い。"}, {"word": "haze", "hint": "かすみ、もや", "general": "空気中に薄く広がる、視界を遮るもの", "example": "A haze hung over the city in the summer heat.", "example_ja": "夏の暑さの中、もやが街の上に立っていた。", "note": "a haze of smoke/heat のように使う。"}, {"word": "flicker", "hint": "ちらちらする、揺らめく", "general": "光が不安定に、点いたり消えたりすること", "example": "The candles flickered as the door opened.", "example_ja": "ドアが開くと、ろうそくの火がちらちらと揺れた。", "note": "flicker out(消える)のように使う。"}, {"word": "murky", "hint": "濁った、はっきりしない", "general": "水や状況が濁っていて、よく見えない様子の", "example": "His past remained murky, no matter how many questions were asked.", "example_ja": "どれだけ質問を重ねても、彼の過去は濁ったままだった。", "note": "murky water / a murky past のように比喩的にも使う。"}, {"word": "vast", "hint": "広大な、巨大な", "general": "非常に大きい、広い性質の", "example": "The vast lawn stretched all the way to the water.", "example_ja": "その広大な芝生は、水際まで続いていた。", "note": "a vast amount/area のように使う。"}, {"word": "sprawling", "hint": "広がった、不規則に広がる", "general": "無秩序に大きく広がっている様子の", "example": "The sprawling estate seemed to go on forever.", "example_ja": "その広々と続く敷地は、永遠に続くように見えた。", "note": "a sprawling city/estate のように使う。"}, {"word": "estate", "hint": "邸宅、土地、財産", "general": "広い土地とその上の建物、または死後に残される財産", "example": "The estate included a private beach and a boathouse.", "example_ja": "その邸宅には、専用ビーチとボートハウスが含まれていた。", "note": "a large estate / inherit an estate のように使う。"}, {"word": "boathouse", "hint": "ボートハウス、艇庫", "general": "ボートを保管するための小さな建物", "example": "They walked down toward the boathouse near the water's edge.", "example_ja": "二人は、水際近くのボートハウスへ向かって歩いていった。", "note": "by/near the boathouse のように使う。"}, {"word": "valley", "hint": "谷", "general": "二つの丘や山の間にある低い土地", "example": "Their world felt as if it existed in a separate valley from everyone else's.", "example_ja": "二人の世界は、他の誰の世界とも別の谷に存在しているように感じられた。", "note": "a valley of ~ という形で比喩的に使われることもある。"}, {"word": "ashes", "hint": "灰", "general": "何かが燃え尽きた後に残る粉のような物質", "example": "The whole area looked gray with ashes and dust.", "example_ja": "その一帯全体が、灰と埃で灰色に見えた。", "note": "a pile of ashes / turn to ashes のように使う。本書では特定の地域の象徴として登場する。"}, {"word": "industrial", "hint": "工業の、産業の", "general": "工場や生産活動に関連する性質の", "example": "The road passed through a gray, industrial wasteland.", "example_ja": "その道は、灰色の工業地帯の荒れ地を通り抜けていた。", "note": "an industrial area/zone のように使う。"}, {"word": "wasteland", "hint": "荒れ地、不毛の地", "general": "何も育たず、価値のない、荒れた土地", "example": "Between the city and the suburbs lay a kind of wasteland.", "example_ja": "都市と郊外の間には、一種の荒れ地が広がっていた。", "note": "waste(無駄)+ land の複合語。比喩的にも使われる。"}, {"word": "billboard", "hint": "看板、広告板", "general": "道路沿いなどに設置される大きな広告", "example": "A faded billboard stood watching over the road, its painted eyes still visible.", "example_ja": "色あせた広告看板が道を見下ろすように立っており、描かれた目はまだ見えていた。", "note": "本書において重要な象徴(医師の広告看板の目)として登場する。"}, {"word": "faded", "hint": "色あせた、薄れた", "general": "色や強さが、時間とともに薄くなった性質の", "example": "The faded sign had clearly been there for years.", "example_ja": "その色あせた看板は、明らかに何年もそこにあったことが分かった。", "note": "a faded photograph/sign のように使う。動詞fade。"}, {"word": "decayed", "hint": "老朽化した、衰えた", "general": "時間が経って、状態が悪くなった性質の", "example": "The decayed buildings along the road told their own story.", "example_ja": "道沿いの老朽化した建物は、それ自体の物語を語っていた。", "note": "動詞decayの過去分詞形。"}, {"word": "commute", "hint": "通勤する、通勤", "general": "自宅と職場の間を定期的に移動すること", "example": "He commuted into the city by train every morning.", "example_ja": "彼は毎朝、電車で街へ通勤していた。", "note": "commute to work / a long commute のように使う。"}, {"word": "suburb", "hint": "郊外", "general": "都市の外側にある、住宅が中心の地域", "example": "They both lived in the suburbs, on opposite shores of the bay.", "example_ja": "二人はどちらも郊外に住んでいて、湾の向かい合う岸にいた。", "note": "the suburbs / a suburb of ~ のように使う。"}, {"word": "skyline", "hint": "スカイライン、(都市の)輪郭", "general": "建物などが空を背景に作る輪郭", "example": "The city skyline glowed faintly in the distance.", "example_ja": "街のスカイラインは、遠くでかすかに光っていた。", "note": "the city skyline のように使う。"}, {"word": "glamour", "hint": "魅惑、華やかさ", "general": "魅力的で刺激的な雰囲気", "example": "The glamour of the parties hid a much emptier reality.", "example_ja": "パーティーの華やかさは、もっと空虚な現実を覆い隠していた。", "note": "形容詞glamorous。an air of glamour のように使う。"}, {"word": "frivolous", "hint": "軽薄な、軽々しい", "general": "重要でないことに時間や注意を使う、軽い性質の", "example": "Their frivolous conversations rarely touched on anything real.", "example_ja": "彼らの軽薄な会話は、現実的なことにはほとんど触れなかった。", "note": "frivolous behavior/talk のように使う。"}, {"word": "trivial", "hint": "些細な、ささいな", "general": "重要性や価値がほとんどない性質の", "example": "They argued about trivial things while ignoring what really mattered.", "example_ja": "本当に重要なことを無視しながら、彼らは些細なことで言い争った。", "note": "a trivial matter/detail のように使う。"}, {"word": "chatter", "hint": "おしゃべり、雑談する", "general": "軽い、とりとめのない話", "example": "The chatter of the guests filled every room of the house.", "example_ja": "客たちのおしゃべりが、家のすべての部屋を満たした。", "note": "idle chatter のように使う。動詞・名詞両方で使う。"}, {"word": "laughter", "hint": "笑い声", "general": "笑うこと、その音", "example": "Laughter and music drifted out across the lawn all evening.", "example_ja": "笑い声と音楽は、夜通し芝生の向こうまで流れていった。", "note": "burst into laughter のように使う。"}, {"word": "crowded", "hint": "混雑した、人でいっぱいの", "general": "多くの人や物で満たされている状態", "example": "The rooms were crowded with people he had never met.", "example_ja": "その部屋部屋は、彼が会ったことのない人々で混雑していた。", "note": "a crowded room/street のように使う。"}, {"word": "deserted", "hint": "人のいない、見捨てられた", "general": "人がいない、または放棄された状態", "example": "By morning, the once-crowded house felt completely deserted.", "example_ja": "朝になると、かつて混雑していた家は完全に人のいない状態に感じられた。", "note": "a deserted street/house のように使う。動詞desert。"}, {"word": "silence", "hint": "静寂、沈黙", "general": "音や声がまったくない状態", "example": "After all the noise, the silence felt almost shocking.", "example_ja": "あれだけの騒がしさの後だったので、その静寂はほとんどショックなものに感じられた。", "note": "in silence / break the silence のように使う。"}, {"word": "echo", "hint": "こだま、響き", "general": "音が反射して繰り返し聞こえること、または比喩的に「残響」", "example": "His words seemed to echo long after he had stopped speaking.", "example_ja": "彼が話し終えた後も、その言葉はずっと響いているように感じられた。", "note": "動詞・名詞両方で使う。比喩的に「記憶に残る」という意味でも使う。"}, {"word": "linger", "hint": "居残る、長く残る", "general": "立ち去るべき時に、まだそこにいること、または感覚などが長く残ること", "example": "A strange feeling lingered with him long after the party ended.", "example_ja": "パーティーが終わった後も、奇妙な感覚が彼の中に長く残った。", "note": "linger in the air / linger after ~ のように使う。"}, {"word": "fade away", "hint": "次第に消えていく、薄れていく", "general": "徐々に弱くなり、最終的に消えること", "example": "The music and lights faded away as the cars drove off into the night.", "example_ja": "車が夜の中へ走り去っていくにつれて、音楽と灯りは次第に消えていった。", "note": "fade away into ~ のように使う。"}, {"word": "perfunctory", "hint": "おざなりな、形だけの", "general": "心を込めず、義務的に行う様子", "example": "He gave a perfunctory nod and went back to his drink.", "example_ja": "彼はおざなりにうなずき、自分の飲み物に戻った。", "note": "a perfunctory nod/greeting のように使う。"}, {"word": "collision", "hint": "衝突", "general": "二つ以上のものが激しくぶつかること", "example": "The collision happened so fast that no one fully understood it.", "example_ja": "その衝突はあまりにも速く起こったため、誰もそれを完全には理解できなかった。", "note": "a collision between ~ のように使う。動詞collide。"}, {"word": "wreckage", "hint": "残骸、破損物", "general": "事故などで壊れた物の残り", "example": "They left wreckage behind them, both literal and emotional.", "example_ja": "彼らは、文字通りの意味でも感情的な意味でも、残骸を後に残していった。", "note": "leave wreckage behind のように比喩的にも使われる。"}, {"word": "fatal", "hint": "致命的な、命を奪う", "general": "死をもたらす性質の", "example": "The accident turned out to be fatal.", "example_ja": "その事故は、結局致命的なものとなった。", "note": "a fatal accident/mistake のように使う。"}, {"word": "eyewitness", "hint": "目撃者、現場にいた人", "general": "出来事(特に事故や犯罪)を実際に見た人", "example": "He had become an eyewitness to something he could never fully describe to anyone.", "example_ja": "彼は、誰にも完全には説明できないような出来事の目撃者となってしまった。", "note": "an eyewitness account/report のように使う。witnessよりも「現場性」を強調する語。"}, {"word": "grief", "hint": "深い悲しみ、悲嘆", "general": "特に死別による、強い悲しみの感情", "example": "Grief settled over the house like a heavy fog.", "example_ja": "重い霧のように、悲嘆がその家に降りかかった。", "note": "grief over ~ / overwhelmed by grief のように使う。"}, {"word": "mourner", "hint": "喪に服す人、会葬者", "general": "葬式に参列し、死者を悼む人", "example": "Only a handful of mourners showed up for the funeral.", "example_ja": "葬式に来た会葬者は、ほんの一握りだった。", "note": "動詞mourn。a small group of mourners のように使う。"}, {"word": "isolation", "hint": "孤立、孤独", "general": "他人や社会から離れている状態", "example": "In the end, his isolation became impossible to ignore.", "example_ja": "結局、彼の孤立は無視できないものとなった。", "note": "a sense of isolation / live in isolation のように使う。"}, {"word": "loneliness", "hint": "孤独感", "general": "一人でいることによる、寂しい気持ち", "example": "Beneath all the parties, a deep loneliness had always been there.", "example_ja": "あれだけのパーティーの裏に、深い孤独感が常にあった。", "note": "feel loneliness / a sense of loneliness のように使う。形容詞lonely。"}, {"word": "abandon", "hint": "見捨てる、放棄する", "general": "人や物を置いて離れる、または計画などをやめること", "example": "One by one, the people he had entertained for years simply abandoned him.", "example_ja": "彼が長年もてなしてきた人々は、一人また一人と彼を見捨てていった。", "note": "abandon someone/something の形。名詞abandonment。"}, {"word": "absence", "hint": "欠席、不在", "general": "その場にいないこと", "example": "His absence at the funeral spoke louder than any words could.", "example_ja": "葬式での彼の不在は、どんな言葉よりも多くを語っていた。", "note": "in someone's absence / notice an absence のように使う。"}, {"word": "sparse", "hint": "わずかな、希薄な", "general": "数や量が少ない様子の", "example": "The crowd at the funeral was sparse, almost embarrassingly so.", "example_ja": "葬式に集まった人々はわずかで、ほとんど気まずいほどだった。", "note": "sparse population/crowd のように使う。"}, {"word": "indifference", "hint": "無関心", "general": "関心や思いやりを示さない態度", "example": "Their indifference to what had happened was the most shocking part of all.", "example_ja": "何が起こったかについての彼らの無関心こそが、何よりも衝撃的だった。", "note": "形容詞indifferent。treat with indifference のように使う。"}, {"word": "callous", "hint": "無情な、思いやりのない", "general": "他人の苦しみに対して冷淡で、感情を持たない性質の", "example": "His callous response left her speechless.", "example_ja": "彼の無情な反応に、彼女は言葉を失った。", "note": "a callous remark/attitude のように使う。"}, {"word": "remorse", "hint": "後悔、自責の念", "general": "自分の行動について深く悲しみ、悔やむ気持ち", "example": "He showed no remorse for what he had done.", "example_ja": "彼は、自分のしたことについて何の後悔も示さなかった。", "note": "feel/show remorse for ~ のように使う。"}, {"word": "guilt", "hint": "罪悪感", "general": "自分が間違ったことをしたと感じる気持ち", "example": "A quiet sense of guilt followed him for the rest of his life.", "example_ja": "静かな罪悪感が、彼の残りの人生についてまわった。", "note": "feel guilt / a sense of guilt のように使う。形容詞guilty。"}, {"word": "culpable", "hint": "責められるべき、有責の", "general": "何かについて責任があり、非難されるべき性質の(やや硬い語)", "example": "In a way, almost everyone involved was culpable.", "example_ja": "ある意味では、関わったほぼ全員が責められるべき立場にあった。", "note": "culpable for ~ のように使う。名詞culpability。"}, {"word": "scapegoat", "hint": "身代わり、スケープゴート", "general": "他人の過ちの責任を負わされる人", "example": "He became a convenient scapegoat for everyone else's mistakes.", "example_ja": "彼は、他の誰もの過ちのための、便利な身代わりとなった。", "note": "make someone a scapegoat のように使う。"}, {"word": "unjust", "hint": "不当な、不公平な", "general": "正義や公平さに欠ける性質の", "example": "It felt deeply unjust that he alone paid the price.", "example_ja": "彼一人だけがその代償を払うことになったのは、非常に不当に感じられた。", "note": "反対語just。an unjust outcome のように使う。"}, {"word": "sacrifice", "hint": "犠牲、犠牲にする", "general": "何かのために、大切なものを失うこと", "example": "In the end, his death felt like a kind of sacrifice that no one had asked for.", "example_ja": "結局、彼の死は、誰も求めていなかった一種の犠牲のように感じられた。", "note": "make a sacrifice / sacrifice oneself for ~ のように使う。"}, {"word": "futile", "hint": "無駄な、無益な", "general": "努力しても結果が得られない、無意味な性質の", "example": "All his efforts to recreate the past had been futile.", "example_ja": "過去を作り直そうとする彼のすべての努力は、無駄だった。", "note": "a futile attempt/effort のように使う。名詞futility。"}, {"word": "in vain", "hint": "無駄に、空しく", "general": "目的を達成できずに(努力などが)終わる様子で", "example": "He had waited for her in vain, night after night.", "example_ja": "彼は夜ごと、空しく彼女を待ち続けていた。", "note": "in vain は副詞句として動詞の後に置かれることが多い。"}, {"word": "haunting", "hint": "心に残る、忘れられない", "general": "強い印象を残し、忘れることができない性質の", "example": "The image of that empty house remained haunting for years.", "example_ja": "その空っぽの家のイメージは、何年もの間、彼の心に残り続けた。", "note": "a haunting image/memory のように使う。動詞haunt。"}, {"word": "poignant", "hint": "痛切な、心を打つ", "general": "強い悲しみや感動を引き起こす性質の", "example": "The final scene was quietly poignant.", "example_ja": "最後の場面は、静かに心を打つものだった。", "note": "a poignant moment/scene のように使う、やや文学的な語。"}, {"word": "swathed", "hint": "包まれた、巻かれた", "general": "布などで、すっぽりと覆われている状態", "example": "The furniture was swathed in white sheets, as if the house had been abandoned.", "example_ja": "家具は白い布に包まれていて、まるでその家が放棄されたかのようだった。", "note": "swathed in ~ のように使う、文学的な語。"}, {"word": "luminous", "hint": "光を放つ、輝く", "general": "自ら光を発しているように見える性質", "example": "Her dress seemed almost luminous in the dim light.", "example_ja": "彼女のドレスは、薄暗い光の中でほとんど輝いて見えた。", "note": "a luminous glow/dress のように使う。"}, {"word": "sumptuous", "hint": "豪華な、贅沢な", "general": "非常に豪華で、印象的な性質", "example": "The table was laid with a sumptuous spread of food.", "example_ja": "その机には、豪華な料理が並べられていた。", "note": "a sumptuous meal/decoration のように使う。"}, {"word": "flapper", "hint": "フラッパー(1920年代の自由な若い女性)", "general": "1920年代に、伝統的な規範に従わない自由な行動をした若い女性", "example": "With her short hair and bold opinions, she seemed like a true flapper.", "example_ja": "短い髪と自信に満ちた意見を持つ彼女は、まさに本物のフラッパーのようだった。", "note": "1920年代アメリカ文化を象徴する語。"}, {"word": "prosperity", "hint": "繁栄、好景気", "general": "経済的に成功し、豊かである状態", "example": "The era was marked by prosperity for some and hardship for others.", "example_ja": "その時代は、一部の人々にとっての繁栄と、他の人々にとっての苦難によって特徴づけられていた。", "note": "economic prosperity のように使う。形容詞prosperous。"}, {"word": "disparity", "hint": "格差、不均衡", "general": "二つのものの間にある大きな違い", "example": "The disparity between the rich and everyone else was impossible to miss.", "example_ja": "富裕層とその他の人々との間の格差は、見逃すことが不可能だった。", "note": "a disparity between ~ / income disparity のように使う。"}, {"word": "working class", "hint": "労働者階級", "general": "主に身体を使う労働によって生計を立てる人々の階級", "example": "The working-class neighborhoods looked nothing like the world he had entered.", "example_ja": "労働者階級の地域は、彼が入り込んだ世界とはまったく似ていなかった。", "note": "the working class / a working-class family のように使う。"}, {"word": "garage", "hint": "自動車修理工場、ガレージ", "general": "自動車を修理したり保管したりする場所", "example": "The small garage stood alone along the dusty road.", "example_ja": "その小さな修理工場は、埃っぽい道路沿いに一軒だけ建っていた。", "note": "a run-down garage のように使う。"}, {"word": "mechanic", "hint": "修理工、機械工", "general": "機械や自動車を修理する仕事をする人", "example": "The mechanic spent his days fixing cars he could never afford himself.", "example_ja": "その修理工は、自分には決して買えない車を直す仕事に日々を費やしていた。", "note": "a car mechanic のように使う。"}, {"word": "telegram", "hint": "電報", "general": "電気信号で送られる短い文書での連絡", "example": "He sent a telegram that no one ever answered.", "example_ja": "彼は電報を送ったが、誰からの返事もなかった。", "note": "send/receive a telegram のように使う。当時の通信手段を表す語。"}, {"word": "motorcar", "hint": "自動車(やや古風な言い方)", "general": "自動車のことを指す、20世紀初頭によく使われた呼び方", "example": "His motorcar was the most expensive one anyone in town had ever seen.", "example_ja": "彼の自動車は、町の誰もが今まで見たことのないほど高価なものだった。", "note": "carのやや古風な言い方。本書の時代背景を反映する語。"}, {"word": "telephone", "hint": "電話", "general": "音声で会話するための通信機器(当時は新しい技術)", "example": "The telephone rang again and again, but no one answered it.", "example_ja": "電話は何度も鳴ったが、誰も出なかった。", "note": "answer the telephone のように使う。"}, {"word": "invitation", "hint": "招待、招待状", "general": "誰かを行事に来るよう誘うこと、またその文書", "example": "He never sent out a single invitation, yet people came anyway.", "example_ja": "彼は招待状を一枚も出さなかったが、それでも人々はやって来た。", "note": "send/receive an invitation のように使う。"}, {"word": "formal", "hint": "正式な、改まった", "general": "儀礼や規則に従った、堅い様子の", "example": "Their conversation suddenly became strangely formal.", "example_ja": "二人の会話は突然、奇妙に改まったものになった。", "note": "a formal dinner/tone のように使う。"}, {"word": "casual", "hint": "くだけた、何気ない", "general": "形式や規則にこだわらない、軽い様子の", "example": "He spoke in a casual tone, as if none of it mattered to him.", "example_ja": "彼はくだけた口調で話したが、それはまるで何も彼にとって重要でないかのようだった。", "note": "a casual remark/conversation のように使う。"}, {"word": "reticence", "hint": "控えめさ、言葉少ななこと", "general": "感情や意見をあまり表に出さず、口数少なくいる性質", "example": "He spoke with a reticence that made it hard to know what he really thought.", "example_ja": "彼が本当に何を考えているのかを知るのは難しいほど、彼は控えめに話した。", "note": "speak with reticence のように使う。形容詞reticent。"}, {"word": "candor", "hint": "率直さ、誠実さ", "general": "思っていることを正直に話す性質", "example": "For once, she spoke with complete candor.", "example_ja": "今回だけは、彼女は完全に率直に話した。", "note": "with candor / a moment of candor のように使う。"}, {"word": "sincerity", "hint": "誠実さ、真心", "general": "偽りのない、正直な気持ちや態度", "example": "It was hard to tell whether his sincerity was real or just another performance.", "example_ja": "彼の誠実さが本物なのか、それとも単なるもう一つの演技なのかを見分けるのは難しかった。", "note": "形容詞sincere。with sincerity のように使う。"}, {"word": "pretense", "hint": "見せかけ、ふり", "general": "本当の気持ちや状況を隠すための、見せかけの態度", "example": "He dropped the pretense for just a moment, and his exhaustion showed.", "example_ja": "彼はほんの一瞬だけ見せかけを取り払い、その疲労がうかがえた。", "note": "drop the pretense / under the pretense of ~ のように使う。"}, {"word": "wan", "hint": "血の気のない、青白い", "general": "病気や疲労で、顔色が悪い様子", "example": "He looked wan and tired in the morning light.", "example_ja": "朝の光の中で、彼は血の気のない、疲れた様子に見えた。", "note": "a wan face/smile のように使う、文学的な語。"}, {"word": "unravel", "hint": "ほどける、ばらばらになる", "general": "物事や関係が次第に崩れていくこと", "example": "Everything began to unravel after that single conversation.", "example_ja": "その一度の会話の後、すべてが崩れ始めた。", "note": "unravel(糸などがほどける)から、比喩的に「崩壊する」という意味で使われる。"}, {"word": "unfold", "hint": "展開する、明らかになる", "general": "出来事が次第に進行し、明らかになること", "example": "The events of that summer unfolded faster than anyone expected.", "example_ja": "その夏の出来事は、誰もが予想していたよりも速く展開した。", "note": "events unfold のように使う。"}, {"word": "climax", "hint": "クライマックス、頂点", "general": "物語や出来事の中で最も緊張や重要性が高まる部分", "example": "The confrontation in the hotel room became the climax of the entire summer.", "example_ja": "ホテルの一室での対決は、その夏全体のクライマックスとなった。", "note": "reach a climax のように使う、文学用語。"}, {"word": "aftermath", "hint": "(出来事の)余波、後", "general": "重大な出来事の後に続く期間や状況", "example": "In the aftermath, no one quite knew how to act around each other.", "example_ja": "その後の余波の中で、誰もお互いにどう振る舞えばいいのか分からなかった。", "note": "in the aftermath of ~ のように使う。"}, {"word": "closure", "hint": "終結、けじめ", "general": "何かが完全に終わったという感覚や状態", "example": "He never got the closure he had been hoping for.", "example_ja": "彼は、自分が望んでいたけじめを決して得ることができなかった。", "note": "find/get closure のように使う。"}, {"word": "turbulent", "hint": "荒れた、激動の", "general": "激しく、不安定な動きや状況", "example": "It had been a turbulent few months for everyone involved.", "example_ja": "関係者全員にとって、それは激動の数か月だった。", "note": "turbulent times/emotions のように使う。"}, {"word": "presumptuous", "hint": "思い上がった、出過ぎた", "general": "許可なく、当然のように何かをする態度", "example": "It seemed presumptuous of him to assume she would simply agree.", "example_ja": "彼女が単に同意するだろうと思い込むのは、彼にとって思い上がったことに思えた。", "note": "presumptuous of someone to do ~ のように使う。"}, {"word": "languorous", "hint": "ものぐさな、けだるい", "general": "動きが遅く、ゆったりとした、けだるい性質", "example": "The languorous heat of the afternoon made everyone slow and quiet.", "example_ja": "午後のけだるい暑さは、誰もをゆっくりと静かにさせた。", "note": "languorous heat/afternoon のように使う、文学的な語。"}, {"word": "aloof", "hint": "よそよそしい、超然とした", "general": "他人と距離を置き、関わろうとしない態度の", "example": "He remained aloof even when surrounded by people who admired him.", "example_ja": "自分を称賛する人々に囲まれていても、彼はよそよそしい態度を保っていた。", "note": "remain aloof / an aloof manner のように使う。"}, {"word": "arrogant", "hint": "傲慢な、横柄な", "general": "自分が他人より優れていると過信している性質の", "example": "His arrogant tone made the room go quiet.", "example_ja": "彼の傲慢な口調は、その場を静まらせた。", "note": "an arrogant person/tone のように使う。名詞arrogance。"}, {"word": "condescending", "hint": "見下したような、恩着せがましい", "general": "自分が他人より上であるかのように扱う態度の", "example": "He spoke to the servants in a condescending way.", "example_ja": "彼は使用人たちに、見下したような態度で話した。", "note": "a condescending tone/smile のように使う。"}, {"word": "dignified", "hint": "威厳のある、品位のある", "general": "立派で、自尊心を保っている様子の", "example": "She remained dignified even in the most uncomfortable moments.", "example_ja": "彼女は、最も気まずい瞬間でさえ威厳を保っていた。", "note": "a dignified manner のように使う。名詞dignity。"}, {"word": "poise", "hint": "落ち着き、優雅さ", "general": "困難な状況でも冷静で優雅な態度を保つこと", "example": "She handled the awkward moment with surprising poise.", "example_ja": "彼女は、その気まずい瞬間を驚くほどの落ち着きで処理した。", "note": "with poise / lose one's poise のように使う。"}, {"word": "composed", "hint": "落ち着いた、冷静な", "general": "動揺せず、平静な状態の", "example": "He remained composed, though his hands betrayed his nerves.", "example_ja": "彼の手は緊張を物語っていたが、彼自身は冷静さを保っていた。", "note": "stay composed のように使う。動詞compose oneself。"}, {"word": "agitated", "hint": "動揺した、いらだった", "general": "不安や怒りで、心が乱れている状態", "example": "He grew increasingly agitated as the evening went on.", "example_ja": "夜が更けるにつれて、彼はますます動揺していった。", "note": "become agitated / an agitated voice のように使う。"}, {"word": "restraint", "hint": "自制、抑制", "general": "感情や行動を抑える力", "example": "It took all his restraint not to say something he would regret.", "example_ja": "後悔するようなことを言わずにいるには、彼のすべての自制心が必要だった。", "note": "with restraint / show restraint のように使う。"}, {"word": "impulsive", "hint": "衝動的な", "general": "考える前に行動してしまう性質の", "example": "Her impulsive decisions often surprised even herself.", "example_ja": "彼女の衝動的な決定は、しばしば彼女自身さえも驚かせた。", "note": "an impulsive person/decision のように使う。"}, {"word": "deliberate", "hint": "故意の、慎重な", "general": "よく考えた上で、意図的に行う性質の", "example": "His every word seemed carefully deliberate.", "example_ja": "彼の一言一言は、注意深く計算されたもののように見えた。", "note": "a deliberate choice/action のように使う。副詞deliberately。"}, {"word": "calculated", "hint": "計算された、打算的な", "general": "目的のために、注意深く計画された性質の", "example": "Every detail of the evening seemed calculated to impress.", "example_ja": "その夜のすべての細部は、感銘を与えるよう計算されているように見えた。", "note": "a calculated risk/move のように使う。"}, {"word": "genuine", "hint": "本物の、心からの", "general": "偽りや見せかけでない、本当の性質の", "example": "For a moment, his smile seemed genuine.", "example_ja": "一瞬、彼の笑顔は本物に見えた。", "note": "genuine emotion/smile のように使う。反対語fake。"}, {"word": "authentic", "hint": "本物の、真正の", "general": "偽りでなく、本来の性質を持つ", "example": "It was hard to find anything authentic in that whole world.", "example_ja": "その世界全体の中で、本物だと言えるものを見つけるのは難しかった。", "note": "authentic feeling/experience のように使う。genuineとほぼ同義。"}, {"word": "forced smile", "hint": "作り笑い、無理にした笑顔", "general": "本当の感情を隠すような、表面的な笑顔", "example": "Her forced smile never quite reached her eyes.", "example_ja": "彼女の作り笑いは、目元までは決して届かなかった。", "note": "forcedとsmileのコロケーション。本当の感情との対比を表す。"}, {"word": "superficial charm", "hint": "表面的な魅力", "general": "深みを欠いた、見た目だけの魅力", "example": "His superficial charm worked on almost everyone he met.", "example_ja": "彼の表面的な魅力は、出会うほぼ全員に効いた。", "note": "superficialとcharmのコロケーション。"}, {"word": "discreet", "hint": "慎重な、控えめな", "general": "目立たず、注意深く振る舞う性質の", "example": "He was always discreet about where his money came from.", "example_ja": "彼は、自分のお金がどこから来たのかについては常に慎重だった。", "note": "a discreet manner のように使う。名詞discretion。"}, {"word": "blunt", "hint": "率直すぎる、無遠慮な", "general": "言葉を選ばず、はっきりと言う性質の", "example": "Her blunt question caught everyone off guard.", "example_ja": "彼女の率直すぎる質問は、誰もが不意をつかれるものだった。", "note": "a blunt question/remark のように使う。"}, {"word": "tactful", "hint": "気の利いた、思いやりのある(言動)", "general": "人を傷つけないよう、慎重に言葉を選ぶ性質の", "example": "He tried to be tactful, but the truth was hard to soften.", "example_ja": "彼は気を利かせようとしたが、その真実を和らげるのは難しかった。", "note": "a tactful response/remark のように使う。反対語tactless。"}, {"word": "diplomatic", "hint": "外交的な、如才ない", "general": "対立を避け、相手を立てるような言動の", "example": "She gave a diplomatic answer that satisfied no one and offended no one.", "example_ja": "彼女は、誰も満足させず誰も怒らせない、如才ない返答をした。", "note": "a diplomatic response のように使う。"}, {"word": "manipulative", "hint": "操作的な、人を操る", "general": "自分の目的のために、他人を不当に動かそうとする性質の", "example": "Looking back, some of his kindness seemed almost manipulative.", "example_ja": "振り返ってみると、彼の優しさのいくつかは、ほとんど操作的なものに見えた。", "note": "a manipulative person のように使う。動詞manipulate。"}, {"word": "impassioned", "hint": "熱烈な、情熱的な", "general": "強い感情をこめて行われる性質", "example": "He gave an impassioned defense of everything he had built.", "example_ja": "彼は、自分が築いてきたすべてのものについて、熱烈な弁護を行った。", "note": "an impassioned speech/defense のように使う。"}, {"word": "feign", "hint": "~のふりをする、装う", "general": "本当はそうでないことを、そうであるかのように見せること", "example": "He feigned interest in the conversation, though his mind was elsewhere.", "example_ja": "彼の心は別の場所にあったが、彼は会話に興味があるふりをした。", "note": "feign interest/surprise の形。やや硬い語。"}, {"word": "pretend", "hint": "~のふりをする", "general": "本当はそうでないことを、そうであるかのように振る舞うこと", "example": "They both pretended not to notice the silence between them.", "example_ja": "二人とも、互いの間の沈黙に気づいていないふりをした。", "note": "pretend to ~ / pretend that ~ の形。"}, {"word": "mock", "hint": "あざける、まねる", "general": "皮肉や軽蔑を込めて、誰かをからかうこと", "example": "His tone seemed almost to mock the seriousness of the moment.", "example_ja": "彼の口調は、その瞬間の重大さをほとんどあざけっているかのようだった。", "note": "mock someone/something の形。形容詞mocking。"}, {"word": "sarcastic", "hint": "皮肉な、嫌味な", "general": "言葉の意味とは逆の、批判的な含みを持つ性質の", "example": "\"Lovely party,\" he said, in a sarcastic tone.", "example_ja": "「いいパーティーだね」と彼は皮肉な口調で言った。", "note": "a sarcastic remark/tone のように使う。名詞sarcasm。"}, {"word": "witty", "hint": "機知に富んだ、ウィットのある", "general": "おもしろく、巧みな言葉を使う性質の", "example": "She was known for her witty remarks at every party.", "example_ja": "彼女は、どのパーティーでも機知に富んだ発言で知られていた。", "note": "a witty comment/person のように使う。名詞wit。"}, {"word": "banter", "hint": "軽い言い合い、からかい合い", "general": "友好的で、ユーモアのある会話", "example": "Their playful banter hid a more serious tension underneath.", "example_ja": "二人の軽快なからかい合いは、その下にあるもっと深刻な緊張を隠していた。", "note": "light banter / banter back and forth のように使う。"}, {"word": "flagrant", "hint": "露骨な、明白な(悪い意味で)", "general": "恥ずかしげもなく、明らかに悪いことをする様子", "example": "It was a flagrant lie, and everyone in the room knew it.", "example_ja": "それは露骨な嘘で、その部屋にいた全員がそれを知っていた。", "note": "a flagrant lie/violation のように使う。"}, {"word": "stammer", "hint": "つかえながら話す、口ごもる", "general": "緊張や驚きで、言葉がスムーズに出てこない様子", "example": "He stammered out an apology before walking away.", "example_ja": "彼は謝罪をつかえながら言って、その場を去った。", "note": "stammer out something の形。動詞・名詞両方で使う。"}, {"word": "falter", "hint": "ためらう、弱まる", "general": "自信や決意が一時的に弱くなること", "example": "Her voice faltered for just a second before she continued.", "example_ja": "彼女の声は続ける前の一瞬、わずかに揺らいだ。", "note": "someone's voice falters のように使う。"}, {"word": "insist", "hint": "主張する、言い張る", "general": "反対されても、自分の考えを強く言い続けること", "example": "He insisted that nothing had changed between them.", "example_ja": "彼は、二人の間で何も変わっていないと言い張った。", "note": "insist that ~ / insist on ~ing の形。"}, {"word": "protest", "hint": "抗議する、異議を述べる", "general": "反対や不満を強く表すこと", "example": "She protested weakly, but no one was listening.", "example_ja": "彼女は弱々しく異議を述べたが、誰も聞いていなかった。", "note": "protest against ~ の形。名詞でも使う。"}, {"word": "plead", "hint": "懇願する、訴える", "general": "強く、感情を込めて何かを求めること", "example": "He pleaded with her to stay just a little longer.", "example_ja": "彼は彼女に、もう少し長くいてくれと懇願した。", "note": "plead with someone to ~ の形。"}, {"word": "insincere", "hint": "不誠実な、心のない", "general": "本当の気持ちが込められていない性質の", "example": "His apology sounded insincere, almost rehearsed.", "example_ja": "彼の謝罪は不誠実に、ほとんど練習されたもののように聞こえた。", "note": "反対語sincere。an insincere apology のように使う。"}, {"word": "forlorn", "hint": "見捨てられた、孤独な", "general": "寂しく、希望を失っているような様子", "example": "The house looked forlorn, even with all its lights on.", "example_ja": "その家は、すべての明かりがついていても、見捨てられたように見えた。", "note": "a forlorn figure/look のように使う。"}, {"word": "loyal", "hint": "忠実な、誠実な", "general": "友人や仲間に対して変わらず誠実である性質の", "example": "Whatever his faults, he had remained loyal to the very end.", "example_ja": "彼にどんな欠点があったにせよ、彼は最後まで忠実であり続けた。", "note": "loyal to someone のように使う。名詞loyalty。"}, {"word": "disloyal", "hint": "不誠実な、裏切りの", "general": "忠誠を欠いている性質の", "example": "She felt disloyal even thinking about leaving.", "example_ja": "彼女は、離れることを考えるだけでさえ不誠実だと感じた。", "note": "反対語loyal。disloyal to someone のように使う。"}, {"word": "abandonment", "hint": "見捨てられること、放棄", "general": "見捨てられた、または放棄された状態", "example": "A sense of abandonment hung over the empty house.", "example_ja": "見捨てられたという感覚が、その空っぽの家に漂っていた。", "note": "動詞abandon。a feeling/sense of abandonment のように使う。"}, {"word": "void", "hint": "空虚、空洞", "general": "何もない、または満たされていない状態", "example": "His success had never filled the void he felt inside.", "example_ja": "彼の成功は、彼の内側にある空虚を決して満たすことはなかった。", "note": "a void in someone's life / fill a void のように使う。"}, {"word": "emptiness", "hint": "虚しさ、空虚さ", "general": "内容や意味が欠けている感覚", "example": "There was an emptiness behind all that glittering wealth.", "example_ja": "あのきらびやかな富の裏には、虚しさがあった。", "note": "a sense of emptiness のように使う。形容詞empty。"}, {"word": "meaningless", "hint": "意味のない、無意味な", "general": "目的や価値を持たない性質の", "example": "All the parties suddenly felt meaningless to him.", "example_ja": "すべてのパーティーは、彼にとって突然意味のないものに感じられた。", "note": "反対語meaningful。feel meaningless のように使う。"}, {"word": "pursuit", "hint": "追求、探求", "general": "何かを得ようと、または達成しようと努力すること", "example": "His whole life had become a pursuit of one impossible goal.", "example_ja": "彼の人生全体が、一つの不可能な目標の追求になっていた。", "note": "the pursuit of ~ / in pursuit of ~ のように使う。動詞pursue。"}, {"word": "elusive", "hint": "つかみどころのない、捕らえにくい", "general": "理解したり、手に入れたりするのが難しい性質の", "example": "Happiness had always been elusive for him, no matter what he gained.", "example_ja": "彼が何を手に入れても、幸福は常に彼にとってつかみどころのないものだった。", "note": "an elusive goal/feeling のように使う。"}, {"word": "hopeful", "hint": "希望に満ちた", "general": "良いことが起こると期待している様子の", "example": "He remained hopeful, even when the evidence suggested otherwise.", "example_ja": "証拠が逆のことを示していても、彼は希望を持ち続けた。", "note": "反対語hopeless。feel hopeful のように使う。"}, {"word": "hopeless", "hint": "絶望的な、希望のない", "general": "良くなる可能性がまったくないと感じる性質の", "example": "By the end, even he seemed to sense it was hopeless.", "example_ja": "最後には、彼自身もそれが絶望的だと感じているように見えた。", "note": "a hopeless situation / feel hopeless のように使う。"}, {"word": "resilient", "hint": "回復力のある、たくましい", "general": "困難な状況からすぐに立ち直る性質の", "example": "Whatever happened, the people around him seemed strangely resilient.", "example_ja": "何が起こっても、彼の周りの人々は奇妙にたくましく見えた。", "note": "a resilient person のように使う。名詞resilience。"}, {"word": "resplendent", "hint": "光り輝く、華麗な", "general": "非常に美しく、印象的に輝いている性質", "example": "The room was resplendent with flowers and candlelight.", "example_ja": "その部屋は、花とろうそくの明かりで華麗に輝いていた。", "note": "resplendent with ~ のように使う、文学的な語。"}];
+const STORAGE_KEY = 'gatsby-flashcards-mastered-v1';
+const LANG_KEY = 'gatsby-flashcards-lang-v1';
+
+let mastered = new Set();
+try{
+  const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+  mastered = new Set(saved);
+}catch(e){ mastered = new Set(); }
+
+let lang = 'ja'; // 'ja' or 'en'
+try{
+  const savedLang = localStorage.getItem(LANG_KEY);
+  if(savedLang === 'en' || savedLang === 'ja') lang = savedLang;
+}catch(e){ lang = 'ja'; }
+
+let deck = [];          // active (unmastered) cards, in working order
+let originalOrder = []; // initial order of active cards (for restart)
+let shownHistory = [];  // words shown in live order (for browsing back)
+let browseIndex = null; // null = live; else index into shownHistory
+let flipped = false;
+let panelOpen = false;
+let loopingWord = null;
+let loopingSelector = null;
+
+function saveProgress(){
+  try{
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(Array.from(mastered)));
+  }catch(e){}
+}
+
+function saveLang(){
+  try{
+    localStorage.setItem(LANG_KEY, lang);
+  }catch(e){}
+}
+
+function buildDeck(){
+  deck = WORDS.filter(w => !mastered.has(w.word));
+  originalOrder = deck.slice();
+  shownHistory = [];
+  browseIndex = null;
+}
+
+function getCurrentWord(){
+  if(browseIndex !== null){
+    return WORDS.find(w => w.word === shownHistory[browseIndex]);
+  }
+  return deck[0];
+}
+
+function speakOnce(word, onEnd){
+  const utter = new SpeechSynthesisUtterance(word);
+  utter.lang = 'en-US';
+  utter.rate = 0.85;
+  utter.onend = onEnd;
+  utter.onerror = onEnd;
+  window.speechSynthesis.speak(utter);
+}
+
+function startLoop(text, selector){
+  if(!('speechSynthesis' in window)) return;
+  window.speechSynthesis.cancel();
+  loopingWord = text;
+  loopingSelector = selector;
+  const el = document.querySelector(selector);
+  if(el) el.classList.add('looping');
+
+  const playNext = () => {
+    if(loopingWord !== text) return;
+    speakOnce(text, () => {
+      if(loopingWord !== text) return;
+      setTimeout(() => {
+        if(loopingWord === text) playNext();
+      }, 250);
+    });
+  };
+  playNext();
+}
+
+function stopLoop(){
+  loopingWord = null;
+  window.speechSynthesis.cancel();
+  if(loopingSelector){
+    const el = document.querySelector(loopingSelector);
+    if(el) el.classList.remove('looping');
+  }
+  loopingSelector = null;
+}
+
+function updateProgress(){
+  const total = WORDS.length;
+  const done = mastered.size;
+  document.getElementById('progressLabel').textContent = `${done} / ${total} 習得`;
+  document.getElementById('progressFill').style.width = `${(done/total)*100}%`;
+
+  const posLabel = document.getElementById('posLabel');
+  if(posLabel){
+    if(browseIndex !== null){
+      const histLabel = lang === 'ja' ? '履歴' : 'History';
+      posLabel.textContent = `${histLabel} ${browseIndex + 1} / ${shownHistory.length}`;
+    } else if(deck.length > 0 && originalOrder.length > 0){
+      const idx = originalOrder.findIndex(w => w.word === deck[0].word);
+      const displayIdx = idx >= 0 ? idx + 1 : '?';
+      posLabel.textContent = `${displayIdx} / ${originalOrder.length}`;
+    } else {
+      posLabel.textContent = '';
+    }
+  }
+
+  renderMasteredList();
+}
+
+function speakerIcon(){
+  return `<svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.06c1.48-.74 2.5-2.26 2.5-4.03zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>`;
+}
+
+function frontHTML(current){
+  const tapHint = lang === 'ja' ? '単語をタップ / クリック' : 'Tap or click the word';
+  const eyebrow = lang === 'ja' ? 'タップして意味を見る' : 'Tap to see the meaning';
+  return `
+    <div class="eyebrow">${eyebrow}</div>
+    <div class="word-row">
+      <div class="word">${current.word}</div>
+      <button class="speak-btn" id="speakBtn" title="発音を聞く">${speakerIcon()}</button>
+    </div>
+    <div class="tap-hint">${tapHint}</div>
+  `;
+}
+
+function backHTML(current){
+  const generalBlock = current.general ? `
+      <div class="general-block">
+        <div class="general-label">${lang === 'ja' ? '本来の意味' : 'Definition'}</div>
+        <div class="general-text">${current.general}</div>
+      </div>` : '';
+
+  const noteBlock = current.note ? `
+      <div class="note-block">
+        <div class="note-label">${lang === 'ja' ? 'ヒント' : 'Note'}</div>
+        <div class="note-text">${current.note}</div>
+      </div>` : '';
+
+  const exampleJaBlock = lang === 'ja' ? `<div class="example-ja-text">${current.example_ja}</div>` : '';
+
+  const backTapHint = lang === 'ja' ? 'タップで単語に戻る' : 'Tap to go back';
+  const exampleHint = lang === 'ja' ? '(タップで読み上げ)' : '(Tap to listen)';
+
+  return `
+    <div class="back-scroll">
+      <div class="hint-block">
+        <div class="hint-label">${lang === 'ja' ? '意味のヒント' : 'Hint'}</div>
+        <div class="hint-text">${current.hint}</div>
+        ${generalBlock}
+        <div class="example-label">Example <span class="example-hint">${exampleHint}</span></div>
+        <div class="example-text clickable" id="exampleText">${current.example}</div>
+        ${exampleJaBlock}
+        ${noteBlock}
+      </div>
+      <div class="back-tap-hint tap-hint">${backTapHint}</div>
+    </div>
+  `;
+}
+
+function attachExampleHandler(current){
+  const exampleEl = document.getElementById('exampleText');
+  if(exampleEl){
+    exampleEl.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if(loopingWord === current.example && loopingSelector === '#exampleText'){
+        stopLoop();
+      } else {
+        startLoop(current.example, '#exampleText');
+      }
+    });
+  }
+}
+
+function attachSpeakHandler(current){
+  const speakBtn = document.getElementById('speakBtn');
+  if(speakBtn){
+    speakBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if(loopingWord === current.word && loopingSelector === '.speak-btn'){
+        stopLoop();
+      } else {
+        startLoop(current.word, '.speak-btn');
+      }
+    });
+  }
+}
+
+function render(){
+  stopLoop();
+  const stage = document.getElementById('stage');
+  const controls = document.getElementById('controls');
+
+  if(deck.length === 0 && browseIndex === null){
+    const doneTitle = lang === 'ja' ? 'よくできました' : 'All done!';
+    const doneMsg = lang === 'ja'
+      ? 'すべての単語が習得済みになりました。<br>「習得済み一覧」から単語を復活させるか、「すべてリセット」を押すと、もう一度練習できます。'
+      : 'All words are marked as mastered.<br>Restore words from the mastered list, or reset everything to practice again.';
+    stage.innerHTML = `
+      <div class="empty-state">
+        <div class="word">${doneTitle}</div>
+        <p>${doneMsg}</p>
+      </div>
+    `;
+    if(shownHistory.length > 0){
+      controls.style.display = 'flex';
+      document.getElementById('skipBtn').style.display = 'none';
+      document.getElementById('masterBtn').style.display = 'none';
+    } else {
+      controls.style.display = 'none';
+    }
+    updateProgress();
+    return;
+  }
+
+  controls.style.display = 'flex';
+  document.getElementById('skipBtn').style.display = 'flex';
+  document.getElementById('masterBtn').style.display = 'flex';
+  flipped = false;
+
+  let current, next;
+  if(browseIndex !== null){
+    current = WORDS.find(w => w.word === shownHistory[browseIndex]);
+    next = null;
+  } else {
+    current = deck[0];
+    next = deck[1];
+  }
+
+  stage.innerHTML = `
+    ${next ? `<div class="card behind"></div>` : ''}
+    <div class="card front" id="currentCard">
+      ${frontHTML(current)}
+    </div>
+  `;
+
+  document.getElementById('currentCard').addEventListener('click', (e) => {
+    if(e.target.closest('.speak-btn')) return;
+    if(e.target.closest('#exampleText')) return;
+    flipCard();
+  });
+
+  attachSpeakHandler(current);
+
+  const masterBtn = document.getElementById('masterBtn');
+  if(masterBtn){
+    masterBtn.textContent = lang === 'ja' ? '習得済み ✓' : 'Mastered ✓';
+    masterBtn.classList.remove('is-mastered');
+  }
+
+  const prevBtn = document.getElementById('prevBtn');
+  const skipBtn = document.getElementById('skipBtn');
+  const restartBtn = document.getElementById('restartBtn');
+
+  if(browseIndex !== null){
+    if(prevBtn) prevBtn.disabled = (browseIndex === 0);
+    if(skipBtn) skipBtn.textContent = lang === 'ja' ? '進む →' : 'Forward →';
+    if(skipBtn) skipBtn.disabled = false;
+    if(masterBtn) masterBtn.disabled = true;
+  } else {
+    if(prevBtn) prevBtn.disabled = (shownHistory.length === 0);
+    if(skipBtn) skipBtn.textContent = lang === 'ja' ? '次へ →' : 'Next →';
+    if(skipBtn) skipBtn.disabled = (deck.length === 0);
+    if(masterBtn) masterBtn.disabled = (deck.length === 0);
+  }
+  if(restartBtn) restartBtn.disabled = originalOrder.length === 0;
+
+  updateProgress();
+}
+
+function flipCard(){
+  if(flipped) {
+    showFront();
+    return;
+  }
+  stopLoop();
+  const card = document.getElementById('currentCard');
+  const current = getCurrentWord();
+  flipped = true;
+
+  card.classList.add('flipping');
+  setTimeout(() => {
+    card.classList.add('flipped-card');
+    card.innerHTML = backHTML(current);
+    attachExampleHandler(current);
+    card.classList.remove('flipping');
+  }, 220);
+}
+
+function showFront(){
+  stopLoop();
+  const card = document.getElementById('currentCard');
+  const current = getCurrentWord();
+  flipped = false;
+  card.classList.add('flipping');
+  setTimeout(() => {
+    card.classList.remove('flipped-card');
+    card.innerHTML = frontHTML(current);
+    attachSpeakHandler(current);
+    card.classList.remove('flipping');
+  }, 220);
+}
+
+function nextCard(){
+  const card = document.getElementById('currentCard');
+  if(!card){ return; }
+
+  if(browseIndex !== null){
+    // browsing history: step forward, or return to live
+    card.classList.add('exit-left');
+    setTimeout(() => {
+      if(browseIndex < shownHistory.length - 1){
+        browseIndex++;
+      } else {
+        browseIndex = null;
+      }
+      render();
+    }, 260);
+    return;
+  }
+
+  if(deck.length === 0) return;
+  const current = deck[0];
+
+  shownHistory.push(current.word);
+  if(shownHistory.length > 200) shownHistory.shift();
+
+  card.classList.add('exit-left');
+  setTimeout(() => {
+    // move current word to the end of the deck (not mastered yet)
+    deck.push(deck.shift());
+    render();
+  }, 260);
+}
+
+function prevCard(){
+  if(browseIndex !== null){
+    if(browseIndex > 0) browseIndex--;
+    render();
+    return;
+  }
+  if(shownHistory.length === 0) return;
+  browseIndex = shownHistory.length - 1;
+  render();
+}
+
+function restartDeck(){
+  const remainingWords = new Set(deck.map(w => w.word));
+  deck = originalOrder.filter(w => remainingWords.has(w.word));
+  shownHistory = [];
+  browseIndex = null;
+  render();
+}
+
+function toggleMastered(){
+  if(browseIndex !== null || deck.length === 0) return;
+  const card = document.getElementById('currentCard');
+  const current = deck[0];
+
+  shownHistory.push(current.word);
+  if(shownHistory.length > 200) shownHistory.shift();
+
+  mastered.add(current.word);
+  saveProgress();
+
+  if(card){
+    card.classList.add('exit-left');
+    setTimeout(() => {
+      deck.shift();
+      render();
+    }, 260);
+  } else {
+    deck.shift();
+    render();
+  }
+}
+
+function renderMasteredList(){
+  const list = document.getElementById('masteredList');
+  const masteredWords = WORDS.filter(w => mastered.has(w.word));
+
+  if(masteredWords.length === 0){
+    const emptyMsg = lang === 'ja' ? '習得済みの単語はまだありません。' : 'No mastered words yet.';
+    list.innerHTML = `<li class="mastered-empty" style="background:none;">${emptyMsg}</li>`;
+    return;
+  }
+
+  const restoreLabel = lang === 'ja' ? '解除' : 'Undo';
+
+  list.innerHTML = masteredWords.map(w => `
+    <li>
+      <span class="m-word">${w.word}</span>
+      <button class="restore-btn" data-word="${w.word}">${restoreLabel}</button>
+    </li>
+  `).join('');
+
+  list.querySelectorAll('.restore-btn').forEach(btn => {
+    btn.addEventListener('click', () => restoreWord(btn.dataset.word));
+  });
+}
+
+function restoreWord(word){
+  mastered.delete(word);
+  saveProgress();
+  const w = WORDS.find(item => item.word === word);
+  if(w && !deck.some(d => d.word === word)){
+    deck.push(w);
+  }
+  if(w && !originalOrder.some(d => d.word === word)){
+    originalOrder.push(w);
+  }
+  render();
+}
+
+function updateStaticLabels(){
+  const title = document.getElementById('appTitle');
+  if(title){
+    title.innerHTML = lang === 'ja'
+      ? 'Gatsby <span class="accent">語彙カード</span>'
+      : 'Gatsby <span class="accent">Vocabulary Cards</span>';
+  }
+
+  const resetBtn = document.getElementById('resetBtn');
+  if(resetBtn) resetBtn.textContent = lang === 'ja' ? 'すべてリセット' : 'Reset all';
+
+  const toggleBtn = document.getElementById('masteredToggleBtn');
+  if(toggleBtn){
+    const label = lang === 'ja' ? '習得済み一覧' : 'Mastered list';
+    toggleBtn.textContent = panelOpen ? `${label} ▴` : `${label} ▾`;
+  }
+
+  const panelHeading = document.getElementById('masteredHeading');
+  if(panelHeading) panelHeading.textContent = lang === 'ja' ? '習得済みの単語' : 'Mastered words';
+
+  const prevBtn = document.getElementById('prevBtn');
+  if(prevBtn) prevBtn.textContent = lang === 'ja' ? '← 前へ' : '← Prev';
+
+  const nextBtn = document.getElementById('skipBtn');
+  if(nextBtn) nextBtn.textContent = lang === 'ja' ? '次へ →' : 'Next →';
+
+  const restartBtn = document.getElementById('restartBtn');
+  if(restartBtn) restartBtn.textContent = lang === 'ja' ? '⟲ 最初' : '⟲ Start';
+
+  const langBtn = document.getElementById('langToggleBtn');
+  if(langBtn) langBtn.textContent = lang === 'ja' ? 'EN' : '日本語';
+}
+
+document.getElementById('skipBtn').addEventListener('click', () => nextCard());
+document.getElementById('prevBtn').addEventListener('click', () => prevCard());
+document.getElementById('masterBtn').addEventListener('click', () => toggleMastered());
+document.getElementById('restartBtn').addEventListener('click', () => restartDeck());
+
+document.getElementById('resetBtn').addEventListener('click', () => {
+  const msg = lang === 'ja' ? '習得済みの記録をすべてリセットしますか？' : 'Reset all mastered-word progress?';
+  if(confirm(msg)){
+    mastered = new Set();
+    saveProgress();
+    buildDeck();
+    render();
+  }
+});
+
+document.getElementById('masteredToggleBtn').addEventListener('click', () => {
+  panelOpen = !panelOpen;
+  const panel = document.getElementById('masteredPanel');
+  panel.classList.toggle('open', panelOpen);
+  updateStaticLabels();
+  if(panelOpen) renderMasteredList();
+});
+
+document.getElementById('langToggleBtn').addEventListener('click', () => {
+  lang = (lang === 'ja') ? 'en' : 'ja';
+  saveLang();
+  updateStaticLabels();
+  render();
+});
+
+document.addEventListener('keydown', (e) => {
+  if(e.code === 'Space'){
+    e.preventDefault();
+    flipCard();
+  } else if(e.code === 'ArrowRight'){
+    nextCard();
+  } else if(e.code === 'ArrowLeft'){
+    prevCard();
+  } else if(e.code === 'Enter'){
+    toggleMastered();
+  }
+});
+
+buildDeck();
+updateStaticLabels();
+render();
+</script></body></html>

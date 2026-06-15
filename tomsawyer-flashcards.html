@@ -1,0 +1,1064 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Adventures of Tom Sawyer 語彙カード</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap');
+
+  :root{
+    --bg: #e9e9e6;
+    --bg-deep: #dcdcd8;
+    --ink: #2b2b2b;
+    --ink-soft: #6b6b68;
+    --line: #c7c7c2;
+    --card: #f4f3ef;
+    --accent: #b3422e;
+    --accent-soft: #d98f7e;
+    --done: #7c8a6e;
+  }
+
+  *{ box-sizing: border-box; }
+
+  body{
+    margin:0;
+    min-height:100vh;
+    background: var(--bg);
+    background-image:
+      radial-gradient(circle at 15% 20%, rgba(0,0,0,0.02) 0%, transparent 40%),
+      radial-gradient(circle at 85% 80%, rgba(0,0,0,0.02) 0%, transparent 40%);
+    color: var(--ink);
+    font-family: 'Inter', 'Noto Sans JP', sans-serif;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    padding: 28px 16px 60px;
+  }
+
+  .topbar{
+    width:100%;
+    max-width:480px;
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+    margin-bottom: 6px;
+  }
+
+  .title{
+    font-family:'Spectral', serif;
+    font-weight:600;
+    font-size: 1.5rem;
+    letter-spacing: 0.01em;
+  }
+  .title .accent{ color: var(--accent); font-style: italic; }
+
+  .topbar-right{
+    display:flex;
+    align-items:center;
+    gap: 10px;
+  }
+
+  .pos-label{
+    font-size: 0.78rem;
+    color: var(--ink-soft);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .lang-toggle{
+    border: 1px solid var(--line);
+    background: var(--card);
+    color: var(--ink);
+    font-family:'Inter', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 999px;
+    cursor:pointer;
+    transition: background 0.2s, border-color 0.2s;
+  }
+  .lang-toggle:hover{ border-color: var(--ink-soft); }
+
+  .progress-label{
+    font-size: 0.78rem;
+    color: var(--ink-soft);
+    font-variant-numeric: tabular-nums;
+    text-align:right;
+  }
+
+  .progress-track{
+    width:100%;
+    max-width:480px;
+    height: 3px;
+    background: var(--line);
+    border-radius: 2px;
+    margin: 10px 0 28px;
+    overflow:hidden;
+  }
+  .progress-fill{
+    height:100%;
+    background: var(--accent);
+    transition: width 0.4s ease;
+  }
+
+  .stage{
+    width:100%;
+    max-width:480px;
+    position:relative;
+    height: 340px;
+    perspective: 1200px;
+  }
+
+  .card{
+    position:absolute;
+    inset:0;
+    border-radius: 14px;
+    background: var(--card);
+    border: 1px solid var(--line);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 12px 28px -16px rgba(0,0,0,0.18);
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    padding: 28px 26px;
+    cursor:pointer;
+    transition: transform 0.45s cubic-bezier(.22,.61,.36,1), opacity 0.3s ease, box-shadow 0.3s;
+    backface-visibility:hidden;
+    user-select:none;
+  }
+
+  .card.behind{
+    transform: scale(0.96) translateY(10px);
+    box-shadow: none;
+    z-index: 0;
+    opacity: 0.6;
+  }
+
+  .card.front{ z-index: 1; }
+
+  .card.flipping{
+    transform: rotateY(90deg) scale(0.96);
+    opacity: 0;
+  }
+
+  .card.exit-left{
+    transform: translateX(-130%) rotate(-8deg);
+    opacity: 0;
+  }
+
+  .card.exit-right{
+    transform: translateX(130%) rotate(8deg);
+    opacity: 0;
+  }
+
+  .card.shake{
+    animation: shake 0.3s ease;
+  }
+
+  @keyframes shake{
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-6px); }
+    75% { transform: translateX(6px); }
+  }
+
+  .eyebrow{
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin-bottom: 18px;
+  }
+
+  .word{
+    font-family:'Spectral', serif;
+    font-weight: 600;
+    font-size: 2.4rem;
+    line-height: 1.15;
+    margin: 0 0 18px;
+    word-break: break-word;
+  }
+
+  .speak-btn{
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    border: 1px solid var(--line);
+    background: #fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    transition: background 0.2s, transform 0.15s, border-color 0.2s;
+    flex-shrink:0;
+  }
+  .speak-btn:hover{ border-color: var(--accent-soft); }
+  .speak-btn:active{ transform: scale(0.92); }
+  .speak-btn svg{ width:20px; height:20px; fill: var(--accent); }
+  .speak-btn.speaking svg{ animation: pulse 0.6s ease infinite alternate; }
+  .speak-btn.looping{ background: var(--accent); border-color: var(--accent); }
+  .speak-btn.looping svg{ fill: #fff; animation: pulse 0.6s ease infinite alternate; }
+  @keyframes pulse{ from{ opacity:1; } to{ opacity:0.45; } }
+
+  .word-row{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap: 14px;
+    margin-bottom: 6px;
+  }
+
+  .tap-hint{
+    font-size: 0.78rem;
+    color: var(--ink-soft);
+    margin-top: 16px;
+  }
+
+  .hint-block{
+    width:100%;
+  }
+  .hint-label{
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 10px;
+  }
+  .hint-text{
+    font-size: 1.15rem;
+    font-weight: 500;
+    margin-bottom: 22px;
+    line-height: 1.6;
+  }
+  .example-label{
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin-bottom: 8px;
+  }
+  .example-text{
+    font-family:'Spectral', serif;
+    font-style: italic;
+    font-size: 1.05rem;
+    line-height: 1.6;
+    color: var(--ink);
+  }
+  .example-text.clickable{
+    cursor:pointer;
+    border-radius: 6px;
+    padding: 4px 6px;
+    margin: -4px -6px;
+    transition: background 0.2s, color 0.2s;
+  }
+  .example-text.clickable:hover{
+    background: var(--bg-deep);
+  }
+  .example-text.clickable.looping{
+    background: var(--accent);
+    color: #fff;
+    animation: pulse 0.6s ease infinite alternate;
+  }
+  .example-hint{
+    text-transform: none;
+    letter-spacing: normal;
+    font-size: 0.7rem;
+    opacity: 0.7;
+  }
+
+  .controls{
+    width:100%;
+    max-width:480px;
+    display:flex;
+    gap: 8px;
+    margin-top: 26px;
+  }
+
+  .btn{
+    flex:1;
+    border: 1px solid var(--line);
+    background: var(--card);
+    color: var(--ink);
+    font-family:'Inter', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 500;
+    padding: 12px 8px;
+    border-radius: 10px;
+    cursor:pointer;
+    transition: background 0.2s, border-color 0.2s, transform 0.1s;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap: 6px;
+    white-space: nowrap;
+  }
+  .btn:active{ transform: scale(0.98); }
+  .btn.skip:hover{ border-color: var(--ink-soft); }
+
+  .btn.nav{
+    background: transparent;
+    color: var(--ink-soft);
+    font-size: 0.8rem;
+    flex: 0.8;
+  }
+  .btn.nav:hover{ border-color: var(--accent-soft); color: var(--accent); }
+  .btn.nav:disabled{
+    opacity: 0.35;
+    cursor: default;
+  }
+  .btn.nav:disabled:hover{ border-color: var(--line); color: var(--ink-soft); }
+
+  .btn.master.is-mastered{
+    background: var(--card);
+    color: var(--done);
+    border-color: var(--done);
+  }
+  .btn.master.is-mastered:hover{ background: var(--card); }
+
+  .btn.master{
+    background: var(--done);
+    color: #fff;
+    border-color: var(--done);
+  }
+  .btn.master:hover{ background: #6c7a5e; }
+  .btn.master:disabled,
+  .btn.skip:disabled{
+    opacity: 0.4;
+    cursor: default;
+  }
+  .btn.master:disabled:hover{ background: var(--done); }
+  .btn.skip:disabled:hover{ border-color: var(--line); }
+
+  .empty-state{
+    width:100%;
+    max-width:480px;
+    height: 340px;
+    border-radius:14px;
+    border: 1px dashed var(--line);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding: 30px;
+    gap: 14px;
+  }
+  .empty-state .word{ font-size: 1.6rem; }
+  .empty-state p{
+    color: var(--ink-soft);
+    font-size: 0.92rem;
+    line-height: 1.7;
+    margin:0;
+  }
+
+  .footer-row{
+    width:100%;
+    max-width:480px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-top: 30px;
+    font-size: 0.78rem;
+    color: var(--ink-soft);
+  }
+
+  .reset-link{
+    color: var(--ink-soft);
+    text-decoration: underline;
+    text-decoration-color: var(--line);
+    cursor:pointer;
+    background:none;
+    border:none;
+    font-family:inherit;
+    font-size: inherit;
+    padding:0;
+  }
+  .reset-link:hover{ color: var(--accent); }
+
+  .checkmark-flash{
+    position:absolute;
+    top: 16px;
+    right: 16px;
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--done);
+    opacity:0;
+    transition: opacity 0.3s;
+  }
+  .checkmark-flash.show{ opacity:1; }
+
+  @media (max-width: 380px){
+    .word{ font-size: 1.9rem; }
+    .stage{ height: 320px; }
+  }
+
+  .card.flipped-card{
+    padding: 24px 24px;
+    overflow-y: auto;
+    align-items: stretch;
+    text-align: left;
+  }
+
+  .back-scroll{
+    width:100%;
+    overflow-y: auto;
+    max-height: 100%;
+    padding-right: 4px;
+  }
+
+  .general-block{
+    background: var(--bg-deep);
+    border-radius: 8px;
+    padding: 10px 12px;
+    margin-bottom: 16px;
+  }
+  .general-label{
+    font-size: 0.68rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin-bottom: 6px;
+  }
+  .general-text{
+    font-size: 0.92rem;
+    line-height: 1.6;
+    color: var(--ink);
+  }
+
+  .example-ja-text{
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: var(--ink-soft);
+    margin-top: 6px;
+  }
+
+  .note-block{
+    margin-top: 18px;
+    border-top: 1px dashed var(--line);
+    padding-top: 14px;
+  }
+  .note-label{
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 8px;
+  }
+  .note-text{
+    font-size: 0.9rem;
+    line-height: 1.7;
+    color: var(--ink);
+  }
+
+  .back-tap-hint{
+    text-align:center;
+    margin-top: 18px;
+  }
+
+  /* Mastered list panel */
+  .panel-toggle{
+    width:100%;
+    max-width:480px;
+    display:flex;
+    justify-content:flex-end;
+    margin-top: 10px;
+  }
+  .mastered-panel{
+    width:100%;
+    max-width:480px;
+    margin-top: 14px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: var(--card);
+    padding: 16px;
+    display:none;
+  }
+  .mastered-panel.open{ display:block; }
+  .mastered-panel h3{
+    font-family:'Spectral', serif;
+    font-size: 1.05rem;
+    font-weight: 600;
+    margin: 0 0 12px;
+  }
+  .mastered-list{
+    list-style:none;
+    margin:0;
+    padding:0;
+    max-height: 280px;
+    overflow-y:auto;
+    display:flex;
+    flex-direction:column;
+    gap: 6px;
+  }
+  .mastered-list li{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap: 10px;
+    padding: 8px 10px;
+    background: var(--bg-deep);
+    border-radius: 8px;
+    font-size: 0.92rem;
+  }
+  .mastered-list li .m-word{
+    font-family:'Spectral', serif;
+    font-weight: 500;
+  }
+  .restore-btn{
+    border: 1px solid var(--line);
+    background: #fff;
+    color: var(--ink);
+    font-size: 0.78rem;
+    padding: 6px 10px;
+    border-radius: 8px;
+    cursor:pointer;
+    flex-shrink:0;
+    white-space: nowrap;
+  }
+  .restore-btn:hover{ border-color: var(--accent-soft); color: var(--accent); }
+  .mastered-empty{
+    color: var(--ink-soft);
+    font-size: 0.88rem;
+    text-align:center;
+    padding: 10px 0;
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="title" id="appTitle">Tom Sawyer <span class="accent">語彙カード</span></div>
+  <div class="topbar-right">
+    <span class="pos-label" id="posLabel">1 / 300</span>
+    <button class="lang-toggle" id="langToggleBtn">EN</button>
+  </div>
+</div>
+
+<div class="progress-track">
+  <div class="progress-fill" id="progressFill" style="width:0%"></div>
+</div>
+<div class="progress-label" id="progressLabel" style="text-align:center;margin:4px 0 8px;">0 / 300 習得</div>
+
+<div class="stage" id="stage"></div>
+
+<div class="controls" id="controls">
+  <button class="btn nav" id="prevBtn">← 前へ</button>
+  <button class="btn skip" id="skipBtn">次へ →</button>
+  <button class="btn master" id="masterBtn">習得済み ✓</button>
+  <button class="btn nav" id="restartBtn">⟲ 最初</button>
+</div>
+
+<div class="footer-row">
+  <span id="remainingLabel"></span>
+  <button class="reset-link" id="resetBtn">すべてリセット</button>
+</div>
+
+<div class="panel-toggle">
+  <button class="reset-link" id="masteredToggleBtn">習得済み一覧 ▾</button>
+</div>
+
+<div class="mastered-panel" id="masteredPanel">
+  <h3 id="masteredHeading">習得済みの単語</h3>
+  <ul class="mastered-list" id="masteredList"></ul>
+</div>
+
+<script>
+const WORDS = [{"word": "mischief", "hint": "いたずら、悪さ(トムの代名詞ともいえる語)", "general": "軽い悪さやふざけた行動、それによる迷惑", "example": "Tom was always getting into mischief of one kind or another.", "example_ja": "トムはいつも、何かしらのいたずらに巻き込まれていた。", "note": "get into mischief / full of mischief のように使う。形容詞mischievous。"}, {"word": "prank", "hint": "いたずら、悪ふざけ", "general": "人を驚かせたり困らせたりするための、軽い悪さ", "example": "He played a prank on his friend that nearly got them both in trouble.", "example_ja": "彼は友人にいたずらを仕掛け、二人とも危うく面倒なことになりかけた。", "note": "play a prank on someone の形。mischiefより「具体的な一回の行為」を指す。"}, {"word": "scheme", "hint": "計画、企み", "general": "何かを成し遂げるための(しばしば抜け目ない)計画", "example": "Tom came up with a scheme to get out of whitewashing the fence.", "example_ja": "トムは塀の白塗りをしなくて済むよう、ある計画を思いついた。", "note": "come up with a scheme / a clever scheme のように使う。"}, {"word": "whitewash", "hint": "(塀などに)白い塗料を塗る", "general": "石灰などを水に溶かした白い塗料を壁や塀に塗ること", "example": "He was supposed to whitewash the whole fence by himself.", "example_ja": "彼は一人で塀全体を白塗りしなければならなかった。", "note": "本書の最も有名なエピソード(塀のペンキ塗り)に関連する語。"}, {"word": "trick", "hint": "策略、たくらみ、騙すこと", "general": "人を騙したり、出し抜いたりするための手段", "example": "It was just a trick to make the other boys want to do his work.", "example_ja": "それは、他の少年たちに自分の仕事をやりたがらせるための単なる策略だった。", "note": "play a trick on someone / a clever trick のように使う。"}, {"word": "persuade", "hint": "説得する", "general": "言葉でうまく相手の考えや行動を変えさせること", "example": "Somehow, Tom persuaded the other boys to pay him for the chance to paint.", "example_ja": "どういうわけか、トムは他の少年たちにペンキを塗らせてもらう代わりにお金を払わせるよう説得してしまった。", "note": "persuade someone to ~ の形。convince(納得させる)と近い意味。"}, {"word": "trade", "hint": "交換する、取引する", "general": "自分の持ち物を他人の持ち物と交換すること", "example": "The boys traded marbles, string, and all sorts of small treasures.", "example_ja": "少年たちはビー玉や紐、その他様々な小さな宝物を交換した。", "note": "trade A for B の形でよく使われる。"}, {"word": "treasure", "hint": "宝物", "general": "金銭的または個人的に価値のある物", "example": "Tom and his friends dreamed of digging up buried treasure.", "example_ja": "トムと友人たちは、埋められた宝物を掘り出すことを夢見ていた。", "note": "buried treasure / a chest of treasure のように使う。"}, {"word": "bury", "hint": "埋める", "general": "物を地中に隠すこと", "example": "They decided to bury the box under an old dead tree.", "example_ja": "彼らは、その箱を古い枯れ木の下に埋めることにした。", "note": "bury something under/in ~ の形。過去形はburied。"}, {"word": "superstition", "hint": "迷信", "general": "科学的根拠のない、言い伝えや信じられている考え", "example": "The boys believed in all sorts of superstitions about graveyards and charms.", "example_ja": "少年たちは、墓地やお守りについてのあらゆる迷信を信じていた。", "note": "形容詞superstitious。本書では迷信が物語の重要な要素になっている。"}, {"word": "charm", "hint": "お守り、まじない", "general": "魔法の力があると信じられている小さな物や言葉", "example": "He carried a charm he believed could cure warts.", "example_ja": "彼はいぼを治せると信じているお守りを持ち歩いていた。", "note": "lucky charm のように使う。動詞では「魅了する」の意味もある。"}, {"word": "spell", "hint": "魔法、まじない(の言葉)", "general": "魔法の効果をもたらすと信じられている言葉や行為", "example": "He recited the words as if they were some kind of spell.", "example_ja": "彼はその言葉を、まるで何かの魔法のまじないであるかのように唱えた。", "note": "cast a spell / under a spell のように使う。"}, {"word": "ghost", "hint": "幽霊", "general": "死んだ人の霊だと言われる存在", "example": "The boys were too scared to go near the haunted house because of the ghost stories.", "example_ja": "少年たちは、幽霊の話のせいでお化け屋敷に近づくのを怖がっていた。", "note": "ghost story(怪談)のように複合語でよく使われる。"}, {"word": "haunted", "hint": "(場所が)お化けが出る、取り憑かれた", "general": "幽霊や霊が出ると信じられている場所の", "example": "Everyone said the old house was haunted.", "example_ja": "その古い家にはお化けが出ると、みんなが言っていた。", "note": "haunted house は定型表現。動詞hauntの過去分詞形。"}, {"word": "graveyard", "hint": "墓場、墓地", "general": "死者を埋葬する場所(やや古風な語)", "example": "They snuck into the graveyard at midnight, hearts pounding.", "example_ja": "彼らは心臓をどきどきさせながら、真夜中に墓場へ忍び込んだ。", "note": "cemeteryより古風・口語的な響きを持つ語。"}, {"word": "sneak", "hint": "こっそり行動する、忍び込む", "general": "人に見つからないように静かに動くこと", "example": "They had to sneak out of their houses without waking anyone.", "example_ja": "彼らは誰も起こさずに、家からこっそり抜け出さなければならなかった。", "note": "sneak out / sneak into ~ のように使う。形容詞sneaky(こそこそした)。"}, {"word": "witness", "hint": "目撃する、目撃者", "general": "自分の目で何かが起こるのを見ること、またその人", "example": "They became unwilling witnesses to something terrible.", "example_ja": "彼らは、何か恐ろしいことの不本意な目撃者になってしまった。", "note": "witness a crime のように使う。動詞・名詞両方で使われる。"}, {"word": "swear", "hint": "誓う、誓約する", "general": "強い言葉で約束すること", "example": "They swore an oath in blood never to tell anyone what they had seen.", "example_ja": "彼らは血で誓いを立て、見たことを誰にも話さないと約束した。", "note": "swear an oath / swear to ~ のように使う。"}, {"word": "oath", "hint": "誓い、誓約", "general": "何かを行う、または行わないという正式な約束", "example": "Breaking the oath felt almost as scary as the secret itself.", "example_ja": "誓いを破ることは、その秘密自体とほとんど同じくらい怖いことのように感じられた。", "note": "take an oath / swear an oath の形。"}, {"word": "runaway", "hint": "逃亡者、家出人", "general": "家や場所から逃げ出した人", "example": "For a while, Tom imagined himself as a runaway, far from home.", "example_ja": "しばらくの間、トムは自分が家から遠く離れた逃亡者であるかのように想像していた。", "note": "形容詞・名詞両方で使う(a runaway boy / become a runaway)。"}, {"word": "pirate", "hint": "海賊", "general": "船を襲って物を奪う者、または冒険的なイメージの存在", "example": "He dreamed of becoming a famous pirate one day.", "example_ja": "彼はいつか有名な海賊になることを夢見ていた。", "note": "本書で少年たちが「海賊になる」という遊びをする場面に関連。"}, {"word": "raft", "hint": "いかだ", "general": "木材などを組んで作った、水に浮く乗り物", "example": "They built a raft out of old logs to float down the river.", "example_ja": "彼らは古い丸太でいかだを作り、川を下って行った。", "note": "build a raft / float on a raft のように使う。"}, {"word": "island", "hint": "島", "general": "水に囲まれた陸地", "example": "The boys decided to camp on a small island in the middle of the river.", "example_ja": "少年たちは、川の真ん中にある小さな島でキャンプをすることにした。", "note": "go to an island / live on an island のように使う。"}, {"word": "camp", "hint": "野営する、キャンプ", "general": "屋外で一時的に泊まること", "example": "They camped under the stars, pretending they were far from civilization.", "example_ja": "彼らは星空の下で野営し、文明から遠く離れているふりをした。", "note": "go camping / camp out のように使う。"}, {"word": "campfire", "hint": "キャンプファイヤー、たき火", "general": "野外で焚く火", "example": "They sat around the campfire, telling stories late into the night.", "example_ja": "彼らはたき火を囲んで座り、夜遅くまで物語を語り合った。", "note": "sit around a campfire のように使う。"}, {"word": "adventure", "hint": "冒険", "general": "危険や興奮を伴う、わくわくする経験", "example": "Every day felt like a new adventure when he was with Huck.", "example_ja": "ハックと一緒にいると、毎日が新しい冒険のように感じられた。", "note": "go on an adventure / a great adventure のように使う。"}, {"word": "daring", "hint": "大胆な、思い切った", "general": "危険を恐れずに行動する性質の", "example": "His daring plans often worried the adults around him.", "example_ja": "彼の大胆な計画は、しばしば周りの大人たちを心配させた。", "note": "a daring plan / daring adventure のように使う。"}, {"word": "reckless", "hint": "無謀な、軽率な", "general": "危険を考えずに行動する性質の", "example": "His aunt thought his behavior was reckless, even for a boy his age.", "example_ja": "伯母は、彼の行動は同年代の少年としても無謀だと思っていた。", "note": "reckless behavior / a reckless decision のように使う。"}, {"word": "dare", "hint": "あえてする、挑戦する", "general": "危険や恐怖にもかかわらず、何かをすること", "example": "He dared Huck to walk along the fence without falling.", "example_ja": "彼はハックに、塀から落ちずに歩いてみろと挑戦させた。", "note": "dare to ~ / dare someone to ~ の形。名詞でも使う(a dare)。"}, {"word": "sword", "hint": "剣", "general": "刃のついた長い武器", "example": "They carved wooden swords and pretended to be knights.", "example_ja": "彼らは木の剣を彫り、騎士のふりをして遊んだ。", "note": "sword fight のように複合語で使われる。"}, {"word": "battle", "hint": "戦い、戦闘", "general": "敵対する者同士が争うこと", "example": "The boys staged a great battle between two imaginary armies.", "example_ja": "少年たちは、二つの架空の軍隊の間で大きな戦いを演じた。", "note": "fight a battle / a great battle のように使う。"}, {"word": "army", "hint": "軍隊", "general": "戦うために組織された人々の集団", "example": "Each boy commanded his own pretend army.", "example_ja": "少年たちはそれぞれ、自分の架空の軍隊を指揮した。", "note": "in the army / join the army のように使う。"}, {"word": "command", "hint": "命令する、指揮する", "general": "権限を持って人に何かをさせること", "example": "As the leader, Tom commanded the others to follow his plan.", "example_ja": "リーダーとして、トムは他の者たちに自分の計画に従うよう命令した。", "note": "command someone to ~ の形。名詞でも使う(give a command)。"}, {"word": "leader", "hint": "リーダー、指導者", "general": "集団を率いる人", "example": "Tom always wanted to be the leader, even in games.", "example_ja": "トムは遊びの中でさえ、いつもリーダーになりたがった。", "note": "become a leader / a natural leader のように使う。"}, {"word": "gang", "hint": "(子供たちの)仲間、グループ", "general": "一緒に行動する人々のグループ(必ずしも悪い意味ではない)", "example": "He wanted to start his own gang of robbers, just for fun.", "example_ja": "彼は遊びとして、自分自身の盗賊団を作りたいと思っていた。", "note": "a gang of friends/robbers のように使う。本書では「子供たちの遊びの集団」を指す。"}, {"word": "robber", "hint": "強盗、盗賊", "general": "物を盗む者", "example": "Playing robbers was one of their favorite games.", "example_ja": "強盗ごっこは、彼らの大好きな遊びの一つだった。", "note": "動詞rob。robber bandという表現も使われる。"}, {"word": "hideout", "hint": "隠れ家", "general": "人に見つからないように身を隠すための場所", "example": "They built a secret hideout in the woods.", "example_ja": "彼らは森の中に秘密の隠れ家を作った。", "note": "build a hideout / secret hideout のように使う。"}, {"word": "explore", "hint": "探検する", "general": "新しい場所を見て回り、発見すること", "example": "They spent hours exploring the cave's dark tunnels.", "example_ja": "彼らは何時間も洞窟の暗いトンネルを探検して過ごした。", "note": "名詞exploration、explorer(探検家)も関連語。"}, {"word": "cave", "hint": "洞窟", "general": "地中や山にある自然の空洞", "example": "Inside the cave, it was so dark they could barely see their hands.", "example_ja": "洞窟の中は非常に暗く、自分の手もほとんど見えなかった。", "note": "go into a cave / a dark cave のように使う。"}, {"word": "torch", "hint": "(火の)たいまつ", "general": "火をつけて持ち歩ける明かり", "example": "They lit a torch to light their way through the cave.", "example_ja": "彼らは洞窟の中を進むため、たいまつに火を灯した。", "note": "light a torch のように使う。現代では「flashlight」もtorchと呼ばれる(主に英語圏)。"}, {"word": "candle", "hint": "ろうそく", "general": "芯に火をつけて燃やし、明かりとする蝋の塊", "example": "Each boy carried a candle stuck into a piece of clay.", "example_ja": "少年たちはそれぞれ、粘土に刺したろうそくを持っていた。", "note": "light a candle / candle wax のように使う。"}, {"word": "footprint", "hint": "足跡", "general": "歩いた跡として残る足の形", "example": "They followed strange footprints leading deeper into the cave.", "example_ja": "彼らは洞窟の奥へと続く奇妙な足跡をたどった。", "note": "follow footprints のように使う。複数形footprintsで使われることが多い。"}, {"word": "echo", "hint": "こだま、反響", "general": "音が反射して繰り返し聞こえること", "example": "Their voices echoed strangely off the cave walls.", "example_ja": "彼らの声は、洞窟の壁に奇妙に反響した。", "note": "動詞・名詞両方で使う。echo off ~ の形。"}, {"word": "lost", "hint": "迷子になった、道に迷った", "general": "自分がどこにいるのか分からなくなった状態", "example": "They realized too late that they were completely lost.", "example_ja": "彼らは、自分たちが完全に道に迷っていることに、遅すぎるタイミングで気づいた。", "note": "get lost / be lost のように使う。"}, {"word": "rescue", "hint": "救助する、救出", "general": "危険な状況から誰かを助け出すこと", "example": "A search party was sent out to rescue them.", "example_ja": "彼らを救助するため、捜索隊が派遣された。", "note": "rescue someone from ~ / a rescue mission のように使う。"}, {"word": "search", "hint": "捜索する、探す", "general": "何かや誰かを見つけるために調べること", "example": "The whole town joined the search for the missing boys.", "example_ja": "町全体が、行方不明になった少年たちの捜索に加わった。", "note": "search for ~ / a search party のように使う。"}, {"word": "missing", "hint": "行方不明の、見当たらない", "general": "いるべき場所にいない、見つからない状態の", "example": "By nightfall, the boys had been reported missing.", "example_ja": "夜になる頃には、少年たちは行方不明として報告されていた。", "note": "go missing / a missing person のように使う。"}, {"word": "funeral", "hint": "葬式", "general": "死者を見送るための儀式", "example": "The townspeople had already begun planning their funeral.", "example_ja": "町の人々は、すでに彼らの葬式の準備を始めていた。", "note": "attend a funeral / hold a funeral のように使う。"}, {"word": "mourn", "hint": "悲しみ嘆く", "general": "誰かの死を深く悲しむこと", "example": "The whole village mourned the boys they believed were dead.", "example_ja": "村全体が、死んだと信じられていた少年たちのことを悲しみ嘆いた。", "note": "mourn for someone / mourn the loss of ~ の形。"}, {"word": "surprise", "hint": "驚き、サプライズ", "general": "予期していなかった出来事や、それによる感情", "example": "Their return was the biggest surprise the town had ever seen.", "example_ja": "彼らの帰還は、その町がこれまで見た中で最大のサプライズだった。", "note": "to someone's surprise / a big surprise のように使う。"}, {"word": "relief", "hint": "安心、安堵", "general": "心配や不安がなくなったときの安心した気持ち", "example": "His aunt cried with relief when she saw him alive.", "example_ja": "伯母は、彼が生きているのを見て安堵の涙を流した。", "note": "a sigh of relief / to someone's relief のように使う。"}, {"word": "forgive", "hint": "許す", "general": "誰かの過ちを責めず、受け入れること", "example": "His aunt forgave him, even though she had been worried sick.", "example_ja": "伯母はひどく心配していたにもかかわらず、彼を許した。", "note": "forgive someone for ~ の形。"}, {"word": "scold", "hint": "叱る", "general": "誰かの行動について強く非難すること", "example": "She scolded him for staying out so late without telling anyone.", "example_ja": "彼女は、誰にも言わずにあんなに遅くまで外出していたことで彼を叱った。", "note": "scold someone for ~ing の形。"}, {"word": "aunt", "hint": "おば(主人公を育てるアント・ポリーを指す)", "general": "父母の姉妹、またはおじの妻", "example": "His aunt raised him after his parents had died.", "example_ja": "両親が亡くなった後、彼は伯母に育てられた。", "note": "Aunt Pollyのように、固有名詞の前について「~おばさん」という呼び方になる。"}, {"word": "guardian", "hint": "保護者、後見人", "general": "子供の世話と養育の責任を持つ人", "example": "As his guardian, she felt responsible for everything he did.", "example_ja": "彼の保護者として、彼女は彼の行動すべてに責任を感じていた。", "note": "legal guardian のように使われる、やや硬い語。"}, {"word": "orphan", "hint": "孤児", "general": "両親を失った子供", "example": "Huck was something of an orphan, left mostly to take care of himself.", "example_ja": "ハックはある意味孤児のような存在で、ほとんど自分自身で生活しなければならなかった。", "note": "形容詞・名詞両方で使う(an orphan child / become an orphan)。"}, {"word": "chore", "hint": "(家庭の)雑用、仕事", "general": "家庭内で定期的に行わなければならない作業", "example": "Whitewashing the fence was just one of his many chores.", "example_ja": "塀の白塗りは、彼が抱える多くの雑用の一つに過ぎなかった。", "note": "do chores / household chores のように使う。"}, {"word": "village", "hint": "村", "general": "小さな町、田舎の集落", "example": "Everyone in the small village seemed to know everyone else's business.", "example_ja": "その小さな村では、誰もが他人の事情を知っているようだった。", "note": "townより小さい単位。village life のように使う。"}, {"word": "neighbor", "hint": "近所の人、隣人", "general": "近くに住んでいる人", "example": "The neighbors gathered to gossip about what had happened.", "example_ja": "近所の人々は、何が起こったのかについてうわさをするために集まった。", "note": "neighborhood(近所、地域)も関連語。"}, {"word": "preacher", "hint": "牧師、説教師", "general": "教会で説教を行う宗教指導者", "example": "The preacher gave a long sermon every Sunday.", "example_ja": "牧師は毎週日曜日に長い説教をした。", "note": "sermon(説教)とセットで覚える。やや口語的な語。"}, {"word": "sermon", "hint": "説教", "general": "宗教的な教えを述べる演説", "example": "He spent most of the sermon thinking about anything but God.", "example_ja": "彼は説教の間、神についてのこと以外、ほとんどあらゆることを考えていた。", "note": "give/deliver a sermon の形。"}, {"word": "Sunday school", "hint": "日曜学校(教会で行われる子供向けの宗教教育)", "general": "日曜日に子供たちが宗教を学ぶための授業", "example": "He hated getting dressed up for Sunday school every week.", "example_ja": "彼は毎週日曜学校のためにきちんとした服を着るのが嫌だった。", "note": "アメリカの宗教文化に関する重要な語句。"}, {"word": "verse", "hint": "(聖書などの)節、詩句", "general": "詩や聖書の一部を構成する短い文", "example": "He was supposed to memorize a Bible verse every week.", "example_ja": "彼は毎週、聖書の一節を覚えなければならなかった。", "note": "a Bible verse / memorize a verse のように使う。"}, {"word": "memorize", "hint": "記憶する、暗記する", "general": "何かを完全に覚えること", "example": "He tried every trick he could think of to memorize the verses faster.", "example_ja": "彼は、その一節をより速く覚えるために考えつく限りのあらゆる手を使った。", "note": "memorize something by heart のように使う。"}, {"word": "recite", "hint": "(記憶したものを)朗誦する、唱える", "general": "覚えた言葉を声に出して言うこと", "example": "Each student had to recite the verses in front of the class.", "example_ja": "生徒たちは一人ずつ、クラスの前でその一節を朗誦しなければならなかった。", "note": "recite a poem/verse のように使う。"}, {"word": "schoolmaster", "hint": "(男性の)校長、教師(やや古風な語)", "general": "学校を運営または指導する男性教師", "example": "The schoolmaster ruled the classroom with a stern look and a switch.", "example_ja": "校長は厳しい表情とむちで教室を統治していた。", "note": "古い時代の小説に出てくる語で、現代ではheadmasterやprincipalが一般的。"}, {"word": "switch", "hint": "(罰として使う)細い枝、むち", "general": "植物の細い枝で、罰として子供を打つために使われたもの", "example": "Misbehaving students risked a few hits from the schoolmaster's switch.", "example_ja": "行儀の悪い生徒は、校長のむちで何度か打たれる危険があった。", "note": "歴史的な体罰の文脈で使われる語。現代では使われない教育方法。"}, {"word": "punish", "hint": "罰する", "general": "悪い行動に対して、罰を与えること", "example": "Tom was punished for being late to school again.", "example_ja": "トムはまた学校に遅刻したことで罰せられた。", "note": "punish someone for ~ の形。名詞punishment。"}, {"word": "misbehave", "hint": "行儀が悪い、悪い行いをする", "general": "正しくない、礼儀に欠ける行動をすること", "example": "He couldn't sit still without misbehaving for very long.", "example_ja": "彼は、長い間悪さをせずに静かに座っていることができなかった。", "note": "反対語はbehave well。"}, {"word": "truant", "hint": "無断欠席する(子供)、不登校児", "general": "許可なく学校を休む人", "example": "He played truant from school more often than his aunt ever found out.", "example_ja": "彼は、伯母が知る以上に頻繁に学校を無断欠席していた。", "note": "play truant という決まった表現で使われる、やや古風な語。"}, {"word": "playmate", "hint": "遊び友達", "general": "一緒に遊ぶ友人", "example": "Huck became his closest playmate that summer.", "example_ja": "その夏、ハックは彼の最も親しい遊び友達になった。", "note": "古風な響きの語。現代ではplaymateよりfriendが一般的。"}, {"word": "villager", "hint": "村人", "general": "村に住む人", "example": "The villagers talked about little else for weeks.", "example_ja": "村人たちは何週間もの間、その話以外ほとんど何も話さなかった。", "note": "village の派生語。複数形で「村人たち全体」を指すことが多い。"}, {"word": "barefoot", "hint": "足が裸の、靴を履かない", "general": "靴や靴下を履いていない状態", "example": "In summer, the boys ran around barefoot most of the day.", "example_ja": "夏には、少年たちは一日のほとんどを裸足で走り回った。", "note": "go barefoot のように使う。当時の子供の生活様式を表す語。"}, {"word": "overalls", "hint": "オーバーオール、つなぎ作業着", "general": "上下が一体になった作業用の服", "example": "He wore the same patched overalls almost every day.", "example_ja": "彼はほとんど毎日、同じ繕われたオーバーオールを着ていた。", "note": "常に複数形で使われる(a pair of overalls)。"}, {"word": "patch", "hint": "(衣服の)継ぎ、つぎ当て", "general": "破れた部分を覆うために縫い付ける布", "example": "His shirt had a patch over each elbow.", "example_ja": "彼のシャツには、両肘にそれぞれつぎ当てがされていた。", "note": "動詞でも使う(patch up a hole)。"}, {"word": "widow", "hint": "未亡人、寡婦", "general": "夫が亡くなった女性", "example": "The widow living at the edge of town was kind to Huck.", "example_ja": "町の外れに住む未亡人は、ハックに優しかった。", "note": "対義語widower(男性の場合)。"}, {"word": "reward", "hint": "報酬、ご褒美", "general": "良い行いや功績に対して与えられるもの", "example": "A reward was offered to whoever found the missing treasure.", "example_ja": "行方不明の宝物を見つけた者には、報酬が出ると発表された。", "note": "offer a reward / receive a reward のように使う。"}, {"word": "fortune", "hint": "財産、大金、運", "general": "非常に多くのお金、または運命", "example": "Finding that money would have changed his whole fortune.", "example_ja": "あのお金を見つけたことは、彼の運命をまるごと変えることになった。", "note": "a small fortune(かなりの金額)/ tell someone's fortune(運勢を占う)などの表現がある。"}, {"word": "wealthy", "hint": "裕福な、富のある", "general": "多くのお金や財産を持っている", "example": "Overnight, the boys became the wealthiest children in town.", "example_ja": "一夜にして、少年たちは町で最も裕福な子供たちになった。", "note": "richとほぼ同義だが、wealthyはより硬い語。"}, {"word": "jealous", "hint": "嫉妬している、ねたんでいる", "general": "他人が持っているものを羨ましく思う気持ちの", "example": "Some of the other boys were openly jealous of his sudden fortune.", "example_ja": "他の少年たちの一部は、彼の突然の幸運をはっきりと羨んでいた。", "note": "jealous of ~ の形。名詞jealousy。"}, {"word": "admire", "hint": "称賛する、感心する", "general": "誰かや何かを高く評価し、好意的に見ること", "example": "The other children admired him for his courage, even when he was reckless.", "example_ja": "他の子供たちは、彼が無謀な時でさえ、その勇気に感心していた。", "note": "admire someone for ~ の形。名詞admiration。"}, {"word": "envy", "hint": "羨望、ねたみ", "general": "他人の持つものを欲しいと強く思う気持ち", "example": "He could see the envy in his friends' eyes.", "example_ja": "彼は友人たちの目に羨望の色を見ることができた。", "note": "jealousyとほぼ同義だが、envyは「対象が明確」なニュアンスが強い。"}, {"word": "superintendent", "hint": "(日曜学校などの)監督者、責任者", "general": "組織や施設を管理・監督する人", "example": "The superintendent gave out a prize for memorizing the most verses.", "example_ja": "監督者は、最も多くの聖句を覚えた者に賞品を贈った。", "note": "school superintendent(教育長)のように現代でも使われる語。"}, {"word": "prize", "hint": "賞、賞品", "general": "競争や功績に対して与えられるもの", "example": "He desperately wanted to win the prize, even if he had to cheat.", "example_ja": "彼はその賞をどうしても獲りたいと思い、ずるをすることさえ考えた。", "note": "win a prize / a prize for ~ のように使う。"}, {"word": "cheat", "hint": "ずるをする、不正を行う", "general": "不正な方法で利益を得ようとすること", "example": "He cheated his way to the front of the line.", "example_ja": "彼はずるをして列の先頭に並んだ。", "note": "cheat at ~ / cheat on a test のように使う。名詞でもある。"}, {"word": "audience", "hint": "観客、聴衆", "general": "演劇や演奏などを見たり聞いたりする人々", "example": "He loved having an audience, even a small one.", "example_ja": "彼は、たとえ小さなものであっても、観客がいることが大好きだった。", "note": "in front of an audience のように使う。"}, {"word": "performance", "hint": "演技、公演", "general": "観客の前で行う演奏や演技", "example": "His tearful performance fooled everyone in the room.", "example_ja": "彼の涙ながらの演技は、その場にいた全員を欺いた。", "note": "give a performance のように使う。動詞perform。"}, {"word": "vanity", "hint": "うぬぼれ、自己満足", "general": "自分の見栄えや評価を過度に気にする性質", "example": "His vanity made him want everyone to notice his new clothes.", "example_ja": "彼のうぬぼれのせいで、彼は誰もが自分の新しい服に気づいてほしいと思っていた。", "note": "形容詞vain。a touch of vanity のように使う。"}, {"word": "showoff", "hint": "見せびらかす人、目立ちたがり", "general": "自分の能力や持ち物をひけらかす人", "example": "Some of the other kids thought he was a showoff.", "example_ja": "他の子供たちの一部は、彼を目立ちたがりだと思っていた。", "note": "show off(見せびらかす)という動詞表現の名詞形。"}, {"word": "boast", "hint": "自慢する", "general": "自分のことを大げさに言って自慢すること", "example": "He couldn't help boasting about the adventure to anyone who would listen.", "example_ja": "彼は、話を聞いてくれる人なら誰にでも、その冒険について自慢せずにはいられなかった。", "note": "boast about/of ~ の形。名詞でもある。"}, {"word": "reputation", "hint": "評判、名声", "general": "人々がある人や物についてどう思っているか", "example": "His reputation as a troublemaker followed him everywhere.", "example_ja": "トラブルメーカーとしての彼の評判は、どこへ行ってもついて回った。", "note": "have a reputation for ~ / a bad/good reputation のように使う。"}, {"word": "troublemaker", "hint": "問題児、トラブルメーカー", "general": "頻繁に問題やトラブルを起こす人", "example": "Adults often called him a troublemaker, but his friends saw him differently.", "example_ja": "大人たちは彼をしばしば問題児と呼んだが、友人たちは彼を違う目で見ていた。", "note": "trouble + makerの複合語。"}, {"word": "respectable", "hint": "立派な、ちゃんとした(社会的に)", "general": "社会的に認められ、尊重されるべき性質の", "example": "His aunt wanted him to grow up respectable, not like Huck.", "example_ja": "伯母は、彼にハックのようにではなく、立派な人間に育ってほしかった。", "note": "respectable family / a respectable life のように使う。"}, {"word": "manners", "hint": "礼儀、マナー", "general": "社会的に適切とされる振る舞い方", "example": "His aunt was always trying to teach him proper manners.", "example_ja": "伯母は常に、彼に正しい礼儀作法を教えようとしていた。", "note": "常に複数形で使う。good/bad manners のように使う。"}, {"word": "scolding", "hint": "小言、叱責", "general": "叱られること、またその言葉", "example": "He got a long scolding for tracking mud through the house.", "example_ja": "彼は家の中を泥で汚したことで、長い小言を言われた。", "note": "動詞scoldの名詞形。get a scolding の形でよく使う。"}, {"word": "lecture", "hint": "(子供への)長い説教、お説教", "general": "宗教的な意味に限らず、長く繰り返される注意や忠告", "example": "He braced himself for another lecture about honesty.", "example_ja": "彼は、正直さについてのまた別の長いお説教に備えて身構えた。", "note": "give someone a lecture という形で「お説教する」という意味になる。"}, {"word": "discipline", "hint": "しつけ、規律", "general": "行動を正しく保つための訓練やルール", "example": "His aunt believed firm discipline was an act of love.", "example_ja": "伯母は、厳しいしつけは愛情の表れだと信じていた。", "note": "動詞・名詞両方で使う。harsh discipline のように使う。"}, {"word": "errand", "hint": "使い、用事", "general": "特定の目的のために行く短い外出", "example": "He was sent on an errand to fetch water from the well.", "example_ja": "彼は井戸から水を汲んでくるという使いに出された。", "note": "run an errand / go on an errand のように使う。"}, {"word": "fetch", "hint": "取りに行く、持ってくる", "general": "何かを取りに行って持ってくること", "example": "Tom was told to fetch firewood before supper.", "example_ja": "トムは夕食前に薪を取ってくるよう言われた。", "note": "goとbringが組み合わさったような意味。fetch something for someone の形。"}, {"word": "well", "hint": "井戸", "general": "地下水を汲み上げるために掘られた穴", "example": "The well behind the house was their main source of water.", "example_ja": "家の裏にある井戸は、彼らの主な水源だった。", "note": "draw water from a well のように使う。"}, {"word": "porch", "hint": "(家の)ポーチ、玄関先の屋根付き空間", "general": "家の入り口にある、屋根のある屋外スペース", "example": "His aunt sat on the porch, watching for him to come home.", "example_ja": "伯母はポーチに座り、彼が帰ってくるのを見守っていた。", "note": "front porch のように使う。アメリカの家屋に特徴的な空間。"}, {"word": "fence", "hint": "塀、フェンス", "general": "庭や敷地を囲むための構造物", "example": "Painting that fence took far longer than he had hoped.", "example_ja": "その塀を塗るのには、彼が望んでいたよりもずっと長い時間がかかった。", "note": "a wooden fence / paint a fence のように使う。本書の最初の有名な場面に関連。"}, {"word": "bucket", "hint": "バケツ", "general": "水などを入れて運ぶための容器", "example": "He carried a bucket of whitewash and a brush.", "example_ja": "彼は白塗料の入ったバケツとブラシを持っていた。", "note": "a bucket of water のように量を表す表現としても使われる。"}, {"word": "brush", "hint": "ブラシ、刷毛", "general": "塗料を塗ったり何かをきれいにしたりするための道具", "example": "He handed the brush to another boy and walked away.", "example_ja": "彼はそのブラシを別の少年に手渡し、歩いて去った。", "note": "paintbrush(絵筆)のように複合語でも使われる。"}, {"word": "crowd", "hint": "群衆、人だかり", "general": "一緒に集まっている多くの人々", "example": "A crowd gathered outside the courthouse to hear the verdict.", "example_ja": "裁判所の外には、判決を聞こうと群衆が集まった。", "note": "a crowd of people / gather a crowd のように使う。"}, {"word": "courthouse", "hint": "裁判所", "general": "法廷が開かれる建物", "example": "The whole town crowded into the courthouse for the trial.", "example_ja": "町中の人々が、裁判のために裁判所に押し寄せた。", "note": "go to the courthouse のように使う。"}, {"word": "trial", "hint": "裁判、審理", "general": "法廷で行われる、罪を判断するための手続き", "example": "His testimony at the trial shocked everyone listening.", "example_ja": "裁判での彼の証言は、聞いていた全員を驚かせた。", "note": "go on trial / stand trial のように使う。"}, {"word": "testimony", "hint": "証言", "general": "裁判などで証人が話す内容", "example": "His testimony changed the outcome of the entire trial.", "example_ja": "彼の証言は、裁判全体の結果を変えた。", "note": "give testimony の形。動詞testify(証言する)も関連語。"}, {"word": "murder", "hint": "殺人", "general": "故意に人を殺すこと", "example": "They had witnessed a murder and didn't know what to do.", "example_ja": "彼らは殺人を目撃したが、どうすればいいか分からなかった。", "note": "commit murder / a murder case のように使う。動詞でも使う。"}, {"word": "murderer", "hint": "殺人犯", "general": "人を殺した人", "example": "The murderer was still walking free in town.", "example_ja": "その殺人犯は、まだ町を自由に歩き回っていた。", "note": "murder + -erの形。"}, {"word": "villain", "hint": "悪役、悪人", "general": "物語の中で悪事を行う人物", "example": "Injun Joe was the most frightening villain Tom had ever encountered.", "example_ja": "インジャン・ジョーは、トムが今まで出会った中で最も恐ろしい悪役だった。", "note": "物語・映画用語としても日常的に使われる。"}, {"word": "accomplice", "hint": "共犯者", "general": "犯罪を一緒に行った人", "example": "He was afraid the killer's accomplice might be watching him too.", "example_ja": "彼は、その殺人者の共犯者も自分を見ているのではないかと恐れた。", "note": "an accomplice to a crime のように使う。"}, {"word": "crime", "hint": "犯罪", "general": "法律で禁じられている行為", "example": "He had never imagined being so close to a real crime.", "example_ja": "彼は、こんなにも本物の犯罪に近づくことになるとは想像もしていなかった。", "note": "commit a crime / a crime scene のように使う。"}, {"word": "innocent", "hint": "無実の、罪のない", "general": "罪を犯していない", "example": "An innocent man was about to be blamed for the murder.", "example_ja": "無実の男が、その殺人の罪を着せられそうになっていた。", "note": "反対語はguilty。innocent of a crime のように使う。"}, {"word": "guilty", "hint": "有罪の、罪を犯した", "general": "罪を犯したと認められる、または感じている", "example": "Tom knew the real killer was sitting in that courtroom, looking anything but guilty.", "example_ja": "トムは、本当の殺人犯がその法廷に座っていて、まったく罪を犯したように見えないことを知っていた。", "note": "find someone guilty / feel guilty の形。名詞guilt。"}, {"word": "accuse", "hint": "非難する、告発する", "general": "誰かが罪を犯したと言うこと", "example": "The wrong man had been accused of the crime.", "example_ja": "間違った男が、その罪で告発されていた。", "note": "accuse someone of ~ の形。名詞accusation。"}, {"word": "confess", "hint": "告白する、自白する", "general": "自分の罪や秘密を認めて話すこと", "example": "He finally found the courage to confess what he knew.", "example_ja": "彼はついに、自分が知っていることを告白する勇気を見つけた。", "note": "confess to ~ の形。名詞confession。"}, {"word": "testify", "hint": "証言する", "general": "法廷で、自分が見たり知っていることを話すこと", "example": "He had to decide whether to testify against a dangerous man.", "example_ja": "彼は、危険な男に対して証言するかどうかを決めなければならなかった。", "note": "testify against/for someone の形。名詞testimony。"}, {"word": "verdict", "hint": "判決、評決", "general": "裁判で出される最終的な決定", "example": "The whole courtroom waited in silence for the verdict.", "example_ja": "法廷全体が、静寂の中で判決を待った。", "note": "reach a verdict / a guilty verdict のように使う。"}, {"word": "escape", "hint": "逃げる、脱出する", "general": "危険や拘束から逃げ出すこと", "example": "The real criminal escaped through a window before anyone could stop him.", "example_ja": "本物の犯人は、誰も止める前に窓から逃げ出した。", "note": "escape from ~ の形。名詞でも使う。"}, {"word": "chase", "hint": "追いかける", "general": "誰かや何かを捕まえようと追うこと", "example": "Men from the town gave chase, but he disappeared into the woods.", "example_ja": "町の男たちは追跡したが、彼は森の中へ姿を消した。", "note": "give chase / a high-speed chase のように使う。"}, {"word": "disguise", "hint": "変装", "general": "自分の正体を隠すための姿や服装", "example": "He wondered if the man's calm appearance was just a disguise.", "example_ja": "彼は、その男の落ち着いた様子は単なる変装なのではないかと思った。", "note": "in disguise / disguise oneself as ~ のように使う。"}, {"word": "corpse", "hint": "死体、遺体", "general": "死んだ人の体", "example": "They were too terrified to look closely at the corpse.", "example_ja": "彼らはあまりにも怖くて、その死体を近くで見ることができなかった。", "note": "dead bodyとほぼ同義だが、より硬い語。"}, {"word": "grave", "hint": "墓", "general": "死者を埋葬する場所、穴", "example": "They were standing near a freshly dug grave when it happened.", "example_ja": "それが起こった時、彼らは掘られたばかりの墓のそばに立っていた。", "note": "dig a grave / open a grave のように使う。"}, {"word": "dig", "hint": "掘る", "general": "地面に穴を作ること", "example": "The men had come to dig up a body for a doctor.", "example_ja": "その男たちは、医者のために死体を掘り出しに来ていた。", "note": "dig up / dig a hole のように使う。過去形dug。"}, {"word": "shovel", "hint": "シャベル、スコップ", "general": "土を掘るための道具", "example": "He left his shovel behind in his panic to run.", "example_ja": "パニックになって逃げる中で、彼はシャベルを置き忘れた。", "note": "dig with a shovel のように使う。"}, {"word": "knife", "hint": "ナイフ", "general": "刃のついた刃物", "example": "He saw a knife flash in the moonlight and froze in terror.", "example_ja": "彼は月明かりにナイフが光るのを見て、恐怖で固まった。", "note": "a sharp knife / pull out a knife のように使う。"}, {"word": "terror", "hint": "恐怖、テラー", "general": "非常に強い恐れの感情", "example": "He had never felt such pure terror before in his life.", "example_ja": "彼は今までの人生で、こんなにも純粋な恐怖を感じたことはなかった。", "note": "feel terror / in terror のように使う。形容詞terrified/terrifying。"}, {"word": "horror", "hint": "恐怖、ショック", "general": "非常に恐ろしいことに対する強い嫌悪感や驚き", "example": "To his horror, he realized the man had seen him too.", "example_ja": "恐ろしいことに、彼はその男にも自分が見られていたことに気づいた。", "note": "to someone's horror / in horror のように使う。"}, {"word": "shudder", "hint": "(恐怖や寒さで)身震いする", "general": "強い感情によって体が小さく揺れること", "example": "He couldn't help but shudder at the memory.", "example_ja": "彼はその記憶に身震いせずにはいられなかった。", "note": "shudder at ~ / a shudder ran through him のように使う。"}, {"word": "creep", "hint": "こっそり進む、不気味な感じがする", "general": "そっと静かに動くこと、または不気味な感覚を与えること", "example": "They had to creep past the sleeping man without making a sound.", "example_ja": "彼らは、音を立てずに眠っている男のそばをこっそり通り過ぎなければならなかった。", "note": "creep up on someone / give someone the creeps のように使う。"}, {"word": "lurk", "hint": "潜む、待ち伏せする", "general": "こっそり隠れて、何かを待つこと", "example": "He felt as if danger were lurking just outside the window.", "example_ja": "彼は、まるで窓の外にすぐ危険が潜んでいるかのように感じた。", "note": "lurk in the shadows のように使われる、やや文学的な語。"}, {"word": "threat", "hint": "脅し、脅威", "general": "誰かを傷つける、または害を与えるという警告", "example": "He took the man's whispered threat very seriously.", "example_ja": "彼は、その男がささやいた脅しを非常に深刻に受け止めた。", "note": "a threat to someone / make a threat のように使う。"}, {"word": "revenge", "hint": "復讐、仕返し", "general": "自分が受けた害に対して、相手に害を返すこと", "example": "He swore revenge on the man who had wronged him.", "example_ja": "彼は、自分を不当に扱った男に復讐を誓った。", "note": "take revenge / seek revenge のように使う。"}, {"word": "vengeance", "hint": "復讐、報復(やや古風で強い語)", "general": "revengeより強く、激しい復讐の感情を表す", "example": "The man's eyes were full of vengeance.", "example_ja": "その男の目は、復讐心に満ちていた。", "note": "revengeより文学的・大げさな響きを持つ語。"}, {"word": "conspire", "hint": "(悪事を)共謀する、企む", "general": "何か(しばしば悪い計画)を密かに他人と準備すること", "example": "They conspired to dig up the buried gold without anyone finding out.", "example_ja": "彼らは、誰にも知られずに埋められた金を掘り出そうと共謀した。", "note": "conspire to ~ / conspire with someone の形。名詞conspiracy。"}, {"word": "avenge", "hint": "(誰かのために)復讐する、報復する", "general": "自分や他人が受けた害に対して仕返しをすること", "example": "He wanted to avenge the wrong that had been done to his friend.", "example_ja": "彼は、友人にされた不当な扱いに対して復讐したいと思った。", "note": "avenge someone/something の形。revengeは名詞、avengeは動詞として使われることが多い。"}, {"word": "loot", "hint": "戦利品、奪った品物", "general": "盗まれた、または奪われた財物", "example": "They had buried their loot under a tree, planning to come back for it.", "example_ja": "彼らは奪った品物を木の下に埋め、後で取りに来るつもりだった。", "note": "動詞でも使う(loot a store)。"}, {"word": "gold", "hint": "金、金貨", "general": "貴重な金属、またそれで作られた貨幣", "example": "The chest was full of gold coins.", "example_ja": "その箱は金貨でいっぱいだった。", "note": "a chest of gold のように使う。"}, {"word": "coin", "hint": "コイン、硬貨", "general": "金属で作られた貨幣", "example": "He had never held so many coins at once.", "example_ja": "彼はこれほど多くのコインを一度に手にしたことはなかった。", "note": "a gold coin / a pile of coins のように使う。"}, {"word": "chest", "hint": "(物入れの)箱、チェスト", "general": "物を入れるための大きな木箱", "example": "They pried open the heavy chest with their hands trembling.", "example_ja": "彼らは手を震わせながら、その重い箱をこじ開けた。", "note": "a treasure chest のように使われることが多い。"}, {"word": "pry", "hint": "こじ開ける", "general": "力を加えて、無理に何かを開けること", "example": "It took both of them to pry the lid off.", "example_ja": "そのふたをこじ開けるには、二人ともの力が必要だった。", "note": "pry open ~ の形でよく使う。"}, {"word": "lid", "hint": "ふた", "general": "容器の上部を覆う部分", "example": "The lid was stuck, rusted shut from years underground.", "example_ja": "そのふたは、何年も地下にあったことで錆びついて固着していた。", "note": "open/close a lid のように使う。"}, {"word": "rusty", "hint": "錆びた", "general": "金属が酸化して錆びている状態", "example": "The lock was old and rusty, but it still worked.", "example_ja": "その錠は古く錆びていたが、それでもまだ使えた。", "note": "形容詞。rust(錆)の派生語。"}, {"word": "clue", "hint": "手がかり", "general": "問題や謎を解くための情報", "example": "The footprints were the only clue they had.", "example_ja": "その足跡は、彼らが持つ唯一の手がかりだった。", "note": "a clue to ~ / find a clue のように使う。"}, {"word": "mystery", "hint": "謎、神秘", "general": "説明や理解が難しい事柄", "example": "The disappearance remained a mystery for years.", "example_ja": "その失踪は、何年もの間謎のままだった。", "note": "a mystery story / solve a mystery のように使う。"}, {"word": "solve", "hint": "解決する、解く", "general": "問題や謎の答えを見つけること", "example": "He felt proud that he had helped solve the mystery.", "example_ja": "彼は、自分がその謎の解決に貢献できたことを誇りに思った。", "note": "solve a problem/mystery/case のように使う。"}, {"word": "suspect", "hint": "疑う、(犯罪の)容疑者", "general": "何かが真実であると思うが確信がない状態、または罪を犯したと疑われる人", "example": "He suspected that the man's story was a lie.", "example_ja": "彼は、その男の話が嘘ではないかと疑っていた。", "note": "動詞(疑う)と名詞(容疑者)で発音とアクセントが異なる。"}, {"word": "evidence", "hint": "証拠", "general": "何かが真実であることを示す情報や物", "example": "There was no real evidence to prove who had done it.", "example_ja": "誰がそれをしたのかを証明する実際の証拠はなかった。", "note": "a piece of evidence / lack of evidence のように使う。不可算名詞。"}, {"word": "witness stand", "hint": "証言台", "general": "証人が法廷で証言するために立つ場所", "example": "Walking up to the witness stand felt like the bravest thing he had ever done.", "example_ja": "証言台に向かって歩くことは、彼が今までで最も勇気のいる行動のように感じられた。", "note": "take the witness stand のように使う。"}, {"word": "sworn statement", "hint": "宣誓供述", "general": "法廷で真実を述べると誓った上での発言", "example": "His sworn statement would decide the outcome of the trial.", "example_ja": "彼の宣誓供述が、その裁判の結末を決めることになる。", "note": "under oath(宣誓のもとで)も関連表現として重要。"}, {"word": "justice", "hint": "正義、司法", "general": "公正で正しいこと、またそれを実現する仕組み", "example": "For the first time, he understood what real justice meant.", "example_ja": "初めて、彼は本当の正義とは何かを理解した。", "note": "bring someone to justice / a sense of justice のように使う。"}, {"word": "hang", "hint": "(刑として)つるす、絞首刑にする", "general": "絞首刑で処刑すること(古い時代の刑罰)", "example": "In those days, a man found guilty of murder might be hanged.", "example_ja": "当時、殺人で有罪となった者は絞首刑になることもあった。", "note": "過去形は処刑の意味でhanged、それ以外はhung。歴史的文脈の語。"}, {"word": "jail", "hint": "刑務所、留置場", "general": "罪を犯した人を閉じ込めておく場所", "example": "The man was kept in the town jail until the trial.", "example_ja": "その男は、裁判まで町の留置場に入れられていた。", "note": "go to jail / in jail のように使う。"}, {"word": "sheriff", "hint": "郡保安官", "general": "地域の法と秩序を守る役人(アメリカの地方制度特有)", "example": "The sheriff organized a group of men to search the woods.", "example_ja": "保安官は、森を捜索するための集団を組織した。", "note": "アメリカ南部・西部の歴史的背景を持つ語。policeとは異なる地方制度。"}, {"word": "posse", "hint": "(保安官が招集する)追跡隊、自警団", "general": "犯罪者を追跡・捕まえるために集められた人々の集団", "example": "A posse rode out at dawn to track down the escaped man.", "example_ja": "夜明けに、逃げた男を追跡するために追跡隊が出発した。", "note": "アメリカ西部開拓時代を扱う物語で頻出する語。"}, {"word": "track down", "hint": "追跡して見つけ出す", "general": "探していた人や物を見つけること", "example": "It took days to track down the man they were looking for.", "example_ja": "彼らが探していた男を見つけ出すには、何日もかかった。", "note": "track someone/something down の形でよく使う句動詞。"}, {"word": "vow", "hint": "誓い、誓約", "general": "何かを必ず行うという強い約束", "example": "He made a silent vow to himself never to tell another lie.", "example_ja": "彼は、もう二度と嘘をつかないという無言の誓いを自分自身に立てた。", "note": "make a vow / a vow of silence のように使う。動詞でも使う。"}, {"word": "sweetheart", "hint": "恋人、いとしい人(やや古風で可愛らしい呼び方)", "general": "恋愛の対象としての相手", "example": "He decided that Becky would be his new sweetheart.", "example_ja": "彼は、ベッキーを自分の新しい恋人にしようと決めた。", "note": "古風で愛らしい響きを持つ語。現代でも軽い呼びかけとして使われる。"}, {"word": "engaged", "hint": "婚約した(子供の遊びとしての「婚約」も含む)", "general": "結婚を約束した状態", "example": "In their game, being 'engaged' just meant promising never to love anyone else.", "example_ja": "彼らの遊びでは、「婚約」とはただ他の誰も好きにならないと約束することを意味した。", "note": "get engaged の形。本書では子供同士の「儀式」として描かれる。"}, {"word": "jilt", "hint": "(恋人を)振る、見捨てる", "general": "特に結婚や交際の約束をした相手を不当に捨てること", "example": "Tom felt like the most jilted boy in the world when she walked away.", "example_ja": "彼女が去っていった時、トムは世界で一番振られた少年のように感じた。", "note": "jilted lover という表現でよく使われる、やや古風な語。"}, {"word": "sulk", "hint": "ふくれる、すねる", "general": "不満や悲しみを態度で示し、不機嫌になること", "example": "He sulked in the corner of the schoolyard all afternoon.", "example_ja": "彼は午後中、校庭の隅でずっとふくれていた。", "note": "sulk about ~ の形。形容詞sulky(不機嫌な)。"}, {"word": "pout", "hint": "口をすぼめてふくれる、むくれる", "general": "不満を表すために唇を突き出すような表情をすること", "example": "She pouted when he wouldn't give her his apple.", "example_ja": "彼がリンゴをくれなかったので、彼女はむくれた。", "note": "主に子供っぽい不満の表現として使われる。"}, {"word": "flatter", "hint": "おだてる、お世辞を言う", "general": "気に入られようと、相手を過度に褒めること", "example": "He tried to flatter her into forgiving him.", "example_ja": "彼は彼女に許してもらおうと、おだてようとした。", "note": "flatter someone into ~ing の形。名詞flattery。"}, {"word": "compliment", "hint": "褒め言葉、お世辞", "general": "誰かの良いところを褒める言葉", "example": "He gave her an awkward compliment about her dress.", "example_ja": "彼は彼女のドレスについて、ぎこちない褒め言葉を言った。", "note": "give/pay someone a compliment の形。動詞でも使う。"}, {"word": "impress", "hint": "感心させる、印象づける", "general": "良い印象を与えること", "example": "He wanted to impress her with his bravery.", "example_ja": "彼は自分の勇敢さで彼女に感心してもらいたかった。", "note": "impress someone with ~ の形。be impressed by ~ も頻出。"}, {"word": "jealousy", "hint": "嫉妬", "general": "他人が持つものや関係を羨ましく思う気持ち", "example": "A flash of jealousy crossed his face when he saw her with another boy.", "example_ja": "彼が彼女が他の少年と一緒にいるのを見た時、嫉妬の表情が彼の顔をよぎった。", "note": "a flash of jealousy / out of jealousy のように使う。"}, {"word": "quarrel", "hint": "口論、けんか(やや古風な語)", "general": "言い合いやけんか", "example": "Their quarrel started over something small and silly.", "example_ja": "二人のけんかは、何か小さくてばかげたことから始まった。", "note": "have a quarrel / quarrel with someone の形。"}, {"word": "sulky", "hint": "不機嫌な、すねた", "general": "不満や悲しみのために口をきかない、機嫌が悪い様子", "example": "He stayed sulky for the rest of the day.", "example_ja": "彼はその日の残りの時間、ずっと不機嫌だった。", "note": "動詞sulkの形容詞形。"}, {"word": "make up", "hint": "仲直りする", "general": "けんかの後に関係を修復すること", "example": "By the next morning, they had already made up.", "example_ja": "翌朝には、二人はもう仲直りしていた。", "note": "make up with someone の形。句動詞。"}, {"word": "reconcile", "hint": "和解する", "general": "対立していた関係を再びうまくいくようにすること", "example": "It took a small gift for them to fully reconcile.", "example_ja": "二人が完全に和解するには、小さな贈り物が必要だった。", "note": "reconcile with someone の形。やや硬い語で、make upよりも改まった文脈で使う。"}, {"word": "friendship", "hint": "友情", "general": "友人同士の関係", "example": "Their friendship survived even the strangest adventures.", "example_ja": "二人の友情は、どんな奇妙な冒険を経ても続いた。", "note": "a close friendship / form a friendship のように使う。"}, {"word": "loyalty", "hint": "忠誠、義理", "general": "友人や仲間に対して変わらず誠実であること", "example": "His loyalty to Huck never wavered, even when others judged him for it.", "example_ja": "彼のハックへの忠誠心は、他人にそれを非難されても、決して揺らがなかった。", "note": "loyalty to someone の形。形容詞loyal。"}, {"word": "waver", "hint": "揺らぐ、ぐらつく", "general": "決意や信念が不安定になること", "example": "His resolve to tell the truth never wavered.", "example_ja": "真実を話すという彼の決意は、決して揺らぐことがなかった。", "note": "waver between A and B のように使う。"}, {"word": "resolve", "hint": "決意", "general": "何かをしようという強い決心", "example": "He felt a sudden resolve to do the right thing, no matter the cost.", "example_ja": "彼は、どんな犠牲を払っても正しいことをしようという突然の決意を感じた。", "note": "a sense of resolve / one's resolve のように使う。動詞でも使う。"}, {"word": "defend", "hint": "守る、弁護する", "general": "批判や攻撃から誰かを守ること", "example": "He stepped up to defend his friend's name in court.", "example_ja": "彼は、法廷で友人の名誉を守るために前に出た。", "note": "defend someone against ~ の形。"}, {"word": "hero", "hint": "英雄、ヒーロー", "general": "勇敢な行いをした人として尊敬される人物", "example": "Overnight, he became something of a town hero.", "example_ja": "一夜にして、彼は町のちょっとした英雄になった。", "note": "a hero in someone's eyes / become a hero のように使う。"}, {"word": "praise", "hint": "称賛する、称賛", "general": "誰かの良さを言葉で評価すること", "example": "He had never received so much praise in his life.", "example_ja": "彼は今までの人生で、こんなにも多くの称賛を受けたことはなかった。", "note": "praise someone for ~ / give praise のように使う。"}, {"word": "applaud", "hint": "喝采する、拍手する", "general": "手をたたいて誰かを称賛すること", "example": "The whole town seemed to applaud his courage.", "example_ja": "町中の人々が、彼の勇気に喝采しているようだった。", "note": "applaud someone for ~ の形。名詞applause。"}, {"word": "shame on you", "hint": "恥を知れ(古い表現的な叱責)", "general": "誰かの行動に対する強い非難の言葉", "example": "\"Shame on you,\" his aunt said, though she was clearly relieved.", "example_ja": "伯母は「恥を知りなさい」と言ったが、明らかに安堵しているようだった。", "note": "古風だが今でも使われる決まった表現。"}, {"word": "naughty", "hint": "いたずらな、いけない(子供に対して使う)", "general": "行儀が悪い、特に子供に対して使われる軽い非難", "example": "\"You naughty boy,\" she scolded, hugging him at the same time.", "example_ja": "「このいたずら坊や」と言いながら、彼女は彼を抱きしめた。", "note": "naughty child のように子供に対して使われることが多い。"}, {"word": "affection", "hint": "愛情、好意", "general": "誰かに対する優しい気持ち", "example": "Beneath her strict words, he could always feel her affection.", "example_ja": "彼女の厳しい言葉の裏にも、彼はいつも愛情を感じることができた。", "note": "show affection / affection for someone の形。"}, {"word": "tender", "hint": "優しい、思いやりのある", "general": "優しく、繊細な気持ちを示す性質の", "example": "She had a tender side that few people ever saw.", "example_ja": "彼女には、ほとんどの人が見たことのない優しい面があった。", "note": "a tender moment / tender words のように使う。"}, {"word": "strict", "hint": "厳しい", "general": "規則を厳しく適用する性質の", "example": "His aunt's strict rules sometimes seemed unfair.", "example_ja": "伯母の厳しい規則は、時々不公平に思えた。", "note": "strict rules / strict parent のように使う。"}, {"word": "firm", "hint": "厳格な、しっかりした(態度について)", "general": "態度や決定が変わらず、はっきりしている", "example": "Her voice was firm, but he could hear the worry underneath it.", "example_ja": "彼女の声は厳格だったが、その下に心配が隠れているのを彼は聞き取れた。", "note": "a firm voice / firm decision のように使う。"}, {"word": "tease", "hint": "からかう", "general": "楽しみのために誰かをからかったり、いじったりすること", "example": "The other boys teased him about being so quiet.", "example_ja": "他の少年たちは、彼がとても静かなことについて彼をからかった。", "note": "tease someone about ~ の形。"}, {"word": "laughter", "hint": "笑い、笑い声", "general": "笑うこと、その音", "example": "Their laughter echoed through the empty schoolyard.", "example_ja": "二人の笑い声は、誰もいない校庭に響き渡った。", "note": "動詞laughの名詞形。burst into laughter のように使う。"}, {"word": "giggle", "hint": "くすくす笑う", "general": "小さく、控えめに笑うこと", "example": "She giggled every time he made a silly face.", "example_ja": "彼が変な顔をするたびに、彼女はくすくす笑った。", "note": "主に子供っぽい笑い方を表す。動詞・名詞両方で使う。"}, {"word": "grin", "hint": "にやりと笑う、満面の笑み", "general": "歯を見せて大きく笑うこと", "example": "He couldn't help grinning when he saw the look on her face.", "example_ja": "彼女の表情を見て、彼はにやりと笑わずにはいられなかった。", "note": "grin from ear to ear(満面の笑みを浮かべる)のような表現もある。"}, {"word": "frown", "hint": "しかめ顔、まゆをひそめる", "general": "不満や心配を表す表情", "example": "His aunt's frown deepened as he explained what had happened.", "example_ja": "彼が何が起こったかを説明すると、伯母のしかめ顔は深まった。", "note": "give someone a frown / frown at ~ のように使う。"}, {"word": "weep", "hint": "(静かに)泣く、嘆く", "general": "涙を流すこと(cryよりやや文学的)", "example": "His aunt wept openly when she thought he was gone for good.", "example_ja": "伯母は、彼が永遠に去ったと思った時、人目もはばからず泣いた。", "note": "cryよりやや古風・文学的な語。weep over ~ の形。"}, {"word": "sob", "hint": "すすり泣く", "general": "声を出して泣くこと", "example": "He could hear his aunt sobbing through the wall.", "example_ja": "彼は壁を通して、伯母がすすり泣いている声を聞くことができた。", "note": "動詞・名詞両方で使う。sob uncontrollably のように使う。"}, {"word": "comfort", "hint": "慰める、慰め", "general": "悲しんでいる人を安心させる優しさ", "example": "He didn't know how to offer comfort, so he just sat beside her.", "example_ja": "彼はどう慰めればいいか分からなかったので、ただ彼女のそばに座った。", "note": "offer comfort / find comfort のように使う。"}, {"word": "despair", "hint": "絶望", "general": "全く希望が持てない状態", "example": "For a moment, his aunt seemed to be in complete despair.", "example_ja": "一瞬、伯母は完全な絶望の中にいるように見えた。", "note": "in despair / a sense of despair のように使う。"}, {"word": "miracle", "hint": "奇跡", "general": "説明できないほど素晴らしく、信じられない出来事", "example": "His safe return felt like a miracle to everyone in town.", "example_ja": "彼の無事の帰還は、町中の人々にとって奇跡のように感じられた。", "note": "a miracle happens / it's a miracle のように使う。"}, {"word": "grateful", "hint": "感謝している", "general": "誰かや何かに対して感謝の気持ちを持つ", "example": "He had never been so grateful to be alive.", "example_ja": "彼は今までこんなにも、生きていることに感謝したことはなかった。", "note": "grateful for ~ / grateful to someone の形。"}, {"word": "thankful", "hint": "ありがたく思う", "general": "良いことに対して感謝を感じている", "example": "His aunt was thankful beyond words.", "example_ja": "伯母は言葉では言い表せないほど感謝していた。", "note": "gratefulとほぼ同義で、より口語的。"}, {"word": "embrace", "hint": "抱きしめる、受け入れる", "general": "愛情を込めて誰かを腕で包むこと、または考えなどを受け入れること", "example": "His aunt embraced him so tightly he could barely breathe.", "example_ja": "伯母は彼をとても強く抱きしめたので、彼はほとんど息ができなかった。", "note": "embrace someone / embrace a change のように使う。"}, {"word": "hug", "hint": "ハグ、抱きしめる", "general": "愛情を示すために誰かを腕で抱くこと", "example": "He got more hugs that day than he had in months.", "example_ja": "その日、彼はそれまでの何ヶ月分よりも多くのハグをされた。", "note": "give someone a hug / hug someone の形。"}, {"word": "longing", "hint": "あこがれ、強い願望", "general": "何かを強く望む気持ち", "example": "He felt a strange longing for the simple days of summer.", "example_ja": "彼は、夏の単純な日々への奇妙なあこがれを感じた。", "note": "a longing for ~ / a deep longing のように使う。"}, {"word": "yearn", "hint": "切望する、あこがれる", "general": "非常に強く何かを欲しがること", "example": "Part of him yearned to be ordinary again.", "example_ja": "彼の一部は、再び普通の存在になることを切望していた。", "note": "yearn for ~ / yearn to ~ の形、やや文学的な語。"}, {"word": "freedom", "hint": "自由", "general": "束縛や規則から解放されている状態", "example": "He treasured his freedom to roam the woods all day.", "example_ja": "彼は、一日中森を歩き回れる自由を大切にしていた。", "note": "freedom to ~ / freedom from ~ の形。"}, {"word": "restless", "hint": "落ち着かない、じっとしていられない", "general": "動きたい、何かしたいという気持ちで満たされている状態", "example": "By midsummer, he grew restless and wanted a new adventure.", "example_ja": "真夏になる頃には、彼は落ち着かなくなり、新しい冒険を求めるようになった。", "note": "feel restless / a restless night のように使う。"}, {"word": "bore", "hint": "退屈させる", "general": "興味を持たせず、つまらない気持ちにさせること", "example": "School bored him almost every single day.", "example_ja": "学校はほとんど毎日、彼を退屈させた。", "note": "形容詞bored(退屈している)/boring(退屈な)の違いに注意。"}, {"word": "yawn", "hint": "あくびをする", "general": "眠さや退屈で大きく口を開けて息を吐くこと", "example": "He yawned through most of the sermon.", "example_ja": "彼は説教のほとんどの間、あくびをしていた。", "note": "動詞・名詞両方で使う。"}, {"word": "daydream", "hint": "夢想する、白昼夢を見る", "general": "現実から離れて、楽しい想像にふけること", "example": "He spent most of class daydreaming about pirates and treasure.", "example_ja": "彼は授業時間の大半を、海賊や宝物についての夢想に費やした。", "note": "daydream about ~ の形。名詞でも使う。"}, {"word": "imagination", "hint": "想像力", "general": "心の中で物事を思い描く力", "example": "His imagination turned the ordinary creek into a wild, dangerous river.", "example_ja": "彼の想像力は、その普通の小川を荒々しく危険な大河に変えた。", "note": "a vivid imagination / use one's imagination のように使う。"}, {"word": "vivid", "hint": "鮮やかな、生き生きとした", "general": "非常に明確で、強い印象を与える性質の", "example": "His descriptions were so vivid that everyone could picture the scene.", "example_ja": "彼の描写は非常に鮮やかで、誰もがその光景を思い描くことができた。", "note": "a vivid memory / vivid imagination のように使う。"}, {"word": "riverbank", "hint": "川岸", "general": "川に沿った岸の部分", "example": "They spent the afternoon fishing along the riverbank.", "example_ja": "彼らは午後を、川岸で釣りをして過ごした。", "note": "along the riverbank のように使う。river + bankの複合語。"}, {"word": "current", "hint": "(川や海の)流れ", "general": "水が一定の方向に動く力", "example": "The current was stronger than it looked from the shore.", "example_ja": "その流れは、岸から見るよりも強かった。", "note": "a strong current / against the current のように使う。"}, {"word": "shore", "hint": "岸、岸辺", "general": "海や湖、川などの陸地に接する部分", "example": "They swam back to shore as fast as they could.", "example_ja": "彼らはできるだけ速く岸まで泳いで戻った。", "note": "on shore / reach the shore のように使う。"}, {"word": "drift", "hint": "漂う", "general": "水や風によって、ゆっくりと動かされること", "example": "The raft drifted slowly down the river while they slept.", "example_ja": "彼らが眠っている間、いかだはゆっくりと川を下って漂っていった。", "note": "drift away / drift downstream のように使う。"}, {"word": "thunderstorm", "hint": "雷雨", "general": "雷を伴う激しい雨", "example": "A sudden thunderstorm forced them to take shelter in the cave.", "example_ja": "突然の雷雨に、彼らは洞窟に避難せざるを得なくなった。", "note": "thunder(雷鳴)+storm(嵐)の複合語。"}, {"word": "lightning", "hint": "雷光、稲妻", "general": "雷雨の際に空に走る光", "example": "A flash of lightning lit up the whole sky for a second.", "example_ja": "雷光が一瞬、空全体を照らした。", "note": "a flash of lightning / lightning strikes のように使う。不可算名詞。"}, {"word": "thunder", "hint": "雷鳴", "general": "雷の音", "example": "The thunder was so loud it shook the windows.", "example_ja": "雷鳴はとても大きく、窓を揺らすほどだった。", "note": "a roll of thunder のように使う。動詞でも使う。"}, {"word": "storm", "hint": "嵐", "general": "強い風や雨を伴う激しい天候", "example": "The storm trapped them inside for the whole night.", "example_ja": "その嵐は、一晩中彼らを中に閉じ込めた。", "note": "a violent storm / weather a storm のように使う。"}, {"word": "shelter", "hint": "避難場所、避難する", "general": "危険や悪天候から身を守るための場所、またそうすること", "example": "They found shelter under a rocky overhang.", "example_ja": "彼らは岩の張り出しの下に避難場所を見つけた。", "note": "take shelter / find shelter の形。動詞でも使う。"}, {"word": "branch", "hint": "(木の)枝", "general": "木の主幹から分かれて伸びている部分", "example": "He climbed onto a low branch to get a better view.", "example_ja": "彼はより良い視界を得るため、低い枝に登った。", "note": "climb a branch / a tree branch のように使う。"}, {"word": "trunk", "hint": "(木の)幹", "general": "木の中心となる太い部分", "example": "They hid behind the wide trunk of an old oak.", "example_ja": "彼らは古いオークの太い幹の後ろに隠れた。", "note": "a tree trunk のように使う。"}, {"word": "thicket", "hint": "(低木の)やぶ、密林", "general": "木や低木が密集して生えている場所", "example": "They pushed their way through a thick thicket of bushes.", "example_ja": "彼らは生い茂ったやぶを押し分けて進んだ。", "note": "a thicket of bushes/trees のように使う。"}, {"word": "meadow", "hint": "草原、牧草地", "general": "草に覆われた広い土地", "example": "They lay in the meadow, watching clouds pass overhead.", "example_ja": "彼らは草原に寝そべり、頭上を流れる雲を眺めた。", "note": "a green meadow / lie in a meadow のように使う。"}, {"word": "hill", "hint": "丘", "general": "周りの土地より高くなっている地形", "example": "From the top of the hill, they could see the whole town.", "example_ja": "丘の頂上から、彼らは町全体を見ることができた。", "note": "climb a hill / over the hill のように使う。"}, {"word": "slope", "hint": "斜面、坂", "general": "傾斜した地面", "example": "They slid down the grassy slope on their backs.", "example_ja": "彼らは背中をつけて、草の斜面を滑り下りた。", "note": "a steep slope / slide down a slope のように使う。"}, {"word": "steep", "hint": "険しい、急な", "general": "角度が急で、登りにくい", "example": "The path up the hill was steeper than it had looked.", "example_ja": "丘へ続く道は、見た目よりも険しかった。", "note": "a steep hill/slope のように使う。"}, {"word": "path", "hint": "小道、道", "general": "人が歩いて作られた狭い道", "example": "A narrow path led from the village into the woods.", "example_ja": "細い小道が、村から森へと続いていた。", "note": "follow a path / a path through the woods のように使う。"}, {"word": "dense", "hint": "密集した、濃い(森などについて)", "general": "中身が詰まっていて、抜けにくい状態", "example": "The forest grew so dense that little sunlight reached the ground.", "example_ja": "その森はとても密集していて、地面まで届く日光はほとんどなかった。", "note": "dense forest / dense fog のように使う。"}, {"word": "fog", "hint": "霧", "general": "地表近くにできる、視界を遮る水蒸気", "example": "A thick fog rolled in just before sunrise.", "example_ja": "日の出の直前、濃い霧が立ち込めた。", "note": "thick fog / fog rolls in のように使う。"}, {"word": "mist", "hint": "霧、ミスト(fogより薄い)", "general": "霧よりも薄く、軽い水蒸気", "example": "A light mist hung over the river in the early morning.", "example_ja": "早朝、軽い霧が川の上に立っていた。", "note": "fogより薄く小規模なものを指す。"}, {"word": "dawn", "hint": "夜明け", "general": "太陽が昇る、朝の早い時間", "example": "They woke at dawn, stiff and hungry.", "example_ja": "彼らは夜明けに、体がこわばり、お腹を空かせて起きた。", "note": "at dawn / from dawn to dusk のように使う。"}, {"word": "dusk", "hint": "夕暮れ、薄暮", "general": "日が沈んで暗くなる前の、夕方の時間", "example": "By dusk, they still hadn't found their way back.", "example_ja": "夕暮れになっても、彼らはまだ帰り道を見つけられていなかった。", "note": "at dusk / from dawn to dusk のように使う。"}, {"word": "moonlight", "hint": "月の光、月明かり", "general": "月から差す光", "example": "They could just barely see by the light of the moon.", "example_ja": "彼らは月明かりだけで、かろうじて物を見ることができた。", "note": "by moonlight / in the moonlight のように使う。"}, {"word": "shimmer", "hint": "きらきら光る、揺らめく", "general": "光が反射して、ゆらゆらと光って見えること", "example": "The water shimmered under the afternoon sun.", "example_ja": "その水面は、午後の太陽の下できらきらと光っていた。", "note": "shimmer in the light のように使う。動詞・名詞両方で使う。"}, {"word": "glow", "hint": "(柔らかい光で)輝く、輝き", "general": "穏やかで暖かい光", "example": "A faint glow came from inside the cave.", "example_ja": "洞窟の中から、かすかな輝きが漏れていた。", "note": "a faint glow / glow in the dark のように使う。"}, {"word": "flicker", "hint": "(明かりが)ちらちらする", "general": "光が安定せず、点いたり消えたりすること", "example": "The candle flickered every time the wind blew.", "example_ja": "風が吹くたびに、ろうそくの火がちらちらと揺れた。", "note": "flicker out(消える)のように使う。"}, {"word": "breeze", "hint": "そよ風", "general": "穏やかで心地よい風", "example": "A cool breeze drifted in through the open window.", "example_ja": "涼しいそよ風が、開いた窓から流れ込んできた。", "note": "a gentle breeze のように使う。"}, {"word": "gust", "hint": "(風の)一吹き、突風", "general": "突然強く吹く風", "example": "A sudden gust of wind nearly blew out their candle.", "example_ja": "突然の突風が、彼らのろうそくの火を吹き消しそうになった。", "note": "a gust of wind のように使う。"}, {"word": "dusty", "hint": "埃っぽい", "general": "埃で覆われている、または埃が多い", "example": "The road into town was dry and dusty.", "example_ja": "町へ続く道は乾いていて埃っぽかった。", "note": "a dusty road / dusty floor のように使う。"}, {"word": "swamp", "hint": "沼地", "general": "水分の多い、湿った低地", "example": "They had heard stories about strange lights in the swamp.", "example_ja": "彼らは沼地に現れる奇妙な光についての話を聞いたことがあった。", "note": "a swamp full of mosquitoes のように使う。"}, {"word": "creek", "hint": "小川、クリーク", "general": "小さな川や水の流れ", "example": "They waded across the creek on their way home.", "example_ja": "彼らは家へ帰る途中、小川を歩いて渡った。", "note": "アメリカ英語でstreamの代わりによく使われる語。"}, {"word": "wade", "hint": "(浅い水を)歩いて渡る", "general": "浅い水の中を歩くこと", "example": "He waded into the shallow part of the river to cool off.", "example_ja": "彼は涼むために、川の浅い部分に歩いて入った。", "note": "wade through ~ の形。"}, {"word": "splash", "hint": "はねかける、水しぶき", "general": "水などが当たって飛び散ること", "example": "They splashed each other until their clothes were soaked.", "example_ja": "彼らは服がずぶ濡れになるまで、互いに水をはねかけ合った。", "note": "splash water on someone / a splash of water のように使う。"}, {"word": "soaked", "hint": "ずぶ濡れの", "general": "完全に水で濡れている状態", "example": "By the time they got home, they were completely soaked.", "example_ja": "家に着いた時には、彼らは完全にずぶ濡れだった。", "note": "get soaked / soaked through のように使う。"}, {"word": "dive", "hint": "飛び込む、潜る", "general": "頭から先に水に入ること", "example": "He dove off the rock without thinking twice.", "example_ja": "彼は何も考えずに、その岩から飛び込んだ。", "note": "過去形はdivedまたはdove(アメリカ英語)。"}, {"word": "float", "hint": "浮く", "general": "水や空中に浮かんで留まること", "example": "They floated on their backs, staring up at the clouds.", "example_ja": "彼らは仰向けに浮かびながら、雲を見上げていた。", "note": "float on water/air のように使う。"}, {"word": "shore up", "hint": "補強する(比喩的にも使う)", "general": "何かをより安定させ、強くすること", "example": "They tried to shore up the raft with extra logs.", "example_ja": "彼らは追加の丸太でいかだを補強しようとした。", "note": "句動詞。shore up confidence(自信を補強する)のように比喩的にも使う。"}, {"word": "insect", "hint": "昆虫", "general": "虫の総称", "example": "The cave was full of strange insects they had never seen.", "example_ja": "その洞窟は、彼らが見たことのない奇妙な昆虫でいっぱいだった。", "note": "bugとほぼ同義だが、insectのほうがやや科学的。"}, {"word": "bat", "hint": "コウモリ", "general": "夜に活動する、飛ぶ哺乳類", "example": "Bats flew silently over their heads in the dark cave.", "example_ja": "暗い洞窟の中で、コウモリが静かに彼らの頭上を飛んでいった。", "note": "a colony of bats のように複数で使われることが多い。"}, {"word": "howl", "hint": "(動物が)長く鳴く、吠える", "general": "オオカミなどが出す、長く悲しげな鳴き声", "example": "Somewhere far off, a dog howled into the night.", "example_ja": "遠くのどこかで、犬が夜に向かって長く吠えた。", "note": "a wolf howls のように使う。動詞・名詞両方で使う。"}, {"word": "crow", "hint": "カラス", "general": "黒い大きな鳥", "example": "A crow's call broke the silence of the graveyard.", "example_ja": "カラスの鳴き声が、墓地の静寂を破った。", "note": "as the crow flies(直線距離で)という表現もある。"}, {"word": "owl", "hint": "フクロウ", "general": "夜に活動する猛禽類", "example": "An owl hooted somewhere in the dark trees.", "example_ja": "暗い木々のどこかで、フクロウがホーホーと鳴いた。", "note": "owls hoot(フクロウはホーホーと鳴く)のように使う。"}, {"word": "snake", "hint": "ヘビ", "general": "足のない、長い体を持つ爬虫類", "example": "He nearly stepped on a snake hidden in the grass.", "example_ja": "彼は草に隠れていたヘビを、危うく踏みそうになった。", "note": "a poisonous snake / a snake bite のように使う。"}, {"word": "sting", "hint": "(虫に)刺す、刺し傷", "general": "虫や植物が皮膚を刺すこと、またその痛み", "example": "A bee sting made his hand swell up.", "example_ja": "ハチに刺されたことで、彼の手は腫れ上がった。", "note": "a bee sting / sting someone のように使う。"}, {"word": "itch", "hint": "かゆい、かゆみ", "general": "皮膚をひっかきたくなる感覚", "example": "The mosquito bites itched all night long.", "example_ja": "蚊に刺された箇所は、一晩中かゆかった。", "note": "形容詞itchy。動詞・名詞両方で使う。"}, {"word": "bruise", "hint": "あざ、打撲傷", "general": "皮膚の下の血管が破れてできる青黒い跡", "example": "He had a fresh bruise on his arm from climbing the fence.", "example_ja": "彼の腕には、塀を登った時にできた新しいあざがあった。", "note": "get a bruise / a bruise on ~ のように使う。"}, {"word": "scratch", "hint": "ひっかき傷、ひっかく", "general": "何かによってできた小さな傷、またそれをつける動作", "example": "His legs were covered in scratches from the thicket.", "example_ja": "彼の脚は、やぶでできたひっかき傷で覆われていた。", "note": "a scratch on ~ / scratch oneself のように使う。"}, {"word": "limp", "hint": "足を引きながら歩く、びっこを引く", "general": "片方の足が痛んだりして、ぎこちなく歩くこと", "example": "He limped the rest of the way home.", "example_ja": "彼は家までの残りの道を、足を引きながら歩いた。", "note": "動詞・名詞両方で使う(walk with a limp)。"}, {"word": "exhausted", "hint": "疲れ果てた", "general": "非常に疲れている状態", "example": "By the time they reached the cave entrance, they were completely exhausted.", "example_ja": "洞窟の入り口に着く頃には、彼らは完全に疲れ果てていた。", "note": "tiredよりも強い疲労を表す。be exhausted from ~ の形。"}, {"word": "famished", "hint": "非常に飢えている、腹ペコの", "general": "非常に強い空腹を感じている状態", "example": "They were famished after two days without food.", "example_ja": "二日間食べ物なしで過ごした後、彼らは腹ペコだった。", "note": "hungryよりも強い表現。"}, {"word": "superstitious", "hint": "迷信深い", "general": "迷信を信じやすい性質の", "example": "Even the adults in town were more superstitious than they liked to admit.", "example_ja": "町の大人たちでさえ、自分で認めたがらないほど迷信深かった。", "note": "名詞superstition。be superstitious about ~ の形。"}, {"word": "wart", "hint": "いぼ", "general": "皮膚にできる小さな硬い突起", "example": "He tried every cure he had ever heard of for getting rid of warts.", "example_ja": "彼はいぼを取るために、これまで聞いたことのあるあらゆる治療法を試した。", "note": "cure a wart のように使う。本書で迷信的な治療法の対象としてよく登場。"}, {"word": "cure", "hint": "治療法、治す", "general": "病気や問題を取り除くもの、または取り除くこと", "example": "Everyone in town seemed to know a different cure for warts.", "example_ja": "町中の人々が、それぞれ違ういぼの治療法を知っているようだった。", "note": "a cure for ~ / cure someone of ~ のように使う。"}, {"word": "remedy", "hint": "治療法、対策", "general": "問題や病気を解決するための方法", "example": "His remedy involved a dead cat and a graveyard at midnight.", "example_ja": "彼の治療法には、死んだ猫と真夜中の墓地が関わっていた。", "note": "a home remedy / a remedy for ~ のように使う。"}, {"word": "bad luck", "hint": "不運、悪運", "general": "運が悪いこと", "example": "Spilling salt was supposed to bring bad luck.", "example_ja": "塩をこぼすことは、不運をもたらすとされていた。", "note": "bring bad luck / have bad luck のように使う。"}, {"word": "fortune-teller", "hint": "占い師", "general": "運勢や未来を予言する人", "example": "A traveling fortune-teller once told him he would be famous.", "example_ja": "以前、旅の占い師が彼にいつか有名になると言った。", "note": "fortune(運命)+ teller(語る人)の複合語。"}, {"word": "omen", "hint": "前兆、兆し", "general": "未来に起こることを示すと信じられているしるし", "example": "A black cat crossing their path felt like a bad omen.", "example_ja": "黒猫が彼らの前を横切ったことは、悪い前兆のように感じられた。", "note": "a good/bad omen のように使う。"}, {"word": "devil", "hint": "悪魔", "general": "邪悪な存在として信じられている霊的な存在", "example": "Some of the boys swore the devil himself lived in the old house.", "example_ja": "少年たちの何人かは、その古い家には悪魔自身が住んでいると言い張った。", "note": "the devil / a little devil(いたずらな子)のように使う。"}, {"word": "witch", "hint": "魔女", "general": "魔法の力を持つとされる女性", "example": "The old woman living alone was rumored to be a witch.", "example_ja": "一人で暮らすその老女は、魔女だとうわさされていた。", "note": "a witch's spell のように使う。"}, {"word": "curse", "hint": "呪い、呪う", "general": "不幸をもたらすとされる言葉や力、またそれをかけること", "example": "He half-believed the place was under some kind of curse.", "example_ja": "彼は、その場所が何かの呪いにかかっているのだと半ば信じていた。", "note": "under a curse / curse someone のように使う。"}, {"word": "hideous", "hint": "恐ろしい、ひどく醜い", "general": "見た目や様子が非常に不快で恐ろしい", "example": "The man's face looked hideous in the candlelight.", "example_ja": "ろうそくの明かりの中で、その男の顔は恐ろしく見えた。", "note": "a hideous monster / look hideous のように使う。"}, {"word": "shriek", "hint": "金切り声、悲鳴", "general": "高く鋭い、恐怖や驚きの声", "example": "Someone let out a shriek when the door creaked open.", "example_ja": "ドアがきしみながら開いた時、誰かが金切り声を上げた。", "note": "let out a shriek / shriek with fear のように使う。"}, {"word": "creak", "hint": "きしむ、きしみ音", "general": "木製のものなどが擦れて出す音", "example": "The old floorboards creaked under their feet.", "example_ja": "古い床板は、彼らの足元できしんだ。", "note": "a creaking door のように使う。動詞・名詞両方で使う。"}, {"word": "rattle", "hint": "カタカタ鳴る、ガタガタ鳴らす", "general": "硬いものが当たり合って出す音", "example": "The wind made the old shutters rattle.", "example_ja": "風が、古い鎧戸をカタカタと鳴らした。", "note": "rattle in the wind のように使う。"}, {"word": "groan", "hint": "うめき声を出す、うめく", "general": "痛みや不満を表す低い声", "example": "He groaned at the thought of more chores.", "example_ja": "彼はさらなる雑用を考えて、うめき声を出した。", "note": "groan with pain / groan about ~ のように使う。"}, {"word": "chill", "hint": "寒気、冷え冷えとした感じ", "general": "寒さ、または恐怖による冷たい感覚", "example": "A chill ran through him as he remembered what he had seen.", "example_ja": "見たものを思い出すと、彼の体に冷気が走った。", "note": "a chill runs through someone のように使う。"}, {"word": "pale", "hint": "顔色が悪い、青白い", "general": "通常より色が薄く、健康そうに見えない", "example": "His face went pale when he heard the news.", "example_ja": "その知らせを聞いた時、彼の顔は青ざめた。", "note": "turn pale / look pale のように使う。"}, {"word": "sneak peek", "hint": "こっそり見ること、盗み見", "general": "許可なく、または隠れて何かを見ること", "example": "He took a sneak peek at the letter before giving it back.", "example_ja": "彼はその手紙を返す前に、こっそりと見てみた。", "note": "take a sneak peek の形。カジュアルな表現。"}, {"word": "peer", "hint": "じっと見る、目を凝らす", "general": "よく見ようと、注意深く見つめること", "example": "He peered into the darkness, trying to see what was making the sound.", "example_ja": "彼は、その音を出しているものを見ようと、暗闇に目を凝らした。", "note": "peer into/through ~ の形。"}, {"word": "crouch", "hint": "うずくまる、しゃがむ", "general": "体を低くして縮める姿勢をとること", "example": "They crouched behind the bushes, holding their breath.", "example_ja": "彼らは息を殺しながら、やぶの後ろにうずくまった。", "note": "crouch down / crouch behind ~ のように使う。"}, {"word": "tiptoe", "hint": "つま先で歩く、こっそり歩く", "general": "音を立てないように、つま先立ちで歩くこと", "example": "They tiptoed past the sleeping watchman.", "example_ja": "彼らは眠っている見張り番のそばを、つま先立ちで通り過ぎた。", "note": "on tiptoe / tiptoe past ~ のように使う。"}, {"word": "clutch", "hint": "ぎゅっとつかむ", "general": "何かを強く握ること", "example": "He clutched the candle so tightly his hand shook.", "example_ja": "彼はろうそくをとても強く握りすぎて、手が震えた。", "note": "clutch at ~(必死につかもうとする)の形でも使う。"}, {"word": "vanish", "hint": "消える、姿を消す", "general": "突然、見えなくなること", "example": "The man seemed to vanish into the night.", "example_ja": "その男は、夜の中に消えてしまったようだった。", "note": "vanish into thin air(完全に姿を消す)のような表現もある。"}, {"word": "appear", "hint": "現れる、出現する", "general": "突然、見えるようになること", "example": "A figure appeared at the end of the dark hallway.", "example_ja": "暗い廊下の先に、人影が現れた。", "note": "反対語はdisappear/vanish。appear out of nowhere のように使う。"}, {"word": "figure", "hint": "人影、姿", "general": "はっきりと識別できない人の形", "example": "A shadowy figure moved between the trees.", "example_ja": "影のような人影が、木々の間を動いた。", "note": "a dark/shadowy figure のように使う。"}, {"word": "shadow", "hint": "影", "general": "光が遮られてできる暗い部分", "example": "His own shadow startled him in the dim light.", "example_ja": "薄暗い光の中で、彼自身の影が彼を驚かせた。", "note": "in the shadow of ~ / cast a shadow のように使う。"}, {"word": "flame", "hint": "炎", "general": "火の燃えている部分", "example": "The flame of the candle wavered in the draft.", "example_ja": "ろうそくの炎は、すき間風の中で揺らめいた。", "note": "a candle flame / burst into flame のように使う。"}, {"word": "smoke", "hint": "煙", "general": "燃焼によって生じる気体", "example": "Thin smoke rose from the dying campfire.", "example_ja": "消えかけたたき火から、薄い煙が上がっていた。", "note": "smoke rises / a cloud of smoke のように使う。"}, {"word": "hollow", "hint": "中がうつろな、空洞の", "general": "中が空いている状態の", "example": "They hid the box inside a hollow tree.", "example_ja": "彼らはその箱を、空洞になった木の中に隠した。", "note": "a hollow tree / sound hollow のように使う。"}, {"word": "loft", "hint": "屋根裏、ロフト", "general": "屋根の下にある、物置や寝床として使われる空間", "example": "He slept in the loft above the barn.", "example_ja": "彼は納屋の上のロフトで寝た。", "note": "sleep in a loft / a hay loft のように使う。"}, {"word": "barn", "hint": "納屋、馬小屋", "general": "農作物や動物を保管・収容するための建物", "example": "They kept their secret stash hidden in the old barn.", "example_ja": "彼らは秘密の隠し場所を、古い納屋に隠していた。", "note": "a barn door / sleep in a barn のように使う。"}, {"word": "ain't", "hint": "~ではない、~ない(am not/is not/are not/have not/has notの口語的・方言的な短縮形)", "general": "標準英語のbe動詞やhave動詞の否定形の代わりに使われる、非標準的な短縮形", "example": "\"That ain't fair,\" Huck said, frowning.", "example_ja": "「そんなの公平じゃないよ」とハックは顔をしかめて言った。", "note": "非標準英語だが、口語表現として現代でも広く使われる。文脈によりam not/is not/are not/has not/have notのいずれにもなる。"}, {"word": "reckon", "hint": "~だと思う、~だろう(thinkやsupposeの意味の方言的表現)", "general": "考える、推測する、という意味の口語・方言的表現", "example": "\"I reckon we'll find that treasure yet,\" Tom said confidently.", "example_ja": "「俺たちはまだあの宝物を見つけられると思うよ」とトムは自信を持って言った。", "note": "I reckon (that) ~ の形でほぼ常に使われる。アメリカ南部方言として特徴的。"}, {"word": "conscience", "hint": "良心", "general": "自分の行いが正しいかどうかを判断する、内面の感覚", "example": "His conscience troubled him long after the others had forgotten the matter.", "example_ja": "他の者たちがそのことを忘れた後も、彼の良心は彼を苦しめ続けた。", "note": "a guilty conscience のように使う。"}, {"word": "remorse", "hint": "深い後悔、自責の念", "general": "自分の行いについて、強く悔やむ気持ち", "example": "A pang of remorse shot through him as he watched her cry.", "example_ja": "彼女が泣くのを見て、彼の中に自責の念が突き刺さった。", "note": "a pang of remorse のように使う。"}, {"word": "defiant", "hint": "反抗的な、挑戦的な", "general": "権威や規則に対して、従わない態度を示す性質", "example": "He stood there, defiant, refusing to apologize.", "example_ja": "彼は反抗的に立ち、謝ろうとしなかった。", "note": "a defiant look/attitude のように使う。"}, {"word": "petulant", "hint": "短気な、すぐ怒る", "general": "小さなことで、不機嫌になりやすい性質", "example": "He answered in a petulant tone, clearly annoyed by the question.", "example_ja": "彼はその質問に明らかにいらだち、短気な口調で答えた。", "note": "a petulant tone/child のように使う。"}, {"word": "vexed", "hint": "いらいらした、困った", "general": "小さな問題で、いらだちや困惑を感じている状態", "example": "He was vexed by the constant interruptions.", "example_ja": "彼は、絶え間ない中断にいらいらしていた。", "note": "vexed by/with ~ のように使う、やや古風な語。"}, {"word": "forlorn", "hint": "見捨てられた、孤独な", "general": "寂しく、希望を失っているような様子", "example": "He looked small and forlorn standing alone by the gate.", "example_ja": "門のそばに一人で立つ彼は、小さく寂しげに見えた。", "note": "a forlorn figure/look のように使う。"}, {"word": "yonder", "hint": "あそこ、向こうの(over thereの古風・方言的表現)", "general": "少し離れた場所を指す、古風で口語的な表現", "example": "\"The old house is just over yonder,\" Huck said, pointing.", "example_ja": "「あの古い家はちょうどあそこにあるよ」とハックは指さして言った。", "note": "over yonder の形で「あちらの方」を指す。アメリカ南部方言・古英語の名残。"}, {"word": "melancholy", "hint": "憂鬱な、もの悲しい", "general": "理由のはっきりしない、深い悲しみや寂しさの感情", "example": "A melancholy feeling settled over him as the sun went down.", "example_ja": "日が沈むと、憂鬱な気分が彼を包んだ。", "note": "a melancholy mood/feeling のように使う。"}, {"word": "despondent", "hint": "意気消沈した", "general": "希望を失い、深く落ち込んでいる状態", "example": "He grew despondent after days of searching turned up nothing.", "example_ja": "何日も探しても何も見つからず、彼は意気消沈していった。", "note": "despondent about ~ のように使う、やや硬い語。"}, {"word": "ardent", "hint": "熱烈な、熱心な", "general": "非常に強い熱意や感情を持つ性質", "example": "He was an ardent believer in second chances.", "example_ja": "彼は、再挑戦のチャンスを熱心に信じる者だった。", "note": "an ardent believer/admirer のように使う。"}, {"word": "plumb", "hint": "完全に、まったく(completelyの口語的表現)", "general": "completely / totallyの意味で使われる口語表現", "example": "\"You're plumb crazy if you think I'm going in there,\" Huck said.", "example_ja": "「あそこに入るなんて、お前は完全に頭がおかしいよ」とハックは言った。", "note": "plumb crazy / plumb tired のように形容詞を強調する。"}, {"word": "smitten", "hint": "心を奪われた、惚れ込んだ", "general": "恋愛感情などで、強く心を奪われている状態", "example": "He was completely smitten and made no effort to hide it.", "example_ja": "彼は完全に心を奪われ、それを隠そうともしなかった。", "note": "smitten with someone のように使う、やや口語的。"}, {"word": "mighty", "hint": "非常に、ものすごく(veryの意味で使う口語的な強調表現)", "general": "「強大な」という通常の意味の他に、口語でveryの代わりに使われる", "example": "\"This is mighty fine pie,\" he said with his mouth full.", "example_ja": "「これはものすごくおいしいパイだな」と彼は口をいっぱいにしながら言った。", "note": "mighty + 形容詞 の形でveryの代用として使われる。"}, {"word": "bashful", "hint": "はにかんだ、恥ずかしがりの", "general": "恥ずかしさで、人前で控えめになる性質", "example": "He gave a bashful smile and looked at his shoes.", "example_ja": "彼ははにかんだ笑みを浮かべ、自分の靴を見た。", "note": "a bashful smile/grin のように使う。"}, {"word": "audacity", "hint": "大胆さ、ずぶとさ", "general": "危険や非難を顧みず、思い切ったことをする性質", "example": "He had the audacity to ask for a reward after causing all that trouble.", "example_ja": "あれだけの騒ぎを起こした後で、彼は報酬を求めるという大胆さを見せた。", "note": "have the audacity to do something のように使う。"}, {"word": "impudent", "hint": "無礼な、ずうずうしい", "general": "目上の人に対して、失礼で生意気な態度をとる性質", "example": "His impudent grin only made the schoolmaster angrier.", "example_ja": "彼の無礼なにやにや笑いは、校長をさらに怒らせるだけだった。", "note": "an impudent grin/remark のように使う。"}, {"word": "chastise", "hint": "懲らしめる、厳しく叱る", "general": "罰や厳しい言葉で、誤りを正そうとすること", "example": "The aunt chastised him sharply for staying out so late.", "example_ja": "その伯母は、こんなに遅くまで外にいたことで彼を厳しく叱った。", "note": "chastise someone for ~ の形、やや硬い語。"}, {"word": "git", "hint": "得る、行く(getの口語的・方言的発音表記)", "general": "getの発音をそのまま表したつづり", "example": "\"Git outta here before someone sees us,\" Tom hissed.", "example_ja": "「誰かに見られる前にここから出ろ」とトムは小声で言った。", "note": "get away / get out などの口語的発音をそのまま表記。"}, {"word": "jest", "hint": "ただ、~だけ(justの口語的発音表記)", "general": "justの発音をそのまま表したつづり", "example": "\"It was jest a joke,\" he said, trying not to laugh.", "example_ja": "「ただの冗談だったんだよ」と彼は笑いをこらえながら言った。", "note": "justの方言的発音表記。"}, {"word": "ketch", "hint": "つかまえる、捕らえる(catchの口語的発音表記)", "general": "catchの発音をそのまま表したつづり", "example": "\"You can't ketch me!\" the boy yelled, running off.", "example_ja": "「俺をつかまえられるもんか!」とその少年は叫びながら走り去った。", "note": "catchの方言的発音表記。"}, {"word": "feller", "hint": "男、やつ(fellowの口語的発音表記)", "general": "fellow(男、人)の発音をそのまま表したつづり", "example": "\"He's a good feller, even if he talks too much,\" said the old man.", "example_ja": "「あいつはいい奴だよ、ちょっとしゃべりすぎだけどな」と老人は言った。", "note": "a good feller のように使う、fellowの方言的発音。"}, {"word": "reprimand", "hint": "叱責、戒める", "general": "誤りについて、正式に、または厳しく非難すること", "example": "He received a stern reprimand from the schoolmaster.", "example_ja": "彼は校長から厳しい叱責を受けた。", "note": "a stern reprimand のように使う。"}, {"word": "penance", "hint": "償い、罰", "general": "自分の罪や誤りに対して行う、自発的な償い", "example": "He decided that whitewashing the fence would be his penance.", "example_ja": "彼は、その塀にペンキを塗ることが自分の償いになると決めた。", "note": "do penance for ~ のように使う。"}, {"word": "loiter", "hint": "うろつく、ぶらぶらする", "general": "特に目的なく、ある場所にとどまっていること", "example": "The boys loitered near the schoolyard gate, in no hurry to go inside.", "example_ja": "少年たちは、中に入る気もないまま、校庭の門の近くをうろついていた。", "note": "loiter near/around ~ のように使う。"}, {"word": "saunter", "hint": "のんびり歩く、ぶらつく", "general": "急がず、気楽な様子で歩くこと", "example": "He sauntered up to the fence as though he had all the time in the world.", "example_ja": "彼は、まるで時間が無限にあるかのように、その塀へのんびりと歩いていった。", "note": "saunter up/along のように使う。"}, {"word": "nuther", "hint": "別の、もう一つの(anotherの口語的発音表記)", "general": "anotherの発音をそのまま表したつづり", "example": "\"That's a whole nuther story,\" Huck said, shaking his head.", "example_ja": "「それはまったく別の話だな」とハックは首を振りながら言った。", "note": "a whole nuther ~ という決まった口語表現でよく使われる。"}, {"word": "gape", "hint": "口を開けて見つめる", "general": "驚きで、口を開けたままじっと見ること", "example": "The other boys gaped at him in astonishment.", "example_ja": "他の少年たちは、驚いて彼を口を開けて見つめた。", "note": "gape at ~ のように使う。"}, {"word": "swagger", "hint": "威張って歩く、得意げに振る舞う", "general": "自信過剰な様子で、堂々と歩いたり振る舞ったりすること", "example": "He swaggered into the schoolyard as though he owned the place.", "example_ja": "彼は、まるでその場所を自分のものであるかのように、得意げに校庭に入っていった。", "note": "swagger into/around ~ のように使う。"}, {"word": "hapless", "hint": "不運な、ついていない", "general": "運が悪く、不幸な出来事に遭いやすい性質", "example": "The hapless boy seemed to attract trouble wherever he went.", "example_ja": "その不運な少年は、どこへ行っても面倒を引き起こすようだった。", "note": "a hapless victim/boy のように使う、やや文学的。"}, {"word": "woebegone", "hint": "悲しげな、悲嘆にくれた", "general": "非常に悲しく、惨めな様子", "example": "He wore a woebegone expression for the rest of the afternoon.", "example_ja": "彼はその日の午後の残り、悲しげな表情をしていた。", "note": "a woebegone expression/look のように使う、古風な語。"}, {"word": "languish", "hint": "衰える、もの寂しく過ごす", "general": "望みが叶わず、つらい状態で時間を過ごすこと", "example": "He languished at his desk, dreaming of the river outside.", "example_ja": "彼は机の前で、外の川を夢見ながら、もの寂しく過ごした。", "note": "languish in/at ~ のように使う、やや文学的。"}, {"word": "fret", "hint": "いらいらする、思い悩む", "general": "小さなことについて、繰り返し心配すること", "example": "His aunt fretted over him long after he had fallen asleep.", "example_ja": "彼の伯母は、彼が寝入った後も長い間思い悩んでいた。", "note": "fret over/about ~ のように使う。"}, {"word": "scamper", "hint": "ちょこちょこ走る、急いで逃げる", "general": "小さく、すばやい足取りで走ること", "example": "The boys scampered off before anyone could catch them.", "example_ja": "少年たちは、誰にも捕まらないうちに走り去った。", "note": "scamper off/away のように使う。"}, {"word": "clamber", "hint": "よじ登る", "general": "手足を使って、苦労しながら登ること", "example": "They clambered over the fence and dropped down on the other side.", "example_ja": "彼らはその塀をよじ登り、向こう側に飛び降りた。", "note": "clamber over/up ~ のように使う。"}, {"word": "tussle", "hint": "取っ組み合い、もめごと", "general": "小さな、力を使った争いやけんか", "example": "A short tussle broke out near the back of the schoolyard.", "example_ja": "校庭の後ろの方で、短い取っ組み合いが起こった。", "note": "a tussle over ~ のように使う。"}, {"word": "jeer", "hint": "あざける、ひやかす", "general": "相手を嘲笑するように、声を出すこと", "example": "The other boys jeered at him from across the yard.", "example_ja": "他の少年たちは、庭の向こうから彼をあざけった。", "note": "jeer at someone のように使う。"}, {"word": "taunt", "hint": "からかう、なじる", "general": "相手を怒らせるために、何度も嫌なことを言うこと", "example": "He taunted his friend until the boy finally lost his temper.", "example_ja": "彼は友人をからかい続け、ついにその少年は怒りを爆発させた。", "note": "taunt someone about ~ のように使う。"}, {"word": "sneer", "hint": "あざ笑う、見下した笑い", "general": "相手を見下すような、軽蔑的な笑みや言葉", "example": "\"Scared, are you?\" he sneered.", "example_ja": "「怖いのか?」と彼はあざ笑った。", "note": "sneer at ~ のように使う。"}, {"word": "bewilder", "hint": "困惑させる、当惑させる", "general": "理解できず、混乱させること", "example": "The sudden change of plans bewildered everyone.", "example_ja": "その突然の計画変更は、全員を困惑させた。", "note": "be bewildered by ~ のように使う。"}, {"word": "forlornly", "hint": "寂しげに、見捨てられたように", "general": "希望を失い、寂しい様子で", "example": "He stood there forlornly, watching the others walk away.", "example_ja": "彼は寂しげにそこに立ち、他の者たちが歩いていくのを見ていた。", "note": "stand/look forlornly のように使う。"}, {"word": "vow silently", "hint": "心の中で誓う", "general": "声に出さず、自分自身に強く約束すること", "example": "He vowed silently that he would make things right somehow.", "example_ja": "彼は、何とかして物事を正そうと心の中で誓った。", "note": "vow silently のように使う。"}, {"word": "poke", "hint": "袋、小袋(bagの方言的表現)", "general": "小さな袋を表すアメリカ南部方言の語", "example": "He kept his marbles in an old leather poke.", "example_ja": "彼はビー玉を古い革の小袋に入れていた。", "note": "a pig in a poke(袋の中の豚=実物を見ずに買う物)という慣用句にも残る。"}, {"word": "vittles", "hint": "食べ物、食料(victualsの口語的発音表記)", "general": "food(食べ物)を表す古風・方言的な語", "example": "\"We'd best save some vittles for the journey back,\" Huck said.", "example_ja": "「帰りの旅のために、食べ物を少し残しておいた方がいいな」とハックは言った。", "note": "victualsという古語の発音をそのまま表記した形。"}, {"word": "forsaken", "hint": "見捨てられた", "general": "助けや関心を受けられず、放置されている状態", "example": "The old house looked forsaken, with weeds growing in every corner.", "example_ja": "その古い家は見捨てられたように見え、あらゆる隅に雑草が生えていた。", "note": "a forsaken house/place のように使う、文学的な語。"}, {"word": "yearning", "hint": "強い憧れ、切望", "general": "何かを強く欲しい、または望む気持ち", "example": "A yearning for adventure had taken hold of him.", "example_ja": "冒険への強い憧れが、彼を捕らえていた。", "note": "a yearning for ~ のように使う。"}, {"word": "exult", "hint": "大喜びする、勝ち誇る", "general": "成功や勝利を、大きな喜びとともに感じること", "example": "He exulted privately over his small victory.", "example_ja": "彼は、その小さな勝利を密かに大喜びした。", "note": "exult over/in ~ のように使う、やや硬い語。"}, {"word": "reverie", "hint": "夢想、空想", "general": "現実から離れた、楽しい考えにふけっている状態", "example": "He was lost in a reverie when the bell rang.", "example_ja": "鐘が鳴ったとき、彼は夢想にとらわれていた。", "note": "lost in a reverie のように使う、文学的な語。"}, {"word": "howdy", "hint": "こんにちは(how do you doの口語的短縮形のあいさつ)", "general": "カジュアルなあいさつの言葉", "example": "\"Howdy, Tom! Where you been?\" Huck called from across the road.", "example_ja": "「やあトム!どこ行ってたんだ?」とハックは道の向こうから呼びかけた。", "note": "アメリカ南部・西部で特徴的なあいさつ表現。"}, {"word": "languid", "hint": "だるい、ものぐさな", "general": "動きが遅く、活力が感じられない様子", "example": "It was a languid afternoon, too hot to do much of anything.", "example_ja": "それはだるい午後で、何かをするには暑すぎた。", "note": "a languid afternoon/mood のように使う。"}, {"word": "flagrant", "hint": "露骨な、明白な(悪い意味で)", "general": "恥ずかしげもなく、明らかに悪いことをする様子", "example": "It was a flagrant violation of every rule the schoolmaster had ever made.", "example_ja": "それは、校長が作ったあらゆる規則に対する露骨な違反だった。", "note": "a flagrant violation/disregard のように使う、硬い語。"}, {"word": "contemptuous", "hint": "軽蔑的な", "general": "何かを価値がないと見下す態度", "example": "He gave the rules a contemptuous glance and ignored them entirely.", "example_ja": "彼はその規則に軽蔑的な視線を向け、完全に無視した。", "note": "a contemptuous look/tone のように使う。"}, {"word": "meddlesome", "hint": "おせっかいな、干渉好きな", "general": "頼まれていないのに、他人のことに関わろうとする性質", "example": "The meddlesome old woman next door always seemed to know everyone's business.", "example_ja": "隣のおせっかいな老婦人は、いつも誰もの事情を知っているようだった。", "note": "a meddlesome neighbor のように使う。"}, {"word": "obstinate", "hint": "頑固な、言い張る", "general": "自分の考えや態度を変えようとしない性質", "example": "He remained obstinate, refusing to admit he had been wrong.", "example_ja": "彼は頑固なままで、自分が間違っていたことを認めようとしなかった。", "note": "an obstinate person/refusal のように使う。"}, {"word": "snicker", "hint": "こそこそ笑う", "general": "小さく、隠れたように笑うこと", "example": "He could hear the other boys snickering behind him.", "example_ja": "彼は、他の少年たちが後ろでこそこそ笑っているのが聞こえた。", "note": "snicker at ~ の形でも使う。"}, {"word": "yelp", "hint": "(犬や人が)キャンと鳴く、悲鳴を上げる", "general": "短く鋭い、痛みや驚きの声", "example": "The dog let out a yelp when it stepped on the broken glass.", "example_ja": "その犬は割れたガラスを踏んで、キャンと鳴いた。", "note": "a dog yelps / let out a yelp のように使う。"}, {"word": "holler", "hint": "大声で叫ぶ(shoutの口語形)", "general": "shoutの口語的な形", "example": "He could hear his aunt hollering his name from the porch.", "example_ja": "彼は、伯母がポーチから自分の名前を大声で呼んでいるのが聞こえた。", "note": "holler at someone のように使う。アメリカ口語で広く使われる。"}, {"word": "furtively", "hint": "こそこそと、ひそかに", "general": "見つからないように、隠れて行う様子で", "example": "He glanced furtively over his shoulder before slipping through the gap in the fence.", "example_ja": "彼はこそこそと肩越しに見回した後、その塀の隙間を通り抜けた。", "note": "glance furtively のように使う。"}, {"word": "y'all", "hint": "あなたたち(you allの口語的短縮形)", "general": "複数の「あなた」を表すアメリカ南部方言の表現", "example": "\"Y'all better hurry up before it gets dark,\" he warned.", "example_ja": "「暗くなる前に、お前ら急いだほうがいいぞ」と彼は警告した。", "note": "アメリカ南部英語の最も有名な特徴の一つ。"}, {"word": "tote", "hint": "運ぶ(carryの口語的な形)", "general": "carryの口語的・方言的な形", "example": "He toted the heavy bucket all the way from the well.", "example_ja": "彼は井戸からずっと、その重いバケツを運んだ。", "note": "tote a bucket/bag のように使う、アメリカ口語の動詞。"}, {"word": "ramshackle", "hint": "おんぼろの、ぐらぐらの", "general": "古くなって、崩れそうな状態の建物など", "example": "The ramshackle old house had been empty for years.", "example_ja": "そのおんぼろの古い家は、何年も空き家になっていた。", "note": "a ramshackle house/building のように使う。"}, {"word": "derelict", "hint": "見捨てられた、放置された", "general": "使われなくなり、荒れ果てた状態の建物など", "example": "They had found a derelict cabin deep in the woods.", "example_ja": "彼らは、森の奥に放置された小屋を見つけた。", "note": "a derelict building/cabin のように使う。"}, {"word": "dunno", "hint": "分からない(don't knowの口語的短縮形)", "general": "I don't knowの口語的・カジュアルな短縮形", "example": "\"Dunno where he went,\" the boy shrugged.", "example_ja": "「あいつがどこに行ったかなんて知らないよ」とその少年は肩をすくめた。", "note": "I dunno. のように単独で使われることが多い、現代でも使われる短縮形。"}, {"word": "gonna", "hint": "~するつもりだ(going toの口語的短縮形)", "general": "going toの口語的・カジュアルな短縮形", "example": "\"I'm gonna tell Aunt Polly everything,\" he threatened.", "example_ja": "「アント・ポリーに全部言いつけてやるからな」と彼は脅した。", "note": "現代英語でも非常によく使われる口語的短縮形。"}, {"word": "wanna", "hint": "~したい(want toの口語的短縮形)", "general": "want toの口語的・カジュアルな短縮形", "example": "\"Don't you wanna come with us?\" Tom asked.", "example_ja": "「お前も一緒に来たくないのか?」とトムは聞いた。", "note": "want toの発音をそのまま表したつづり。"}, {"word": "clandestine", "hint": "秘密の、ひそかな", "general": "隠れて、こっそりと行われる性質", "example": "They had arranged a clandestine meeting after dark.", "example_ja": "彼らは、暗くなってからの秘密の会合を取りつけていた。", "note": "a clandestine meeting/plan のように使う、硬い語。"}, {"word": "yep", "hint": "うん、そうだ(yesの口語的な形)", "general": "yes のくだけた言い方", "example": "\"You scared?\" \"Yep,\" he admitted.", "example_ja": "「怖いのか?」「うん」と彼は認めた。", "note": "カジュアルな会話で使われる。反対はnope。"}, {"word": "nope", "hint": "いや、違う(noの口語的な形)", "general": "no のくだけた言い方", "example": "\"Found anything?\" \"Nope, nothing yet.\"", "example_ja": "「何か見つかったか?」「いや、まだ何も」", "note": "yepの反対語として対になって使われることが多い。"}, {"word": "trepidation", "hint": "恐れ、不安", "general": "これから起こることへの、強い不安の気持ち", "example": "He approached the old house with a growing sense of trepidation.", "example_ja": "彼は、募る不安の感覚を抱きながら、その古い家に近づいた。", "note": "a sense of trepidation のように使う、やや硬い語。"}, {"word": "foreboding", "hint": "嫌な予感、不吉な予兆", "general": "悪いことが起こるという、強い予感", "example": "A vague sense of foreboding kept him from going any further.", "example_ja": "漠然とした不吉な予感が、彼をそれ以上先に進めなくさせた。", "note": "a sense of foreboding のように使う、文学的な語。"}, {"word": "warn't", "hint": "〜ではなかった(wasn't/weren'tの方言形)", "general": "was not / were not の南部方言的な発音表記", "example": "\"I warn't doing nothing,\" Tom muttered under his breath.", "example_ja": "「何もしてなかったんだよ」とトムは小声でつぶやいた。", "note": "wasn't/weren'tの方言表記。"}, {"word": "gwyne", "hint": "〜するつもりだ(going toの方言形)", "general": "going to の南部方言的な発音表記", "example": "\"I'm gwyne to tell on you,\" the boy threatened.", "example_ja": "「お前のことをチクってやるぞ」とその少年は脅した。", "note": "going toの方言表記。"}, {"word": "sich", "hint": "そのような(suchの方言形)", "general": "such の南部方言的な発音表記", "example": "\"I never seen sich a mess in my life,\" she said, shaking her head.", "example_ja": "「こんな汚れ、生まれて初めて見たよ」と彼女は頭を振りながら言った。", "note": "suchの方言表記。"}, {"word": "yourn", "hint": "あなたのもの(yoursの方言形)", "general": "yours の南部方言的な発音表記", "example": "\"That dog ain't yourn,\" the boy said flatly.", "example_ja": "「その犬はお前のもんじゃないだろ」とその少年は平然と言った。", "note": "yoursの方言表記。"}, {"word": "hisn", "hint": "彼のもの(hisの方言形)", "general": "his(所有代名詞) の南部方言的な発音表記", "example": "\"That hat there, that's hisn,\" someone pointed out.", "example_ja": "「あそこの帽子、それは彼のだよ」と誰かが指摘した。", "note": "his(彼のもの)の方言表記。"}, {"word": "hisself", "hint": "彼自身(himselfの方言形)", "general": "himself の南部方言的な発音表記", "example": "\"He done it all hisself,\" the boy bragged.", "example_ja": "「あいつ、全部自分一人でやったんだぜ」とその少年は自慢した。", "note": "himselfの方言表記。"}, {"word": "twixt", "hint": "〜の間に(betwixt/betweenの古い形)", "general": "between の古風な、または方言的な表記", "example": "The cave lay twixt the river and the hill.", "example_ja": "その洞窟は、川と丘の間にあった。", "note": "betweenのやや古風・方言的な表記。"}, {"word": "afeard", "hint": "怖がっている(afraidの方言形)", "general": "afraid の南部方言的な発音表記", "example": "\"I ain't afeard of no ghost,\" Tom said, though his voice shook.", "example_ja": "「幽霊なんか怖くないよ」とトムは言ったが、声は震えていた。", "note": "afraidの方言表記。"}, {"word": "druther", "hint": "〜の方がいい(would ratherの方言形)", "general": "would rather の南部方言的な発音表記", "example": "\"I'd druther go fishing than do chores,\" he grumbled.", "example_ja": "「家の手伝いより釣りに行く方がましだよ」と彼はぶつぶつ言った。", "note": "would ratherの方言表記。"}, {"word": "powerful", "hint": "とても、非常に(口語的な強調表現)", "general": "veryの代わりに使われる、口語的な強調表現", "example": "\"That sun's powerful hot today,\" the old man said, wiping his brow.", "example_ja": "「今日の日差しはものすごく暑いな」とその老人は額を拭いながら言った。", "note": "powerful + 形容詞 でveryの代わりとして使う口語表現。"}, {"word": "calculate", "hint": "〜だと思う(believe/supposeの口語的代用)", "general": "believe や suppose の意味で使われる、口語的な動詞", "example": "\"I calculate he'll be along directly,\" the man said.", "example_ja": "「彼はすぐに来るだろうと思うよ」とその男は言った。", "note": "I calculate (that) ~ で「〜だと思う」の意味になる口語表現。"}, {"word": "allow", "hint": "〜だと思う、言う(believe/sayの口語的代用)", "general": "believe や say の意味で使われる、口語的な動詞", "example": "\"I allow we'd best be getting home,\" she said.", "example_ja": "「もう家に帰った方がいいと思うよ」と彼女は言った。", "note": "I allow (that) ~ で「〜だと思う」の意味になる口語表現。"}, {"word": "spect", "hint": "〜だと思う(expectの省略形)", "general": "expect の口語的な短縮表記", "example": "\"I spect he's right,\" the boy admitted.", "example_ja": "「あいつの言う通りだと思うよ」とその少年は認めた。", "note": "expectの口語的短縮表記。"}, {"word": "younguns", "hint": "子供たち(young onesの方言形)", "general": "young ones(子供たち) の南部方言的な発音表記", "example": "\"Get on home, you younguns,\" the woman called out.", "example_ja": "「家に帰りなさい、子供たち」とその女性は呼びかけた。", "note": "young onesの方言表記。"}, {"word": "critter", "hint": "生き物、動物(creatureの方言形)", "general": "creature の口語的・方言的な発音表記", "example": "\"What kind of critter makes a noise like that?\" Huck whispered.", "example_ja": "「あんな音を出す生き物って何だろう」とハックはささやいた。", "note": "creatureの方言表記。"}, {"word": "varmint", "hint": "害獣、厄介者(varmint=vermin)", "general": "害をなす動物や、嫌われ者の人を指す口語的な語", "example": "\"That old cat's a real varmint,\" the farmer complained.", "example_ja": "「あの老いた猫は本当に厄介者だ」とその農夫はこぼした。", "note": "vermin(害獣)の口語的な発音表記。"}, {"word": "skeer", "hint": "怖がらせる(scareの方言形)", "general": "scare の南部方言的な発音表記", "example": "\"Don't skeer me like that!\" she shouted.", "example_ja": "「そんな風に驚かさないでよ!」と彼女は叫んだ。", "note": "scareの方言表記。"}, {"word": "'em", "hint": "彼ら、それらを(themの省略形)", "general": "them の口語的な短縮表記", "example": "\"Just leave 'em be,\" Tom said, waving his hand.", "example_ja": "「そのままにしといてやれよ」とトムは手を振りながら言った。", "note": "themの口語的短縮表記。"}, {"word": "'cause", "hint": "なぜなら(becauseの省略形)", "general": "because の口語的な短縮表記", "example": "\"I didn't go, 'cause I wasn't feeling well,\" he explained.", "example_ja": "「行かなかったんだ、気分が悪かったから」と彼は説明した。", "note": "becauseの口語的短縮表記。"}, {"word": "'bout", "hint": "〜について(aboutの省略形)", "general": "about の口語的な短縮表記", "example": "\"What's all this 'bout a treasure?\" the man asked.", "example_ja": "「その宝の話って一体何なんだ?」とその男は尋ねた。", "note": "aboutの口語的短縮表記。"}, {"word": "o'", "hint": "〜の(ofの省略形)", "general": "of の口語的な短縮表記", "example": "\"A piece o' that pie would be nice,\" he said hopefully.", "example_ja": "「あのパイを少しもらえたら嬉しいな」と彼は期待を込めて言った。", "note": "ofの口語的短縮表記。"}, {"word": "yer", "hint": "あなたの、あなたを(your/youの方言形)", "general": "your または you の南部方言的な発音表記", "example": "\"Watch yer step,\" the old man warned.", "example_ja": "「足元に気をつけろよ」とその老人は警告した。", "note": "your/youの方言表記。"}, {"word": "thar", "hint": "そこ(thereの方言形)", "general": "there の南部方言的な発音表記", "example": "\"Look over thar,\" Huck whispered, pointing into the dark.", "example_ja": "「あっちを見てみろよ」とハックは暗闇を指してささやいた。", "note": "thereの方言表記。"}, {"word": "har", "hint": "ここ(hereの方言形)", "general": "here の南部方言的な発音表記", "example": "\"Come on over har,\" the man called.", "example_ja": "「こっちに来いよ」とその男は呼びかけた。", "note": "hereの方言表記。"}, {"word": "nothin'", "hint": "何も(nothingの省略形)", "general": "nothing の口語的な短縮表記", "example": "\"I ain't got nothin' to say,\" the boy muttered.", "example_ja": "「言うことなんて何もないよ」とその少年はつぶやいた。", "note": "nothingの口語的短縮表記。"}, {"word": "somethin'", "hint": "何か(somethingの省略形)", "general": "something の口語的な短縮表記", "example": "\"There's somethin' moving in the bushes,\" Tom whispered.", "example_ja": "「茂みの中で何かが動いてるぞ」とトムはささやいた。", "note": "somethingの口語的短縮表記。"}, {"word": "goin'", "hint": "〜するつもりだ(goingの省略形)", "general": "going の口語的な短縮表記", "example": "\"Where you goin' in such a hurry?\" his aunt asked.", "example_ja": "「そんなに急いでどこに行くんだい?」と彼の伯母は尋ねた。", "note": "goingの口語的短縮表記。"}, {"word": "'spose", "hint": "〜だと思う(supposeの省略形)", "general": "suppose の口語的な短縮表記", "example": "\"I 'spose you're right,\" she sighed.", "example_ja": "「あなたの言う通りなんだろうね」と彼女はため息をついた。", "note": "supposeの口語的短縮表記。"}, {"word": "durn", "hint": "いまいましい(damnの穏やかな代用語)", "general": "damn の代わりに使われる、穏やかな悪態表現", "example": "\"This durn fence won't ever get finished,\" Tom complained.", "example_ja": "「この忌々しい塀は一生終わらないよ」とトムはこぼした。", "note": "damnの穏やかな代用語、口語的な悪態。"}, {"word": "consarn", "hint": "いまいましい(concernの穏やかな悪態表現)", "general": "damn/curse の代わりに使われる、穏やかな悪態表現", "example": "\"Consarn it, the bucket's got a hole in it,\" the man grumbled.", "example_ja": "「ちぇっ、バケツに穴が開いてるじゃないか」とその男はぶつぶつ言った。", "note": "concernを語源とする、穏やかな悪態表現。"}, {"word": "dratted", "hint": "いまいましい(damnedの穏やかな代用語)", "general": "damned の代わりに使われる、穏やかな悪態の形容詞", "example": "\"That dratted cat knocked over the milk again,\" she sighed.", "example_ja": "「あの忌々しい猫がまたミルクをひっくり返したわ」と彼女はため息をついた。", "note": "damnedの穏やかな代用語。"}, {"word": "tetched", "hint": "頭がおかしい、変な(touchedの方言形)", "general": "少し気が変だ、という意味で使われる口語的な形容詞", "example": "\"That old man's a little tetched, if you ask me,\" the boy said.", "example_ja": "「あの老人はちょっと頭がおかしいと思うよ」とその少年は言った。", "note": "touched(精神的に少しおかしい)の方言的発音表記。"}, {"word": "reckon up", "hint": "計算する、見積もる", "general": "金額や数量を、おおまかに計算すること", "example": "He sat down to reckon up how much money he had left.", "example_ja": "彼は、残っているお金がどれくらいかを計算するために座った。", "note": "reckon upでcalculateに近い意味の口語表現。"}, {"word": "a-going", "hint": "行っている、進行中の(going の古風な強調形)", "general": "going の前にaを付けた、古風・方言的な進行形表現", "example": "\"Where are you a-going with that?\" the woman called after him.", "example_ja": "「それを持ってどこへ行くつもりだい?」とその女性は彼を呼び止めた。", "note": "a- + 動名詞 という古風な進行形の形。"}, {"word": "'tis", "hint": "それは〜だ(it isの省略形)", "general": "it is の古風な、または方言的な短縮表記", "example": "\"'Tis a fine morning,\" the old man said, looking at the sky.", "example_ja": "「いい朝だね」とその老人は空を見ながら言った。", "note": "it isの古風な短縮表記。"}, {"word": "fixin' to", "hint": "〜するところだ、〜しようとしている", "general": "about to の意味で使われる、南部方言的な表現", "example": "\"I'm fixin' to go down to the river,\" Tom announced.", "example_ja": "「これから川に行くところなんだ」とトムは宣言した。", "note": "be fixin' to do something で「〜するところだ」の意味。"}, {"word": "dern", "hint": "いまいましい(damnの方言的な代用語)", "general": "damn の代わりに使われる、穏やかな悪態表現", "example": "\"Dern it all, I lost my marbles again,\" the boy groaned.", "example_ja": "「ちぇっ、またビー玉をなくしちまった」とその少年はうなった。", "note": "durnの異表記、damnの代用語。"}, {"word": "whar", "hint": "どこ(whereの方言形)", "general": "where の南部方言的な発音表記", "example": "\"Whar'd you put my hat?\" the man asked.", "example_ja": "「俺の帽子をどこに置いたんだ?」とその男は尋ねた。", "note": "whereの方言表記。"}, {"word": "no'm", "hint": "いいえ、奥様(no, ma'amの省略形)", "general": "no, ma'am の口語的な短縮表記", "example": "\"No'm, I haven't seen him today,\" the boy said politely.", "example_ja": "「いいえ、今日は彼を見ていません」とその少年は丁寧に言った。", "note": "no, ma'amの口語的短縮表記。"}, {"word": "younker", "hint": "若者、若い男(youngsterの方言形)", "general": "youngster(若者) の口語的・方言的な発音表記", "example": "\"That younker's got more energy than sense,\" the old man chuckled.", "example_ja": "「あの若いやつは、分別よりも元気の方が多いな」とその老人は笑った。", "note": "youngsterの方言表記。"}, {"word": "low-down", "hint": "卑劣な、下劣な", "general": "道徳的に低く、軽蔑すべき性質", "example": "\"That's a low-down trick to play on a friend,\" she said angrily.", "example_ja": "「友達にそんな卑劣な悪戯をするなんて」と彼女は怒って言った。", "note": "a low-down trick のように使う、口語的な形容詞。"}, {"word": "no-account", "hint": "役に立たない、価値のない", "general": "何の価値もなく、信用できない性質", "example": "\"He's just a no-account drifter,\" the sheriff said dismissively.", "example_ja": "「あいつはただの役立たずの流れ者だ」と保安官は素っ気なく言った。", "note": "a no-account person のように使う、軽蔑的な口語表現。"}, {"word": "a heap", "hint": "たくさん、大いに", "general": "a lot の代わりに使われる、口語的な表現", "example": "\"That meant a heap to me,\" the old woman said softly.", "example_ja": "「それは私にとって本当に大きな意味があったよ」とその老婦人は静かに言った。", "note": "a heap (of ~) / mean a heap のように使う口語表現。"}, {"word": "set a spell", "hint": "しばらく座って過ごす", "general": "少しの間、座ってくつろぐこと", "example": "\"Why don't you set a spell and rest your feet?\" she offered.", "example_ja": "「ちょっと座って休んでいったらどうだい?」と彼女は勧めた。", "note": "sit for a whileの口語的・方言的な表現。"}, {"word": "reckon so", "hint": "そう思う、たぶんそうだろう", "general": "I think so / probably の意味で使われる、口語的な返答", "example": "\"You think it'll rain?\" \"Reckon so.\"", "example_ja": "「雨が降ると思う?」「たぶんそうだろうね」", "note": "I reckon soの短縮形、口語的な相づち表現。"}];
+const STORAGE_KEY = 'tomsawyer-flashcards-mastered-v1';
+const LANG_KEY = 'tomsawyer-flashcards-lang-v1';
+
+let mastered = new Set();
+try{
+  const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+  mastered = new Set(saved);
+}catch(e){ mastered = new Set(); }
+
+let lang = 'ja'; // 'ja' or 'en'
+try{
+  const savedLang = localStorage.getItem(LANG_KEY);
+  if(savedLang === 'en' || savedLang === 'ja') lang = savedLang;
+}catch(e){ lang = 'ja'; }
+
+let deck = [];          // active (unmastered) cards, in working order
+let originalOrder = []; // initial order of active cards (for restart)
+let shownHistory = [];  // words shown in live order (for browsing back)
+let browseIndex = null; // null = live; else index into shownHistory
+let flipped = false;
+let panelOpen = false;
+let loopingWord = null;
+let loopingSelector = null;
+
+function saveProgress(){
+  try{
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(Array.from(mastered)));
+  }catch(e){}
+}
+
+function saveLang(){
+  try{
+    localStorage.setItem(LANG_KEY, lang);
+  }catch(e){}
+}
+
+function buildDeck(){
+  deck = WORDS.filter(w => !mastered.has(w.word));
+  originalOrder = deck.slice();
+  shownHistory = [];
+  browseIndex = null;
+}
+
+function getCurrentWord(){
+  if(browseIndex !== null){
+    return WORDS.find(w => w.word === shownHistory[browseIndex]);
+  }
+  return deck[0];
+}
+
+function speakOnce(word, onEnd){
+  const utter = new SpeechSynthesisUtterance(word);
+  utter.lang = 'en-US';
+  utter.rate = 0.85;
+  utter.onend = onEnd;
+  utter.onerror = onEnd;
+  window.speechSynthesis.speak(utter);
+}
+
+function startLoop(text, selector){
+  if(!('speechSynthesis' in window)) return;
+  window.speechSynthesis.cancel();
+  loopingWord = text;
+  loopingSelector = selector;
+  const el = document.querySelector(selector);
+  if(el) el.classList.add('looping');
+
+  const playNext = () => {
+    if(loopingWord !== text) return;
+    speakOnce(text, () => {
+      if(loopingWord !== text) return;
+      setTimeout(() => {
+        if(loopingWord === text) playNext();
+      }, 250);
+    });
+  };
+  playNext();
+}
+
+function stopLoop(){
+  loopingWord = null;
+  window.speechSynthesis.cancel();
+  if(loopingSelector){
+    const el = document.querySelector(loopingSelector);
+    if(el) el.classList.remove('looping');
+  }
+  loopingSelector = null;
+}
+
+function updateProgress(){
+  const total = WORDS.length;
+  const done = mastered.size;
+  document.getElementById('progressLabel').textContent = `${done} / ${total} 習得`;
+  document.getElementById('progressFill').style.width = `${(done/total)*100}%`;
+
+  const posLabel = document.getElementById('posLabel');
+  if(posLabel){
+    if(browseIndex !== null){
+      const histLabel = lang === 'ja' ? '履歴' : 'History';
+      posLabel.textContent = `${histLabel} ${browseIndex + 1} / ${shownHistory.length}`;
+    } else if(deck.length > 0 && originalOrder.length > 0){
+      const idx = originalOrder.findIndex(w => w.word === deck[0].word);
+      const displayIdx = idx >= 0 ? idx + 1 : '?';
+      posLabel.textContent = `${displayIdx} / ${originalOrder.length}`;
+    } else {
+      posLabel.textContent = '';
+    }
+  }
+
+  renderMasteredList();
+}
+
+function speakerIcon(){
+  return `<svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.06c1.48-.74 2.5-2.26 2.5-4.03zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>`;
+}
+
+function frontHTML(current){
+  const tapHint = lang === 'ja' ? '単語をタップ / クリック' : 'Tap or click the word';
+  const eyebrow = lang === 'ja' ? 'タップして意味を見る' : 'Tap to see the meaning';
+  return `
+    <div class="eyebrow">${eyebrow}</div>
+    <div class="word-row">
+      <div class="word">${current.word}</div>
+      <button class="speak-btn" id="speakBtn" title="発音を聞く">${speakerIcon()}</button>
+    </div>
+    <div class="tap-hint">${tapHint}</div>
+  `;
+}
+
+function backHTML(current){
+  const generalBlock = current.general ? `
+      <div class="general-block">
+        <div class="general-label">${lang === 'ja' ? '本来の意味' : 'Definition'}</div>
+        <div class="general-text">${current.general}</div>
+      </div>` : '';
+
+  const noteBlock = current.note ? `
+      <div class="note-block">
+        <div class="note-label">${lang === 'ja' ? 'ヒント' : 'Note'}</div>
+        <div class="note-text">${current.note}</div>
+      </div>` : '';
+
+  const exampleJaBlock = lang === 'ja' ? `<div class="example-ja-text">${current.example_ja}</div>` : '';
+
+  const backTapHint = lang === 'ja' ? 'タップで単語に戻る' : 'Tap to go back';
+  const exampleHint = lang === 'ja' ? '(タップで読み上げ)' : '(Tap to listen)';
+
+  return `
+    <div class="back-scroll">
+      <div class="hint-block">
+        <div class="hint-label">${lang === 'ja' ? '意味のヒント' : 'Hint'}</div>
+        <div class="hint-text">${current.hint}</div>
+        ${generalBlock}
+        <div class="example-label">Example <span class="example-hint">${exampleHint}</span></div>
+        <div class="example-text clickable" id="exampleText">${current.example}</div>
+        ${exampleJaBlock}
+        ${noteBlock}
+      </div>
+      <div class="back-tap-hint tap-hint">${backTapHint}</div>
+    </div>
+  `;
+}
+
+function attachExampleHandler(current){
+  const exampleEl = document.getElementById('exampleText');
+  if(exampleEl){
+    exampleEl.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if(loopingWord === current.example && loopingSelector === '#exampleText'){
+        stopLoop();
+      } else {
+        startLoop(current.example, '#exampleText');
+      }
+    });
+  }
+}
+
+function attachSpeakHandler(current){
+  const speakBtn = document.getElementById('speakBtn');
+  if(speakBtn){
+    speakBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if(loopingWord === current.word && loopingSelector === '.speak-btn'){
+        stopLoop();
+      } else {
+        startLoop(current.word, '.speak-btn');
+      }
+    });
+  }
+}
+
+function render(){
+  stopLoop();
+  const stage = document.getElementById('stage');
+  const controls = document.getElementById('controls');
+
+  if(deck.length === 0 && browseIndex === null){
+    const doneTitle = lang === 'ja' ? 'よくできました' : 'All done!';
+    const doneMsg = lang === 'ja'
+      ? 'すべての単語が習得済みになりました。<br>「習得済み一覧」から単語を復活させるか、「すべてリセット」を押すと、もう一度練習できます。'
+      : 'All words are marked as mastered.<br>Restore words from the mastered list, or reset everything to practice again.';
+    stage.innerHTML = `
+      <div class="empty-state">
+        <div class="word">${doneTitle}</div>
+        <p>${doneMsg}</p>
+      </div>
+    `;
+    if(shownHistory.length > 0){
+      controls.style.display = 'flex';
+      document.getElementById('skipBtn').style.display = 'none';
+      document.getElementById('masterBtn').style.display = 'none';
+    } else {
+      controls.style.display = 'none';
+    }
+    updateProgress();
+    return;
+  }
+
+  controls.style.display = 'flex';
+  document.getElementById('skipBtn').style.display = 'flex';
+  document.getElementById('masterBtn').style.display = 'flex';
+  flipped = false;
+
+  let current, next;
+  if(browseIndex !== null){
+    current = WORDS.find(w => w.word === shownHistory[browseIndex]);
+    next = null;
+  } else {
+    current = deck[0];
+    next = deck[1];
+  }
+
+  stage.innerHTML = `
+    ${next ? `<div class="card behind"></div>` : ''}
+    <div class="card front" id="currentCard">
+      ${frontHTML(current)}
+    </div>
+  `;
+
+  document.getElementById('currentCard').addEventListener('click', (e) => {
+    if(e.target.closest('.speak-btn')) return;
+    if(e.target.closest('#exampleText')) return;
+    flipCard();
+  });
+
+  attachSpeakHandler(current);
+
+  const masterBtn = document.getElementById('masterBtn');
+  if(masterBtn){
+    masterBtn.textContent = lang === 'ja' ? '習得済み ✓' : 'Mastered ✓';
+    masterBtn.classList.remove('is-mastered');
+  }
+
+  const prevBtn = document.getElementById('prevBtn');
+  const skipBtn = document.getElementById('skipBtn');
+  const restartBtn = document.getElementById('restartBtn');
+
+  if(browseIndex !== null){
+    if(prevBtn) prevBtn.disabled = (browseIndex === 0);
+    if(skipBtn) skipBtn.textContent = lang === 'ja' ? '進む →' : 'Forward →';
+    if(skipBtn) skipBtn.disabled = false;
+    if(masterBtn) masterBtn.disabled = true;
+  } else {
+    if(prevBtn) prevBtn.disabled = (shownHistory.length === 0);
+    if(skipBtn) skipBtn.textContent = lang === 'ja' ? '次へ →' : 'Next →';
+    if(skipBtn) skipBtn.disabled = (deck.length === 0);
+    if(masterBtn) masterBtn.disabled = (deck.length === 0);
+  }
+  if(restartBtn) restartBtn.disabled = originalOrder.length === 0;
+
+  updateProgress();
+}
+
+function flipCard(){
+  if(flipped) {
+    showFront();
+    return;
+  }
+  stopLoop();
+  const card = document.getElementById('currentCard');
+  const current = getCurrentWord();
+  flipped = true;
+
+  card.classList.add('flipping');
+  setTimeout(() => {
+    card.classList.add('flipped-card');
+    card.innerHTML = backHTML(current);
+    attachExampleHandler(current);
+    card.classList.remove('flipping');
+  }, 220);
+}
+
+function showFront(){
+  stopLoop();
+  const card = document.getElementById('currentCard');
+  const current = getCurrentWord();
+  flipped = false;
+  card.classList.add('flipping');
+  setTimeout(() => {
+    card.classList.remove('flipped-card');
+    card.innerHTML = frontHTML(current);
+    attachSpeakHandler(current);
+    card.classList.remove('flipping');
+  }, 220);
+}
+
+function nextCard(){
+  const card = document.getElementById('currentCard');
+  if(!card){ return; }
+
+  if(browseIndex !== null){
+    // browsing history: step forward, or return to live
+    card.classList.add('exit-left');
+    setTimeout(() => {
+      if(browseIndex < shownHistory.length - 1){
+        browseIndex++;
+      } else {
+        browseIndex = null;
+      }
+      render();
+    }, 260);
+    return;
+  }
+
+  if(deck.length === 0) return;
+  const current = deck[0];
+
+  shownHistory.push(current.word);
+  if(shownHistory.length > 200) shownHistory.shift();
+
+  card.classList.add('exit-left');
+  setTimeout(() => {
+    // move current word to the end of the deck (not mastered yet)
+    deck.push(deck.shift());
+    render();
+  }, 260);
+}
+
+function prevCard(){
+  if(browseIndex !== null){
+    if(browseIndex > 0) browseIndex--;
+    render();
+    return;
+  }
+  if(shownHistory.length === 0) return;
+  browseIndex = shownHistory.length - 1;
+  render();
+}
+
+function restartDeck(){
+  const remainingWords = new Set(deck.map(w => w.word));
+  deck = originalOrder.filter(w => remainingWords.has(w.word));
+  shownHistory = [];
+  browseIndex = null;
+  render();
+}
+
+function toggleMastered(){
+  if(browseIndex !== null || deck.length === 0) return;
+  const card = document.getElementById('currentCard');
+  const current = deck[0];
+
+  shownHistory.push(current.word);
+  if(shownHistory.length > 200) shownHistory.shift();
+
+  mastered.add(current.word);
+  saveProgress();
+
+  if(card){
+    card.classList.add('exit-left');
+    setTimeout(() => {
+      deck.shift();
+      render();
+    }, 260);
+  } else {
+    deck.shift();
+    render();
+  }
+}
+
+function renderMasteredList(){
+  const list = document.getElementById('masteredList');
+  const masteredWords = WORDS.filter(w => mastered.has(w.word));
+
+  if(masteredWords.length === 0){
+    const emptyMsg = lang === 'ja' ? '習得済みの単語はまだありません。' : 'No mastered words yet.';
+    list.innerHTML = `<li class="mastered-empty" style="background:none;">${emptyMsg}</li>`;
+    return;
+  }
+
+  const restoreLabel = lang === 'ja' ? '解除' : 'Undo';
+
+  list.innerHTML = masteredWords.map(w => `
+    <li>
+      <span class="m-word">${w.word}</span>
+      <button class="restore-btn" data-word="${w.word}">${restoreLabel}</button>
+    </li>
+  `).join('');
+
+  list.querySelectorAll('.restore-btn').forEach(btn => {
+    btn.addEventListener('click', () => restoreWord(btn.dataset.word));
+  });
+}
+
+function restoreWord(word){
+  mastered.delete(word);
+  saveProgress();
+  const w = WORDS.find(item => item.word === word);
+  if(w && !deck.some(d => d.word === word)){
+    deck.push(w);
+  }
+  if(w && !originalOrder.some(d => d.word === word)){
+    originalOrder.push(w);
+  }
+  render();
+}
+
+function updateStaticLabels(){
+  const title = document.getElementById('appTitle');
+  if(title){
+    title.innerHTML = lang === 'ja'
+      ? 'Tom Sawyer <span class="accent">語彙カード</span>'
+      : 'Tom Sawyer <span class="accent">Vocabulary Cards</span>';
+  }
+
+  const resetBtn = document.getElementById('resetBtn');
+  if(resetBtn) resetBtn.textContent = lang === 'ja' ? 'すべてリセット' : 'Reset all';
+
+  const toggleBtn = document.getElementById('masteredToggleBtn');
+  if(toggleBtn){
+    const label = lang === 'ja' ? '習得済み一覧' : 'Mastered list';
+    toggleBtn.textContent = panelOpen ? `${label} ▴` : `${label} ▾`;
+  }
+
+  const panelHeading = document.getElementById('masteredHeading');
+  if(panelHeading) panelHeading.textContent = lang === 'ja' ? '習得済みの単語' : 'Mastered words';
+
+  const prevBtn = document.getElementById('prevBtn');
+  if(prevBtn) prevBtn.textContent = lang === 'ja' ? '← 前へ' : '← Prev';
+
+  const nextBtn = document.getElementById('skipBtn');
+  if(nextBtn) nextBtn.textContent = lang === 'ja' ? '次へ →' : 'Next →';
+
+  const restartBtn = document.getElementById('restartBtn');
+  if(restartBtn) restartBtn.textContent = lang === 'ja' ? '⟲ 最初' : '⟲ Start';
+
+  const langBtn = document.getElementById('langToggleBtn');
+  if(langBtn) langBtn.textContent = lang === 'ja' ? 'EN' : '日本語';
+}
+
+document.getElementById('skipBtn').addEventListener('click', () => nextCard());
+document.getElementById('prevBtn').addEventListener('click', () => prevCard());
+document.getElementById('masterBtn').addEventListener('click', () => toggleMastered());
+document.getElementById('restartBtn').addEventListener('click', () => restartDeck());
+
+document.getElementById('resetBtn').addEventListener('click', () => {
+  const msg = lang === 'ja' ? '習得済みの記録をすべてリセットしますか？' : 'Reset all mastered-word progress?';
+  if(confirm(msg)){
+    mastered = new Set();
+    saveProgress();
+    buildDeck();
+    render();
+  }
+});
+
+document.getElementById('masteredToggleBtn').addEventListener('click', () => {
+  panelOpen = !panelOpen;
+  const panel = document.getElementById('masteredPanel');
+  panel.classList.toggle('open', panelOpen);
+  updateStaticLabels();
+  if(panelOpen) renderMasteredList();
+});
+
+document.getElementById('langToggleBtn').addEventListener('click', () => {
+  lang = (lang === 'ja') ? 'en' : 'ja';
+  saveLang();
+  updateStaticLabels();
+  render();
+});
+
+document.addEventListener('keydown', (e) => {
+  if(e.code === 'Space'){
+    e.preventDefault();
+    flipCard();
+  } else if(e.code === 'ArrowRight'){
+    nextCard();
+  } else if(e.code === 'ArrowLeft'){
+    prevCard();
+  } else if(e.code === 'Enter'){
+    toggleMastered();
+  }
+});
+
+buildDeck();
+updateStaticLabels();
+render();
+</script></body></html>
