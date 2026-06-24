@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🇪🇸 スペイン語カード 段階４</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#fff7f0;--surface:#ffffff;--primary:#c2410c;--primary-light:#c2410c22;--accent:#0891b2;--green:#16a34a;--green-light:#dcfce7;--amber:#d97706;--amber-light:#fef3c7;--red:#e11d48;--text:#1e293b;--muted:#64748b;--border:#fdba74;--shadow:0 4px 24px rgba(194,65,12,0.10);--radius:18px;}
+*{box-sizing:border-box;margin:0;padding:0;}html,body{height:100%;}
+body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);min-height:100vh;padding:16px 12px 48px;color:var(--text);}
+.container{max-width:560px;margin:auto;}
+.header{text-align:center;margin-bottom:14px;}.header h2{font-size:18px;font-weight:900;color:var(--primary);}.header p{font-size:12px;color:var(--muted);margin-top:2px;}
+.badges{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-bottom:10px;}
+.badge{display:inline-flex;align-items:center;gap:4px;padding:4px 12px;border-radius:99px;font-size:11px;font-weight:700;background:var(--primary-light);color:var(--primary);border:1px solid var(--border);}
+.badge.green{background:var(--green-light);color:var(--green);border-color:#86efac;}
+.progress-wrap{background:#c2410c33;border-radius:99px;height:6px;margin-bottom:4px;overflow:hidden;}
+.progress-bar{height:100%;background:var(--primary);border-radius:99px;transition:width 0.4s ease;}
+.progress-label{text-align:center;font-size:12px;color:var(--muted);margin-bottom:10px;}
+.tap-hint{font-size:11px;color:var(--muted);margin-bottom:6px;text-align:center;}
+.card{background:var(--surface);border-radius:var(--radius);padding:28px 20px 20px;box-shadow:var(--shadow);margin-bottom:12px;position:relative;border:2px solid var(--border);min-height:160px;cursor:pointer;user-select:none;transition:transform .1s,border-color .2s;}
+.card.tappable:active{transform:scale(0.985);}.card.revealed{border-color:var(--primary);}.card.no-tap{cursor:default;}
+.card-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+.card-num{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);}
+.cat-label{font-size:11px;font-weight:700;letter-spacing:.06em;color:var(--primary);text-align:center;flex:1;}
+.master-wrap{display:flex;align-items:center;gap:4px;font-size:11px;color:var(--muted);}
+.master-wrap input[type=checkbox]{width:17px;height:17px;accent-color:var(--green);cursor:pointer;}
+.master-wrap.disabled{opacity:.3;pointer-events:none;}
+.main-text{font-size:clamp(13px,3.6vw,17px);font-weight:700;line-height:1.7;text-align:center;margin-bottom:14px;}
+.answer-wrap{opacity:0;transform:translateY(5px);transition:opacity .25s,transform .25s;pointer-events:none;}
+.answer-wrap.show{opacity:1;transform:translateY(0);pointer-events:auto;}
+.answer-ja{font-size:clamp(12px,3.3vw,14px);font-weight:700;color:var(--accent);text-align:center;line-height:1.6;background:#f0f9ff;border-radius:10px;padding:10px 14px;margin-bottom:8px;}
+.answer-tip{font-size:12px;font-weight:600;color:#c2410c;text-align:left;padding:0 4px;line-height:1.6;}
+.answer-tip::before{content:'💡 ';}
+.master-badge{display:none;text-align:center;margin-top:8px;background:var(--green-light);color:var(--green);padding:2px 10px;border-radius:99px;font-size:10px;font-weight:700;}
+.master-badge.show{display:block;}
+.no-active{background:var(--amber-light);border-radius:12px;padding:16px;text-align:center;font-size:14px;color:var(--amber);font-weight:700;display:none;margin-bottom:12px;}
+.no-active.show{display:block;}
+.auto-panel{background:var(--surface);border-radius:var(--radius);padding:14px 18px;box-shadow:var(--shadow);margin-bottom:12px;display:none;border-left:4px solid var(--primary);}
+.auto-panel.show{display:block;}
+.auto-step-title{font-size:12px;font-weight:900;color:var(--primary);margin-bottom:4px;}
+.auto-instruction{font-size:14px;font-weight:700;color:var(--text);line-height:1.5;}
+.auto-count{font-family:'DM Mono',monospace;font-size:12px;color:var(--muted);margin-top:4px;}
+.filter-panel{background:var(--surface);border-radius:var(--radius);padding:14px 16px;box-shadow:var(--shadow);margin-bottom:12px;}
+.filter-header{display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none;}
+.filter-header-left{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;}
+.filter-current{font-size:12px;font-weight:700;color:var(--primary);background:var(--primary-light);padding:3px 10px;border-radius:99px;border:1px solid var(--border);max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.filter-toggle-icon{font-size:12px;color:var(--muted);transition:transform .2s;margin-left:6px;}
+.filter-toggle-icon.open{transform:rotate(180deg);}
+.filter-chips-wrap{display:none;margin-top:10px;}.filter-chips-wrap.open{display:block;}
+.chip-all{display:block;width:100%;padding:8px 14px;margin-bottom:8px;border-radius:10px;font-size:12px;font-weight:700;cursor:pointer;border:2px solid var(--border);background:#fff;color:var(--muted);text-align:left;font-family:'Noto Sans JP',sans-serif;transition:all .15s;}
+.chip-all.active{background:var(--primary-light);color:var(--primary);border-color:var(--primary);}
+.cat-row{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:10px;cursor:pointer;border:2px solid transparent;background:#fff;margin-bottom:5px;transition:all .15s;user-select:none;}
+.cat-row.active{background:var(--primary-light);border-color:var(--primary);}
+.cat-row-name{flex:1;font-size:13px;font-weight:700;color:var(--text);}
+.cat-row.active .cat-row-name{color:var(--primary);}
+.cat-row-count{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);background:#f1f5f9;padding:2px 8px;border-radius:99px;font-weight:600;}
+.cat-row.active .cat-row-count{background:#fff;color:var(--primary);}
+.cat-dot{width:8px;height:8px;border-radius:50%;background:#e2e8f0;flex-shrink:0;}
+.cat-dot.done{background:var(--green);}
+.panel{background:var(--surface);border-radius:var(--radius);padding:14px 16px;box-shadow:var(--shadow);margin-bottom:12px;}
+.panel-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}.panel-row+.panel-row{margin-top:8px;}
+.panel label{font-size:12px;color:var(--muted);font-weight:700;white-space:nowrap;}
+.panel select{flex:1;font-size:12px;border:1px solid var(--border);border-radius:8px;padding:4px 8px;background:#fff;color:var(--text);font-family:'Noto Sans JP',sans-serif;}
+.panel input[type=range]{flex:1;min-width:80px;accent-color:var(--primary);}
+.speed-val{font-family:'DM Mono',monospace;font-size:13px;font-weight:600;color:var(--primary);min-width:32px;}
+.btn-row{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:10px;}
+.btn{border:none;border-radius:99px;padding:10px 18px;font-size:13px;font-weight:700;font-family:'Noto Sans JP',sans-serif;cursor:pointer;transition:opacity .15s,transform .1s;display:inline-flex;align-items:center;gap:5px;}
+.btn:active{transform:scale(0.94);opacity:.85;}
+.btn-primary{background:var(--primary);color:#fff;}.btn-secondary{background:#e2e8f0;color:var(--text);}
+.btn-red{background:var(--red);color:#fff;}.btn-amber{background:var(--amber);color:#fff;}
+.btn-blue{background:#2563eb;color:#fff;}.btn-on{background:var(--green);color:#fff;}
+.master-summary{background:var(--green-light);border-radius:12px;padding:10px 14px;font-size:12px;color:var(--green);font-weight:700;text-align:center;margin-bottom:10px;display:none;cursor:pointer;user-select:none;}
+.master-summary.show{display:block;}
+.help-btn{display:inline-flex;align-items:center;gap:5px;padding:5px 14px;border-radius:99px;border:1px solid var(--border);background:var(--primary-light);color:var(--primary);font-size:12px;font-weight:700;cursor:pointer;margin-top:8px;font-family:'Noto Sans JP',sans-serif;}
+.guide-overlay{display:none;position:fixed;inset:0;z-index:100;background:rgba(0,0,0,0.5);overflow-y:auto;-webkit-overflow-scrolling:touch;}
+.guide-overlay.show{display:block;}
+.guide-modal{background:var(--bg);max-width:520px;margin:0 auto;min-height:100vh;padding:0 0 60px;}
+.guide-modal-header{position:sticky;top:0;z-index:10;background:var(--primary);color:#fff;padding:16px 20px;display:flex;align-items:center;justify-content:space-between;}
+.guide-modal-header h2{font-size:16px;font-weight:900;}
+.guide-close{background:rgba(255,255,255,0.2);border:none;border-radius:99px;color:#fff;font-size:13px;font-weight:700;padding:5px 14px;cursor:pointer;font-family:'Noto Sans JP',sans-serif;}
+.guide-body{padding:14px 14px 20px;}
+.g-section{background:#fff;border-radius:14px;border:1px solid #fed7aa;margin-bottom:10px;overflow:hidden;}
+.g-head{padding:11px 14px;background:#fff7ed;border-bottom:1px solid #fed7aa;display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700;color:var(--text);}
+.g-body{padding:14px;}
+.g-text{font-size:12px;color:var(--muted);line-height:1.8;margin-bottom:10px;}
+.g-shadow-steps{background:#fff7ed;border-radius:10px;padding:10px 12px;margin-top:8px;}
+.g-s-step{display:flex;align-items:flex-start;gap:8px;margin-bottom:7px;}.g-s-step:last-child{margin-bottom:0;}
+.g-s-badge{min-width:52px;padding:2px 0;text-align:center;border-radius:99px;font-size:10px;font-weight:700;flex-shrink:0;margin-top:2px;}
+.gsb-g{background:var(--primary-light);color:#7c2d12;}.gsb-b{background:#dbeafe;color:#1e40af;}
+.g-s-text{font-size:11px;color:var(--muted);line-height:1.75;}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="header">
+<h2>🇪🇸 スペイン語カード 段階４</h2>
+<p>ニュース・経済・教育・接続法・慣用表現</p>
+<button class="help-btn" onclick="openGuide()">❓ 使い方ガイド</button>
+</div>
+<div class="badges">
+<div class="badge" id="mode-badge">📖 西 → 日</div>
+<div class="badge" id="order-badge">順番通り</div>
+<div class="badge green" id="master-badge">マスター: 0 / 60</div>
+</div>
+<div class="progress-wrap"><div class="progress-bar" id="progress-bar" style="width:2%"></div></div>
+<div class="progress-label">カード <span id="cur-num">1</span> / <span id="tot-num">60</span></div>
+<div class="no-active" id="no-active">✅ このカテゴリをすべてマスターしました！<br><span style="font-size:12px;font-weight:600;">チェックを外すか別のカテゴリを選んでください。</span></div>
+<div class="auto-panel" id="auto-panel">
+<div class="auto-step-title" id="auto-step-title">STEP 1</div>
+<div class="auto-instruction" id="auto-instruction">音声を聴いてください。</div>
+<div class="auto-count" id="auto-count"></div>
+</div>
+<div class="tap-hint" id="tap-hint">👆 カードをタップして日本語訳を表示</div>
+<div class="card tappable" id="main-card" onclick="handleTap()">
+<div class="card-top">
+<div class="card-num" id="card-num">01</div>
+<div class="cat-label" id="card-cat"></div>
+<div class="master-wrap" id="master-wrap">
+<span>マスター</span>
+<input type="checkbox" id="master-cb" onchange="toggleMaster(event)" onclick="event.stopPropagation()">
+</div>
+</div>
+<div class="main-text" id="main-text">Loading...</div>
+<div class="answer-wrap" id="answer-wrap">
+<div class="answer-ja" id="answer-ja"></div>
+<div class="answer-tip" id="answer-tip" style="display:none"></div>
+</div>
+<div class="master-badge" id="mastered-badge">✔ マスター済</div>
+</div>
+<div class="master-summary" id="master-summary" onclick="toggleMasterList()"></div>
+<div id="master-list-wrap" style="display:none;margin-bottom:12px;">
+<div style="background:#fff;border-radius:16px;padding:14px 16px;box-shadow:var(--shadow);">
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+<span style="font-size:13px;font-weight:900;color:var(--green);">✅ マスター済みリスト</span>
+<button class="btn btn-secondary" id="clear-all-btn" style="padding:4px 12px;font-size:11px;" onclick="clearAllMasterStep1()">全解除</button>
+</div>
+<div id="master-list"></div>
+</div>
+</div>
+<div class="filter-panel">
+<div class="filter-header" onclick="toggleFilterPanel()">
+<div class="filter-header-left">📂 カテゴリを選ぶ</div>
+<div style="display:flex;align-items:center;gap:4px;">
+<div class="filter-current" id="filter-current-label">すべて</div>
+<span class="filter-toggle-icon" id="filter-toggle-icon">▼</span>
+</div>
+</div>
+<div class="filter-chips-wrap" id="filter-chips-wrap">
+<button class="chip-all active" id="chip-all" onclick="selectCategory('all')">🎯 すべて表示</button>
+<div id="cat-rows"></div>
+</div>
+</div>
+<div class="panel">
+<div class="panel-row" style="margin-bottom:8px;">
+<label>🔊 音声優先</label>
+<select id="voice-pref" onchange="applyVoicePref()">
+<option value="ES">🇪🇸 スペイン</option>
+<option value="MX">🇲🇽 メキシコ</option>
+<option value="AR">🇦🇷 アルゼンチン</option>
+</select>
+<select id="voice-select" style="flex:2;"></select>
+</div>
+<div class="panel-row">
+<label>速度</label>
+<input type="range" id="rate-slider" min="0.5" max="1.5" step="0.1" value="1.0" oninput="updateRate()">
+<span class="speed-val" id="rate-val">1.0×</span>
+</div>
+</div>
+<div id="normal-controls">
+<div class="btn-row">
+<button class="btn btn-secondary" onclick="prev()">← 戻る</button>
+<button class="btn btn-primary" onclick="speakCurrent()">🔊 音声</button>
+<button class="btn btn-secondary" onclick="next()">次へ →</button>
+<button class="btn btn-secondary" style="font-size:11px;padding:8px 6px;" onclick="switchMode()">🔄 西⇄日</button>
+</div>
+<div class="btn-row" style="gap:4px;">
+<button class="btn btn-secondary" style="font-size:11px;padding:7px 5px;" id="random-btn" onclick="toggleRandom()">🔀 ランダム</button>
+<button class="btn btn-secondary" style="font-size:11px;padding:7px 5px;" id="repeat-btn" onclick="toggleRepeat()">🔁 繰り返し</button>
+<button class="btn btn-blue" style="font-size:11px;padding:7px 5px;" onclick="startContinuous()">▶ 連続再生</button>
+<button class="btn btn-amber" style="font-size:11px;padding:7px 5px;" onclick="startShadowing()">🗣️ シャドウ</button>
+</div>
+</div>
+<div id="auto-controls" style="display:none;">
+<div class="btn-row"><button class="btn btn-red" onclick="stopAutoPlay()">⏹ 停止</button></div>
+</div>
+</div>
+
+<div class="guide-overlay" id="guide-overlay" onclick="handleOverlayClick(event)">
+<div class="guide-modal">
+<div class="guide-modal-header">
+<h2>🇪🇸 スペイン語カード 段階４</h2>
+<button class="guide-close" onclick="closeGuide()">✕ 閉じる</button>
+</div>
+<div class="guide-body">
+<div class="g-section">
+<div class="g-head"><span>📚</span> 段階４について</div>
+<div class="g-body"><p class="g-text">ニュース・経済・教育・接続法・慣用表現など、中〜上級レベルの表現を扱います。接続法（subjuntivo）の頻出パターンや、ネイティブがよく使う慣用句を中心に学習します。</p></div>
+</div>
+<div class="g-section">
+<div class="g-head"><span>🗣️</span> シャドウイング（4ステップ）</div>
+<div class="g-body">
+<div class="g-shadow-steps">
+<div class="g-s-step"><span class="g-s-badge gsb-g">STEP 1</span><div class="g-s-text"><strong>文字を見ずに2回聴く</strong></div></div>
+<div class="g-s-step"><span class="g-s-badge gsb-g">STEP 2</span><div class="g-s-text"><strong>文字を見ずにシャドウイング×2</strong></div></div>
+<div class="g-s-step"><span class="g-s-badge gsb-b">STEP 3</span><div class="g-s-text"><strong>日本語訳を見ながらシャドウイング×2</strong></div></div>
+<div class="g-s-step"><span class="g-s-badge gsb-g">STEP 4</span><div class="g-s-text"><strong>何も見ずにシャドウイング×2</strong></div></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<script>
+const CATS={
+'📰 ニュース・社会':'#c2410c',
+'💰 経済・ビジネス':'#0369a1',
+'🎓 教育・学習':'#d97706',
+'🔀 接続法・複雑構文':'#7c3aed',
+'🗣️ 慣用句・口語表現':'#0f766e',
+};
+
+const phrases=[
+// ニュース・社会 (12)
+{cat:'📰 ニュース・社会',en:'Según las últimas noticias...',ja:'最新ニュースによると…',tip:'según = 〜によると; últimas = 最新の（女性複数）'},
+{cat:'📰 ニュース・社会',en:'El gobierno ha anunciado nuevas medidas.',ja:'政府が新たな措置を発表しました。',tip:'gobierno = 政府; anunciar = 発表する; medida = 措置'},
+{cat:'📰 ニュース・社会',en:'Se espera que la situación mejore pronto.',ja:'状況がすぐに改善されることが期待されます。',tip:'se espera que = 〜が期待される; mejorar = 改善する'},
+{cat:'📰 ニュース・社会',en:'La tasa de desempleo ha bajado.',ja:'失業率が下がりました。',tip:'tasa = 率; desempleo = 失業; bajar = 下がる'},
+{cat:'📰 ニュース・社会',en:'Miles de personas salieron a protestar.',ja:'何千人もの人々が抗議するために街に出ました。',tip:'miles = 何千; protestar = 抗議する'},
+{cat:'📰 ニュース・社会',en:'El cambio climático es una amenaza global.',ja:'気候変動は地球規模の脅威です。',tip:'cambio climático = 気候変動; amenaza = 脅威'},
+{cat:'📰 ニュース・社会',en:'Las elecciones se celebrarán en marzo.',ja:'選挙は3月に行われます。',tip:'elecciones = 選挙; celebrarse = 行われる'},
+{cat:'📰 ニュース・社会',en:'Se han registrado varios terremotos.',ja:'複数の地震が記録されました。',tip:'registrar = 記録する; terremoto = 地震'},
+{cat:'📰 ニュース・社会',en:'La pobreza sigue siendo un problema grave.',ja:'貧困は依然として深刻な問題です。',tip:'pobreza = 貧困; grave = 深刻な・重大な'},
+{cat:'📰 ニュース・社会',en:'El acuerdo fue firmado por ambas partes.',ja:'協定は双方によって署名されました。',tip:'acuerdo = 協定; firmar = 署名する; ambas = 両方の'},
+{cat:'📰 ニュース・社会',en:'La inmigración es un tema polémico.',ja:'移民は議論を呼ぶテーマです。',tip:'inmigración = 移民・移住; polémico = 議論的な'},
+{cat:'📰 ニュース・社会',en:'Se investigan las causas del accidente.',ja:'事故の原因が調査されています。',tip:'investigar = 調査する; causa = 原因'},
+// 経済・ビジネス (12)
+{cat:'💰 経済・ビジネス',en:'La inflación ha alcanzado un récord histórico.',ja:'インフレが歴史的な記録に達しました。',tip:'inflación = インフレ; alcanzar = 達する; récord = 記録'},
+{cat:'💰 経済・ビジネス',en:'Hay que reducir los gastos operativos.',ja:'運営コストを削減する必要があります。',tip:'reducir = 削減する; gasto = 費用・出費'},
+{cat:'💰 経済・ビジネス',en:'Estamos buscando inversores.',ja:'投資家を探しています。',tip:'inversor = 投資家; invertir = 投資する'},
+{cat:'💰 経済・ビジネス',en:'Las ventas han aumentado un veinte por ciento.',ja:'売上が20パーセント増加しました。',tip:'ventas = 売上; aumentar = 増加する; por ciento = パーセント'},
+{cat:'💰 経済・ビジネス',en:'Firmamos un contrato con la empresa.',ja:'その会社と契約を結びました。',tip:'firmar = 署名する; contrato = 契約'},
+{cat:'💰 経済・ビジネス',en:'El mercado está muy competitivo.',ja:'市場はとても競争が激しいです。',tip:'mercado = 市場; competitivo = 競争的な'},
+{cat:'💰 経済・ビジネス',en:'Necesitamos ampliar nuestra cuota de mercado.',ja:'私たちの市場シェアを拡大する必要があります。',tip:'ampliar = 拡大する; cuota = 割り当て・シェア'},
+{cat:'💰 経済・ビジネス',en:'El presupuesto para este año es limitado.',ja:'今年の予算は限られています。',tip:'presupuesto = 予算; limitado = 限られた'},
+{cat:'💰 経済・ビジネス',en:'Hemos lanzado un nuevo producto al mercado.',ja:'新製品を市場に投入しました。',tip:'lanzar = 投入する・発売する; producto = 製品'},
+{cat:'💰 経済・ビジネス',en:'La empresa cotiza en bolsa.',ja:'その企業は株式市場に上場しています。',tip:'cotizar en bolsa = 株式上場する; bolsa = 株式市場・袋'},
+{cat:'💰 経済・ビジネス',en:'Tenemos que negociar mejores condiciones.',ja:'より良い条件で交渉しなければなりません。',tip:'negociar = 交渉する; condición = 条件'},
+{cat:'💰 経済・ビジネス',en:'El beneficio neto aumentó este trimestre.',ja:'今四半期の純利益が増加しました。',tip:'beneficio = 利益; neto = 純〜; trimestre = 四半期'},
+// 教育・学習 (12)
+{cat:'🎓 教育・学習',en:'Me he matriculado en un curso de español.',ja:'スペイン語のコースに登録しました。',tip:'matricularse = 登録する・入学する; curso = コース'},
+{cat:'🎓 教育・学習',en:'Aprender idiomas abre muchas puertas.',ja:'語学を学ぶことで多くの扉が開きます。',tip:'idioma = 言語; abrir puertas = 扉を開く（慣用）'},
+{cat:'🎓 教育・学習',en:'Hay que practicar todos los días.',ja:'毎日練習しなければなりません。',tip:'practicar = 練習する; todos los días = 毎日'},
+{cat:'🎓 教育・学習',en:'El nivel de este examen es bastante alto.',ja:'この試験のレベルはかなり高いです。',tip:'nivel = レベル; bastante = かなり・十分に'},
+{cat:'🎓 教育・学習',en:'Tengo que repasar antes del examen.',ja:'試験前に復習しなければなりません。',tip:'repasar = 復習する; antes de = 〜の前に'},
+{cat:'🎓 教育・学習',en:'La beca me permite estudiar en el extranjero.',ja:'奨学金のおかげで海外で勉強できます。',tip:'beca = 奨学金; extranjero = 外国・海外'},
+{cat:'🎓 教育・学習',en:'Hice un intercambio cultural el año pasado.',ja:'昨年文化交流をしました。',tip:'intercambio = 交換・交流; el año pasado = 昨年'},
+{cat:'🎓 教育・学習',en:'El profesor explica muy bien.',ja:'先生はとても上手く説明します。',tip:'profesor/a = 先生・教授; explicar = 説明する'},
+{cat:'🎓 教育・学習',en:'Tengo dificultades con el subjuntivo.',ja:'接続法に苦労しています。',tip:'dificultad = 困難; subjuntivo = 接続法'},
+{cat:'🎓 教育・学習',en:'La educación es la clave del éxito.',ja:'教育は成功の鍵です。',tip:'clave = 鍵・重要なもの; éxito = 成功'},
+{cat:'🎓 教育・学習',en:'Voy a hacer un posgrado el año que viene.',ja:'来年大学院に進む予定です。',tip:'posgrado = 大学院; el año que viene = 来年'},
+{cat:'🎓 教育・学習',en:'Aprendí más haciendo que estudiando.',ja:'勉強するよりやってみる方が多く学びました。',tip:'hacer = する・作る; estudiar = 勉強する'},
+// 接続法・複雑構文 (12)
+{cat:'🔀 接続法・複雑構文',en:'Espero que todo salga bien.',ja:'すべてうまくいくことを願っています。',tip:'esperar que + 接続法; salir bien = うまくいく'},
+{cat:'🔀 接続法・複雑構文',en:'Ojalá puedas venir a la fiesta.',ja:'パーティーに来られるといいですね。',tip:'ojalá + 接続法 = 〜であればよいのだが（願望）'},
+{cat:'🔀 接続法・複雑構文',en:'Es importante que llegues a tiempo.',ja:'時間通りに着くことが重要です。',tip:'es importante que + 接続法; a tiempo = 時間通りに'},
+{cat:'🔀 接続法・複雑構文',en:'No creo que sea tan difícil.',ja:'そんなに難しいとは思いません。',tip:'no creer que + 接続法; sea = ser の接続法'},
+{cat:'🔀 接続法・複雑構文',en:'Cuando llegues, llámame.',ja:'着いたら、電話してください。',tip:'cuando + 接続法（未来の条件）; llamar = 電話する'},
+{cat:'🔀 接続法・複雑構文',en:'Si tuviera más tiempo, viajaría más.',ja:'もっと時間があれば、もっと旅行するのに。',tip:'si + 過去接続法 + 条件法（反事実）'},
+{cat:'🔀 接続法・複雑構文',en:'Me alegra que hayas venido.',ja:'来てくれて嬉しいです。',tip:'alegrarse de que + 接続法; hayas venido = 来た（完了接続法）'},
+{cat:'🔀 接続法・複雑構文',en:'Para que lo sepas, ya he terminado.',ja:'知っておいてほしいのですが、もう終わりました。',tip:'para que + 接続法 = 〜するように; sepas = saber の接続法'},
+{cat:'🔀 接続法・複雑構文',en:'Busco a alguien que hable japonés.',ja:'日本語を話せる人を探しています。',tip:'不特定の先行詞 + 接続法; hable = hablar の接続法'},
+{cat:'🔀 接続法・複雑構文',en:'Aunque llueva, saldré.',ja:'雨が降っても、出かけます。',tip:'aunque + 接続法 = たとえ〜でも（仮定）'},
+{cat:'🔀 接続法・複雑構文',en:'Te lo dije para que no cometieras el mismo error.',ja:'同じミスをしないようにと言いました。',tip:'para que + 過去接続法; cometer = 犯す; error = 誤り'},
+{cat:'🔀 接続法・複雑構文',en:'Quizás venga mañana.',ja:'もしかしたら明日来るかもしれません。',tip:'quizás/tal vez + 接続法 = 〜かもしれない'},
+// 慣用句・口語表現 (12)
+{cat:'🗣️ 慣用句・口語表現',en:'No hay mal que por bien no venga.',ja:'禍福はあざなえる縄のごとし。（悪いことも良い面がある）',tip:'直訳「良いことが来ない悪いことはない」'},
+{cat:'🗣️ 慣用句・口語表現',en:'Meter la pata.',ja:'失態を演じる・しくじる。',tip:'pata = 足（動物）; 直訳「足を突っ込む」'},
+{cat:'🗣️ 慣用句・口語表現',en:'Costar un ojo de la cara.',ja:'目が飛び出るほど高い。',tip:'ojo = 目; cara = 顔; 直訳「顔の目一つ分かかる」'},
+{cat:'🗣️ 慣用句・口語表現',en:'Estar en las nubes.',ja:'ぼーっとしている・夢想している。',tip:'nubes = 雲; 直訳「雲の中にいる」'},
+{cat:'🗣️ 慣用句・口語表現',en:'No hay de qué.',ja:'どういたしまして。（de nada より少し丁寧）',tip:'直訳「〜のことは何もない」'},
+{cat:'🗣️ 慣用句・口語表現',en:'¡Qué va!',ja:'まさか！／とんでもない！',tip:'強い否定・驚きを表す口語表現'},
+{cat:'🗣️ 慣用句・口語表現',en:'A ver...',ja:'えーっと…／見てみましょう…',tip:'考えたり確認したりする際のつなぎ言葉'},
+{cat:'🗣️ 慣用句・口語表現',en:'Dar en el clavo.',ja:'ズバリ当てる・的を射る。',tip:'clavo = 釘; 直訳「釘に当てる」= 英 hit the nail on the head'},
+{cat:'🗣️ 慣用句・口語表現',en:'Ponerse las pilas.',ja:'気合を入れる・本腰を入れる。',tip:'pila = 電池; 直訳「電池を入れる」'},
+{cat:'🗣️ 慣用句・口語表現',en:'Hablar por los codos.',ja:'よくしゃべる・おしゃべりだ。',tip:'codo = 肘; 直訳「肘で話す」'},
+{cat:'🗣️ 慣用句・口語表現',en:'Tomar el pelo a alguien.',ja:'人をからかう・だます。',tip:'pelo = 髪の毛; 直訳「誰かの髪を引っ張る」'},
+{cat:'🗣️ 慣用句・口語表現',en:'No pegar ojo.',ja:'一睡もできない。',tip:'ojo = 目; 直訳「目をくっつけない」= 目を閉じられない'},
+];
+
+const TOTAL=phrases.length;
+let currentIndex=0,isRandom=false,isEnToJa=true,isRevealed=false;
+let activeCategory='all',isAutoPlaying=false,isRepeating=false;
+let repeatTimer=null,autoStopped=false,autoTimeout=null;
+let masterSet=new Set(JSON.parse(localStorage.getItem('es_lv4_master')||'[]'));
+
+let esVoices=[];
+function populateVoices(){const all=window.speechSynthesis.getVoices();esVoices=all.filter(v=>v.lang.startsWith('es'));if(!esVoices.length)esVoices=all;applyVoicePref();}
+function applyVoicePref(){const pref=document.getElementById('voice-pref').value;const preferred=pref==='ES'?['es-ES','es-MX','es-AR']:pref==='MX'?['es-MX','es-ES','es-AR']:['es-AR','es-ES','es-MX'];const sorted=[...esVoices].sort((a,b)=>{const ai=preferred.findIndex(p=>a.lang.startsWith(p));const bi=preferred.findIndex(p=>b.lang.startsWith(p));return(ai<0?99:ai)-(bi<0?99:bi);});const sel=document.getElementById('voice-select');sel.innerHTML='';sorted.forEach((v,i)=>{const o=document.createElement('option');o.value=i;o.textContent=`${v.name} (${v.lang})`;sel.appendChild(o);});esVoices=sorted;}
+populateVoices();if(window.speechSynthesis.onvoiceschanged!==undefined)window.speechSynthesis.onvoiceschanged=populateVoices;
+function getVoice(){const sel=document.getElementById('voice-select');return esVoices[parseInt(sel.value)]||esVoices[0]||null;}
+function getRate(){return parseFloat(document.getElementById('rate-slider').value);}
+function updateRate(){document.getElementById('rate-val').textContent=getRate().toFixed(1)+'×';}
+let keepAlive=null;
+function startKeepAlive(){stopKeepAlive();keepAlive=setInterval(()=>{if(window.speechSynthesis.speaking){window.speechSynthesis.pause();window.speechSynthesis.resume();}},10000);}
+function stopKeepAlive(){if(keepAlive){clearInterval(keepAlive);keepAlive=null;}}
+let isSpeaking=false;
+function speakOne(text,onEnd){window.speechSynthesis.cancel();isSpeaking=false;clearTimeout(speakOne._t);speakOne._t=setTimeout(()=>{if(isSpeaking)return;isSpeaking=true;const utt=new SpeechSynthesisUtterance(text);const v=getVoice();if(v){utt.voice=v;utt.lang=v.lang;}else{utt.lang='es-ES';}utt.rate=getRate();utt.onstart=startKeepAlive;utt.onend=()=>{isSpeaking=false;stopKeepAlive();if(onEnd)onEnd();};utt.onerror=()=>{isSpeaking=false;stopKeepAlive();if(onEnd)onEnd();};window.speechSynthesis.speak(utt);},150);}
+function stripTags(html){return html.replace(/<[^>]+>/g,'').replace(/\s+/g,' ').trim();}
+function getSpeechText(item){return stripTags(item.en);}
+function speakCurrent(){const a=getActive();if(!a.length)return;speakOne(getSpeechText(a[currentIndex]));}
+function speakRepeat(text){if(!isRepeating)return;window.speechSynthesis.cancel();setTimeout(()=>{speakOne(text,()=>{if(isRepeating){repeatTimer=setTimeout(()=>speakRepeat(text),300);}});},150);}
+function toggleRepeat(){isRepeating=!isRepeating;const btn=document.getElementById('repeat-btn');btn.textContent='🔁 繰り返し: '+(isRepeating?'ON':'OFF');btn.style.background=isRepeating?'var(--primary)':'';btn.style.color=isRepeating?'#fff':'';if(isRepeating){const a=getActive();if(!a.length)return;speakRepeat(getSpeechText(a[currentIndex]));}else{if(repeatTimer){clearTimeout(repeatTimer);repeatTimer=null;}window.speechSynthesis.cancel();}}
+function speakP(){return new Promise(resolve=>{if(autoStopped){resolve();return;}const a=getActive();if(!a.length){resolve();return;}speakOne(getSpeechText(a[currentIndex]),resolve);});}
+const allCats=[...new Set(phrases.map(p=>p.cat))];
+function buildCatRows(){const wrap=document.getElementById('cat-rows');wrap.innerHTML='';allCats.forEach(cat=>{const total=phrases.filter(p=>p.cat===cat).length;const mastered=phrases.filter((p,i)=>p.cat===cat&&masterSet.has(i)).length;const done=total>0&&mastered===total;const row=document.createElement('div');row.className='cat-row'+(cat===activeCategory?' active':'');row.innerHTML=`<div class="cat-dot ${done?'done':''}"></div><div class="cat-row-name">${cat}</div><div class="cat-row-count">${mastered===0?total:`${total-mastered}残/${total}`}</div>`;row.onclick=()=>selectCategory(cat);wrap.appendChild(row);});document.getElementById('chip-all').className='chip-all'+(activeCategory==='all'?' active':'');}
+let filterOpen=false;
+function toggleFilterPanel(){filterOpen=!filterOpen;document.getElementById('filter-chips-wrap').className='filter-chips-wrap'+(filterOpen?' open':'');document.getElementById('filter-toggle-icon').className='filter-toggle-icon'+(filterOpen?' open':'');}
+function updateFilterLabel(){const a=getActive();document.getElementById('filter-current-label').textContent=activeCategory==='all'?`すべて（${a.length}）`:`${activeCategory}（${a.length}）`;}
+function selectCategory(cat){if(isAutoPlaying)return;activeCategory=cat;currentIndex=0;filterOpen=false;document.getElementById('filter-chips-wrap').className='filter-chips-wrap';document.getElementById('filter-toggle-icon').className='filter-toggle-icon';buildCatRows();updateFilterLabel();update();}
+function getActive(){return phrases.map((p,i)=>({...p,globalIdx:i})).filter(p=>!masterSet.has(p.globalIdx)&&(activeCategory==='all'||p.cat===activeCategory));}
+function saveMaster(){localStorage.setItem('es_lv4_master',JSON.stringify([...masterSet]));}
+function update(){const active=getActive();document.getElementById('master-badge').textContent=`マスター: ${masterSet.size} / ${TOTAL}`;if(!active.length){document.getElementById('no-active').classList.add('show');document.getElementById('main-card').style.display='none';document.getElementById('tap-hint').style.display='none';updateMasterUI();buildCatRows();updateFilterLabel();return;}document.getElementById('no-active').classList.remove('show');document.getElementById('main-card').style.display='';document.getElementById('tap-hint').style.display='';if(currentIndex>=active.length)currentIndex=0;const item=active[currentIndex];const color=CATS[item.cat]||'#c2410c';document.getElementById('cur-num').textContent=currentIndex+1;document.getElementById('tot-num').textContent=active.length;document.getElementById('progress-bar').style.width=((currentIndex+1)/active.length*100)+'%';document.getElementById('progress-bar').style.background=color;document.getElementById('card-num').textContent=String(item.globalIdx+1).padStart(2,'0');document.getElementById('card-cat').textContent=item.cat;document.getElementById('card-cat').style.color=color;document.getElementById('main-text').innerHTML=isEnToJa?item.en:item.ja;document.getElementById('answer-ja').innerHTML=isEnToJa?item.ja:item.en;const tipEl=document.getElementById('answer-tip');if(item.tip){tipEl.textContent=item.tip;tipEl.style.display='';}else tipEl.style.display='none';document.getElementById('mode-badge').textContent=isEnToJa?'📖 西 → 日':'📖 日 → 西';isRevealed=false;document.getElementById('answer-wrap').classList.remove('show');document.getElementById('main-card').classList.remove('revealed');document.getElementById('master-cb').checked=masterSet.has(item.globalIdx);document.getElementById('mastered-badge').classList.toggle('show',masterSet.has(item.globalIdx));updateMasterUI();buildCatRows();updateFilterLabel();}
+function updateMasterUI(){const count=masterSet.size;const summary=document.getElementById('master-summary');if(count>0){summary.classList.add('show');summary.textContent=`✅ ${count}枚マスター済 — タップして一覧表示 / 解除`;const listEl=document.getElementById('master-list');listEl.innerHTML='';[...masterSet].sort((a,b)=>a-b).forEach(idx=>{const p=phrases[idx];if(!p)return;const row=document.createElement('div');row.style.cssText='display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid #e2e8f0;font-size:12px;';row.innerHTML=`<span style="flex:1;line-height:1.5;"><span style="color:${CATS[p.cat]};font-weight:800;">${p.cat}</span><br>${stripTags(p.en)}</span><button onclick="removeMaster(${idx})" style="border:none;background:#e11d48;color:#fff;border-radius:99px;padding:3px 10px;font-size:11px;font-weight:700;cursor:pointer;">解除</button>`;listEl.appendChild(row);});}else{summary.classList.remove('show');document.getElementById('master-list-wrap').style.display='none';}}
+function handleTap(){if(isAutoPlaying)return;if(!isRevealed){isRevealed=true;document.getElementById('answer-wrap').classList.add('show');document.getElementById('main-card').classList.add('revealed');}}
+function toggleMaster(e){if(isAutoPlaying)return;const active=getActive();if(!active.length)return;const item=active[currentIndex];if(e.target.checked){masterSet.add(item.globalIdx);saveMaster();updateMasterUI();buildCatRows();updateFilterLabel();document.getElementById('master-badge').textContent=`マスター: ${masterSet.size} / ${TOTAL}`;setTimeout(()=>{const na=getActive();if(na.length===0){update();return;}if(currentIndex>=na.length)currentIndex=0;update();},400);}else{masterSet.delete(item.globalIdx);saveMaster();document.getElementById('mastered-badge').classList.remove('show');updateMasterUI();buildCatRows();updateFilterLabel();document.getElementById('master-badge').textContent=`マスター: ${masterSet.size} / ${TOTAL}`;}}
+function removeMaster(idx){masterSet.delete(idx);saveMaster();if(!masterSet.size)document.getElementById('master-list-wrap').style.display='none';update();}
+function clearAllMasterStep1(){const btn=document.getElementById('clear-all-btn');if(!btn)return;btn.textContent='本当に全解除？';btn.style.background='#e11d48';btn.style.color='#fff';btn.onclick=clearAllMasterStep2;setTimeout(()=>{if(btn.textContent==='本当に全解除？'){btn.textContent='全解除';btn.style.background='';btn.style.color='';btn.onclick=clearAllMasterStep1;}},3000);}
+function clearAllMasterStep2(){masterSet.clear();saveMaster();document.getElementById('master-list-wrap').style.display='none';const btn=document.getElementById('clear-all-btn');if(btn){btn.textContent='全解除';btn.style.background='';btn.style.color='';btn.onclick=clearAllMasterStep1;}update();}
+function toggleMasterList(){if(!masterSet.size)return;const w=document.getElementById('master-list-wrap');w.style.display=w.style.display==='none'?'':'none';}
+function next(){if(isAutoPlaying)return;if(repeatTimer){clearTimeout(repeatTimer);repeatTimer=null;}window.speechSynthesis.cancel();const active=getActive();if(!active.length)return;currentIndex=isRandom?Math.floor(Math.random()*active.length):(currentIndex+1)%active.length;update();}
+function prev(){if(isAutoPlaying)return;if(repeatTimer){clearTimeout(repeatTimer);repeatTimer=null;}window.speechSynthesis.cancel();const active=getActive();if(!active.length)return;currentIndex=(currentIndex-1+active.length)%active.length;update();}
+function toggleRandom(){isRandom=!isRandom;const btn=document.getElementById('random-btn');btn.textContent=isRandom?'🔀 ランダム: ON':'🔀 ランダム: OFF';btn.className=isRandom?'btn btn-on':'btn btn-secondary';document.getElementById('order-badge').textContent=isRandom?'ランダム':'順番通り';}
+function switchMode(){if(isAutoPlaying)return;isEnToJa=!isEnToJa;update();}
+function delayP(ms){return new Promise(r=>{if(autoStopped){r();return;}autoTimeout=setTimeout(r,ms);});}
+function setAutoPanel(step,instr,count){document.getElementById('auto-step-title').textContent=step;document.getElementById('auto-instruction').textContent=instr;document.getElementById('auto-count').textContent=count;}
+function enterAutoUI(){isAutoPlaying=true;autoStopped=false;document.getElementById('normal-controls').style.display='none';document.getElementById('auto-controls').style.display='';document.getElementById('auto-panel').classList.add('show');document.getElementById('tap-hint').style.display='none';document.getElementById('master-wrap').classList.add('disabled');document.getElementById('main-card').classList.remove('tappable');document.getElementById('main-card').classList.add('no-tap');}
+function exitAutoUI(){autoStopped=true;isAutoPlaying=false;window.speechSynthesis.cancel();isSpeaking=false;stopKeepAlive();clearTimeout(speakOne._t);if(autoTimeout){clearTimeout(autoTimeout);autoTimeout=null;}document.getElementById('normal-controls').style.display='';document.getElementById('auto-controls').style.display='none';document.getElementById('auto-panel').classList.remove('show');document.getElementById('tap-hint').style.display='';document.getElementById('master-wrap').classList.remove('disabled');document.getElementById('main-card').classList.add('tappable');document.getElementById('main-card').classList.remove('no-tap');}
+function stopAutoPlay(){exitAutoUI();update();}
+function showHidden(){document.getElementById('main-text').textContent='？？？';document.getElementById('answer-wrap').classList.remove('show');document.getElementById('main-card').classList.remove('revealed');}
+function showAll(){const a=getActive();if(!a.length)return;const item=a[currentIndex];document.getElementById('main-text').innerHTML=item.en;document.getElementById('answer-wrap').classList.add('show');document.getElementById('main-card').classList.add('revealed');}
+async function runShadowing(){const active=getActive();if(!active.length){stopAutoPlay();return;}const startIdx=currentIndex;for(let i=0;i<active.length;i++){if(autoStopped)break;currentIndex=(startIdx+i)%active.length;update();const n=i+1,tot=active.length;showHidden();setAutoPanel(`カード ${n}/${tot} — STEP 1`,'👂 発話せずに2回聴いてください。','1/2回目…');await speakP();if(autoStopped)break;await delayP(350);if(autoStopped)break;setAutoPanel(`カード ${n}/${tot} — STEP 1`,'👂 発話せずに2回聴いてください。','2/2回目…');await speakP();if(autoStopped)break;await delayP(450);if(autoStopped)break;showHidden();setAutoPanel(`カード ${n}/${tot} — STEP 2`,'🗣️ 音声に合わせてシャドウイングしてください。','1/2回目…');await speakP();if(autoStopped)break;await delayP(350);if(autoStopped)break;setAutoPanel(`カード ${n}/${tot} — STEP 2`,'🗣️ 音声に合わせてシャドウイングしてください。','2/2回目…');await speakP();if(autoStopped)break;await delayP(450);if(autoStopped)break;showAll();setAutoPanel(`カード ${n}/${tot} — STEP 3`,'📖 スペイン語・日本語訳を見ながら2回シャドウイングしてください。','1/2回目…');await speakP();if(autoStopped)break;await delayP(350);if(autoStopped)break;setAutoPanel(`カード ${n}/${tot} — STEP 3`,'📖 スペイン語・日本語訳を見ながら2回シャドウイングしてください。','2/2回目…');await speakP();if(autoStopped)break;await delayP(450);if(autoStopped)break;showHidden();setAutoPanel(`カード ${n}/${tot} — STEP 4`,'🙈 何も見ずに2回シャドウイングしてください。','1/2回目…');await speakP();if(autoStopped)break;await delayP(350);if(autoStopped)break;setAutoPanel(`カード ${n}/${tot} — STEP 4`,'🙈 何も見ずに2回シャドウイングしてください。','2/2回目…');await speakP();if(autoStopped)break;await delayP(700);}if(!autoStopped){setAutoPanel('完了！','🎉 シャドウイング完了しました！','');await delayP(2000);stopAutoPlay();}}
+function startShadowing(){if(!getActive().length){alert('出題できるカードがありません。');return;}enterAutoUI();runShadowing();}
+async function runContinuous(){let loopCount=0;while(!autoStopped){const active=getActive();if(!active.length){stopAutoPlay();return;}loopCount++;const startIdx=currentIndex;for(let i=0;i<active.length;i++){if(autoStopped)break;currentIndex=(startIdx+i)%active.length;update();document.getElementById('answer-wrap').classList.add('show');document.getElementById('main-card').classList.add('revealed');setAutoPanel(`連続再生 ${i+1}/${active.length}（${loopCount}周目）`,'▶ スペイン語音声を再生中 — ⏹ 停止ボタンで終了','');await speakP();if(autoStopped)break;await delayP(500);}if(!autoStopped)currentIndex=0;}}
+function startContinuous(){if(!getActive().length){alert('出題できるカードがありません。');return;}enterAutoUI();runContinuous();}
+function openGuide(){document.getElementById('guide-overlay').classList.add('show');document.getElementById('guide-overlay').scrollTop=0;}
+function closeGuide(){document.getElementById('guide-overlay').classList.remove('show');}
+function handleOverlayClick(e){if(e.target===document.getElementById('guide-overlay'))closeGuide();}
+buildCatRows();updateFilterLabel();update();
+</script>
+<script>
+(function(){let startX=0,startY=0;document.addEventListener('touchstart',e=>{startX=e.touches[0].clientX;startY=e.touches[0].clientY;},{passive:true});document.addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-startX;const dy=e.changedTouches[0].clientY-startY;if(Math.abs(dx)>Math.abs(dy)&&Math.abs(dx)>50){if(dx<0)next();else prev();}},{passive:true});})();
+</script>
+</body>
+</html>

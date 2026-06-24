@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🇪🇸 スペイン語カード 段階１</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+--bg: #fff7f0;
+--surface: #ffffff;
+--primary: #c2410c;
+--primary-light: #c2410c22;
+--accent: #0891b2;
+--green: #16a34a;
+--green-light: #dcfce7;
+--amber: #d97706;
+--amber-light: #fef3c7;
+--red: #e11d48;
+--text: #1e293b;
+--muted: #64748b;
+--border: #fdba74;
+--shadow: 0 4px 24px rgba(194,65,12,0.10);
+--radius: 18px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+body {
+font-family: 'Noto Sans JP', sans-serif;
+background: var(--bg);
+min-height: 100vh;
+padding: 16px 12px 48px;
+color: var(--text);
+}
+.container { max-width: 560px; margin: auto; }
+.header { text-align: center; margin-bottom: 14px; }
+.header h2 { font-size: 18px; font-weight: 900; color: var(--primary); }
+.header p { font-size: 12px; color: var(--muted); margin-top: 2px; }
+.badges { display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; margin-bottom: 10px; }
+.badge {
+display: inline-flex; align-items: center; gap: 4px;
+padding: 4px 12px; border-radius: 99px; font-size: 11px; font-weight: 700;
+background: var(--primary-light); color: var(--primary);
+border: 1px solid var(--border);
+}
+.badge.green { background: var(--green-light); color: var(--green); border-color: #86efac; }
+.badge.amber { background: var(--amber-light); color: var(--amber); border-color: #fcd34d; }
+.progress-wrap { background: #c2410c33; border-radius: 99px; height: 6px; margin-bottom: 4px; overflow: hidden; }
+.progress-bar { height: 100%; background: var(--primary); border-radius: 99px; transition: width 0.4s ease; }
+.progress-label { text-align: center; font-size: 12px; color: var(--muted); margin-bottom: 10px; }
+.tap-hint { font-size: 11px; color: var(--muted); margin-bottom: 6px; text-align: center; }
+.card {
+background: var(--surface); border-radius: var(--radius);
+padding: 28px 20px 20px; box-shadow: var(--shadow);
+margin-bottom: 12px; position: relative;
+border: 2px solid var(--border);
+min-height: 160px;
+cursor: pointer; user-select: none;
+transition: transform .1s, border-color .2s;
+}
+.card.tappable:active { transform: scale(0.985); }
+.card.revealed { border-color: var(--primary); }
+.card.no-tap { cursor: default; }
+.card-top {
+display: flex; align-items: center; justify-content: space-between;
+margin-bottom: 10px;
+}
+.card-num { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--muted); }
+.cat-label {
+font-size: 11px; font-weight: 700; letter-spacing: .06em;
+color: var(--primary); text-align: center; flex: 1;
+}
+.master-wrap { display: flex; align-items: center; gap: 4px; font-size: 11px; color: var(--muted); }
+.master-wrap input[type=checkbox] { width: 17px; height: 17px; accent-color: var(--green); cursor: pointer; }
+.master-wrap.disabled { opacity: .3; pointer-events: none; }
+.main-text {
+font-size: clamp(15px, 4vw, 19px); font-weight: 700;
+line-height: 1.65; text-align: center; margin-bottom: 14px;
+}
+.answer-wrap {
+opacity: 0; transform: translateY(5px);
+transition: opacity .25s, transform .25s;
+pointer-events: none;
+}
+.answer-wrap.show { opacity: 1; transform: translateY(0); pointer-events: auto; }
+.answer-ja {
+font-size: clamp(13px, 3.5vw, 15px); font-weight: 700;
+color: var(--accent); text-align: center; line-height: 1.6;
+background: #f0f9ff; border-radius: 10px; padding: 10px 14px; margin-bottom: 8px;
+}
+.answer-tip {
+font-size: 12px; font-weight: 600; color: #c2410c;
+text-align: left; padding: 0 4px; line-height: 1.6;
+}
+.answer-tip::before { content: '💡 '; }
+.master-badge {
+display: none; text-align: center; margin-top: 8px;
+background: var(--green-light); color: var(--green);
+padding: 2px 10px; border-radius: 99px; font-size: 10px; font-weight: 700;
+}
+.master-badge.show { display: block; }
+.no-active {
+background: var(--amber-light); border-radius: 12px; padding: 16px;
+text-align: center; font-size: 14px; color: var(--amber); font-weight: 700;
+display: none; margin-bottom: 12px;
+}
+.no-active.show { display: block; }
+.auto-panel {
+background: var(--surface); border-radius: var(--radius);
+padding: 14px 18px; box-shadow: var(--shadow); margin-bottom: 12px;
+display: none; border-left: 4px solid var(--primary);
+}
+.auto-panel.show { display: block; }
+.auto-step-title { font-size: 12px; font-weight: 900; color: var(--primary); margin-bottom: 4px; }
+.auto-instruction { font-size: 14px; font-weight: 700; color: var(--text); line-height: 1.5; }
+.auto-count { font-family: 'DM Mono', monospace; font-size: 12px; color: var(--muted); margin-top: 4px; }
+.filter-panel {
+background: var(--surface); border-radius: var(--radius);
+padding: 14px 16px; box-shadow: var(--shadow); margin-bottom: 12px;
+}
+.filter-header { display: flex; align-items: center; justify-content: space-between; cursor: pointer; user-select: none; }
+.filter-header-left { font-size: 12px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; }
+.filter-current {
+font-size: 12px; font-weight: 700; color: var(--primary);
+background: var(--primary-light); padding: 3px 10px; border-radius: 99px;
+border: 1px solid var(--border); max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.filter-toggle-icon { font-size: 12px; color: var(--muted); transition: transform .2s; margin-left: 6px; }
+.filter-toggle-icon.open { transform: rotate(180deg); }
+.filter-chips-wrap { display: none; margin-top: 10px; }
+.filter-chips-wrap.open { display: block; }
+.chip-all {
+display: block; width: 100%; padding: 8px 14px; margin-bottom: 8px;
+border-radius: 10px; font-size: 12px; font-weight: 700; cursor: pointer;
+border: 2px solid var(--border); background: #fff; color: var(--muted);
+text-align: left; font-family: 'Noto Sans JP', sans-serif; transition: all .15s;
+}
+.chip-all.active { background: var(--primary-light); color: var(--primary); border-color: var(--primary); }
+.cat-row {
+display: flex; align-items: center; gap: 8px; padding: 8px 10px;
+border-radius: 10px; cursor: pointer; border: 2px solid transparent;
+background: #fff; margin-bottom: 5px; transition: all .15s; user-select: none;
+}
+.cat-row.active { background: var(--primary-light); border-color: var(--primary); }
+.cat-row-name { flex: 1; font-size: 13px; font-weight: 700; color: var(--text); }
+.cat-row.active .cat-row-name { color: var(--primary); }
+.cat-row-count {
+font-family: 'DM Mono', monospace; font-size: 11px; color: var(--muted);
+background: #f1f5f9; padding: 2px 8px; border-radius: 99px; font-weight: 600;
+}
+.cat-row.active .cat-row-count { background: #fff; color: var(--primary); }
+.cat-dot { width: 8px; height: 8px; border-radius: 50%; background: #e2e8f0; flex-shrink: 0; }
+.cat-dot.done { background: var(--green); }
+.panel {
+background: var(--surface); border-radius: var(--radius);
+padding: 14px 16px; box-shadow: var(--shadow); margin-bottom: 12px;
+}
+.panel-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.panel-row + .panel-row { margin-top: 8px; }
+.panel label { font-size: 12px; color: var(--muted); font-weight: 700; white-space: nowrap; }
+.panel select {
+flex: 1; font-size: 12px; border: 1px solid var(--border);
+border-radius: 8px; padding: 4px 8px; background: #fff;
+color: var(--text); font-family: 'Noto Sans JP', sans-serif;
+}
+.panel input[type=range] { flex: 1; min-width: 80px; accent-color: var(--primary); }
+.speed-val { font-family: 'DM Mono', monospace; font-size: 13px; font-weight: 600; color: var(--primary); min-width: 32px; }
+.btn-row { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin-bottom: 10px; }
+.btn {
+border: none; border-radius: 99px; padding: 10px 18px;
+font-size: 13px; font-weight: 700; font-family: 'Noto Sans JP', sans-serif;
+cursor: pointer; transition: opacity .15s, transform .1s;
+display: inline-flex; align-items: center; gap: 5px;
+}
+.btn:active { transform: scale(0.94); opacity: .85; }
+.btn-primary { background: var(--primary); color: #fff; }
+.btn-secondary { background: #e2e8f0; color: var(--text); }
+.btn-red { background: var(--red); color: #fff; }
+.btn-amber { background: var(--amber); color: #fff; }
+.btn-blue { background: #2563eb; color: #fff; }
+.btn-on { background: var(--green); color: #fff; }
+.master-summary {
+background: var(--green-light); border-radius: 12px; padding: 10px 14px;
+font-size: 12px; color: var(--green); font-weight: 700;
+text-align: center; margin-bottom: 10px; display: none; cursor: pointer; user-select: none;
+}
+.master-summary.show { display: block; }
+.help-btn {
+display: inline-flex; align-items: center; gap: 5px;
+padding: 5px 14px; border-radius: 99px;
+border: 1px solid var(--border); background: var(--primary-light);
+color: var(--primary); font-size: 12px; font-weight: 700;
+cursor: pointer; margin-top: 8px;
+font-family: 'Noto Sans JP', sans-serif;
+}
+.guide-overlay {
+display: none; position: fixed; inset: 0; z-index: 100;
+background: rgba(0,0,0,0.5); overflow-y: auto;
+-webkit-overflow-scrolling: touch;
+}
+.guide-overlay.show { display: block; }
+.guide-modal {
+background: var(--bg); max-width: 520px; margin: 0 auto;
+min-height: 100vh; padding: 0 0 60px; position: relative;
+}
+.guide-modal-header {
+position: sticky; top: 0; z-index: 10;
+background: var(--primary); color: #fff;
+padding: 16px 20px;
+display: flex; align-items: center; justify-content: space-between;
+}
+.guide-modal-header h2 { font-size: 16px; font-weight: 900; }
+.guide-close {
+background: rgba(255,255,255,0.2); border: none; border-radius: 99px;
+color: #fff; font-size: 13px; font-weight: 700; padding: 5px 14px;
+cursor: pointer; font-family: 'Noto Sans JP', sans-serif;
+}
+.guide-body { padding: 14px 14px 20px; }
+.g-section { background: #fff; border-radius: 14px; border: 1px solid #fed7aa; margin-bottom: 10px; overflow: hidden; }
+.g-head { padding: 11px 14px; background: #fff7ed; border-bottom: 1px solid #fed7aa; display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 700; color: var(--text); }
+.g-body { padding: 14px; }
+.g-text { font-size: 12px; color: var(--muted); line-height: 1.8; margin-bottom: 10px; }
+.g-text:last-child { margin-bottom: 0; }
+.g-text strong { color: var(--text); font-weight: 700; }
+.g-step { display: flex; gap: 9px; margin-bottom: 9px; align-items: flex-start; }
+.g-step:last-child { margin-bottom: 0; }
+.g-step-num { min-width: 22px; height: 22px; border-radius: 50%; background: var(--primary-light); color: var(--primary); font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
+.g-step-text { font-size: 12px; color: var(--muted); line-height: 1.8; }
+.g-step-text strong { color: var(--text); font-weight: 700; }
+.g-method { border-left: 3px solid var(--border); padding: 8px 12px; margin-bottom: 9px; border-radius: 0 8px 8px 0; background: #fff7ed; }
+.g-method:last-child { margin-bottom: 0; }
+.g-method-title { font-size: 12px; font-weight: 700; color: var(--primary); margin-bottom: 4px; }
+.g-method-body { font-size: 12px; color: var(--muted); line-height: 1.8; }
+.g-shadow-steps { background: #fff7ed; border-radius: 10px; padding: 10px 12px; margin-top: 8px; }
+.g-s-step { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 7px; }
+.g-s-step:last-child { margin-bottom: 0; }
+.g-s-badge { min-width: 52px; padding: 2px 0; text-align: center; border-radius: 99px; font-size: 10px; font-weight: 700; flex-shrink: 0; margin-top: 2px; }
+.gsb-g { background: var(--primary-light); color: #7c2d12; }
+.gsb-b { background: #dbeafe; color: #1e40af; }
+.g-s-text { font-size: 11px; color: var(--muted); line-height: 1.75; }
+.g-s-text strong { color: var(--text); font-weight: 700; }
+.g-flow { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin: 10px 0 6px; }
+.g-flow-tag { padding: 4px 11px; border-radius: 99px; font-size: 11px; font-weight: 700; }
+.gft-green { background: var(--primary-light); color: #7c2d12; border: 1px solid #fdba74; }
+.gft-amber { background: #fef3c7; color: #92400e; border: 1px solid #fcd34d; }
+.gft-blue { background: #dbeafe; color: #1e40af; border: 1px solid #93c5fd; }
+.g-flow-arr { color: var(--muted); font-size: 13px; }
+.gbd { display:inline-flex;align-items:center;gap:4px;padding:5px 12px;border-radius:99px;font-size:11px;font-weight:700;border:none;margin:3px; }
+.gbd-sec { background:#e2e8f0;color:#1e293b; }
+.gbd-pri { background:#c2410c;color:#fff; }
+.gbd-amb { background:#d97706;color:#fff; }
+.gbd-blue { background:#2563eb;color:#fff; }
+.g-note { background: #fff7ed; border: 1px solid #fdba74; border-radius: 10px; padding: 10px 12px; font-size: 12px; color: #7c2d12; line-height: 1.8; margin-top: 10px; }
+.g-note strong { font-weight: 700; }
+</style>
+</head>
+<body>
+<div class="container">
+<div class="header">
+<h2>🇪🇸 スペイン語カード 段階１</h2>
+<p>挨拶・自己紹介・数字・日常表現</p>
+<button class="help-btn" onclick="openGuide()">❓ 使い方ガイド</button>
+</div>
+<div class="badges">
+<div class="badge" id="mode-badge">📖 西 → 日</div>
+<div class="badge" id="order-badge">順番通り</div>
+<div class="badge green" id="master-badge">マスター: 0 / 60</div>
+</div>
+<div class="progress-wrap"><div class="progress-bar" id="progress-bar" style="width:2%"></div></div>
+<div class="progress-label">カード <span id="cur-num">1</span> / <span id="tot-num">60</span></div>
+<div class="no-active" id="no-active">
+✅ このカテゴリをすべてマスターしました！<br>
+<span style="font-size:12px;font-weight:600;">チェックを外すか別のカテゴリを選んでください。</span>
+</div>
+<div class="auto-panel" id="auto-panel">
+<div class="auto-step-title" id="auto-step-title">STEP 1</div>
+<div class="auto-instruction" id="auto-instruction">音声を聴いてください。</div>
+<div class="auto-count" id="auto-count"></div>
+</div>
+<div class="tap-hint" id="tap-hint">👆 カードをタップして日本語訳を表示</div>
+<div class="card tappable" id="main-card" onclick="handleTap()">
+<div class="card-top">
+<div class="card-num" id="card-num">01</div>
+<div class="cat-label" id="card-cat"></div>
+<div class="master-wrap" id="master-wrap">
+<span>マスター</span>
+<input type="checkbox" id="master-cb" onchange="toggleMaster(event)" onclick="event.stopPropagation()">
+</div>
+</div>
+<div class="main-text" id="main-text">Loading...</div>
+<div class="answer-wrap" id="answer-wrap">
+<div class="answer-ja" id="answer-ja"></div>
+<div class="answer-tip" id="answer-tip" style="display:none"></div>
+</div>
+<div class="master-badge" id="mastered-badge">✔ マスター済</div>
+</div>
+<div class="master-summary" id="master-summary" onclick="toggleMasterList()"></div>
+<div id="master-list-wrap" style="display:none;margin-bottom:12px;">
+<div style="background:#fff;border-radius:16px;padding:14px 16px;box-shadow:var(--shadow);">
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+<span style="font-size:13px;font-weight:900;color:var(--green);">✅ マスター済みリスト</span>
+<button class="btn btn-secondary" id="clear-all-btn" style="padding:4px 12px;font-size:11px;" onclick="clearAllMasterStep1()">全解除</button>
+</div>
+<div id="master-list"></div>
+</div>
+</div>
+<div class="filter-panel">
+<div class="filter-header" onclick="toggleFilterPanel()">
+<div class="filter-header-left">📂 カテゴリを選ぶ</div>
+<div style="display:flex;align-items:center;gap:4px;">
+<div class="filter-current" id="filter-current-label">すべて</div>
+<span class="filter-toggle-icon" id="filter-toggle-icon">▼</span>
+</div>
+</div>
+<div class="filter-chips-wrap" id="filter-chips-wrap">
+<button class="chip-all active" id="chip-all" onclick="selectCategory('all')">🎯 すべて表示</button>
+<div id="cat-rows"></div>
+</div>
+</div>
+<div class="panel">
+<div class="panel-row" style="margin-bottom:8px;">
+<label>🔊 音声優先</label>
+<select id="voice-pref" onchange="applyVoicePref()">
+<option value="ES">🇪🇸 スペイン</option>
+<option value="MX">🇲🇽 メキシコ</option>
+<option value="AR">🇦🇷 アルゼンチン</option>
+</select>
+<select id="voice-select" style="flex:2;"></select>
+</div>
+<div class="panel-row">
+<label>速度</label>
+<input type="range" id="rate-slider" min="0.5" max="1.5" step="0.1" value="1.0" oninput="updateRate()">
+<span class="speed-val" id="rate-val">1.0×</span>
+</div>
+</div>
+<div id="normal-controls">
+<div class="btn-row">
+<button class="btn btn-secondary" onclick="prev()">← 戻る</button>
+<button class="btn btn-primary" onclick="speakCurrent()">🔊 音声</button>
+<button class="btn btn-secondary" onclick="next()">次へ →</button>
+<button class="btn btn-secondary" style="font-size:11px;padding:8px 6px;" onclick="switchMode()">🔄 西⇄日</button>
+</div>
+<div class="btn-row" style="gap:4px;">
+<button class="btn btn-secondary" style="font-size:11px;padding:7px 5px;" id="random-btn" onclick="toggleRandom()">🔀 ランダム</button>
+<button class="btn btn-secondary" style="font-size:11px;padding:7px 5px;" id="repeat-btn" onclick="toggleRepeat()">🔁 繰り返し</button>
+<button class="btn btn-blue" style="font-size:11px;padding:7px 5px;" onclick="startContinuous()">▶ 連続再生</button>
+<button class="btn btn-amber" style="font-size:11px;padding:7px 5px;" onclick="startShadowing()">🗣️ シャドウ</button>
+</div>
+</div>
+<div id="auto-controls" style="display:none;">
+<div class="btn-row">
+<button class="btn btn-red" onclick="stopAutoPlay()">⏹ 停止</button>
+</div>
+</div>
+</div>
+
+<!-- Guide Modal -->
+<div class="guide-overlay" id="guide-overlay" onclick="handleOverlayClick(event)">
+<div class="guide-modal">
+<div class="guide-modal-header">
+<h2>🇪🇸 スペイン語カード 段階１</h2>
+<button class="guide-close" onclick="closeGuide()">✕ 閉じる</button>
+</div>
+<div class="guide-body">
+<div class="g-section">
+<div class="g-head"><span>🔘</span> 各ボタンの説明</div>
+<div class="g-body">
+<div style="margin-bottom:12px">
+<div><span class="gbd gbd-sec">← 戻る</span><span class="gbd gbd-pri">🔊 音声</span><span class="gbd gbd-sec">次へ →</span></div>
+<p class="g-text" style="margin-top:6px">カードを前後に移動します。<strong>音声</strong>ボタンでスペイン語を読み上げます。</p>
+</div>
+<div style="margin-bottom:12px">
+<div><span class="gbd gbd-amb">🗣️ シャドウイング</span><span class="gbd gbd-blue">▶ 連続再生</span></div>
+<p class="g-text" style="margin-top:6px">シャドウイングは4ステップの反復練習を自動で進めます。連続再生は全カードを音声で流し聴きします。</p>
+</div>
+<div>
+<div><span class="gbd gbd-sec">🔀 ランダム</span><span class="gbd gbd-sec">🔄 西⇄日</span></div>
+<p class="g-text" style="margin-top:6px">ランダムでカードをシャッフル。<strong>西⇄日</strong>で日本語を見てスペイン語を答えるスピーキング練習になります。</p>
+</div>
+</div>
+</div>
+<div class="g-section">
+<div class="g-head"><span>👆</span> 基本の練習法</div>
+<div class="g-body">
+<div class="g-method">
+<div class="g-method-title">手順</div>
+<div class="g-method-body">
+<div class="g-step"><div class="g-step-num">1</div><div class="g-step-text"><strong>音声を聴く</strong> — 「🔊 音声」を押し、意味を考えながら聴きます。</div></div>
+<div class="g-step"><div class="g-step-num">2</div><div class="g-step-text"><strong>カードをタップ</strong> — 日本語訳を確認します。</div></div>
+<div class="g-step"><div class="g-step-num">3</div><div class="g-step-text"><strong>もう一度音声を聴く</strong> → 自分で声に出して2〜3回繰り返します。</div></div>
+<div class="g-step"><div class="g-step-num">4</div><div class="g-step-text">覚えたら<strong>右上のマスターにチェック</strong> → 自動で次のカードへ進みます。</div></div>
+</div>
+</div>
+</div>
+</div>
+<div class="g-section">
+<div class="g-head"><span>🗣️</span> シャドウイング自動再生（4ステップ）</div>
+<div class="g-body">
+<div class="g-shadow-steps">
+<div class="g-s-step"><span class="g-s-badge gsb-g">STEP 1</span><div class="g-s-text"><strong>文字を見ずに2回聴く</strong></div></div>
+<div class="g-s-step"><span class="g-s-badge gsb-g">STEP 2</span><div class="g-s-text"><strong>文字を見ずにシャドウイング×2</strong></div></div>
+<div class="g-s-step"><span class="g-s-badge gsb-b">STEP 3</span><div class="g-s-text"><strong>日本語訳を見ながらシャドウイング×2</strong></div></div>
+<div class="g-s-step"><span class="g-s-badge gsb-g">STEP 4</span><div class="g-s-text"><strong>また文字を見ずにシャドウイング×2</strong></div></div>
+</div>
+</div>
+</div>
+<div class="g-section">
+<div class="g-head"><span>🔊</span> 音声・速度の設定</div>
+<div class="g-body">
+<div class="g-step"><div class="g-step-num">1</div><div class="g-step-text"><strong>スペイン / メキシコ / アルゼンチン</strong>でアクセントを切り替えられます。</div></div>
+<div class="g-step"><div class="g-step-num">2</div><div class="g-step-text">速度スライダーで<strong>0.5倍〜1.5倍</strong>に調整できます。最初は<strong>0.8×</strong>がおすすめです。</div></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<script>
+const CATS = {
+'🗣️ 挨拶': '#c2410c',
+'🙋 自己紹介': '#0369a1',
+'🔢 数字・時間': '#d97706',
+'💬 日常表現': '#7c3aed',
+'🛒 買い物・場所': '#0f766e',
+};
+
+const phrases = [
+// 挨拶 (15)
+{cat:'🗣️ 挨拶', en:'¡Buenos días!', ja:'おはようございます！', tip:'buen(o) = 良い; día = 日（朝の挨拶）'},
+{cat:'🗣️ 挨拶', en:'¡Buenas tardes!', ja:'こんにちは！（午後）', tip:'tarde = 午後・夕方'},
+{cat:'🗣️ 挨拶', en:'¡Buenas noches!', ja:'こんばんは！／おやすみなさい！', tip:'noche = 夜（夜の挨拶・就寝時両方）'},
+{cat:'🗣️ 挨拶', en:'¡Hola!', ja:'やあ！／こんにちは！（カジュアル）', tip:'時間帯を問わず使える万能挨拶'},
+{cat:'🗣️ 挨拶', en:'¿Cómo está usted?', ja:'お元気ですか？（丁寧）', tip:'usted = あなた（敬語）; cómo = どう'},
+{cat:'🗣️ 挨拶', en:'¿Cómo estás?', ja:'元気？（友人向け）', tip:'tú（親称）に対応する形'},
+{cat:'🗣️ 挨拶', en:'Bien, gracias. ¿Y usted?', ja:'元気です、ありがとう。あなたは？（丁寧）', tip:'y = そして・と'},
+{cat:'🗣️ 挨拶', en:'Muy bien, gracias.', ja:'とても元気です、ありがとう。', tip:'muy = とても; bien = 良く'},
+{cat:'🗣️ 挨拶', en:'Más o menos.', ja:'まあまあです。', tip:'más = もっと; menos = より少ない（直訳「多かれ少なかれ」）'},
+{cat:'🗣️ 挨拶', en:'¡Hasta luego!', ja:'さようなら！', tip:'hasta = 〜まで; luego = 後で'},
+{cat:'🗣️ 挨拶', en:'¡Hasta mañana!', ja:'また明日！', tip:'mañana = 明日・朝'},
+{cat:'🗣️ 挨拶', en:'Por favor.', ja:'お願いします。', tip:'por = 〜のために; favor = 好意'},
+{cat:'🗣️ 挨拶', en:'Muchas gracias.', ja:'どうもありがとうございます。', tip:'muchas = たくさんの（女性複数）'},
+{cat:'🗣️ 挨拶', en:'De nada.', ja:'どういたしまして。', tip:'直訳「何でもないことです」'},
+{cat:'🗣️ 挨拶', en:'Perdón. / Disculpe.', ja:'すみません。／失礼します。', tip:'perdón = 許し; disculpe = 謝る（丁寧命令形）'},
+// 自己紹介 (12)
+{cat:'🙋 自己紹介', en:'Me llamo Carlos.', ja:'私はカルロスと申します。', tip:'llamarse = 〜という名前だ（再帰動詞）'},
+{cat:'🙋 自己紹介', en:'Mi nombre es Ana López.', ja:'私の名前はアナ・ロペスです。', tip:'mi = 私の; nombre = 名前'},
+{cat:'🙋 自己紹介', en:'Soy japonés / japonesa.', ja:'私は日本人です。', tip:'soy = です（ser動詞）; 男性/女性で語尾変化'},
+{cat:'🙋 自己紹介', en:'Soy de Japón.', ja:'私は日本出身です。', tip:'ser de = 〜出身・〜から来た'},
+{cat:'🙋 自己紹介', en:'Vivo en Tokio.', ja:'私は東京に住んでいます。', tip:'vivir = 住む・生きる; en = 〜に'},
+{cat:'🙋 自己紹介', en:'Tengo treinta años.', ja:'私は30歳です。', tip:'tener = 持つ; años = 年・歳（直訳「30年を持つ」）'},
+{cat:'🙋 自己紹介', en:'Soy profesor / profesora.', ja:'私は教師です。', tip:'職業を言うときはser動詞。冠詞不要'},
+{cat:'🙋 自己紹介', en:'Trabajo en una empresa.', ja:'私は会社で働いています。', tip:'trabajar = 働く; empresa = 会社'},
+{cat:'🙋 自己紹介', en:'Estudio español.', ja:'私はスペイン語を勉強しています。', tip:'estudiar = 勉強する'},
+{cat:'🙋 自己紹介', en:'Encantado / Encantada de conocerle.', ja:'お会いできて嬉しいです。', tip:'encantado/a = 魅了された（男/女）; conocer = 知り合う'},
+{cat:'🙋 自己紹介', en:'¿De dónde es usted?', ja:'ご出身はどちらですか？（丁寧）', tip:'dónde = どこ; de dónde = どこ出身'},
+{cat:'🙋 自己紹介', en:'¿Cuántos años tiene?', ja:'おいくつですか？（丁寧）', tip:'cuántos = いくつ; tiene = 持つ（usted）'},
+// 数字・時間 (13)
+{cat:'🔢 数字・時間', en:'uno, dos, tres, cuatro, cinco', ja:'1、2、3、4、5', tip:'スペイン語の数字は規則的で覚えやすい'},
+{cat:'🔢 数字・時間', en:'seis, siete, ocho, nueve, diez', ja:'6、7、8、9、10', tip:'diez = 10（英語のdecadeと同語源）'},
+{cat:'🔢 数字・時間', en:'once, doce, trece, catorce, quince', ja:'11、12、13、14、15', tip:'11〜15は不規則形'},
+{cat:'🔢 数字・時間', en:'veinte, treinta, cuarenta, cincuenta', ja:'20、30、40、50', tip:'〜entaで終わる規則パターン'},
+{cat:'🔢 数字・時間', en:'cien, doscientos, mil', ja:'100、200、1000', tip:'cien（100単独）; ciento（101〜）'},
+{cat:'🔢 数字・時間', en:'¿Qué hora es?', ja:'今何時ですか？', tip:'qué = 何; hora = 時間'},
+{cat:'🔢 数字・時間', en:'Son las tres.', ja:'3時です。', tip:'son las + 数字（2時以上は複数）'},
+{cat:'🔢 数字・時間', en:'Es la una.', ja:'1時です。', tip:'es la una（1時のみ単数）'},
+{cat:'🔢 数字・時間', en:'Son las tres y media.', ja:'3時半です。', tip:'y media = 半（30分）; y cuarto = 15分'},
+{cat:'🔢 数字・時間', en:'Hoy es lunes.', ja:'今日は月曜日です。', tip:'hoy = 今日; lunes = 月曜日'},
+{cat:'🔢 数字・時間', en:'Mañana es martes.', ja:'明日は火曜日です。', tip:'martes = 火曜日（Marsの日）'},
+{cat:'🔢 数字・時間', en:'¿Qué día es hoy?', ja:'今日は何曜日ですか？', tip:'qué día = 何曜日'},
+{cat:'🔢 数字・時間', en:'El fin de semana', ja:'週末', tip:'fin = 終わり; semana = 週'},
+// 日常表現 (12)
+{cat:'💬 日常表現', en:'¿Qué es esto?', ja:'これは何ですか？', tip:'qué = 何; esto = これ（中性）'},
+{cat:'💬 日常表現', en:'No entiendo.', ja:'わかりません。', tip:'entender = 理解する; no = 〜ない'},
+{cat:'💬 日常表現', en:'¿Puede repetir, por favor?', ja:'もう一度言っていただけますか？', tip:'repetir = 繰り返す; puede = できる（usted）'},
+{cat:'💬 日常表現', en:'Habla más despacio, por favor.', ja:'もっとゆっくり話してください。', tip:'más despacio = もっとゆっくり'},
+{cat:'💬 日常表現', en:'¿Habla inglés?', ja:'英語を話せますか？', tip:'hablar = 話す; inglés = 英語'},
+{cat:'💬 日常表現', en:'Tengo hambre.', ja:'お腹が空いています。', tip:'hambre = 空腹（直訳「空腹を持つ」）'},
+{cat:'💬 日常表現', en:'Tengo sed.', ja:'喉が渇いています。', tip:'sed = 渇き'},
+{cat:'💬 日常表現', en:'Estoy cansado / cansada.', ja:'疲れています。', tip:'estar = 状態のser; cansado/a = 疲れた'},
+{cat:'💬 日常表現', en:'¡Está delicioso!', ja:'美味しいです！', tip:'delicioso = 美味しい・素晴らしい'},
+{cat:'💬 日常表現', en:'¡Qué bueno!', ja:'いいですね！／素晴らしい！', tip:'qué = なんて; bueno = 良い'},
+{cat:'💬 日常表現', en:'No sé.', ja:'わかりません（知りません）。', tip:'saber = 知る; no sé = 知らない'},
+{cat:'💬 日常表現', en:'¿Me puede ayudar?', ja:'助けていただけますか？', tip:'ayudar = 助ける; me = 私を'},
+// 買い物・場所 (8)
+{cat:'🛒 買い物・場所', en:'¿Cuánto cuesta?', ja:'いくらですか？', tip:'cuánto = いくら; costar = 〜の値段がする'},
+{cat:'🛒 買い物・場所', en:'Es muy caro / barato.', ja:'とても高い／安いです。', tip:'caro = 高い; barato = 安い'},
+{cat:'🛒 買い物・場所', en:'Quisiera comprar esto.', ja:'これを買いたいです。', tip:'quisiera = 〜したい（丁寧な願望）'},
+{cat:'🛒 買い物・場所', en:'¿Dónde está el baño?', ja:'トイレはどこですか？', tip:'dónde = どこ; baño = トイレ・浴室'},
+{cat:'🛒 買い物・場所', en:'¿Dónde está la estación?', ja:'駅はどこですか？', tip:'estación = 駅・ステーション'},
+{cat:'🛒 買い物・場所', en:'A la derecha / izquierda.', ja:'右に／左に。', tip:'derecha = 右; izquierda = 左'},
+{cat:'🛒 買い物・場所', en:'Todo recto.', ja:'まっすぐです。', tip:'todo = すべて; recto = まっすぐ'},
+{cat:'🛒 買い物・場所', en:'La cuenta, por favor.', ja:'お会計をお願いします。', tip:'cuenta = 勘定・計算; よく使う飲食店表現'},
+];
+
+const TOTAL = phrases.length;
+let currentIndex = 0;
+let isRandom = false;
+let isEnToJa = true;
+let isRevealed = false;
+let activeCategory = 'all';
+let isAutoPlaying = false;
+let isRepeating = false;
+let repeatTimer = null;
+let autoStopped = false;
+let autoTimeout = null;
+let masterSet = new Set(JSON.parse(localStorage.getItem('es_lv1_master') || '[]'));
+
+let esVoices = [];
+function populateVoices() {
+  const all = window.speechSynthesis.getVoices();
+  esVoices = all.filter(v => v.lang.startsWith('es'));
+  if (!esVoices.length) esVoices = all;
+  applyVoicePref();
+}
+function applyVoicePref() {
+  const pref = document.getElementById('voice-pref').value;
+  const preferred = pref === 'ES' ? ['es-ES','es-MX','es-AR'] : pref === 'MX' ? ['es-MX','es-ES','es-AR'] : ['es-AR','es-ES','es-MX'];
+  const sorted = [...esVoices].sort((a,b) => {
+    const ai = preferred.findIndex(p => a.lang.startsWith(p));
+    const bi = preferred.findIndex(p => b.lang.startsWith(p));
+    return (ai<0?99:ai)-(bi<0?99:bi);
+  });
+  const sel = document.getElementById('voice-select');
+  sel.innerHTML = '';
+  sorted.forEach((v,i) => {
+    const o = document.createElement('option');
+    o.value = i; o.textContent = `${v.name} (${v.lang})`;
+    sel.appendChild(o);
+  });
+  esVoices = sorted;
+}
+populateVoices();
+if (window.speechSynthesis.onvoiceschanged !== undefined) window.speechSynthesis.onvoiceschanged = populateVoices;
+
+function getVoice() { const sel = document.getElementById('voice-select'); return esVoices[parseInt(sel.value)] || esVoices[0] || null; }
+function getRate() { return parseFloat(document.getElementById('rate-slider').value); }
+function updateRate() { document.getElementById('rate-val').textContent = getRate().toFixed(1) + '×'; }
+
+let keepAlive = null;
+function startKeepAlive() { stopKeepAlive(); keepAlive = setInterval(() => { if (window.speechSynthesis.speaking) { window.speechSynthesis.pause(); window.speechSynthesis.resume(); } }, 10000); }
+function stopKeepAlive() { if (keepAlive) { clearInterval(keepAlive); keepAlive = null; } }
+
+let isSpeaking = false;
+function speakOne(text, onEnd) {
+  window.speechSynthesis.cancel(); isSpeaking = false;
+  clearTimeout(speakOne._t);
+  speakOne._t = setTimeout(() => {
+    if (isSpeaking) return; isSpeaking = true;
+    const utt = new SpeechSynthesisUtterance(text);
+    const v = getVoice();
+    if (v) { utt.voice = v; utt.lang = v.lang; } else { utt.lang = 'es-ES'; }
+    utt.rate = getRate();
+    utt.onstart = startKeepAlive;
+    utt.onend = () => { isSpeaking=false; stopKeepAlive(); if(onEnd) onEnd(); };
+    utt.onerror = () => { isSpeaking=false; stopKeepAlive(); if(onEnd) onEnd(); };
+    window.speechSynthesis.speak(utt);
+  }, 150);
+}
+function stripTags(html) { return html.replace(/<[^>]+>/g,'').replace(/\s+/g,' ').trim(); }
+function getSpeechText(item) { return stripTags(item.en); }
+function speakCurrent() { const a = getActive(); if(!a.length) return; speakOne(getSpeechText(a[currentIndex])); }
+
+function speakRepeat(text) {
+  if (!isRepeating) return;
+  window.speechSynthesis.cancel();
+  setTimeout(() => { speakOne(text, () => { if (isRepeating) { repeatTimer = setTimeout(() => speakRepeat(text), 300); } }); }, 150);
+}
+function toggleRepeat() {
+  isRepeating = !isRepeating;
+  const btn = document.getElementById('repeat-btn');
+  btn.textContent = '🔁 繰り返し: ' + (isRepeating ? 'ON' : 'OFF');
+  btn.style.background = isRepeating ? 'var(--primary)' : '';
+  btn.style.color = isRepeating ? '#fff' : '';
+  if (isRepeating) { const a = getActive(); if (!a.length) return; speakRepeat(getSpeechText(a[currentIndex])); }
+  else { if (repeatTimer) { clearTimeout(repeatTimer); repeatTimer = null; } window.speechSynthesis.cancel(); }
+}
+
+function speakP() {
+  return new Promise(resolve => {
+    if (autoStopped) { resolve(); return; }
+    const a = getActive(); if(!a.length) { resolve(); return; }
+    speakOne(getSpeechText(a[currentIndex]), resolve);
+  });
+}
+
+const allCats = [...new Set(phrases.map(p => p.cat))];
+function buildCatRows() {
+  const wrap = document.getElementById('cat-rows'); wrap.innerHTML = '';
+  allCats.forEach(cat => {
+    const total = phrases.filter(p => p.cat === cat).length;
+    const mastered = phrases.filter((p,i)=>p.cat===cat && masterSet.has(i)).length;
+    const done = total > 0 && mastered === total;
+    const row = document.createElement('div');
+    row.className = 'cat-row' + (cat===activeCategory?' active':'');
+    row.innerHTML = `<div class="cat-dot ${done?'done':''}"></div><div class="cat-row-name">${cat}</div><div class="cat-row-count">${mastered===0?total:`${total-mastered}残/${total}`}</div>`;
+    row.onclick = () => selectCategory(cat);
+    wrap.appendChild(row);
+  });
+  document.getElementById('chip-all').className = 'chip-all'+(activeCategory==='all'?' active':'');
+}
+let filterOpen = false;
+function toggleFilterPanel() {
+  filterOpen = !filterOpen;
+  document.getElementById('filter-chips-wrap').className = 'filter-chips-wrap'+(filterOpen?' open':'');
+  document.getElementById('filter-toggle-icon').className = 'filter-toggle-icon'+(filterOpen?' open':'');
+}
+function updateFilterLabel() {
+  const a = getActive();
+  document.getElementById('filter-current-label').textContent = activeCategory==='all' ? `すべて（${a.length}）` : `${activeCategory}（${a.length}）`;
+}
+function selectCategory(cat) {
+  if (isAutoPlaying) return;
+  activeCategory = cat; currentIndex = 0; filterOpen = false;
+  document.getElementById('filter-chips-wrap').className = 'filter-chips-wrap';
+  document.getElementById('filter-toggle-icon').className = 'filter-toggle-icon';
+  buildCatRows(); updateFilterLabel(); update();
+}
+
+function getActive() {
+  return phrases.map((p,i) => ({...p, globalIdx:i})).filter(p => !masterSet.has(p.globalIdx) && (activeCategory==='all' || p.cat===activeCategory));
+}
+function saveMaster() { localStorage.setItem('es_lv1_master', JSON.stringify([...masterSet])); }
+
+function update() {
+  const active = getActive();
+  const noActive = document.getElementById('no-active');
+  const mainCard = document.getElementById('main-card');
+  const tapHint = document.getElementById('tap-hint');
+  document.getElementById('master-badge').textContent = `マスター: ${masterSet.size} / ${TOTAL}`;
+  if (!active.length) {
+    noActive.classList.add('show'); mainCard.style.display = 'none'; tapHint.style.display = 'none';
+    updateMasterUI(); buildCatRows(); updateFilterLabel(); return;
+  }
+  noActive.classList.remove('show'); mainCard.style.display = ''; tapHint.style.display = '';
+  if (currentIndex >= active.length) currentIndex = 0;
+  const item = active[currentIndex];
+  const color = CATS[item.cat] || '#c2410c';
+  document.getElementById('cur-num').textContent = currentIndex + 1;
+  document.getElementById('tot-num').textContent = active.length;
+  document.getElementById('progress-bar').style.width = ((currentIndex+1)/active.length*100)+'%';
+  document.getElementById('progress-bar').style.background = color;
+  document.getElementById('card-num').textContent = String(item.globalIdx+1).padStart(2,'0');
+  document.getElementById('card-cat').textContent = item.cat;
+  document.getElementById('card-cat').style.color = color;
+  const displayHTML = isEnToJa ? item.en : item.ja;
+  document.getElementById('main-text').innerHTML = displayHTML;
+  document.getElementById('answer-ja').innerHTML = isEnToJa ? item.ja : item.en;
+  const tipEl = document.getElementById('answer-tip');
+  if (item.tip) { tipEl.textContent = item.tip; tipEl.style.display=''; } else tipEl.style.display = 'none';
+  document.getElementById('mode-badge').textContent = isEnToJa ? '📖 西 → 日' : '📖 日 → 西';
+  isRevealed = false;
+  document.getElementById('answer-wrap').classList.remove('show');
+  mainCard.classList.remove('revealed');
+  document.getElementById('master-cb').checked = masterSet.has(item.globalIdx);
+  document.getElementById('mastered-badge').classList.toggle('show', masterSet.has(item.globalIdx));
+  updateMasterUI(); buildCatRows(); updateFilterLabel();
+}
+
+function updateMasterUI() {
+  const count = masterSet.size;
+  const summary = document.getElementById('master-summary');
+  const listWrap = document.getElementById('master-list-wrap');
+  if (count > 0) {
+    summary.classList.add('show');
+    summary.textContent = `✅ ${count}枚マスター済 — タップして一覧表示 / 解除`;
+    const listEl = document.getElementById('master-list'); listEl.innerHTML = '';
+    [...masterSet].sort((a,b)=>a-b).forEach(idx => {
+      const p = phrases[idx]; if(!p) return;
+      const row = document.createElement('div');
+      row.style.cssText = 'display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid #e2e8f0;font-size:12px;';
+      row.innerHTML = `<span style="flex:1;line-height:1.5;"><span style="color:${CATS[p.cat]};font-weight:800;">${p.cat}</span><br>${stripTags(p.en)}</span><button onclick="removeMaster(${idx})" style="border:none;background:#e11d48;color:#fff;border-radius:99px;padding:3px 10px;font-size:11px;font-weight:700;cursor:pointer;">解除</button>`;
+      listEl.appendChild(row);
+    });
+  } else { summary.classList.remove('show'); listWrap.style.display = 'none'; }
+}
+
+function handleTap() {
+  if (isAutoPlaying) return;
+  if (!isRevealed) {
+    isRevealed = true;
+    document.getElementById('answer-wrap').classList.add('show');
+    document.getElementById('main-card').classList.add('revealed');
+  }
+}
+
+function toggleMaster(e) {
+  if (isAutoPlaying) return;
+  const active = getActive(); if(!active.length) return;
+  const item = active[currentIndex];
+  if (e.target.checked) {
+    masterSet.add(item.globalIdx); saveMaster();
+    updateMasterUI(); buildCatRows(); updateFilterLabel();
+    document.getElementById('master-badge').textContent = `マスター: ${masterSet.size} / ${TOTAL}`;
+    setTimeout(() => { const nextActive = getActive(); if (nextActive.length === 0) { update(); return; } if (currentIndex >= nextActive.length) currentIndex = 0; update(); }, 400);
+  } else {
+    masterSet.delete(item.globalIdx); saveMaster();
+    document.getElementById('mastered-badge').classList.remove('show');
+    updateMasterUI(); buildCatRows(); updateFilterLabel();
+    document.getElementById('master-badge').textContent = `マスター: ${masterSet.size} / ${TOTAL}`;
+  }
+}
+
+function removeMaster(idx) { masterSet.delete(idx); saveMaster(); if (!masterSet.size) document.getElementById('master-list-wrap').style.display='none'; update(); }
+function clearAllMasterStep1() {
+  const btn = document.getElementById('clear-all-btn'); if (!btn) return;
+  btn.textContent = '本当に全解除？'; btn.style.background = '#e11d48'; btn.style.color = '#fff'; btn.onclick = clearAllMasterStep2;
+  setTimeout(() => { if (btn.textContent === '本当に全解除？') { btn.textContent = '全解除'; btn.style.background = ''; btn.style.color = ''; btn.onclick = clearAllMasterStep1; } }, 3000);
+}
+function clearAllMasterStep2() {
+  masterSet.clear(); saveMaster(); document.getElementById('master-list-wrap').style.display = 'none';
+  const btn = document.getElementById('clear-all-btn');
+  if (btn) { btn.textContent = '全解除'; btn.style.background = ''; btn.style.color = ''; btn.onclick = clearAllMasterStep1; }
+  update();
+}
+function toggleMasterList() { if (!masterSet.size) return; const w = document.getElementById('master-list-wrap'); w.style.display = w.style.display==='none' ? '' : 'none'; }
+
+function next() {
+  if (isAutoPlaying) return;
+  if (repeatTimer) { clearTimeout(repeatTimer); repeatTimer = null; }
+  window.speechSynthesis.cancel();
+  const active = getActive(); if(!active.length) return;
+  currentIndex = isRandom ? Math.floor(Math.random()*active.length) : (currentIndex+1) % active.length;
+  update();
+}
+function prev() {
+  if (isAutoPlaying) return;
+  if (repeatTimer) { clearTimeout(repeatTimer); repeatTimer = null; }
+  window.speechSynthesis.cancel();
+  const active = getActive(); if(!active.length) return;
+  currentIndex = (currentIndex - 1 + active.length) % active.length;
+  update();
+}
+function toggleRandom() {
+  isRandom = !isRandom;
+  const btn = document.getElementById('random-btn');
+  btn.textContent = isRandom ? '🔀 ランダム: ON' : '🔀 ランダム: OFF';
+  btn.className = isRandom ? 'btn btn-on' : 'btn btn-secondary';
+  document.getElementById('order-badge').textContent = isRandom ? 'ランダム' : '順番通り';
+}
+function switchMode() { if (isAutoPlaying) return; isEnToJa = !isEnToJa; update(); }
+
+function delayP(ms) { return new Promise(r => { if (autoStopped) { r(); return; } autoTimeout = setTimeout(r, ms); }); }
+function setAutoPanel(step, instr, count) {
+  document.getElementById('auto-step-title').textContent = step;
+  document.getElementById('auto-instruction').textContent = instr;
+  document.getElementById('auto-count').textContent = count;
+}
+function enterAutoUI() {
+  isAutoPlaying = true; autoStopped = false;
+  document.getElementById('normal-controls').style.display = 'none';
+  document.getElementById('auto-controls').style.display = '';
+  document.getElementById('auto-panel').classList.add('show');
+  document.getElementById('tap-hint').style.display = 'none';
+  document.getElementById('master-wrap').classList.add('disabled');
+  document.getElementById('main-card').classList.remove('tappable');
+  document.getElementById('main-card').classList.add('no-tap');
+}
+function exitAutoUI() {
+  autoStopped = true; isAutoPlaying = false;
+  window.speechSynthesis.cancel(); isSpeaking = false; stopKeepAlive();
+  clearTimeout(speakOne._t);
+  if (autoTimeout) { clearTimeout(autoTimeout); autoTimeout = null; }
+  document.getElementById('normal-controls').style.display = '';
+  document.getElementById('auto-controls').style.display = 'none';
+  document.getElementById('auto-panel').classList.remove('show');
+  document.getElementById('tap-hint').style.display = '';
+  document.getElementById('master-wrap').classList.remove('disabled');
+  document.getElementById('main-card').classList.add('tappable');
+  document.getElementById('main-card').classList.remove('no-tap');
+}
+function stopAutoPlay() { exitAutoUI(); update(); }
+
+function showHidden() { document.getElementById('main-text').textContent = '？？？'; document.getElementById('answer-wrap').classList.remove('show'); document.getElementById('main-card').classList.remove('revealed'); }
+function showAll() { const a=getActive(); if(!a.length) return; const item=a[currentIndex]; document.getElementById('main-text').innerHTML=item.en; document.getElementById('answer-wrap').classList.add('show'); document.getElementById('main-card').classList.add('revealed'); }
+
+async function runShadowing() {
+  const active = getActive(); if (!active.length) { stopAutoPlay(); return; }
+  const startIdx = currentIndex;
+  for (let i = 0; i < active.length; i++) {
+    if (autoStopped) break;
+    currentIndex = (startIdx + i) % active.length; update();
+    const n = i+1, tot = active.length;
+    showHidden();
+    setAutoPanel(`カード ${n}/${tot} — STEP 1`,'👂 発話せずに2回聴いてください。','1/2回目…');
+    await speakP(); if(autoStopped) break; await delayP(350); if(autoStopped) break;
+    setAutoPanel(`カード ${n}/${tot} — STEP 1`,'👂 発話せずに2回聴いてください。','2/2回目…');
+    await speakP(); if(autoStopped) break; await delayP(450); if(autoStopped) break;
+    showHidden();
+    setAutoPanel(`カード ${n}/${tot} — STEP 2`,'🗣️ 音声に合わせてシャドウイングしてください。','1/2回目…');
+    await speakP(); if(autoStopped) break; await delayP(350); if(autoStopped) break;
+    setAutoPanel(`カード ${n}/${tot} — STEP 2`,'🗣️ 音声に合わせてシャドウイングしてください。','2/2回目…');
+    await speakP(); if(autoStopped) break; await delayP(450); if(autoStopped) break;
+    showAll();
+    setAutoPanel(`カード ${n}/${tot} — STEP 3`,'📖 スペイン語・日本語訳を見ながら2回シャドウイングしてください。','1/2回目…');
+    await speakP(); if(autoStopped) break; await delayP(350); if(autoStopped) break;
+    setAutoPanel(`カード ${n}/${tot} — STEP 3`,'📖 スペイン語・日本語訳を見ながら2回シャドウイングしてください。','2/2回目…');
+    await speakP(); if(autoStopped) break; await delayP(450); if(autoStopped) break;
+    showHidden();
+    setAutoPanel(`カード ${n}/${tot} — STEP 4`,'🙈 何も見ずに2回シャドウイングしてください。','1/2回目…');
+    await speakP(); if(autoStopped) break; await delayP(350); if(autoStopped) break;
+    setAutoPanel(`カード ${n}/${tot} — STEP 4`,'🙈 何も見ずに2回シャドウイングしてください。','2/2回目…');
+    await speakP(); if(autoStopped) break; await delayP(700);
+  }
+  if (!autoStopped) { setAutoPanel('完了！', '🎉 シャドウイング完了しました！', ''); await delayP(2000); stopAutoPlay(); }
+}
+function startShadowing() { if (!getActive().length) { alert('出題できるカードがありません。'); return; } enterAutoUI(); runShadowing(); }
+
+async function runContinuous() {
+  let loopCount = 0;
+  while (!autoStopped) {
+    const active = getActive(); if (!active.length) { stopAutoPlay(); return; }
+    loopCount++;
+    const startIdx = currentIndex;
+    for (let i = 0; i < active.length; i++) {
+      if (autoStopped) break;
+      currentIndex = (startIdx + i) % active.length; update();
+      document.getElementById('answer-wrap').classList.add('show');
+      document.getElementById('main-card').classList.add('revealed');
+      const n = i+1, tot = active.length;
+      setAutoPanel(`連続再生 ${n}/${tot}（${loopCount}周目）`, '▶ スペイン語音声を再生中 — ⏹ 停止ボタンで終了', '');
+      await speakP(); if(autoStopped) break; await delayP(500);
+    }
+    if (!autoStopped) currentIndex = 0;
+  }
+}
+function startContinuous() { if (!getActive().length) { alert('出題できるカードがありません。'); return; } enterAutoUI(); runContinuous(); }
+
+function openGuide() { document.getElementById('guide-overlay').classList.add('show'); document.getElementById('guide-overlay').scrollTop = 0; }
+function closeGuide() { document.getElementById('guide-overlay').classList.remove('show'); }
+function handleOverlayClick(e) { if (e.target === document.getElementById('guide-overlay')) closeGuide(); }
+
+buildCatRows();
+updateFilterLabel();
+update();
+</script>
+<script>
+(function() {
+  let startX = 0, startY = 0;
+  document.addEventListener('touchstart', e => { startX = e.touches[0].clientX; startY = e.touches[0].clientY; }, { passive: true });
+  document.addEventListener('touchend', e => {
+    const dx = e.changedTouches[0].clientX - startX;
+    const dy = e.changedTouches[0].clientY - startY;
+    if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 50) { if (dx < 0) next(); else prev(); }
+  }, { passive: true });
+})();
+</script>
+</body>
+</html>
