@@ -498,11 +498,10 @@ function speakP() {
 
 function speakCurrent() { const active = getActive(); if (!active.length) return; speakOne(getSpeechText(active[currentIndex])); }
 
-function speakRepeat() {
+function speakRepeat(text) {
   if (!isRepeating || isAutoPlaying) return;
-  const _a=getActive();if(!_a.length)return;const _t=getSpeechText(_a[currentIndex]);
-  speakOne(_t, () => {
-    if (isRepeating && !isAutoPlaying) { clearTimeout(speakRepeat._t); speakRepeat._t = setTimeout(() => speakRepeat(), 300); }
+  speakOne(text, () => {
+    if (isRepeating && !isAutoPlaying) { clearTimeout(speakRepeat._t); speakRepeat._t = setTimeout(() => speakRepeat(text), 1200); }
   });
 }
 speakRepeat._t = null;
@@ -512,7 +511,7 @@ function toggleRepeat() {
   const btn = document.getElementById('repeat-btn');
   btn.textContent = isRepeating ? '🔁 繰り返し: ON' : '🔁 繰り返し';
   btn.className   = isRepeating ? 'btn btn-on' : 'btn btn-secondary';
-  if (isRepeating) { const a = getActive(); if (a.length) speakRepeat(); }
+  if (isRepeating) { const a = getActive(); if (a.length) speakRepeat(getSpeechText(a[currentIndex])); }
   else { window.speechSynthesis.cancel(); isSpeaking = false; stopKeepAlive(); clearTimeout(speakRepeat._t); }
 }
 
@@ -592,7 +591,7 @@ function handleTap() {
 function toggleMaster(e) {
   const active = getActive(); if (!active.length) return;
   const item = active[currentIndex]; const realIdx = phrases.indexOf(item);
-  if (e.target.checked) { mastered.add(realIdx); document.getElementById('mastered-badge').classList.add('show'); setTimeout(() => { next(); }, 400); }
+  if (e.target.checked) { mastered.add(realIdx); document.getElementById('mastered-badge').classList.add('show'); setTimeout(()=>{if(currentIndex>=getActive().length)currentIndex=0;update();},400); }
   else { mastered.delete(realIdx); document.getElementById('mastered-badge').classList.remove('show'); }
   updateMasterBadge(); buildCatRows();
 }
@@ -602,14 +601,14 @@ function next() {
   if (isRandom) currentIndex = Math.floor(Math.random() * active.length);
   else currentIndex = (currentIndex + 1) % active.length;
   update();
-  if (isRepeating) { clearTimeout(speakRepeat._t); speakRepeat(); }
+  if (isRepeating) setTimeout(() => { const a=getActive(); if(a.length) speakRepeat(getSpeechText(a[currentIndex])); }, 300);
 }
 
 function prev() {
   const active = getActive(); if (!active.length) return;
   currentIndex = (currentIndex - 1 + active.length) % active.length;
   update();
-  if (isRepeating) { clearTimeout(speakRepeat._t); speakRepeat(); }
+  if (isRepeating) setTimeout(() => { const a=getActive(); if(a.length) speakRepeat(getSpeechText(a[currentIndex])); }, 300);
 }
 
 function toggleRandom() {
@@ -742,24 +741,6 @@ function handleOverlayClick(e) { if (e.target === document.getElementById('guide
 buildCatRows();
 updateFilterLabel();
 update();
-</script>
-<script>
-// スワイプ機能
-(function() {
-  var startX = 0, startY = 0;
-  document.addEventListener('touchstart', function(e) {
-    startX = e.touches[0].clientX;
-    startY = e.touches[0].clientY;
-  }, { passive: true });
-  document.addEventListener('touchend', function(e) {
-    var dx = e.changedTouches[0].clientX - startX;
-    var dy = e.changedTouches[0].clientY - startY;
-    if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 50) {
-      if (dx < 0) next();
-      else prev();
-    }
-  }, { passive: true });
-})();
 </script>
 </body>
 </html>
