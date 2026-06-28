@@ -5,50 +5,47 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>コンコーネ 50番練習曲</title>
 <style>
-  :root { --ink:#1a1410; --paper:#f7f3ec; --gold:#c49a3c; --accent:#8b3a2a; }
-  * { box-sizing:border-box; margin:0; padding:0; }
-  body { background:var(--paper); color:var(--ink); font-family:-apple-system,'Noto Sans JP',sans-serif; display:flex; flex-direction:column; height:100vh; overflow:hidden; }
-  header { background:var(--ink); color:#fff; padding:8px 10px; display:flex; align-items:center; gap:8px; flex-shrink:0; }
-  header h1 { font-size:12px; font-weight:700; white-space:nowrap; }
-  #numSelect { background:var(--gold); color:var(--ink); border:none; border-radius:4px; padding:4px 6px; font-size:12px; font-weight:700; }
-  .score-area { flex:1; overflow:hidden; background:#fff; }
-  .score-embed { width:100%; height:100%; border:none; display:block; }
-  .score-fallback { width:100%; height:100%; display:none; align-items:center; justify-content:center; background:#f0ece4; }
-  .score-fallback a { background:var(--accent); color:#fff; padding:10px 20px; border-radius:6px; text-decoration:none; font-size:14px; font-weight:600; }
-  .controls { flex-shrink:0; background:var(--ink); padding:6px 10px; display:flex; align-items:center; gap:6px; flex-wrap:wrap; }
-  .ctrl-label { font-size:10px; color:#a09888; }
-  .ctrl-btn { background:#3a342c; color:#fff; border:none; border-radius:4px; width:26px; height:26px; font-size:15px; cursor:pointer; }
-  .ctrl-btn:disabled { opacity:0.3; cursor:default; }
-  .pitch-val { font-size:12px; font-weight:700; min-width:26px; text-align:center; color:var(--gold); }
-  .reset-btn { background:none; border:1px solid #3a342c; border-radius:4px; color:#a09888; padding:2px 6px; font-size:10px; cursor:pointer; }
-  .reset-btn:disabled { opacity:0.3; cursor:default; }
-  .div { width:1px; height:20px; background:#3a342c; margin:0 2px; }
-  .spd { background:#3a342c; border:none; border-radius:4px; padding:4px 8px; font-size:11px; cursor:pointer; color:#a09888; }
-  .spd.on { background:var(--gold); color:var(--ink); }
-  .spd:disabled { opacity:0.3; cursor:default; }
-  .audio-bar { flex-shrink:0; background:#111; padding:6px 10px; display:flex; align-items:center; gap:8px; }
-  .audio-title { font-size:11px; color:var(--gold); white-space:nowrap; }
-  .play-btn { background:var(--gold); color:var(--ink); border:none; border-radius:50%; width:30px; height:30px; font-size:13px; cursor:pointer; flex-shrink:0; }
-  .prog-wrap { flex:1; height:6px; background:#333; border-radius:3px; cursor:pointer; }
-  .prog-bar { height:100%; background:var(--gold); border-radius:3px; width:0; }
-  .time { font-size:10px; color:#a09888; white-space:nowrap; min-width:72px; text-align:right; }
-  #status { font-size:10px; color:#f88; }
+:root { --ink:#1a1410; --paper:#f7f3ec; --gold:#c49a3c; --accent:#8b3a2a; }
+* { box-sizing:border-box; margin:0; padding:0; }
+body { background:var(--paper); color:var(--ink); font-family:-apple-system,'Noto Sans JP',sans-serif; display:flex; flex-direction:column; height:100vh; overflow:hidden; }
+header { background:var(--ink); color:#fff; padding:8px 10px; display:flex; align-items:center; gap:8px; flex-shrink:0; }
+header h1 { font-size:12px; font-weight:700; white-space:nowrap; }
+#numSelect { background:var(--gold); color:var(--ink); border:none; border-radius:4px; padding:4px 6px; font-size:12px; font-weight:700; }
+.score-area { flex:1; overflow:hidden; background:#fff; }
+.score-embed { width:100%; height:100%; border:none; display:block; }
+.score-fallback { width:100%; height:100%; display:none; align-items:center; justify-content:center; background:#f0ece4; }
+.score-fallback a { background:var(--accent); color:#fff; padding:10px 20px; border-radius:6px; text-decoration:none; font-size:14px; font-weight:600; }
+.controls { flex-shrink:0; background:var(--ink); padding:6px 10px; display:flex; align-items:center; gap:6px; flex-wrap:wrap; }
+.ctrl-label { font-size:10px; color:#a09888; }
+.ctrl-btn { background:#3a342c; color:#fff; border:none; border-radius:4px; width:26px; height:26px; font-size:15px; cursor:pointer; }
+.ctrl-btn:disabled { opacity:0.3; cursor:default; }
+.pitch-val { font-size:12px; font-weight:700; min-width:26px; text-align:center; color:var(--gold); }
+.reset-btn { background:none; border:1px solid #3a342c; border-radius:4px; color:#a09888; padding:2px 6px; font-size:10px; cursor:pointer; }
+.reset-btn:disabled { opacity:0.3; cursor:default; }
+.div { width:1px; height:20px; background:#3a342c; margin:0 2px; }
+.spd { background:#3a342c; border:none; border-radius:4px; padding:4px 8px; font-size:11px; cursor:pointer; color:#a09888; }
+.spd.on { background:var(--gold); color:var(--ink); }
+.spd:disabled { opacity:0.3; cursor:default; }
+.audio-bar { flex-shrink:0; background:#111; padding:6px 10px; display:flex; align-items:center; gap:8px; }
+.audio-title { font-size:11px; color:var(--gold); white-space:nowrap; }
+.play-btn { background:var(--gold); color:var(--ink); border:none; border-radius:50%; width:30px; height:30px; font-size:13px; cursor:pointer; flex-shrink:0; }
+.prog-wrap { flex:1; height:6px; background:#333; border-radius:3px; cursor:pointer; }
+.prog-bar { height:100%; background:var(--gold); border-radius:3px; width:0; }
+.time { font-size:10px; color:#a09888; white-space:nowrap; min-width:72px; text-align:right; }
+#status { font-size:10px; color:#f88; }
 </style>
 </head>
 <body>
-
 <header>
   <h1>コンコーネ 五十番練習曲 Op.9 中声用</h1>
   <select id="numSelect" onchange="selectNum(+this.value)"></select>
 </header>
-
 <div class="score-area">
   <embed id="scoreEmbed" class="score-embed" src="scores/Concone50_01.pdf" type="application/pdf">
   <div class="score-fallback" id="scoreFallback">
     <a id="scoreLink" href="scores/Concone50_01.pdf" target="_blank">📄 楽譜を開く（PDF）</a>
   </div>
 </div>
-
 <div class="controls">
   <span class="ctrl-label">音程</span>
   <button class="ctrl-btn" id="pitchDn">−</button>
@@ -62,7 +59,6 @@
   <button class="spd" data-r="0.5">0.5×</button>
   <button class="spd" data-r="1.25">1.25×</button>
 </div>
-
 <div class="audio-bar">
   <span class="audio-title" id="audioTitle">🎵 第１番</span>
   <button class="play-btn" id="playBtn">▶</button>
@@ -75,14 +71,12 @@
 const $ = id => document.getElementById(id);
 
 let ctx, src, gainNode;
-let originalBuf = null;   // 常に元バッファを保持
-let activeBuf = null;     // 現在再生中のバッファ（ピッチシフト済み）
-let activePitchRatio = 1; // activeBufのピッチ比率
-let pitch = 0;            // 設定中の半音数
-let speed = 1.0;          // 設定中の速度
+let originalBuf = null;
+let pitch = 0;   // 半音数（−6〜＋6）
+let speed = 1.0; // 再生速度
 let playing = false;
 let startCtxTime = 0;
-let pauseOrigPos = 0;     // 一時停止位置（originalBuf換算秒）
+let pauseOrigPos = 0; // 一時停止位置（originalBuf秒換算）
 let raf;
 
 function getCtx() {
@@ -94,7 +88,6 @@ function getCtx() {
 const mp3path = n => `mp3/${n}_CONCONE 50 LESSONS for medium voice.mp3`;
 const pdfpath = n => `scores/Concone50_${String(n).padStart(2,'0')}.pdf`;
 
-// コントロール全体の有効/無効
 function setControlsDisabled(disabled) {
   ['pitchDn','pitchUp','pitchReset'].forEach(id => $(id).disabled = disabled);
   document.querySelectorAll('.spd').forEach(b => b.disabled = disabled);
@@ -110,7 +103,7 @@ for (let i = 1; i <= 50; i++) {
 
 function selectNum(n) {
   hardStop();
-  originalBuf = activeBuf = null;
+  originalBuf = null;
   pauseOrigPos = 0;
   $('audioTitle').textContent = `🎵 第${n}番`;
   $('scoreEmbed').src = pdfpath(n);
@@ -129,29 +122,6 @@ function selectNum(n) {
     .catch(() => $('status').textContent = 'ファイルなし');
 }
 
-// ピッチシフト（リサンプリング）
-function shiftPitch(buffer, semitones) {
-  if (semitones === 0) return buffer;
-  const ratio = Math.pow(2, semitones / 12);
-  const c = getCtx();
-  const ch = buffer.numberOfChannels;
-  const origLen = buffer.length;
-  const newLen = Math.round(origLen / ratio);
-  const out = c.createBuffer(ch, newLen, buffer.sampleRate);
-  for (let i = 0; i < ch; i++) {
-    const inp = buffer.getChannelData(i);
-    const outp = out.getChannelData(i);
-    for (let j = 0; j < newLen; j++) {
-      const p = j * ratio;
-      const lo = Math.floor(p);
-      const hi = Math.min(lo + 1, origLen - 1);
-      outp[j] = inp[lo] + (inp[hi] - inp[lo]) * (p - lo);
-    }
-  }
-  return out;
-}
-
-// srcだけ止める
 function hardStop() {
   if (src) { src.onended = null; try { src.stop(); } catch(e){} src = null; }
   if (gainNode) { gainNode.disconnect(); gainNode = null; }
@@ -161,12 +131,11 @@ function hardStop() {
   setControlsDisabled(false);
 }
 
-// originalBuf換算での現在位置
 function currentOrigPos() {
-  if (!playing || !activeBuf) return pauseOrigPos;
+  if (!playing || !originalBuf) return pauseOrigPos;
+  // playbackRate = speed なので、経過時間にspeedをかけるとoriginalBuf上の位置になる
   const elapsed = (getCtx().currentTime - startCtxTime) * speed;
-  // activeBuf秒 → originalBuf秒
-  return pauseOrigPos + elapsed * activePitchRatio;
+  return pauseOrigPos + elapsed;
 }
 
 function fmt(s) {
@@ -175,32 +144,35 @@ function fmt(s) {
   return m + ':' + String(ss).padStart(2, '0');
 }
 
-// 再生開始（現在のpitch/speedを確実に適用）
 function startPlay() {
   if (!originalBuf) { $('status').textContent = '読込中…'; return; }
 
-  // 再生開始時点のpitch/speedを確定
-  const currentPitch = pitch;
-  const currentSpeed = speed;
-
-  // ピッチシフト済みバッファを生成
-  activeBuf = shiftPitch(originalBuf, currentPitch);
-  activePitchRatio = Math.pow(2, currentPitch / 12);
-
-  // pauseOrigPosをactiveBuf換算に変換
-  const bufPos = pauseOrigPos / activePitchRatio;
-  const safePos = Math.max(0, Math.min(bufPos, activeBuf.duration - 0.01));
+  const safePos = Math.max(0, Math.min(pauseOrigPos, originalBuf.duration - 0.01));
 
   hardStop();
 
   const c = getCtx();
   gainNode = c.createGain();
   gainNode.connect(c.destination);
+
   src = c.createBufferSource();
-  src.buffer = activeBuf;
-  src.playbackRate.value = currentSpeed;
+  src.buffer = originalBuf; // 元バッファをそのまま使用
+
+  // ── ポイント ──────────────────────────────────────────
+  // playbackRate だけで速度を制御。
+  // playbackRateを変えると音程もズレるので、detuneでピッチを補正する。
+  //
+  //   detuneの目標 = pitch（半音）× 100セント
+  //                  − playbackRateによる音程上昇分（セント換算）
+  //
+  //   playbackRate = r のとき音程変化 = log2(r) × 1200 セント
+  // ──────────────────────────────────────────────────────
+  src.playbackRate.value = speed;
+  src.detune.value = pitch * 100 - Math.log2(speed) * 1200;
+
   src.connect(gainNode);
   src.start(0, safePos);
+
   startCtxTime = c.currentTime;
   playing = true;
   $('playBtn').textContent = '⏸';
@@ -226,7 +198,6 @@ function tick() {
   raf = requestAnimationFrame(tick);
 }
 
-// 再生ボタン
 $('playBtn').onclick = () => {
   if (!originalBuf) return;
   if (playing) {
@@ -237,7 +208,6 @@ $('playBtn').onclick = () => {
   }
 };
 
-// シーク（停止中のみ）
 $('progWrap').onclick = e => {
   if (!originalBuf || playing) return;
   const r = $('progWrap').getBoundingClientRect();
@@ -246,16 +216,15 @@ $('progWrap').onclick = e => {
   $('timeDisp').textContent = fmt(pauseOrigPos) + ' / ' + fmt(originalBuf.duration);
 };
 
-// 音程変更（停止中のみ有効）
 function changePitch(d) {
   pitch = Math.max(-6, Math.min(6, pitch + d));
   $('pitchVal').textContent = pitch === 0 ? '±0' : pitch > 0 ? `+${pitch}` : `${pitch}`;
 }
+
 $('pitchDn').onclick = () => changePitch(-1);
 $('pitchUp').onclick = () => changePitch(+1);
 $('pitchReset').onclick = () => { pitch = 0; changePitch(0); };
 
-// 速度変更（停止中のみ有効）
 document.querySelectorAll('.spd').forEach(btn => {
   btn.onclick = () => {
     speed = parseFloat(btn.dataset.r);
