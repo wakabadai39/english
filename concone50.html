@@ -11,28 +11,50 @@ body { background:var(--paper); color:var(--ink); font-family:-apple-system,'Not
 header { background:var(--ink); color:#fff; padding:8px 10px; display:flex; align-items:center; gap:8px; flex-shrink:0; }
 header h1 { font-size:12px; font-weight:700; white-space:nowrap; }
 #numSelect { background:var(--gold); color:var(--ink); border:none; border-radius:4px; padding:4px 6px; font-size:12px; font-weight:700; }
-.score-area { flex:1; overflow:hidden; background:#fff; }
+.score-area { flex:1; overflow:hidden; background:#fff; min-height:0; }
 .score-embed { width:100%; height:100%; border:none; display:block; }
 .score-fallback { width:100%; height:100%; display:none; align-items:center; justify-content:center; background:#f0ece4; }
 .score-fallback a { background:var(--accent); color:#fff; padding:10px 20px; border-radius:6px; text-decoration:none; font-size:14px; font-weight:600; }
-.controls { flex-shrink:0; background:var(--ink); padding:6px 10px; display:flex; align-items:center; gap:6px; flex-wrap:wrap; }
+
+/* 音程コントロール */
+.controls { flex-shrink:0; background:var(--ink); padding:6px 10px; display:flex; align-items:center; gap:6px; }
 .ctrl-label { font-size:10px; color:#a09888; }
 .ctrl-btn { background:#3a342c; color:#fff; border:none; border-radius:4px; width:26px; height:26px; font-size:15px; cursor:pointer; }
 .ctrl-btn:disabled { opacity:0.3; cursor:default; }
-.pitch-val { font-size:12px; font-weight:700; min-width:26px; text-align:center; color:var(--gold); }
+.pitch-val { font-size:12px; font-weight:700; min-width:30px; text-align:center; color:var(--gold); }
 .reset-btn { background:none; border:1px solid #3a342c; border-radius:4px; color:#a09888; padding:2px 6px; font-size:10px; cursor:pointer; }
-.reset-btn:disabled { opacity:0.3; cursor:default; }
-.div { width:1px; height:20px; background:#3a342c; margin:0 2px; }
-.spd { background:#3a342c; border:none; border-radius:4px; padding:4px 8px; font-size:11px; cursor:pointer; color:#a09888; }
-.spd.on { background:var(--gold); color:var(--ink); }
-.spd:disabled { opacity:0.3; cursor:default; }
+
+/* 再生バー */
 .audio-bar { flex-shrink:0; background:#111; padding:6px 10px; display:flex; align-items:center; gap:8px; }
 .audio-title { font-size:11px; color:var(--gold); white-space:nowrap; }
 .play-btn { background:var(--gold); color:var(--ink); border:none; border-radius:50%; width:30px; height:30px; font-size:13px; cursor:pointer; flex-shrink:0; }
 .prog-wrap { flex:1; height:6px; background:#333; border-radius:3px; cursor:pointer; }
-.prog-bar { height:100%; background:var(--gold); border-radius:3px; width:0; }
+.prog-bar { height:100%; background:var(--gold); border-radius:3px; width:0; transition:none; }
 .time { font-size:10px; color:#a09888; white-space:nowrap; min-width:72px; text-align:right; }
 #status { font-size:10px; color:#f88; }
+
+/* 鍵盤エリア */
+.keyboard-area { flex-shrink:0; background:#1a1410; padding:4px 6px 6px; }
+.kb-top { display:flex; align-items:center; gap:8px; margin-bottom:4px; }
+.kb-label { font-size:10px; color:#a09888; }
+.timbre-btn { background:#3a342c; border:none; border-radius:4px; padding:3px 8px; font-size:10px; color:#a09888; cursor:pointer; }
+.timbre-btn.on { background:var(--gold); color:var(--ink); font-weight:700; }
+.piano-wrap { position:relative; width:100%; overflow-x:auto; -webkit-overflow-scrolling:touch; }
+.piano { position:relative; display:flex; height:80px; user-select:none; -webkit-user-select:none; width: max-content; }
+.wkey {
+  position:relative; width:28px; height:80px; background:#f5f0e8;
+  border:1px solid #888; border-top:none; border-radius:0 0 4px 4px;
+  margin-right:1px; flex-shrink:0; cursor:pointer; z-index:1;
+  display:flex; align-items:flex-end; justify-content:center; padding-bottom:3px;
+  font-size:8px; color:#888; touch-action:none;
+}
+.wkey:active, .wkey.pressed { background:#c8b06a; }
+.bkey {
+  position:absolute; width:18px; height:50px; background:#1a1410;
+  border-radius:0 0 3px 3px; z-index:2; cursor:pointer; touch-action:none;
+  top:0;
+}
+.bkey:active, .bkey.pressed { background:#4a3a1a; }
 </style>
 </head>
 <body>
@@ -46,19 +68,15 @@ header h1 { font-size:12px; font-weight:700; white-space:nowrap; }
     <a id="scoreLink" href="scores/Concone50_01.pdf" target="_blank">📄 楽譜を開く（PDF）</a>
   </div>
 </div>
+
 <div class="controls">
   <span class="ctrl-label">音程</span>
   <button class="ctrl-btn" id="pitchDn">−</button>
   <span class="pitch-val" id="pitchVal">±0</span>
   <button class="ctrl-btn" id="pitchUp">＋</button>
   <button class="reset-btn" id="pitchReset">戻す</button>
-  <div class="div"></div>
-  <span class="ctrl-label">速度</span>
-  <button class="spd on" data-r="1.0">1.0×</button>
-  <button class="spd" data-r="0.75">0.75×</button>
-  <button class="spd" data-r="0.5">0.5×</button>
-  <button class="spd" data-r="1.25">1.25×</button>
 </div>
+
 <div class="audio-bar">
   <span class="audio-title" id="audioTitle">🎵 第１番</span>
   <button class="play-btn" id="playBtn">▶</button>
@@ -67,51 +85,30 @@ header h1 { font-size:12px; font-weight:700; white-space:nowrap; }
   <span id="status"></span>
 </div>
 
-<script>
-// ============================================================
-// Phase Vocoder による独立した音程・速度変換
-// OfflineAudioContext で以下の2段階処理を行う：
-//   1. リサンプリング：sampleRate を変えてピッチシフト（テンポも変化）
-//   2. playbackRate補正：テンポをspeedに合わせて再調整
-//
-// 具体的には：
-//   - OfflineAudioContext の sampleRate を original×pitchRatio に設定
-//     → 同じサンプル数を低いレートで再生 → 音程が上がる
-//     → ただしバッファ長（秒）は original/pitchRatio 倍になる
-//   - これを playbackRate = speed/pitchRatio で再生
-//     → 再生時間 = (original/pitchRatio) / (speed/pitchRatio) = original/speed ✓
-//     → 実際の音程変化 = pitchRatio × (speed/pitchRatio) = speed ... まだダメ
-//
-// ★ 正しいアプローチ（soundtouchなし、純粋JS）：
-//   リサンプリング後バッファ（長さ orig/pitchRatio）を
-//   playbackRate = 1/pitchRatio で再生する
-//   → 再生時間 = (orig/pitchRatio) / (1/pitchRatio) = orig ✓ テンポ変化なし
-//   → しかし再生速度×サンプルレート変換の合計音程変化 = 1 → ピッチも変化なし ✗
-//
-// ★★ 本当に正しいアプローチ：
-//   OfflineAudioContextのsampleRateをorigSR/pitchRatioにする（低くする）
-//   同じ PCM データを低レートで記録 → 後で標準レートで再生すると音程が上がる
-//   バッファ長(秒) = origLen / (origSR/pitchRatio) = origLen*pitchRatio/origSR = orig*pitchRatio
-//   これをplaybackRate=speed*pitchRatioで再生
-//   → 再生時間 = orig*pitchRatio / (speed*pitchRatio) = orig/speed ✓
-//   → 音程: sampleRateがorigSR/pitchRatioなのにorigSRのコンテキストで再生
-//     = pitchRatio倍の音程 ✓、speedには依存しない ✓
-// ============================================================
+<div class="keyboard-area">
+  <div class="kb-top">
+    <span class="kb-label">音色：</span>
+    <button class="timbre-btn on" data-t="flute">フルート</button>
+    <button class="timbre-btn" data-t="violin">バイオリン</button>
+    <button class="timbre-btn" data-t="oboe">オーボエ</button>
+  </div>
+  <div class="piano-wrap">
+    <div class="piano" id="piano"></div>
+  </div>
+</div>
 
+<script>
 const $ = id => document.getElementById(id);
 
+// ─── MP3再生 ───────────────────────────────────────────────
 let ctx, src, gainNode;
 let originalBuf = null;
-let processedBuf = null;   // 現在のpitch/speedで処理済みのバッファ
-let currentPitchInBuf = null;
-let currentSpeedInBuf = null;
-
-let pitch = 0;    // 半音数
-let speed = 1.0;  // 再生速度
-
+let processedBuf = null;
+let cachedPitch = null;
+let pitch = 0;
 let playing = false;
 let startCtxTime = 0;
-let pauseOrigPos = 0;  // originalBuf時間軸での位置（秒）
+let pausePos = 0;   // processedBuf時間軸での一時停止位置
 let raf;
 let processing = false;
 
@@ -124,92 +121,79 @@ function getCtx() {
 const mp3path = n => `mp3/${n}_CONCONE 50 LESSONS for medium voice.mp3`;
 const pdfpath = n => `scores/Concone50_${String(n).padStart(2,'0')}.pdf`;
 
-function setControlsDisabled(disabled) {
-  ['pitchDn','pitchUp','pitchReset'].forEach(id => $(id).disabled = disabled);
-  document.querySelectorAll('.spd').forEach(b => b.disabled = disabled);
-  $('numSelect').disabled = disabled;
+function fmt(s) {
+  if (!s || isNaN(s)) return '0:00';
+  return Math.floor(s/60) + ':' + String(Math.floor(s%60)).padStart(2,'0');
+}
+
+// processedBuf の長さは originalBuf / pitchRatio
+// = originalBuf.duration * (1/pitchRatio) ... pitchを上げると短く、下げると長くなる
+// プログレスバー・時間表示は processedBuf.duration 基準で行う
+function pitchRatio() { return Math.pow(2, pitch / 12); }
+
+function currentProcPos() {
+  if (!playing || !processedBuf) return pausePos;
+  return pausePos + (getCtx().currentTime - startCtxTime);
+}
+
+function setControlsDisabled(d) {
+  ['pitchDn','pitchUp','pitchReset','numSelect'].forEach(id => $(id).disabled = d);
 }
 
 // プルダウン生成
-const sel = $('numSelect');
 for (let i = 1; i <= 50; i++) {
   const o = document.createElement('option');
-  o.value = i; o.textContent = `第 ${i} 番`; sel.appendChild(o);
+  o.value = i; o.textContent = `第 ${i} 番`; $('numSelect').appendChild(o);
 }
 
 function selectNum(n) {
   hardStop();
-  originalBuf = null;
-  processedBuf = null;
-  currentPitchInBuf = null;
-  currentSpeedInBuf = null;
-  pauseOrigPos = 0;
+  originalBuf = null; processedBuf = null; cachedPitch = null; pausePos = 0;
   $('audioTitle').textContent = `🎵 第${n}番`;
   $('scoreEmbed').src = pdfpath(n);
   $('scoreLink').href = pdfpath(n);
-  $('progBar').style.width = '0';
-  $('timeDisp').textContent = '0:00 / 0:00';
+  $('progBar').style.width = '0'; $('timeDisp').textContent = '0:00 / 0:00';
   $('status').textContent = '読込中…';
   fetch(mp3path(n))
     .then(r => { if (!r.ok) throw new Error(r.status); return r.arrayBuffer(); })
     .then(ab => getCtx().decodeAudioData(ab))
-    .then(decoded => {
-      originalBuf = decoded;
-      $('status').textContent = '';
-      $('timeDisp').textContent = '0:00 / ' + fmt(originalBuf.duration);
-    })
+    .then(dec => { originalBuf = dec; $('status').textContent = ''; updateTimeDisplay(); })
     .catch(() => $('status').textContent = 'ファイルなし');
 }
 
-// ──────────────────────────────────────────────────
-// processBuffer:
-//   OfflineAudioContext の sampleRate を SR/pitchRatio に設定してレンダリング。
-//   同じ PCM サンプル列を「低い/高いレート」として記録することで
-//   通常の AudioContext（標準SR）で再生したときに音程が変わる。
+// ──────────────────────────────────────────────────────────
+// shiftPitch:
+//   バッファのサンプル数を「pitchRatio倍」にして音程を変える。
+//   音程を上げる(pitchRatio>1) → バッファが短くなり → テンポも速くなる（仕様通り）
+//   音程を下げる(pitchRatio<1) → バッファが長くなる
 //
-//   バッファ長（秒）= origLen / (SR/pitchRatio) = origDuration * pitchRatio
-//   これを playbackRate = speed * pitchRatio で再生すると：
-//     再生時間 = origDuration * pitchRatio / (speed * pitchRatio) = origDuration / speed ✓
-//     音程変化 = pitchRatio（speedに無関係）✓
-// ──────────────────────────────────────────────────
-async function processBuffer(buffer, semitones, spd) {
-  if (semitones === 0 && spd === 1.0) {
-    return { buf: buffer, playRate: 1.0 };
-  }
-
-  const pitchRatio = Math.pow(2, semitones / 12);
-  const origSR = buffer.sampleRate;
+//   ★ポイント：バッファ長を正しく保持することで最後まで再生される
+//   新バッファ長 = origLen / pitchRatio
+//   新バッファ[i] = 元バッファ[i * pitchRatio]（線形補間）
+// ──────────────────────────────────────────────────────────
+function shiftPitch(buffer, semitones) {
+  if (semitones === 0) return buffer;
+  const ratio = Math.pow(2, semitones / 12);
   const ch = buffer.numberOfChannels;
   const origLen = buffer.length;
-
-  // OfflineAudioContextのsampleRateをorigSR/pitchRatioに設定
-  // これにより同じサンプル数が pitchRatio 倍の時間として記録される
-  const offlineSR = Math.round(origSR / pitchRatio);
-  const offlineLen = origLen; // サンプル数は変わらない
-
-  // OfflineAudioContextを作成（sampleRateを変えることがポイント）
-  const offCtx = new OfflineAudioContext(ch, offlineLen, offlineSR);
-
-  // 元バッファをofflineCtxに渡す（異なるsampleRateで作成）
-  const srcBuf = offCtx.createBuffer(ch, origLen, origSR);
-  for (let i = 0; i < ch; i++) {
-    srcBuf.getChannelData(i).set(buffer.getChannelData(i));
+  const SR = buffer.sampleRate;
+  // 新バッファ長 = origLen / ratio（音程を下げれば長くなる）
+  const newLen = Math.round(origLen / ratio);
+  const c = getCtx();
+  const out = c.createBuffer(ch, newLen, SR);
+  for (let ci = 0; ci < ch; ci++) {
+    const inp = buffer.getChannelData(ci);
+    const op = out.getChannelData(ci);
+    for (let i = 0; i < newLen; i++) {
+      const srcIdx = i * ratio;
+      const lo = Math.floor(srcIdx);
+      const hi = lo + 1;
+      const frac = srcIdx - lo;
+      op[i] = (lo < origLen ? inp[lo] : 0) * (1-frac) +
+               (hi < origLen ? inp[hi] : 0) * frac;
+    }
   }
-
-  const offSrc = offCtx.createBufferSource();
-  offSrc.buffer = srcBuf;
-  offSrc.connect(offCtx.destination);
-  offSrc.start(0);
-
-  const rendered = await offCtx.startRendering();
-  // rendered.sampleRate = offlineSR = origSR/pitchRatio
-  // rendered.duration = origLen / offlineSR = origDuration * pitchRatio
-
-  // 再生時のplaybackRate = spd * pitchRatio で
-  //   実際の再生時間 = origDuration * pitchRatio / (spd * pitchRatio) = origDuration / spd ✓
-  const playRate = spd * pitchRatio;
-
-  return { buf: rendered, playRate };
+  return out;
 }
 
 function hardStop() {
@@ -221,121 +205,76 @@ function hardStop() {
   if (!processing) setControlsDisabled(false);
 }
 
-// originalBuf時間軸での現在位置
-function currentOrigPos() {
-  if (!playing || !originalBuf) return pauseOrigPos;
-  // 再生時間 elapsed × speed = originalBuf上の移動量
-  const elapsed = getCtx().currentTime - startCtxTime;
-  return pauseOrigPos + elapsed * speed;
-}
-
-function fmt(s) {
-  if (!s || isNaN(s)) return '0:00';
-  const m = Math.floor(s / 60), ss = Math.floor(s % 60);
-  return m + ':' + String(ss).padStart(2, '0');
+function updateTimeDisplay() {
+  const dur = processedBuf ? processedBuf.duration : (originalBuf ? originalBuf.duration : 0);
+  $('timeDisp').textContent = fmt(pausePos) + ' / ' + fmt(dur);
 }
 
 async function startPlay() {
-  if (!originalBuf) { $('status').textContent = '読込中…'; return; }
-
+  if (!originalBuf) return;
   const targetPitch = pitch;
-  const targetSpeed = speed;
-
-  // pitch/speed が変わっていればバッファを再処理
-  if (processedBuf === null || currentPitchInBuf !== targetPitch || currentSpeedInBuf !== targetSpeed) {
-    processing = true;
-    setControlsDisabled(true);
+  if (cachedPitch !== targetPitch) {
+    processing = true; setControlsDisabled(true);
     $('status').textContent = '処理中…';
-    const result = await processBuffer(originalBuf, targetPitch, targetSpeed);
-    processedBuf = result.buf;
-    currentPitchInBuf = targetPitch;
-    currentSpeedInBuf = targetSpeed;
-    processing = false;
-    $('status').textContent = '';
+    await new Promise(r => setTimeout(r, 10));
+    processedBuf = shiftPitch(originalBuf, targetPitch);
+    cachedPitch = targetPitch;
+    processing = false; $('status').textContent = '';
   }
-
-  // processedBuf上の開始位置
-  // originalBuf秒 → processedBuf秒
-  // processedBuf.duration = originalBuf.duration * pitchRatio
-  const pitchRatio = Math.pow(2, targetPitch / 12);
-  const bufPos = pauseOrigPos * pitchRatio;
-  const safePos = Math.max(0, Math.min(bufPos, processedBuf.duration - 0.01));
-
+  const safePausePos = Math.max(0, Math.min(pausePos, processedBuf.duration - 0.01));
   hardStop();
-
   const c = getCtx();
-  gainNode = c.createGain();
-  gainNode.connect(c.destination);
-
+  gainNode = c.createGain(); gainNode.connect(c.destination);
   src = c.createBufferSource();
   src.buffer = processedBuf;
-  src.playbackRate.value = targetSpeed * pitchRatio;
+  src.playbackRate.value = 1.0; // playbackRateは触らない。テンポ=バッファ長で決まる
   src.connect(gainNode);
-  src.start(0, safePos);
-
+  src.start(0, safePausePos);
   startCtxTime = c.currentTime;
-  playing = true;
-  $('playBtn').textContent = '⏸';
+  pausePos = safePausePos;
+  playing = true; $('playBtn').textContent = '⏸';
   setControlsDisabled(true);
-
   src.onended = () => {
     if (playing) {
-      hardStop();
-      pauseOrigPos = 0;
+      hardStop(); pausePos = 0;
       $('progBar').style.width = '0';
-      $('timeDisp').textContent = '0:00 / ' + fmt(originalBuf.duration);
+      updateTimeDisplay();
     }
   };
-
   tick();
 }
 
 function tick() {
-  if (!playing || !originalBuf) return;
-  const pos = Math.min(currentOrigPos(), originalBuf.duration);
-  $('progBar').style.width = (pos / originalBuf.duration * 100) + '%';
-  $('timeDisp').textContent = fmt(pos) + ' / ' + fmt(originalBuf.duration);
+  if (!playing || !processedBuf) return;
+  const pos = Math.min(currentProcPos(), processedBuf.duration);
+  $('progBar').style.width = (pos / processedBuf.duration * 100) + '%';
+  $('timeDisp').textContent = fmt(pos) + ' / ' + fmt(processedBuf.duration);
   raf = requestAnimationFrame(tick);
 }
 
 $('playBtn').onclick = () => {
   if (!originalBuf) return;
-  if (playing) {
-    pauseOrigPos = currentOrigPos();
-    hardStop();
-  } else {
-    startPlay();
-  }
+  if (playing) { pausePos = currentProcPos(); hardStop(); }
+  else { startPlay(); }
 };
 
 $('progWrap').onclick = e => {
-  if (!originalBuf || playing) return;
+  if (!processedBuf || playing) return;
   const r = $('progWrap').getBoundingClientRect();
-  pauseOrigPos = (e.clientX - r.left) / r.width * originalBuf.duration;
-  $('progBar').style.width = ((pauseOrigPos / originalBuf.duration) * 100) + '%';
-  $('timeDisp').textContent = fmt(pauseOrigPos) + ' / ' + fmt(originalBuf.duration);
+  pausePos = (e.clientX - r.left) / r.width * processedBuf.duration;
+  $('progBar').style.width = ((pausePos / processedBuf.duration)*100) + '%';
+  updateTimeDisplay();
 };
 
 function changePitch(d) {
   pitch = Math.max(-6, Math.min(6, pitch + d));
-  $('pitchVal').textContent = pitch === 0 ? '±0' : pitch > 0 ? `+${pitch}` : `${pitch}`;
-  // バッファキャッシュを無効化
-  processedBuf = null;
+  $('pitchVal').textContent = pitch===0?'±0':pitch>0?`+${pitch}`:`${pitch}`;
+  processedBuf = null; cachedPitch = null; pausePos = 0;
+  $('progBar').style.width = '0'; updateTimeDisplay();
 }
-
 $('pitchDn').onclick = () => changePitch(-1);
 $('pitchUp').onclick = () => changePitch(+1);
-$('pitchReset').onclick = () => { pitch = 0; changePitch(0); };
-
-document.querySelectorAll('.spd').forEach(btn => {
-  btn.onclick = () => {
-    speed = parseFloat(btn.dataset.r);
-    document.querySelectorAll('.spd').forEach(b => b.classList.remove('on'));
-    btn.classList.add('on');
-    // バッファキャッシュを無効化
-    processedBuf = null;
-  };
-});
+$('pitchReset').onclick = () => { pitch=0; changePitch(0); };
 
 // iOS
 if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
@@ -344,6 +283,244 @@ if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
 }
 
 selectNum(1);
+
+// ─── 鍵盤 ─────────────────────────────────────────────────
+let timbre = 'flute';
+document.querySelectorAll('.timbre-btn').forEach(b => {
+  b.onclick = () => {
+    timbre = b.dataset.t;
+    document.querySelectorAll('.timbre-btn').forEach(x=>x.classList.remove('on'));
+    b.classList.add('on');
+  };
+});
+
+// ファ(F3)〜ファ(F5)の2オクターブ
+// MIDI: F3=53, F5=77
+const START_MIDI = 53; // F3
+const END_MIDI   = 77; // F5
+const NOTE_NAMES = ['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
+const WHITE_STEPS = [0,2,4,5,7,9,11]; // C D E F G A B のsemitone
+const BLACK_AT    = [1,3,null,6,8,10,null]; // 各白鍵の右の黒鍵offset (nullはなし)
+
+// 白鍵・黒鍵リストを構築
+const piano = $('piano');
+let wkeys = []; // {el, midi}
+
+// MIDIノート→白鍵インデックス（C=0基準）
+function isWhite(midi) {
+  const pc = midi % 12;
+  return [0,2,4,5,7,9,11].includes(pc);
+}
+
+// 白鍵のみ左から並べ、黒鍵はposition:absoluteで重ねる
+const WKEY_W = 28, WKEY_GAP = 1;
+
+let wIdx = 0;
+const blackKeyData = []; // {midi, wIdx_left} 左隣の白鍵インデックス基準
+
+for (let midi = START_MIDI; midi <= END_MIDI; midi++) {
+  if (!isWhite(midi)) continue;
+  const el = document.createElement('div');
+  el.className = 'wkey';
+  const pc = midi % 12;
+  const oct = Math.floor(midi/12) - 1;
+  if (pc === 0) el.textContent = `C${oct}`;
+  else if (pc === 5) el.textContent = `F${oct}`;
+  el.dataset.midi = midi;
+  piano.appendChild(el);
+  wkeys.push({el, midi, idx: wIdx});
+
+  // この白鍵の右に黒鍵があるか
+  const rightBlack = midi + 1;
+  if (rightBlack <= END_MIDI && !isWhite(rightBlack)) {
+    blackKeyData.push({midi: rightBlack, wIdx});
+  }
+  wIdx++;
+}
+
+// 黒鍵を配置
+blackKeyData.forEach(({midi, wIdx: wi}) => {
+  const el = document.createElement('div');
+  el.className = 'bkey';
+  el.dataset.midi = midi;
+  // 左端 = wi番目白鍵の右端 - 黒鍵幅/2
+  const left = (wi+1) * (WKEY_W + WKEY_GAP) - 9 - 1;
+  el.style.left = left + 'px';
+  piano.appendChild(el);
+});
+
+// ─── 音合成 ──────────────────────────────────────────────
+const activeKeys = new Map(); // midi → {osc, gain}
+
+function midiToFreq(midi) { return 440 * Math.pow(2, (midi-69+pitch)/12); }
+
+// 音色ごとにオシレータ構成を変える
+function playNote(midi) {
+  if (activeKeys.has(midi)) return;
+  const c = getCtx();
+  const freq = midiToFreq(midi);
+  const masterGain = c.createGain();
+  masterGain.connect(c.destination);
+
+  const oscs = [];
+
+  if (timbre === 'flute') {
+    // フルート：基音＋弱い倍音、サイン波中心、ソフトアタック
+    const g = c.createGain(); g.connect(masterGain);
+    const o = c.createOscillator(); o.type='sine'; o.frequency.value=freq;
+    o.connect(g); o.start(); oscs.push(o);
+    // 2倍音（弱め）
+    const g2 = c.createGain(); g2.gain.value=0.08; g2.connect(masterGain);
+    const o2 = c.createOscillator(); o2.type='sine'; o2.frequency.value=freq*2;
+    o2.connect(g2); o2.start(); oscs.push(o2);
+    // 軽いビブラート
+    const lfo = c.createOscillator(); lfo.frequency.value=5.5;
+    const lfoG = c.createGain(); lfoG.gain.value=freq*0.012;
+    lfo.connect(lfoG); lfoG.connect(o.frequency); lfo.start(); oscs.push(lfo);
+    // エンベロープ
+    const now = c.currentTime;
+    g.gain.setValueAtTime(0, now);
+    g.gain.linearRampToValueAtTime(0.38, now+0.08);
+    masterGain.gain.setValueAtTime(1,now);
+
+  } else if (timbre === 'violin') {
+    // バイオリン：鋸歯状波ベース＋倍音豊富
+    const now = c.currentTime;
+    [[1,0.28],[2,0.18],[3,0.12],[4,0.08],[5,0.05],[6,0.03]].forEach(([n,amp])=>{
+      const o = c.createOscillator(); o.type='sawtooth'; o.frequency.value=freq*n;
+      const g = c.createGain(); g.gain.value=amp;
+      o.connect(g); g.connect(masterGain); o.start(); oscs.push(o);
+    });
+    // ビブラート
+    const lfo = c.createOscillator(); lfo.frequency.value=6;
+    const lfoG = c.createGain(); lfoG.gain.value=freq*0.015;
+    lfo.connect(lfoG);
+    oscs.forEach(o=>{ try{ lfoG.connect(o.frequency); }catch(e){} });
+    lfo.start(); oscs.push(lfo);
+    // エンベロープ
+    masterGain.gain.setValueAtTime(0, now);
+    masterGain.gain.linearRampToValueAtTime(0.5, now+0.15);
+
+  } else {
+    // オーボエ：矩形波＋奇数倍音、明るい音色
+    const now = c.currentTime;
+    [[1,0.25],[3,0.15],[5,0.08],[7,0.04]].forEach(([n,amp])=>{
+      const o = c.createOscillator(); o.type='square'; o.frequency.value=freq*n;
+      const g = c.createGain(); g.gain.value=amp;
+      o.connect(g); g.connect(masterGain); o.start(); oscs.push(o);
+    });
+    // ビブラート（浅め）
+    const lfo = c.createOscillator(); lfo.frequency.value=5;
+    const lfoG = c.createGain(); lfoG.gain.value=freq*0.008;
+    lfo.connect(lfoG);
+    oscs.forEach(o=>{ try{ lfoG.connect(o.frequency); }catch(e){} });
+    lfo.start(); oscs.push(lfo);
+    masterGain.gain.setValueAtTime(0, now);
+    masterGain.gain.linearRampToValueAtTime(0.45, now+0.04);
+  }
+
+  activeKeys.set(midi, {oscs, masterGain});
+}
+
+function stopNote(midi) {
+  if (!activeKeys.has(midi)) return;
+  const {oscs, masterGain} = activeKeys.get(midi);
+  const c = getCtx();
+  const now = c.currentTime;
+  masterGain.gain.setValueAtTime(masterGain.gain.value, now);
+  masterGain.gain.linearRampToValueAtTime(0, now+0.12);
+  setTimeout(() => {
+    oscs.forEach(o => { try { o.stop(); } catch(e){} });
+    masterGain.disconnect();
+  }, 200);
+  activeKeys.delete(midi);
+}
+
+// ── ドラッグ／スライドで音を切り替える ──────────────────
+// 「現在押されているmidi」を1つ管理し、
+// カーソル/タッチが別の鍵に移ったら前の音をoffして新しい音をonにする。
+
+let dragMidi = null; // ドラッグ中に鳴っているmidi
+
+function keyElemAt(x, y) {
+  // 指定座標にある最前面の鍵盤要素を返す（黒鍵優先）
+  const els = document.elementsFromPoint(x, y);
+  // 黒鍵を先にチェック（z-index上位）
+  for (const el of els) if (el.classList.contains('bkey')) return el;
+  for (const el of els) if (el.classList.contains('wkey')) return el;
+  return null;
+}
+
+function dragStart(midi, el) {
+  if (dragMidi !== null && dragMidi !== midi) {
+    // 前の音を止める
+    const prev = document.querySelector(`.wkey.pressed,.bkey.pressed`);
+    if (prev) prev.classList.remove('pressed');
+    stopNote(dragMidi);
+  }
+  dragMidi = midi;
+  playNote(midi);
+  el.classList.add('pressed');
+}
+
+function dragMove(x, y) {
+  if (dragMidi === null) return;
+  const el = keyElemAt(x, y);
+  if (!el) return;
+  const midi = parseInt(el.dataset.midi);
+  if (midi !== dragMidi) {
+    // 前の鍵を離す
+    document.querySelectorAll('.wkey.pressed,.bkey.pressed').forEach(k => k.classList.remove('pressed'));
+    stopNote(dragMidi);
+    // 新しい鍵を押す
+    dragMidi = midi;
+    playNote(midi);
+    el.classList.add('pressed');
+  }
+}
+
+function dragEnd() {
+  if (dragMidi !== null) {
+    stopNote(dragMidi);
+    dragMidi = null;
+  }
+  document.querySelectorAll('.wkey.pressed,.bkey.pressed').forEach(k => k.classList.remove('pressed'));
+}
+
+// マウスイベントはpianoコンテナで一括管理
+const pianoEl = $('piano');
+
+pianoEl.addEventListener('mousedown', e => {
+  const el = keyElemAt(e.clientX, e.clientY);
+  if (!el) return;
+  e.preventDefault();
+  dragStart(parseInt(el.dataset.midi), el);
+});
+
+window.addEventListener('mousemove', e => {
+  if (dragMidi === null) return;
+  dragMove(e.clientX, e.clientY);
+});
+
+window.addEventListener('mouseup', () => dragEnd());
+
+// タッチイベント（1本指スライド対応）
+pianoEl.addEventListener('touchstart', e => {
+  e.preventDefault();
+  const t = e.changedTouches[0];
+  const el = keyElemAt(t.clientX, t.clientY);
+  if (!el) return;
+  dragStart(parseInt(el.dataset.midi), el);
+}, {passive:false});
+
+pianoEl.addEventListener('touchmove', e => {
+  e.preventDefault();
+  const t = e.changedTouches[0];
+  dragMove(t.clientX, t.clientY);
+}, {passive:false});
+
+pianoEl.addEventListener('touchend',    e => { e.preventDefault(); dragEnd(); }, {passive:false});
+pianoEl.addEventListener('touchcancel', e => { dragEnd(); });
 </script>
 </body>
 </html>
