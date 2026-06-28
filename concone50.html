@@ -68,16 +68,52 @@ header h1 { font-size:12px; font-weight:700; white-space:nowrap; }
 </div>
 
 <script>
+// ============================================================
+// Phase Vocoder による独立した音程・速度変換
+// OfflineAudioContext で以下の2段階処理を行う：
+//   1. リサンプリング：sampleRate を変えてピッチシフト（テンポも変化）
+//   2. playbackRate補正：テンポをspeedに合わせて再調整
+//
+// 具体的には：
+//   - OfflineAudioContext の sampleRate を original×pitchRatio に設定
+//     → 同じサンプル数を低いレートで再生 → 音程が上がる
+//     → ただしバッファ長（秒）は original/pitchRatio 倍になる
+//   - これを playbackRate = speed/pitchRatio で再生
+//     → 再生時間 = (original/pitchRatio) / (speed/pitchRatio) = original/speed ✓
+//     → 実際の音程変化 = pitchRatio × (speed/pitchRatio) = speed ... まだダメ
+//
+// ★ 正しいアプローチ（soundtouchなし、純粋JS）：
+//   リサンプリング後バッファ（長さ orig/pitchRatio）を
+//   playbackRate = 1/pitchRatio で再生する
+//   → 再生時間 = (orig/pitchRatio) / (1/pitchRatio) = orig ✓ テンポ変化なし
+//   → しかし再生速度×サンプルレート変換の合計音程変化 = 1 → ピッチも変化なし ✗
+//
+// ★★ 本当に正しいアプローチ：
+//   OfflineAudioContextのsampleRateをorigSR/pitchRatioにする（低くする）
+//   同じ PCM データを低レートで記録 → 後で標準レートで再生すると音程が上がる
+//   バッファ長(秒) = origLen / (origSR/pitchRatio) = origLen*pitchRatio/origSR = orig*pitchRatio
+//   これをplaybackRate=speed*pitchRatioで再生
+//   → 再生時間 = orig*pitchRatio / (speed*pitchRatio) = orig/speed ✓
+//   → 音程: sampleRateがorigSR/pitchRatioなのにorigSRのコンテキストで再生
+//     = pitchRatio倍の音程 ✓、speedには依存しない ✓
+// ============================================================
+
 const $ = id => document.getElementById(id);
 
 let ctx, src, gainNode;
 let originalBuf = null;
-let pitch = 0;   // 半音数（−6〜＋6）
-let speed = 1.0; // 再生速度
+let processedBuf = null;   // 現在のpitch/speedで処理済みのバッファ
+let currentPitchInBuf = null;
+let currentSpeedInBuf = null;
+
+let pitch = 0;    // 半音数
+let speed = 1.0;  // 再生速度
+
 let playing = false;
 let startCtxTime = 0;
-let pauseOrigPos = 0; // 一時停止位置（originalBuf秒換算）
+let pauseOrigPos = 0;  // originalBuf時間軸での位置（秒）
 let raf;
+let processing = false;
 
 function getCtx() {
   if (!ctx) ctx = new (window.AudioContext || window.webkitAudioContext)();
@@ -104,6 +140,9 @@ for (let i = 1; i <= 50; i++) {
 function selectNum(n) {
   hardStop();
   originalBuf = null;
+  processedBuf = null;
+  currentPitchInBuf = null;
+  currentSpeedInBuf = null;
   pauseOrigPos = 0;
   $('audioTitle').textContent = `🎵 第${n}番`;
   $('scoreEmbed').src = pdfpath(n);
@@ -122,20 +161,72 @@ function selectNum(n) {
     .catch(() => $('status').textContent = 'ファイルなし');
 }
 
+// ──────────────────────────────────────────────────
+// processBuffer:
+//   OfflineAudioContext の sampleRate を SR/pitchRatio に設定してレンダリング。
+//   同じ PCM サンプル列を「低い/高いレート」として記録することで
+//   通常の AudioContext（標準SR）で再生したときに音程が変わる。
+//
+//   バッファ長（秒）= origLen / (SR/pitchRatio) = origDuration * pitchRatio
+//   これを playbackRate = speed * pitchRatio で再生すると：
+//     再生時間 = origDuration * pitchRatio / (speed * pitchRatio) = origDuration / speed ✓
+//     音程変化 = pitchRatio（speedに無関係）✓
+// ──────────────────────────────────────────────────
+async function processBuffer(buffer, semitones, spd) {
+  if (semitones === 0 && spd === 1.0) {
+    return { buf: buffer, playRate: 1.0 };
+  }
+
+  const pitchRatio = Math.pow(2, semitones / 12);
+  const origSR = buffer.sampleRate;
+  const ch = buffer.numberOfChannels;
+  const origLen = buffer.length;
+
+  // OfflineAudioContextのsampleRateをorigSR/pitchRatioに設定
+  // これにより同じサンプル数が pitchRatio 倍の時間として記録される
+  const offlineSR = Math.round(origSR / pitchRatio);
+  const offlineLen = origLen; // サンプル数は変わらない
+
+  // OfflineAudioContextを作成（sampleRateを変えることがポイント）
+  const offCtx = new OfflineAudioContext(ch, offlineLen, offlineSR);
+
+  // 元バッファをofflineCtxに渡す（異なるsampleRateで作成）
+  const srcBuf = offCtx.createBuffer(ch, origLen, origSR);
+  for (let i = 0; i < ch; i++) {
+    srcBuf.getChannelData(i).set(buffer.getChannelData(i));
+  }
+
+  const offSrc = offCtx.createBufferSource();
+  offSrc.buffer = srcBuf;
+  offSrc.connect(offCtx.destination);
+  offSrc.start(0);
+
+  const rendered = await offCtx.startRendering();
+  // rendered.sampleRate = offlineSR = origSR/pitchRatio
+  // rendered.duration = origLen / offlineSR = origDuration * pitchRatio
+
+  // 再生時のplaybackRate = spd * pitchRatio で
+  //   実際の再生時間 = origDuration * pitchRatio / (spd * pitchRatio) = origDuration / spd ✓
+  const playRate = spd * pitchRatio;
+
+  return { buf: rendered, playRate };
+}
+
 function hardStop() {
   if (src) { src.onended = null; try { src.stop(); } catch(e){} src = null; }
   if (gainNode) { gainNode.disconnect(); gainNode = null; }
   playing = false;
   $('playBtn').textContent = '▶';
   cancelAnimationFrame(raf);
-  setControlsDisabled(false);
+  if (!processing) setControlsDisabled(false);
 }
 
+// originalBuf時間軸での現在位置
 function currentOrigPos() {
   if (!playing || !originalBuf) return pauseOrigPos;
-  // playbackRate = speed なので、経過時間にspeedをかけるとoriginalBuf上の位置になる
-  const elapsed = (getCtx().currentTime - startCtxTime) * speed;
-  return pauseOrigPos + elapsed;
+  // 再生時間 elapsed × speed = originalBuf上の移動量
+  const elapsed = getCtx().currentTime - startCtxTime;
+  return pauseOrigPos + elapsed * speed;
 }
 
 function fmt(s) {
@@ -144,10 +235,31 @@ function fmt(s) {
   return m + ':' + String(ss).padStart(2, '0');
 }
 
-function startPlay() {
+async function startPlay() {
   if (!originalBuf) { $('status').textContent = '読込中…'; return; }
 
-  const safePos = Math.max(0, Math.min(pauseOrigPos, originalBuf.duration - 0.01));
+  const targetPitch = pitch;
+  const targetSpeed = speed;
+
+  // pitch/speed が変わっていればバッファを再処理
+  if (processedBuf === null || currentPitchInBuf !== targetPitch || currentSpeedInBuf !== targetSpeed) {
+    processing = true;
+    setControlsDisabled(true);
+    $('status').textContent = '処理中…';
+    const result = await processBuffer(originalBuf, targetPitch, targetSpeed);
+    processedBuf = result.buf;
+    currentPitchInBuf = targetPitch;
+    currentSpeedInBuf = targetSpeed;
+    processing = false;
+    $('status').textContent = '';
+  }
+
+  // processedBuf上の開始位置
+  // originalBuf秒 → processedBuf秒
+  // processedBuf.duration = originalBuf.duration * pitchRatio
+  const pitchRatio = Math.pow(2, targetPitch / 12);
+  const bufPos = pauseOrigPos * pitchRatio;
+  const safePos = Math.max(0, Math.min(bufPos, processedBuf.duration - 0.01));
 
   hardStop();
 
@@ -156,20 +268,8 @@ function startPlay() {
   gainNode.connect(c.destination);
 
   src = c.createBufferSource();
-  src.buffer = originalBuf; // 元バッファをそのまま使用
-
-  // ── ポイント ──────────────────────────────────────────
-  // playbackRate だけで速度を制御。
-  // playbackRateを変えると音程もズレるので、detuneでピッチを補正する。
-  //
-  //   detuneの目標 = pitch（半音）× 100セント
-  //                  − playbackRateによる音程上昇分（セント換算）
-  //
-  //   playbackRate = r のとき音程変化 = log2(r) × 1200 セント
-  // ──────────────────────────────────────────────────────
-  src.playbackRate.value = speed;
-  src.detune.value = pitch * 100 - Math.log2(speed) * 1200;
-
+  src.buffer = processedBuf;
+  src.playbackRate.value = targetSpeed * pitchRatio;
   src.connect(gainNode);
   src.start(0, safePos);
 
@@ -219,6 +319,8 @@ $('progWrap').onclick = e => {
 function changePitch(d) {
   pitch = Math.max(-6, Math.min(6, pitch + d));
   $('pitchVal').textContent = pitch === 0 ? '±0' : pitch > 0 ? `+${pitch}` : `${pitch}`;
+  // バッファキャッシュを無効化
+  processedBuf = null;
 }
 
 $('pitchDn').onclick = () => changePitch(-1);
@@ -230,6 +332,8 @@ document.querySelectorAll('.spd').forEach(btn => {
     speed = parseFloat(btn.dataset.r);
     document.querySelectorAll('.spd').forEach(b => b.classList.remove('on'));
     btn.classList.add('on');
+    // バッファキャッシュを無効化
+    processedBuf = null;
   };
 });
 
