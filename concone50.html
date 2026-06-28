@@ -72,13 +72,12 @@
 const $ = id => document.getElementById(id);
 
 let ctx, src, gainNode;
-let originalBuf = null;  // 元のバッファ
-let pitchedBuf = null;   // ピッチシフト済みバッファ
-let pitch = 0;
+let originalBuf = null;   // 常に元のバッファを保持
+let pitch = 0;            // 半音
 let speed = 1.0;
 let playing = false;
 let startCtxTime = 0;
-let startBufOff = 0;
+let pausePos = 0;         // 一時停止位置（元バッファの秒）
 let raf;
 
 function getCtx() {
@@ -90,7 +89,6 @@ function getCtx() {
 const mp3path = n => `mp3/${n}_CONCONE 50 LESSONS for medium voice.mp3`;
 const pdfpath = n => `scores/Concone50_${String(n).padStart(2,'0')}.pdf`;
 
-// プルダウン
 const sel = $('numSelect');
 for (let i = 1; i <= 50; i++) {
   const o = document.createElement('option');
@@ -98,9 +96,9 @@ for (let i = 1; i <= 50; i++) {
 }
 
 function selectNum(n) {
-  stopAudio();
-  originalBuf = pitchedBuf = null;
-  startBufOff = 0;
+  fullStop();
+  originalBuf = null;
+  pausePos = 0;
   $('audioTitle').textContent = `🎵 第${n}番`;
   $('scoreEmbed').src = pdfpath(n);
   $('scoreLink').href = pdfpath(n);
@@ -110,90 +108,76 @@ function selectNum(n) {
   fetch(mp3path(n))
     .then(r => { if (!r.ok) throw new Error(r.status); return r.arrayBuffer(); })
     .then(ab => getCtx().decodeAudioData(ab))
-    .then(decoded => {
-      originalBuf = decoded;
-      return applyPitchShift(decoded, pitch);
-    })
-    .then(shifted => { pitchedBuf = shifted; $('status').textContent = ''; })
+    .then(decoded => { originalBuf = decoded; $('status').textContent = ''; })
     .catch(() => $('status').textContent = 'ファイルなし');
 }
 
-// ピッチシフト：位相ボコーダー（簡易版）
-// semitones半音だけ音程をシフトしたAudioBufferを返す
-async function applyPitchShift(buffer, semitones) {
-  if (semitones === 0) return buffer;
+// 再生開始：毎回元バッファからピッチシフト済みバッファを生成して再生
+async function startPlay(fromPos) {
+  if (!originalBuf) return;
+  fullStop();
+  $('status').textContent = pitch !== 0 ? '処理中…' : '';
 
-  const pitchRatio = Math.pow(2, semitones / 12);
+  // ピッチシフト済みバッファを生成
+  const buf = await shiftPitch(originalBuf, pitch);
+  $('status').textContent = '';
+
+  // bufの時間軸はoriginalBufと異なる場合があるので位置を変換
+  const pitchRatio = Math.pow(2, pitch / 12);
+  // fromPosはoriginalBufの秒 → pitchedBufの秒に変換
+  const bufPos = fromPos / pitchRatio;
+  const safePos = Math.max(0, Math.min(bufPos, buf.duration - 0.01));
+
   const c = getCtx();
-  const sampleRate = buffer.sampleRate;
-  const numChannels = buffer.numberOfChannels;
-  const origLen = buffer.length;
-
-  // ストレッチ比率（音程シフト後に元の長さに戻すため）
-  // 方法：先にtimestretchして元の速度を維持
-  // 簡易実装：pitchRatioでリサンプリング
-  const newLen = Math.round(origLen / pitchRatio);
-  const outBuf = c.createBuffer(numChannels, newLen, sampleRate);
-
-  for (let ch = 0; ch < numChannels; ch++) {
-    const input = buffer.getChannelData(ch);
-    const output = outBuf.getChannelData(ch);
-    // 線形補間でリサンプリング
-    for (let i = 0; i < newLen; i++) {
-      const srcIdx = i * pitchRatio;
-      const lo = Math.floor(srcIdx);
-      const hi = Math.min(lo + 1, origLen - 1);
-      const frac = srcIdx - lo;
-      output[i] = input[lo] * (1 - frac) + input[hi] * frac;
+  gainNode = c.createGain();
+  gainNode.connect(c.destination);
+  src = c.createBufferSource();
+  src.buffer = buf;
+  src.playbackRate.value = speed;  // 速度のみ
+  src.connect(gainNode);
+  src.start(0, safePos);
+  startCtxTime = c.currentTime;
+  // 現在位置の追跡はoriginalBufの秒で統一
+  // ctxTime経過 × speed = pitchedBufの秒 → × pitchRatio = originalBufの秒
+  playing = true;
+  $('playBtn').textContent = '⏸';
+  src.onended = () => {
+    if (playing) {
+      playing = false;
+      pausePos = 0;
+      $('playBtn').textContent = '▶';
+      $('progBar').style.width = '0';
+      cancelAnimationFrame(raf);
     }
-  }
-  return outBuf;
+  };
+  tick(buf, pitchRatio);
 }
 
-function stopAudio() {
-  if (src) { try { src.stop(); } catch(e){} src = null; }
+function tick(buf, pitchRatio) {
+  if (!playing || !buf) return;
+  // originalBufでの再生位置
+  const elapsed = (getCtx().currentTime - startCtxTime) * speed * pitchRatio;
+  const pos = pausePos + elapsed;  // pausePosは再生開始前のoriginalBuf秒
+  const clamped = Math.min(pos, originalBuf.duration);
+  $('progBar').style.width = (clamped / originalBuf.duration * 100) + '%';
+  $('timeDisp').textContent = fmt(clamped) + ' / ' + fmt(originalBuf.duration);
+  raf = requestAnimationFrame(() => tick(buf, pitchRatio));
+}
+
+// 完全停止（pausePosは触らない）
+function fullStop() {
+  if (src) { src.onended = null; try { src.stop(); } catch(e){} src = null; }
+  if (gainNode) { gainNode.disconnect(); gainNode = null; }
   playing = false;
   $('playBtn').textContent = '▶';
   cancelAnimationFrame(raf);
 }
 
-function currentOffset() {
-  if (!playing) return startBufOff;
-  return startBufOff + (getCtx().currentTime - startCtxTime) * speed;
-}
-
-function playFrom(offset) {
-  if (!pitchedBuf) return;
-  stopAudio();
-  const c = getCtx();
-  gainNode = c.createGain();
-  gainNode.connect(c.destination);
-  src = c.createBufferSource();
-  src.buffer = pitchedBuf;
-  // 速度のみをplaybackRateで制御（音程はバッファ生成時に処理済み）
-  src.playbackRate.value = speed;
-  src.connect(gainNode);
-  const safeOff = Math.max(0, Math.min(offset, pitchedBuf.duration - 0.01));
-  src.start(0, safeOff);
-  startCtxTime = c.currentTime;
-  startBufOff = safeOff;
-  playing = true;
-  $('playBtn').textContent = '⏸';
-  src.onended = () => { if (playing) { stopAudio(); startBufOff = 0; updateProg(); } };
-  tick();
-}
-
-function tick() {
-  updateProg();
-  if (playing) raf = requestAnimationFrame(tick);
-}
-
-function updateProg() {
-  const buf = pitchedBuf || originalBuf;
-  if (!buf) return;
-  const off = Math.min(currentOffset(), buf.duration);
-  $('progBar').style.width = (off / buf.duration * 100) + '%';
-  $('timeDisp').textContent = fmt(off) + ' / ' + fmt(buf.duration);
+// 現在のoriginalBuf換算位置
+function currentOrigPos() {
+  if (!playing) return pausePos;
+  const pitchRatio = Math.pow(2, pitch / 12);
+  return pausePos + (getCtx().currentTime - startCtxTime) * speed * pitchRatio;
 }
 
 function fmt(s) {
@@ -201,45 +185,77 @@ function fmt(s) {
   return m + ':' + String(ss).padStart(2, '0');
 }
 
-$('playBtn').onclick = () => {
-  if (!pitchedBuf) { $('status').textContent = '読込中…'; return; }
-  if (playing) { startBufOff = currentOffset(); stopAudio(); }
-  else playFrom(startBufOff);
-};
-
-$('progWrap').onclick = e => {
-  if (!pitchedBuf) return;
-  const r = $('progWrap').getBoundingClientRect();
-  const off = (e.clientX - r.left) / r.width * pitchedBuf.duration;
-  startBufOff = off;
-  if (playing) playFrom(off);
-  else updateProg();
-};
-
-// 音程変更：バッファを再生成
-async function updatePitch() {
-  $('pitchVal').textContent = pitch === 0 ? '±0' : pitch > 0 ? `+${pitch}` : `${pitch}`;
-  if (!originalBuf) return;
-  const wasPlaying = playing;
-  const off = currentOffset();
-  stopAudio();
-  $('status').textContent = '処理中…';
-  pitchedBuf = await applyPitchShift(originalBuf, pitch);
-  $('status').textContent = '';
-  if (wasPlaying) playFrom(off);
+// ピッチシフト（リサンプリング）
+function shiftPitch(buffer, semitones) {
+  if (semitones === 0) return Promise.resolve(buffer);
+  const ratio = Math.pow(2, semitones / 12);
+  const c = getCtx();
+  const ch = buffer.numberOfChannels;
+  const origLen = buffer.length;
+  const newLen = Math.round(origLen / ratio);
+  const out = c.createBuffer(ch, newLen, buffer.sampleRate);
+  for (let i = 0; i < ch; i++) {
+    const inp = buffer.getChannelData(i);
+    const outp = out.getChannelData(i);
+    for (let j = 0; j < newLen; j++) {
+      const p = j * ratio;
+      const lo = Math.floor(p);
+      const hi = Math.min(lo + 1, origLen - 1);
+      outp[j] = inp[lo] + (inp[hi] - inp[lo]) * (p - lo);
+    }
+  }
+  return Promise.resolve(out);
 }
 
-$('pitchDn').onclick = () => { pitch = Math.max(-6, pitch - 1); updatePitch(); };
-$('pitchUp').onclick = () => { pitch = Math.min(6, pitch + 1); updatePitch(); };
-$('pitchReset').onclick = () => { pitch = 0; updatePitch(); };
+// 再生ボタン
+$('playBtn').onclick = () => {
+  if (!originalBuf) return;
+  if (playing) {
+    pausePos = currentOrigPos();
+    fullStop();
+  } else {
+    startPlay(pausePos);
+  }
+};
 
-// 速度変更
+// シーク
+$('progWrap').onclick = e => {
+  if (!originalBuf) return;
+  const r = $('progWrap').getBoundingClientRect();
+  pausePos = (e.clientX - r.left) / r.width * originalBuf.duration;
+  if (playing) startPlay(pausePos);
+  else {
+    $('progBar').style.width = ((pausePos / originalBuf.duration) * 100) + '%';
+    $('timeDisp').textContent = fmt(pausePos) + ' / ' + fmt(originalBuf.duration);
+  }
+};
+
+// 音程変更（停止して次の再生時に反映）
+function changePitch(d) {
+  pitch = Math.max(-6, Math.min(6, pitch + d));
+  $('pitchVal').textContent = pitch === 0 ? '±0' : pitch > 0 ? `+${pitch}` : `${pitch}`;
+  if (playing) {
+    pausePos = currentOrigPos();
+    fullStop();
+    startPlay(pausePos);
+  }
+}
+$('pitchDn').onclick = () => changePitch(-1);
+$('pitchUp').onclick = () => changePitch(+1);
+$('pitchReset').onclick = () => changePitch(-pitch);
+
+// 速度変更（再生中はsrcに直接反映）
 document.querySelectorAll('.spd').forEach(btn => {
   btn.onclick = () => {
+    if (playing) {
+      // 現在位置を保存してから速度変更
+      pausePos = currentOrigPos();
+      startCtxTime = getCtx().currentTime;
+    }
     speed = parseFloat(btn.dataset.r);
+    if (src) src.playbackRate.value = speed;
     document.querySelectorAll('.spd').forEach(b => b.classList.remove('on'));
     btn.classList.add('on');
-    if (playing) { startBufOff = currentOffset(); playFrom(startBufOff); }
   };
 });
 
