@@ -63,10 +63,7 @@ header h1 { font-size:12px; font-weight:700; white-space:nowrap; }
   <select id="numSelect" onchange="selectNum(+this.value)"></select>
 </header>
 <div class="score-area">
-  <embed id="scoreEmbed" class="score-embed" src="scores/Concone50_01.pdf" type="application/pdf">
-  <div class="score-fallback" id="scoreFallback">
-    <a id="scoreLink" href="scores/Concone50_01.pdf" target="_blank">📄 楽譜を開く（PDF）</a>
-  </div>
+  <iframe id="scoreFrame" class="score-embed" src="scores/Concone50_01.pdf"></iframe>
 </div>
 
 <div class="controls">
@@ -150,8 +147,7 @@ function selectNum(n) {
   hardStop();
   originalBuf = null; processedBuf = null; cachedPitch = null; pausePos = 0;
   $('audioTitle').textContent = `🎵 第${n}番`;
-  $('scoreEmbed').src = pdfpath(n);
-  $('scoreLink').href = pdfpath(n);
+  $('scoreFrame').src = pdfpath(n);
   $('progBar').style.width = '0'; $('timeDisp').textContent = '0:00 / 0:00';
   $('status').textContent = '読込中…';
   fetch(mp3path(n))
@@ -275,12 +271,6 @@ function changePitch(d) {
 $('pitchDn').onclick = () => changePitch(-1);
 $('pitchUp').onclick = () => changePitch(+1);
 $('pitchReset').onclick = () => { pitch=0; changePitch(0); };
-
-// iOS
-if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
-  $('scoreEmbed').style.display = 'none';
-  $('scoreFallback').style.display = 'flex';
-}
 
 selectNum(1);
 
