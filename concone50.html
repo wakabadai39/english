@@ -11,8 +11,9 @@ body { background:var(--paper); color:var(--ink); font-family:-apple-system,'Not
 header { background:var(--ink); color:#fff; padding:8px 10px; display:flex; align-items:center; gap:8px; flex-shrink:0; }
 header h1 { font-size:12px; font-weight:700; white-space:nowrap; }
 #numSelect { background:var(--gold); color:var(--ink); border:none; border-radius:4px; padding:4px 6px; font-size:12px; font-weight:700; }
-.score-area { flex:1; overflow:hidden; background:#fff; min-height:0; }
-.score-embed { width:100%; height:100%; border:none; display:block; }
+.score-area { flex:1; overflow:hidden; background:#fff; min-height:0; position:relative; }
+.score-wrap { width:100%; height:100%; overflow-y:auto; overflow-x:hidden; -webkit-overflow-scrolling:touch; position:relative; }
+.score-embed { border:none; display:block; transform-origin:top left; }
 .score-fallback { width:100%; height:100%; display:none; align-items:center; justify-content:center; background:#f0ece4; }
 .score-fallback a { background:var(--accent); color:#fff; padding:10px 20px; border-radius:6px; text-decoration:none; font-size:14px; font-weight:600; }
 
@@ -63,7 +64,9 @@ header h1 { font-size:12px; font-weight:700; white-space:nowrap; }
   <select id="numSelect" onchange="selectNum(+this.value)"></select>
 </header>
 <div class="score-area">
-  <iframe id="scoreFrame" class="score-embed" src="scores/Concone50_01.pdf"></iframe>
+  <div class="score-wrap" id="scoreWrap">
+    <iframe id="scoreFrame" class="score-embed" src="scores/Concone50_01.pdf"></iframe>
+  </div>
 </div>
 
 <div class="controls">
@@ -148,6 +151,7 @@ function selectNum(n) {
   originalBuf = null; processedBuf = null; cachedPitch = null; pausePos = 0;
   $('audioTitle').textContent = `🎵 第${n}番`;
   $('scoreFrame').src = pdfpath(n);
+  setTimeout(scaleFrame, 300);
   $('progBar').style.width = '0'; $('timeDisp').textContent = '0:00 / 0:00';
   $('status').textContent = '読込中…';
   fetch(mp3path(n))
@@ -271,6 +275,23 @@ function changePitch(d) {
 $('pitchDn').onclick = () => changePitch(-1);
 $('pitchUp').onclick = () => changePitch(+1);
 $('pitchReset').onclick = () => { pitch=0; changePitch(0); };
+
+// iframeをscoreWrapの幅に合わせてscaleする
+function scaleFrame() {
+  const wrap = $('scoreWrap');
+  const frame = $('scoreFrame');
+  const wrapW = wrap.clientWidth;
+  // iframeはPDFのネイティブ幅（A4想定: 595px）で描画させ、それをscaleで縮める
+  const pdfW = 595;
+  const scale = wrapW / pdfW;
+  const frameH = wrap.clientHeight / scale;
+  frame.style.width = pdfW + 'px';
+  frame.style.height = frameH + 'px';
+  frame.style.transform = `scale(${scale})`;
+}
+
+window.addEventListener('resize', scaleFrame);
+scaleFrame();
 
 selectNum(1);
 
