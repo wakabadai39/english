@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>コンコーネ 50番練習曲</title>
 <style>
-  :root { --ink:#1a1410; --paper:#f7f3ec; --gold:#c49a3c; --accent:#8b3a2a; --muted:#7a7060; }
+  :root { --ink:#1a1410; --paper:#f7f3ec; --gold:#c49a3c; --accent:#8b3a2a; }
   * { box-sizing:border-box; margin:0; padding:0; }
   body { background:var(--paper); color:var(--ink); font-family:-apple-system,'Noto Sans JP',sans-serif; display:flex; flex-direction:column; height:100vh; overflow:hidden; }
   header { background:var(--ink); color:#fff; padding:8px 10px; display:flex; align-items:center; gap:8px; flex-shrink:0; }
@@ -72,9 +72,10 @@
 const $ = id => document.getElementById(id);
 
 let ctx, src, gainNode;
-let buf = null;
-let pitch = 0;       // 半音単位
-let speed = 1.0;     // 再生速度
+let originalBuf = null;  // 元のバッファ
+let pitchedBuf = null;   // ピッチシフト済みバッファ
+let pitch = 0;
+let speed = 1.0;
 let playing = false;
 let startCtxTime = 0;
 let startBufOff = 0;
@@ -86,10 +87,10 @@ function getCtx() {
   return ctx;
 }
 
-const mp3 = n => `mp3/${n}_CONCONE 50 LESSONS for medium voice.mp3`;
-const pdf = n => `scores/Concone50_${String(n).padStart(2,'0')}.pdf`;
+const mp3path = n => `mp3/${n}_CONCONE 50 LESSONS for medium voice.mp3`;
+const pdfpath = n => `scores/Concone50_${String(n).padStart(2,'0')}.pdf`;
 
-// プルダウン生成
+// プルダウン
 const sel = $('numSelect');
 for (let i = 1; i <= 50; i++) {
   const o = document.createElement('option');
@@ -98,19 +99,55 @@ for (let i = 1; i <= 50; i++) {
 
 function selectNum(n) {
   stopAudio();
-  buf = null;
+  originalBuf = pitchedBuf = null;
   startBufOff = 0;
   $('audioTitle').textContent = `🎵 第${n}番`;
-  $('scoreEmbed').src = pdf(n);
-  $('scoreLink').href = pdf(n);
+  $('scoreEmbed').src = pdfpath(n);
+  $('scoreLink').href = pdfpath(n);
   $('progBar').style.width = '0';
   $('timeDisp').textContent = '0:00 / 0:00';
   $('status').textContent = '読込中…';
-  fetch(mp3(n))
+  fetch(mp3path(n))
     .then(r => { if (!r.ok) throw new Error(r.status); return r.arrayBuffer(); })
     .then(ab => getCtx().decodeAudioData(ab))
-    .then(decoded => { buf = decoded; $('status').textContent = ''; })
+    .then(decoded => {
+      originalBuf = decoded;
+      return applyPitchShift(decoded, pitch);
+    })
+    .then(shifted => { pitchedBuf = shifted; $('status').textContent = ''; })
     .catch(() => $('status').textContent = 'ファイルなし');
+}
+
+// ピッチシフト：位相ボコーダー（簡易版）
+// semitones半音だけ音程をシフトしたAudioBufferを返す
+async function applyPitchShift(buffer, semitones) {
+  if (semitones === 0) return buffer;
+
+  const pitchRatio = Math.pow(2, semitones / 12);
+  const c = getCtx();
+  const sampleRate = buffer.sampleRate;
+  const numChannels = buffer.numberOfChannels;
+  const origLen = buffer.length;
+
+  // ストレッチ比率（音程シフト後に元の長さに戻すため）
+  // 方法：先にtimestretchして元の速度を維持
+  // 簡易実装：pitchRatioでリサンプリング
+  const newLen = Math.round(origLen / pitchRatio);
+  const outBuf = c.createBuffer(numChannels, newLen, sampleRate);
+
+  for (let ch = 0; ch < numChannels; ch++) {
+    const input = buffer.getChannelData(ch);
+    const output = outBuf.getChannelData(ch);
+    // 線形補間でリサンプリング
+    for (let i = 0; i < newLen; i++) {
+      const srcIdx = i * pitchRatio;
+      const lo = Math.floor(srcIdx);
+      const hi = Math.min(lo + 1, origLen - 1);
+      const frac = srcIdx - lo;
+      output[i] = input[lo] * (1 - frac) + input[hi] * frac;
+    }
+  }
+  return outBuf;
 }
 
 function stopAudio() {
@@ -126,26 +163,17 @@ function currentOffset() {
 }
 
 function playFrom(offset) {
-  if (!buf) return;
+  if (!pitchedBuf) return;
   stopAudio();
   const c = getCtx();
   gainNode = c.createGain();
   gainNode.connect(c.destination);
   src = c.createBufferSource();
-  src.buffer = buf;
-
-  // 速度設定
+  src.buffer = pitchedBuf;
+  // 速度のみをplaybackRateで制御（音程はバッファ生成時に処理済み）
   src.playbackRate.value = speed;
-
-  // 音程設定：detuneはセント単位
-  // playbackRateによる音程変化を打ち消した上で、希望の音程変化を加える
-  // playbackRate=rのとき音程はlog2(r)*1200セント変化する
-  // それをdetuneで逆補正 + 希望のpitchセントを加算
-  const speedCentsOffset = Math.log2(speed) * 1200;
-  src.detune.value = pitch * 100 - speedCentsOffset;
-
   src.connect(gainNode);
-  const safeOff = Math.max(0, Math.min(offset, buf.duration - 0.01));
+  const safeOff = Math.max(0, Math.min(offset, pitchedBuf.duration - 0.01));
   src.start(0, safeOff);
   startCtxTime = c.currentTime;
   startBufOff = safeOff;
@@ -161,6 +189,7 @@ function tick() {
 }
 
 function updateProg() {
+  const buf = pitchedBuf || originalBuf;
   if (!buf) return;
   const off = Math.min(currentOffset(), buf.duration);
   $('progBar').style.width = (off / buf.duration * 100) + '%';
@@ -173,25 +202,33 @@ function fmt(s) {
 }
 
 $('playBtn').onclick = () => {
-  if (!buf) { $('status').textContent = '読込中…'; return; }
+  if (!pitchedBuf) { $('status').textContent = '読込中…'; return; }
   if (playing) { startBufOff = currentOffset(); stopAudio(); }
   else playFrom(startBufOff);
 };
 
 $('progWrap').onclick = e => {
-  if (!buf) return;
+  if (!pitchedBuf) return;
   const r = $('progWrap').getBoundingClientRect();
-  const off = (e.clientX - r.left) / r.width * buf.duration;
+  const off = (e.clientX - r.left) / r.width * pitchedBuf.duration;
   startBufOff = off;
   if (playing) playFrom(off);
   else updateProg();
 };
 
-// 音程変更
-function updatePitch() {
+// 音程変更：バッファを再生成
+async function updatePitch() {
   $('pitchVal').textContent = pitch === 0 ? '±0' : pitch > 0 ? `+${pitch}` : `${pitch}`;
-  if (playing) { startBufOff = currentOffset(); playFrom(startBufOff); }
+  if (!originalBuf) return;
+  const wasPlaying = playing;
+  const off = currentOffset();
+  stopAudio();
+  $('status').textContent = '処理中…';
+  pitchedBuf = await applyPitchShift(originalBuf, pitch);
+  $('status').textContent = '';
+  if (wasPlaying) playFrom(off);
 }
+
 $('pitchDn').onclick = () => { pitch = Math.max(-6, pitch - 1); updatePitch(); };
 $('pitchUp').onclick = () => { pitch = Math.min(6, pitch + 1); updatePitch(); };
 $('pitchReset').onclick = () => { pitch = 0; updatePitch(); };
@@ -206,7 +243,7 @@ document.querySelectorAll('.spd').forEach(btn => {
   };
 });
 
-// iOS判定
+// iOS
 if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
   $('scoreEmbed').style.display = 'none';
   $('scoreFallback').style.display = 'flex';
