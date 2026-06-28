@@ -26,10 +26,10 @@
   .audio-bar { flex-shrink:0; background:#111; padding:6px 10px; display:flex; align-items:center; gap:8px; }
   .audio-title { font-size:11px; color:var(--gold); white-space:nowrap; }
   .play-btn { background:var(--gold); color:var(--ink); border:none; border-radius:50%; width:30px; height:30px; font-size:13px; cursor:pointer; flex-shrink:0; }
-  .prog-wrap { flex:1; height:6px; background:#333; border-radius:3px; cursor:pointer; position:relative; }
-  .prog-bar { height:100%; background:var(--gold); border-radius:3px; width:0; transition:width .1s linear; }
+  .prog-wrap { flex:1; height:6px; background:#333; border-radius:3px; cursor:pointer; }
+  .prog-bar { height:100%; background:var(--gold); border-radius:3px; width:0; }
   .time { font-size:10px; color:#a09888; white-space:nowrap; min-width:72px; text-align:right; }
-  #status { font-size:10px; color:#f88; margin-left:4px; }
+  #status { font-size:10px; color:#f88; }
 </style>
 </head>
 <body>
@@ -54,9 +54,9 @@
   <button class="reset-btn" id="pitchReset">戻す</button>
   <div class="div"></div>
   <span class="ctrl-label">速度</span>
-  <button class="spd" data-r="0.5">0.5×</button>
   <button class="spd on" data-r="1.0">1.0×</button>
   <button class="spd" data-r="0.75">0.75×</button>
+  <button class="spd" data-r="0.5">0.5×</button>
   <button class="spd" data-r="1.25">1.25×</button>
 </div>
 
@@ -71,34 +71,35 @@
 <script>
 const $ = id => document.getElementById(id);
 
-// --- 状態 ---
-let ctx, gainNode, src;
+let ctx, src, gainNode;
 let buf = null;
-let pitch = 0;      // 半音
-let speed = 1.0;    // 再生速度
+let pitch = 0;       // 半音単位
+let speed = 1.0;     // 再生速度
 let playing = false;
-let startCtxTime = 0;  // ctx.currentTime at play start
-let startBufOff = 0;   // buffer offset at play start
+let startCtxTime = 0;
+let startBufOff = 0;
 let raf;
 
 function getCtx() {
-  if (!ctx) { ctx = new (window.AudioContext||window.webkitAudioContext)(); }
+  if (!ctx) ctx = new (window.AudioContext || window.webkitAudioContext)();
   if (ctx.state === 'suspended') ctx.resume();
   return ctx;
 }
 
-// mp3/pdf パス
 const mp3 = n => `mp3/${n}_CONCONE 50 LESSONS for medium voice.mp3`;
 const pdf = n => `scores/Concone50_${String(n).padStart(2,'0')}.pdf`;
 
-// プルダウン
+// プルダウン生成
 const sel = $('numSelect');
-for (let i=1;i<=50;i++){const o=document.createElement('option');o.value=i;o.textContent=`第 ${i} 番`;sel.appendChild(o);}
+for (let i = 1; i <= 50; i++) {
+  const o = document.createElement('option');
+  o.value = i; o.textContent = `第 ${i} 番`; sel.appendChild(o);
+}
 
-// 番号選択
 function selectNum(n) {
   stopAudio();
   buf = null;
+  startBufOff = 0;
   $('audioTitle').textContent = `🎵 第${n}番`;
   $('scoreEmbed').src = pdf(n);
   $('scoreLink').href = pdf(n);
@@ -106,13 +107,12 @@ function selectNum(n) {
   $('timeDisp').textContent = '0:00 / 0:00';
   $('status').textContent = '読込中…';
   fetch(mp3(n))
-    .then(r => { if(!r.ok) throw new Error(r.status); return r.arrayBuffer(); })
+    .then(r => { if (!r.ok) throw new Error(r.status); return r.arrayBuffer(); })
     .then(ab => getCtx().decodeAudioData(ab))
     .then(decoded => { buf = decoded; $('status').textContent = ''; })
-    .catch(e => { $('status').textContent = 'ファイルなし'; console.error(e); });
+    .catch(() => $('status').textContent = 'ファイルなし');
 }
 
-// 再生停止
 function stopAudio() {
   if (src) { try { src.stop(); } catch(e){} src = null; }
   playing = false;
@@ -133,8 +133,17 @@ function playFrom(offset) {
   gainNode.connect(c.destination);
   src = c.createBufferSource();
   src.buffer = buf;
+
+  // 速度設定
   src.playbackRate.value = speed;
-  src.detune.value = pitch * 100;  // 半音→セント
+
+  // 音程設定：detuneはセント単位
+  // playbackRateによる音程変化を打ち消した上で、希望の音程変化を加える
+  // playbackRate=rのとき音程はlog2(r)*1200セント変化する
+  // それをdetuneで逆補正 + 希望のpitchセントを加算
+  const speedCentsOffset = Math.log2(speed) * 1200;
+  src.detune.value = pitch * 100 - speedCentsOffset;
+
   src.connect(gainNode);
   const safeOff = Math.max(0, Math.min(offset, buf.duration - 0.01));
   src.start(0, safeOff);
@@ -142,7 +151,7 @@ function playFrom(offset) {
   startBufOff = safeOff;
   playing = true;
   $('playBtn').textContent = '⏸';
-  src.onended = () => { if(playing){ stopAudio(); startBufOff=0; updateProg(); } };
+  src.onended = () => { if (playing) { stopAudio(); startBufOff = 0; updateProg(); } };
   tick();
 }
 
@@ -154,20 +163,21 @@ function tick() {
 function updateProg() {
   if (!buf) return;
   const off = Math.min(currentOffset(), buf.duration);
-  $('progBar').style.width = (off/buf.duration*100)+'%';
-  $('timeDisp').textContent = fmt(off)+' / '+fmt(buf.duration);
+  $('progBar').style.width = (off / buf.duration * 100) + '%';
+  $('timeDisp').textContent = fmt(off) + ' / ' + fmt(buf.duration);
 }
 
-function fmt(s) { const m=Math.floor(s/60),ss=Math.floor(s%60); return m+':'+String(ss).padStart(2,'0'); }
+function fmt(s) {
+  const m = Math.floor(s / 60), ss = Math.floor(s % 60);
+  return m + ':' + String(ss).padStart(2, '0');
+}
 
-// 再生ボタン
 $('playBtn').onclick = () => {
   if (!buf) { $('status').textContent = '読込中…'; return; }
   if (playing) { startBufOff = currentOffset(); stopAudio(); }
-  else { playFrom(startBufOff); }
+  else playFrom(startBufOff);
 };
 
-// シーク
 $('progWrap').onclick = e => {
   if (!buf) return;
   const r = $('progWrap').getBoundingClientRect();
@@ -177,33 +187,31 @@ $('progWrap').onclick = e => {
   else updateProg();
 };
 
-// 音程
+// 音程変更
 function updatePitch() {
-  $('pitchVal').textContent = pitch===0?'±0':pitch>0?`+${pitch}`:`${pitch}`;
-  if (playing) { const off=currentOffset(); startBufOff=off; playFrom(off); }
-  else if (src) src.detune.value = pitch*100;
+  $('pitchVal').textContent = pitch === 0 ? '±0' : pitch > 0 ? `+${pitch}` : `${pitch}`;
+  if (playing) { startBufOff = currentOffset(); playFrom(startBufOff); }
 }
-$('pitchDn').onclick = () => { pitch=Math.max(-6,pitch-1); updatePitch(); };
-$('pitchUp').onclick = () => { pitch=Math.min(6,pitch+1); updatePitch(); };
-$('pitchReset').onclick = () => { pitch=0; updatePitch(); };
+$('pitchDn').onclick = () => { pitch = Math.max(-6, pitch - 1); updatePitch(); };
+$('pitchUp').onclick = () => { pitch = Math.min(6, pitch + 1); updatePitch(); };
+$('pitchReset').onclick = () => { pitch = 0; updatePitch(); };
 
-// 速度
+// 速度変更
 document.querySelectorAll('.spd').forEach(btn => {
   btn.onclick = () => {
     speed = parseFloat(btn.dataset.r);
-    document.querySelectorAll('.spd').forEach(b=>b.classList.remove('on'));
+    document.querySelectorAll('.spd').forEach(b => b.classList.remove('on'));
     btn.classList.add('on');
-    if (playing) { const off=currentOffset(); startBufOff=off; playFrom(off); }
+    if (playing) { startBufOff = currentOffset(); playFrom(startBufOff); }
   };
 });
 
-// iOS
+// iOS判定
 if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
-  $('scoreEmbed').style.display='none';
-  $('scoreFallback').style.display='flex';
+  $('scoreEmbed').style.display = 'none';
+  $('scoreFallback').style.display = 'flex';
 }
 
-// 初期読み込み
 selectNum(1);
 </script>
 </body>
