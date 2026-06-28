@@ -5,340 +5,206 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>コンコーネ 50番練習曲</title>
 <style>
-  :root {
-    --ink: #1a1410; --paper: #f7f3ec; --cream: #ede7d9;
-    --accent: #8b3a2a; --gold: #c49a3c; --muted: #7a7060;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    background: var(--paper);
-    color: var(--ink);
-    font-family: -apple-system, 'Noto Sans JP', sans-serif;
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-    overflow: hidden;
-  }
-
-  header {
-    background: var(--ink);
-    color: var(--paper);
-    padding: 8px 10px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    flex-shrink: 0;
-  }
-  header h1 { font-size: 12px; font-weight: 700; white-space: nowrap; }
-  #numSelect {
-    background: var(--gold);
-    color: var(--ink);
-    border: none;
-    border-radius: 4px;
-    padding: 4px 6px;
-    font-size: 12px;
-    font-weight: 700;
-    cursor: pointer;
-  }
-
-  .score-area { flex: 1; overflow: hidden; background: #fff; }
-  .score-embed { width: 100%; height: 100%; border: none; display: block; }
-  .score-fallback {
-    width: 100%; height: 100%;
-    display: none;
-    align-items: center;
-    justify-content: center;
-    background: #f0ece4;
-  }
-  .score-fallback a {
-    background: var(--accent); color: #fff;
-    padding: 10px 20px; border-radius: 6px;
-    text-decoration: none; font-size: 14px; font-weight: 600;
-  }
-
-  .controls {
-    flex-shrink: 0;
-    background: var(--ink);
-    padding: 6px 10px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    flex-wrap: wrap;
-  }
-  .ctrl-label { font-size: 10px; color: #a09888; }
-  .ctrl-btn {
-    background: #3a342c; color: #fff; border: none;
-    border-radius: 4px; width: 26px; height: 26px;
-    font-size: 15px; cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-  }
-  .ctrl-btn:active { opacity: 0.7; }
-  .pitch-display {
-    font-size: 12px; font-weight: 700;
-    min-width: 26px; text-align: center; color: var(--gold);
-  }
-  .reset-btn {
-    background: none; border: 1px solid #3a342c;
-    border-radius: 4px; color: #a09888;
-    padding: 2px 6px; font-size: 10px; cursor: pointer;
-  }
-  .divider { width: 1px; height: 20px; background: #3a342c; margin: 0 2px; }
-  .spd-btn {
-    background: #3a342c; border: none; border-radius: 4px;
-    padding: 4px 8px; font-size: 11px; cursor: pointer; color: #a09888;
-  }
-  .spd-btn.active { background: var(--gold); color: var(--ink); }
-
-  .audio-bar {
-    flex-shrink: 0; background: #111;
-    padding: 4px 8px;
-    display: flex; align-items: center; gap: 8px;
-  }
-  .audio-bar span { font-size: 11px; color: var(--gold); white-space: nowrap; }
-
-  /* カスタムプレーヤー */
-  .player-wrap {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .play-btn {
-    background: var(--gold); color: var(--ink);
-    border: none; border-radius: 50%;
-    width: 32px; height: 32px;
-    font-size: 14px; cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
-  }
-  .progress-wrap {
-    flex: 1; height: 4px; background: #333; border-radius: 2px; cursor: pointer;
-  }
-  .progress-bar { height: 100%; background: var(--gold); border-radius: 2px; width: 0%; }
-  .time-label { font-size: 10px; color: #a09888; white-space: nowrap; min-width: 70px; text-align: right; }
+  :root { --ink:#1a1410; --paper:#f7f3ec; --gold:#c49a3c; --accent:#8b3a2a; --muted:#7a7060; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { background:var(--paper); color:var(--ink); font-family:-apple-system,'Noto Sans JP',sans-serif; display:flex; flex-direction:column; height:100vh; overflow:hidden; }
+  header { background:var(--ink); color:#fff; padding:8px 10px; display:flex; align-items:center; gap:8px; flex-shrink:0; }
+  header h1 { font-size:12px; font-weight:700; white-space:nowrap; }
+  #numSelect { background:var(--gold); color:var(--ink); border:none; border-radius:4px; padding:4px 6px; font-size:12px; font-weight:700; }
+  .score-area { flex:1; overflow:hidden; background:#fff; }
+  .score-embed { width:100%; height:100%; border:none; display:block; }
+  .score-fallback { width:100%; height:100%; display:none; align-items:center; justify-content:center; background:#f0ece4; }
+  .score-fallback a { background:var(--accent); color:#fff; padding:10px 20px; border-radius:6px; text-decoration:none; font-size:14px; font-weight:600; }
+  .controls { flex-shrink:0; background:var(--ink); padding:6px 10px; display:flex; align-items:center; gap:6px; flex-wrap:wrap; }
+  .ctrl-label { font-size:10px; color:#a09888; }
+  .ctrl-btn { background:#3a342c; color:#fff; border:none; border-radius:4px; width:26px; height:26px; font-size:15px; cursor:pointer; }
+  .pitch-val { font-size:12px; font-weight:700; min-width:26px; text-align:center; color:var(--gold); }
+  .reset-btn { background:none; border:1px solid #3a342c; border-radius:4px; color:#a09888; padding:2px 6px; font-size:10px; cursor:pointer; }
+  .div { width:1px; height:20px; background:#3a342c; margin:0 2px; }
+  .spd { background:#3a342c; border:none; border-radius:4px; padding:4px 8px; font-size:11px; cursor:pointer; color:#a09888; }
+  .spd.on { background:var(--gold); color:var(--ink); }
+  .audio-bar { flex-shrink:0; background:#111; padding:6px 10px; display:flex; align-items:center; gap:8px; }
+  .audio-title { font-size:11px; color:var(--gold); white-space:nowrap; }
+  .play-btn { background:var(--gold); color:var(--ink); border:none; border-radius:50%; width:30px; height:30px; font-size:13px; cursor:pointer; flex-shrink:0; }
+  .prog-wrap { flex:1; height:6px; background:#333; border-radius:3px; cursor:pointer; position:relative; }
+  .prog-bar { height:100%; background:var(--gold); border-radius:3px; width:0; transition:width .1s linear; }
+  .time { font-size:10px; color:#a09888; white-space:nowrap; min-width:72px; text-align:right; }
+  #status { font-size:10px; color:#f88; margin-left:4px; }
 </style>
 </head>
 <body>
 
 <header>
   <h1>コンコーネ 五十番練習曲 Op.9 中声用</h1>
-  <select id="numSelect" onchange="selectNum(parseInt(this.value))"></select>
+  <select id="numSelect" onchange="selectNum(+this.value)"></select>
 </header>
 
 <div class="score-area">
   <embed id="scoreEmbed" class="score-embed" src="scores/Concone50_01.pdf" type="application/pdf">
   <div class="score-fallback" id="scoreFallback">
-    <a id="scoreFallbackLink" href="scores/Concone50_01.pdf" target="_blank">📄 楽譜を開く（PDF）</a>
+    <a id="scoreLink" href="scores/Concone50_01.pdf" target="_blank">📄 楽譜を開く（PDF）</a>
   </div>
 </div>
 
 <div class="controls">
   <span class="ctrl-label">音程</span>
-  <button class="ctrl-btn" onclick="changePitch(-1)">−</button>
-  <span class="pitch-display" id="pitchDisplay">±0</span>
-  <button class="ctrl-btn" onclick="changePitch(+1)">＋</button>
-  <button class="reset-btn" onclick="resetPitch()">戻す</button>
-
-  <div class="divider"></div>
-
+  <button class="ctrl-btn" id="pitchDn">−</button>
+  <span class="pitch-val" id="pitchVal">±0</span>
+  <button class="ctrl-btn" id="pitchUp">＋</button>
+  <button class="reset-btn" id="pitchReset">戻す</button>
+  <div class="div"></div>
   <span class="ctrl-label">速度</span>
-  <button class="spd-btn" onclick="setSpeed(0.5,this)">0.5×</button>
-  <button class="spd-btn" onclick="setSpeed(0.75,this)">0.75×</button>
-  <button class="spd-btn active" onclick="setSpeed(1.0,this)">1.0×</button>
-  <button class="spd-btn" onclick="setSpeed(1.25,this)">1.25×</button>
+  <button class="spd" data-r="0.5">0.5×</button>
+  <button class="spd on" data-r="1.0">1.0×</button>
+  <button class="spd" data-r="0.75">0.75×</button>
+  <button class="spd" data-r="1.25">1.25×</button>
 </div>
 
 <div class="audio-bar">
-  <span id="audioTitle">🎵 第１番</span>
-  <div class="player-wrap">
-    <button class="play-btn" id="playBtn" onclick="togglePlay()">▶</button>
-    <div class="progress-wrap" id="progressWrap" onclick="seek(event)">
-      <div class="progress-bar" id="progressBar"></div>
-    </div>
-    <span class="time-label" id="timeLabel">0:00 / 0:00</span>
-  </div>
+  <span class="audio-title" id="audioTitle">🎵 第１番</span>
+  <button class="play-btn" id="playBtn">▶</button>
+  <div class="prog-wrap" id="progWrap"><div class="prog-bar" id="progBar"></div></div>
+  <span class="time" id="timeDisp">0:00 / 0:00</span>
+  <span id="status"></span>
 </div>
 
 <script>
-// --- Web Audio API によるピッチシフト・速度独立制御 ---
-let audioCtx = null;
-let sourceNode = null;
-let audioBuffer = null;
-let gainNode = null;
-let startedAt = 0;      // audioCtx.currentTime での開始時刻
-let pausedAt = 0;       // 一時停止時の再生位置（秒）
-let isPlaying = false;
-let pitchSemitones = 0;
-let playbackRate = 1.0;
-let currentNum = 1;
-let rafId = null;
+const $ = id => document.getElementById(id);
 
-function getAudioCtx() {
-  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  return audioCtx;
+// --- 状態 ---
+let ctx, gainNode, src;
+let buf = null;
+let pitch = 0;      // 半音
+let speed = 1.0;    // 再生速度
+let playing = false;
+let startCtxTime = 0;  // ctx.currentTime at play start
+let startBufOff = 0;   // buffer offset at play start
+let raf;
+
+function getCtx() {
+  if (!ctx) { ctx = new (window.AudioContext||window.webkitAudioContext)(); }
+  if (ctx.state === 'suspended') ctx.resume();
+  return ctx;
 }
 
-function pdfPath(n) { return `scores/Concone50_${String(n).padStart(2,'0')}.pdf`; }
-function mp3Path(n) { return `mp3/${n}_CONCONE 50 LESSONS for medium voice.mp3`; }
+// mp3/pdf パス
+const mp3 = n => `mp3/${n}_CONCONE 50 LESSONS for medium voice.mp3`;
+const pdf = n => `scores/Concone50_${String(n).padStart(2,'0')}.pdf`;
 
-// プルダウン生成
-const sel = document.getElementById('numSelect');
-for (let i = 1; i <= 50; i++) {
-  const opt = document.createElement('option');
-  opt.value = i; opt.textContent = `第 ${i} 番`;
-  sel.appendChild(opt);
-}
+// プルダウン
+const sel = $('numSelect');
+for (let i=1;i<=50;i++){const o=document.createElement('option');o.value=i;o.textContent=`第 ${i} 番`;sel.appendChild(o);}
 
 // 番号選択
 function selectNum(n) {
-  currentNum = n;
-  stopPlayback();
-  pausedAt = 0;
-  audioBuffer = null;
-  document.getElementById('progressBar').style.width = '0%';
-  document.getElementById('timeLabel').textContent = '0:00 / 0:00';
-  document.getElementById('playBtn').textContent = '▶';
-
-  const pdf = pdfPath(n);
-  document.getElementById('scoreEmbed').src = pdf;
-  document.getElementById('scoreFallbackLink').href = pdf;
-  document.getElementById('audioTitle').textContent = `🎵 第${n}番`;
-
-  loadBuffer(mp3Path(n));
+  stopAudio();
+  buf = null;
+  $('audioTitle').textContent = `🎵 第${n}番`;
+  $('scoreEmbed').src = pdf(n);
+  $('scoreLink').href = pdf(n);
+  $('progBar').style.width = '0';
+  $('timeDisp').textContent = '0:00 / 0:00';
+  $('status').textContent = '読込中…';
+  fetch(mp3(n))
+    .then(r => { if(!r.ok) throw new Error(r.status); return r.arrayBuffer(); })
+    .then(ab => getCtx().decodeAudioData(ab))
+    .then(decoded => { buf = decoded; $('status').textContent = ''; })
+    .catch(e => { $('status').textContent = 'ファイルなし'; console.error(e); });
 }
 
-// MP3をArrayBufferとして読み込む
-function loadBuffer(url) {
-  fetch(url)
-    .then(r => r.arrayBuffer())
-    .then(ab => getAudioCtx().decodeAudioData(ab))
-    .then(buf => { audioBuffer = buf; })
-    .catch(() => { document.getElementById('timeLabel').textContent = 'ファイルなし'; });
+// 再生停止
+function stopAudio() {
+  if (src) { try { src.stop(); } catch(e){} src = null; }
+  playing = false;
+  $('playBtn').textContent = '▶';
+  cancelAnimationFrame(raf);
 }
 
-// 再生・停止トグル
-function togglePlay() {
-  if (!audioBuffer) return;
-  if (isPlaying) {
-    pausedAt = (getAudioCtx().currentTime - startedAt) * playbackRate;
-    stopPlayback();
-  } else {
-    startPlayback(pausedAt);
-  }
+function currentOffset() {
+  if (!playing) return startBufOff;
+  return startBufOff + (getCtx().currentTime - startCtxTime) * speed;
 }
 
-function startPlayback(offset) {
-  const ctx = getAudioCtx();
-  stopPlayback();
-
-  sourceNode = ctx.createBufferSource();
-  sourceNode.buffer = audioBuffer;
-
-  // 速度（時間軸）→ playbackRate
-  sourceNode.playbackRate.value = playbackRate;
-
-  // ピッチシフト：detune（セント単位）
-  sourceNode.detune.value = pitchSemitones * 100;
-
-  gainNode = ctx.createGain();
-  sourceNode.connect(gainNode);
-  gainNode.connect(ctx.destination);
-
-  const safeOffset = Math.min(offset, audioBuffer.duration);
-  sourceNode.start(0, safeOffset);
-  startedAt = ctx.currentTime - safeOffset / playbackRate;
-  isPlaying = true;
-  document.getElementById('playBtn').textContent = '⏸';
-
-  sourceNode.onended = () => {
-    if (isPlaying) {
-      isPlaying = false;
-      pausedAt = 0;
-      document.getElementById('playBtn').textContent = '▶';
-      document.getElementById('progressBar').style.width = '0%';
-      cancelAnimationFrame(rafId);
-    }
-  };
-
-  updateProgress();
+function playFrom(offset) {
+  if (!buf) return;
+  stopAudio();
+  const c = getCtx();
+  gainNode = c.createGain();
+  gainNode.connect(c.destination);
+  src = c.createBufferSource();
+  src.buffer = buf;
+  src.playbackRate.value = speed;
+  src.detune.value = pitch * 100;  // 半音→セント
+  src.connect(gainNode);
+  const safeOff = Math.max(0, Math.min(offset, buf.duration - 0.01));
+  src.start(0, safeOff);
+  startCtxTime = c.currentTime;
+  startBufOff = safeOff;
+  playing = true;
+  $('playBtn').textContent = '⏸';
+  src.onended = () => { if(playing){ stopAudio(); startBufOff=0; updateProg(); } };
+  tick();
 }
 
-function stopPlayback() {
-  if (sourceNode) {
-    sourceNode.onended = null;
-    try { sourceNode.stop(); } catch(e) {}
-    sourceNode = null;
-  }
-  isPlaying = false;
-  document.getElementById('playBtn').textContent = '▶';
-  cancelAnimationFrame(rafId);
+function tick() {
+  updateProg();
+  if (playing) raf = requestAnimationFrame(tick);
 }
 
-// プログレス更新
-function updateProgress() {
-  if (!isPlaying || !audioBuffer) return;
-  const elapsed = (getAudioCtx().currentTime - startedAt) * playbackRate;
-  const dur = audioBuffer.duration;
-  const pct = Math.min(elapsed / dur * 100, 100);
-  document.getElementById('progressBar').style.width = pct + '%';
-  document.getElementById('timeLabel').textContent = fmt(elapsed) + ' / ' + fmt(dur);
-  if (elapsed < dur) rafId = requestAnimationFrame(updateProgress);
+function updateProg() {
+  if (!buf) return;
+  const off = Math.min(currentOffset(), buf.duration);
+  $('progBar').style.width = (off/buf.duration*100)+'%';
+  $('timeDisp').textContent = fmt(off)+' / '+fmt(buf.duration);
 }
 
-function fmt(s) {
-  const m = Math.floor(s / 60);
-  const sec = Math.floor(s % 60);
-  return m + ':' + String(sec).padStart(2,'0');
-}
+function fmt(s) { const m=Math.floor(s/60),ss=Math.floor(s%60); return m+':'+String(ss).padStart(2,'0'); }
+
+// 再生ボタン
+$('playBtn').onclick = () => {
+  if (!buf) { $('status').textContent = '読込中…'; return; }
+  if (playing) { startBufOff = currentOffset(); stopAudio(); }
+  else { playFrom(startBufOff); }
+};
 
 // シーク
-function seek(e) {
-  if (!audioBuffer) return;
-  const rect = document.getElementById('progressWrap').getBoundingClientRect();
-  const pct = (e.clientX - rect.left) / rect.width;
-  const offset = pct * audioBuffer.duration;
-  pausedAt = offset;
-  if (isPlaying) startPlayback(offset);
-  else {
-    const pctShow = Math.min(pct * 100, 100);
-    document.getElementById('progressBar').style.width = pctShow + '%';
-    document.getElementById('timeLabel').textContent = fmt(offset) + ' / ' + fmt(audioBuffer.duration);
-  }
-}
+$('progWrap').onclick = e => {
+  if (!buf) return;
+  const r = $('progWrap').getBoundingClientRect();
+  const off = (e.clientX - r.left) / r.width * buf.duration;
+  startBufOff = off;
+  if (playing) playFrom(off);
+  else updateProg();
+};
 
-// 音程変更（再生中は即時反映）
-function changePitch(d) {
-  pitchSemitones = Math.max(-6, Math.min(6, pitchSemitones + d));
-  document.getElementById('pitchDisplay').textContent =
-    pitchSemitones === 0 ? '±0' : (pitchSemitones > 0 ? `+${pitchSemitones}` : `${pitchSemitones}`);
-  if (isPlaying) {
-    const pos = (getAudioCtx().currentTime - startedAt) * playbackRate;
-    pausedAt = pos;
-    startPlayback(pos);
-  }
+// 音程
+function updatePitch() {
+  $('pitchVal').textContent = pitch===0?'±0':pitch>0?`+${pitch}`:`${pitch}`;
+  if (playing) { const off=currentOffset(); startBufOff=off; playFrom(off); }
+  else if (src) src.detune.value = pitch*100;
 }
-function resetPitch() { pitchSemitones = 0; changePitch(0); }
+$('pitchDn').onclick = () => { pitch=Math.max(-6,pitch-1); updatePitch(); };
+$('pitchUp').onclick = () => { pitch=Math.min(6,pitch+1); updatePitch(); };
+$('pitchReset').onclick = () => { pitch=0; updatePitch(); };
 
-// 速度変更（再生中は即時反映）
-function setSpeed(rate, btn) {
-  const pos = isPlaying ? (getAudioCtx().currentTime - startedAt) * playbackRate : pausedAt;
-  playbackRate = rate;
-  document.querySelectorAll('.spd-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  if (isPlaying) {
-    pausedAt = pos;
-    startPlayback(pos);
-  }
-}
+// 速度
+document.querySelectorAll('.spd').forEach(btn => {
+  btn.onclick = () => {
+    speed = parseFloat(btn.dataset.r);
+    document.querySelectorAll('.spd').forEach(b=>b.classList.remove('on'));
+    btn.classList.add('on');
+    if (playing) { const off=currentOffset(); startBufOff=off; playFrom(off); }
+  };
+});
 
-// iOS判定
+// iOS
 if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
-  document.getElementById('scoreEmbed').style.display = 'none';
-  document.getElementById('scoreFallback').style.display = 'flex';
+  $('scoreEmbed').style.display='none';
+  $('scoreFallback').style.display='flex';
 }
 
 // 初期読み込み
-loadBuffer(mp3Path(1));
+selectNum(1);
 </script>
 </body>
 </html>
