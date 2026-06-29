@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>コンコーネ 50番練習曲</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"><\/script>
 <style>
 :root { --ink:#1a1410; --paper:#f7f3ec; --gold:#c49a3c; --accent:#8b3a2a; }
 * { box-sizing:border-box; margin:0; padding:0; }
@@ -12,10 +13,8 @@ header { background:var(--ink); color:#fff; padding:8px 10px; display:flex; alig
 header h1 { font-size:12px; font-weight:700; white-space:nowrap; }
 #numSelect { background:var(--gold); color:var(--ink); border:none; border-radius:4px; padding:4px 6px; font-size:12px; font-weight:700; }
 .score-area { flex:1; overflow:hidden; background:#fff; min-height:0; position:relative; }
-.score-wrap { width:100%; height:100%; overflow-y:auto; overflow-x:hidden; -webkit-overflow-scrolling:touch; position:relative; }
-.score-embed { border:none; display:block; transform-origin:top left; }
-.score-fallback { width:100%; height:100%; display:none; align-items:center; justify-content:center; background:#f0ece4; }
-.score-fallback a { background:var(--accent); color:#fff; padding:10px 20px; border-radius:6px; text-decoration:none; font-size:14px; font-weight:600; }
+.score-wrap { width:100%; height:100%; overflow-y:auto; overflow-x:hidden; -webkit-overflow-scrolling:touch; }
+#scoreCanvas { display:block; width:100%; }
 
 /* 音程コントロール */
 .controls { flex-shrink:0; background:var(--ink); padding:6px 10px; display:flex; align-items:center; gap:6px; }
@@ -65,7 +64,7 @@ header h1 { font-size:12px; font-weight:700; white-space:nowrap; }
 </header>
 <div class="score-area">
   <div class="score-wrap" id="scoreWrap">
-    <iframe id="scoreFrame" class="score-embed" src="scores/Concone50_01.pdf"></iframe>
+    <canvas id="scoreCanvas"></canvas>
   </div>
 </div>
 
@@ -150,8 +149,7 @@ function selectNum(n) {
   hardStop();
   originalBuf = null; processedBuf = null; cachedPitch = null; pausePos = 0;
   $('audioTitle').textContent = `🎵 第${n}番`;
-  $('scoreFrame').src = pdfpath(n);
-  setTimeout(scaleFrame, 300);
+  renderAllPages(pdfpath(n));
   $('progBar').style.width = '0'; $('timeDisp').textContent = '0:00 / 0:00';
   $('status').textContent = '読込中…';
   fetch(mp3path(n))
@@ -283,22 +281,54 @@ $('pitchDn').onclick = () => changePitch(-1);
 $('pitchUp').onclick = () => changePitch(+1);
 $('pitchReset').onclick = () => { pitch=0; changePitch(0); };
 
-// iframeをscoreWrapの幅に合わせてscaleする
-function scaleFrame() {
+// PDF.js でPDFをCanvasに描画
+pdfjsLib.GlobalWorkerOptions.workerSrc =
+  'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+let currentPdfUrl = null;
+let pdfDoc = null;
+
+async function renderAllPages(url) {
+  currentPdfUrl = url;
   const wrap = $('scoreWrap');
-  const frame = $('scoreFrame');
+  const canvas = $('scoreCanvas');
+  const ctx2d = canvas.getContext('2d');
   const wrapW = wrap.clientWidth;
-  // iframeはPDFのネイティブ幅（A4想定: 595px）で描画させ、それをscaleで縮める
-  const pdfW = 595;
-  const scale = wrapW / pdfW;
-  const frameH = wrap.clientHeight / scale;
-  frame.style.width = pdfW + 'px';
-  frame.style.height = frameH + 'px';
-  frame.style.transform = `scale(${scale})`;
+
+  try {
+    pdfDoc = await pdfjsLib.getDocument(url).promise;
+    const numPages = pdfDoc.numPages;
+
+    // 全ページの高さを合計してcanvasサイズを決める
+    let totalH = 0;
+    const pageViewports = [];
+    for (let p = 1; p <= numPages; p++) {
+      const page = await pdfDoc.getPage(p);
+      const vp = page.getViewport({ scale: wrapW / page.getViewport({scale:1}).width });
+      pageViewports.push({page, vp});
+      totalH += vp.height;
+    }
+
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width  = wrapW * dpr;
+    canvas.height = totalH * dpr;
+    canvas.style.width  = wrapW + 'px';
+    canvas.style.height = totalH + 'px';
+    ctx2d.scale(dpr, dpr);
+
+    let offsetY = 0;
+    for (const {page, vp} of pageViewports) {
+      await page.render({ canvasContext: ctx2d, viewport: vp, transform: [1,0,0,1,0,offsetY] }).promise;
+      offsetY += vp.height;
+    }
+  } catch(e) {
+    console.error('PDF読み込みエラー:', e);
+  }
 }
 
-window.addEventListener('resize', scaleFrame);
-scaleFrame();
+window.addEventListener('resize', () => {
+  if (currentPdfUrl) renderAllPages(currentPdfUrl);
+});
 
 
 
