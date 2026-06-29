@@ -40,8 +40,8 @@ header h1 { font-size:12px; font-weight:700; white-space:nowrap; }
 .kb-label { font-size:10px; color:#a09888; }
 .timbre-btn { background:#3a342c; border:none; border-radius:4px; padding:3px 8px; font-size:10px; color:#a09888; cursor:pointer; }
 .timbre-btn.on { background:var(--gold); color:var(--ink); font-weight:700; }
-.piano-wrap { position:relative; width:100%; overflow-x:auto; -webkit-overflow-scrolling:touch; }
-.piano { position:relative; display:flex; height:80px; user-select:none; -webkit-user-select:none; width: max-content; }
+.piano-wrap { position:relative; width:100%; overflow:hidden; height:80px; }
+.piano { position:relative; display:flex; height:80px; user-select:none; -webkit-user-select:none; width:max-content; transform-origin:top left; }
 .wkey {
   position:relative; width:28px; height:80px; background:#f5f0e8;
   border:1px solid #888; border-top:none; border-radius:0 0 4px 4px;
@@ -200,9 +200,10 @@ function hardStop() {
   if (src) { src.onended = null; try { src.stop(); } catch(e){} src = null; }
   if (gainNode) { gainNode.disconnect(); gainNode = null; }
   playing = false;
+  processing = false;  // 処理中フラグを必ずリセット
   $('playBtn').textContent = '▶';
   cancelAnimationFrame(raf);
-  if (!processing) setControlsDisabled(false);
+  setControlsDisabled(false);
 }
 
 function updateTimeDisplay() {
@@ -216,10 +217,16 @@ async function startPlay() {
   if (cachedPitch !== targetPitch) {
     processing = true; setControlsDisabled(true);
     $('status').textContent = '処理中…';
-    await new Promise(r => setTimeout(r, 10));
-    processedBuf = shiftPitch(originalBuf, targetPitch);
-    cachedPitch = targetPitch;
-    processing = false; $('status').textContent = '';
+    try {
+      await new Promise(r => setTimeout(r, 10));
+      processedBuf = shiftPitch(originalBuf, targetPitch);
+      cachedPitch = targetPitch;
+    } catch(e) {
+      $('status').textContent = 'エラー';
+    } finally {
+      processing = false; $('status').textContent = '';
+      setControlsDisabled(false);
+    }
   }
   const safePausePos = Math.max(0, Math.min(pausePos, processedBuf.duration - 0.01));
   hardStop();
@@ -293,6 +300,8 @@ function scaleFrame() {
 window.addEventListener('resize', scaleFrame);
 scaleFrame();
 
+
+
 selectNum(1);
 
 // ─── 鍵盤 ─────────────────────────────────────────────────
@@ -315,6 +324,7 @@ const BLACK_AT    = [1,3,null,6,8,10,null]; // 各白鍵の右の黒鍵offset (n
 
 // 白鍵・黒鍵リストを構築
 const piano = $('piano');
+piano.style.height = '80px';
 let wkeys = []; // {el, midi}
 
 // MIDIノート→白鍵インデックス（C=0基準）
@@ -324,7 +334,17 @@ function isWhite(midi) {
 }
 
 // 白鍵のみ左から並べ、黒鍵はposition:absoluteで重ねる
-const WKEY_W = 28, WKEY_GAP = 1;
+// 白鍵幅は後でDOM生成後に動的計算する
+// まず白鍵の総数を数える
+let totalWkeys = 0;
+for (let m = START_MIDI; m <= END_MIDI; m++) { if (isWhite(m)) totalWkeys++; }
+// piano-wrapの幅から白鍵幅を計算（gap=1px）
+const pianoWrap = document.querySelector('.piano-wrap');
+const availW = pianoWrap.clientWidth;
+const WKEY_GAP = 1;
+const WKEY_W = Math.floor((availW - (totalWkeys - 1) * WKEY_GAP) / totalWkeys);
+const BKEY_W = Math.round(WKEY_W * 0.6);
+const BKEY_H = Math.round(80 * 0.62);
 
 let wIdx = 0;
 const blackKeyData = []; // {midi, wIdx_left} 左隣の白鍵インデックス基準
@@ -338,6 +358,9 @@ for (let midi = START_MIDI; midi <= END_MIDI; midi++) {
   if (pc === 0) el.textContent = `C${oct}`;
   else if (pc === 5) el.textContent = `F${oct}`;
   el.dataset.midi = midi;
+  el.style.width = WKEY_W + 'px';
+  el.style.height = '80px';
+  el.style.marginRight = WKEY_GAP + 'px';
   piano.appendChild(el);
   wkeys.push({el, midi, idx: wIdx});
 
@@ -355,8 +378,10 @@ blackKeyData.forEach(({midi, wIdx: wi}) => {
   el.className = 'bkey';
   el.dataset.midi = midi;
   // 左端 = wi番目白鍵の右端 - 黒鍵幅/2
-  const left = (wi+1) * (WKEY_W + WKEY_GAP) - 9 - 1;
+  const left = (wi+1) * (WKEY_W + WKEY_GAP) - Math.round(BKEY_W/2) - 1;
   el.style.left = left + 'px';
+  el.style.width = BKEY_W + 'px';
+  el.style.height = BKEY_H + 'px';
   piano.appendChild(el);
 });
 
@@ -532,6 +557,43 @@ pianoEl.addEventListener('touchmove', e => {
 
 pianoEl.addEventListener('touchend',    e => { e.preventDefault(); dragEnd(); }, {passive:false});
 pianoEl.addEventListener('touchcancel', e => { dragEnd(); });
+
+// リサイズ時に白鍵幅を再計算して鍵盤を再描画
+window.addEventListener('resize', () => {
+  // 鍵盤を再描画
+  piano.innerHTML = '';
+  wkeys = [];
+  const newAvailW = pianoWrap.clientWidth;
+  const newWkeyW = Math.floor((newAvailW - (totalWkeys-1)*WKEY_GAP) / totalWkeys);
+  const newBkeyW = Math.round(newWkeyW * 0.6);
+  const newBkeyH = Math.round(80 * 0.62);
+  let wi2 = 0;
+  const bkData2 = [];
+  for (let midi = START_MIDI; midi <= END_MIDI; midi++) {
+    if (!isWhite(midi)) continue;
+    const el = document.createElement('div');
+    el.className = 'wkey';
+    const pc = midi % 12;
+    const oct = Math.floor(midi/12) - 1;
+    if (pc===0) el.textContent=`C${oct}`;
+    else if (pc===5) el.textContent=`F${oct}`;
+    el.dataset.midi = midi;
+    el.style.width = newWkeyW+'px'; el.style.height='80px'; el.style.marginRight=WKEY_GAP+'px';
+    piano.appendChild(el);
+    wkeys.push({el, midi, idx:wi2});
+    const rb = midi+1;
+    if (rb<=END_MIDI && !isWhite(rb)) bkData2.push({midi:rb, wIdx:wi2});
+    wi2++;
+  }
+  bkData2.forEach(({midi, wIdx:wi}) => {
+    const el = document.createElement('div');
+    el.className = 'bkey'; el.dataset.midi = midi;
+    const left = (wi+1)*(newWkeyW+WKEY_GAP) - Math.round(newBkeyW/2) - 1;
+    el.style.left=left+'px'; el.style.width=newBkeyW+'px'; el.style.height=newBkeyH+'px';
+    piano.appendChild(el);
+  });
+  document.querySelectorAll('.wkey,.bkey').forEach(setupKey);
+});
 </script>
 </body>
 </html>
