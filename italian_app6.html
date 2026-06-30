@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🇮🇹 イタリア語⑥　上級文法・論述</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f0f4ff;
+  --surface: #ffffff;
+  --primary: #1e3a8a;
+  --primary-light: #1e3a8a22;
+  --accent: #0891b2;
+  --green: #1e3a8a;
+  --green-light: #dde4ff;
+  --amber: #d97706;
+  --amber-light: #fef3c7;
+  --red: #e11d48;
+  --text: #1e293b;
+  --muted: #64748b;
+  --border: #93a8e8;
+  --shadow: 0 4px 24px rgba(22,163,74,0.10);
+  --radius: 18px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+body {
+  font-family: 'Noto Sans JP', sans-serif;
+  background: var(--bg);
+  min-height: 100vh;
+  padding: 16px 12px 48px;
+  color: var(--text);
+}
+.container { max-width: 560px; margin: auto; }
+.header { text-align: center; margin-bottom: 14px; }
+.header h2 { font-size: 18px; font-weight: 900; color: var(--primary); }
+.header p  { font-size: 12px; color: var(--muted); margin-top: 2px; }
+.badges { display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; margin-bottom: 10px; }
+.badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 4px 12px; border-radius: 99px; font-size: 11px; font-weight: 700;
+  background: var(--primary-light); color: var(--primary);
+  border: 1px solid var(--border);
+}
+.badge.green { background: var(--green-light); color: var(--green); border-color: #93a8e8; }
+.badge.amber { background: var(--amber-light); color: var(--amber); border-color: #fcd34d; }
+.progress-wrap { background: var(--primary)33; border-radius: 99px; height: 6px; margin-bottom: 4px; overflow: hidden; }
+.progress-bar  { height: 100%; background: var(--primary); border-radius: 99px; transition: width 0.4s ease; }
+.progress-label { text-align: center; font-size: 12px; color: var(--muted); margin-bottom: 10px; }
+.tap-hint { font-size: 11px; color: var(--muted); margin-bottom: 6px; text-align: center; }
+.card {
+  background: var(--surface); border-radius: var(--radius);
+  padding: 28px 20px 20px; box-shadow: var(--shadow);
+  margin-bottom: 12px; position: relative;
+  border: 2px solid var(--border);
+  min-height: 160px;
+  cursor: pointer; user-select: none;
+  transition: transform .1s, border-color .2s;
+}
+.card.tappable:active { transform: scale(0.985); }
+.card.revealed { border-color: var(--primary); }
+.card.no-tap { cursor: default; }
+.card-top {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 10px;
+}
+.card-num { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--muted); }
+.cat-label {
+  font-size: 11px; font-weight: 700; letter-spacing: .06em;
+  color: var(--primary); text-align: center; flex: 1;
+}
+.master-wrap { display: flex; align-items: center; gap: 4px; font-size: 11px; color: var(--muted); }
+.master-wrap input[type=checkbox] { width: 17px; height: 17px; accent-color: var(--green); cursor: pointer; }
+.master-wrap.disabled { opacity: .3; pointer-events: none; }
+.main-text {
+  font-size: clamp(15px, 4vw, 19px); font-weight: 700;
+  line-height: 1.65; text-align: center; margin-bottom: 14px;
+}
+.answer-wrap {
+  opacity: 0; transform: translateY(5px);
+  transition: opacity .25s, transform .25s;
+  pointer-events: none;
+}
+.answer-wrap.show { opacity: 1; transform: translateY(0); pointer-events: auto; }
+.answer-ja {
+  font-size: clamp(13px, 3.5vw, 15px); font-weight: 700;
+  color: var(--accent); text-align: center; line-height: 1.6;
+  background: #f0f9ff; border-radius: 10px; padding: 10px 14px; margin-bottom: 8px;
+}
+.answer-tip {
+  font-size: 12px; font-weight: 600; color: var(--green);
+  text-align: left; padding: 0 4px; line-height: 1.6;
+}
+.answer-tip::before { content: '💡 '; }
+.master-badge {
+  display: none; text-align: center; margin-top: 8px;
+  background: var(--green-light); color: var(--green);
+  padding: 2px 10px; border-radius: 99px; font-size: 10px; font-weight: 700;
+}
+.master-badge.show { display: block; }
+.no-active {
+  background: var(--amber-light); border-radius: 12px; padding: 16px;
+  text-align: center; font-size: 14px; color: var(--amber); font-weight: 700;
+  display: none; margin-bottom: 12px;
+}
+.no-active.show { display: block; }
+.auto-panel {
+  background: var(--surface); border-radius: var(--radius);
+  padding: 14px 18px; box-shadow: var(--shadow); margin-bottom: 12px;
+  display: none; border-left: 4px solid var(--primary);
+}
+.auto-panel.show { display: block; }
+.auto-step-title { font-size: 12px; font-weight: 900; color: var(--primary); margin-bottom: 4px; }
+.auto-instruction { font-size: 14px; font-weight: 700; color: var(--text); line-height: 1.5; }
+.auto-count { font-family: 'DM Mono', monospace; font-size: 12px; color: var(--muted); margin-top: 4px; }
+.filter-panel {
+  background: var(--surface); border-radius: var(--radius);
+  padding: 14px 16px; box-shadow: var(--shadow); margin-bottom: 12px;
+}
+.filter-header { display: flex; align-items: center; justify-content: space-between; cursor: pointer; user-select: none; }
+.filter-header-left { font-size: 12px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; }
+.filter-current {
+  font-size: 12px; font-weight: 700; color: var(--primary);
+  background: var(--primary-light); padding: 3px 10px; border-radius: 99px;
+  border: 1px solid var(--border); max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.filter-toggle-icon { font-size: 12px; color: var(--muted); transition: transform .2s; margin-left: 6px; }
+.filter-toggle-icon.open { transform: rotate(180deg); }
+.filter-chips-wrap { display: none; margin-top: 10px; }
+.filter-chips-wrap.open { display: block; }
+.chip-all {
+  display: block; width: 100%; padding: 8px 14px; margin-bottom: 8px;
+  border-radius: 10px; font-size: 12px; font-weight: 700; cursor: pointer;
+  border: 2px solid var(--border); background: #fff; color: var(--muted);
+  text-align: left; font-family: 'Noto Sans JP', sans-serif; transition: all .15s;
+}
+.chip-all.active { background: var(--primary-light); color: var(--primary); border-color: var(--primary); }
+.cat-row {
+  display: flex; align-items: center; gap: 8px; padding: 8px 10px;
+  border-radius: 10px; cursor: pointer; border: 2px solid transparent;
+  background: #fff; margin-bottom: 5px; transition: all .15s; user-select: none;
+}
+.cat-row.active { background: var(--primary-light); border-color: var(--primary); }
+.cat-row-name { flex: 1; font-size: 13px; font-weight: 700; color: var(--text); }
+.cat-row.active .cat-row-name { color: var(--primary); }
+.cat-row-count {
+  font-family: 'DM Mono', monospace; font-size: 11px; color: var(--muted);
+  background: #f1f5f9; padding: 2px 8px; border-radius: 99px; font-weight: 600;
+}
+.cat-row.active .cat-row-count { background: #fff; color: var(--primary); }
+.cat-dot { width: 8px; height: 8px; border-radius: 50%; background: #e2e8f0; flex-shrink: 0; }
+.cat-dot.done { background: var(--green); }
+.panel {
+  background: var(--surface); border-radius: var(--radius);
+  padding: 14px 16px; box-shadow: var(--shadow); margin-bottom: 12px;
+}
+.panel-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.panel-row + .panel-row { margin-top: 8px; }
+.panel label { font-size: 12px; color: var(--muted); font-weight: 700; white-space: nowrap; }
+.panel select {
+  flex: 1; font-size: 12px; border: 1px solid var(--border);
+  border-radius: 8px; padding: 4px 8px; background: #fff;
+  color: var(--text); font-family: 'Noto Sans JP', sans-serif;
+}
+.panel input[type=range] { flex: 1; min-width: 80px; accent-color: var(--primary); }
+.speed-val { font-family: 'DM Mono', monospace; font-size: 13px; font-weight: 600; color: var(--primary); min-width: 32px; }
+.btn-row { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin-bottom: 10px; }
+.btn {
+  border: none; border-radius: 99px; padding: 10px 18px;
+  font-size: 13px; font-weight: 700; font-family: 'Noto Sans JP', sans-serif;
+  cursor: pointer; transition: opacity .15s, transform .1s;
+  display: inline-flex; align-items: center; gap: 5px;
+}
+.btn:active { transform: scale(0.94); opacity: .85; }
+.btn-primary   { background: var(--primary); color: #fff; }
+.btn-secondary { background: #e2e8f0; color: var(--text); }
+.btn-red       { background: var(--red); color: #fff; }
+.btn-amber     { background: var(--amber); color: #fff; }
+.btn-blue      { background: #2563eb; color: #fff; }
+.btn-on        { background: var(--green); color: #fff; }
+.master-summary {
+  background: var(--green-light); border-radius: 12px; padding: 10px 14px;
+  font-size: 12px; color: var(--green); font-weight: 700;
+  text-align: center; margin-bottom: 10px; display: none; cursor: pointer; user-select: none;
+}
+.master-summary.show { display: block; }
+.help-btn {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 5px 14px; border-radius: 99px;
+  border: 1px solid var(--border); background: var(--primary-light);
+  color: var(--primary); font-size: 12px; font-weight: 700;
+  cursor: pointer; margin-top: 8px;
+  font-family: 'Noto Sans JP', sans-serif;
+}
+.guide-overlay {
+  display: none; position: fixed; inset: 0; z-index: 100;
+  background: rgba(0,0,0,0.5); overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.guide-overlay.show { display: block; }
+.guide-modal {
+  background: var(--bg); max-width: 520px; margin: 0 auto;
+  min-height: 100vh; padding: 0 0 60px; position: relative;
+}
+.guide-modal-header {
+  position: sticky; top: 0; z-index: 10;
+  background: var(--primary); color: #fff;
+  padding: 16px 20px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.guide-modal-header h2 { font-size: 16px; font-weight: 900; }
+.guide-close {
+  background: rgba(255,255,255,0.2); border: none; border-radius: 99px;
+  color: #fff; font-size: 13px; font-weight: 700; padding: 5px 14px;
+  cursor: pointer; font-family: 'Noto Sans JP', sans-serif;
+}
+.guide-body { padding: 14px 14px 20px; }
+.g-section { background: #fff; border-radius: 14px; border: 1px solid #d1fae5; margin-bottom: 10px; overflow: hidden; }
+.g-head { padding: 11px 14px; background: var(--green-light); border-bottom: 1px solid #d1fae5; display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 700; color: var(--text); }
+.g-body { padding: 14px; }
+.g-text { font-size: 12px; color: var(--muted); line-height: 1.8; margin-bottom: 10px; }
+.g-text:last-child { margin-bottom: 0; }
+.g-text strong { color: var(--text); font-weight: 700; }
+.g-step { display: flex; gap: 9px; margin-bottom: 9px; align-items: flex-start; }
+.g-step:last-child { margin-bottom: 0; }
+.g-step-num { min-width: 22px; height: 22px; border-radius: 50%; background: var(--primary-light); color: var(--primary); font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
+.g-step-text { font-size: 12px; color: var(--muted); line-height: 1.8; }
+.g-step-text strong { color: var(--text); font-weight: 700; }
+.g-method { border-left: 3px solid var(--border); padding: 8px 12px; margin-bottom: 9px; border-radius: 0 8px 8px 0; background: var(--green-light); }
+.g-method:last-child { margin-bottom: 0; }
+.g-method-title { font-size: 12px; font-weight: 700; color: var(--primary); margin-bottom: 4px; }
+.g-method-body { font-size: 12px; color: var(--muted); line-height: 1.8; }
+.g-amber { border-left-color: #fcd34d; background: #fffbeb; }
+.g-amber .g-method-title { color: #92400e; }
+.g-blue  { border-left-color: #93c5fd; background: #eff6ff; }
+.g-blue  .g-method-title { color: #1e40af; }
+.g-blue  .g-method-body  { color: #1e3a8a; }
+.g-shadow-steps { background: var(--green-light); border-radius: 10px; padding: 10px 12px; margin-top: 8px; }
+.g-s-step { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 7px; }
+.g-s-step:last-child { margin-bottom: 0; }
+.g-s-badge { min-width: 52px; padding: 2px 0; text-align: center; border-radius: 99px; font-size: 10px; font-weight: 700; flex-shrink: 0; margin-top: 2px; }
+.gsb-g { background: var(--primary-light); color: #166534; }
+.gsb-b { background: #dbeafe; color: #1e40af; }
+.g-s-text { font-size: 11px; color: var(--muted); line-height: 1.75; }
+.g-s-text strong { color: var(--text); font-weight: 700; }
+.g-flow { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin: 10px 0 6px; }
+.g-flow-tag { padding: 4px 11px; border-radius: 99px; font-size: 11px; font-weight: 700; }
+.gft-green { background: var(--primary-light); color: #166534; border: 1px solid var(--border); }
+.gft-amber { background: #fef3c7; color: #92400e; border: 1px solid #fcd34d; }
+.gft-blue  { background: #dbeafe; color: #1e40af; border: 1px solid #93c5fd; }
+.g-flow-arr { color: var(--muted); font-size: 13px; }
+.gbd { display:inline-flex;align-items:center;gap:4px;padding:5px 12px;border-radius:99px;font-size:11px;font-weight:700;border:none;margin:3px; }
+.gbd-sec { background:#e2e8f0;color:#1e293b; }
+.gbd-pri { background:var(--primary);color:#fff; }
+.gbd-amb { background:#d97706;color:#fff; }
+.gbd-blue { background:#2563eb;color:#fff; }
+.g-note { background: var(--green-light); border: 1px solid var(--border); border-radius: 10px; padding: 10px 12px; font-size: 12px; color: #166534; line-height: 1.8; margin-top: 10px; }
+.g-note strong { font-weight: 700; }
+.gti { display:inline-block;padding:1px 7px;border-radius:99px;font-size:10px;font-weight:700;vertical-align:middle; }
+.gti-a { background:#fef3c7;color:#92400e; }
+.gti-b { background:#dbeafe;color:#1e40af; }
+</style>
+</head>
+<body>
+<div class="container">
+
+<div class="header">
+  <h2>🇮🇹 イタリア語⑥　上級文法・論述</h2>
+  <p>挨拶・自己紹介・基本表現</p>
+  <button class="help-btn" onclick="openGuide()">❓ 使い方ガイド</button>
+</div>
+
+<div class="badges">
+  <div class="badge" id="mode-badge">📖 英 → 日</div>
+  <div class="badge" id="order-badge">順番通り</div>
+  <div class="badge green" id="master-badge">マスター: 0 / 50</div>
+</div>
+
+<div class="progress-wrap"><div class="progress-bar" id="progress-bar" style="width:2%"></div></div>
+<div class="progress-label">カード <span id="cur-num">1</span> / <span id="tot-num">50</span></div>
+
+<div class="no-active" id="no-active">
+  ✅ このカテゴリをすべてマスターしました！<br>
+  <span style="font-size:12px;font-weight:600;">チェックを外すか別のカテゴリを選んでください。</span>
+</div>
+
+<div class="auto-panel" id="auto-panel">
+  <div class="auto-step-title" id="auto-step-title">STEP 1</div>
+  <div class="auto-instruction" id="auto-instruction">音声を聴いてください。</div>
+  <div class="auto-count" id="auto-count"></div>
+</div>
+
+<div class="tap-hint" id="tap-hint">👆 カードをタップして日本語訳を表示</div>
+
+<div class="card tappable" id="main-card" onclick="handleTap()">
+  <div class="card-top">
+    <div class="card-num" id="card-num">01</div>
+    <div class="cat-label" id="card-cat">好きな科目</div>
+    <div class="master-wrap" id="master-wrap">
+      <span>マスター</span>
+      <input type="checkbox" id="master-cb" onchange="toggleMaster(event)" onclick="event.stopPropagation()">
+    </div>
+  </div>
+  <div class="main-text" id="main-text">Loading...</div>
+  <div class="answer-wrap" id="answer-wrap">
+    <div class="answer-ja" id="answer-ja"></div>
+    <div class="answer-tip" id="answer-tip" style="display:none"></div>
+  </div>
+  <div class="master-badge" id="mastered-badge">✔ マスター済</div>
+</div>
+
+<div class="master-summary" id="master-summary" onclick="toggleMasterList()"></div>
+<div id="master-list-wrap" style="display:none;margin-bottom:12px;">
+  <div style="background:#fff;border-radius:16px;padding:14px 16px;box-shadow:var(--shadow);">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+      <span style="font-size:13px;font-weight:900;color:var(--green);">✅ マスター済みリスト</span>
+      <button class="btn btn-secondary" id="clear-all-btn" style="padding:4px 12px;font-size:11px;" onclick="clearAllMasterStep1()">全解除</button>
+    </div>
+    <div id="master-list"></div>
+  </div>
+</div>
+
+<div class="filter-panel">
+  <div class="filter-header" onclick="toggleFilterPanel()">
+    <div class="filter-header-left">📂 カテゴリを選ぶ</div>
+    <div style="display:flex;align-items:center;gap:4px;">
+      <div class="filter-current" id="filter-current-label">すべて</div>
+      <span class="filter-toggle-icon" id="filter-toggle-icon">▼</span>
+    </div>
+  </div>
+  <div class="filter-chips-wrap" id="filter-chips-wrap">
+    <button class="chip-all active" id="chip-all" onclick="selectCategory('all')">🎯 すべて表示</button>
+    <div id="cat-rows"></div>
+  </div>
+</div>
+
+<div class="panel">
+  <div class="panel-row" style="margin-bottom:8px;">
+    <label>🔊 音声優先</label>
+    <select id="voice-pref" onchange="applyVoicePref()">
+      <option value="IT">🇮🇹 イタリア語</option>
+      <option value="CH">🇨🇭 スイス</option>
+    </select>
+    <select id="voice-select" style="flex:2;"></select>
+  </div>
+  <div class="panel-row">
+    <label>速度</label>
+    <input type="range" id="rate-slider" min="0.5" max="1.5" step="0.1" value="1.0" oninput="updateRate()">
+    <span class="speed-val" id="rate-val">1.0×</span>
+  </div>
+</div>
+
+<div id="normal-controls">
+  <div class="btn-row">
+    <button class="btn btn-secondary" onclick="prev()">← 戻る</button>
+    <button class="btn btn-primary"   onclick="speakCurrent()">🔊 音声</button>
+    <button class="btn btn-secondary" onclick="next()">次へ →</button>
+    <button class="btn btn-secondary" style="font-size:11px;padding:8px 6px;" onclick="switchMode()">🔄 伊⇄日</button>
+  </div>
+  <div class="btn-row" style="gap:4px;">
+    <button class="btn btn-secondary" style="font-size:11px;padding:7px 5px;" id="random-btn" onclick="toggleRandom()">🔀 ランダム</button>
+    <button class="btn btn-secondary" style="font-size:11px;padding:7px 5px;" id="repeat-btn" onclick="toggleRepeat()">🔁 繰り返し</button>
+    <button class="btn btn-blue"  style="font-size:11px;padding:7px 5px;" onclick="startContinuous()">▶ 連続再生</button>
+    <button class="btn btn-amber" style="font-size:11px;padding:7px 5px;" onclick="startShadowing()">🗣️ シャドウ</button>
+  </div>
+</div>
+
+<div id="auto-controls" style="display:none;">
+  <div class="btn-row">
+    <button class="btn btn-red" onclick="stopAutoPlay()">⏹ 停止</button>
+  </div>
+</div>
+
+</div>
+
+<!-- Guide Modal -->
+<div class="guide-overlay" id="guide-overlay" onclick="handleOverlayClick(event)">
+<div class="guide-modal">
+  <div class="guide-modal-header">
+    <h2>🇮🇹 イタリア語⑥　上級文法・論述</h2>
+    <button class="guide-close" onclick="closeGuide()">✕ 閉じる</button>
+  </div>
+  <div class="guide-body">
+    <div class="g-section">
+      <div class="g-head"><span>🔘</span> 各ボタンの説明</div>
+      <div class="g-body">
+        <div style="margin-bottom:12px">
+          <div><span class="gbd gbd-sec">← 戻る</span><span class="gbd gbd-pri">🔊 音声</span><span class="gbd gbd-sec">次へ →</span></div>
+          <p class="g-text" style="margin-top:6px">カードを前後に移動します。<strong>音声</strong>ボタンで英語を読み上げます。</p>
+        </div>
+        <div style="margin-bottom:12px">
+          <div><span class="gbd gbd-amb">🗣️ シャドウイング</span><span class="gbd gbd-blue">▶ 連続再生</span></div>
+          <p class="g-text" style="margin-top:6px"><span class="gti gti-a">シャドウイング</span> 4ステップの反復練習を自動で進めます。<br><span class="gti gti-b">連続再生</span> 全カードを英語音声で流し聴きします。</p>
+        </div>
+        <div>
+          <div><span class="gbd gbd-sec">🔀 ランダム: OFF</span><span class="gbd gbd-sec">🔄 伊⇄日</span></div>
+          <p class="g-text" style="margin-top:6px">ランダムでカードをシャッフルします。<strong>英⇄日</strong>で日本語を見て英語を答えるスピーキング練習になります。</p>
+        </div>
+      </div>
+    </div>
+    <div class="g-section">
+      <div class="g-head"><span>👆</span> まずは1枚ずつ — 基本の練習法</div>
+      <div class="g-body">
+        <div class="g-method">
+          <div class="g-method-title">手順</div>
+          <div class="g-method-body">
+            <div class="g-step"><div class="g-step-num">1</div><div class="g-step-text"><strong>音声を聴く</strong> — 「🔊 音声」を押し、意味を考えながら聴きます。</div></div>
+            <div class="g-step"><div class="g-step-num">2</div><div class="g-step-text"><strong>カードをタップ</strong> — 日本語訳を確認します。</div></div>
+            <div class="g-step"><div class="g-step-num">3</div><div class="g-step-text"><strong>もう一度音声を聴く</strong> → 自分で声に出して2〜3回繰り返します。</div></div>
+            <div class="g-step"><div class="g-step-num">4</div><div class="g-step-text">覚えたら<strong>右上のマスターにチェック</strong> → 自動で次のカードへ進みます。</div></div>
+          </div>
+        </div>
+        <div class="g-note">慣れてきたらシャドウイングに挑戦しましょう！</div>
+      </div>
+    </div>
+    <div class="g-section">
+      <div class="g-head"><span>🗣️</span> シャドウイング自動再生</div>
+      <div class="g-body">
+        <div class="g-method g-amber">
+          <div class="g-method-title">4ステップの流れ</div>
+          <div class="g-shadow-steps">
+            <div class="g-s-step"><span class="g-s-badge gsb-g">STEP 1</span><div class="g-s-text"><strong>文字を見ずに2回聴く</strong></div></div>
+            <div class="g-s-step"><span class="g-s-badge gsb-g">STEP 2</span><div class="g-s-text"><strong>文字を見ずにシャドウイング×2</strong></div></div>
+            <div class="g-s-step"><span class="g-s-badge gsb-b">STEP 3</span><div class="g-s-text"><strong>日本語訳を見ながらシャドウイング×2</strong></div></div>
+            <div class="g-s-step"><span class="g-s-badge gsb-g">STEP 4</span><div class="g-s-text"><strong>また文字を見ずにシャドウイング×2</strong></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="g-section">
+      <div class="g-head"><span>🔁</span> おすすめの学習サイクル</div>
+      <div class="g-body">
+        <div class="g-flow">
+          <span class="g-flow-tag gft-green">1枚ずつ練習</span><span class="g-flow-arr">→</span>
+          <span class="g-flow-tag gft-green">マスターにチェック</span><span class="g-flow-arr">→</span>
+          <span class="g-flow-tag gft-amber">シャドウイング</span><span class="g-flow-arr">→</span>
+          <span class="g-flow-tag gft-blue">連続再生で復習</span>
+        </div>
+        <div class="g-note"><strong>スピーキング練習も忘れずに。</strong> 「🔄 伊⇄日」ボタンで日本語表示モードに切り替え、英語を声に出す練習をしましょう。</div>
+      </div>
+    </div>
+    <div class="g-section">
+      <div class="g-head"><span>🔊</span> 音声・速度の設定</div>
+      <div class="g-body">
+        <div class="g-step"><div class="g-step-num">1</div><div class="g-step-text"><strong>US優先 / GB優先</strong>でアクセントを切り替えられます。</div></div>
+        <div class="g-step"><div class="g-step-num">2</div><div class="g-step-text">速度スライダーで<strong>0.5倍〜1.5倍</strong>に調整できます。最初は<strong>0.8×</strong>がおすすめです。</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<script>
+// ── Data ─────────────────────────────────────────────────────────
+const CATS = {
+  '🗣️ 挨拶': '#16a34a',
+  '🙋 自己紹介': '#0369a1',
+  '🔢 数字・時間': '#d97706',
+  '💬 日常表現': '#e85d26',
+};
+
+const phrases = [
+  // ===== 接続法現在 =====
+  {cat:'🎓 接続法現在', en:'Penso che il problema sia più grave di quanto sembri. Bisogna intervenire subito.', ja:'問題は見た目より深刻だと思います。すぐに行動する必要があります。', tip:'sia più grave di quanto sembri = 見た目より深刻だと思う（接続法現在）'},
+  {cat:'🎓 接続法現在', en:'È importante che tu venga alla riunione di domani. Parleremo di qualcosa che ti riguarda direttamente.', ja:'明日の会議にあなたが来ることが重要です。あなたに直接関わることを話し合います。', tip:'che ti riguarda direttamente = あなたに直接関わる（接続法）'},
+  {cat:'🎓 接続法現在', en:'Spero che tutto vada bene con il tuo esame. Hai studiato tantissimo, lo so.', ja:'試験がうまくいくといいですね。たくさん勉強したのは知っています。', tip:'spero che vada bene = うまくいくといいね（接続法）'},
+  {cat:'🎓 接続法現在', en:'Voglio che tu mi dica la verità, qualunque essa sia. Preferisco una brutta verità a una bella bugia.', ja:'どんな真実であれ、本当のことを言ってほしいです。嘘より悪い真実の方がましです。', tip:'qualunque essa sia = それがどんなものであれ; bugia = 嘘'},
+  {cat:'🎓 接続法現在', en:'Non credo che sia una buona idea investire tutto in un solo progetto. È troppo rischioso.', ja:'全てを一つのプロジェクトに投資するのは良い考えではないと思います。リスクが高すぎます。', tip:'non credo che sia = 〜とは思わない（接続法）; rischioso = リスクが高い'},
+  {cat:'🎓 接続法現在', en:'Sebbene sia stanca morta, non riesco ad addormentarmi. Troppe cose per la testa.', ja:'くたくたに疲れているにもかかわらず、眠れません。頭の中に考えが多すぎます。', tip:'sebbene + 接続法 = 〜にもかかわらず; addormentarsi = 眠りに落ちる'},
+  {cat:'🎓 接続法現在', en:'Affinché tu possa capire la situazione, ti spiego tutto dall\'inizio.', ja:'状況を理解してもらえるよう、最初から全部説明します。', tip:'affinché + 接続法 = 〜するために（目的）; dall\'inizio = 最初から'},
+  {cat:'🎓 接続法現在', en:'Prima che tu parta, devo dirti una cosa importante che ho tenuto dentro troppo a lungo.', ja:'出発する前に、長い間心に秘めていた大切なことを言わなければなりません。', tip:'prima che + 接続法 = 〜する前に; ho tenuto dentro = 心に秘めていた'},
+  {cat:'🎓 接続法現在', en:'Chiunque abbia fatto questo sbaglio, deve assumersi la responsabilità.', ja:'誰がこの間違いをしたのであれ、責任を取らなければなりません。', tip:'chiunque + 接続法 = 誰が〜であれ; assumersi la responsabilità = 責任を取る'},
+  {cat:'🎓 接続法現在', en:'Qualunque cosa succeda, sono con te. Non ti lascio sola in questo momento difficile.', ja:'何が起きても、あなたと一緒です。この難しい時期にあなたを一人にしません。', tip:'qualunque cosa succeda = 何が起きても; momento difficile = 難しい時期'},
+  // ===== 接続法過去・半過去 =====
+  {cat:'🎓 接続法過去', en:'Sono felice che tu sia venuta. Temevo che avessi dimenticato il nostro appuntamento.', ja:'来てくれて嬉しいです。約束を忘れていたかと心配していました。', tip:'temevo che avessi dimenticato = 忘れていたかと心配していた（接続法過去）'},
+  {cat:'🎓 接続法過去', en:'Mi dispiace che le cose siano andate così. Speravo in un esito diverso.', ja:'こうなってしまったのが残念です。違う結果を望んでいました。', tip:'mi dispiace che siano andate così = こうなったのが残念（接続法過去）'},
+  {cat:'🎓 接続法半過去', en:'Se avessi più tempo libero, imparerei a dipingere. È qualcosa che ho sempre voluto fare.', ja:'もっと自由な時間があれば、絵を習うのに。ずっとやりたかったことです。', tip:'se avessi + 条件法 = 現在の非現実仮定; dipingere = 絵を描く'},
+  {cat:'🎓 接続法半過去', en:'Vorrei che le cose fossero andate diversamente. Ma non posso cambiare il passato.', ja:'物事が違う形で進んでいたらよかったのに。でも過去は変えられません。', tip:'vorrei che fossero andate = 〜だったらよかった（接続法半過去）'},
+  {cat:'🎓 接続法半過去', en:'Benché piovesse a dirotto, siamo andati ugualmente alla festa. Non volevamo mancare.', ja:'土砂降りにもかかわらず、それでもパーティーに行きました。欠席したくなかったんです。', tip:'piovesse a dirotto = 土砂降りだった; ugualmente = それでも'},
+  {cat:'🎓 接続法半過去', en:'Non sapevo che parlassi così bene il giapponese. Dove l\'hai imparato? Sei rimasta lì?', ja:'あなたがそんなに日本語が上手とは知りませんでした。どこで習いましたか？住んでいたんですか？', tip:'non sapevo che parlassi = 知らなかった（接続法半過去）'},
+  // ===== 接続法大過去（非現実仮定） =====
+  {cat:'🎓 接続法大過去', en:'Se lo avessi saputo prima, ti avrei aiutato subito. Perché non me l\'hai detto?', ja:'もっと早く知っていたなら、すぐに助けていたのに。なぜ言ってくれなかったのですか？', tip:'se lo avessi saputo = 知っていたなら（大過去）+ avrei aiutato（条件法過去）'},
+  {cat:'🎓 接続法大過去', en:'Se fossi partita prima, non avrei perso il treno. La prossima volta mi organizzo meglio.', ja:'もっと早く出発していたなら、電車を乗り過ごさなかったのに。次回はもっとうまく準備します。', tip:'se fossi partito/a = 出発していたなら; la prossima volta = 次回'},
+  {cat:'🎓 接続法大過去', en:'Avrei voluto studiare medicina, ma non sono riuscita a superare l\'esame di ammissione.', ja:'医学を勉強したかったのですが、入学試験に合格できませんでした。', tip:'avrei voluto = 〜したかった（条件法過去）; esame di ammissione = 入学試験'},
+  // ===== 間接話法 =====
+  {cat:'🎓 間接話法', en:'Mi ha detto che sarebbe arrivata tardi perché il treno era in ritardo. Non ho potuto fare altro che aspettare.', ja:'電車が遅れているので遅くなると言っていました。待つしかありませんでした。', tip:'sarebbe arrivato/a = 来るだろう（条件法過去・間接話法）'},
+  {cat:'🎓 間接話法', en:'Il medico ha detto che dovevo riposare almeno una settimana e non andare al lavoro.', ja:'医師は少なくとも1週間休んで仕事に行ってはいけないと言いました。', tip:'dovevo riposare = 休まなければならなかった（過去の義務・間接話法）'},
+  {cat:'🎓 間接話法', en:'Secondo il rapporto, la situazione economica sarebbe migliorata rispetto all\'anno scorso.', ja:'報告によると、経済状況は昨年と比べて改善しているとのことです。', tip:'sarebbe migliorata = 改善した（条件法・報道の引用）; rispetto a = 〜と比べて'},
+  {cat:'🎓 間接話法', en:'Mi ha chiesto se potevo aiutarlo con la presentazione. Gli ho detto di sì, ma non ho molto tempo.', ja:'プレゼンを手伝えるか聞かれました。了承しましたが、あまり時間がありません。', tip:'mi ha chiesto se potevo = 〜できるか聞いた（間接疑問・過去）'},
+  {cat:'🎓 間接話法', en:'Gli ho detto di smettere di preoccuparsi, che tutto si sarebbe risolto. Speriamo che avessi ragione.', ja:'心配するのをやめて、全て解決するだろうと言いました。正しかったといいのですが。', tip:'di smettere di = やめるように; tutto si sarebbe risolto = 全て解決するだろう'},
+  // ===== ジェルンディオ =====
+  {cat:'🎓 ジェルンディオ', en:'Uscendo di casa stamattina, ho incontrato il mio vicino che non vedevo da mesi.', ja:'今朝家を出るとき、何ヶ月も会っていなかった隣人に会いました。', tip:'uscendo = 出るとき・出ながら; che non vedevo da mesi = 何ヶ月も会っていなかった'},
+  {cat:'🎓 ジェルンディオ', en:'Vivendo in Italia per un anno, ho capito quanto sia importante la famiglia nella cultura italiana.', ja:'1年間イタリアに住んで、イタリア文化において家族がいかに重要かを理解しました。', tip:'vivendo = 住みながら・住んだことで; quanto sia importante = いかに重要か'},
+  {cat:'🎓 ジェルンディオ', en:'Studiando ogni giorno anche solo per mezz\'ora, vedrai che il tuo italiano migliorerà.', ja:'毎日たった30分でも勉強することで、イタリア語が上達するのがわかるでしょう。', tip:'studiando = 勉強することで; vedrai che = 〜がわかるでしょう'},
+  {cat:'🎓 ジェルンディオ', en:'Pur essendo stanca, ho finito il lavoro senza lamentarmi. Era necessario.', ja:'疲れているにもかかわらず、文句を言わずに仕事を終えました。必要でした。', tip:'pur essendo = 〜であるにもかかわらず; senza lamentarmi = 文句を言わずに'},
+  {cat:'🎓 ジェルンディオ', en:'Avendo già visto quel film due volte, ho proposto di andare a vedere qualcosa di diverso.', ja:'その映画をもう2度見ていたので、何か違うものを見に行くことを提案しました。', tip:'avendo già visto = すでに見ていたので（先行する動作）; ho proposto = 提案した'},
+  // ===== 論述・上級表現 =====
+  {cat:'📝 論述・上級表現', en:'Innanzitutto, vorrei chiarire che non sono contraria al cambiamento in sé, ma al modo in cui viene proposto.', ja:'まず、変化そのものに反対しているのではなく、提案されている方法に反対していることを明確にしたいと思います。', tip:'innanzitutto = まず; contrario/a a = 〜に反対して; in sé = それ自体'},
+  {cat:'📝 論述・上級表現', en:'Da un lato, questa politica porterebbe vantaggi economici; dall\'altro, i costi sociali potrebbero essere altissimi.', ja:'一方では、この政策は経済的利益をもたらすでしょう。他方では、社会的コストが非常に高くなる可能性があります。', tip:'porterebbe = もたらすだろう（条件法）; altissimi = 非常に高い'},
+  {cat:'📝 論述・上級表現', en:'I dati dimostrano chiaramente che questa tendenza è in aumento. Non possiamo più ignorarlo.', ja:'データはこの傾向が増加していることを明確に示しています。もはや無視できません。', tip:'tendenza = 傾向; in aumento = 増加している'},
+  {cat:'📝 論述・上級表現', en:'Tuttavia, bisogna tener presente che i dati disponibili sono ancora parziali e potrebbero cambiare.', ja:'しかしながら、入手可能なデータはまだ部分的であり、変わる可能性があることを念頭に置く必要があります。', tip:'tener presente = 念頭に置く; parziali = 部分的な'},
+  {cat:'📝 論述・上級表現', en:'In conclusione, si può affermare che, nonostante le difficoltà, abbiamo fatto progressi significativi.', ja:'まとめると、困難にもかかわらず、私たちは大きな進歩を遂げたと言えます。', tip:'si può affermare = 言える（非人称）; progressi significativi = 大きな進歩'},
+  {cat:'📝 論述・上級表現', en:'Alla luce di questi dati, sarebbe auspicabile rivedere la politica attuale prima che sia troppo tardi.', ja:'これらのデータを踏まえると、手遅れになる前に現在の政策を見直すことが望ましいでしょう。', tip:'alla luce di = 〜を踏まえると; auspicabile = 望ましい; rivedere = 見直す'},
+  {cat:'📝 論述・上級表現', en:'Vale la pena ricordare che ogni scelta ha delle conseguenze a lungo termine che non sempre riusciamo a prevedere.', ja:'すべての選択には必ずしも予測できない長期的な結果があることを覚えておく価値があります。', tip:'vale la pena ricordare = 覚えておく価値がある; a lungo termine = 長期的に'},
+  {cat:'📝 論述・上級表現', en:'Si tratta di una questione complessa che non ammette risposte semplici. Chi dice il contrario, semplifica troppo.', ja:'これは単純な答えを許さない複雑な問題です。そうでないと言う人は単純化しすぎています。', tip:'si tratta di = 〜の問題だ; non ammette = 許さない; chi dice il contrario = 逆のことを言う人'},
+  {cat:'📖 上級語彙', en:'Non bisogna sottovalutare l\'impatto di questa decisione. Le conseguenze potrebbero essere molto più gravi del previsto.', ja:'この決定の影響を過小評価してはなりません。結果は予想よりはるかに深刻になる可能性があります。', tip:'sottovalutare = 過小評価する; del previsto = 予想より'},
+  {cat:'📖 上級語彙', en:'A ben vedere, il problema non è tanto la mancanza di risorse quanto la loro cattiva gestione.', ja:'よく考えると、問題はリソースの不足ではなく、その悪い管理にあります。', tip:'a ben vedere = よく考えると; tanto...quanto = 〜ではなく〜; gestione = 管理'},
+  {cat:'📖 上級語彙', en:'Occorre trovare un equilibrio tra la libertà individuale e il bene comune. Non è una scelta facile.', ja:'個人の自由と公共の利益のバランスを見つける必要があります。容易な選択ではありません。', tip:'occorre = 〜する必要がある（非人称）; bene comune = 公共の利益'},
+  {cat:'📖 上級語彙', en:'Il fenomeno è in continua evoluzione e richiede un monitoraggio costante da parte delle autorità.', ja:'この現象は絶えず変化しており、当局による継続的な監視が必要です。', tip:'in continua evoluzione = 絶えず変化している; monitoraggio = 監視; costante = 継続的な'},
+  {cat:'🎓 接続法現在', en:'È probabile che la riunione venga rinviata. Il direttore non ha ancora confermato la sua presenza.', ja:'会議は延期される可能性があります。部長はまだ出席を確認していません。', tip:'è probabile che + 接続法 = 〜の可能性がある; presenza = 出席'},
+  {cat:'🎓 接続法現在', en:'Non mi sembra che la situazione sia cambiata molto. Stiamo ancora aspettando una risposta definitiva.', ja:'状況がそれほど変わったとは思えません。まだ最終的な回答を待っています。', tip:'non mi sembra che + 接続法 = 〜とは思えない; definitiva = 最終的な'},
+  {cat:'🎓 接続法半過去', en:'Se abitassi più vicino al lavoro, risparmerei un\'ora di viaggio ogni giorno. Sarebbe una vita molto diversa.', ja:'職場の近くに住んでいたなら、毎日1時間の通勤を節約できるのに。全く違う生活になるでしょう。', tip:'abitassi = 住んでいたなら（接続法半過去）; risparmerei = 節約できるのに（条件法）'},
+  {cat:'🎓 接続法半過去', en:'Avrei preferito che me lo dicessi prima. Così avrei avuto il tempo di prepararmi.', ja:'もっと前に言ってほしかったです。そうすれば準備する時間があったのに。', tip:'avrei preferito che + 接続法半過去 = 〜してほしかった'},
+  {cat:'🎓 間接話法', en:'La professoressa ha spiegato che l\'esame sarebbe stato più difficile del solito e che avremmo dovuto studiare di più.', ja:'先生は試験がいつもより難しく、もっと勉強しなければならないだろうと説明しました。', tip:'sarebbe stato = 〜だっただろう; avremmo dovuto = 〜しなければならなかっただろう'},
+  {cat:'🎓 ジェルンディオ', en:'Ascoltando la radio italiana ogni mattina, ho notato un netto miglioramento nella mia comprensione.', ja:'毎朝イタリアのラジオを聴いていたことで、リスニング力が明らかに向上したことに気づきました。', tip:'ascoltando = 聴いていたことで; netto miglioramento = 明らかな向上'},
+  {cat:'🎓 ジェルンディオ', en:'Tornando a casa, ho trovato un biglietto sul tavolo. Era di mia madre: era uscita a fare la spesa.', ja:'家に帰ると、テーブルにメモがありました。母からで、買い物に出かけていました。', tip:'tornando a casa = 家に帰ると（ジェルンディオで状況を表す）'},
+  {cat:'📝 論述・上級表現', en:'Non si può non riconoscere che, nonostante i progressi, molto resta ancora da fare.', ja:'進歩にもかかわらず、まだやることが多く残っていることを認めないわけにはいきません。', tip:'non si può non riconoscere = 認めないわけにはいかない（二重否定で強調）'},
+  {cat:'📝 論述・上級表現', en:'Per quanto riguarda la questione ambientale, non bastano le parole: servono azioni concrete e immediate.', ja:'環境問題に関しては、言葉では足りません。具体的で即時の行動が必要です。', tip:'per quanto riguarda = 〜に関しては; azioni concrete = 具体的な行動'},
+  {cat:'📝 論述・上級表現', en:'Ciò premesso, è fondamentale che tutte le parti in causa contribuiscano alla ricerca di una soluzione.', ja:'以上を前提として、関係する全ての当事者が解決策の探索に貢献することが基本的に重要です。', tip:'ciò premesso = 以上を前提として; parti in causa = 関係当事者'},
+  {cat:'📖 上級語彙', en:'Sarebbe auspicabile che le istituzioni adottassero misure più efficaci per contrastare questo fenomeno.', ja:'機関がこの現象に対抗するためにより効果的な措置を採ることが望ましいでしょう。', tip:'auspicabile + 接続法半過去 = 望ましい（丁寧な提言）; contrastare = 対抗する'},
+  {cat:'📖 上級語彙', en:'Il dibattito è ancora aperto e non sembra che si raggiunga un consenso a breve.', ja:'議論はまだ続いており、近いうちに合意に達するとは思えません。', tip:'non sembra che si raggiunga = 達するとは思えない（接続法）; a breve = 近いうちに'},
+  {cat:'📖 上級語彙', en:'Approfondendo l\'analisi, emergono aspetti che a prima vista non erano evidenti.', ja:'分析を深めると、一見では明らかでなかった側面が浮かび上がります。', tip:'approfondendo = 深めることで（ジェルンディオ）; a prima vista = 一見では; emergono = 浮かび上がる'},
+  {cat:'📖 上級語彙', en:'Vale la pena chiedersi se stiamo davvero andando nella direzione giusta o se ci stiamo illudendo.', ja:'本当に正しい方向に進んでいるのか、それとも錯覚しているのかを自問する価値があります。', tip:'vale la pena chiedersi = 自問する価値がある; ci stiamo illudendo = 錯覚している'},
+  {cat:'🎓 接続法大過去', en:'Se avessi accettato quell\'offerta di lavoro tre anni fa, ora sarei in una posizione completamente diversa.', ja:'3年前にあの仕事のオファーを受け入れていたなら、今は全く違う立場にいたでしょう。', tip:'se avessi accettato = 受け入れていたなら（大過去）; sarei = 〜だっただろう（条件法）'},
+  {cat:'🎓 接続法大過去', en:'Avrei tanto voluto esserci anch\'io, ma purtroppo non era possibile. Come è andata?', ja:'私もその場にいたかったのですが、残念ながら無理でした。どうでしたか？', tip:'avrei tanto voluto = とても〜したかった; purtroppo = 残念ながら'},
+  {cat:'🎓 接続法現在', en:'Dubito che arrivino in tempo. Con questo traffico, ci vorrà almeno un\'altra mezz\'ora.', ja:'時間通りに来るか疑問です。この渋滞では少なくともあと30分かかるでしょう。', tip:'dubito che + 接続法 = 〜か疑問; ci vorrà = 〜かかるだろう'},
+  {cat:'🎓 接続法現在', en:'Aspetto qui finché non torna. Non voglio andarmene senza averle parlato.', ja:'戻ってくるまでここで待ちます。彼女と話さずに去りたくありません。', tip:'finché non + 接続法 = 〜するまで; senza averle parlato = 彼女と話さずに'},
+];
+
+
+const TOTAL = phrases.length;
+
+// ── State ─────────────────────────────────────────────────────────
+let currentIndex   = 0;
+let isRandom       = false;
+let isEnToJa       = true;
+let isRevealed     = false;
+let activeCategory = 'all';
+let isAutoPlaying  = false;
+let isRepeating    = false;
+let repeatTimer    = null;
+let autoMode       = '';
+let autoStopped    = false;
+let autoTimeout    = null;
+let masterSet = new Set(JSON.parse(localStorage.getItem('jiko50_master') || '[]'));
+
+// ── Voice setup ───────────────────────────────────────────────────
+let enVoices = [];
+
+function populateVoices() {
+  const all = window.speechSynthesis.getVoices();
+  enVoices = all.filter(v => v.lang.startsWith('it'));
+  if (!enVoices.length) enVoices = all;
+  applyVoicePref();
+}
+
+function applyVoicePref() {
+  const pref = document.getElementById('voice-pref').value;
+  const preferred = pref === 'IT' ? ['it-IT','it-CH'] : ['it-CH','it-IT'];
+  const sorted = [...enVoices].sort((a,b) => {
+    const ai = preferred.findIndex(p => a.lang.startsWith(p));
+    const bi = preferred.findIndex(p => b.lang.startsWith(p));
+    return (ai<0?99:ai)-(bi<0?99:bi);
+  });
+  const sel = document.getElementById('voice-select');
+  sel.innerHTML = '';
+  sorted.forEach((v,i) => {
+    const o = document.createElement('option');
+    o.value = i; o.textContent = `${v.name} (${v.lang})`;
+    sel.appendChild(o);
+  });
+  enVoices = sorted;
+}
+
+populateVoices();
+if (window.speechSynthesis.onvoiceschanged !== undefined)
+  window.speechSynthesis.onvoiceschanged = populateVoices;
+
+function getVoice() {
+  const sel = document.getElementById('voice-select');
+  return enVoices[parseInt(sel.value)] || enVoices[0] || null;
+}
+function getRate() { return parseFloat(document.getElementById('rate-slider').value); }
+function updateRate() { document.getElementById('rate-val').textContent = getRate().toFixed(1) + '×'; }
+
+let keepAlive = null;
+function startKeepAlive() {
+  stopKeepAlive();
+  keepAlive = setInterval(() => {
+    if (window.speechSynthesis.speaking) { window.speechSynthesis.pause(); window.speechSynthesis.resume(); }
+  }, 10000);
+}
+function stopKeepAlive() { if (keepAlive) { clearInterval(keepAlive); keepAlive = null; } }
+
+let isSpeaking = false;
+function speakOne(text, onEnd) {
+  window.speechSynthesis.cancel(); isSpeaking = false;
+  clearTimeout(speakOne._t);
+  speakOne._t = setTimeout(() => {
+    if (isSpeaking) return; isSpeaking = true;
+    const utt = new SpeechSynthesisUtterance(text);
+    const v = getVoice();
+    if (v) { utt.voice = v; utt.lang = v.lang; }
+    else { const pref = document.getElementById('voice-pref').value; utt.lang = 'it-IT'; }
+    utt.rate = getRate();
+    utt.onstart = startKeepAlive;
+    utt.onend   = () => { isSpeaking=false; stopKeepAlive(); if(onEnd) onEnd(); };
+    utt.onerror = () => { isSpeaking=false; stopKeepAlive(); if(onEnd) onEnd(); };
+    window.speechSynthesis.speak(utt);
+  }, 150);
+}
+
+function stripTags(html) { return html.replace(/<[^>]+>/g,'').replace(/\s+/g,' ').trim(); }
+function getSpeechText(item) { return item.speech || stripTags(item.en); }
+
+// 「/」で分割して間を置きながら順番に読む
+function splitSentences(text) {
+  return text.split(/\s*\/\s*/).map(s => s.trim()).filter(s => s.length > 0);
+}
+function speakSequence(parts, onEnd, idx) {
+  idx = idx || 0;
+  if (idx >= parts.length) { if (onEnd) onEnd(); return; }
+  speakOne(parts[idx], () => {
+    if (idx + 1 < parts.length) {
+      setTimeout(() => speakSequence(parts, onEnd, idx + 1), 600);
+    } else {
+      if (onEnd) onEnd();
+    }
+  });
+}
+function speakText(text, onEnd) {
+  const parts = splitSentences(text);
+  if (parts.length <= 1) { speakOne(text, onEnd); }
+  else { speakSequence(parts, onEnd, 0); }
+}
+
+function speakCurrent() { const a = getActive(); if(!a.length) return; speakText(getSpeechText(a[currentIndex])); }
+function speakRepeat(text) {
+  if (!isRepeating) return;
+  window.speechSynthesis.cancel();
+  setTimeout(() => {
+    speakText(text, () => {
+      if (isRepeating) { repeatTimer = setTimeout(() => speakRepeat(text), 300); }
+    });
+  }, 150);
+}
+
+function toggleRepeat() {
+  isRepeating = !isRepeating;
+  const btn = document.getElementById('repeat-btn');
+  btn.textContent = '🔁 繰り返し: ' + (isRepeating ? 'ON' : 'OFF');
+  btn.style.background = isRepeating ? 'var(--primary)' : '';
+  btn.style.color = isRepeating ? '#fff' : '';
+  if (isRepeating) {
+    const a = getActive(); if (!a.length) return;
+    speakRepeat(a[currentIndex].speech || stripTags(a[currentIndex].en));
+  } else {
+    if (repeatTimer) { clearTimeout(repeatTimer); repeatTimer = null; }
+    window.speechSynthesis.cancel();
+  }
+}
+
+function speakP() {
+  return new Promise(resolve => {
+    if (autoStopped) { resolve(); return; }
+    const a = getActive(); if(!a.length) { resolve(); return; }
+    speakText(getSpeechText(a[currentIndex]), resolve);
+  });
+}
+
+// ── Category ──────────────────────────────────────────────────────
+const allCats = [...new Set(phrases.map(p => p.cat))];
+
+function buildCatRows() {
+  const wrap = document.getElementById('cat-rows'); wrap.innerHTML = '';
+  allCats.forEach(cat => {
+    const total    = phrases.filter(p => p.cat === cat).length;
+    const mastered = phrases.filter((p,i)=>p.cat===cat && masterSet.has(i)).length;
+    const done     = total > 0 && mastered === total;
+    const row = document.createElement('div');
+    row.className = 'cat-row' + (cat===activeCategory?' active':'');
+    row.innerHTML = `<div class="cat-dot ${done?'done':''}"></div><div class="cat-row-name">${cat}</div><div class="cat-row-count">${mastered===0?total:`${total-mastered}残/${total}`}</div>`;
+    row.onclick = () => selectCategory(cat);
+    wrap.appendChild(row);
+  });
+  document.getElementById('chip-all').className = 'chip-all'+(activeCategory==='all'?' active':'');
+}
+
+let filterOpen = false;
+function toggleFilterPanel() {
+  filterOpen = !filterOpen;
+  document.getElementById('filter-chips-wrap').className = 'filter-chips-wrap'+(filterOpen?' open':'');
+  document.getElementById('filter-toggle-icon').className = 'filter-toggle-icon'+(filterOpen?' open':'');
+}
+function updateFilterLabel() {
+  const a = getActive();
+  document.getElementById('filter-current-label').textContent =
+    activeCategory==='all' ? `すべて（${a.length}）` : `${activeCategory}（${a.length}）`;
+}
+function selectCategory(cat) {
+  if (isAutoPlaying) return;
+  activeCategory = cat; currentIndex = 0; filterOpen = false;
+  document.getElementById('filter-chips-wrap').className = 'filter-chips-wrap';
+  document.getElementById('filter-toggle-icon').className = 'filter-toggle-icon';
+  buildCatRows(); updateFilterLabel(); update();
+}
+
+// ── Helpers ───────────────────────────────────────────────────────
+function getActive() {
+  return phrases
+    .map((p,i) => ({...p, globalIdx:i}))
+    .filter(p => !masterSet.has(p.globalIdx) && (activeCategory==='all' || p.cat===activeCategory));
+}
+function saveMaster() { localStorage.setItem('jiko50_master', JSON.stringify([...masterSet])); }
+
+// ── Update UI ─────────────────────────────────────────────────────
+function update() {
+  const active = getActive();
+  const noActive = document.getElementById('no-active');
+  const mainCard = document.getElementById('main-card');
+  const tapHint  = document.getElementById('tap-hint');
+  document.getElementById('master-badge').textContent = `マスター: ${masterSet.size} / ${TOTAL}`;
+  if (!active.length) {
+    noActive.classList.add('show'); mainCard.style.display = 'none'; tapHint.style.display = 'none';
+    updateMasterUI(); buildCatRows(); updateFilterLabel(); return;
+  }
+  noActive.classList.remove('show'); mainCard.style.display = ''; tapHint.style.display = '';
+  if (currentIndex >= active.length) currentIndex = 0;
+  const item  = active[currentIndex];
+  const color = CATS[item.cat] || '#16a34a';
+  document.getElementById('cur-num').textContent = currentIndex + 1;
+  document.getElementById('tot-num').textContent = active.length;
+  document.getElementById('progress-bar').style.width = ((currentIndex+1)/active.length*100)+'%';
+  document.getElementById('progress-bar').style.background = color;
+  document.getElementById('card-num').textContent = String(item.globalIdx+1).padStart(2,'0');
+  document.getElementById('card-cat').textContent = item.cat;
+  document.getElementById('card-cat').style.color  = color;
+  const displayHTML = isEnToJa ? item.en : item.ja;
+  document.getElementById('main-text').innerHTML   = displayHTML;
+  document.getElementById('answer-ja').innerHTML   = isEnToJa ? item.ja : item.en;
+  const tipEl = document.getElementById('answer-tip');
+  if (item.tip) { tipEl.textContent = item.tip; tipEl.style.display=''; } else tipEl.style.display = 'none';
+  document.getElementById('mode-badge').textContent = isEnToJa ? '📖 伊 → 日' : '📖 日 → 伊';
+  isRevealed = false;
+  document.getElementById('answer-wrap').classList.remove('show');
+  mainCard.classList.remove('revealed');
+  document.getElementById('master-cb').checked = masterSet.has(item.globalIdx);
+  document.getElementById('mastered-badge').classList.toggle('show', masterSet.has(item.globalIdx));
+  updateMasterUI(); buildCatRows(); updateFilterLabel();
+}
+
+function updateMasterUI() {
+  const count   = masterSet.size;
+  const summary = document.getElementById('master-summary');
+  const listWrap = document.getElementById('master-list-wrap');
+  if (count > 0) {
+    summary.classList.add('show');
+    summary.textContent = `✅ ${count}枚マスター済 — タップして一覧表示 / 解除`;
+    const listEl = document.getElementById('master-list'); listEl.innerHTML = '';
+    [...masterSet].sort((a,b)=>a-b).forEach(idx => {
+      const p = phrases[idx]; if(!p) return;
+      const row = document.createElement('div');
+      row.style.cssText = 'display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid #e2e8f0;font-size:12px;';
+      row.innerHTML = `<span style="flex:1;line-height:1.5;"><span style="color:${CATS[p.cat]};font-weight:800;">${p.cat}</span><br>${stripTags(p.en)}</span><button onclick="removeMaster(${idx})" style="border:none;background:#e11d48;color:#fff;border-radius:99px;padding:3px 10px;font-size:11px;font-weight:700;cursor:pointer;">解除</button>`;
+      listEl.appendChild(row);
+    });
+  } else { summary.classList.remove('show'); listWrap.style.display = 'none'; }
+}
+
+// ── Actions ───────────────────────────────────────────────────────
+function handleTap() {
+  if (isAutoPlaying) return;
+  if (!isRevealed) {
+    isRevealed = true;
+    document.getElementById('answer-wrap').classList.add('show');
+    document.getElementById('main-card').classList.add('revealed');
+  }
+}
+
+function toggleMaster(e) {
+  if (isAutoPlaying) return;
+  const active = getActive(); if(!active.length) return;
+  const item = active[currentIndex];
+  if (e.target.checked) {
+    masterSet.add(item.globalIdx); saveMaster();
+    updateMasterUI(); buildCatRows(); updateFilterLabel();
+    document.getElementById('master-badge').textContent = `マスター: ${masterSet.size} / ${TOTAL}`;
+    setTimeout(() => {
+      const nextActive = getActive();
+      if (nextActive.length === 0) { update(); return; }
+      if (currentIndex >= nextActive.length) currentIndex = 0;
+      update();
+    }, 400);
+  } else {
+    masterSet.delete(item.globalIdx); saveMaster();
+    document.getElementById('mastered-badge').classList.remove('show');
+    updateMasterUI(); buildCatRows(); updateFilterLabel();
+    document.getElementById('master-badge').textContent = `マスター: ${masterSet.size} / ${TOTAL}`;
+  }
+}
+
+function removeMaster(idx) { masterSet.delete(idx); saveMaster(); if (!masterSet.size) document.getElementById('master-list-wrap').style.display='none'; update(); }
+
+function clearAllMasterStep1() {
+  const btn = document.getElementById('clear-all-btn'); if (!btn) return;
+  btn.textContent = '本当に全解除？'; btn.style.background = '#e11d48'; btn.style.color = '#fff'; btn.onclick = clearAllMasterStep2;
+  setTimeout(() => { if (btn.textContent === '本当に全解除？') { btn.textContent = '全解除'; btn.style.background = ''; btn.style.color = ''; btn.onclick = clearAllMasterStep1; } }, 3000);
+}
+function clearAllMasterStep2() {
+  masterSet.clear(); saveMaster(); document.getElementById('master-list-wrap').style.display = 'none';
+  const btn = document.getElementById('clear-all-btn');
+  if (btn) { btn.textContent = '全解除'; btn.style.background = ''; btn.style.color = ''; btn.onclick = clearAllMasterStep1; }
+  update();
+}
+function toggleMasterList() { if (!masterSet.size) return; const w = document.getElementById('master-list-wrap'); w.style.display = w.style.display==='none' ? '' : 'none'; }
+
+function next() {
+  if (isAutoPlaying) return;
+  if (repeatTimer) { clearTimeout(repeatTimer); repeatTimer = null; }
+  window.speechSynthesis.cancel();
+  if (repeatTimer) { clearTimeout(repeatTimer); repeatTimer = null; }
+  window.speechSynthesis.cancel();
+  const active = getActive(); if(!active.length) return;
+  currentIndex = isRandom ? Math.floor(Math.random()*active.length) : (currentIndex+1) % active.length;
+  update();
+}
+function prev() {
+  if (isAutoPlaying) return;
+  if (repeatTimer) { clearTimeout(repeatTimer); repeatTimer = null; }
+  window.speechSynthesis.cancel();
+  if (repeatTimer) { clearTimeout(repeatTimer); repeatTimer = null; }
+  window.speechSynthesis.cancel();
+  const active = getActive(); if(!active.length) return;
+  currentIndex = (currentIndex - 1 + active.length) % active.length;
+  update();
+}
+function toggleRandom() {
+  isRandom = !isRandom;
+  const btn = document.getElementById('random-btn');
+  btn.textContent = isRandom ? '🔀 ランダム: ON' : '🔀 ランダム: OFF';
+  btn.className   = isRandom ? 'btn btn-on' : 'btn btn-secondary';
+  document.getElementById('order-badge').textContent = isRandom ? 'ランダム' : '順番通り';
+}
+function switchMode() { if (isAutoPlaying) return; isEnToJa = !isEnToJa; update(); }
+
+// ── Auto-play helpers ─────────────────────────────────────────────
+function delayP(ms) { return new Promise(r => { if (autoStopped) { r(); return; } autoTimeout = setTimeout(r, ms); }); }
+function setAutoPanel(step, instr, count) {
+  document.getElementById('auto-step-title').textContent  = step;
+  document.getElementById('auto-instruction').textContent = instr;
+  document.getElementById('auto-count').textContent       = count;
+}
+function enterAutoUI() {
+  isAutoPlaying = true; autoStopped = false;
+  document.getElementById('normal-controls').style.display = 'none';
+  document.getElementById('auto-controls').style.display   = '';
+  document.getElementById('auto-panel').classList.add('show');
+  document.getElementById('tap-hint').style.display        = 'none';
+  document.getElementById('master-wrap').classList.add('disabled');
+  document.getElementById('main-card').classList.remove('tappable');
+  document.getElementById('main-card').classList.add('no-tap');
+}
+function exitAutoUI() {
+  autoStopped = true; isAutoPlaying = false;
+  window.speechSynthesis.cancel(); isSpeaking = false; stopKeepAlive();
+  clearTimeout(speakOne._t);
+  if (autoTimeout) { clearTimeout(autoTimeout); autoTimeout = null; }
+  document.getElementById('normal-controls').style.display = '';
+  document.getElementById('auto-controls').style.display   = 'none';
+  document.getElementById('auto-panel').classList.remove('show');
+  document.getElementById('tap-hint').style.display        = '';
+  document.getElementById('master-wrap').classList.remove('disabled');
+  document.getElementById('main-card').classList.add('tappable');
+  document.getElementById('main-card').classList.remove('no-tap');
+}
+function stopAutoPlay() { exitAutoUI(); update(); }
+
+// ── Shadowing ─────────────────────────────────────────────────────
+function showHidden() { document.getElementById('main-text').textContent = '？？？'; document.getElementById('answer-wrap').classList.remove('show'); document.getElementById('main-card').classList.remove('revealed'); }
+function showAll() { const a=getActive(); if(!a.length) return; const item=a[currentIndex]; document.getElementById('main-text').innerHTML=item.en; document.getElementById('answer-wrap').classList.add('show'); document.getElementById('main-card').classList.add('revealed'); }
+
+async function runShadowing() {
+  const active = getActive(); if (!active.length) { stopAutoPlay(); return; }
+  const startIdx = currentIndex;
+  for (let i = 0; i < active.length; i++) {
+    if (autoStopped) break;
+    currentIndex = (startIdx + i) % active.length; update();
+    const n = i+1, tot = active.length;
+    showHidden();
+    setAutoPanel(`カード ${n}/${tot} — STEP 1`,'👂 発話せずに2回聴いてください。','1/2回目…');
+    await speakP(); if(autoStopped) break; await delayP(350); if(autoStopped) break;
+    setAutoPanel(`カード ${n}/${tot} — STEP 1`,'👂 発話せずに2回聴いてください。','2/2回目…');
+    await speakP(); if(autoStopped) break; await delayP(450); if(autoStopped) break;
+    showHidden();
+    setAutoPanel(`カード ${n}/${tot} — STEP 2`,'🗣️ 音声に合わせてシャドウイングしてください。','1/2回目…');
+    await speakP(); if(autoStopped) break; await delayP(350); if(autoStopped) break;
+    setAutoPanel(`カード ${n}/${tot} — STEP 2`,'🗣️ 音声に合わせてシャドウイングしてください。','2/2回目…');
+    await speakP(); if(autoStopped) break; await delayP(450); if(autoStopped) break;
+    showAll();
+    setAutoPanel(`カード ${n}/${tot} — STEP 3`,'📖 英文・日本語訳を見ながら2回シャドウイングしてください。','1/2回目…');
+    await speakP(); if(autoStopped) break; await delayP(350); if(autoStopped) break;
+    setAutoPanel(`カード ${n}/${tot} — STEP 3`,'📖 英文・日本語訳を見ながら2回シャドウイングしてください。','2/2回目…');
+    await speakP(); if(autoStopped) break; await delayP(450); if(autoStopped) break;
+    showHidden();
+    setAutoPanel(`カード ${n}/${tot} — STEP 4`,'🙈 何も見ずに2回シャドウイングしてください。','1/2回目…');
+    await speakP(); if(autoStopped) break; await delayP(350); if(autoStopped) break;
+    setAutoPanel(`カード ${n}/${tot} — STEP 4`,'🙈 何も見ずに2回シャドウイングしてください。','2/2回目…');
+    await speakP(); if(autoStopped) break; await delayP(700);
+  }
+  if (!autoStopped) { setAutoPanel('完了！', '🎉 シャドウイング完了しました！', ''); await delayP(2000); stopAutoPlay(); }
+}
+function startShadowing() { if (!getActive().length) { alert('出題できるカードがありません。'); return; } autoMode = 'shadow'; enterAutoUI(); runShadowing(); }
+
+// ── Continuous play ───────────────────────────────────────────────
+async function runContinuous() {
+  let loopCount = 0;
+  while (!autoStopped) {
+    const active = getActive(); if (!active.length) { stopAutoPlay(); return; }
+    loopCount++;
+    const startIdx = currentIndex;
+    for (let i = 0; i < active.length; i++) {
+      if (autoStopped) break;
+      currentIndex = (startIdx + i) % active.length; update();
+      document.getElementById('answer-wrap').classList.add('show');
+      document.getElementById('main-card').classList.add('revealed');
+      const n = i+1, tot = active.length;
+      setAutoPanel(`連続再生 ${n}/${tot}（${loopCount}周目）`, '▶ 英語音声を再生中 — ⏹ 停止ボタンで終了', '');
+      await speakP(); if(autoStopped) break; await delayP(500);
+    }
+    if (!autoStopped) currentIndex = 0;
+  }
+}
+function startContinuous() { if (!getActive().length) { alert('出題できるカードがありません。'); return; } autoMode = 'continuous'; enterAutoUI(); runContinuous(); }
+
+// ── Guide modal ───────────────────────────────────────────────────
+function openGuide() { document.getElementById('guide-overlay').classList.add('show'); document.getElementById('guide-overlay').scrollTop = 0; }
+function closeGuide() { document.getElementById('guide-overlay').classList.remove('show'); }
+function handleOverlayClick(e) { if (e.target === document.getElementById('guide-overlay')) closeGuide(); }
+
+// ── Init ──────────────────────────────────────────────────────────
+buildCatRows();
+updateFilterLabel();
+update();
+</script>
+<script>
+// スワイプ機能
+(function() {
+  let startX = 0, startY = 0;
+  document.addEventListener('touchstart', e => {
+    startX = e.touches[0].clientX;
+    startY = e.touches[0].clientY;
+  }, { passive: true });
+  document.addEventListener('touchend', e => {
+    const dx = e.changedTouches[0].clientX - startX;
+    const dy = e.changedTouches[0].clientY - startY;
+    if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 50) {
+      if (dx < 0) next();
+      else prev();
+    }
+  }, { passive: true });
+})();
+</script>
+</body>
+</html>
