@@ -207,7 +207,10 @@ $('pitchReset').onclick=()=>{pitch=0;changePitch(0);};
 pdfjsLib.GlobalWorkerOptions.workerSrc =
   'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js';
 
+let currentPdfUrl = null;
+
 async function renderPDF(url) {
+  currentPdfUrl = url;
   const area = $('scoreArea');
   area.innerHTML = '';
   const w = area.clientWidth;
@@ -360,7 +363,12 @@ pianoEl.addEventListener('touchmove',e=>{e.preventDefault();const t=e.changedTou
 pianoEl.addEventListener('touchend',e=>{e.preventDefault();dragEnd();},{passive:false});
 pianoEl.addEventListener('touchcancel',()=>dragEnd());
 
-window.addEventListener('resize',()=>buildPiano());
+let resizeTimer;
+window.addEventListener('resize',()=>{
+  buildPiano();
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(()=>{ if(currentPdfUrl) renderPDF(currentPdfUrl); }, 300);
+});
 
 // DOM確定後に初期化
 window.addEventListener('load',()=>{
