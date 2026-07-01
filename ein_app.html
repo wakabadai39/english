@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🇮🇹 EasyItalianNews 2026年6月30日号</title>
+<style>
+:root {
+  --bg: #fef9ec;
+  --primary: #b45309;
+  --primary-light: #b4530918;
+  --border: #fcd34d;
+  --text: #1e293b;
+  --sub: #64748b;
+  --card-bg: #fff;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--bg); font-family: -apple-system, BlinkMacSystemFont, sans-serif; min-height: 100vh; padding-bottom: 40px; }
+.wrap { max-width: 480px; margin: 0 auto; padding: 10px 12px; }
+
+/* MP3プレーヤー */
+.mp3-box {
+  background: #1e293b;
+  border-radius: 14px;
+  padding: 10px 14px;
+  margin-bottom: 10px;
+}
+.mp3-label { font-size: 10px; color: #64748b; font-weight: 700; margin-bottom: 6px; letter-spacing:.05em; }
+.mp3-row { display: flex; align-items: center; gap: 10px; }
+.mp3-btn {
+  background: var(--primary); border: none; border-radius: 50%;
+  width: 36px; height: 36px; font-size: 14px; color: #fff;
+  cursor: pointer; flex-shrink: 0; display:flex; align-items:center; justify-content:center;
+}
+.mp3-right { flex: 1; display: flex; flex-direction: column; gap: 4px; }
+.mp3-bar {
+  -webkit-appearance: none; width: 100%; height: 4px;
+  border-radius: 99px; background: #334155;
+  accent-color: var(--primary); cursor: pointer;
+}
+.mp3-time { font-size: 10px; color: #64748b; text-align: right; }
+
+/* ヘッダー */
+.hdr { text-align: center; margin-bottom: 10px; }
+.hdr-title { font-size: 16px; font-weight: 900; color: var(--primary); }
+.hdr-sub { font-size: 11px; color: var(--sub); margin-top: 2px; }
+.prog-wrap { background: #e2e8f0; border-radius: 99px; height: 4px; margin: 8px 0 4px; overflow:hidden; }
+.prog-bar { height: 100%; background: var(--primary); border-radius: 99px; transition: width .4s; }
+.card-count { font-size: 12px; color: var(--sub); }
+
+/* ヘッダーバッジ行 */
+.badge-row { display: flex; gap: 6px; justify-content: center; margin: 8px 0; flex-wrap: wrap; }
+.badge {
+  padding: 5px 14px; border-radius: 99px; font-size: 12px; font-weight: 700;
+  border: 2px solid #e2e8f0; background: #fff; color: var(--text); cursor: pointer;
+}
+.badge.active { background: var(--primary-light); border-color: var(--primary); color: var(--primary); }
+
+/* カード */
+.card {
+  background: var(--card-bg); border-radius: 16px;
+  border: 2px solid #e2e8f0; padding: 18px;
+  margin-bottom: 10px; cursor: pointer; min-height: 150px;
+  transition: border-color .2s;
+}
+.card.revealed { border-color: var(--primary); }
+.card-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.card-num { font-size: 11px; color: #94a3b8; font-weight: 700; }
+.card-cat { font-size: 12px; font-weight: 800; color: var(--primary); }
+.master-wrap { display: flex; align-items: center; gap: 4px; font-size: 11px; color: var(--sub); }
+.master-cb { width: 16px; height: 16px; accent-color: var(--primary); cursor: pointer; }
+.card-it { font-size: 16px; font-weight: 700; line-height: 1.65; color: var(--text); }
+.card-hint { font-size: 11px; color: #94a3b8; text-align: center; margin-top: 18px; }
+.card-ja {
+  display: none; margin-top: 10px; padding: 10px;
+  background: #f0f9ff; border-radius: 10px;
+  font-size: 14px; color: #0369a1; line-height: 1.6;
+}
+.card-tip {
+  display: none; margin-top: 8px; padding: 8px 10px;
+  border-left: 4px solid var(--primary); border-radius: 0 8px 8px 0;
+  background: var(--primary-light);
+  font-size: 12px; color: #92400e; line-height: 1.65;
+}
+.card.revealed .card-ja,
+.card.revealed .card-tip { display: block; }
+.card.revealed .card-hint { display: none; }
+
+/* ボタン */
+.btn-row { display: flex; gap: 8px; margin-bottom: 8px; }
+.btn {
+  flex: 1; padding: 10px 4px; border: 2px solid #e2e8f0;
+  border-radius: 99px; font-size: 13px; font-weight: 700;
+  cursor: pointer; background: #fff; color: var(--text);
+}
+.btn-primary { background: var(--primary); color: #fff; border-color: var(--primary); }
+.btn-blue    { background: #2563eb; color: #fff; border-color: #2563eb; }
+.btn-red     { background: #dc2626; color: #fff; border-color: #dc2626; }
+.btn-sm { font-size: 11px; padding: 7px 4px; }
+
+/* カテゴリパネル */
+.cat-panel {
+  background: #fff; border-radius: 14px; padding: 12px;
+  margin-bottom: 10px; border: 2px solid #e2e8f0;
+}
+.cat-panel-hdr {
+  display: flex; justify-content: space-between; align-items: center; cursor: pointer;
+}
+.cat-panel-title { font-size: 13px; font-weight: 800; color: var(--sub); }
+.cat-rows { margin-top: 10px; display: none; }
+.cat-rows.open { display: block; }
+.cat-row {
+  display: flex; align-items: center; gap: 8px; padding: 8px 10px;
+  border-radius: 10px; cursor: pointer; margin-bottom: 4px;
+  border: 2px solid transparent;
+}
+.cat-row:hover { background: var(--primary-light); }
+.cat-row.active { background: var(--primary-light); border-color: var(--primary); }
+.cat-row-name { flex: 1; font-size: 13px; font-weight: 700; }
+.cat-row.active .cat-row-name { color: var(--primary); }
+.cat-row-count {
+  font-size: 11px; font-weight: 700; background: #f1f5f9;
+  padding: 2px 8px; border-radius: 99px; color: var(--sub);
+}
+.cat-row.active .cat-row-count { background: #fff; color: var(--primary); }
+.cat-all-row { border-bottom: 1px solid #f1f5f9; margin-bottom: 6px; padding-bottom: 8px; }
+
+/* マスター一覧 */
+.master-panel { background: #fff; border-radius: 14px; padding: 12px; margin-bottom: 10px; border: 2px solid #e2e8f0; display:none; }
+.master-panel.show { display: block; }
+.master-summary { font-size: 12px; color: var(--primary); font-weight: 700; cursor: pointer; margin-bottom: 6px; }
+.master-item { display: flex; align-items: center; gap: 8px; padding: 6px 0; border-bottom: 1px solid #f1f5f9; font-size: 12px; }
+.master-item-text { flex: 1; line-height: 1.4; }
+.master-del { border: none; background: #e11d48; color: #fff; border-radius: 99px; padding: 2px 10px; font-size: 11px; font-weight: 700; cursor: pointer; }
+.master-clear { margin-top: 8px; font-size: 11px; color: #e11d48; cursor: pointer; font-weight: 700; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- MP3プレーヤー -->
+<div class="mp3-box">
+  <div class="mp3-label">🎙️ ネイティブ音声 — EIN300626.mp3</div>
+  <div class="mp3-row">
+    <button class="mp3-btn" id="mp3btn" onclick="toggleMp3()">▶</button>
+    <div class="mp3-right">
+      <input type="range" class="mp3-bar" id="mp3bar" value="0" min="0" step="0.1" oninput="seekMp3(this.value)">
+      <div class="mp3-time" id="mp3time">0:00 / 0:00</div>
+    </div>
+  </div>
+</div>
+
+<!-- ヘッダー -->
+<div class="hdr">
+  <div class="hdr-title">🇮🇹 EasyItalianNews</div>
+  <div class="hdr-sub">2026年6月30日号 — 全6記事・50枚</div>
+</div>
+
+<!-- バッジ行 -->
+<div class="badge-row">
+  <div class="badge active" id="mode-badge" onclick="toggleMode()">📖 伊→日</div>
+  <div class="badge" id="order-badge" onclick="toggleRandom()">順番通り</div>
+  <div class="badge active" id="master-badge" onclick="showMasterPanel()">マスター: 0 / 50</div>
+</div>
+
+<!-- プログレスバー -->
+<div class="prog-wrap"><div class="prog-bar" id="prog-bar" style="width:3%"></div></div>
+<div class="card-count" id="card-count" style="text-align:center">カード 1 / 29</div>
+
+<!-- カード -->
+<div class="card" id="card" onclick="revealCard()" style="margin-top:8px">
+  <div class="card-head">
+    <span class="card-num" id="card-num">01</span>
+    <span class="card-cat" id="card-cat"></span>
+    <label class="master-wrap" onclick="event.stopPropagation()">
+      マスター <input type="checkbox" class="master-cb" id="master-cb" onchange="toggleMaster()">
+    </label>
+  </div>
+  <div class="card-it" id="card-it"></div>
+  <div class="card-hint">👆 タップして日本語訳・解説を表示</div>
+  <div class="card-ja" id="card-ja"></div>
+  <div class="card-tip">💡 <span id="card-tip-text"></span></div>
+</div>
+
+<!-- ボタン -->
+<div class="btn-row">
+  <button class="btn" onclick="prev()">← 戻る</button>
+  <button class="btn btn-primary" onclick="speakCurrent()">🔊 音声</button>
+  <button class="btn" onclick="next()">次へ →</button>
+</div>
+<div class="btn-row">
+  <button class="btn btn-sm" id="repeat-btn" onclick="toggleRepeat()">🔁 繰り返し: OFF</button>
+  <button class="btn btn-sm btn-blue" onclick="startAllRead()">📖 全読み上げ</button>
+  <button class="btn btn-sm btn-red" id="stop-btn" onclick="stopAll()" style="display:none">⏹ 停止</button>
+</div>
+
+<!-- カテゴリパネル -->
+<div class="cat-panel">
+  <div class="cat-panel-hdr" onclick="toggleCatPanel()">
+    <span class="cat-panel-title">📂 記事を選ぶ</span>
+    <span id="cat-filter-label" style="font-size:12px;font-weight:700;color:var(--primary)">すべて ▼</span>
+  </div>
+  <div class="cat-rows" id="cat-rows"></div>
+</div>
+
+<!-- マスター一覧パネル -->
+<div class="master-panel" id="master-panel">
+  <div class="master-summary" id="master-summary" onclick="toggleMasterList()">✅ マスター済みカード</div>
+  <div id="master-list"></div>
+  <div class="master-clear" onclick="clearAllMaster()">🗑️ 全て解除</div>
+</div>
+
+</div><!-- /wrap -->
+
+<audio id="mp3audio" src="EIN300626.mp3" preload="auto"></audio>
+
+<script>
+const phrases = [
+  // ===== ESTERI: Francia =====
+  {cat:'✈️ Francia', en:'Francia: aereo di paracadutisti cade vicino a Nancy', ja:'フランス：ナンシー近郊でパラシュート機が墜落', tip:'aereo di paracadutisti=パラシュート機（paracadutisti=パラシュート降下者たち）。cade=落ちる（cadereの3人称現在）。vicino a=〜の近くに'},
+  {cat:'✈️ Francia', en:'Un grave incidente aereo è avvenuto a Tomblaine, vicino alla città di Nancy, nel dipartimento francese della Meurthe-et-Moselle.', ja:'フランスのムルト＝エ＝モゼル県、ナンシー市近郊のトンブレーヌで深刻な航空事故が発生しました。', tip:'grave=深刻な・重大な。incidente aereo=航空事故。è avvenuto=発生した（avvenireの近過去、essereを使う非人称動詞）。dipartimento=（フランスの）県。vicino alla città di=〜市の近くに'},
+  {cat:'✈️ Francia', en:'Un piccolo aereo da turismo, utilizzato da un club di paracadutismo, è precipitato improvvisamente alla fine della pista, schiantandosi in una zona erbosa.', ja:'パラシュートクラブが使用していた小型の観光機が、滑走路の端で突然墜落し、草地に激突しました。', tip:'aereo da turismo=観光機・軽飛行機（da=用途を表す）。utilizzato da=〜によって使用された（過去分詞の形容詞用法）。è precipitato=墜落した（precipitareの近過去、essereを使う）。improvvisamente=突然。pista=滑走路。schiantandosi=激突しながら（schiantarsiのジェルンディオ、再帰動詞）。zona erbosa=草地'},
+  {cat:'✈️ Francia', en:'Nel disastro hanno perso la vita 11 persone: il pilota esperto, cinque istruttori e cinque allievi.', ja:'この惨事で11人が命を失いました：熟練パイロット1名、指導員5名、生徒5名です。', tip:'disastro=惨事・災害。hanno perso la vita=命を失った（perdere la vitaという慣用句）。pilota esperto=熟練パイロット。istruttori=指導員（複数）。allievi=生徒・訓練生（複数）'},
+  {cat:'✈️ Francia', en:'Tra loro ci sono degli infermieri di Nancy che stavano per fare il loro primo lancio con il paracadute.', ja:'その中にはナンシーの看護師たちがいて、初めてのパラシュート降下をしようとしていたところでした。', tip:'tra loro=その中に。ci sono=いる（c\'è/ci sonoの複数）。infermieri=看護師（複数）。stavano per+不定詞=〜しようとしていた（直前の未来を表す半過去進行形）。lancio con il paracadute=パラシュート降下'},
+  {cat:'✈️ Francia', en:'Il prefetto Yves Séguy ha spiegato che, fortunatamente, non ci sono state altre vittime a terra, nonostante l\'impatto sia avvenuto vicino ad alcune case e a un cimitero.', ja:'イヴ・セギュイ県知事は、衝撃が一部の民家と墓地の近くで起きたにもかかわらず、幸いにも地上での他の犠牲者はいなかったと説明しました。', tip:'prefetto=（フランスの）県知事。fortunatamente=幸いにも。non ci sono state=なかった（essereの近過去否定複数）。nonostante+接続法=〜にもかかわらず（sia avvenuto=接続法過去）。cimitero=墓地'},
+  {cat:'✈️ Francia', en:'Le cause dell\'incidente non sono ancora certe, ma si ipotizza un guasto meccanico.', ja:'事故の原因はまだ確定していませんが、機械的な故障が推測されています。', tip:'cause=原因（複数）。non sono ancora certe=まだ確定していない（certe=確かな、の女性複数形）。si ipotizza=推測されている（ipotizzareの非人称受動）。guasto meccanico=機械的な故障'},
+  {cat:'✈️ Francia', en:'Sul posto sono subito intervenuti i soccorritori, con 50 vigili del fuoco e tre équipe mediche.', ja:'現場にはすぐに救助隊が駆けつけ、消防士50名と3つの医療チームが出動しました。', tip:'sul posto=現場で。sono intervenuti=駆けつけた（intervenireの近過去、essereを使う）。soccorritori=救助隊員（複数）。vigili del fuoco=消防士（複数）。équipe mediche=医療チーム（équipeはフランス語由来）'},
+  {cat:'✈️ Francia', en:'La gendarmeria, la particolare forza di polizia francese, ha già avviato un\'inchiesta per fare luce sulla tragedia.', ja:'フランス特有の警察組織である憲兵隊は、この悲劇の真相解明のための調査をすでに開始しました。', tip:'gendarmeria=憲兵隊（フランス特有の準軍事警察）。particolare=特有の・特別な。ha avviato=開始した（avviareの近過去）。inchiesta=調査・捜査。fare luce su=〜を解明する（直訳「光を当てる」という慣用句）。tragedia=悲劇'},
+  // ===== ITALIA: Bocelli =====
+  {cat:'🏠 Bocelli', en:'Forte dei Marmi, rubato bottino da mezzo milione da una villa di Bocelli', ja:'フォルテ・デイ・マルミ、ボチェッリの別荘から50万ユーロ相当の戦利品が盗まれる', tip:'rubato=盗まれた（rubareの過去分詞）。bottino=戦利品・盗品。mezzo milione=50万（mezzo=半分、milione=100万）。villa=別荘・豪邸'},
+  {cat:'🏠 Bocelli', en:'Furto di grande valore a Forte dei Marmi, in provincia di Lucca.', ja:'ルッカ県フォルテ・デイ・マルミで高額の窃盗事件が発生しました。', tip:'furto=窃盗・盗難（男性名詞）。di grande valore=高額の（valore=価値）。in provincia di=〜県に'},
+  {cat:'🏠 Bocelli', en:'Alcuni ladri sono entrati in una villa della famiglia di Andrea Bocelli e hanno rubato oggetti per un valore stimato di oltre 500 mila euro.', ja:'何者かがアンドレア・ボチェッリの家族の別荘に侵入し、推定50万ユーロ以上の物品を盗みました。', tip:'ladri=泥棒（複数、単数はladro）。sono entrati=入った（entrareの近過去、essereを使う移動動詞）。hanno rubato=盗んだ（rubareの近過去）。valore stimato=推定価格（stimato=見積もられた）。oltre=〜以上'},
+  {cat:'🏠 Bocelli', en:'La casa era affittata a una famiglia americana in vacanza.', ja:'その家は休暇中のアメリカ人家族に貸し出されていました。', tip:'era affittata=貸し出されていた（affittareの過去分詞+essereの半過去、受動態）。in vacanza=休暇中'},
+  {cat:'🏠 Bocelli', en:'In quel momento gli ospiti erano fuori e i malviventi hanno approfittato della loro assenza per entrare nell\'abitazione.', ja:'その時、宿泊客は外出していて、犯人たちはその不在に乗じて住居に侵入しました。', tip:'ospiti=客・宿泊者（複数）。erano fuori=外出していた（essereの半過去）。malviventi=犯罪者（直訳「悪く生きる人」）。hanno approfittato di=〜に乗じた（熟語）。assenza=不在。abitazione=住居'},
+  {cat:'🏠 Bocelli', en:'Tra gli oggetti rubati ci sarebbero gioielli, orologi di pregio, contanti e borse di lusso.', ja:'盗まれた物の中には、宝石類、高級時計、現金、ブランドバッグなどがあるとされています。', tip:'ci sarebbero=あるとされている（essereの条件法。イタリアの報道では未確認情報に条件法を使う慣習がある）。gioielli=宝石類。orologi di pregio=高級時計（pregio=品質・価値）。contanti=現金。borse di lusso=ブランドバッグ'},
+  {cat:'🏠 Bocelli', en:'Secondo le prime ricostruzioni, l\'impianto di allarme non sarebbe stato attivato.', ja:'最初の状況説明によると、警報システムは作動していなかったとのことです。', tip:'secondo le prime ricostruzioni=最初の状況説明によると（ricostruzione=再構成・状況説明）。impianto di allarme=警報システム（impianto=設備）。non sarebbe stato attivato=作動していなかったとのこと（essereの条件法過去+過去分詞、受動態の条件法。未確認情報の報道表現）'},
+  {cat:'🏠 Bocelli', en:'Al rientro, gli ospiti hanno trovato la villa a soqquadro e hanno subito chiamato i carabinieri.', ja:'帰宅した際、宿泊客は別荘がめちゃくちゃにされているのを発見し、すぐにカラビニエリを呼びました。', tip:'al rientro=帰宅した際（rientro=帰宅）。hanno trovato=見つけた（trovareの近過去）。a soqquadro=めちゃくちゃに（部屋が荒らされた状態を表す慣用句）。carabinieri=カラビニエリ（イタリアの準軍事的国家警察）'},
+  {cat:'🏠 Bocelli', en:'Gli investigatori stanno esaminando le immagini delle telecamere di sorveglianza della zona e raccogliendo informazioni utili per identificare i responsabili.', ja:'捜査員たちは周辺の防犯カメラの映像を調べ、容疑者を特定するための有益な情報を収集しています。', tip:'investigatori=捜査員。stanno esaminando=調べている（stare+ジェルンディオの進行形）。telecamere di sorveglianza=防犯カメラ。raccogliendo=収集しながら（ジェルンディオ）。identificare=特定する。responsabili=容疑者・責任者'},
+  {cat:'🏠 Bocelli', en:'Il valore esatto della refurtiva è ancora in fase di verifica, ma le prime stime parlano di un bottino superiore a mezzo milione di euro.', ja:'盗難品の正確な金額はまだ確認中ですが、最初の試算では50万ユーロを超える戦利品と言われています。', tip:'valore esatto=正確な金額。refurtiva=盗難品（法律・報道用語）。in fase di verifica=確認中。stime=試算・見積もり（複数）。parlano di=〜と言われている（parlareの3人称複数）。superiore a=〜を超える'},
+  // ===== ITALIA: Trenitalia =====
+  {cat:'💻 Trenitalia', en:'Attacco hacker a Trenitalia, violati i dati personali di molti passeggeri', ja:'トレニタリアへのハッカー攻撃、多くの乗客の個人データが侵害される', tip:'attacco hacker=ハッカー攻撃（hacker=英語からの外来語）。violati=侵害された（violare=侵害する、の過去分詞）。dati personali=個人データ。passeggeri=乗客（複数）'},
+  {cat:'💻 Trenitalia', en:'Trenitalia ha subìto un grave attacco informatico che ha colpito i sistemi di gestione dei clienti.', ja:'トレニタリアは顧客管理システムを標的にした深刻なサイバー攻撃を受けました。', tip:'ha subìto=受けた（subireの近過去、subìtoとアクセント記号付きで「被った」の意。subitoは「すぐに」と区別するため）。attacco informatico=サイバー攻撃（informatico=情報技術の）。ha colpito=標的にした（colpireの近過去）。sistemi di gestione=管理システム'},
+  {cat:'💻 Trenitalia', en:'Alcuni hacker sono riusciti a entrare nei database dell\'azienda e a violare i dati personali di numerosi viaggiatori.', ja:'何者かがハッカーとして会社のデータベースに侵入し、多数の旅客の個人データを侵害することに成功しました。', tip:'sono riusciti a+不定詞=〜することに成功した（riuscireの近過去、essereを使う）。database=データベース（英語からの外来語）。violare=侵害する。numerosi=多数の'},
+  {cat:'💻 Trenitalia', en:'La violazione è stata scoperta dai tecnici della sicurezza informatica della società, che hanno subito attivato le procedure di protezione e isolato i sistemi colpiti.', ja:'この侵害は会社の情報セキュリティ技術者によって発見され、彼らはすぐに保護手順を起動し、被害を受けたシステムを隔離しました。', tip:'violazione=侵害（女性名詞）。è stata scoperta=発見された（scoprireの近過去受動態）。tecnici della sicurezza informatica=情報セキュリティ技術者。hanno attivato=起動した。isolato=隔離した（isolareの過去分詞）。colpiti=被害を受けた（colpireの過去分詞）'},
+  {cat:'💻 Trenitalia', en:'I pirati informatici hanno avuto accesso a informazioni sensibili degli utenti come nomi, cognomi, indirizzi email, numeri di telefono e dettagli sui viaggi acquistati.', ja:'不正アクセス者たちは、氏名、メールアドレス、電話番号、購入した旅行の詳細などユーザーの機密情報にアクセスしました。', tip:'pirati informatici=不正アクセス者（直訳「情報技術の海賊」）。hanno avuto accesso a=〜にアクセスした（avere accesso aという熟語）。sensibili=機密の・センシティブな。cognomi=姓（複数）。dettagli=詳細（複数）。acquistati=購入した（過去分詞）'},
+  {cat:'💻 Trenitalia', en:'Trenitalia ha rassicurato subito i clienti, spiegando che i dati bancari, i numeri delle carte di credito e le password di accesso non sono stati rubati, poiché sono conservati in server diversi e protetti da sistemi di sicurezza più forti.', ja:'トレニタリアはすぐに顧客を安心させ、銀行データ、クレジットカード番号、アクセスパスワードは別のサーバーに保管され、より強力なセキュリティシステムで保護されているため盗まれていないと説明しました。', tip:'ha rassicurato=安心させた（rassicurareの近過去）。spiegando=説明しながら（ジェルンディオ）。dati bancari=銀行データ。non sono stati rubati=盗まれていない（近過去受動態否定）。poiché=〜なので（理由の接続詞）. conservati=保管された。protetti=保護された'},
+  {cat:'💻 Trenitalia', en:'L\'azienda ha avviato una stretta collaborazione con la Polizia Postale e con il Garante per la Privacy per capire l\'origine dell\'attacco e bloccare la diffusione dei dati rubati.', ja:'会社は攻撃の起源を解明し盗まれたデータの拡散を阻止するため、郵政警察とプライバシー保護機関との緊密な協力を開始しました。', tip:'ha avviato=開始した（avviareの近過去）。stretta collaborazione=緊密な協力（stretta=緊密な・密接な）。Polizia Postale=郵政警察（イタリアのサイバー犯罪専門警察）。Garante per la Privacy=プライバシー保護機関（イタリアの独立監督機関）。bloccare la diffusione=拡散を阻止する'},
+  {cat:'💻 Trenitalia', en:'Nel frattempo, Trenitalia ha inviato una comunicazione a tutti gli utenti, consigliando di prestare massima attenzione a email o messaggi sospetti che potrebbero essere usati per truffe.', ja:'その間、トレニタリアは全ユーザーに通知を送り、詐欺に使われる可能性のある不審なメールやメッセージに最大限の注意を払うよう勧めました。', tip:'nel frattempo=その間に。ha inviato=送った（inviareの近過去）。consigliando=勧めながら（ジェルンディオ）。prestare massima attenzione a=〜に最大限の注意を払う。sospetti=不審な。truffe=詐欺（複数）。potrebbero essere usati=使われる可能性がある（potereの条件法+受動態）'},
+  // ===== SCIENZA: Sinner =====
+  {cat:'🌟 Sinner', en:'Un asteroide chiamato Jannik Sinner', ja:'ヤニック・シンナーと名付けられた小惑星', tip:'asteroide=小惑星（男性名詞）。chiamato=名付けられた（chiamareの過去分詞、形容詞用法）'},
+  {cat:'🌟 Sinner', en:'Dallo scorso 15 giugno, nell\'universo c\'è un asteroide che porta ufficialmente il nome del tennista italiano Jannik Sinner.', ja:'去る6月15日から、宇宙にイタリアのテニス選手ヤニック・シンナーの名を公式に冠した小惑星が存在しています。', tip:'dallo scorso 15 giugno=去る6月15日から（da+定冠詞+日付）。nell\'universo=宇宙に（nel=in+il）。porta il nome di=〜の名前を持つ（portare=運ぶ・持つ）。ufficialmente=公式に。tennista=テニス選手（男女同形）'},
+  {cat:'🌟 Sinner', en:'L\'asteroide orbita nella fascia principale tra Marte e Giove ed è stato scoperto il 10 marzo 2003 presso l\'Osservatorio di Campo Imperatore, da un gruppo di lavoro toscano.', ja:'その小惑星は火星と木星の間の主小惑星帯を周回しており、2003年3月10日にトスカーナの作業グループによってカンポ・インペラトーレ天文台で発見されました。', tip:'orbita=周回する（orbitareの3人称）。fascia principale=主小惑星帯（fascia=帯・地帯）。tra Marte e Giove=火星と木星の間。è stato scoperto=発見された（scoprireの近過去受動態）。osservatorio=天文台。toscano=トスカーナの'},
+  {cat:'🌟 Sinner', en:'A richiedere la dedica sono stati due degli scopritori, l\'astronomo Fabrizio Bernardi che lavora nella Space dynamics services, e Maura Tombelli, astronoma e direttrice dell\'Osservatorio di Montelupo Fiorentino.', ja:'献名を申請したのは発見者のうちの2人、スペース・ダイナミクス・サービスで働く天文学者ファブリツィオ・ベルナルディと、モンテルポ・フィオレンティーノ天文台の天文学者兼所長マウラ・トンベッリです。', tip:'a richiedere=申請したのは（強調の倒置構文）。dedica=献名・捧げること。scopritori=発見者（複数）。astronomo/astronoma=天文学者（男性形/女性形）。direttrice=所長・館長（女性形、男性形はdirettore）'},
+  {cat:'🌟 Sinner', en:'La dedica a Jannik Sinner, secondo i due astronomi, non deriva solo dai suoi straordinari successi sportivi, ma anche dai valori di resilienza, correttezza e assoluta dedizione che esprime sul campo e fuori.', ja:'2人の天文学者によると、シンナーへの献名は彼の並外れたスポーツ上の成功だけでなく、コート上外で示すレジリエンス、フェアプレー精神、完全な献身という価値観にも由来しているとのことです。', tip:'secondo i due astronomi=2人の天文学者によると。non deriva solo...ma anche=〜だけでなく〜にも由来する（derivare da=〜に由来する）。straordinari=並外れた。resilienza=レジリエンス・回復力。correttezza=正しさ・フェアプレー精神。dedizione=献身。sul campo e fuori=コート上外で'},
+  {cat:'🌟 Sinner', en:'Come una stella cometa o un corpo celeste fisso, Sinner rappresenta un punto di riferimento luminoso per le nuove generazioni.', ja:'彗星や固定天体のように、シンナーは新世代にとって輝かしい基準点を体現しています。', tip:'stella cometa=彗星（cometa=尾のある星）。corpo celeste fisso=固定天体（celeste=天体の、fisso=固定した）。rappresenta=体現する・代表する（rappresentareの3人称）。punto di riferimento=基準点・道標。luminoso=輝かしい・明るい'},
+  // ===== ECONOMIA: Tofu =====
+  {cat:'🥢 Tofu', en:'In Europa sta finendo il tofu', ja:'ヨーロッパで豆腐が不足しつつある', tip:'sta finendo=なくなりつつある（stare+ジェルンディオの進行形、finire=終わる・なくなる）'},
+  {cat:'🥢 Tofu', en:'Negli ultimi anni il tofu è diventato uno degli alimenti più richiesti in Germania: in appena quattro anni il consumo è raddoppiato, creando difficoltà ai produttori, incapaci di soddisfare una domanda in continua crescita.', ja:'ここ数年、豆腐はドイツで最も需要の高い食品の一つになっています。わずか4年で消費量が倍増し、絶えず増加する需要を満たせない生産者たちに困難をもたらしています。', tip:'negli ultimi anni=ここ数年で。è diventato=なった（diventareの近過去）。alimenti=食品（複数）。più richiesti=最も需要の高い。in appena quattro anni=わずか4年で（appena=わずか）。è raddoppiato=倍増した（raddoppiareの近過去）。creando difficoltà=困難をもたらしながら（ジェルンディオ）。incapaci di=〜できない。in continua crescita=絶えず増加する'},
+  {cat:'🥢 Tofu', en:'Il problema riguarda tutto il settore europeo, ancora frammentato e privo di impianti sufficientemente grandi.', ja:'問題はヨーロッパ全体のセクターに関わっており、いまだに分散していて十分に大きな設備を欠いています。', tip:'riguarda=関わる（riguardareの3人称）。settore=セクター・部門。frammentato=分散した・断片化した（過去分詞の形容詞用法）。privo di=〜を欠いている（privoは「欠いた」の形容詞）。impianti=設備・プラント（複数）。sufficientemente=十分に'},
+  {cat:'🥢 Tofu', en:'Secondo le stime, il mercato europeo del tofu, oggi valutato circa 630 milioni di euro, potrebbe quasi raddoppiare entro cinque anni.', ja:'試算によると、現在約6億3000万ユーロと評価されている欧州の豆腐市場は、5年以内にほぼ倍増する可能性があります。', tip:'secondo le stime=試算によると（stime=見積もりの複数）。valutato=評価された（valuare=評価する、の過去分詞）。circa=約。potrebbe raddoppiare=倍増する可能性がある（potereの条件法）。entro cinque anni=5年以内に'},
+  {cat:'🥢 Tofu', en:'Importarlo dall\'estero non rappresenta una soluzione conveniente, poiché i costi di trasporto sono elevati.', ja:'海外から輸入することは、輸送コストが高いため、便利な解決策とはなりません。', tip:'importarlo=それを輸入すること（importare+lo、不定詞が主語になる）。dall\'estero=海外から。non rappresenta=〜とはならない（rappresentareの否定）。soluzione conveniente=便利な解決策（conveniente=便利な・お得な）。poiché=〜なので（理由の接続詞）。costi di trasporto=輸送コスト。elevati=高い（elevatoの複数形）'},
+  {cat:'🥢 Tofu', en:'Il tofu, ottenuto dalla lavorazione dei fagioli di soia, è ormai molto diffuso anche nei paesi occidentali.', ja:'大豆の加工で得られる豆腐は、今や西洋諸国でも非常に普及しています。', tip:'ottenuto dalla lavorazione di=〜の加工で得られる（過去分詞の形容詞用法）。fagioli di soia=大豆（fagiolo=豆）。ormai=今や・もはや。diffuso=普及した・広まった（過去分詞の形容詞用法）。paesi occidentali=西洋諸国'},
+  {cat:'🥢 Tofu', en:'Il suo successo è legato non solo alle diete vegetariane e vegane, ma anche all\'interesse crescente per un\'alimentazione ricca di proteine, sostenibile e ispirata alla cucina asiatica.', ja:'その成功は、ベジタリアン・ヴィーガンダイエットだけでなく、タンパク質が豊富で持続可能なアジア料理にインスパイアされた食生活への高まる関心にも結びついています。', tip:'è legato a=〜に結びついている（legareの過去分詞+essere）。non solo...ma anche=〜だけでなく〜にも。diete vegetariane e vegane=ベジタリアン・ヴィーガンダイエット。interesse crescente=高まる関心。alimentazione=食生活。ricca di proteine=タンパク質が豊富な。sostenibile=持続可能な。ispirata a=〜にインスパイアされた'},
+  // ===== SPORT: Figurine =====
+  {cat:'⚽ Figurine', en:'Caccia alle figurine dei Mondiali negli USA', ja:'アメリカでワールドカップシールの争奪戦', tip:'caccia=狩り・争奪戦。figurine=シール・ステッカー（子供向けのコレクションシール）。Mondiali=ワールドカップ（世界選手権の意）'},
+  {cat:'⚽ Figurine', en:'Negli Stati Uniti è scoppiata una vera e propria moda: completare l\'album di figurine Panini per i Mondiali di calcio.', ja:'アメリカでワールドカップのパニーニシールブックを完成させるという本物のブームが起きています。', tip:'è scoppiata=起きた・勃発した（scoppiareの近過去、essereを使う。scoppiare=爆発する→突然起きる）。una vera e propria moda=本物のブーム（vera e propria=まさに本当の、強調表現）。album di figurine=シールブック。Panini=パニーニ（イタリアのシールメーカー）'},
+  {cat:'⚽ Figurine', en:'Questa tradizione, nata in Italia nel 1970, non era mai stata così popolare in America.', ja:'1970年にイタリアで生まれたこの伝統は、アメリカでこれほど人気になったことはありませんでした。', tip:'tradizione=伝統（女性名詞）。nata in Italia=イタリアで生まれた（nascereの過去分詞、関係節中で形容詞的に使われている）。non era mai stata così popolare=これほど人気になったことはなかった（essereの大過去否定、mai=一度も〜ない）'},
+  {cat:'⚽ Figurine', en:'Il successo di ora è enorme per tre motivi principali.', ja:'現在の成功は主に3つの理由で非常に大きいです。', tip:'il successo di ora=現在の成功。enorme=非常に大きい・巨大な。motivi principali=主な理由（motivo=理由・動機、principali=主な、の複数形）'},
+  {cat:'⚽ Figurine', en:'Intanto, il calcio è sempre più amato, inoltre gli Stati Uniti sono il paese ospitante dei Mondiali 2026, e infine molti influencer stanno promuovendo sui social la collezione di figurine, contribuendo a renderla così popolare.', ja:'まず、サッカーがますます人気になっていること、さらにアメリカが2026年ワールドカップの開催国であること、そして最後に多くのインフルエンサーがSNSでシールコレクションを宣伝し、これほど人気にするのに貢献していることです。', tip:'intanto=まず・その間に。sempre più amato=ますます人気になっている（sempre più=ますます〜）。inoltre=さらに。paese ospitante=開催国（ospitante=主催する）。infine=最後に。stanno promuovendo=宣伝している（進行形）。contribuendo a renderla=それをそうするのに貢献しながら（ジェルンディオ）'},
+  {cat:'⚽ Figurine', en:'La richiesta è così alta che le bustine sono andate esaurite in una sola settimana.', ja:'需要があまりに高くて、パックはわずか1週間で売り切れました。', tip:'così...che=あまりに〜なので（結果を表す構文）。bustine=小袋・パック（bustaの縮小形）。sono andate esaurite=売り切れた（andare+過去分詞=変化を表す表現、esaurito=売り切れた・使い果たした）'},
+  {cat:'⚽ Figurine', en:'Finire l\'album quest\'anno è una sfida da record, infatti servono ben 980 figurine totali, poiché le squadre sono passate da 32 a 48.', ja:'今年アルバムを完成させるのは記録的な挑戦で、実際チームが32から48に増えたため、合計980枚ものシールが必要です。', tip:'finire l\'album=アルバムを完成させること（不定詞が主語）。sfida da record=記録的な挑戦。infatti=実際・なぜなら。servono=必要だ（servireの非人称複数）。ben=なんと（数量を強調する副詞）。poiché=〜なので。le squadre sono passate da...a=チームが〜から〜に増えた'},
+  {cat:'⚽ Figurine', en:'Oltre alle figurine normali, i collezionisti cercano le rarissime versioni con i bordi colorati.', ja:'通常のシールに加えて、コレクターたちは縁に色がついた非常に珍しいバージョンを探しています。', tip:'oltre a=〜に加えて。collezionisti=コレクター（複数）。rarissime=非常に珍しい（raroの絶対最上級、女性複数形）。versioni=バージョン（複数）。bordi colorati=色付きの縁（bordo=縁・ボーダー）'},
+  {cat:'⚽ Figurine', en:'Quella speciale di Messi con il bordo nero, unica al mondo, potrebbe valere fino a 200mila dollari.', ja:'世界に1枚しかない黒い縁のメッシの特別版は、最大20万ドルの価値があるかもしれません。', tip:'quella speciale=あの特別なもの（quella=あの、女性形でfigurinaを指す）。con il bordo nero=黒い縁の。unica al mondo=世界で唯一の（unica=唯一の、女性形）。potrebbe valere=〜の価値があるかもしれない（valereの条件法）。fino a=〜まで'},
+  {cat:'⚽ Figurine', en:'Dal 2031 i diritti ufficiali per gli album dei Mondiali non saranno più della Panini, ma passeranno all\'azienda americana Fanatics.', ja:'2031年からはワールドカップアルバムの公式権利はもうパニーニのものではなくなり、アメリカのファナティクス社に移ります。', tip:'dal 2031=2031年から。i diritti=権利（複数）。non saranno più della Panini=もうパニーニのものではなくなる（未来形否定、della=di+la）。passeranno=移るだろう（passareの未来形）。azienda=会社'},
+
+];
+
+// ── 定数・状態 ────────────────────────────────────────────────────
+const TOTAL = phrases.length;
+const CATS = {
+  '✈️ Francia': '#dc2626',
+  '🏠 Bocelli': '#b45309',
+  '💻 Trenitalia': '#2563eb',
+  '🌟 Sinner': '#7c3aed',
+  '🥢 Tofu': '#16a34a',
+  '⚽ Figurine': '#0369a1',
+};
+
+phrases.forEach((p, i) => p.globalIdx = i);
+
+let masterSet   = new Set(JSON.parse(localStorage.getItem('ein_master') || '[]'));
+let activeCategory = 'all';
+let currentIndex   = 0;
+let isRandom       = false;
+let showJa         = false; // false=伊→日, true=日→伊
+let isRepeating    = false;
+let repeatTimer    = null;
+let isAllRead      = false;
+let allReadStopped = false;
+
+// ── MP3 ─────────────────────────────────────────────────────────
+const mp3 = document.getElementById('mp3audio');
+const mp3btn = document.getElementById('mp3btn');
+const mp3bar = document.getElementById('mp3bar');
+const mp3time = document.getElementById('mp3time');
+
+function fmt(s) {
+  const m = Math.floor(s/60), sec = Math.floor(s%60);
+  return m+':'+(sec<10?'0':'')+sec;
+}
+mp3.addEventListener('loadedmetadata', () => {
+  mp3bar.max = mp3.duration;
+  mp3time.textContent = '0:00 / '+fmt(mp3.duration);
+});
+mp3.addEventListener('timeupdate', () => {
+  mp3bar.value = mp3.currentTime;
+  mp3time.textContent = fmt(mp3.currentTime)+' / '+fmt(mp3.duration||0);
+});
+mp3.addEventListener('ended', () => mp3btn.textContent = '▶');
+function toggleMp3() {
+  if (mp3.paused) { mp3.play(); mp3btn.textContent = '⏸'; }
+  else { mp3.pause(); mp3btn.textContent = '▶'; }
+}
+function seekMp3(v) { mp3.currentTime = v; }
+
+// ── カード取得 ───────────────────────────────────────────────────
+function getActive() {
+  return phrases
+    .map((p,i) => ({...p, globalIdx:i}))
+    .filter(p => !masterSet.has(p.globalIdx) &&
+      (activeCategory === 'all' || p.cat === activeCategory));
+}
+
+// ── 表示更新 ─────────────────────────────────────────────────────
+function update() {
+  const a = getActive();
+  if (!a.length) {
+    document.getElementById('card-it').textContent = '表示できるカードがありません';
+    document.getElementById('card-ja').textContent = '';
+    document.getElementById('card-tip-text').textContent = '';
+    document.getElementById('card-cat').textContent = '';
+    document.getElementById('card-num').textContent = '--';
+    document.getElementById('card-count').textContent = 'カード 0 / 0';
+    document.getElementById('prog-bar').style.width = '0%';
+    document.getElementById('master-cb').checked = false;
+    document.getElementById('card').classList.remove('revealed');
+    return;
+  }
+  if (currentIndex >= a.length) currentIndex = 0;
+  const p = a[currentIndex];
+  const card = document.getElementById('card');
+  card.classList.remove('revealed');
+
+  document.getElementById('card-num').textContent = String(currentIndex+1).padStart(2,'0');
+  document.getElementById('card-cat').textContent = p.cat;
+
+  if (showJa) {
+    document.getElementById('card-it').textContent = p.ja;
+  } else {
+    document.getElementById('card-it').textContent = p.en;
+  }
+  document.getElementById('card-ja').textContent = showJa ? p.en : p.ja;
+  document.getElementById('card-tip-text').textContent = p.tip;
+  document.getElementById('master-cb').checked = masterSet.has(p.globalIdx);
+  document.getElementById('card-count').textContent = 'カード '+(currentIndex+1)+' / '+a.length;
+  document.getElementById('prog-bar').style.width = ((currentIndex+1)/a.length*100)+'%';
+  document.getElementById('master-badge').textContent = 'マスター: '+masterSet.size+' / '+TOTAL;
+  buildCatRows();
+
+  // カテゴリの色を適用
+  const color = CATS[p.cat] || '#b45309';
+  document.getElementById('card-cat').style.color = color;
+  document.getElementById('card').style.borderColor = '#e2e8f0';
+}
+
+function revealCard() {
+  document.getElementById('card').classList.add('revealed');
+}
+
+function prev() {
+  const a = getActive(); if (!a.length) return;
+  if (isRandom) { currentIndex = Math.floor(Math.random()*a.length); }
+  else { currentIndex = currentIndex > 0 ? currentIndex-1 : a.length-1; }
+  update();
+}
+
+function next() {
+  const a = getActive(); if (!a.length) return;
+  if (isRandom) { currentIndex = Math.floor(Math.random()*a.length); }
+  else { currentIndex = currentIndex < a.length-1 ? currentIndex+1 : 0; }
+  update();
+}
+
+// ── モード切替 ───────────────────────────────────────────────────
+function toggleMode() {
+  showJa = !showJa;
+  const btn = document.getElementById('mode-badge');
+  btn.textContent = showJa ? '📖 日→伊' : '📖 伊→日';
+  update();
+}
+
+function toggleRandom() {
+  isRandom = !isRandom;
+  const btn = document.getElementById('order-badge');
+  btn.textContent = isRandom ? 'ランダム' : '順番通り';
+  btn.classList.toggle('active', isRandom);
+}
+
+// ── 音声 ─────────────────────────────────────────────────────────
+function splitSentences(text) {
+  return text.split(/\s*\/\s*/).map(s=>s.trim()).filter(s=>s);
+}
+function speakOne(text, onEnd) {
+  window.speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = 'it-IT'; u.rate = 0.9;
+  const vs = speechSynthesis.getVoices().filter(v=>v.lang.startsWith('it'));
+  if (vs.length) u.voice = vs[0];
+  if (onEnd) u.onend = onEnd;
+  speechSynthesis.speak(u);
+}
+function speakSeq(parts, onEnd, idx) {
+  idx = idx || 0;
+  if (idx >= parts.length) { if (onEnd) onEnd(); return; }
+  speakOne(parts[idx], () => {
+    if (idx+1 < parts.length) setTimeout(()=>speakSeq(parts,onEnd,idx+1), 600);
+    else if (onEnd) onEnd();
+  });
+}
+function speakText(text, onEnd) {
+  const parts = splitSentences(text);
+  parts.length <= 1 ? speakOne(text, onEnd) : speakSeq(parts, onEnd, 0);
+}
+function speakCurrent() {
+  const a = getActive(); if (!a.length) return;
+  speakText(a[currentIndex].en);
+}
+
+// ── 繰り返し ─────────────────────────────────────────────────────
+function toggleRepeat() {
+  isRepeating = !isRepeating;
+  const btn = document.getElementById('repeat-btn');
+  btn.textContent = '🔁 繰り返し: '+(isRepeating?'ON':'OFF');
+  btn.style.background = isRepeating ? 'var(--primary)' : '';
+  btn.style.color = isRepeating ? '#fff' : '';
+  if (isRepeating) doRepeat();
+  else { if (repeatTimer) clearTimeout(repeatTimer); window.speechSynthesis.cancel(); }
+}
+function doRepeat() {
+  if (!isRepeating) return;
+  const a = getActive(); if (!a.length) return;
+  speakText(a[currentIndex].en, () => {
+    if (isRepeating) repeatTimer = setTimeout(doRepeat, 500);
+  });
+}
+
+// ── 全読み上げ ────────────────────────────────────────────────────
+function startAllRead() {
+  const a = getActive(); if (!a.length) return;
+  isAllRead = true; allReadStopped = false;
+  currentIndex = 0;
+  document.getElementById('stop-btn').style.display = '';
+  update();
+  document.getElementById('card').classList.add('revealed');
+  readNext(a);
+}
+function readNext(a) {
+  if (allReadStopped || currentIndex >= a.length) {
+    isAllRead = false;
+    document.getElementById('stop-btn').style.display = 'none';
+    return;
+  }
+  update();
+  document.getElementById('card').classList.add('revealed');
+  speakText(a[currentIndex].en, () => {
+    if (!allReadStopped) setTimeout(()=>{ currentIndex++; readNext(a); }, 1200);
+  });
+}
+function stopAll() {
+  allReadStopped = true; isAllRead = false; isRepeating = false;
+  if (repeatTimer) clearTimeout(repeatTimer);
+  window.speechSynthesis.cancel();
+  document.getElementById('stop-btn').style.display = 'none';
+  document.getElementById('repeat-btn').textContent = '🔁 繰り返し: OFF';
+  document.getElementById('repeat-btn').style.background = '';
+  document.getElementById('repeat-btn').style.color = '';
+}
+
+// ── マスター ─────────────────────────────────────────────────────
+function toggleMaster() {
+  const a = getActive(); if (!a.length) return;
+  const p = a[currentIndex];
+  if (masterSet.has(p.globalIdx)) { masterSet.delete(p.globalIdx); }
+  else {
+    masterSet.add(p.globalIdx);
+    const nextA = getActive().filter(x=>!masterSet.has(x.globalIdx));
+    if (currentIndex >= nextA.length && nextA.length > 0) currentIndex = nextA.length-1;
+  }
+  localStorage.setItem('ein_master', JSON.stringify([...masterSet]));
+  update(); updateMasterPanel();
+}
+function showMasterPanel() {
+  const panel = document.getElementById('master-panel');
+  panel.classList.toggle('show');
+  updateMasterPanel();
+}
+function updateMasterPanel() {
+  const list = document.getElementById('master-list');
+  const summary = document.getElementById('master-summary');
+  if (!masterSet.size) {
+    document.getElementById('master-panel').classList.remove('show');
+    return;
+  }
+  summary.textContent = '✅ マスター済み '+masterSet.size+' 枚（タップで一覧）';
+  list.innerHTML = '';
+  [...masterSet].sort((a,b)=>a-b).forEach(idx => {
+    const p = phrases[idx];
+    const div = document.createElement('div');
+    div.className = 'master-item';
+    div.innerHTML = `<div class="master-item-text" style="color:${CATS[p.cat]||'#b45309'};font-weight:800;">${p.cat}</div>
+      <button class="master-del" onclick="removeMaster(${idx})">解除</button>`;
+    list.appendChild(div);
+  });
+}
+function removeMaster(idx) {
+  masterSet.delete(idx);
+  localStorage.setItem('ein_master', JSON.stringify([...masterSet]));
+  update(); updateMasterPanel();
+}
+function clearAllMaster() {
+  masterSet.clear();
+  localStorage.setItem('ein_master', '[]');
+  document.getElementById('master-panel').classList.remove('show');
+  update();
+}
+function toggleMasterList() {
+  document.getElementById('master-list').style.display =
+    document.getElementById('master-list').style.display === 'none' ? '' : 'none';
+}
+
+// ── カテゴリパネル ────────────────────────────────────────────────
+function toggleCatPanel() {
+  document.getElementById('cat-rows').classList.toggle('open');
+  const lbl = document.getElementById('cat-filter-label');
+  lbl.textContent = document.getElementById('cat-rows').classList.contains('open')
+    ? (activeCategory==='all'?'すべて':'記事を選択中') + ' ▲'
+    : (activeCategory==='all'?'すべて':activeCategory) + ' ▼';
+}
+function selectCategory(cat) {
+  activeCategory = cat;
+  currentIndex = 0;
+  document.getElementById('cat-rows').classList.remove('open');
+  document.getElementById('cat-filter-label').textContent = (cat==='all'?'すべて':cat)+' ▼';
+  update();
+}
+function buildCatRows() {
+  const wrap = document.getElementById('cat-rows');
+  wrap.innerHTML = '';
+
+  // すべて行
+  const allRow = document.createElement('div');
+  allRow.className = 'cat-row cat-all-row'+(activeCategory==='all'?' active':'');
+  allRow.onclick = ()=>selectCategory('all');
+  allRow.innerHTML = `<div class="cat-row-name">🎯 すべての記事</div>
+    <div class="cat-row-count">${phrases.filter(p=>!masterSet.has(p.globalIdx)).length}枚</div>`;
+  wrap.appendChild(allRow);
+
+  // 各記事行
+  [...new Set(phrases.map(p=>p.cat))].forEach(cat => {
+    const total = phrases.filter(p=>p.cat===cat).length;
+    const remaining = phrases.filter(p=>p.cat===cat&&!masterSet.has(p.globalIdx)).length;
+    const row = document.createElement('div');
+    row.className = 'cat-row'+(cat===activeCategory?' active':'');
+    row.onclick = ()=>selectCategory(cat);
+    row.innerHTML = `<div class="cat-row-name" style="color:${activeCategory===cat?(CATS[cat]||'#b45309'):'#1e293b'}">${cat}</div>
+      <div class="cat-row-count">${remaining===total?total:remaining+'残/'+total}</div>`;
+    wrap.appendChild(row);
+  });
+}
+
+// ── スワイプ ─────────────────────────────────────────────────────
+let touchX = 0;
+document.getElementById('card').addEventListener('touchstart', e=>{touchX=e.touches[0].clientX;});
+document.getElementById('card').addEventListener('touchend', e=>{
+  const dx = e.changedTouches[0].clientX - touchX;
+  if (Math.abs(dx) > 50) { if(dx<0) next(); else prev(); }
+});
+
+// ── 初期化 ───────────────────────────────────────────────────────
+speechSynthesis.getVoices();
+buildCatRows();
+update();
+</script>
+</body>
+</html>
