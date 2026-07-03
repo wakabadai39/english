@@ -257,7 +257,26 @@ const phrases=[
 {cat:'🌌 宇宙・科学', en:'A satellite was launched into orbit to monitor melting glaciers.', ja:'溶け続ける氷河を監視するために、人工衛星が軌道に打ち上げられた。', tip:'satellite＝人工衛星・衛星。launch＝〜を打ち上げる・発射する。orbit＝軌道。monitor＝〜を監視する。glacier＝氷河。'},
 ];
 const audioFiles=[{file:'16-Section_16.mp4',label:'1'},{file:'17-Section_17.mp4',label:'2'},{file:'18-Section_18.mp4',label:'3'},{file:'19-Section_19.mp4',label:'4'},{file:'20-Section_20.mp4',label:'5'}];
-let audioEls=audioFiles.map(f=>{const a=new Audio('duo_audio/'+f.file); a.preload='none'; return a;});
+function makeSrcCandidates(file){
+  const alt=file.includes('_')?file.replace(/_/g,' '):null;
+  return alt?[file,alt]:[file];
+}
+let audioEls=audioFiles.map(f=>{
+  const a=new Audio();
+  a.preload='none';
+  a._candidates=makeSrcCandidates(f.file);
+  a._candIdx=0;
+  a.src='duo_audio/'+encodeURIComponent(a._candidates[0]);
+  return a;
+});
+function advanceCandidate(a){
+  if(a._candIdx<a._candidates.length-1){
+    a._candIdx++;
+    a.src='duo_audio/'+encodeURIComponent(a._candidates[a._candIdx]);
+    return true;
+  }
+  return false;
+}
 (function buildTrackButtons(){
   const row=document.getElementById('audio-track-row');
   audioFiles.forEach((f,i)=>{
@@ -297,17 +316,20 @@ function playTrack(i,chain){
       currentPlayingIdx=-1;
     }
   };
-  const playPromise=a.play();
-  if(playPromise&&playPromise.catch){
-    playPromise.catch(err=>{
-      btn.classList.remove('playing');
-      currentPlayingIdx=-1;
-      loopAllOn=false;
-      const loopBtn=document.getElementById('audio-loop-all-btn');
-      if(loopBtn){loopBtn.classList.remove('on');loopBtn.textContent='🔁';}
-      alert('音声ファイルの再生に失敗しました。\nファイル: duo_audio/'+audioFiles[i].file+'\n\nduo_audioフォルダがHTMLファイルと同じ場所にアップロードされているか、ファイル名が一致しているかご確認ください。');
-    });
-  }
+  const attempt=()=>{
+    const p=a.play();
+    if(p&&p.catch){
+      p.catch(()=>{
+        if(advanceCandidate(a)){
+          attempt();
+        } else {
+          btn.classList.remove('playing');
+          currentPlayingIdx=-1;
+        }
+      });
+    }
+  };
+  attempt();
 }
 function toggleTrack(i){
   if(currentPlayingIdx===i){

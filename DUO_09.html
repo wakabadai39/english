@@ -262,7 +262,26 @@ const phrases=[
 {cat:'🙏 日常の締めくくり', en:'"Let\'s call it a day, Bob. I\'m starved." "Yep. I\'ll buy you dinner."', ja:'「ボブ、今日はこの辺までにしましょう。お腹がぺこぺこ。」「ああ。晩飯は僕がおごるよ。」', tip:'call it a day＝今日はこれで終わりにする（慣用句）。starved＝ひどく空腹の。buy ... dinner＝〜に夕食をおごる。'},
 ];
 const audioFiles=[{file:'41-Section_41.mp4',label:'1'},{file:'42-Section_42.mp4',label:'2'},{file:'43-Section_43.mp4',label:'3'},{file:'44-Section_44.mp4',label:'4'},{file:'45-Section_45.mp4',label:'5'}];
-let audioEls=audioFiles.map(f=>{const a=new Audio('duo_audio/'+f.file); a.preload='none'; return a;});
+function makeSrcCandidates(file){
+  const alt=file.includes('_')?file.replace(/_/g,' '):null;
+  return alt?[file,alt]:[file];
+}
+let audioEls=audioFiles.map(f=>{
+  const a=new Audio();
+  a.preload='none';
+  a._candidates=makeSrcCandidates(f.file);
+  a._candIdx=0;
+  a.src='duo_audio/'+encodeURIComponent(a._candidates[0]);
+  return a;
+});
+function advanceCandidate(a){
+  if(a._candIdx<a._candidates.length-1){
+    a._candIdx++;
+    a.src='duo_audio/'+encodeURIComponent(a._candidates[a._candIdx]);
+    return true;
+  }
+  return false;
+}
 (function buildTrackButtons(){
   const row=document.getElementById('audio-track-row');
   audioFiles.forEach((f,i)=>{
@@ -302,17 +321,20 @@ function playTrack(i,chain){
       currentPlayingIdx=-1;
     }
   };
-  const playPromise=a.play();
-  if(playPromise&&playPromise.catch){
-    playPromise.catch(err=>{
-      btn.classList.remove('playing');
-      currentPlayingIdx=-1;
-      loopAllOn=false;
-      const loopBtn=document.getElementById('audio-loop-all-btn');
-      if(loopBtn){loopBtn.classList.remove('on');loopBtn.textContent='🔁';}
-      alert('音声ファイルの再生に失敗しました。\nファイル: duo_audio/'+audioFiles[i].file+'\n\nduo_audioフォルダがHTMLファイルと同じ場所にアップロードされているか、ファイル名が一致しているかご確認ください。');
-    });
-  }
+  const attempt=()=>{
+    const p=a.play();
+    if(p&&p.catch){
+      p.catch(()=>{
+        if(advanceCandidate(a)){
+          attempt();
+        } else {
+          btn.classList.remove('playing');
+          currentPlayingIdx=-1;
+        }
+      });
+    }
+  };
+  attempt();
 }
 function toggleTrack(i){
   if(currentPlayingIdx===i){

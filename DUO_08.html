@@ -252,7 +252,26 @@ const phrases=[
 {cat:'😳 人間関係のドタバタ', en:'"Believe it or not, I saw an alien and then it vanished!" "Give me a break!"', ja:'「信じてくれないかもしれないけど、宇宙人を見たの。で、消えちゃったのよ！」「冗談はよせよ。」', tip:'Believe it or not＝信じようが信じまいが。alien＝宇宙人。vanish＝消える。Give me a break!＝勘弁してよ・冗談はよせ（口語）。'},
 ];
 const audioFiles=[{file:'36-Section_36.mp4',label:'1'},{file:'37-Section_37.mp4',label:'2'},{file:'38-Section_38.mp4',label:'3'},{file:'39-Section_39.mp4',label:'4'},{file:'40-Section_40.mp4',label:'5'}];
-let audioEls=audioFiles.map(f=>{const a=new Audio('duo_audio/'+f.file); a.preload='none'; return a;});
+function makeSrcCandidates(file){
+  const alt=file.includes('_')?file.replace(/_/g,' '):null;
+  return alt?[file,alt]:[file];
+}
+let audioEls=audioFiles.map(f=>{
+  const a=new Audio();
+  a.preload='none';
+  a._candidates=makeSrcCandidates(f.file);
+  a._candIdx=0;
+  a.src='duo_audio/'+encodeURIComponent(a._candidates[0]);
+  return a;
+});
+function advanceCandidate(a){
+  if(a._candIdx<a._candidates.length-1){
+    a._candIdx++;
+    a.src='duo_audio/'+encodeURIComponent(a._candidates[a._candIdx]);
+    return true;
+  }
+  return false;
+}
 (function buildTrackButtons(){
   const row=document.getElementById('audio-track-row');
   audioFiles.forEach((f,i)=>{
@@ -292,17 +311,20 @@ function playTrack(i,chain){
       currentPlayingIdx=-1;
     }
   };
-  const playPromise=a.play();
-  if(playPromise&&playPromise.catch){
-    playPromise.catch(err=>{
-      btn.classList.remove('playing');
-      currentPlayingIdx=-1;
-      loopAllOn=false;
-      const loopBtn=document.getElementById('audio-loop-all-btn');
-      if(loopBtn){loopBtn.classList.remove('on');loopBtn.textContent='🔁';}
-      alert('音声ファイルの再生に失敗しました。\nファイル: duo_audio/'+audioFiles[i].file+'\n\nduo_audioフォルダがHTMLファイルと同じ場所にアップロードされているか、ファイル名が一致しているかご確認ください。');
-    });
-  }
+  const attempt=()=>{
+    const p=a.play();
+    if(p&&p.catch){
+      p.catch(()=>{
+        if(advanceCandidate(a)){
+          attempt();
+        } else {
+          btn.classList.remove('playing');
+          currentPlayingIdx=-1;
+        }
+      });
+    }
+  };
+  attempt();
 }
 function toggleTrack(i){
   if(currentPlayingIdx===i){

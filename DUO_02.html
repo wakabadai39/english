@@ -256,7 +256,26 @@ const phrases=[
 {cat:'🏠 生活・家事', en:'He fainted with hunger and fatigue, but came to after a while.', ja:'彼は空腹と疲労で気を失ったが、しばらくして意識を取り戻した。', tip:'faint＝気を失う・失神する。fatigue＝疲労（名詞）。come to＝意識を取り戻す（come around も同義）。after a while＝しばらくして。'},
 ];
 const audioFiles=[{file:'06-Section_6.mp4',label:'1'},{file:'07-Section_7.mp4',label:'2'},{file:'08-Section_8.mp4',label:'3'},{file:'09-Section_9.mp4',label:'4'},{file:'10-Section_10.mp4',label:'5'}];
-let audioEls=audioFiles.map(f=>{const a=new Audio('duo_audio/'+f.file); a.preload='none'; return a;});
+function makeSrcCandidates(file){
+  const alt=file.includes('_')?file.replace(/_/g,' '):null;
+  return alt?[file,alt]:[file];
+}
+let audioEls=audioFiles.map(f=>{
+  const a=new Audio();
+  a.preload='none';
+  a._candidates=makeSrcCandidates(f.file);
+  a._candIdx=0;
+  a.src='duo_audio/'+encodeURIComponent(a._candidates[0]);
+  return a;
+});
+function advanceCandidate(a){
+  if(a._candIdx<a._candidates.length-1){
+    a._candIdx++;
+    a.src='duo_audio/'+encodeURIComponent(a._candidates[a._candIdx]);
+    return true;
+  }
+  return false;
+}
 (function buildTrackButtons(){
   const row=document.getElementById('audio-track-row');
   audioFiles.forEach((f,i)=>{
@@ -296,17 +315,20 @@ function playTrack(i,chain){
       currentPlayingIdx=-1;
     }
   };
-  const playPromise=a.play();
-  if(playPromise&&playPromise.catch){
-    playPromise.catch(err=>{
-      btn.classList.remove('playing');
-      currentPlayingIdx=-1;
-      loopAllOn=false;
-      const loopBtn=document.getElementById('audio-loop-all-btn');
-      if(loopBtn){loopBtn.classList.remove('on');loopBtn.textContent='🔁';}
-      alert('音声ファイルの再生に失敗しました。\nファイル: duo_audio/'+audioFiles[i].file+'\n\nduo_audioフォルダがHTMLファイルと同じ場所にアップロードされているか、ファイル名が一致しているかご確認ください。');
-    });
-  }
+  const attempt=()=>{
+    const p=a.play();
+    if(p&&p.catch){
+      p.catch(()=>{
+        if(advanceCandidate(a)){
+          attempt();
+        } else {
+          btn.classList.remove('playing');
+          currentPlayingIdx=-1;
+        }
+      });
+    }
+  };
+  attempt();
 }
 function toggleTrack(i){
   if(currentPlayingIdx===i){
