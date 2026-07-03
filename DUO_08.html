@@ -282,7 +282,7 @@ function playTrack(i,chain){
   const a=audioEls[i];
   const btn=document.getElementById('audio-track-'+i);
   btn.classList.add('playing');
-  a.currentTime=0;
+  try{ a.currentTime=0; }catch(e){}
   a.onended=()=>{
     btn.classList.remove('playing');
     if(chain){
@@ -292,7 +292,17 @@ function playTrack(i,chain){
       currentPlayingIdx=-1;
     }
   };
-  a.play();
+  const playPromise=a.play();
+  if(playPromise&&playPromise.catch){
+    playPromise.catch(err=>{
+      btn.classList.remove('playing');
+      currentPlayingIdx=-1;
+      loopAllOn=false;
+      const loopBtn=document.getElementById('audio-loop-all-btn');
+      if(loopBtn){loopBtn.classList.remove('on');loopBtn.textContent='🔁';}
+      alert('音声ファイルの再生に失敗しました。\nファイル: duo_audio/'+audioFiles[i].file+'\n\nduo_audioフォルダがHTMLファイルと同じ場所にアップロードされているか、ファイル名が一致しているかご確認ください。');
+    });
+  }
 }
 function toggleTrack(i){
   if(currentPlayingIdx===i){
