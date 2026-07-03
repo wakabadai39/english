@@ -3,392 +3,342 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DUO 3.0 — No. 401〜450</title>
+<title>DUO 3.0 — No. 492〜560</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-:root {
-  --bg: #fdf4ff;
-  --surface: #ffffff;
-  --primary: #7e22ce;
-  --primary-light: #faf5ff;
-  --accent: #0891b2;
-  --green: #16a34a;
-  --green-light: #dcfce7;
-  --amber: #d97706;
-  --amber-light: #fef3c7;
-  --red: #e11d48;
-  --text: #1e293b;
-  --muted: #64748b;
-  --border: #d8b4fe;
-  --shadow: 0 4px 24px rgba(126,34,206,0.10);
-  --radius: 18px;
+:root{
+--bg:#fdf2f8;--surface:#ffffff;--primary:#be185d;--primary-light:#fce7f3;
+--accent:#c026d3;--green:#16a34a;--green-light:#dcfce7;--amber:#d97706;--amber-light:#fef3c7;
+--red:#e11d48;--text:#1e293b;--muted:#64748b;--border:#f9a8d4;
+--shadow:0 4px 24px rgba(190,24,93,0.10);--radius:18px;
 }
-* { box-sizing: border-box; margin: 0; padding: 0; }
-html, body { height: 100%; }
-body { font-family: 'Noto Sans JP', sans-serif; background: var(--bg); min-height: 100vh; padding: 16px 12px 48px; color: var(--text); }
-.container { max-width: 560px; margin: auto; }
-.header { text-align: center; margin-bottom: 14px; }
-.header h2 { font-size: 18px; font-weight: 900; color: var(--primary); }
-.header p  { font-size: 12px; color: var(--muted); margin-top: 2px; }
-.badges { display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; margin-bottom: 10px; }
-.badge { display: inline-flex; align-items: center; gap: 4px; padding: 4px 12px; border-radius: 99px; font-size: 11px; font-weight: 700; background: var(--primary-light); color: var(--primary); border: 1px solid var(--border); }
-.badge.green { background: var(--green-light); color: var(--green); border-color: #86efac; }
-.progress-wrap { background: #e9d5ff; border-radius: 99px; height: 6px; margin-bottom: 4px; overflow: hidden; }
-.progress-bar  { height: 100%; background: var(--primary); border-radius: 99px; transition: width 0.4s ease; }
-.progress-label { text-align: center; font-size: 12px; color: var(--muted); margin-bottom: 10px; }
-.tap-hint { font-size: 11px; color: var(--muted); margin-bottom: 6px; text-align: center; }
-.card { background: var(--surface); border-radius: var(--radius); padding: 28px 20px 20px; box-shadow: var(--shadow); margin-bottom: 12px; position: relative; border: 2px solid var(--border); min-height: 160px; cursor: pointer; user-select: none; transition: transform .1s, border-color .2s; }
-.card.tappable:active { transform: scale(0.985); }
-.card.revealed { border-color: var(--primary); }
-.card.no-tap { cursor: default; }
-.card-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
-.card-num { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--muted); }
-.cat-label { font-size: 11px; font-weight: 700; letter-spacing: .06em; color: var(--primary); text-align: center; flex: 1; }
-.master-wrap { display: flex; align-items: center; gap: 4px; font-size: 11px; color: var(--muted); }
-.master-wrap input[type=checkbox] { width: 17px; height: 17px; accent-color: var(--green); cursor: pointer; }
-.master-wrap.disabled { opacity: .3; pointer-events: none; }
-.main-text { font-size: clamp(15px, 4vw, 19px); font-weight: 700; line-height: 1.65; text-align: center; margin-bottom: 14px; }
-.answer-wrap { opacity: 0; transform: translateY(5px); transition: opacity .25s, transform .25s; pointer-events: none; }
-.answer-wrap.show { opacity: 1; transform: translateY(0); pointer-events: auto; }
-.answer-ja { font-size: clamp(13px, 3.5vw, 15px); font-weight: 700; color: var(--accent); text-align: center; line-height: 1.6; background: #f0f9ff; border-radius: 10px; padding: 10px 14px; margin-bottom: 8px; }
-.answer-tip { font-size: 12px; font-weight: 600; color: var(--green); text-align: left; padding: 0 4px; line-height: 1.6; }
-.answer-tip::before { content: '💡 '; }
-.master-badge { display: none; text-align: center; margin-top: 8px; background: var(--green-light); color: var(--green); padding: 2px 10px; border-radius: 99px; font-size: 10px; font-weight: 700; }
-.master-badge.show { display: block; }
-.no-active { background: var(--amber-light); border-radius: 12px; padding: 16px; text-align: center; font-size: 14px; color: var(--amber); font-weight: 700; display: none; margin-bottom: 12px; }
-.no-active.show { display: block; }
-.auto-panel { background: var(--surface); border-radius: var(--radius); padding: 14px 18px; box-shadow: var(--shadow); margin-bottom: 12px; display: none; border-left: 4px solid var(--primary); }
-.auto-panel.show { display: block; }
-.auto-step-title { font-size: 12px; font-weight: 900; color: var(--primary); margin-bottom: 4px; }
-.auto-instruction { font-size: 14px; font-weight: 700; color: var(--text); line-height: 1.5; }
-.auto-count { font-family: 'DM Mono', monospace; font-size: 12px; color: var(--muted); margin-top: 4px; }
-.filter-panel { background: var(--surface); border-radius: var(--radius); padding: 14px 16px; box-shadow: var(--shadow); margin-bottom: 12px; }
-.filter-header { display: flex; align-items: center; justify-content: space-between; cursor: pointer; user-select: none; }
-.filter-header-left { font-size: 12px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; }
-.filter-current { font-size: 12px; font-weight: 700; color: var(--primary); background: var(--primary-light); padding: 3px 10px; border-radius: 99px; border: 1px solid var(--border); max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.filter-toggle-icon { font-size: 12px; color: var(--muted); transition: transform .2s; margin-left: 6px; }
-.filter-toggle-icon.open { transform: rotate(180deg); }
-.filter-chips-wrap { display: none; margin-top: 10px; }
-.filter-chips-wrap.open { display: block; }
-.chip-all { display: block; width: 100%; padding: 8px 14px; margin-bottom: 8px; border-radius: 10px; font-size: 12px; font-weight: 700; cursor: pointer; border: 2px solid var(--border); background: #fff; color: var(--muted); text-align: left; font-family: 'Noto Sans JP', sans-serif; transition: all .15s; }
-.chip-all.active { background: var(--primary-light); color: var(--primary); border-color: var(--primary); }
-.cat-row { display: flex; align-items: center; gap: 8px; padding: 8px 10px; border-radius: 10px; cursor: pointer; border: 2px solid transparent; background: #fff; margin-bottom: 5px; transition: all .15s; user-select: none; }
-.cat-row.active { background: var(--primary-light); border-color: var(--primary); }
-.cat-row-name { flex: 1; font-size: 13px; font-weight: 700; color: var(--text); }
-.cat-row.active .cat-row-name { color: var(--primary); }
-.cat-row-count { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--muted); background: #f1f5f9; padding: 2px 8px; border-radius: 99px; font-weight: 600; }
-.cat-row.active .cat-row-count { background: #fff; color: var(--primary); }
-.cat-dot { width: 8px; height: 8px; border-radius: 50%; background: #e2e8f0; flex-shrink: 0; }
-.cat-dot.done { background: var(--green); }
-.panel { background: var(--surface); border-radius: var(--radius); padding: 14px 16px; box-shadow: var(--shadow); margin-bottom: 12px; }
-.panel-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-.panel-row + .panel-row { margin-top: 8px; }
-.panel label { font-size: 12px; color: var(--muted); font-weight: 700; white-space: nowrap; }
-.panel select { flex: 1; font-size: 12px; border: 1px solid var(--border); border-radius: 8px; padding: 4px 8px; background: #fff; color: var(--text); font-family: 'Noto Sans JP', sans-serif; }
-.panel input[type=range] { flex: 1; min-width: 80px; accent-color: var(--primary); }
-.speed-val { font-family: 'DM Mono', monospace; font-size: 13px; font-weight: 600; color: var(--primary); min-width: 32px; }
-.btn-row { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin-bottom: 10px; }
-.btn { border: none; border-radius: 99px; padding: 10px 18px; font-size: 13px; font-weight: 700; font-family: 'Noto Sans JP', sans-serif; cursor: pointer; transition: opacity .15s, transform .1s; display: inline-flex; align-items: center; gap: 5px; }
-.btn:active { transform: scale(0.94); opacity: .85; }
-.btn-primary   { background: var(--primary); color: #fff; }
-.btn-secondary { background: #e2e8f0; color: var(--text); }
-.btn-red       { background: var(--red); color: #fff; }
-.btn-amber     { background: var(--amber); color: #fff; }
-.btn-blue      { background: #2563eb; color: #fff; }
-.btn-on        { background: var(--green); color: #fff; }
-.master-summary { background: var(--green-light); border-radius: 12px; padding: 10px 14px; font-size: 12px; color: var(--green); font-weight: 700; text-align: center; margin-bottom: 10px; display: none; cursor: pointer; user-select: none; }
-.master-summary.show { display: block; }
-.help-btn { display: inline-flex; align-items: center; gap: 5px; padding: 5px 14px; border-radius: 99px; border: 1px solid var(--border); background: var(--primary-light); color: var(--primary); font-size: 12px; font-weight: 700; cursor: pointer; margin-top: 8px; font-family: 'Noto Sans JP', sans-serif; }
-.guide-overlay { display: none; position: fixed; inset: 0; z-index: 100; background: rgba(0,0,0,0.5); overflow-y: auto; -webkit-overflow-scrolling: touch; }
-.guide-overlay.show { display: block; }
-.guide-modal { background: var(--bg); max-width: 520px; margin: 0 auto; min-height: 100vh; padding: 0 0 60px; }
-.guide-modal-header { position: sticky; top: 0; z-index: 10; background: var(--primary); color: #fff; padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; }
-.guide-modal-header h2 { font-size: 16px; font-weight: 900; }
-.guide-close { background: rgba(255,255,255,0.2); border: none; border-radius: 99px; color: #fff; font-size: 13px; font-weight: 700; padding: 5px 14px; cursor: pointer; font-family: 'Noto Sans JP', sans-serif; }
-.guide-body { padding: 14px 14px 20px; }
-.g-section { background: #fff; border-radius: 14px; border: 1px solid #e9d5ff; margin-bottom: 10px; overflow: hidden; }
-.g-head { padding: 11px 14px; background: #faf5ff; border-bottom: 1px solid #e9d5ff; display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 700; color: var(--text); }
-.g-body { padding: 14px; }
-.g-text { font-size: 12px; color: var(--muted); line-height: 1.8; margin-bottom: 10px; }
-.g-text strong { color: var(--text); font-weight: 700; }
-.g-step { display: flex; gap: 9px; margin-bottom: 9px; align-items: flex-start; }
-.g-step:last-child { margin-bottom: 0; }
-.g-step-num { min-width: 22px; height: 22px; border-radius: 50%; background: var(--primary-light); color: var(--primary); font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
-.g-step-text { font-size: 12px; color: var(--muted); line-height: 1.8; }
-.g-step-text strong { color: var(--text); font-weight: 700; }
-.g-method { border-left: 3px solid var(--border); padding: 8px 12px; margin-bottom: 9px; border-radius: 0 8px 8px 0; background: #faf5ff; }
-.g-method-title { font-size: 12px; font-weight: 700; color: var(--primary); margin-bottom: 4px; }
-.g-amber { border-left-color: #fcd34d; background: #fffbeb; }
-.g-amber .g-method-title { color: #92400e; }
-.g-shadow-steps { background: #faf5ff; border-radius: 10px; padding: 10px 12px; margin-top: 8px; }
-.g-s-step { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 7px; }
-.g-s-step:last-child { margin-bottom: 0; }
-.g-s-badge { min-width: 52px; padding: 2px 0; text-align: center; border-radius: 99px; font-size: 10px; font-weight: 700; flex-shrink: 0; margin-top: 2px; }
-.gsb-g { background: var(--primary-light); color: #581c87; }
-.gsb-b { background: #dbeafe; color: #1e40af; }
-.g-s-text { font-size: 11px; color: var(--muted); line-height: 1.75; }
-.g-s-text strong { color: var(--text); font-weight: 700; }
-.gbd { display:inline-flex;align-items:center;gap:4px;padding:5px 12px;border-radius:99px;font-size:11px;font-weight:700;border:none;margin:3px; }
-.gbd-sec { background:#e2e8f0;color:#1e293b; }
-.gbd-pri { background:#7e22ce;color:#fff; }
-.gbd-amb { background:#d97706;color:#fff; }
-.gbd-blue { background:#2563eb;color:#fff; }
-.gti { display:inline-block;padding:1px 7px;border-radius:99px;font-size:10px;font-weight:700;vertical-align:middle; }
-.gti-a { background:#fef3c7;color:#92400e; }
-.gti-b { background:#dbeafe;color:#1e40af; }
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);min-height:100vh;padding:2px 12px 48px;color:var(--text);}
+.container{max-width:560px;margin:auto;}
+.header{text-align:center;margin-bottom:4px;}
+.header h2{font-size:18px;font-weight:900;color:var(--primary);}
+.header p{font-size:12px;color:var(--muted);margin-top:2px;}
+.badges{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-bottom:10px;}
+.badge{display:inline-flex;align-items:center;gap:4px;padding:4px 12px;border-radius:99px;font-size:11px;font-weight:700;background:var(--primary-light);color:var(--primary);border:1px solid var(--border);}
+.badge.green{background:var(--green-light);color:var(--green);border-color:#86efac;}
+.progress-wrap{background:#fbcfe8;border-radius:99px;height:6px;margin-bottom:4px;overflow:hidden;}
+.progress-bar{height:100%;background:var(--primary);border-radius:99px;transition:width 0.4s ease;}
+.progress-label{text-align:center;font-size:12px;color:var(--muted);margin-bottom:10px;}
+.tap-hint{font-size:11px;color:var(--muted);margin-bottom:6px;text-align:center;}
+.card{background:var(--surface);border-radius:var(--radius);padding:28px 20px 20px;box-shadow:var(--shadow);margin-bottom:12px;position:relative;border:2px solid var(--border);min-height:160px;cursor:pointer;user-select:none;transition:transform .1s,border-color .2s;}
+.card.tappable:active{transform:scale(0.985);}
+.card.revealed{border-color:var(--primary);}
+.card.no-tap{cursor:default;}
+.card-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+.card-num{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);}
+.cat-label{font-size:11px;font-weight:700;letter-spacing:.06em;color:var(--primary);text-align:center;flex:1;}
+.master-wrap{display:flex;align-items:center;gap:4px;font-size:11px;color:var(--muted);}
+.master-wrap input[type=checkbox]{width:17px;height:17px;accent-color:var(--green);cursor:pointer;}
+.master-wrap.disabled{opacity:.3;pointer-events:none;}
+.main-text{font-size:clamp(14px,3.8vw,18px);font-weight:700;line-height:1.65;text-align:center;margin-bottom:14px;}
+.answer-wrap{opacity:0;transform:translateY(5px);transition:opacity .25s,transform .25s;pointer-events:none;}
+.answer-wrap.show{opacity:1;transform:translateY(0);pointer-events:auto;}
+.answer-ja{font-size:clamp(13px,3.5vw,15px);font-weight:700;color:var(--accent);text-align:center;line-height:1.6;background:#fdf4ff;border-radius:10px;padding:10px 14px;margin-bottom:8px;}
+.answer-tip{font-size:12px;font-weight:600;color:var(--green);text-align:left;padding:0 4px;line-height:1.6;}
+.answer-tip::before{content:'💡 ';}
+.master-badge{display:none;text-align:center;margin-top:8px;background:var(--green-light);color:var(--green);padding:2px 10px;border-radius:99px;font-size:10px;font-weight:700;}
+.master-badge.show{display:block;}
+.no-active{background:var(--amber-light);border-radius:12px;padding:16px;text-align:center;font-size:14px;color:var(--amber);font-weight:700;display:none;margin-bottom:12px;}
+.no-active.show{display:block;}
+.auto-panel{background:var(--surface);border-radius:var(--radius);padding:14px 18px;box-shadow:var(--shadow);margin-bottom:12px;display:none;border-left:4px solid var(--primary);}
+.auto-panel.show{display:block;}
+.auto-step-title{font-size:12px;font-weight:900;color:var(--primary);margin-bottom:4px;}
+.auto-instruction{font-size:14px;font-weight:700;color:var(--text);line-height:1.5;}
+.auto-count{font-family:'DM Mono',monospace;font-size:12px;color:var(--muted);margin-top:4px;}
+.filter-panel{background:var(--surface);border-radius:var(--radius);padding:14px 16px;box-shadow:var(--shadow);margin-bottom:12px;}
+.filter-header{display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none;}
+.filter-header-left{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;}
+.filter-current{font-size:12px;font-weight:700;color:var(--primary);background:var(--primary-light);padding:3px 10px;border-radius:99px;border:1px solid var(--border);max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.filter-toggle-icon{font-size:12px;color:var(--muted);transition:transform .2s;margin-left:6px;}
+.filter-toggle-icon.open{transform:rotate(180deg);}
+.filter-chips-wrap{display:none;margin-top:10px;}
+.filter-chips-wrap.open{display:block;}
+.chip-all{display:block;width:100%;padding:8px 14px;margin-bottom:8px;border-radius:10px;font-size:12px;font-weight:700;cursor:pointer;border:2px solid var(--border);background:#fff;color:var(--muted);text-align:left;font-family:'Noto Sans JP',sans-serif;transition:all .15s;}
+.chip-all.active{background:var(--primary-light);color:var(--primary);border-color:var(--primary);}
+.cat-row{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:10px;cursor:pointer;border:2px solid transparent;background:#fff;margin-bottom:5px;transition:all .15s;user-select:none;}
+.cat-row.active{background:var(--primary-light);border-color:var(--primary);}
+.cat-row-name{flex:1;font-size:13px;font-weight:700;color:var(--text);}
+.cat-row.active .cat-row-name{color:var(--primary);}
+.cat-row-count{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);background:#f1f5f9;padding:2px 8px;border-radius:99px;font-weight:600;}
+.cat-row.active .cat-row-count{background:#fff;color:var(--primary);}
+.cat-dot{width:8px;height:8px;border-radius:50%;background:#e2e8f0;flex-shrink:0;}
+.cat-dot.done{background:var(--green);}
+.panel{background:var(--surface);border-radius:var(--radius);padding:14px 16px;box-shadow:var(--shadow);margin-bottom:12px;}
+.panel-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.panel-row+.panel-row{margin-top:8px;}
+.panel label{font-size:12px;color:var(--muted);font-weight:700;white-space:nowrap;}
+.panel select{flex:1;font-size:12px;border:1px solid var(--border);border-radius:8px;padding:4px 8px;background:#fff;color:var(--text);font-family:'Noto Sans JP',sans-serif;}
+.panel input[type=range]{flex:1;min-width:80px;accent-color:var(--primary);}
+.speed-val{font-family:'DM Mono',monospace;font-size:13px;font-weight:600;color:var(--primary);min-width:32px;}
+.btn-row{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:10px;}
+.btn{border:none;border-radius:99px;padding:10px 18px;font-size:13px;font-weight:700;font-family:'Noto Sans JP',sans-serif;cursor:pointer;transition:opacity .15s,transform .1s;display:inline-flex;align-items:center;gap:5px;}
+.btn:active{transform:scale(0.94);opacity:.85;}
+.btn-primary{background:var(--primary);color:#fff;}
+.btn-secondary{background:#e2e8f0;color:var(--text);}
+.btn-red{background:var(--red);color:#fff;}
+.btn-amber{background:var(--amber);color:#fff;}
+.btn-blue{background:#2563eb;color:#fff;}
+.btn-on{background:var(--green);color:#fff;}
+.master-summary{background:var(--green-light);border-radius:12px;padding:10px 14px;font-size:12px;color:var(--green);font-weight:700;text-align:center;margin-bottom:10px;display:none;cursor:pointer;user-select:none;}
+.master-summary.show{display:block;}
+.help-btn{display:inline-flex;align-items:center;gap:5px;padding:5px 14px;border-radius:99px;border:1px solid var(--border);background:var(--primary-light);color:var(--primary);font-size:12px;font-weight:700;cursor:pointer;font-family:'Noto Sans JP',sans-serif;}
+.top-row{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:8px;}
+.audio-mini-label{font-size:10px;color:var(--muted);text-align:center;margin-bottom:4px;font-weight:700;}
+.audio-track-row{display:flex;align-items:center;justify-content:center;gap:11px;margin:0 0 16px;flex-wrap:wrap;}
+.audio-track-btn{border:1px solid #99f6e4;border-radius:99px;padding:4px 11px;font-size:11px;font-weight:700;cursor:pointer;background:#f0fdfa;color:#0891b2;font-family:'DM Mono',monospace;}
+.audio-track-btn.playing{background:#0891b2;color:#fff;border-color:#0891b2;}
+.audio-loop-all-btn{border:1px solid var(--border);border-radius:99px;padding:4px 11px;font-size:11px;font-weight:700;cursor:pointer;background:#e2e8f0;color:var(--text);}
+.audio-loop-all-btn.on{background:var(--green);color:#fff;border-color:var(--green);}
 </style>
 </head>
 <body>
 <div class="container">
-
 <div class="header">
-  <h2>💜 DUO 3.0 — No. 401〜450</h2>
-  <p>法律・犯罪・裁判 / 戦争・政治・外交 / メディア・社会 / 慣用句</p>
-  <button class="help-btn" onclick="openGuide()">❓ 使い方ガイド</button>
+<h2>🌸 DUO 3.0 — No. 492〜560</h2>
 </div>
 
-<div class="badges">
-  <div class="badge" id="mode-badge">📖 英 → 日</div>
-  <div class="badge" id="order-badge">順番通り</div>
-  <div class="badge green" id="master-badge-top">マスター: 0 / 50</div>
+<div class="top-row">
+<button class="help-btn" onclick="alert('👆カードタップで答え表示\n🔊音声再生（合成音声）\n🗣️シャドウイング4ステップ\n▶連続再生\n🔄英⇄日モード切替\nマスターチェックで次へ\n\n上部の「ネイティブ再生」欄はカードと連動しない復習用の音声プレーヤーです。番号ボタンで個別再生、ループボタンで1〜5を繰り返し再生します。')">❓ 使い方</button>
+<div class="badge green" id="master-badge-top">マスター: 0 / 69</div>
 </div>
 
+<div class="audio-mini-label">ネイティブ再生</div>
+<div class="audio-track-row" id="audio-track-row"></div>
 <div class="progress-wrap"><div class="progress-bar" id="progress-bar" style="width:2%"></div></div>
-<div class="progress-label">カード <span id="cur-num">1</span> / <span id="tot-num">50</span></div>
-
-<div class="no-active" id="no-active">
-  ✅ このカテゴリをすべてマスターしました！<br>
-  <span style="font-size:12px;font-weight:600;">チェックを外すか別のカテゴリを選んでください。</span>
-</div>
-
+<div class="progress-label">カード <span id="cur-num">1</span> / <span id="tot-num">69</span></div>
+<div class="no-active" id="no-active">✅ このカテゴリをすべてマスターしました！</div>
 <div class="auto-panel" id="auto-panel">
-  <div class="auto-step-title" id="auto-step-title">STEP 1</div>
-  <div class="auto-instruction" id="auto-instruction">音声を聴いてください。</div>
-  <div class="auto-count" id="auto-count"></div>
+<div class="auto-step-title" id="auto-step-title">STEP 1</div>
+<div class="auto-instruction" id="auto-instruction">音声を聴いてください。</div>
+<div class="auto-count" id="auto-count"></div>
 </div>
-
 <div class="tap-hint" id="tap-hint">👆 カードをタップして日本語訳・解説を表示</div>
-
 <div class="card tappable" id="main-card" onclick="handleTap()">
-  <div class="card-top">
-    <div class="card-num" id="card-num">151</div>
-    <div class="cat-label" id="card-cat"></div>
-    <div class="master-wrap" id="master-wrap">
-      <span>マスター</span>
-      <input type="checkbox" id="master-cb" onchange="toggleMaster(event)" onclick="event.stopPropagation()">
-    </div>
-  </div>
-  <div class="main-text" id="main-text">Loading...</div>
-  <div class="answer-wrap" id="answer-wrap">
-    <div class="answer-ja" id="answer-ja"></div>
-    <div class="answer-tip" id="answer-tip" style="display:none"></div>
-  </div>
-  <div class="master-badge" id="mastered-badge">✔ マスター済</div>
+<div class="card-top">
+<div class="card-num" id="card-num">492</div>
+<div class="cat-label" id="card-cat"></div>
+<div class="master-wrap" id="master-wrap">
+<span>マスター</span>
+<input type="checkbox" id="master-cb" onchange="toggleMaster(event)" onclick="event.stopPropagation()">
 </div>
-
+</div>
+<div class="main-text" id="main-text">Loading...</div>
+<div class="answer-wrap" id="answer-wrap">
+<div class="answer-ja" id="answer-ja"></div>
+<div class="answer-tip" id="answer-tip" style="display:none"></div>
+</div>
+<div class="master-badge" id="mastered-badge">✔ マスター済</div>
+</div>
 <div class="master-summary" id="master-summary" onclick="toggleMasterList()"></div>
 <div id="master-list-wrap" style="display:none;margin-bottom:12px;">
-  <div style="background:#fff;border-radius:16px;padding:14px 16px;box-shadow:var(--shadow);">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
-      <span style="font-size:13px;font-weight:900;color:var(--green);">✅ マスター済みリスト</span>
-      <button class="btn btn-secondary" style="padding:4px 12px;font-size:11px;" onclick="clearAllMaster()">全解除</button>
-    </div>
-    <div id="master-list"></div>
-  </div>
+<div style="background:#fff;border-radius:16px;padding:14px 16px;box-shadow:var(--shadow);">
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+<span style="font-size:13px;font-weight:900;color:var(--green);">✅ マスター済みリスト</span>
+<button class="btn btn-secondary" style="padding:4px 12px;font-size:11px;" onclick="clearAllMaster()">全解除</button>
 </div>
-
+<div id="master-list"></div>
+</div>
+</div>
 <div class="filter-panel">
-  <div class="filter-header" onclick="toggleFilterPanel()">
-    <div class="filter-header-left">📂 カテゴリを選ぶ</div>
-    <div style="display:flex;align-items:center;gap:4px;">
-      <div class="filter-current" id="filter-current-label">すべて</div>
-      <span class="filter-toggle-icon" id="filter-toggle-icon">▼</span>
-    </div>
-  </div>
-  <div class="filter-chips-wrap" id="filter-chips-wrap">
-    <button class="chip-all active" id="chip-all" onclick="selectCategory('all')">🎯 すべて表示</button>
-    <div id="cat-rows"></div>
-  </div>
+<div class="filter-header" onclick="toggleFilterPanel()">
+<div class="filter-header-left">📂 カテゴリを選ぶ</div>
+<div style="display:flex;align-items:center;gap:4px;">
+<div class="filter-current" id="filter-current-label">すべて</div>
+<span class="filter-toggle-icon" id="filter-toggle-icon">▼</span>
 </div>
-
+</div>
+<div class="filter-chips-wrap" id="filter-chips-wrap">
+<button class="chip-all active" id="chip-all" onclick="selectCategory('all')">🎯 すべて表示</button>
+<div id="cat-rows"></div>
+</div>
+</div>
 <div class="panel">
-  <div class="panel-row" style="margin-bottom:8px;">
-    <label>🔊 音声優先</label>
-    <select id="voice-pref" onchange="applyVoicePref()">
-      <option value="US">🇺🇸 US優先</option>
-      <option value="GB">🇬🇧 GB優先</option>
-    </select>
-    <select id="voice-select" style="flex:2;"></select>
-  </div>
-  <div class="panel-row">
-    <label>速度</label>
-    <input type="range" id="rate-slider" min="0.5" max="1.5" step="0.1" value="1.0" oninput="updateRate()">
-    <span class="speed-val" id="rate-val">1.0×</span>
-  </div>
+<div class="panel-row" style="margin-bottom:8px;">
+<label>🔊 音声優先</label>
+<select id="voice-pref" onchange="applyVoicePref()"><option value="US">🇺🇸 US優先</option><option value="GB">🇬🇧 GB優先</option></select>
+<select id="voice-select" style="flex:2;"></select>
 </div>
-
+<div class="panel-row">
+<label>速度</label>
+<input type="range" id="rate-slider" min="0.5" max="1.5" step="0.1" value="1.0" oninput="updateRate()">
+<span class="speed-val" id="rate-val">1.0×</span>
+</div>
+</div>
 <div id="normal-controls">
-  <div class="btn-row">
-    <button class="btn btn-secondary" onclick="prev()">← 戻る</button>
-    <button class="btn btn-primary"   onclick="speakCurrent()">🔊 音声</button>
-    <button class="btn btn-secondary" onclick="next()">次へ →</button>
-    <button class="btn btn-secondary" style="font-size:11px;padding:8px 6px;" onclick="switchMode()">🔄 英⇄日</button>
-  </div>
-  <div class="btn-row" style="gap:4px;">
-    <button class="btn btn-secondary" style="font-size:11px;padding:7px 5px;" id="random-btn" onclick="toggleRandom()">🔀 ランダム</button>
-    <button class="btn btn-secondary" style="font-size:11px;padding:7px 5px;" id="repeat-btn" onclick="toggleRepeat()">🔁 繰り返し</button>
-    <button class="btn btn-blue"  style="font-size:11px;padding:7px 5px;" onclick="startContinuous()">▶ 連続再生</button>
-    <button class="btn btn-amber" style="font-size:11px;padding:7px 5px;" onclick="startShadowing()">🗣️ シャドウ</button>
-  </div>
+<div class="btn-row">
+<button class="btn btn-secondary" onclick="prev()">← 戻る</button>
+<button class="btn btn-primary" onclick="speakCurrent()">🔊 音声</button>
+<button class="btn btn-secondary" onclick="next()">次へ →</button>
+<button class="btn btn-secondary" style="font-size:11px;padding:8px 6px;" onclick="switchMode()">🔄 英⇄日</button>
 </div>
-
+<div class="btn-row" style="gap:4px;">
+<button class="btn btn-secondary" style="font-size:11px;padding:7px 5px;" id="random-btn" onclick="toggleRandom()">🔀 ランダム</button>
+<button class="btn btn-secondary" style="font-size:11px;padding:7px 5px;" id="repeat-btn" onclick="toggleRepeat()">🔁 繰り返し</button>
+<button class="btn btn-blue" style="font-size:11px;padding:7px 5px;" onclick="startContinuous()">▶ 連続再生</button>
+<button class="btn btn-amber" style="font-size:11px;padding:7px 5px;" onclick="startShadowing()">🗣️ シャドウ</button>
+</div>
+</div>
 <div id="auto-controls" style="display:none;">
-  <div class="btn-row">
-    <button class="btn btn-red" onclick="stopAutoPlay()">⏹ 停止</button>
-  </div>
-</div>
-
-</div><!-- /container -->
-
-<!-- Guide Modal -->
-<div class="guide-overlay" id="guide-overlay" onclick="handleOverlayClick(event)">
-<div class="guide-modal">
-  <div class="guide-modal-header">
-    <h2>❓ 使い方ガイド</h2>
-    <button class="guide-close" onclick="closeGuide()">✕ 閉じる</button>
-  </div>
-  <div class="guide-body">
-    <div class="g-section">
-      <div class="g-head"><span>🔘</span> 各ボタンの説明</div>
-      <div class="g-body">
-        <div style="margin-bottom:12px">
-          <div><span class="gbd gbd-sec">← 戻る</span><span class="gbd gbd-pri">🔊 音声</span><span class="gbd gbd-sec">次へ →</span></div>
-          <p class="g-text" style="margin-top:6px">カードを前後に移動します。<strong>音声</strong>ボタンで英語を読み上げます。</p>
-        </div>
-        <div>
-          <div><span class="gbd gbd-amb">🗣️ シャドウイング</span><span class="gbd gbd-blue">▶ 連続再生</span></div>
-          <p class="g-text" style="margin-top:6px"><span class="gti gti-a">シャドウイング</span> 4ステップの反復練習を自動で進めます。<span class="gti gti-b">連続再生</span> 全カードを英語音声で流し聴きします。</p>
-        </div>
-      </div>
-    </div>
-    <div class="g-section">
-      <div class="g-head"><span>👆</span> 基本の練習法</div>
-      <div class="g-body">
-        <div class="g-method">
-          <div class="g-method-title">手順</div>
-          <div class="g-step"><div class="g-step-num">1</div><div class="g-step-text"><strong>音声を聴く</strong> — 意味を考えながら「🔊 音声」を押します。</div></div>
-          <div class="g-step"><div class="g-step-num">2</div><div class="g-step-text"><strong>カードをタップ</strong> — 日本語訳と💡解説を確認します。</div></div>
-          <div class="g-step"><div class="g-step-num">3</div><div class="g-step-text"><strong>もう一度聴いて声に出す</strong> — 2〜3回繰り返しましょう。</div></div>
-          <div class="g-step"><div class="g-step-num">4</div><div class="g-step-text">覚えたら<strong>マスターにチェック</strong>を入れます。</div></div>
-        </div>
-      </div>
-    </div>
-    <div class="g-section">
-      <div class="g-head"><span>🗣️</span> シャドウイング — 4ステップ</div>
-      <div class="g-body">
-        <div class="g-method g-amber">
-          <div class="g-shadow-steps">
-            <div class="g-s-step"><span class="g-s-badge gsb-g">STEP 1</span><div class="g-s-text"><strong>文字を見ずに2回聴く</strong></div></div>
-            <div class="g-s-step"><span class="g-s-badge gsb-g">STEP 2</span><div class="g-s-text"><strong>文字を見ずにシャドウイング×2</strong></div></div>
-            <div class="g-s-step"><span class="g-s-badge gsb-b">STEP 3</span><div class="g-s-text"><strong>日本語訳を見ながらシャドウイング×2</strong></div></div>
-            <div class="g-s-step"><span class="g-s-badge gsb-g">STEP 4</span><div class="g-s-text"><strong>また文字を見ずにシャドウイング×2</strong></div></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+<div class="btn-row"><button class="btn btn-red" onclick="stopAutoPlay()">⏹ 停止</button></div>
 </div>
 </div>
-
 <script>
-const CATS = {
-  '🔪 法律・犯罪・裁判': '#e11d48',
-  '🏛️ 戦争・政治・外交': '#7e22ce',
-  '📺 メディア・社会':   '#0891b2',
-  '📜 表現・慣用句':    '#d97706',
-};
-
-const phrases = [
-  // ── 📜 表現・慣用句 ──
-  {cat:"📜 表現・慣用句", en:"Scarcely had he seen me before he ran away.", ja:"私を見るとすぐに、彼は逃げ出した。", tip:"Scarcely had + S + 過去分詞 + before ...＝〜するとすぐに…（倒置構文）。Hardly / No sooner も同義。文頭に否定副詞が来ると倒置が起きる。"},
-  {cat:"📜 表現・慣用句", en:"He had no sooner seen me than he ran away.", ja:"私を見るとすぐに、彼は逃げ出した。", tip:"No sooner had + S + 過去分詞 + than ...＝〜するとすぐに…。過去完了＋過去形の組み合わせ。scarcely/hardly との言い換えも頻出。"},
-  // ── 🔪 法律・犯罪・裁判 ──
-  {cat:"🔪 法律・犯罪・裁判", en:"He was about to commit suicide by swallowing poison when he thought better of it.", ja:"毒物を飲んで自殺をしようとした直前に彼は思いとどまった。", tip:"be about to do＝まさに〜しようとしている。commit suicide＝自殺する。swallow＝〜を飲み込む。think better of it＝思いとどまる・考え直す（慣用句）。"},
-  {cat:"🔪 法律・犯罪・裁判", en:"The vague rumor proved to be false. Nevertheless, some skepticism lingers on.", ja:"その曖昧な噂は嘘だとわかった。だがそれでも、多少の疑いは残る。", tip:"vague＝曖昧な。prove to be＝〜であることが判明する。nevertheless＝それにもかかわらず（= nonetheless）。skepticism＝懐疑。linger on＝残り続ける・長引く。"},
-  {cat:"🔪 法律・犯罪・裁判", en:"A senior official is suspected of accepting bribes from a company, but there isn't sufficient evidence to arrest him.", ja:"ある政府高官が企業から賄賂を受け取った容疑をかけられている。しかし、逮捕するには証拠が不十分だ。", tip:"be suspected of doing＝〜の容疑をかけられている。bribe＝賄賂。sufficient＝十分な（= enough）。evidence＝証拠（不可算名詞）。arrest＝逮捕する。"},
-  {cat:"🔪 法律・犯罪・裁判", en:"Jason, who was in charge of the project, was dismissed for corruption.", ja:"そのプロジェクトの責任者であったジェイソンが、汚職に手を染めた理由で解任された。", tip:"be in charge of＝〜の責任者である。dismiss＝〜を解雇・解任する（= fire）。corruption＝汚職・腐敗。コンマ + who は非制限用法の関係代名詞で補足説明。"},
-  {cat:"🔪 法律・犯罪・裁判", en:"To my knowledge, he has not been involved in the fraud scheme.", ja:"私の知る限り、彼はその詐欺の企みには関与していません。", tip:"to my knowledge＝私の知る限りでは（慣用句）。be involved in＝〜に関与している。fraud＝詐欺・不正。scheme＝計画・企み（悪意を含む文脈で使われやすい）。"},
-  {cat:"🔪 法律・犯罪・裁判", en:"They found out the truth while examining a pile of relevant documents.", ja:"関連書類の山を調べていくうちに、彼らは真実をつかんだ。", tip:"find out＝〜を突き止める。while doing＝〜しながら（while + 主語 + be の省略形）。a pile of＝〜の山・大量の。relevant＝関連する（= related to）。"},
-  {cat:"🔪 法律・犯罪・裁判", en:"During the trial it came to light that they had been covering up illegal transactions for decades.", ja:"公判中に、彼らが数十年にわたって違法取引を隠蔽していたことが明るみに出た。", tip:"trial＝裁判・公判。come to light＝明るみに出る（慣用句）。cover up＝〜を隠蔽する。illegal＝違法な。transaction＝取引。decade＝10年間。"},
-  {cat:"🔪 法律・犯罪・裁判", en:"The detective took down his testimony on the spot, word for word.", ja:"刑事はその場で、彼の証言を一言一句正確に書き取った。", tip:"detective＝刑事・探偵。take down＝〜を書き留める。testimony＝証言（testify は証言する）。on the spot＝その場で・即座に。word for word＝一言一句（= verbatim）。"},
-  {cat:"🔪 法律・犯罪・裁判", en:"For the first time in my life, I felt a pang of conscience, but there was no other way out.", ja:"生まれて初めて良心の呵責を感じましたが、そうする以外にその場をしのぐ方法はありませんでした。", tip:"for the first time in my life＝生まれて初めて。a pang of conscience＝良心の呵責（pang＝鋭い痛み・苦しみ）。way out＝脱出口・解決策（there is no way out＝逃げ場がない）。"},
-  // ── 📺 メディア・社会 ──
-  {cat:"📺 メディア・社会", en:"I'm still haunted by a vivid nightmare I had last night.", ja:"昨日の夜に見た生々しい悪夢がまだ頭から離れない。", tip:"be haunted by＝〜につきまとわれる（haunt＝幽霊が出る・つきまとう）。vivid＝鮮明な・生き生きとした。nightmare＝悪夢。目的格の関係代名詞が省略された後置修飾。"},
-  {cat:"📺 メディア・社会", en:"By and large, reporters don't hesitate to intrude on one's privacy.", ja:"概して、記者というものは個人のプライバシーを侵害することにためらいを感じない。", tip:"by and large＝概して（= generally・on the whole）。hesitate to do＝〜することをためらう。intrude on＝〜を侵害する・侵入する。privacy＝プライバシー。"},
-  {cat:"📺 メディア・社会", en:"The author revised his manuscript over and over again.", ja:"著者は何度も何度も原稿を手直しした。", tip:"author＝著者・作者。revise＝〜を改訂・修正する（revision は名詞）。manuscript＝原稿（manu＝手＋script＝書いたもの）。over and over again＝何度も何度も（= repeatedly）。"},
-  {cat:"📺 メディア・社会", en:"On the whole, the elite are not sensitive to criticism.", ja:"概して、エリートたちは批判に対して鈍感だ。", tip:"on the whole＝概して（= by and large）。elite＝エリート（集合名詞として複数扱い）。be sensitive to＝〜に敏感である（insensitive は鈍感）。criticism＝批判・批評。"},
-  {cat:"📺 メディア・社会", en:"When a tabloid revealed that he was a drug addict, his reputation was all but ruined.", ja:"ある大衆紙に彼は麻薬常用者だと暴露され、彼の評判はほとんど地に落ちた。", tip:"tabloid＝タブロイド紙・大衆紙。reveal＝〜を暴露する・明らかにする。addict＝中毒者（drug addict＝麻薬常用者）。all but＝ほとんど（= almost）。ruin＝〜を台無しにする。"},
-  {cat:"📺 メディア・社会", en:"According to a survey, three in five people today are indifferent to foreign affairs.", ja:"ある調査によると、今日では5人中3人が外交問題には無関心だそうだ。", tip:"according to＝〜によると（情報源を示す）。survey＝調査・アンケート。three in five＝5人中3人（分数的表現）。be indifferent to＝〜に無関心だ（= not care about）。foreign affairs＝外交問題。"},
-  // ── 📜 表現・慣用句 ──
-  {cat:"📜 表現・慣用句", en:"He is second to none when it comes to finding fault with others.", ja:"他人の過失を指摘することにかけては、彼の右に出るものはいない。", tip:"second to none＝誰にも劣らない・右に出る者はいない（= the best）。when it comes to doing＝〜することに関しては（重要慣用句）。find fault with＝〜の欠点を見つける・けちをつける。"},
-  {cat:"📜 表現・慣用句", en:"In my opinion, permanent peace is nothing but an illusion.", ja:"私の考えでは、恒久的な平和など幻想に過ぎない。", tip:"in my opinion＝私の意見では（= in my view）。permanent＝永続的な・恒久的な。nothing but＝〜に過ぎない（= only。anything but は「決して〜でない」）。illusion＝幻想・錯覚。"},
-  {cat:"📜 表現・慣用句", en:"Needless to say, the refugees were longing for freedom.", ja:"言うまでもなく、難民たちは自由を強く求めていた。", tip:"needless to say＝言うまでもなく（= it goes without saying that ...）。refugee＝難民・亡命者（refuge は避難所）。long for＝〜を強く望む・切望する（= yearn for）。"},
-  // ── 🏛️ 戦争・政治・外交 ──
-  {cat:"🏛️ 戦争・政治・外交", en:"They considered every aspect of the defense program and pointed out numerous flaws.", ja:"彼らはその防衛計画をあらゆる面から検討し、多数の問題箇所を指摘した。", tip:"aspect＝側面・観点。defense＝防衛（英 defence）。point out＝〜を指摘する。numerous＝多数の（= many）。flaw＝欠陥・欠点（= defect）。"},
-  {cat:"🏛️ 戦争・政治・外交", en:"We will not tolerate anyone who engages in terrorism.", ja:"我々は、誰であろうとテロ活動に携わる者に寛容でいるつもりはない。", tip:"tolerate＝〜を容認する・我慢する（= put up with）。engage in＝〜に携わる・従事する（= be involved in）。terrorism＝テロ活動（terrorist は名詞・形容詞）。"},
-  {cat:"🏛️ 戦争・政治・外交", en:"The notorious rebel was ultimately captured and confined to jail.", ja:"悪名高い反乱兵はついに捕らえられ、拘置所に身柄を拘束された。", tip:"notorious＝悪名高い（= infamous）。rebel＝反乱兵（名詞 'rebəl'、動詞 ri'bel でアクセント変化）。ultimately＝最終的に（= eventually）。confine to＝〜に閉じ込める・拘束する。"},
-  {cat:"🏛️ 戦争・政治・外交", en:"Troops were swiftly called in to put down the riot.", ja:"暴動を鎮圧するために、直ちに軍隊が派遣された。", tip:"troops＝軍隊・部隊（集合名詞）。swiftly＝迅速に（= quickly）。call in＝〜を呼び込む・派遣する。put down＝〜を鎮圧する（= suppress）。riot＝暴動・騒乱。"},
-  {cat:"🏛️ 戦争・政治・外交", en:"We should appeal to reason instead of resorting to violence.", ja:"私たちは暴力に頼るのではなく、理性に訴えるべきだ。", tip:"appeal to＝〜に訴える・頼る。instead of doing＝〜する代わりに。resort to＝〜に頼る（否定的文脈で使われやすい）。violence＝暴力。"},
-  {cat:"🏛️ 戦争・政治・外交", en:"I suggest we adopt flexible tactics for the moment.", ja:"当分の間は柔軟な戦術を取ってみてはどうでしょう。", tip:"suggest (that) S + 動詞原形＝〜することを提案する（仮定法現在）。adopt＝〜を採用する。flexible＝柔軟な（= adaptable）。for the moment＝今のところ・当分の間。"},
-  {cat:"🏛️ 戦争・政治・外交", en:"The armed forces succeeded in occupying the entire territory.", ja:"軍は全領土を占領することに成功した。", tip:"armed forces＝軍隊（= the military）。succeed in doing＝〜することに成功する（fail to do は失敗する）。occupy＝〜を占領する。entire＝全体の（= whole）。territory＝領土。"},
-  {cat:"🏛️ 戦争・政治・外交", en:"Under the circumstances, the enemy has no choice but to surrender. They can't hold out any longer.", ja:"このような状況下では、敵は降伏せざるを得ない。彼らがこれ以上持ちこたえることは不可能だ。", tip:"under the circumstances＝このような状況では。have no choice but to do＝〜せざるを得ない（= cannot help doing）。surrender＝降伏する。hold out＝持ちこたえる・頑張り続ける。"},
-  {cat:"🏛️ 戦争・政治・外交", en:"Sooner or later, the hostages will be set free.", ja:"遅かれ早かれ、人質たちは解放されるだろう。", tip:"sooner or later＝遅かれ早かれ（慣用句）。hostage＝人質（take hostages＝人質を取る）。set free＝〜を解放する（= release・liberate）。"},
-  {cat:"🏛️ 戦争・政治・外交", en:"Under the reign of tyranny, innocent people were deprived of their citizenship.", ja:"専制政治による支配のもとで、罪のない人々が市民権を剥奪された。", tip:"reign＝支配・統治。tyranny＝専制政治・暴政（tyrant は専制君主）。innocent＝無実の（= not guilty）。deprive A of B＝AからBを奪う（= strip A of B）。citizenship＝市民権。"},
-  {cat:"🏛️ 戦争・政治・外交", en:"Some soldiers were reluctant to obey the commands.", ja:"その命令に嫌々従う兵士もいた。", tip:"be reluctant to do＝〜することに気が進まない（= be unwilling to do）。obey＝〜に従う・服従する（disobey は反抗する）。command＝命令・指令（= order）。"},
-  {cat:"🏛️ 戦争・政治・外交", en:"His regime is bound to collapse.", ja:"彼の政権はきっと崩壊する。", tip:"regime＝政権・体制（権威主義的な政府を指すことが多い）。be bound to do＝きっと〜する・〜せざるを得ない（= be certain to do）。collapse＝崩壊する（名詞にもなる）。"},
-  {cat:"🏛️ 戦争・政治・外交", en:"The allies condemned the invasion as a violation of UN resolutions.", ja:"同盟諸国はその侵略行為が国連決議に違反するとして、厳しく非難した。", tip:"ally＝同盟国（複数 allies）。condemn＝〜を強く非難する（= denounce）。invasion＝侵略（invade の名詞形）。violation＝違反（violate の名詞形）。resolution＝決議・解決。"},
-  {cat:"🏛️ 戦争・政治・外交", en:"We cannot rule out the possibility that civil war will break out in that country.", ja:"その国で内乱が勃発する可能性がないとは断言できない。", tip:"rule out＝〜を除外する・可能性を排除する（= exclude）。possibility that ...＝〜という可能性（that は同格節）。civil war＝内戦。break out＝〜が勃発する（= occur suddenly）。"},
-  {cat:"🏛️ 戦争・政治・外交", en:"The colony declared independence and became a republic.", ja:"その植民地は独立を宣言し、共和国となった。", tip:"colony＝植民地（colonial は形容詞）。declare＝〜を宣言する（Declaration of Independence＝独立宣言）。independence＝独立。republic＝共和国（= democratic state）。"},
-  {cat:"🏛️ 戦争・政治・外交", en:"An immense monument was erected in honor of the noble patriot.", ja:"その高潔な愛国者に敬意を表して、巨大な記念碑が建てられた。", tip:"immense＝巨大な（= enormous）。monument＝記念碑。erect＝〜を建立する（= build）。in honor of＝〜に敬意を表して。noble＝高潔な。patriot＝愛国者（patriotism は愛国心）。"},
-  {cat:"🏛️ 戦争・政治・外交", en:"He got down on his knees and prayed for the souls of the deceased.", ja:"彼はひざまずいて故人の霊に祈りを捧げた。", tip:"get down on one's knees＝ひざまずく。pray for＝〜のために祈る（pray は自動詞）。soul＝魂・精神（= spirit）。deceased＝故人・死者（the deceased で「亡くなった人」）。"},
-  {cat:"🏛️ 戦争・政治・外交", en:"The Supreme Court is located near the Imperial Palace.", ja:"最高裁判所は皇居の近くにある。", tip:"Supreme Court＝最高裁判所（supreme＝最高の・至上の）。be located＝〜に位置している（= be situated）。Imperial Palace＝皇居（imperial＝帝国の・皇室の）。"},
-  {cat:"🏛️ 戦争・政治・外交", en:"The pro-choice group protested against a ban on abortion.", ja:"中絶合法賛成派グループが中絶の禁止に対して抗議した。", tip:"pro-choice＝中絶の権利を支持する（対義語は pro-life）。protest against＝〜に抗議する（= object to）。ban on＝〜の禁止（= prohibition of）。abortion＝中絶（abort の名詞形）。"},
-  {cat:"🏛️ 戦争・政治・外交", en:"Senator Ford remained neutral in the bitter controversy.", ja:"フォード上院議員はその激しい論争において、中立の立場を守った。", tip:"senator＝上院議員（Senate＝上院）。remain neutral＝中立を保つ（remain + 形容詞＝〜のままでいる）。bitter＝激しい・厳しい。controversy＝論争・議論（= dispute）。"},
-  {cat:"🏛️ 戦争・政治・外交", en:"Ford has been in a difficult situation all week long. He is no longer capable of coping with it.", ja:"フォード氏はこの一週間ずっと困難な立場に置かれている。もはや、彼にはどうすることもできない。", tip:"all week long＝一週間ずっと（all + 期間 + long）。no longer＝もはや〜でない（= not ... any longer）。be capable of doing＝〜する能力がある。cope with＝〜に対処する（= deal with）。"},
-  {cat:"🏛️ 戦争・政治・外交", en:"The summit talks are to be broadcast simultaneously throughout the world.", ja:"首脳会談は世界中で同時に放送される予定だ。", tip:"summit talks＝首脳会談（summit＝頂上・首脳）。be to do＝〜する予定だ（予定・義務を表す）。broadcast＝放送する（broadcast-broadcast-broadcast）。simultaneously＝同時に（= at the same time）。"},
-  {cat:"🏛️ 戦争・政治・外交", en:"Diplomatic dialogue helped put an end to the conflict.", ja:"外交的対話のおかげでその紛争に終止符を打つことができた。", tip:"diplomatic＝外交的な（diplomacy は外交）。help (to) do＝〜するのに役立つ。put an end to＝〜に終止符を打つ・終わらせる。conflict＝紛争・葛藤（= dispute）。"},
-  {cat:"🏛️ 戦争・政治・外交", en:"Johnson was appointed as a goodwill ambassador to foster mutual understanding between the two nations.", ja:"両国の相互理解を深めるために、ジョンソンさんが親善大使に任命された。", tip:"appoint A as B＝AをBに任命する（= name・designate）。goodwill ambassador＝親善大使。foster＝〜を育てる・促進する（= promote・nurture）。mutual＝相互の（= reciprocal）。"},
-  {cat:"🏛️ 戦争・政治・外交", en:"The specialist predicts international tension will build up.", ja:"その専門家は国際的な緊張が高まっていくと予測している。", tip:"specialist＝専門家（= expert）。predict＝〜を予測する（= forecast）。international tension＝国際的な緊張。build up＝高まる・蓄積される（= increase gradually）。"},
-  {cat:"🏛️ 戦争・政治・外交", en:"Ethnic minorities struggle against prejudice, poverty, and oppression.", ja:"民族的少数派は偏見、貧困、抑圧と戦っている。", tip:"ethnic minority＝民族的少数派・少数民族。struggle against＝〜と戦う・抗う（= fight against）。prejudice＝偏見（= bias）。poverty＝貧困。oppression＝抑圧（oppress の名詞形）。"},
-  {cat:"🏛️ 戦争・政治・外交", en:"We must make every effort to do away with all discrimination.", ja:"すべての差別をなくすために、私たちはあらゆる努力をしなければならない。", tip:"make every effort to do＝あらゆる努力をする（= spare no effort）。do away with＝〜をなくす・廃止する（= abolish・eliminate）。discrimination＝差別（discriminate against は〜を差別する）。"},
-  {cat:"🏛️ 戦争・政治・外交", en:"The immigrants have endured physical and mental pain.", ja:"移民たちは肉体的、精神的苦痛に耐えてきた。", tip:"immigrant＝移民・入国者（emigrant は出国者）。endure＝〜に耐える（= bear・put up with）。physical＝肉体的な（mental は精神的な）。pain＝苦痛・痛み。"},
-  {cat:"🏛️ 戦争・政治・外交", en:"The amendment was rejected because it didn't take racial diversity into account.", ja:"その改正案は、人種の多様性を考慮していないとの理由で却下された。", tip:"amendment＝改正・修正（amend の名詞形）。reject＝〜を却下・拒絶する（= turn down）。take A into account＝Aを考慮に入れる（= take A into consideration）。racial diversity＝人種の多様性。"},
-  {cat:"🏛️ 戦争・政治・外交", en:"What will become of Japan-U.S. relations if the security treaty expires?", ja:"安全保障条約が期限切れになったら、日米関係はどうなるだろうか？", tip:"What will become of ...?＝〜はどうなるだろうか（慣用表現）。Japan-U.S. relations＝日米関係。security treaty＝安全保障条約。expire＝期限が切れる・満了する（= run out）。"},
+const OFFSET=492;
+const CATS={'😳 人間関係のドタバタ':'#be185d','📚 社会適応・日常':'#2563eb','💔 恋愛のもつれ':'#16a34a','💕 恋愛・結婚の行方':'#7c3aed','🙏 日常の締めくくり':'#d97706'};
+const phrases=[
+{cat:'😳 人間関係のドタバタ', en:'Quite a few people have been invited to celebrate the couple\'s anniversary.', ja:'かなりの数の人々が、その夫婦の結婚記念のお祝いに招待されている。', tip:'quite a few＝かなり多くの。celebrate＝〜を祝う。anniversary＝記念日。'},
+{cat:'😳 人間関係のドタバタ', en:'It won\'t be long before everything is ready. In the meantime, help yourself to some snacks.', ja:'もうすぐ準備完了です。その間、軽食をご自由につまんでいて下さい。', tip:'It won\'t be long before ...＝まもなく〜だ。in the meantime＝その間に。help yourself to＝〜を自由に取って食べる。'},
+{cat:'😳 人間関係のドタバタ', en:'Dressed in a loud and peculiar outfit, she stood out in the crowd.', ja:'けばけばしい奇妙な服を着ていた彼女は、人込みの中でもひときわ目立った。', tip:'dressed in ...＝〜を着て（分詞構文）。loud＝（服装が）派手な。peculiar＝奇妙な。stand out＝目立つ。'},
+{cat:'😳 人間関係のドタバタ', en:'All the guests were touched by her hospitality.', ja:'招かれた人は皆、彼女のもてなしに心を打たれた。', tip:'guest＝招待客。be touched by＝〜に感動する。hospitality＝もてなし・歓待。'},
+{cat:'😳 人間関係のドタバタ', en:'Her shabby clothes were not suitable for the occasion.', ja:'彼女のよれよれの服は、その場にはふさわしくなかった。', tip:'shabby＝みすぼらしい・よれよれの。suitable for＝〜にふさわしい。occasion＝場面・状況。'},
+{cat:'😳 人間関係のドタバタ', en:'That topic is too intimate to share with casual acquaintances.', ja:'たまたま知り合った人たちと話すには、その話題は立ち入りすぎている。', tip:'too ... to ~＝〜するには…すぎる。intimate＝親密な・個人的な。casual acquaintance＝ちょっとした知り合い。'},
+{cat:'😳 人間関係のドタバタ', en:'When Tom gets drunk, he gets crude and offensive. Stay away from him.', ja:'トムは酔っぱらうと下品になって、人に不快な思いをさせるから、近づいちゃだめだよ。', tip:'get drunk＝酔っ払う。crude＝下品な。offensive＝不快な・失礼な。stay away from＝〜に近づかない。'},
+{cat:'😳 人間関係のドタバタ', en:'He could hardly comprehend what she was implying.', ja:'彼女がほのめかしていることを彼はほとんど理解できなかった。', tip:'can hardly＝ほとんど〜できない。comprehend＝〜を理解する。imply＝〜をほのめかす。'},
+{cat:'😳 人間関係のドタバタ', en:'Bob felt embarrassed when he was teased in front of some girls.', ja:'女の子の前でからかわれて、ボブは恥ずかしかった。', tip:'feel embarrassed＝恥ずかしく感じる。tease＝〜をからかう。in front of＝〜の前で。'},
+{cat:'😳 人間関係のドタバタ', en:'His ambiguous reply made her all the more irritated.', ja:'彼の曖昧な返事はなおさら彼女をいらいらさせた。', tip:'ambiguous＝曖昧な。all the more＝なおさら・かえって。irritated＝いらいらした。'},
+{cat:'😳 人間関係のドタバタ', en:'Bob is very timid and blushes when chatting with girls.', ja:'ボブはとても臆病で女の子とおしゃべりすると赤面してしまう。', tip:'timid＝臆病な・内気な。blush＝赤面する。chat with＝〜とおしゃべりする。'},
+{cat:'😳 人間関係のドタバタ', en:'Nick looks down on anyone who comes from a rural area.', ja:'ニックは地方出身者なら誰であろうと見下している。', tip:'look down on＝〜を見下す（⇔ look up to）。rural area＝地方・田舎。'},
+{cat:'😳 人間関係のドタバタ', en:'"What\'s the matter, Bob? You look so miserable." "Leave me alone. It\'s none of your business."', ja:'「どうしたの、ボブ？そんなに暗い顔をして。」「ほっといてくれよ。君には関係ないことだ。」', tip:'What\'s the matter?＝どうしたの。miserable＝惨めな・浮かない顔の。Leave me alone.＝ほっといて。It\'s none of your business.＝あなたには関係ない。'},
+{cat:'😳 人間関係のドタバタ', en:'Although Bob was in disguise, I recognized him at a glance.', ja:'ボブは変装していたけれども、一目で彼だとわかった。', tip:'in disguise＝変装して。recognize＝〜を見分ける・認識する。at a glance＝一目で。'},
+{cat:'😳 人間関係のドタバタ', en:'"What are you chuckling about?" "Bob, you have your sweatshirt on backwards!" "Oops!"', ja:'「何をくすくす笑ってるんだ？」「ボブ、トレーナーが後ろ前よ。」「あっ！」', tip:'chuckle＝くすくす笑う。have ... on backwards＝〜を前後逆に着ている。Oops!＝あっ（失敗時の間投詞）。'},
+{cat:'😳 人間関係のドタバタ', en:'He is not good at making friends and always keeps to himself.', ja:'彼は友達作りが苦手で、いつも一人ぼっちでいる。', tip:'be not good at＝〜が苦手だ。make friends＝友達を作る。keep to oneself＝人と交わらない・一人でいる。'},
+{cat:'📚 社会適応・日常', en:'Having found no place he felt he belonged, he was extremely uneasy and lonely.', ja:'自分が受け入れられる場所を見つけられず、彼は極度の不安と孤独に陥っていた。', tip:'having found ...＝〜が見つからず（分詞構文の完了形）。belong＝所属する・居場所がある。uneasy＝不安な。'},
+{cat:'📚 社会適応・日常', en:'I found it pretty hard to adjust to my new surroundings.', ja:'新しい環境に順応するのはかなり大変なことだとわかった。', tip:'find it ... to do＝〜するのが…だとわかる。adjust to＝〜に順応する。surroundings＝周囲の環境。'},
+{cat:'📚 社会適応・日常', en:'I felt utterly out of place among those sophisticated people.', ja:'ああいう洗練された人たちの中で、自分はまったく場違いな気がした。', tip:'utterly＝まったく・完全に。out of place＝場違いな。sophisticated＝洗練された。'},
+{cat:'📚 社会適応・日常', en:'To tell the truth, I don\'t like classical music. On the other hand, Molly is really into it.', ja:'正直言って私はクラシック音楽は好きじゃない。かたや、モリーのほうは完全にはまっている。', tip:'to tell the truth＝正直に言うと。on the other hand＝一方で。be into＝〜にはまっている（口語）。'},
+{cat:'📚 社会適応・日常', en:'Bob derives pleasure from observing insects.', ja:'ボブは昆虫の観察に楽しみを感じている。', tip:'derive A from B＝BからAを得る。observe＝〜を観察する。insect＝昆虫。'},
+{cat:'📚 社会適応・日常', en:'"How about playing cards or something for a change?" "Sorry, I\'m not up for it."', ja:'「気分転換にトランプか何かしない？」「悪いけど、そういう気分じゃないよ。」', tip:'How about ...?＝〜はどう？。for a change＝気分転換に。be up for＝〜する気がある（口語）。'},
+{cat:'📚 社会適応・日常', en:'"After you." "No please, you go ahead." "Thanks." "You\'re welcome."', ja:'「お先にどうぞ。」「いや、あなたの方こそお先にどうぞ。」「すみません。」「どういたしまして。」', tip:'After you.＝お先にどうぞ（定番表現）。go ahead＝先に行く・進める。You\'re welcome.＝どういたしまして。'},
+{cat:'📚 社会適応・日常', en:'His niece is sociable and mature for her age. She could pass for twenty-something.', ja:'彼の姪は年の割には社交的で大人だ。二十代と言っても通用する。', tip:'niece＝姪。sociable＝社交的な。mature for one\'s age＝年齢の割に大人びている。pass for＝〜で通用する。'},
+{cat:'📚 社会適応・日常', en:'"Take care of yourself and say hi to your family for me." "I will. See you later."', ja:'「じゃあね。家族のみんなによろしく。」「ああ。またね。」', tip:'take care of yourself＝お大事に・元気でね。say hi to ... for me＝〜によろしく伝えて。See you later.＝またね。'},
+{cat:'📚 社会適応・日常', en:'I\'m looking forward to hearing from you. Sincerely, ((IN A LETTER))', ja:'お返事頂けるのを楽しみにしております。敬具 ((手紙で))', tip:'look forward to doing＝〜するのを楽しみにする。hear from＝〜から連絡がある。Sincerely＝敬具（手紙の結び）。'},
+{cat:'📚 社会適応・日常', en:'Can you spare a minute? I\'d like to discuss something of importance to both of us.', ja:'ちょっと時間を割いてくれませんか？二人にとって大事なことを話し合いたいんです。', tip:'spare＝〜を割く・都合をつける。discuss＝〜について話し合う。of importance＝重要な（= important）。'},
+{cat:'📚 社会適応・日常', en:'It may seem trivial to you but for me it\'s worth paying attention to.', ja:'あなたには些細なことに思えるかも知れませんが、私にとってそれは注意すべきことなんです。', tip:'trivial＝些細な。be worth doing＝〜する価値がある。pay attention to＝〜に注意を払う。'},
+{cat:'💔 恋愛のもつれ', en:'As far as Bob is concerned, anything goes. By contrast, Jane is very cautious.', ja:'ボブについて言えば、彼はどんなことでも受け入れるタイプだが、対照的にジェーンはとても慎重派だ。', tip:'as far as ... is concerned＝〜に関する限り。anything goes＝何でもあり。by contrast＝対照的に。cautious＝慎重な。'},
+{cat:'💔 恋愛のもつれ', en:'After an awkward pause, Bill took her by the hand and dragged her upstairs.', ja:'気まずい沈黙の後、ビルは彼女の手を取って上の階に引っ張って行った。', tip:'awkward pause＝気まずい間・沈黙。take ... by the hand＝〜の手を取る。drag＝〜を引っ張る。'},
+{cat:'💔 恋愛のもつれ', en:'Bill just wanted to comfort Monica, but she interpreted it as romantic interest.', ja:'ビルはただモニカを慰めたかっただけなのに、彼女は彼が自分に気があるのだと解釈した。', tip:'comfort＝〜を慰める。interpret A as B＝AをBと解釈する。romantic interest＝恋愛的な関心。'},
+{cat:'💔 恋愛のもつれ', en:'After making sure she was sound asleep, he crept out of the room and set off.', ja:'彼女が熟睡しているのを確かめて、彼はこっそり部屋を抜け出して旅立った。', tip:'make sure＝〜を確かめる。sound asleep＝ぐっすり眠って。creep out＝こっそり抜け出す。set off＝出発する。'},
+{cat:'💔 恋愛のもつれ', en:'Between you and me, Lisa, I came across Nick passionately embracing a woman.', ja:'ここだけの話だけど、リサ、女の人を熱く抱擁してるニックを見ちゃったんだ。', tip:'between you and me＝ここだけの話だが。come across＝〜に偶然出くわす。embrace＝〜を抱擁する。'},
+{cat:'💔 恋愛のもつれ', en:'Such a remark is open to misunderstanding.', ja:'そういう発言は誤解を招きやすい。', tip:'remark＝発言・意見。be open to＝〜を招きやすい・余地がある。misunderstanding＝誤解。'},
+{cat:'💔 恋愛のもつれ', en:'"I can\'t stand it anymore!" "Calm down. I\'ll come over as soon as possible." ((ON THE PHONE))', ja:'「もう我慢できないっ！」「落ちつけよ。すぐそこに行くから。」', tip:'stand＝〜を我慢する（否定文で）。calm down＝落ち着く。come over＝（相手のところへ）行く。'},
+{cat:'💔 恋愛のもつれ', en:'Don\'t take it literally. He is inclined to exaggerate.', ja:'そんなこと真に受けちゃだめだよ。彼は大げさに言う傾向があるから。', tip:'take ... literally＝〜を文字通りに受け取る。be inclined to＝〜する傾向がある。exaggerate＝誇張する。'},
+{cat:'💔 恋愛のもつれ', en:'"You should apologize to Lisa for making fun of her. You went too far this time." "Yeah.. I will, sometime when she\'s in a better mood."', ja:'「リサをばかにしたことを謝るべきだわ。今回はやりすぎよ。」「ああ、そうするよ。そのうち彼女の機嫌が直ったらね。」', tip:'apologize for＝〜のことで謝る。make fun of＝〜をからかう。go too far＝やり過ぎる。'},
+{cat:'💔 恋愛のもつれ', en:'"Lisa, are you getting along with Nick?" "Once in a while, I think of divorcing him." "You must be kidding!"', ja:'「リサ、ニックとうまくやってる？」「時々、離婚を考えることがあるわ。」「冗談だろ！」', tip:'get along with＝〜とうまくやる。once in a while＝時々。You must be kidding!＝冗談でしょう！'},
+{cat:'💔 恋愛のもつれ', en:'In tears, she tore up his letter and threw it away.', ja:'彼女は泣きながら、彼からの手紙をめちゃくちゃに引き裂いて捨てた。', tip:'in tears＝涙を流して。tear up＝〜を引き裂く。throw away＝〜を捨てる。'},
+{cat:'💔 恋愛のもつれ', en:'"Jennifer deceived me!" "You should have known better than to trust her."', ja:'「ジェニファーにだまされた！」「彼女を信じないくらいの分別があってもよかったのに。」', tip:'deceive＝〜をだます。should have known better＝もっと分別があってよかったのに。'},
+{cat:'💔 恋愛のもつれ', en:'Tom regretted having wasted a great deal of his life.', ja:'トムは自分の人生の多くを無駄にしてきたことを後悔した。', tip:'regret doing＝〜したことを後悔する。regret having done＝過去の完了を強調。waste＝〜を無駄にする。'},
+{cat:'💔 恋愛のもつれ', en:'I cannot look back on my adolescence without feeling depressed.', ja:'自分の思春期を振り返ると、いつも憂鬱な気分になる。', tip:'cannot ... without ~＝〜せずには…できない（二重否定）。look back on＝〜を振り返る。adolescence＝思春期。'},
+{cat:'💔 恋愛のもつれ', en:'"Jennifer left me for another guy." "Oh, you must be upset." "Not really. I\'m used to it."', ja:'「ジェニファーが俺をふって他の男のところにいったよ。」「えっ、それは辛いわね。」「そうでもないよ。慣れてるよ。」', tip:'leave A for B＝Aを捨ててBのところへ行く。be upset＝動揺している。be used to＝〜に慣れている。'},
+{cat:'💔 恋愛のもつれ', en:'"No wonder she didn\'t show up to see him off." "How come?" "They broke up." "Oh, what a pity!"', ja:'「彼女が見送りに来なかったのも当然だよ。」「どうして？」「二人は別れたんだ。」「えっ、かわいそうに！」', tip:'no wonder＝〜も当然だ。show up＝現れる。see ... off＝〜を見送る。break up＝別れる。'},
+{cat:'💔 恋愛のもつれ', en:'"Living here all by myself is torture!" he sobbed.', ja:'「ここで自分一人だけで生きていくなんて拷問だ」と彼はすすり泣きして言った。', tip:'all by myself＝完全に一人で。torture＝拷問（比喩的に苦痛）。sob＝すすり泣く。'},
+{cat:'💕 恋愛・結婚の行方', en:'"To be honest, I\'m crazy about Ken because he\'s brave, self-confident, and never afraid of taking risks." "If I were you, I\'d ask him out!"', ja:'「正直言うと私、ケンに夢中なの。だって、勇敢で自分に自信を持っていて、それに危険を冒すことを決して恐れないでしょ。」「私ならデートに誘うわ。」', tip:'be crazy about＝〜に夢中である。self-confident＝自信のある。ask ... out＝〜をデートに誘う。'},
+{cat:'💕 恋愛・結婚の行方', en:'"I\'ve been going with Jennifer on and off for ages." "You\'re as indecisive as ever. Isn\'t it about time you settled down?"', ja:'「ずいぶん長い間、ジェニファーとは付き合ったり別れたりの繰り返しだよ。」「相変わらず優柔不断ね。そろそろ落ち着いたらどう？」', tip:'go with＝〜と付き合う。on and off＝断続的に。indecisive＝優柔不断な。It\'s about time ...＝そろそろ〜する頃だ。'},
+{cat:'💕 恋愛・結婚の行方', en:'"It dawned on me that I had been taken in by Jennifer all along." "How naive! Didn\'t you see through her?"', ja:'「ジェニファーにずっとだまされていたのがわかってきたよ。」「何てうぶなの。彼女の本性が見抜けなかったの？」', tip:'It dawns on ... that ~＝〜だと（人）はわかってくる。be taken in＝だまされる。see through＝〜の本性を見抜く。'},
+{cat:'💕 恋愛・結婚の行方', en:'Even though she is seeing someone else, I won\'t give her up.', ja:'実際、彼女は誰かと付き合っているけれども、僕は彼女をあきらめない。', tip:'even though＝〜だけれども。see someone＝（恋愛的に）付き合う。give up＝〜をあきらめる。'},
+{cat:'💕 恋愛・結婚の行方', en:'"Hi, Jane. What\'s up?" "Not much. How about you?" "I got married to Jennifer." "Wow! Congratulations!"', ja:'「やあ、ジェーン。最近どう？」「別に。あなたは？」「ジェニファーと結婚したんだ。」「ええっ、おめでとう！」', tip:'What\'s up?＝どうしてる（口語挨拶）。Not much.＝特に何も（決まり文句）。get married to＝〜と結婚する。'},
+{cat:'💕 恋愛・結婚の行方', en:'Whenever you\'re in trouble or feeling down, I\'ll be there for you.', ja:'大変なことがあったり、落ち込んだりしたときはいつでも、私があなたのそばにいるわ。', tip:'whenever＝〜するときはいつも。be in trouble＝困っている。feel down＝落ち込む。be there for＝〜のそばにいる・支える。'},
+{cat:'💕 恋愛・結婚の行方', en:'"Delight" is the opposite of "sorrow."', ja:'「喜び」は「悲しみ」の反対です。', tip:'delight＝喜び。opposite＝反対のもの。sorrow＝悲しみ。'},
+{cat:'💕 恋愛・結婚の行方', en:'"Jennifer went so far as to call me an idiot and she wouldn\'t take it back." "Serves you right! You provoked her, didn\'t you?"', ja:'「ジェニファーは僕をばか呼ばわりまでして、しかもそれを撤回しないんだ。」「自業自得よ！あなたからけしかけたんでしょう？」', tip:'go so far as to＝〜しさえする。take back＝（発言を）撤回する。Serves you right!＝自業自得だ。provoke＝〜を挑発する。'},
+{cat:'💕 恋愛・結婚の行方', en:'"Why do you put up with her arrogance? She\'s just taking advantage of you." "Shut up!"', ja:'「彼女の傲慢さにどうして我慢しているの？利用されているだけよ。」「うるさい！」', tip:'put up with＝〜を我慢する。arrogance＝傲慢さ。take advantage of＝〜を利用する。Shut up!＝黙れ（口語・強い表現）。'},
+{cat:'💕 恋愛・結婚の行方', en:'Take your time. I know you need a couple of days to reflect on it.', ja:'慌てなくていいですよ。そのことをじっくり考えるには2、3日必要でしょうから。', tip:'Take your time.＝ゆっくりでいい。a couple of＝2、3の。reflect on＝〜についてじっくり考える。'},
+{cat:'🙏 日常の締めくくり', en:'Bob has to get through this ordeal on his own.', ja:'ボブは自分の力でこの厳しい試練を乗り切らなければいけない。', tip:'get through＝〜を乗り切る。ordeal＝試練。on one\'s own＝自分の力で。'},
+{cat:'🙏 日常の締めくくり', en:'Flies and mosquitoes interfered with his meditation.', ja:'ハエと蚊が彼の瞑想の邪魔をした。', tip:'fly（複数flies）＝ハエ。mosquito＝蚊。interfere with＝〜の邪魔をする。meditation＝瞑想。'},
+{cat:'🙏 日常の締めくくり', en:'The sacred ritual took place after being postponed twice.', ja:'2度の延期の後、その神聖な儀式は執り行われた。', tip:'sacred＝神聖な。ritual＝儀式。take place＝行われる。postpone＝〜を延期する。'},
+{cat:'🙏 日常の締めくくり', en:'All at once, the Buddhist priest burst into laughter, spoiling the solemn atmosphere.', ja:'お坊さんが突然大声で笑い出し、厳粛な雰囲気を台無しにした。', tip:'all at once＝突然（= suddenly）。burst into laughter＝突然笑い出す。spoil＝〜を台無しにする。solemn＝厳粛な。'},
+{cat:'🙏 日常の締めくくり', en:'Cover your mouth when you cough, sneeze, or yawn.', ja:'咳、くしゃみ、あくびをするときは口を手で隠しなさい。', tip:'cover＝〜を覆う。cough＝咳をする。sneeze＝くしゃみをする。yawn＝あくびをする。'},
+{cat:'🙏 日常の締めくくり', en:'"One of her relatives passed away three days ago." "Oh, that\'s too bad. I\'m so sorry."', ja:'「彼女の親戚が3日前に亡くなったんだ。」「えっ、それは大変ね。お気の毒だわ。」', tip:'relative＝親戚。pass away＝亡くなる（dieの婉曲表現）。That\'s too bad.＝それは大変・気の毒に。'},
+{cat:'🙏 日常の締めくくり', en:'Besides attending the funeral, she needs to make all the arrangements.', ja:'彼女は葬儀に参列するだけでなく、すべての段取りをつけなければならない。', tip:'besides＝〜に加えて（前置詞）。attend＝〜に出席する。funeral＝葬儀。make arrangements＝手はずを整える。'},
+{cat:'🙏 日常の締めくくり', en:'"I feel for you, Jane. Grief doesn\'t fade away quickly." "I\'m OK. I\'ll get over it."', ja:'「ジェーン、気持ちはわかるよ。悲しみはすぐに消えるものじゃない。」「大丈夫。乗り越えてみせるわ。」', tip:'feel for＝〜に同情する。grief＝深い悲しみ。fade away＝薄れて消える。get over＝〜を乗り越える。'},
+{cat:'🙏 日常の締めくくり', en:'She cherishes the precious memories of her childhood.', ja:'彼女は子供の頃のかけがえのない思い出を大切にしている。', tip:'cherish＝〜を大切にする。precious＝かけがえのない・貴重な。memory＝思い出。'},
+{cat:'🙏 日常の締めくくり', en:'"Speaking of Jennifer, she got engaged to a businessman." "I\'m at a loss for words! I hope she won\'t break it off."', ja:'「ジェニファーと言えば、彼女、実業家と婚約したんだよ。」「あきれてものが言えないわ。破談にならなきゃいいけどね。」', tip:'speaking of＝〜と言えば。get engaged to＝〜と婚約する。be at a loss for words＝言葉に詰まる。break it off＝（婚約などを）解消する。'},
+{cat:'🙏 日常の締めくくり', en:'These days, the motives for marriage are not necessarily pure. Take Jennifer for example.', ja:'近ごろでは、結婚の動機は必ずしも純粋とは限らない。例えば、ジェニファーを見てごらんよ。', tip:'these days＝近ごろ。motive＝動機。not necessarily＝必ずしも〜とは限らない。take ... for example＝〜を例に取ると。'},
+{cat:'🙏 日常の締めくくり', en:'Go easy on Bob. You know, he\'s been going through a rough period recently.', ja:'ボブにはやさしく接してあげてくれよ。ほら、彼は最近ずっと辛いこと続きなんだ。', tip:'go easy on＝〜に優しく接する・手加減する。go through＝〜を経験する（困難など）。rough period＝辛い時期。'},
+{cat:'🙏 日常の締めくくり', en:'"By the way, do you have the time?" "Let\'s see.. it\'s a quarter to eight."', ja:'「ところで、今何時？」「え〜っと、8時15分前だよ。」', tip:'by the way＝ところで。Do you have the time?＝今何時ですか（Do you have time?＝時間ある？と区別）。a quarter to eight＝8時15分前。'},
+{cat:'🙏 日常の締めくくり', en:'"Let\'s call it a day, Bob. I\'m starved." "Yep. I\'ll buy you dinner."', ja:'「ボブ、今日はこの辺までにしましょう。お腹がぺこぺこ。」「ああ。晩飯は僕がおごるよ。」', tip:'call it a day＝今日はこれで終わりにする（慣用句）。starved＝ひどく空腹の。buy ... dinner＝〜に夕食をおごる。'},
 ];
-
-
-// ── State ──────────────────────────────────────────────────────────
+const audioFiles=[{file:'41-Section_41.mp4',label:'1'},{file:'42-Section_42.mp4',label:'2'},{file:'43-Section_43.mp4',label:'3'},{file:'44-Section_44.mp4',label:'4'},{file:'45-Section_45.mp4',label:'5'}];
+let audioEls=audioFiles.map(f=>{const a=new Audio('duo_audio/'+f.file); a.preload='none'; return a;});
+(function buildTrackButtons(){
+  const row=document.getElementById('audio-track-row');
+  audioFiles.forEach((f,i)=>{
+    const b=document.createElement('button');
+    b.className='audio-track-btn';
+    b.id='audio-track-'+i;
+    b.textContent=(i+1);
+    b.onclick=()=>toggleTrack(i);
+    row.appendChild(b);
+  });
+  const loopBtn=document.createElement('button');
+  loopBtn.className='audio-loop-all-btn';
+  loopBtn.id='audio-loop-all-btn';
+  loopBtn.textContent='🔁';
+  loopBtn.onclick=toggleLoopAll;
+  row.appendChild(loopBtn);
+})();
+let currentPlayingIdx=-1;
+let loopAllOn=false;
+function stopAllAudio(){
+  audioEls.forEach((a,i)=>{ a.pause(); a.currentTime=0; a.onended=null; const b=document.getElementById('audio-track-'+i); if(b){b.classList.remove('playing');} });
+  currentPlayingIdx=-1;
+}
+function playTrack(i,chain){
+  stopAllAudio();
+  currentPlayingIdx=i;
+  const a=audioEls[i];
+  const btn=document.getElementById('audio-track-'+i);
+  btn.classList.add('playing');
+  a.currentTime=0;
+  a.onended=()=>{
+    btn.classList.remove('playing');
+    if(chain){
+      const nextIdx=(i+1)%audioFiles.length;
+      playTrack(nextIdx,true);
+    } else {
+      currentPlayingIdx=-1;
+    }
+  };
+  a.play();
+}
+function toggleTrack(i){
+  if(currentPlayingIdx===i){
+    stopAllAudio();
+    loopAllOn=false;
+    document.getElementById('audio-loop-all-btn').classList.remove('on');
+    document.getElementById('audio-loop-all-btn').textContent='🔁';
+  } else {
+    loopAllOn=false;
+    document.getElementById('audio-loop-all-btn').classList.remove('on');
+    document.getElementById('audio-loop-all-btn').textContent='🔁';
+    playTrack(i,false);
+  }
+}
+function toggleLoopAll(){
+  if(loopAllOn){
+    loopAllOn=false;
+    stopAllAudio();
+    document.getElementById('audio-loop-all-btn').classList.remove('on');
+    document.getElementById('audio-loop-all-btn').textContent='🔁';
+  } else {
+    loopAllOn=true;
+    document.getElementById('audio-loop-all-btn').classList.add('on');
+    document.getElementById('audio-loop-all-btn').textContent='⏹';
+    playTrack(0,true);
+  }
+}
 let currentIndex=0,isEnToJa=true,isRandom=false,isRepeating=false;
 let mastered=new Set(),activeCategory='all';
-let isAutoPlaying=false,autoStopped=false,autoMode=null,autoTimeout=null;
+let isAutoPlaying=false,autoStopped=false,autoTimeout=null;
 let isSpeaking=false,keepAliveTimer=null,speechRate=1.0,voices=[],voicePref='US';
-
 function getActive(){return phrases.filter((p,i)=>{if(activeCategory!=='all'&&p.cat!==activeCategory)return false;if(mastered.has(i))return false;return true;});}
-function buildCatRows(){
-  const wrap=document.getElementById('cat-rows');wrap.innerHTML='';
-  Object.keys(CATS).forEach(cat=>{
-    const total=phrases.filter(p=>p.cat===cat).length;
-    const mastCnt=phrases.filter((p,i)=>p.cat===cat&&mastered.has(i)).length;
-    const row=document.createElement('div');
-    row.className='cat-row'+(activeCategory===cat?' active':'');
-    row.innerHTML=`<div class="cat-dot${mastCnt===total?' done':''}"></div><div class="cat-row-name">${cat}</div><div class="cat-row-count">${mastCnt}/${total}</div>`;
-    row.onclick=()=>selectCategory(cat);wrap.appendChild(row);
-  });
-}
+function buildCatRows(){const wrap=document.getElementById('cat-rows');wrap.innerHTML='';Object.keys(CATS).forEach(cat=>{const total=phrases.filter(p=>p.cat===cat).length;const mc=phrases.filter((p,i)=>p.cat===cat&&mastered.has(i)).length;const row=document.createElement('div');row.className='cat-row'+(activeCategory===cat?' active':'');row.innerHTML=`<div class="cat-dot${mc===total?' done':''}"></div><div class="cat-row-name">${cat}</div><div class="cat-row-count">${mc}/${total}</div>`;row.onclick=()=>selectCategory(cat);wrap.appendChild(row);});}
 function selectCategory(cat){activeCategory=cat;currentIndex=0;document.getElementById('chip-all').className='chip-all'+(cat==='all'?' active':'');buildCatRows();updateFilterLabel();update();document.getElementById('filter-chips-wrap').classList.remove('open');document.getElementById('filter-toggle-icon').classList.remove('open');}
 function updateFilterLabel(){document.getElementById('filter-current-label').textContent=activeCategory==='all'?'すべて':activeCategory;}
 function toggleFilterPanel(){document.getElementById('filter-chips-wrap').classList.toggle('open');document.getElementById('filter-toggle-icon').classList.toggle('open');}
-
 function loadVoices(){const all=window.speechSynthesis.getVoices();const okNames=new Set(['Microsoft Ava Online (Natural) - English (United States)','Microsoft Andrew Online (Natural) - English (United States)','Microsoft Emma Online (Natural) - English (United States)','Microsoft Brian Online (Natural) - English (United States)','Microsoft Jenny Online (Natural) - English (United States)','Microsoft Guy Online (Natural) - English (United States)','Microsoft Aria Online (Natural) - English (United States)','Microsoft Ana Online (Natural) - English (United States)','Microsoft Christopher Online (Natural) - English (United States)','Microsoft Eric Online (Natural) - English (United States)','Microsoft Michelle Online (Natural) - English (United States)','Microsoft Steffan Online (Natural) - English (United States)','Microsoft Ava Multilingual Online (Natural) - English (United States)','Microsoft Andrew Multilingual Online (Natural) - English (United States)','Microsoft Emma Multilingual Online (Natural) - English (United States)','Microsoft Brian Multilingual Online (Natural) - English (United States)','Microsoft Hazel - English (United Kingdom)','Microsoft Susan - English (United Kingdom)','Microsoft George - English (United Kingdom)','Microsoft Libby Online (Natural) - English (United Kingdom)','Microsoft Maisie Online (Natural) - English (United Kingdom)','Microsoft Thomas Online (Natural) - English (United Kingdom)','Microsoft Sonia Online (Natural) - English (United Kingdom)','Microsoft Ryan Online (Natural) - English (United Kingdom)','Microsoft William Online (Natural) - English (Australia)','Microsoft Natasha Online (Natural) - English (Australia)','Microsoft Clara Online (Natural) - English (Canada)','Microsoft Liam Online (Natural) - English (Canada)','Microsoft Leah Online (Natural) - English (South Africa)','Microsoft Luke Online (Natural) - English (South Africa)','Microsoft Emily Online (Natural) - English (Ireland)','Microsoft Connor Online (Natural) - English (Ireland)','Microsoft Yan Online (Natural) - English (Hong Kong SAR)','Microsoft Sam Online (Natural) - English (Hong Kong SAR)','Microsoft Asilia Online (Natural) - English (Kenya)','Microsoft Chilemba Online (Natural) - English (Kenya)','Microsoft Ezinne Online (Natural) - English (Nigeria)','Microsoft Abeo Online (Natural) - English (Nigeria)','Microsoft Molly Online (Natural) - English (New Zealand)','Microsoft Luna Online (Natural) - English (Singapore)','Microsoft Imani Online (Natural) - English (Tanzania)','Microsoft Elimu Online (Natural) - English (Tanzania)','Microsoft James Online (Natural) - English (Philippines)','Microsoft Neerja Online (Natural) - English (India)','Microsoft Prabhat Online (Natural) - English (India)']);const wl=all.filter(v=>okNames.has(v.name));voices=wl.length?wl:all.filter(v=>v.lang.startsWith('en'));if(!voices.length)voices=all;applyVoicePref();}
 loadVoices();
 window.speechSynthesis.onvoiceschanged=loadVoices;
@@ -401,52 +351,20 @@ function speakOne(text,onEnd){window.speechSynthesis.cancel();isSpeaking=false;c
 speakOne._t=null;
 function speakP(){return new Promise(r=>{const a=getActive();if(!a.length){r();return;}speakOne(a[currentIndex].en,r);});}
 function speakCurrent(){const a=getActive();if(!a.length)return;speakOne(a[currentIndex].en);}
-function speakRepeat(){if(!isRepeating||isAutoPlaying)return;const _a=getActive();if(!_a.length)return;const _t=_a[currentIndex].en;speakOne(_t,()=>{if(isRepeating&&!isAutoPlaying){clearTimeout(speakRepeat._t);speakRepeat._t=setTimeout(()=>speakRepeat(),300);}});}
+function speakRepeat(){if(!isRepeating||isAutoPlaying)return;const a=getActive();if(!a.length)return;speakOne(a[currentIndex].en,()=>{if(isRepeating&&!isAutoPlaying){clearTimeout(speakRepeat._t);speakRepeat._t=setTimeout(()=>speakRepeat(),300);}}); }
 speakRepeat._t=null;
 function toggleRepeat(){isRepeating=!isRepeating;const btn=document.getElementById('repeat-btn');btn.textContent=isRepeating?'🔁 繰り返し: ON':'🔁 繰り返し';btn.className=isRepeating?'btn btn-on':'btn btn-secondary';if(isRepeating){const a=getActive();if(a.length)speakRepeat();}else{window.speechSynthesis.cancel();isSpeaking=false;stopKeepAlive();clearTimeout(speakRepeat._t);}}
-
-function update(){
-  const active=getActive();const noEl=document.getElementById('no-active');
-  if(!active.length){noEl.classList.add('show');document.getElementById('main-card').style.display='none';document.getElementById('tap-hint').style.display='none';updateMasterBadge();buildCatRows();return;}
-  noEl.classList.remove('show');document.getElementById('main-card').style.display='';document.getElementById('tap-hint').style.display='';
-  if(currentIndex>=active.length)currentIndex=0;
-  const item=active[currentIndex];const realIdx=phrases.indexOf(item);
-  document.getElementById('card-num').textContent=String(realIdx+401).padStart(3,'0');
-  document.getElementById('card-cat').textContent=item.cat;
-  document.getElementById('cur-num').textContent=currentIndex+1;
-  document.getElementById('tot-num').textContent=active.length;
-  const pct=active.length>1?((currentIndex/(active.length-1))*100).toFixed(0):100;
-  document.getElementById('progress-bar').style.width=pct+'%';
-  if(isEnToJa){document.getElementById('main-text').innerHTML=item.en;document.getElementById('answer-ja').textContent=item.ja;}
-  else{document.getElementById('main-text').innerHTML=item.ja;document.getElementById('answer-ja').textContent=item.en;}
-  const tipEl=document.getElementById('answer-tip');
-  if(item.tip){tipEl.textContent=item.tip;tipEl.style.display='';}else{tipEl.style.display='none';}
-  document.getElementById('mode-badge').textContent=isEnToJa?'📖 英 → 日':'📖 日 → 英';
-  document.getElementById('answer-wrap').classList.remove('show');document.getElementById('main-card').classList.remove('revealed');
-  const cb=document.getElementById('master-cb');cb.checked=mastered.has(realIdx);
-  if(mastered.has(realIdx))document.getElementById('mastered-badge').classList.add('show');else document.getElementById('mastered-badge').classList.remove('show');
-  updateMasterBadge();buildCatRows();
-}
-function updateMasterBadge(){
-  const cnt=mastered.size;document.getElementById('master-badge-top').textContent=`マスター: ${cnt} / ${phrases.length}`;
-  const sumEl=document.getElementById('master-summary');
-  if(cnt>0){sumEl.classList.add('show');sumEl.textContent=`✅ マスター済み: ${cnt}件 — タップしてリスト表示`;renderMasterList();}else{sumEl.classList.remove('show');}
-}
-function renderMasterList(){
-  const listEl=document.getElementById('master-list');listEl.innerHTML='';
-  [...mastered].sort((a,b)=>a-b).forEach(idx=>{const item=phrases[idx];const d=document.createElement('div');d.style.cssText='padding:8px 0;border-bottom:1px solid #fdf4ff;font-size:12px;';d.innerHTML=`<span style="font-family:monospace;font-size:10px;color:#64748b;">${String(idx+401).padStart(3,'0')}</span> ${item.en}`;listEl.appendChild(d);});
-}
+function update(){const active=getActive();const noEl=document.getElementById('no-active');if(!active.length){noEl.classList.add('show');document.getElementById('main-card').style.display='none';document.getElementById('tap-hint').style.display='none';updateMasterBadge();buildCatRows();return;}noEl.classList.remove('show');document.getElementById('main-card').style.display='';document.getElementById('tap-hint').style.display='';if(currentIndex>=active.length)currentIndex=0;const item=active[currentIndex];const realIdx=phrases.indexOf(item);document.getElementById('card-num').textContent=String(realIdx+OFFSET).padStart(3,'0');document.getElementById('card-cat').textContent=item.cat;document.getElementById('cur-num').textContent=currentIndex+1;document.getElementById('tot-num').textContent=active.length;const pct=active.length>1?((currentIndex/(active.length-1))*100).toFixed(0):100;document.getElementById('progress-bar').style.width=pct+'%';if(isEnToJa){document.getElementById('main-text').innerHTML=item.en;document.getElementById('answer-ja').textContent=item.ja;}else{document.getElementById('main-text').innerHTML=item.ja;document.getElementById('answer-ja').textContent=item.en;}const tipEl=document.getElementById('answer-tip');if(item.tip){tipEl.textContent=item.tip;tipEl.style.display='';}else{tipEl.style.display='none';}document.getElementById('answer-wrap').classList.remove('show');document.getElementById('main-card').classList.remove('revealed');const cb=document.getElementById('master-cb');cb.checked=mastered.has(realIdx);if(mastered.has(realIdx))document.getElementById('mastered-badge').classList.add('show');else document.getElementById('mastered-badge').classList.remove('show');updateMasterBadge();buildCatRows();}
+function updateMasterBadge(){const cnt=mastered.size;document.getElementById('master-badge-top').textContent=`マスター: ${cnt} / ${phrases.length}`;const sumEl=document.getElementById('master-summary');if(cnt>0){sumEl.classList.add('show');sumEl.textContent=`✅ マスター済み: ${cnt}件 — タップしてリスト表示`;renderMasterList();}else sumEl.classList.remove('show');}
+function renderMasterList(){const listEl=document.getElementById('master-list');listEl.innerHTML='';[...mastered].sort((a,b)=>a-b).forEach(idx=>{const item=phrases[idx];const d=document.createElement('div');d.style.cssText='padding:8px 0;border-bottom:1px solid #f8fafc;font-size:12px;';d.innerHTML=`<span style="font-family:monospace;font-size:10px;color:#64748b;">${String(idx+OFFSET).padStart(3,'0')}</span> ${item.en.substring(0,55)}...`;listEl.appendChild(d);});}
 function toggleMasterList(){const w=document.getElementById('master-list-wrap');w.style.display=w.style.display==='none'?'':'none';}
 function clearAllMaster(){if(!confirm('マスター済みをすべて解除しますか？'))return;mastered.clear();currentIndex=0;update();document.getElementById('master-list-wrap').style.display='none';}
-
 function handleTap(){if(isAutoPlaying)return;const wrap=document.getElementById('answer-wrap');if(!wrap.classList.contains('show')){wrap.classList.add('show');document.getElementById('main-card').classList.add('revealed');}}
 function toggleMaster(e){const active=getActive();if(!active.length)return;const item=active[currentIndex];const realIdx=phrases.indexOf(item);if(e.target.checked){mastered.add(realIdx);document.getElementById('mastered-badge').classList.add('show');setTimeout(()=>{if(currentIndex>=getActive().length)currentIndex=0;update();},400);}else{mastered.delete(realIdx);document.getElementById('mastered-badge').classList.remove('show');}updateMasterBadge();buildCatRows();}
-
-function next(){const a=getActive();if(!a.length)return;if(isRepeating){isRepeating=false;window.speechSynthesis.cancel();clearTimeout(speakRepeat._t);const btn=document.getElementById('repeat-btn');btn.textContent='🔁 繰り返し';btn.className='btn btn-secondary';}if(isRandom)currentIndex=Math.floor(Math.random()*a.length);else currentIndex=(currentIndex+1)%a.length;update();}
-function prev(){const a=getActive();if(!a.length)return;if(isRepeating){isRepeating=false;window.speechSynthesis.cancel();clearTimeout(speakRepeat._t);const btn=document.getElementById('repeat-btn');btn.textContent='🔁 繰り返し';btn.className='btn btn-secondary';}currentIndex=(currentIndex-1+a.length)%a.length;update();}
-function toggleRandom(){isRandom=!isRandom;const btn=document.getElementById('random-btn');btn.textContent=isRandom?'🔀 ランダム: ON':'🔀 ランダム: OFF';btn.className=isRandom?'btn btn-on':'btn btn-secondary';document.getElementById('order-badge').textContent=isRandom?'ランダム':'順番通り';}
+function next(){const a=getActive();if(!a.length)return;if(isRandom)currentIndex=Math.floor(Math.random()*a.length);else currentIndex=(currentIndex+1)%a.length;update();if(isRepeating){clearTimeout(speakRepeat._t);speakRepeat();}}
+function prev(){const a=getActive();if(!a.length)return;currentIndex=(currentIndex-1+a.length)%a.length;update();if(isRepeating){clearTimeout(speakRepeat._t);speakRepeat();}}
+function toggleRandom(){isRandom=!isRandom;const btn=document.getElementById('random-btn');btn.textContent=isRandom?'🔀 ランダム: ON':'🔀 ランダム: OFF';btn.className=isRandom?'btn btn-on':'btn btn-secondary';}
 function switchMode(){if(isAutoPlaying)return;isEnToJa=!isEnToJa;update();}
-
 function delayP(ms){return new Promise(r=>{if(autoStopped){r();return;}autoTimeout=setTimeout(r,ms);});}
 function setAutoPanel(s,i,c){document.getElementById('auto-step-title').textContent=s;document.getElementById('auto-instruction').textContent=i;document.getElementById('auto-count').textContent=c;}
 function enterAutoUI(){isAutoPlaying=true;autoStopped=false;document.getElementById('normal-controls').style.display='none';document.getElementById('auto-controls').style.display='';document.getElementById('auto-panel').classList.add('show');document.getElementById('tap-hint').style.display='none';document.getElementById('master-wrap').classList.add('disabled');document.getElementById('main-card').classList.remove('tappable');document.getElementById('main-card').classList.add('no-tap');}
@@ -454,57 +372,27 @@ function exitAutoUI(){autoStopped=true;isAutoPlaying=false;window.speechSynthesi
 function stopAutoPlay(){exitAutoUI();update();}
 function showHidden(){document.getElementById('main-text').textContent='？？？';document.getElementById('answer-wrap').classList.remove('show');document.getElementById('main-card').classList.remove('revealed');}
 function showAll(){const a=getActive();if(!a.length)return;document.getElementById('main-text').innerHTML=a[currentIndex].en;document.getElementById('answer-wrap').classList.add('show');document.getElementById('main-card').classList.add('revealed');}
-
-async function runShadowing(){
-  const active=getActive();if(!active.length){stopAutoPlay();return;}
-  const startIdx=currentIndex;
-  for(let i=0;i<active.length;i++){
-    if(autoStopped)break;currentIndex=(startIdx+i)%active.length;update();const n=i+1,tot=active.length;
-    showHidden();setAutoPanel(`カード ${n}/${tot} — STEP 1`,'👂 発話せずに2回聴いてください。','1/2回目…');await speakP();if(autoStopped)break;await delayP(350);if(autoStopped)break;
-    setAutoPanel(`カード ${n}/${tot} — STEP 1`,'👂 発話せずに2回聴いてください。','2/2回目…');await speakP();if(autoStopped)break;await delayP(450);if(autoStopped)break;
-    showHidden();setAutoPanel(`カード ${n}/${tot} — STEP 2`,'🗣️ 音声に合わせてシャドウイングしてください。','1/2回目…');await speakP();if(autoStopped)break;await delayP(350);if(autoStopped)break;
-    setAutoPanel(`カード ${n}/${tot} — STEP 2`,'🗣️ 音声に合わせてシャドウイングしてください。','2/2回目…');await speakP();if(autoStopped)break;await delayP(450);if(autoStopped)break;
-    showAll();setAutoPanel(`カード ${n}/${tot} — STEP 3`,'📖 英文・日本語訳を見ながら2回シャドウイング。','1/2回目…');await speakP();if(autoStopped)break;await delayP(350);if(autoStopped)break;
-    setAutoPanel(`カード ${n}/${tot} — STEP 3`,'📖 英文・日本語訳を見ながら2回シャドウイング。','2/2回目…');await speakP();if(autoStopped)break;await delayP(450);if(autoStopped)break;
-    showHidden();setAutoPanel(`カード ${n}/${tot} — STEP 4`,'🙈 何も見ずに2回シャドウイングしてください。','1/2回目…');await speakP();if(autoStopped)break;await delayP(350);if(autoStopped)break;
-    setAutoPanel(`カード ${n}/${tot} — STEP 4`,'🙈 何も見ずに2回シャドウイングしてください。','2/2回目…');await speakP();if(autoStopped)break;await delayP(700);
-  }
-  if(!autoStopped){setAutoPanel('完了！','🎉 シャドウイング完了しました！','');await delayP(2000);stopAutoPlay();}
-}
-function startShadowing(){if(!getActive().length){alert('出題できるカードがありません。');return;}autoMode='shadow';enterAutoUI();runShadowing();}
-
-async function runContinuous(){
-  let lc=0;
-  while(!autoStopped){
-    const active=getActive();if(!active.length){stopAutoPlay();return;}lc++;const si=currentIndex;
-    for(let i=0;i<active.length;i++){if(autoStopped)break;currentIndex=(si+i)%active.length;update();document.getElementById('answer-wrap').classList.add('show');document.getElementById('main-card').classList.add('revealed');setAutoPanel(`連続再生 ${i+1}/${active.length}（${lc}周目）`,'▶ 英語音声を再生中 — ⏹ 停止ボタンで終了','');await speakP();if(autoStopped)break;await delayP(500);}
-    if(!autoStopped)currentIndex=0;
-  }
-}
-function startContinuous(){if(!getActive().length){alert('出題できるカードがありません。');return;}autoMode='continuous';enterAutoUI();runContinuous();}
-
-function openGuide(){document.getElementById('guide-overlay').classList.add('show');document.getElementById('guide-overlay').scrollTop=0;}
-function closeGuide(){document.getElementById('guide-overlay').classList.remove('show');}
-function handleOverlayClick(e){if(e.target===document.getElementById('guide-overlay'))closeGuide();}
-
+async function runShadowing(){const active=getActive();if(!active.length){stopAutoPlay();return;}const si=currentIndex;for(let i=0;i<active.length;i++){if(autoStopped)break;currentIndex=(si+i)%active.length;update();const n=i+1,tot=active.length;showHidden();setAutoPanel(`カード ${n}/${tot} — STEP 1`,'👂 発話せずに2回聴いてください。','1/2回目…');await speakP();if(autoStopped)break;await delayP(350);if(autoStopped)break;setAutoPanel(`カード ${n}/${tot} — STEP 1`,'👂 発話せずに2回聴いてください。','2/2回目…');await speakP();if(autoStopped)break;await delayP(450);if(autoStopped)break;showHidden();setAutoPanel(`カード ${n}/${tot} — STEP 2`,'🗣️ 音声に合わせてシャドウイングしてください。','1/2回目…');await speakP();if(autoStopped)break;await delayP(350);if(autoStopped)break;setAutoPanel(`カード ${n}/${tot} — STEP 2`,'🗣️ 音声に合わせてシャドウイングしてください。','2/2回目…');await speakP();if(autoStopped)break;await delayP(450);if(autoStopped)break;showAll();setAutoPanel(`カード ${n}/${tot} — STEP 3`,'📖 英文・日本語訳を見ながら2回シャドウイング。','1/2回目…');await speakP();if(autoStopped)break;await delayP(350);if(autoStopped)break;setAutoPanel(`カード ${n}/${tot} — STEP 3`,'📖 英文・日本語訳を見ながら2回シャドウイング。','2/2回目…');await speakP();if(autoStopped)break;await delayP(450);if(autoStopped)break;showHidden();setAutoPanel(`カード ${n}/${tot} — STEP 4`,'🙈 何も見ずに2回シャドウイングしてください。','1/2回目…');await speakP();if(autoStopped)break;await delayP(350);if(autoStopped)break;setAutoPanel(`カード ${n}/${tot} — STEP 4`,'🙈 何も見ずに2回シャドウイングしてください。','2/2回目…');await speakP();if(autoStopped)break;await delayP(700);}if(!autoStopped){setAutoPanel('完了！','🎉 シャドウイング完了しました！','');await delayP(2000);stopAutoPlay();}}
+function startShadowing(){if(!getActive().length){alert('出題できるカードがありません。');return;}enterAutoUI();runShadowing();}
+async function runContinuous(){let lc=0;while(!autoStopped){const active=getActive();if(!active.length){stopAutoPlay();return;}lc++;const si=currentIndex;for(let i=0;i<active.length;i++){if(autoStopped)break;currentIndex=(si+i)%active.length;update();document.getElementById('answer-wrap').classList.add('show');document.getElementById('main-card').classList.add('revealed');setAutoPanel(`連続再生 ${i+1}/${active.length}（${lc}周目）`,'▶ 英語音声を再生中 — ⏹ 停止ボタンで終了','');await speakP();if(autoStopped)break;await delayP(500);}if(!autoStopped)currentIndex=0;}}
+function startContinuous(){if(!getActive().length){alert('出題できるカードがありません。');return;}enterAutoUI();runContinuous();}
 buildCatRows();updateFilterLabel();update();
 </script>
 <script>
-// スワイプ機能
 (function() {
-  var startX = 0, startY = 0;
-  document.addEventListener('touchstart', function(e) {
-    startX = e.touches[0].clientX;
-    startY = e.touches[0].clientY;
-  }, { passive: true });
-  document.addEventListener('touchend', function(e) {
-    var dx = e.changedTouches[0].clientX - startX;
-    var dy = e.changedTouches[0].clientY - startY;
-    if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 50) {
-      if (dx < 0) next();
-      else prev();
-    }
-  }, { passive: true });
+var startX = 0, startY = 0;
+document.addEventListener('touchstart', function(e) {
+startX = e.touches[0].clientX;
+startY = e.touches[0].clientY;
+}, { passive: true });
+document.addEventListener('touchend', function(e) {
+var dx = e.changedTouches[0].clientX - startX;
+var dy = e.changedTouches[0].clientY - startY;
+if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 50) {
+if (dx < 0) next();
+else prev();
+}
+}, { passive: true });
 })();
 </script>
 </body>
