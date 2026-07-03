@@ -255,26 +255,13 @@ const phrases=[
 {cat:'🗣️ 日常会話', en:'"This is fake, isn\'t it?" "Hey, it\'s a genuine antique!" "No way!"', ja:'「これって偽物だろう？」「何言ってるの。本物の骨董品よ。」「まさか！」', tip:'fake＝偽物（名詞・形容詞）。genuine＝本物の・正真正銘の。antique＝骨董品・アンティーク。No way!＝まさか！・絶対ない！（口語）。'},
 ];
 const audioFiles=[{file:'01-Section_1.mp4',label:'1'},{file:'02-Section_2.mp4',label:'2'},{file:'03-Section_3.mp4',label:'3'},{file:'04-Section_4.mp4',label:'4'},{file:'05-Section_5.mp4',label:'5'}];
-function makeSrcCandidates(file){
-  const alt=file.includes('_')?file.replace(/_/g,' '):null;
-  return alt?[file,alt]:[file];
+// ファイル名の表記ゆれ（アンダースコア／半角スペース）を自動で吸収するため、
+// 候補となるファイル名パターンを複数用意し、再生時に順番に試す。
+function audioCandidates(name){
+  const variants=new Set([name, name.replace(/_/g,' '), name.replace(/ /g,'_')]);
+  return [...variants];
 }
-let audioEls=audioFiles.map(f=>{
-  const a=new Audio();
-  a.preload='none';
-  a._candidates=makeSrcCandidates(f.file);
-  a._candIdx=0;
-  a.src='duo_audio/'+encodeURIComponent(a._candidates[0]);
-  return a;
-});
-function advanceCandidate(a){
-  if(a._candIdx<a._candidates.length-1){
-    a._candIdx++;
-    a.src='duo_audio/'+encodeURIComponent(a._candidates[a._candIdx]);
-    return true;
-  }
-  return false;
-}
+let audioEls=audioFiles.map(f=>{const a=new Audio(); a.preload='none'; a.dataset.candidates=JSON.stringify(audioCandidates(f.file)); a.dataset.tryIndex='0'; return a;});
 (function buildTrackButtons(){
   const row=document.getElementById('audio-track-row');
   audioFiles.forEach((f,i)=>{
@@ -298,12 +285,22 @@ function stopAllAudio(){
   audioEls.forEach((a,i)=>{ a.pause(); a.currentTime=0; a.onended=null; const b=document.getElementById('audio-track-'+i); if(b){b.classList.remove('playing');} });
   currentPlayingIdx=-1;
 }
-function playTrack(i,chain){
-  stopAllAudio();
-  currentPlayingIdx=i;
+function tryPlayCandidate(i,chain,candIdx){
   const a=audioEls[i];
+  const candidates=JSON.parse(a.dataset.candidates);
+  if(candIdx>=candidates.length){
+    // 全候補で失敗
+    const btn=document.getElementById('audio-track-'+i);
+    btn.classList.remove('playing');
+    currentPlayingIdx=-1;
+    loopAllOn=false;
+    const loopBtn=document.getElementById('audio-loop-all-btn');
+    if(loopBtn){loopBtn.classList.remove('on');loopBtn.textContent='🔁';}
+    alert('音声ファイルの再生に失敗しました。\n試したファイル名:\n'+candidates.map(c=>'duo_audio/'+c).join('\n')+'\n\nduo_audioフォルダがHTMLファイルと同じ場所にアップロードされているか、ファイル名が一致しているかご確認ください。');
+    return;
+  }
   const btn=document.getElementById('audio-track-'+i);
-  btn.classList.add('playing');
+  a.src=encodeURI('duo_audio/'+candidates[candIdx]);
   try{ a.currentTime=0; }catch(e){}
   a.onended=()=>{
     btn.classList.remove('playing');
@@ -314,20 +311,17 @@ function playTrack(i,chain){
       currentPlayingIdx=-1;
     }
   };
-  const attempt=()=>{
-    const p=a.play();
-    if(p&&p.catch){
-      p.catch(()=>{
-        if(advanceCandidate(a)){
-          attempt();
-        } else {
-          btn.classList.remove('playing');
-          currentPlayingIdx=-1;
-        }
-      });
-    }
-  };
-  attempt();
+  const playPromise=a.play();
+  if(playPromise&&playPromise.catch){
+    playPromise.catch(()=>{ tryPlayCandidate(i,chain,candIdx+1); });
+  }
+}
+function playTrack(i,chain){
+  stopAllAudio();
+  currentPlayingIdx=i;
+  const btn=document.getElementById('audio-track-'+i);
+  btn.classList.add('playing');
+  tryPlayCandidate(i,chain,0);
 }
 function toggleTrack(i){
   if(currentPlayingIdx===i){
