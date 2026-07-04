@@ -103,12 +103,10 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);min-height:100vh
 </div>
 
 <div class="top-row">
-<button class="help-btn" onclick="alert('👆カードタップで答え表示\n🔊音声再生（合成音声）\n🗣️シャドウイング4ステップ\n▶連続再生\n🔄英⇄日モード切替\nマスターチェックで次へ\n\n上部の「ネイティブ再生」欄はカードと連動しない復習用の音声プレーヤーです。番号ボタンで個別再生、ループボタンで1〜5を繰り返し再生します。')">❓ 使い方</button>
+<button class="help-btn" onclick="alert('👆カードタップで答え表示\n🔊音声再生（ネイティブ音声。ファイルがない場合のみ合成音声）\n🗣️シャドウイング4ステップ\n▶連続再生\n🔄英⇄日モード切替\nマスターチェックで次へ')">❓ 使い方</button>
 <div class="badge green" id="master-badge-top">マスター: 0 / 63</div>
 </div>
 
-<div class="audio-mini-label">ネイティブ再生</div>
-<div class="audio-track-row" id="audio-track-row"></div>
 <div class="progress-wrap"><div class="progress-bar" id="progress-bar" style="width:2%"></div></div>
 <div class="progress-label">カード <span id="cur-num">1</span> / <span id="tot-num">63</span></div>
 <div class="no-active" id="no-active">✅ このカテゴリをすべてマスターしました！</div>
@@ -191,175 +189,85 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);min-height:100vh
 const OFFSET=241;
 const CATS={'🌿 環境・自然':'#be185d','🌏 地理・気象':'#2563eb','🌍 自然・災害':'#16a34a','🏙️ 現代社会・技術':'#7c3aed','💼 ビジネス・経済':'#d97706','✏️ 構文・慣用表現A':'#0891b2','🏠 旅行・日常生活':'#dc2626'};
 const phrases=[
-{cat:'🌿 環境・自然', en:'The ecologist has warned us time and again that petroleum is not only a blessing but also a curse.', ja:'生態学者は我々に繰り返し警告してきた。石油は天の恵みであると同時に災いのもとでもあると。', tip:'ecologist＝生態学者。time and again＝繰り返し何度も。petroleum＝石油。not only A but also B＝AだけでなくBも。blessing＝恵み・祝福。curse＝呪い・災い。'},
-{cat:'🌏 地理・気象', en:'The continent is abundant in fossil fuels.', ja:'その大陸は化石燃料が豊富だ。', tip:'continent＝大陸。be abundant in＝〜が豊富だ（= be rich in）。fossil＝化石。fossil fuels＝化石燃料（石油・石炭・天然ガスなど）。'},
-{cat:'🌏 地理・気象', en:'The region is relatively rich in mineral resources.', ja:'その地域は鉱物資源が比較的豊かだ。', tip:'region＝地域・地方。relatively＝比較的・相対的に。rich in＝〜が豊富な。mineral resources＝鉱物資源。'},
-{cat:'🌏 地理・気象', en:'Wheat accounts for approximately two-thirds of agricultural production in the area.', ja:'小麦はこの地域の農業生産高のおよそ3分の2を占めている。', tip:'account for＝〜を占める・〜の原因となる。approximately＝おおよそ（= about より格式的）。two-thirds＝3分の2。agricultural＝農業の。'},
-{cat:'🌏 地理・気象', en:'Fertile soil is indispensable for a good harvest.', ja:'良い収穫を得るためには、肥沃な土壌が不可欠だ。', tip:'fertile＝肥沃な・豊かな（infertile は不毛な）。soil＝土壌。indispensable＝不可欠な（= essential）。harvest＝収穫・収穫物。'},
-{cat:'🌏 地理・気象', en:'A humid climate is characteristic of the peninsula.', ja:'湿気の多い気候はその半島の特色です。', tip:'humid＝湿気の多い（humidity＝湿度）。climate＝気候（weather は今の天気）。characteristic of＝〜の特色・特徴である。peninsula＝半島（pene-＝ほとんど＋insula＝島）。'},
-{cat:'🌏 地理・気象', en:'The active volcano erupts at regular intervals.', ja:'その活火山は周期的に噴火する。', tip:'active volcano＝活火山（extinct volcano は死火山）。erupt＝噴火する（eruption＝噴火）。at regular intervals＝一定の間隔で・周期的に。'},
-{cat:'🌏 地理・気象', en:'The Panama Canal connects the Atlantic with the Pacific.', ja:'パナマ運河は大西洋と太平洋をつないでいる。', tip:'canal＝運河。connect A with B＝AとBをつなぐ。the Atlantic＝大西洋（Atlantic Ocean）。the Pacific＝太平洋（Pacific Ocean）。'},
-{cat:'🌏 地理・気象', en:'The geographical features here are similar to those of our prefecture.', ja:'ここ（当地）の地理的特徴は、私たちの県のそれと似ている。', tip:'geographical＝地理的な（geography＝地理学）。feature＝特徴・特色。similar to＝〜と似ている。those＝前に出た名詞の代用（= the features）。prefecture＝県・都道府県。'},
-{cat:'🌏 地理・気象', en:'More often than not, famine is accompanied by plague.', ja:'たいてい、飢饉になると疫病も発生する。', tip:'more often than not＝たいていの場合・過半数の場合（慣用句）。famine＝飢饉・飢え。be accompanied by＝〜を伴う・〜が一緒に起こる。plague＝疫病・ペスト。'},
-{cat:'🌍 自然・災害', en:'A devastating earthquake hit the state capital, leaving tens of thousands of residents homeless.', ja:'壊滅的な規模の地震が州都を襲い、数万人の住民が家を失った。', tip:'devastating＝壊滅的な・破壊的な。state capital＝州都。leave A B＝AをBの状態にする（付帯状況）。tens of thousands of＝数万の。homeless＝家を失った。'},
-{cat:'🌍 自然・災害', en:'"Watch out! The ceiling is giving way!"', ja:'「気をつけろ！天井が崩れかけてるぞ！」', tip:'watch out!＝気をつけろ！（= look out!）。ceiling＝天井（floor は床）。give way＝崩れる・陥没する・屈服する（慣用句）。'},
-{cat:'🌍 自然・災害', en:'The weather forecast says the typhoon is likely to accelerate and approach the coast.', ja:'台風は速度を上げて沿岸に接近しそうだと天気予報では言っている。', tip:'weather forecast＝天気予報。be likely to＝〜しそうだ（= probably will）。accelerate＝加速する。approach＝〜に近づく。coast＝海岸・沿岸。'},
-{cat:'🌍 自然・災害', en:'"It\'s still up in the air whether the game will be called off or not." "So what? It makes no difference to me."', ja:'「試合が中止になるかどうか、まだ決まらないんだ。」「それがどうしたの？私にとっては、どうでもいいことだわ。」', tip:'up in the air＝未決定の・宙ぶらりんの（慣用句）。call off＝〜を中止する（= cancel）。make no difference＝関係ない・どうでもよい。'},
-{cat:'🌍 自然・災害', en:'"It\'s foggy, isn\'t it?" "It sure is. But chances are it\'ll clear up later on."', ja:'「霧が濃いわね。」「本当ね。でも、たぶんこのあとは晴れるわ。」', tip:'foggy＝霧が濃い（fog＝霧）。chances are (that)＝おそらく〜だろう（慣用句）。clear up＝（天気が）晴れる・（問題が）解決する。later on＝この後・後ほど。'},
-{cat:'🏙️ 現代社会・技術', en:'For the most part, modernization is identified with westernization.', ja:'ほとんどの場合、近代化は西欧化と同一のものと見なされる。', tip:'for the most part＝ほとんどの場合・大部分は。modernization＝近代化。be identified with＝〜と同一視される・同じものとみなされる。westernization＝西欧化。'},
-{cat:'🏙️ 現代社会・技術', en:'Urban culture appears to be attractive to many people, in particular, to younger people.', ja:'都会の文化は多くの人々の目には魅力的に映る。とりわけ、若者にとっては。', tip:'urban＝都市の（rural は農村の）。appear to be＝〜のように見える。attractive＝魅力的な。in particular＝とりわけ・特に（= especially）。'},
-{cat:'🏙️ 現代社会・技術', en:'"AI" stands for "artificial intelligence."', ja:'AIは人工知能の略です。', tip:'stand for＝〜の略である・〜を表す（= represent）。artificial＝人工の・人為的な（natural の反対）。intelligence＝知能・情報（インテリジェンス）。'},
-{cat:'🏙️ 現代社会・技術', en:'Household appliances are becoming more convenient day by day.', ja:'家庭用の電化製品は日に日に便利になっている。', tip:'household＝家庭の・世帯の。appliance＝（家庭用）電化製品。day by day＝日に日に・日々（= gradually）。convenient＝便利な。'},
-{cat:'💼 ビジネス・経済', en:'My income is not adequate to provide for my family of four, but we have to make the best of it.', ja:'私の収入は四人家族を養うには十分ではないけれど、それで何とかやっていくしかない。', tip:'income＝収入・所得。adequate＝十分な・適切な（= sufficient）。provide for＝〜を養う・〜に備える。make the best of＝〜を最大限に活用する・〜で何とかやっていく（慣用句）。'},
-{cat:'🏙️ 現代社会・技術', en:'The popularity of a website depends on its content.', ja:'ホームページの人気は内容次第。', tip:'popularity＝人気・知名度。depend on＝〜次第である・〜に依存する。content＝内容・コンテンツ（不可算名詞として使うことも多い）。'},
-{cat:'🏙️ 現代社会・技術', en:'You\'ve got to keep up with it. Once you fall behind, it\'s hard to catch up.', ja:'遅れずについていかなくちゃ。一度遅れをとったら追い付くのは大変だよ。', tip:'keep up with＝〜に遅れずついていく。fall behind＝遅れをとる・後れをとる（= lag behind）。catch up＝追いつく（catch up with も同義）。'},
-{cat:'🏙️ 現代社会・技術', en:'As technology rapidly advances, it\'s tough to keep pace with it.', ja:'技術は急速に進歩するので、遅れを取らずについていくのは大変だ。', tip:'rapidly＝急速に。advance＝進歩する・前進する。tough＝大変な・きつい（口語）。keep pace with＝〜に遅れずついていく（keep up with と同義）。'},
-{cat:'🏙️ 現代社会・技術', en:'More and more people are rushing to make use of the interactive nature of the medium.', ja:'ますます多くの人々が、その媒体の双方向的な性質を利用しようと躍起になっている。', tip:'more and more＝ますます多くの。rush to do＝〜しようと急ぐ・躍起になる。make use of＝〜を利用する（= utilize）。interactive＝双方向の・インタラクティブな。medium＝媒体（複数形はmedia）。'},
-{cat:'🏙️ 現代社会・技術', en:'Innovation has something to do with the ability to notice unusual phenomena.', ja:'革新的なものを生み出すこと、それは変わった現象を見逃さない能力と何らかの関係がある。', tip:'innovation＝革新・イノベーション。have something to do with＝〜と何らかの関係がある（have nothing to do with は無関係）。phenomenon＝現象（複数形はphenomena）。'},
-{cat:'💼 ビジネス・経済', en:'A bunch of other companies are imitating our excellent methods.', ja:'多くの他社が我々の優れた方法を真似している。', tip:'a bunch of＝たくさんの（口語）。imitate＝〜を真似する・模倣する。excellent＝優れた・卓越した。method＝方法・手法。'},
-{cat:'🏙️ 現代社会・技術', en:'The once desolate valley was transformed into a thriving hub of hi-tech business.', ja:'かつての荒涼とした盆地が、繁栄を謳歌するハイテクビジネスの中心地に変貌した。', tip:'desolate＝荒涼とした・寂しい。be transformed into＝〜に変貌する。thriving＝繁栄している・盛んな。hub＝中心地・ハブ。hi-tech＝ハイテクの。'},
-{cat:'💼 ビジネス・経済', en:'Although there\'s still plenty of room for improvement, his invention is superior to conventional equipment in every respect.', ja:'まだ改善の余地はたくさんあるけれど、彼の発明品はあらゆる点で従来の機器よりも優れている。', tip:'room for improvement＝改善の余地。be superior to＝〜より優れている（inferior to は劣っている）。conventional＝従来の・慣習的な。in every respect＝あらゆる点で。'},
-{cat:'💼 ビジネス・経済', en:'The strength of the firm is attributed to its unique and future-oriented strategies.', ja:'その会社の強さは、他社にない未来志向の戦略によって生み出されている。', tip:'firm＝会社・企業（= company）。be attributed to＝〜に起因する・〜のせいである（attribute A to B＝AをBのせいにする）。unique＝独自の・ユニークな。strategy＝戦略（複数形はstrategies）。'},
-{cat:'💼 ビジネス・経済', en:'SONY has integrated a wide range of functions into this cool gadget. It\'s catching on from coast to coast.', ja:'ソニーはこのスゴイ機器に多岐にわたる機能を統合させた。全米で評判になり始めている商品だ。', tip:'integrate A into B＝AをBに統合する。a wide range of＝多岐にわたる・幅広い。gadget＝機器・ガジェット（小型電子機器）。catch on＝流行する・人気が出る。from coast to coast＝全国で（米国：東海岸から西海岸まで）。'},
-{cat:'🏙️ 現代社会・技術', en:'This tool comes in handy, so I always keep it close at hand.', ja:'この道具は何かと便利だから、いつも手元に置いています。', tip:'come in handy＝役に立つ・便利である（慣用句）。close at hand＝手元に・身近に（= within reach）。'},
-{cat:'💼 ビジネス・経済', en:'"In general, consumers prefer quantity to quality." "It\'s the other way around today."', ja:'「一般的に、消費者は質よりも量を選びます。」「今は全く逆です。」', tip:'in general＝一般的に（= generally）。prefer A to B＝BよりAを好む（語順注意）。quantity＝量（quality は質）。the other way around＝逆・反対（慣用句）。'},
-{cat:'💼 ビジネス・経済', en:'Obviously, the advertisement is aimed at teenagers.', ja:'明らかにその広告は10代の若者層をターゲットにしている。', tip:'obviously＝明らかに・明白に。advertisement＝広告（= ad）。be aimed at＝〜をターゲットにしている・〜に向けられている。teenager＝10代の若者。'},
-{cat:'💼 ビジネス・経済', en:'The factory now under construction will assemble 1,000 VCR units per day.', ja:'現在建設中のその工場は、一日当たり1,000台のビデオデッキを組み立てることになる。', tip:'under construction＝建設中。assemble＝〜を組み立てる（disassemble は分解する）。per day＝一日あたり（per＝〜につき）。'},
-{cat:'💼 ビジネス・経済', en:'Efficient machinery replaced manual labor.', ja:'効率的な機械が、肉体労働に取って代わった。', tip:'efficient＝効率的な（efficiency＝効率）。machinery＝機械類（集合名詞）。replace＝〜に取って代わる。manual labor＝肉体労働・手作業（manual＝手の・手動の）。'},
-{cat:'💼 ビジネス・経済', en:'In those days, the gigantic corporation had a virtual monopoly over internal commerce.', ja:'当時、その巨大企業が国内の商業を事実上独占していた。', tip:'in those days＝当時・昔は。gigantic＝巨大な（= enormous）。virtual＝事実上の・実質的な（virtually＝事実上）。monopoly＝独占・モノポリー。internal commerce＝国内商業。'},
-{cat:'💼 ビジネス・経済', en:'With restrictions removed, thousands of new enterprises have come into being.', ja:'制限が解除され、数千の新しい企業が誕生した。', tip:'restriction＝制限・規制。remove＝〜を取り除く。enterprise＝企業・事業（= company・venture）。come into being＝生まれる・誕生する（= come into existence）。'},
-{cat:'💼 ビジネス・経済', en:'As a result of his ridiculous venture, he is in danger of going bankrupt.', ja:'ばかげた新事業の結果、彼は破産の危機に瀕している。', tip:'ridiculous＝ばかげた・馬鹿らしい。venture＝新事業・ベンチャー。in danger of＝〜の危機に。go bankrupt＝破産する（bankrupt＝破産した）。'},
-{cat:'💼 ビジネス・経済', en:'Compared to the previous year, business is looking up in terms of sales. However, we haven\'t made any profit yet.', ja:'昨年と比べて、売上の数字だけを見れば事業は上向いている。しかしながら、利益はまだ全く出ていない。', tip:'compared to＝〜と比べて。look up＝上向く・好転する（look down は悪化する）。in terms of＝〜の点では・〜に関して。profit＝利益・利潤（loss は損失）。'},
-{cat:'💼 ビジネス・経済', en:'"I\'m going to be transferred to an overseas branch." "Oh, I\'ll miss you. Please drop me a line."', ja:'「海外の支店に転勤することになったよ。」「えっ。寂しくなるわ。手紙でも下さいね。」', tip:'be transferred to＝〜に転勤・転属になる。overseas＝海外の。miss＝〜がいなくて寂しい。drop a line＝（短い）手紙やメールを送る（慣用句）。'},
-{cat:'💼 ビジネス・経済', en:'While he was away on business, his wife gave birth to a baby boy.', ja:'彼が出張中に、奥さんが男の子の赤ちゃんを出産した。', tip:'away on business＝出張中で。give birth to＝〜を出産する（重要表現）。baby boy＝男の子（baby girl は女の子）。'},
-{cat:'💼 ビジネス・経済', en:'Apparently, Nick wasn\'t willing to take on the task because it would just add to his burdens.', ja:'どうやらニックは、自分の負担が増えるからその仕事を引き受けたがらなかったようだ。', tip:'apparently＝どうやら・見たところ。be willing to＝進んで〜する（be not willing to は〜したがらない）。take on＝〜を引き受ける。add to＝〜を増やす・加重する。burden＝負担・重荷。'},
-{cat:'💼 ビジネス・経済', en:'Bob had intended to take her out tonight, but he had to work overtime.', ja:'ボブは今夜、彼女とデートするつもりだったが、残業になってしまった。', tip:'intend to＝〜するつもりだ（had intended to＝するつもりだったが→できなかった）。take out＝〜を連れ出す・デートする。work overtime＝残業する（overtime＝時間外）。'},
-{cat:'💼 ビジネス・経済', en:'"Please estimate the losses by Friday at the latest." "I\'ll manage it somehow."', ja:'「遅くとも金曜日までには損失の見積もりを出して下さい。」「何とかやってみましょう。」', tip:'estimate＝〜を見積もる（estimate the losses＝損失を見積もる）。at the latest＝遅くとも（at the earliest は早くとも）。manage to do＝何とか〜する（I\'ll manage it somehow＝何とかやります）。'},
-{cat:'💼 ビジネス・経済', en:'"Nick, I\'m counting on you." "OK, I\'ll see to it." "Thanks, I appreciate it." "Don\'t mention it."', ja:'「頼りにしてるわ、ニック。」「大丈夫、きちんとやっておきます。」「ありがとう。感謝するわ。」「いいんですよ。」', tip:'count on＝〜を頼りにする・当てにする。see to it (that)＝〜するように取り計らう（see to it＝きちんとやる）。appreciate＝〜に感謝する。Don\'t mention it.＝どういたしまして（= You\'re welcome）。'},
-{cat:'💼 ビジネス・経済', en:'He pretends to be enthusiastic when his boss is around.', ja:'彼は上司がそばにいる時は熱心なふりをする。', tip:'pretend to＝〜のふりをする。enthusiastic＝熱心な・熱狂的な（enthusiasm＝熱意）。when ... is around＝〜がそばにいるとき。'},
-{cat:'💼 ビジネス・経済', en:'He got promoted at the expense of his colleagues. He should be ashamed of himself.', ja:'彼は同僚を踏み台にして出世した。恥を知るべきだ。', tip:'get promoted＝昇進する。at the expense of＝〜を犠牲にして・〜を踏み台にして（慣用句）。colleague＝同僚。be ashamed of oneself＝恥じる・恥を知る。'},
-{cat:'💼 ビジネス・経済', en:'As the recession set in, temporary employees were laid off one after another.', ja:'景気の後退が始まると、短期契約社員たちは次々に一時解雇を言い渡された。', tip:'recession＝不況・景気後退。set in＝始まる・到来する（悪い状況が始まるイメージ）。temporary employee＝臨時・契約社員。lay off＝〜を一時解雇する。one after another＝次々に。'},
-{cat:'💼 ビジネス・経済', en:'Nowadays, many people are out of work against their will. Who is responsible for that?', ja:'最近では、多くの人々が職に就きたくても就けないでいる。誰の責任だろう？', tip:'out of work＝失業している（= unemployed）。against one\'s will＝意に反して・不本意ながら。be responsible for＝〜に責任がある（responsible＝責任ある）。'},
-{cat:'💼 ビジネス・経済', en:'I\'ve gotten pessimistic, and I\'m worried about something I would never have been concerned about before.', ja:'私も悲観的になってきて、以前は決して気にならなかったことに不安を感じている。', tip:'pessimistic＝悲観的な（optimistic は楽観的）。be concerned about＝〜について心配する（= worry about）。would never have＝仮定法過去完了（以前の自分なら〜しなかったのに）。'},
-{cat:'💼 ビジネス・経済', en:'Today, even white-collar workers are confronted with great hardships.', ja:'今日では、サラリーマンでさえ大変な苦難に直面している。', tip:'white-collar＝ホワイトカラー・事務職の（blue-collar は肉体労働）。be confronted with＝〜に直面している（= be faced with）。hardship＝苦難・困難（複数形hardshipsで使うことも）。'},
-{cat:'💼 ビジネス・経済', en:'The authorities are striving in vain to stabilize the currency.', ja:'当局は通貨を安定させようと懸命だが、どうにもならない。', tip:'authorities＝当局・行政機関（複数形）。strive＝懸命に努力する（strive-strove-striven）。in vain＝無駄に・むなしく（= without success）。stabilize＝〜を安定させる。currency＝通貨。'},
-{cat:'💼 ビジネス・経済', en:'We\'ve come to the conclusion that nothing is more urgent than reducing Japan\'s huge deficit.', ja:'日本の膨大な赤字を削減することが何よりも緊急を要することだ、という結論に我々は達した。', tip:'come to the conclusion＝〜という結論に達する。urgent＝緊急の・差し迫った。reduce＝〜を削減する・減らす。deficit＝赤字・財政赤字（surplus は黒字）。'},
-{cat:'✏️ 構文・慣用表現A', en:'The questionnaires were distributed at random.', ja:'アンケート用紙が無作為に配布された。', tip:'questionnaire＝アンケート用紙・質問票。distribute＝〜を配布する・分配する。at random＝無作為に・でたらめに（randomlyと同義）。'},
-{cat:'✏️ 構文・慣用表現A', en:'All you have to do is fill in the blanks below.', ja:'以下の空欄部分にご記入いただくだけで結構です。', tip:'All you have to do is do＝〜するだけでよい（重要構文。isの後は原形）。fill in＝〜に記入する（fill out も同義）。blank＝空欄・ブランク。'},
-{cat:'✏️ 構文・慣用表現A', en:'In addition to a 10% discount, you can pick out an optional excursion for free.', ja:'10%の割引に加えて、無料のオプションツアーを一つ選択できます。', tip:'in addition to＝〜に加えて（= besides）。discount＝割引。pick out＝〜を選ぶ・選び出す（= choose）。optional＝任意の・選択可能な。excursion＝小旅行・遠足（= day trip）。for free＝無料で（= free of charge）。'},
-{cat:'✏️ 構文・慣用表現A', en:'Round-trip fares to each destination are as follows.', ja:'各目的地までの往復料金は下記の通りです。', tip:'round trip＝往復（one-way は片道）。fare＝運賃・料金（交通機関の料金）。destination＝目的地。as follows＝以下の通り（列挙の前に使う定型表現）。'},
-{cat:'✏️ 構文・慣用表現A', en:'"Don\'t forget to confirm your reservation in advance." "I won\'t."', ja:'「事前に予約の確認をするのを忘れないでね。」「ええ、わかった。」', tip:'confirm＝〜を確認する・確定する。reservation＝予約（= booking）。in advance＝事前に・あらかじめ（= beforehand）。I won\'t.＝（忘れ）ません（won\'t forget の省略）。'},
-{cat:'✏️ 構文・慣用表現A', en:'Be sure to check in at least 45 minutes prior to departure time.', ja:'遅くとも出発時刻の45分前には搭乗手続きを必ず完了させて下さい。', tip:'be sure to＝必ず〜しなさい（= make sure to）。check in＝チェックインする・搭乗手続きをする。at least＝少なくとも。prior to＝〜の前に（= before。格式的）。departure＝出発（arrival は到着）。'},
-{cat:'✏️ 構文・慣用表現A', en:'I attached my name tag to my baggage, but it soon came off.', ja:'自分の荷物に名札を付けたけれども、すぐに取れてしまった。', tip:'attach A to B＝AをBに取り付ける・添付する。name tag＝名札・名前タグ。baggage＝手荷物（= luggage。不可算名詞）。come off＝取れる・はがれる（= fall off）。'},
-{cat:'🏠 旅行・日常生活', en:'On average, these packages weigh two pounds.', ja:'これらの小包の重さは平均すると2ポンドです。', tip:'on average＝平均して（= on the average）。package＝小包。weigh＝〜の重さがある。pound＝ポンド（約450g）。'},
-{cat:'🏠 旅行・日常生活', en:'This plastic garbage bag is free of hazardous chemicals.', ja:'このビニール製のゴミ袋は有害な化学物質を含んでいません。', tip:'free of＝〜を含まない（= without）。garbage bag＝ゴミ袋。hazardous＝有害な（= dangerous）。chemical＝化学物質。'},
-{cat:'🏠 旅行・日常生活', en:'This flashlight is getting dim. It needs new batteries.', ja:'この懐中電灯は明かりが弱くなってきた。電池を入れ替えないと。', tip:'flashlight＝懐中電灯（米語）。get dim＝暗くなる。battery＝電池（複数形batteries）。'},
+{cat:'🌿 環境・自然', en:'The ecologist has warned us time and again that petroleum is not only a blessing but also a curse.', ja:'生態学者は我々に繰り返し警告してきた。石油は天の恵みであると同時に災いのもとでもあると。', tip:'ecologist＝生態学者。time and again＝繰り返し何度も。petroleum＝石油。not only A but also B＝AだけでなくBも。blessing＝恵み・祝福。curse＝呪い・災い。',audio:'card_audio/card_241.mp3'},
+{cat:'🌏 地理・気象', en:'The continent is abundant in fossil fuels.', ja:'その大陸は化石燃料が豊富だ。', tip:'continent＝大陸。be abundant in＝〜が豊富だ（= be rich in）。fossil＝化石。fossil fuels＝化石燃料（石油・石炭・天然ガスなど）。',audio:'card_audio/card_242.mp3'},
+{cat:'🌏 地理・気象', en:'The region is relatively rich in mineral resources.', ja:'その地域は鉱物資源が比較的豊かだ。', tip:'region＝地域・地方。relatively＝比較的・相対的に。rich in＝〜が豊富な。mineral resources＝鉱物資源。',audio:'card_audio/card_243.mp3'},
+{cat:'🌏 地理・気象', en:'Wheat accounts for approximately two-thirds of agricultural production in the area.', ja:'小麦はこの地域の農業生産高のおよそ3分の2を占めている。', tip:'account for＝〜を占める・〜の原因となる。approximately＝おおよそ（= about より格式的）。two-thirds＝3分の2。agricultural＝農業の。',audio:'card_audio/card_244.mp3'},
+{cat:'🌏 地理・気象', en:'Fertile soil is indispensable for a good harvest.', ja:'良い収穫を得るためには、肥沃な土壌が不可欠だ。', tip:'fertile＝肥沃な・豊かな（infertile は不毛な）。soil＝土壌。indispensable＝不可欠な（= essential）。harvest＝収穫・収穫物。',audio:'card_audio/card_245.mp3'},
+{cat:'🌏 地理・気象', en:'A humid climate is characteristic of the peninsula.', ja:'湿気の多い気候はその半島の特色です。', tip:'humid＝湿気の多い（humidity＝湿度）。climate＝気候（weather は今の天気）。characteristic of＝〜の特色・特徴である。peninsula＝半島（pene-＝ほとんど＋insula＝島）。',audio:'card_audio/card_246.mp3'},
+{cat:'🌏 地理・気象', en:'The active volcano erupts at regular intervals.', ja:'その活火山は周期的に噴火する。', tip:'active volcano＝活火山（extinct volcano は死火山）。erupt＝噴火する（eruption＝噴火）。at regular intervals＝一定の間隔で・周期的に。',audio:'card_audio/card_247.mp3'},
+{cat:'🌏 地理・気象', en:'The Panama Canal connects the Atlantic with the Pacific.', ja:'パナマ運河は大西洋と太平洋をつないでいる。', tip:'canal＝運河。connect A with B＝AとBをつなぐ。the Atlantic＝大西洋（Atlantic Ocean）。the Pacific＝太平洋（Pacific Ocean）。',audio:'card_audio/card_248.mp3'},
+{cat:'🌏 地理・気象', en:'The geographical features here are similar to those of our prefecture.', ja:'ここ（当地）の地理的特徴は、私たちの県のそれと似ている。', tip:'geographical＝地理的な（geography＝地理学）。feature＝特徴・特色。similar to＝〜と似ている。those＝前に出た名詞の代用（= the features）。prefecture＝県・都道府県。',audio:'card_audio/card_249.mp3'},
+{cat:'🌏 地理・気象', en:'More often than not, famine is accompanied by plague.', ja:'たいてい、飢饉になると疫病も発生する。', tip:'more often than not＝たいていの場合・過半数の場合（慣用句）。famine＝飢饉・飢え。be accompanied by＝〜を伴う・〜が一緒に起こる。plague＝疫病・ペスト。',audio:'card_audio/card_250.mp3'},
+{cat:'🌍 自然・災害', en:'A devastating earthquake hit the state capital, leaving tens of thousands of residents homeless.', ja:'壊滅的な規模の地震が州都を襲い、数万人の住民が家を失った。', tip:'devastating＝壊滅的な・破壊的な。state capital＝州都。leave A B＝AをBの状態にする（付帯状況）。tens of thousands of＝数万の。homeless＝家を失った。',audio:'card_audio/card_251.mp3'},
+{cat:'🌍 自然・災害', en:'"Watch out! The ceiling is giving way!"', ja:'「気をつけろ！天井が崩れかけてるぞ！」', tip:'watch out!＝気をつけろ！（= look out!）。ceiling＝天井（floor は床）。give way＝崩れる・陥没する・屈服する（慣用句）。',audio:'card_audio/card_252.mp3'},
+{cat:'🌍 自然・災害', en:'The weather forecast says the typhoon is likely to accelerate and approach the coast.', ja:'台風は速度を上げて沿岸に接近しそうだと天気予報では言っている。', tip:'weather forecast＝天気予報。be likely to＝〜しそうだ（= probably will）。accelerate＝加速する。approach＝〜に近づく。coast＝海岸・沿岸。',audio:'card_audio/card_253.mp3'},
+{cat:'🌍 自然・災害', en:'"It\'s still up in the air whether the game will be called off or not." "So what? It makes no difference to me."', ja:'「試合が中止になるかどうか、まだ決まらないんだ。」「それがどうしたの？私にとっては、どうでもいいことだわ。」', tip:'up in the air＝未決定の・宙ぶらりんの（慣用句）。call off＝〜を中止する（= cancel）。make no difference＝関係ない・どうでもよい。',audio:'card_audio/card_254.mp3'},
+{cat:'🌍 自然・災害', en:'"It\'s foggy, isn\'t it?" "It sure is. But chances are it\'ll clear up later on."', ja:'「霧が濃いわね。」「本当ね。でも、たぶんこのあとは晴れるわ。」', tip:'foggy＝霧が濃い（fog＝霧）。chances are (that)＝おそらく〜だろう（慣用句）。clear up＝（天気が）晴れる・（問題が）解決する。later on＝この後・後ほど。',audio:'card_audio/card_255.mp3'},
+{cat:'🏙️ 現代社会・技術', en:'For the most part, modernization is identified with westernization.', ja:'ほとんどの場合、近代化は西欧化と同一のものと見なされる。', tip:'for the most part＝ほとんどの場合・大部分は。modernization＝近代化。be identified with＝〜と同一視される・同じものとみなされる。westernization＝西欧化。',audio:'card_audio/card_256.mp3'},
+{cat:'🏙️ 現代社会・技術', en:'Urban culture appears to be attractive to many people, in particular, to younger people.', ja:'都会の文化は多くの人々の目には魅力的に映る。とりわけ、若者にとっては。', tip:'urban＝都市の（rural は農村の）。appear to be＝〜のように見える。attractive＝魅力的な。in particular＝とりわけ・特に（= especially）。',audio:'card_audio/card_257.mp3'},
+{cat:'🏙️ 現代社会・技術', en:'"AI" stands for "artificial intelligence."', ja:'AIは人工知能の略です。', tip:'stand for＝〜の略である・〜を表す（= represent）。artificial＝人工の・人為的な（natural の反対）。intelligence＝知能・情報（インテリジェンス）。',audio:'card_audio/card_258.mp3'},
+{cat:'🏙️ 現代社会・技術', en:'Household appliances are becoming more convenient day by day.', ja:'家庭用の電化製品は日に日に便利になっている。', tip:'household＝家庭の・世帯の。appliance＝（家庭用）電化製品。day by day＝日に日に・日々（= gradually）。convenient＝便利な。',audio:'card_audio/card_259.mp3'},
+{cat:'💼 ビジネス・経済', en:'My income is not adequate to provide for my family of four, but we have to make the best of it.', ja:'私の収入は四人家族を養うには十分ではないけれど、それで何とかやっていくしかない。', tip:'income＝収入・所得。adequate＝十分な・適切な（= sufficient）。provide for＝〜を養う・〜に備える。make the best of＝〜を最大限に活用する・〜で何とかやっていく（慣用句）。',audio:'card_audio/card_260.mp3'},
+{cat:'🏙️ 現代社会・技術', en:'The popularity of a website depends on its content.', ja:'ホームページの人気は内容次第。', tip:'popularity＝人気・知名度。depend on＝〜次第である・〜に依存する。content＝内容・コンテンツ（不可算名詞として使うことも多い）。',audio:'card_audio/card_261.mp3'},
+{cat:'🏙️ 現代社会・技術', en:'You\'ve got to keep up with it. Once you fall behind, it\'s hard to catch up.', ja:'遅れずについていかなくちゃ。一度遅れをとったら追い付くのは大変だよ。', tip:'keep up with＝〜に遅れずついていく。fall behind＝遅れをとる・後れをとる（= lag behind）。catch up＝追いつく（catch up with も同義）。',audio:'card_audio/card_262.mp3'},
+{cat:'🏙️ 現代社会・技術', en:'As technology rapidly advances, it\'s tough to keep pace with it.', ja:'技術は急速に進歩するので、遅れを取らずについていくのは大変だ。', tip:'rapidly＝急速に。advance＝進歩する・前進する。tough＝大変な・きつい（口語）。keep pace with＝〜に遅れずついていく（keep up with と同義）。',audio:'card_audio/card_263.mp3'},
+{cat:'🏙️ 現代社会・技術', en:'More and more people are rushing to make use of the interactive nature of the medium.', ja:'ますます多くの人々が、その媒体の双方向的な性質を利用しようと躍起になっている。', tip:'more and more＝ますます多くの。rush to do＝〜しようと急ぐ・躍起になる。make use of＝〜を利用する（= utilize）。interactive＝双方向の・インタラクティブな。medium＝媒体（複数形はmedia）。',audio:'card_audio/card_264.mp3'},
+{cat:'🏙️ 現代社会・技術', en:'Innovation has something to do with the ability to notice unusual phenomena.', ja:'革新的なものを生み出すこと、それは変わった現象を見逃さない能力と何らかの関係がある。', tip:'innovation＝革新・イノベーション。have something to do with＝〜と何らかの関係がある（have nothing to do with は無関係）。phenomenon＝現象（複数形はphenomena）。',audio:'card_audio/card_265.mp3'},
+{cat:'💼 ビジネス・経済', en:'A bunch of other companies are imitating our excellent methods.', ja:'多くの他社が我々の優れた方法を真似している。', tip:'a bunch of＝たくさんの（口語）。imitate＝〜を真似する・模倣する。excellent＝優れた・卓越した。method＝方法・手法。',audio:'card_audio/card_266.mp3'},
+{cat:'🏙️ 現代社会・技術', en:'The once desolate valley was transformed into a thriving hub of hi-tech business.', ja:'かつての荒涼とした盆地が、繁栄を謳歌するハイテクビジネスの中心地に変貌した。', tip:'desolate＝荒涼とした・寂しい。be transformed into＝〜に変貌する。thriving＝繁栄している・盛んな。hub＝中心地・ハブ。hi-tech＝ハイテクの。',audio:'card_audio/card_267.mp3'},
+{cat:'💼 ビジネス・経済', en:'Although there\'s still plenty of room for improvement, his invention is superior to conventional equipment in every respect.', ja:'まだ改善の余地はたくさんあるけれど、彼の発明品はあらゆる点で従来の機器よりも優れている。', tip:'room for improvement＝改善の余地。be superior to＝〜より優れている（inferior to は劣っている）。conventional＝従来の・慣習的な。in every respect＝あらゆる点で。',audio:'card_audio/card_268.mp3'},
+{cat:'💼 ビジネス・経済', en:'The strength of the firm is attributed to its unique and future-oriented strategies.', ja:'その会社の強さは、他社にない未来志向の戦略によって生み出されている。', tip:'firm＝会社・企業（= company）。be attributed to＝〜に起因する・〜のせいである（attribute A to B＝AをBのせいにする）。unique＝独自の・ユニークな。strategy＝戦略（複数形はstrategies）。',audio:'card_audio/card_269.mp3'},
+{cat:'💼 ビジネス・経済', en:'SONY has integrated a wide range of functions into this cool gadget. It\'s catching on from coast to coast.', ja:'ソニーはこのスゴイ機器に多岐にわたる機能を統合させた。全米で評判になり始めている商品だ。', tip:'integrate A into B＝AをBに統合する。a wide range of＝多岐にわたる・幅広い。gadget＝機器・ガジェット（小型電子機器）。catch on＝流行する・人気が出る。from coast to coast＝全国で（米国：東海岸から西海岸まで）。',audio:'card_audio/card_270.mp3'},
+{cat:'🏙️ 現代社会・技術', en:'This tool comes in handy, so I always keep it close at hand.', ja:'この道具は何かと便利だから、いつも手元に置いています。', tip:'come in handy＝役に立つ・便利である（慣用句）。close at hand＝手元に・身近に（= within reach）。',audio:'card_audio/card_271.mp3'},
+{cat:'💼 ビジネス・経済', en:'"In general, consumers prefer quantity to quality." "It\'s the other way around today."', ja:'「一般的に、消費者は質よりも量を選びます。」「今は全く逆です。」', tip:'in general＝一般的に（= generally）。prefer A to B＝BよりAを好む（語順注意）。quantity＝量（quality は質）。the other way around＝逆・反対（慣用句）。',audio:'card_audio/card_272.mp3'},
+{cat:'💼 ビジネス・経済', en:'Obviously, the advertisement is aimed at teenagers.', ja:'明らかにその広告は10代の若者層をターゲットにしている。', tip:'obviously＝明らかに・明白に。advertisement＝広告（= ad）。be aimed at＝〜をターゲットにしている・〜に向けられている。teenager＝10代の若者。',audio:'card_audio/card_273.mp3'},
+{cat:'💼 ビジネス・経済', en:'The factory now under construction will assemble 1,000 VCR units per day.', ja:'現在建設中のその工場は、一日当たり1,000台のビデオデッキを組み立てることになる。', tip:'under construction＝建設中。assemble＝〜を組み立てる（disassemble は分解する）。per day＝一日あたり（per＝〜につき）。',audio:'card_audio/card_274.mp3'},
+{cat:'💼 ビジネス・経済', en:'Efficient machinery replaced manual labor.', ja:'効率的な機械が、肉体労働に取って代わった。', tip:'efficient＝効率的な（efficiency＝効率）。machinery＝機械類（集合名詞）。replace＝〜に取って代わる。manual labor＝肉体労働・手作業（manual＝手の・手動の）。',audio:'card_audio/card_275.mp3'},
+{cat:'💼 ビジネス・経済', en:'In those days, the gigantic corporation had a virtual monopoly over internal commerce.', ja:'当時、その巨大企業が国内の商業を事実上独占していた。', tip:'in those days＝当時・昔は。gigantic＝巨大な（= enormous）。virtual＝事実上の・実質的な（virtually＝事実上）。monopoly＝独占・モノポリー。internal commerce＝国内商業。',audio:'card_audio/card_276.mp3'},
+{cat:'💼 ビジネス・経済', en:'With restrictions removed, thousands of new enterprises have come into being.', ja:'制限が解除され、数千の新しい企業が誕生した。', tip:'restriction＝制限・規制。remove＝〜を取り除く。enterprise＝企業・事業（= company・venture）。come into being＝生まれる・誕生する（= come into existence）。',audio:'card_audio/card_277.mp3'},
+{cat:'💼 ビジネス・経済', en:'As a result of his ridiculous venture, he is in danger of going bankrupt.', ja:'ばかげた新事業の結果、彼は破産の危機に瀕している。', tip:'ridiculous＝ばかげた・馬鹿らしい。venture＝新事業・ベンチャー。in danger of＝〜の危機に。go bankrupt＝破産する（bankrupt＝破産した）。',audio:'card_audio/card_278.mp3'},
+{cat:'💼 ビジネス・経済', en:'Compared to the previous year, business is looking up in terms of sales. However, we haven\'t made any profit yet.', ja:'昨年と比べて、売上の数字だけを見れば事業は上向いている。しかしながら、利益はまだ全く出ていない。', tip:'compared to＝〜と比べて。look up＝上向く・好転する（look down は悪化する）。in terms of＝〜の点では・〜に関して。profit＝利益・利潤（loss は損失）。',audio:'card_audio/card_279.mp3'},
+{cat:'💼 ビジネス・経済', en:'"I\'m going to be transferred to an overseas branch." "Oh, I\'ll miss you. Please drop me a line."', ja:'「海外の支店に転勤することになったよ。」「えっ。寂しくなるわ。手紙でも下さいね。」', tip:'be transferred to＝〜に転勤・転属になる。overseas＝海外の。miss＝〜がいなくて寂しい。drop a line＝（短い）手紙やメールを送る（慣用句）。',audio:'card_audio/card_280.mp3'},
+{cat:'💼 ビジネス・経済', en:'While he was away on business, his wife gave birth to a baby boy.', ja:'彼が出張中に、奥さんが男の子の赤ちゃんを出産した。', tip:'away on business＝出張中で。give birth to＝〜を出産する（重要表現）。baby boy＝男の子（baby girl は女の子）。',audio:'card_audio/card_281.mp3'},
+{cat:'💼 ビジネス・経済', en:'Apparently, Nick wasn\'t willing to take on the task because it would just add to his burdens.', ja:'どうやらニックは、自分の負担が増えるからその仕事を引き受けたがらなかったようだ。', tip:'apparently＝どうやら・見たところ。be willing to＝進んで〜する（be not willing to は〜したがらない）。take on＝〜を引き受ける。add to＝〜を増やす・加重する。burden＝負担・重荷。',audio:'card_audio/card_282.mp3'},
+{cat:'💼 ビジネス・経済', en:'Bob had intended to take her out tonight, but he had to work overtime.', ja:'ボブは今夜、彼女とデートするつもりだったが、残業になってしまった。', tip:'intend to＝〜するつもりだ（had intended to＝するつもりだったが→できなかった）。take out＝〜を連れ出す・デートする。work overtime＝残業する（overtime＝時間外）。',audio:'card_audio/card_283.mp3'},
+{cat:'💼 ビジネス・経済', en:'"Please estimate the losses by Friday at the latest." "I\'ll manage it somehow."', ja:'「遅くとも金曜日までには損失の見積もりを出して下さい。」「何とかやってみましょう。」', tip:'estimate＝〜を見積もる（estimate the losses＝損失を見積もる）。at the latest＝遅くとも（at the earliest は早くとも）。manage to do＝何とか〜する（I\'ll manage it somehow＝何とかやります）。',audio:'card_audio/card_284.mp3'},
+{cat:'💼 ビジネス・経済', en:'"Nick, I\'m counting on you." "OK, I\'ll see to it." "Thanks, I appreciate it." "Don\'t mention it."', ja:'「頼りにしてるわ、ニック。」「大丈夫、きちんとやっておきます。」「ありがとう。感謝するわ。」「いいんですよ。」', tip:'count on＝〜を頼りにする・当てにする。see to it (that)＝〜するように取り計らう（see to it＝きちんとやる）。appreciate＝〜に感謝する。Don\'t mention it.＝どういたしまして（= You\'re welcome）。',audio:'card_audio/card_285.mp3'},
+{cat:'💼 ビジネス・経済', en:'He pretends to be enthusiastic when his boss is around.', ja:'彼は上司がそばにいる時は熱心なふりをする。', tip:'pretend to＝〜のふりをする。enthusiastic＝熱心な・熱狂的な（enthusiasm＝熱意）。when ... is around＝〜がそばにいるとき。',audio:'card_audio/card_286.mp3'},
+{cat:'💼 ビジネス・経済', en:'He got promoted at the expense of his colleagues. He should be ashamed of himself.', ja:'彼は同僚を踏み台にして出世した。恥を知るべきだ。', tip:'get promoted＝昇進する。at the expense of＝〜を犠牲にして・〜を踏み台にして（慣用句）。colleague＝同僚。be ashamed of oneself＝恥じる・恥を知る。',audio:'card_audio/card_287.mp3'},
+{cat:'💼 ビジネス・経済', en:'As the recession set in, temporary employees were laid off one after another.', ja:'景気の後退が始まると、短期契約社員たちは次々に一時解雇を言い渡された。', tip:'recession＝不況・景気後退。set in＝始まる・到来する（悪い状況が始まるイメージ）。temporary employee＝臨時・契約社員。lay off＝〜を一時解雇する。one after another＝次々に。',audio:'card_audio/card_288.mp3'},
+{cat:'💼 ビジネス・経済', en:'Nowadays, many people are out of work against their will. Who is responsible for that?', ja:'最近では、多くの人々が職に就きたくても就けないでいる。誰の責任だろう？', tip:'out of work＝失業している（= unemployed）。against one\'s will＝意に反して・不本意ながら。be responsible for＝〜に責任がある（responsible＝責任ある）。',audio:'card_audio/card_289.mp3'},
+{cat:'💼 ビジネス・経済', en:'I\'ve gotten pessimistic, and I\'m worried about something I would never have been concerned about before.', ja:'私も悲観的になってきて、以前は決して気にならなかったことに不安を感じている。', tip:'pessimistic＝悲観的な（optimistic は楽観的）。be concerned about＝〜について心配する（= worry about）。would never have＝仮定法過去完了（以前の自分なら〜しなかったのに）。',audio:'card_audio/card_290.mp3'},
+{cat:'💼 ビジネス・経済', en:'Today, even white-collar workers are confronted with great hardships.', ja:'今日では、サラリーマンでさえ大変な苦難に直面している。', tip:'white-collar＝ホワイトカラー・事務職の（blue-collar は肉体労働）。be confronted with＝〜に直面している（= be faced with）。hardship＝苦難・困難（複数形hardshipsで使うことも）。',audio:'card_audio/card_291.mp3'},
+{cat:'💼 ビジネス・経済', en:'The authorities are striving in vain to stabilize the currency.', ja:'当局は通貨を安定させようと懸命だが、どうにもならない。', tip:'authorities＝当局・行政機関（複数形）。strive＝懸命に努力する（strive-strove-striven）。in vain＝無駄に・むなしく（= without success）。stabilize＝〜を安定させる。currency＝通貨。',audio:'card_audio/card_292.mp3'},
+{cat:'💼 ビジネス・経済', en:'We\'ve come to the conclusion that nothing is more urgent than reducing Japan\'s huge deficit.', ja:'日本の膨大な赤字を削減することが何よりも緊急を要することだ、という結論に我々は達した。', tip:'come to the conclusion＝〜という結論に達する。urgent＝緊急の・差し迫った。reduce＝〜を削減する・減らす。deficit＝赤字・財政赤字（surplus は黒字）。',audio:'card_audio/card_293.mp3'},
+{cat:'✏️ 構文・慣用表現A', en:'The questionnaires were distributed at random.', ja:'アンケート用紙が無作為に配布された。', tip:'questionnaire＝アンケート用紙・質問票。distribute＝〜を配布する・分配する。at random＝無作為に・でたらめに（randomlyと同義）。',audio:'card_audio/card_294.mp3'},
+{cat:'✏️ 構文・慣用表現A', en:'All you have to do is fill in the blanks below.', ja:'以下の空欄部分にご記入いただくだけで結構です。', tip:'All you have to do is do＝〜するだけでよい（重要構文。isの後は原形）。fill in＝〜に記入する（fill out も同義）。blank＝空欄・ブランク。',audio:'card_audio/card_295.mp3'},
+{cat:'✏️ 構文・慣用表現A', en:'In addition to a 10% discount, you can pick out an optional excursion for free.', ja:'10%の割引に加えて、無料のオプションツアーを一つ選択できます。', tip:'in addition to＝〜に加えて（= besides）。discount＝割引。pick out＝〜を選ぶ・選び出す（= choose）。optional＝任意の・選択可能な。excursion＝小旅行・遠足（= day trip）。for free＝無料で（= free of charge）。',audio:'card_audio/card_296.mp3'},
+{cat:'✏️ 構文・慣用表現A', en:'Round-trip fares to each destination are as follows.', ja:'各目的地までの往復料金は下記の通りです。', tip:'round trip＝往復（one-way は片道）。fare＝運賃・料金（交通機関の料金）。destination＝目的地。as follows＝以下の通り（列挙の前に使う定型表現）。',audio:'card_audio/card_297.mp3'},
+{cat:'✏️ 構文・慣用表現A', en:'"Don\'t forget to confirm your reservation in advance." "I won\'t."', ja:'「事前に予約の確認をするのを忘れないでね。」「ええ、わかった。」', tip:'confirm＝〜を確認する・確定する。reservation＝予約（= booking）。in advance＝事前に・あらかじめ（= beforehand）。I won\'t.＝（忘れ）ません（won\'t forget の省略）。',audio:'card_audio/card_298.mp3'},
+{cat:'✏️ 構文・慣用表現A', en:'Be sure to check in at least 45 minutes prior to departure time.', ja:'遅くとも出発時刻の45分前には搭乗手続きを必ず完了させて下さい。', tip:'be sure to＝必ず〜しなさい（= make sure to）。check in＝チェックインする・搭乗手続きをする。at least＝少なくとも。prior to＝〜の前に（= before。格式的）。departure＝出発（arrival は到着）。',audio:'card_audio/card_299.mp3'},
+{cat:'✏️ 構文・慣用表現A', en:'I attached my name tag to my baggage, but it soon came off.', ja:'自分の荷物に名札を付けたけれども、すぐに取れてしまった。', tip:'attach A to B＝AをBに取り付ける・添付する。name tag＝名札・名前タグ。baggage＝手荷物（= luggage。不可算名詞）。come off＝取れる・はがれる（= fall off）。',audio:'card_audio/card_300.mp3'},
+{cat:'🏠 旅行・日常生活', en:'On average, these packages weigh two pounds.', ja:'これらの小包の重さは平均すると2ポンドです。', tip:'on average＝平均して（= on the average）。package＝小包。weigh＝〜の重さがある。pound＝ポンド（約450g）。',audio:'card_audio/card_301.mp3'},
+{cat:'🏠 旅行・日常生活', en:'This plastic garbage bag is free of hazardous chemicals.', ja:'このビニール製のゴミ袋は有害な化学物質を含んでいません。', tip:'free of＝〜を含まない（= without）。garbage bag＝ゴミ袋。hazardous＝有害な（= dangerous）。chemical＝化学物質。',audio:'card_audio/card_302.mp3'},
+{cat:'🏠 旅行・日常生活', en:'This flashlight is getting dim. It needs new batteries.', ja:'この懐中電灯は明かりが弱くなってきた。電池を入れ替えないと。', tip:'flashlight＝懐中電灯（米語）。get dim＝暗くなる。battery＝電池（複数形batteries）。',audio:'card_audio/card_303.mp3'},
 ];
-const audioFiles=[{file:'21-Section_21.mp4',label:'1'},{file:'22-Section_22.mp4',label:'2'},{file:'23-Section_23.mp4',label:'3'},{file:'24-Section_24.mp4',label:'4'},{file:'25-Section_25.mp4',label:'5'}];
-function makeSrcCandidates(file){
-  const alt=file.includes('_')?file.replace(/_/g,' '):null;
-  return alt?[file,alt]:[file];
+// カードごとのネイティブ音声再生
+let nativeAudioEl=new Audio();
+nativeAudioEl.preload='none';
+function playNativeAudio(audioFile,onEnd,onError){
+  nativeAudioEl.pause();
+  nativeAudioEl.onended=null;
+  nativeAudioEl.onerror=null;
+  if(!audioFile){ if(onError)onError(); return; }
+  nativeAudioEl.src=audioFile;
+  nativeAudioEl.currentTime=0;
+  nativeAudioEl.onended=()=>{ if(onEnd)onEnd(); };
+  const p=nativeAudioEl.play();
+  if(p&&p.catch){ p.catch(()=>{ if(onError)onError(); }); }
 }
-let audioEls=audioFiles.map(f=>{
-  const a=new Audio();
-  a.preload='none';
-  a._candidates=makeSrcCandidates(f.file);
-  a._candIdx=0;
-  a.src='duo_audio/'+encodeURIComponent(a._candidates[0]);
-  return a;
-});
-function advanceCandidate(a){
-  if(a._candIdx<a._candidates.length-1){
-    a._candIdx++;
-    a.src='duo_audio/'+encodeURIComponent(a._candidates[a._candIdx]);
-    return true;
-  }
-  return false;
-}
-(function buildTrackButtons(){
-  const row=document.getElementById('audio-track-row');
-  audioFiles.forEach((f,i)=>{
-    const b=document.createElement('button');
-    b.className='audio-track-btn';
-    b.id='audio-track-'+i;
-    b.textContent=(i+1);
-    b.onclick=()=>toggleTrack(i);
-    row.appendChild(b);
-  });
-  const loopBtn=document.createElement('button');
-  loopBtn.className='audio-loop-all-btn';
-  loopBtn.id='audio-loop-all-btn';
-  loopBtn.textContent='🔁';
-  loopBtn.onclick=toggleLoopAll;
-  row.appendChild(loopBtn);
-})();
-let currentPlayingIdx=-1;
-let loopAllOn=false;
-function stopAllAudio(){
-  audioEls.forEach((a,i)=>{ a.pause(); a.currentTime=0; a.onended=null; const b=document.getElementById('audio-track-'+i); if(b){b.classList.remove('playing');} });
-  currentPlayingIdx=-1;
-}
-function playTrack(i,chain){
-  stopAllAudio();
-  currentPlayingIdx=i;
-  const a=audioEls[i];
-  const btn=document.getElementById('audio-track-'+i);
-  btn.classList.add('playing');
-  try{ a.currentTime=0; }catch(e){}
-  a.onended=()=>{
-    btn.classList.remove('playing');
-    if(chain){
-      const nextIdx=(i+1)%audioFiles.length;
-      playTrack(nextIdx,true);
-    } else {
-      currentPlayingIdx=-1;
-    }
-  };
-  const attempt=()=>{
-    const p=a.play();
-    if(p&&p.catch){
-      p.catch(()=>{
-        if(advanceCandidate(a)){
-          attempt();
-        } else {
-          btn.classList.remove('playing');
-          currentPlayingIdx=-1;
-          loopAllOn=false;
-          const loopBtn=document.getElementById('audio-loop-all-btn');
-          if(loopBtn){loopBtn.classList.remove('on');loopBtn.textContent='🔁';}
-          alert('音声ファイルの再生に失敗しました。\n試したファイル名:\n'+a._candidates.map(c=>'duo_audio/'+c).join('\n')+'\n\nduo_audioフォルダがHTMLファイルと同じ場所にアップロードされているか、ファイル名が一致しているかご確認ください。');
-        }
-      });
-    }
-  };
-  attempt();
-}
-function toggleTrack(i){
-  if(currentPlayingIdx===i){
-    stopAllAudio();
-    loopAllOn=false;
-    document.getElementById('audio-loop-all-btn').classList.remove('on');
-    document.getElementById('audio-loop-all-btn').textContent='🔁';
-  } else {
-    loopAllOn=false;
-    document.getElementById('audio-loop-all-btn').classList.remove('on');
-    document.getElementById('audio-loop-all-btn').textContent='🔁';
-    playTrack(i,false);
-  }
-}
-function toggleLoopAll(){
-  if(loopAllOn){
-    loopAllOn=false;
-    stopAllAudio();
-    document.getElementById('audio-loop-all-btn').classList.remove('on');
-    document.getElementById('audio-loop-all-btn').textContent='🔁';
-  } else {
-    loopAllOn=true;
-    document.getElementById('audio-loop-all-btn').classList.add('on');
-    document.getElementById('audio-loop-all-btn').textContent='⏹';
-    playTrack(0,true);
-  }
-}
+function stopNativeAudio(){ nativeAudioEl.pause(); nativeAudioEl.onended=null; }
 let currentIndex=0,isEnToJa=true,isRandom=false,isRepeating=false;
 let mastered=new Set(),activeCategory='all';
 let isAutoPlaying=false,autoStopped=false,autoTimeout=null;
@@ -377,13 +285,22 @@ function getVoice(){return voices[parseInt(document.getElementById('voice-select
 function updateRate(){speechRate=parseFloat(document.getElementById('rate-slider').value);document.getElementById('rate-val').textContent=speechRate.toFixed(1)+'×';}
 function startKeepAlive(){stopKeepAlive();keepAliveTimer=setInterval(()=>{if(window.speechSynthesis.speaking)window.speechSynthesis.pause(),window.speechSynthesis.resume();},10000);}
 function stopKeepAlive(){if(keepAliveTimer){clearInterval(keepAliveTimer);keepAliveTimer=null;}}
-function speakOne(text,onEnd){window.speechSynthesis.cancel();isSpeaking=false;clearTimeout(speakOne._t);speakOne._t=setTimeout(()=>{const utt=new SpeechSynthesisUtterance(text);const v=getVoice();if(v){utt.voice=v;utt.lang=v.lang;}else{utt.lang=voicePref==='US'?'en-US':'en-GB';}utt.rate=speechRate;utt.onend=()=>{isSpeaking=false;stopKeepAlive();if(onEnd)onEnd();};utt.onerror=()=>{isSpeaking=false;stopKeepAlive();if(onEnd)onEnd();};isSpeaking=true;startKeepAlive();window.speechSynthesis.speak(utt);},80);}
+function speakTTS(text,onEnd){window.speechSynthesis.cancel();isSpeaking=false;clearTimeout(speakOne._t);speakOne._t=setTimeout(()=>{const utt=new SpeechSynthesisUtterance(text);const v=getVoice();if(v){utt.voice=v;utt.lang=v.lang;}else{utt.lang=voicePref==='US'?'en-US':'en-GB';}utt.rate=speechRate;utt.onend=()=>{isSpeaking=false;stopKeepAlive();if(onEnd)onEnd();};utt.onerror=()=>{isSpeaking=false;stopKeepAlive();if(onEnd)onEnd();};isSpeaking=true;startKeepAlive();window.speechSynthesis.speak(utt);},80);}
 speakOne._t=null;
-function speakP(){return new Promise(r=>{const a=getActive();if(!a.length){r();return;}speakOne(a[currentIndex].en,r);});}
-function speakCurrent(){const a=getActive();if(!a.length)return;speakOne(a[currentIndex].en);}
-function speakRepeat(){if(!isRepeating||isAutoPlaying)return;const a=getActive();if(!a.length)return;speakOne(a[currentIndex].en,()=>{if(isRepeating&&!isAutoPlaying){clearTimeout(speakRepeat._t);speakRepeat._t=setTimeout(()=>speakRepeat(),300);}}); }
+function speakOne(card,onEnd){
+  window.speechSynthesis.cancel();
+  stopNativeAudio();
+  if(card&&card.audio){
+    playNativeAudio(card.audio,onEnd,()=>{ speakTTS(card.en,onEnd); });
+  } else {
+    speakTTS(card.en,onEnd);
+  }
+}
+function speakP(){return new Promise(r=>{const a=getActive();if(!a.length){r();return;}speakOne(a[currentIndex],r);});}
+function speakCurrent(){const a=getActive();if(!a.length)return;speakOne(a[currentIndex]);}
+function speakRepeat(){if(!isRepeating||isAutoPlaying)return;const a=getActive();if(!a.length)return;speakOne(a[currentIndex],()=>{if(isRepeating&&!isAutoPlaying){clearTimeout(speakRepeat._t);speakRepeat._t=setTimeout(()=>speakRepeat(),300);}}); }
 speakRepeat._t=null;
-function toggleRepeat(){isRepeating=!isRepeating;const btn=document.getElementById('repeat-btn');btn.textContent=isRepeating?'🔁 繰り返し: ON':'🔁 繰り返し';btn.className=isRepeating?'btn btn-on':'btn btn-secondary';if(isRepeating){const a=getActive();if(a.length)speakRepeat();}else{window.speechSynthesis.cancel();isSpeaking=false;stopKeepAlive();clearTimeout(speakRepeat._t);}}
+function toggleRepeat(){isRepeating=!isRepeating;const btn=document.getElementById('repeat-btn');btn.textContent=isRepeating?'🔁 繰り返し: ON':'🔁 繰り返し';btn.className=isRepeating?'btn btn-on':'btn btn-secondary';if(isRepeating){const a=getActive();if(a.length)speakRepeat();}else{window.speechSynthesis.cancel();stopNativeAudio();isSpeaking=false;stopKeepAlive();clearTimeout(speakRepeat._t);}}
 function update(){const active=getActive();const noEl=document.getElementById('no-active');if(!active.length){noEl.classList.add('show');document.getElementById('main-card').style.display='none';document.getElementById('tap-hint').style.display='none';updateMasterBadge();buildCatRows();return;}noEl.classList.remove('show');document.getElementById('main-card').style.display='';document.getElementById('tap-hint').style.display='';if(currentIndex>=active.length)currentIndex=0;const item=active[currentIndex];const realIdx=phrases.indexOf(item);document.getElementById('card-num').textContent=String(realIdx+OFFSET).padStart(3,'0');document.getElementById('card-cat').textContent=item.cat;document.getElementById('cur-num').textContent=currentIndex+1;document.getElementById('tot-num').textContent=active.length;const pct=active.length>1?((currentIndex/(active.length-1))*100).toFixed(0):100;document.getElementById('progress-bar').style.width=pct+'%';if(isEnToJa){document.getElementById('main-text').innerHTML=item.en;document.getElementById('answer-ja').textContent=item.ja;}else{document.getElementById('main-text').innerHTML=item.ja;document.getElementById('answer-ja').textContent=item.en;}const tipEl=document.getElementById('answer-tip');if(item.tip){tipEl.textContent=item.tip;tipEl.style.display='';}else{tipEl.style.display='none';}document.getElementById('answer-wrap').classList.remove('show');document.getElementById('main-card').classList.remove('revealed');const cb=document.getElementById('master-cb');cb.checked=mastered.has(realIdx);if(mastered.has(realIdx))document.getElementById('mastered-badge').classList.add('show');else document.getElementById('mastered-badge').classList.remove('show');updateMasterBadge();buildCatRows();}
 function updateMasterBadge(){const cnt=mastered.size;document.getElementById('master-badge-top').textContent=`マスター: ${cnt} / ${phrases.length}`;const sumEl=document.getElementById('master-summary');if(cnt>0){sumEl.classList.add('show');sumEl.textContent=`✅ マスター済み: ${cnt}件 — タップしてリスト表示`;renderMasterList();}else sumEl.classList.remove('show');}
 function renderMasterList(){const listEl=document.getElementById('master-list');listEl.innerHTML='';[...mastered].sort((a,b)=>a-b).forEach(idx=>{const item=phrases[idx];const d=document.createElement('div');d.style.cssText='padding:8px 0;border-bottom:1px solid #f8fafc;font-size:12px;';d.innerHTML=`<span style="font-family:monospace;font-size:10px;color:#64748b;">${String(idx+OFFSET).padStart(3,'0')}</span> ${item.en.substring(0,55)}...`;listEl.appendChild(d);});}
@@ -398,7 +315,7 @@ function switchMode(){if(isAutoPlaying)return;isEnToJa=!isEnToJa;update();}
 function delayP(ms){return new Promise(r=>{if(autoStopped){r();return;}autoTimeout=setTimeout(r,ms);});}
 function setAutoPanel(s,i,c){document.getElementById('auto-step-title').textContent=s;document.getElementById('auto-instruction').textContent=i;document.getElementById('auto-count').textContent=c;}
 function enterAutoUI(){isAutoPlaying=true;autoStopped=false;document.getElementById('normal-controls').style.display='none';document.getElementById('auto-controls').style.display='';document.getElementById('auto-panel').classList.add('show');document.getElementById('tap-hint').style.display='none';document.getElementById('master-wrap').classList.add('disabled');document.getElementById('main-card').classList.remove('tappable');document.getElementById('main-card').classList.add('no-tap');}
-function exitAutoUI(){autoStopped=true;isAutoPlaying=false;window.speechSynthesis.cancel();isSpeaking=false;stopKeepAlive();clearTimeout(speakOne._t);if(autoTimeout){clearTimeout(autoTimeout);autoTimeout=null;}document.getElementById('normal-controls').style.display='';document.getElementById('auto-controls').style.display='none';document.getElementById('auto-panel').classList.remove('show');document.getElementById('tap-hint').style.display='';document.getElementById('master-wrap').classList.remove('disabled');document.getElementById('main-card').classList.add('tappable');document.getElementById('main-card').classList.remove('no-tap');}
+function exitAutoUI(){autoStopped=true;isAutoPlaying=false;window.speechSynthesis.cancel();stopNativeAudio();isSpeaking=false;stopKeepAlive();clearTimeout(speakOne._t);if(autoTimeout){clearTimeout(autoTimeout);autoTimeout=null;}document.getElementById('normal-controls').style.display='';document.getElementById('auto-controls').style.display='none';document.getElementById('auto-panel').classList.remove('show');document.getElementById('tap-hint').style.display='';document.getElementById('master-wrap').classList.remove('disabled');document.getElementById('main-card').classList.add('tappable');document.getElementById('main-card').classList.remove('no-tap');}
 function stopAutoPlay(){exitAutoUI();update();}
 function showHidden(){document.getElementById('main-text').textContent='？？？';document.getElementById('answer-wrap').classList.remove('show');document.getElementById('main-card').classList.remove('revealed');}
 function showAll(){const a=getActive();if(!a.length)return;document.getElementById('main-text').innerHTML=a[currentIndex].en;document.getElementById('answer-wrap').classList.add('show');document.getElementById('main-card').classList.add('revealed');}
