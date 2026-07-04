@@ -103,12 +103,10 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);min-height:100vh
 </div>
 
 <div class="top-row">
-<button class="help-btn" onclick="alert('👆カードタップで答え表示\n🔊音声再生（合成音声）\n🗣️シャドウイング4ステップ\n▶連続再生\n🔄英⇄日モード切替\nマスターチェックで次へ\n\n上部の「ネイティブ再生」欄はカードと連動しない復習用の音声プレーヤーです。番号ボタンで個別再生、ループボタンで1〜5を繰り返し再生します。')">❓ 使い方</button>
+<button class="help-btn" onclick="alert('👆カードタップで答え表示\n🔊音声再生（ネイティブ音声。ファイルがない場合のみ合成音声）\n🗣️シャドウイング4ステップ\n▶連続再生\n🔄英⇄日モード切替\nマスターチェックで次へ')">❓ 使い方</button>
 <div class="badge green" id="master-badge-top">マスター: 0 / 64</div>
 </div>
 
-<div class="audio-mini-label">ネイティブ再生</div>
-<div class="audio-track-row" id="audio-track-row"></div>
 <div class="progress-wrap"><div class="progress-bar" id="progress-bar" style="width:2%"></div></div>
 <div class="progress-label">カード <span id="cur-num">1</span> / <span id="tot-num">64</span></div>
 <div class="no-active" id="no-active">✅ このカテゴリをすべてマスターしました！</div>
@@ -191,176 +189,86 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);min-height:100vh
 const OFFSET=177;
 const CATS={'💕 恋愛・人生':'#be185d','🧠 心理・感情':'#2563eb','💑 人間関係・感情':'#16a34a','🚗 交通・移動':'#7c3aed','🌌 宇宙・科学':'#d97706','🌿 環境・自然':'#0891b2','🌏 地理・気象':'#dc2626'};
 const phrases=[
-{cat:'💕 恋愛・人生', en:'"Naomi likes to show off her perfect figure. I wish I were thin like her. I envy her." "You could go on a diet."', ja:'「ナオミは自分の完璧なスタイルをひけらかしたがる。私も彼女みたいに痩せていればなあ。彼女が羨ましいわ。」「ダイエットすれば。」', tip:'show off＝〜をひけらかす・見せびらかす。I wish I were ...＝〜だったらなあ（仮定法過去）。envy＝〜を羨む（= be jealous of）。go on a diet＝ダイエットをする。'},
-{cat:'💕 恋愛・人生', en:'I fell in love with Naomi at first sight. Three months later, I took a chance and proposed to her, but she turned me down.', ja:'ナオミに一目惚れした。3ヶ月後、思い切って彼女にプロポーズしてみたが振られてしまった。', tip:'fall in love with＝〜に恋をする。at first sight＝一目で・一目惚れで。take a chance＝思い切ってやってみる。propose to＝〜にプロポーズする。turn down＝〜を断る・振る（reject と同義）。'},
-{cat:'💕 恋愛・人生', en:'I met the man by chance. He\'s gentle and smart. What\'s more, he\'s single!', ja:'偶然その人に出会ったの。優しくて頭もいいの。おまけに独身！', tip:'by chance＝偶然に（= by accident。on purpose は故意に）。gentle＝優しい・穏やかな。what\'s more＝おまけに・さらに（= moreover・furthermore）。single＝独身の。'},
-{cat:'💕 恋愛・人生', en:'His nephew was brought up to be modest and considerate.', ja:'彼の甥は、謙虚で思いやりのある人になるように育てられた。', tip:'nephew＝甥（niece は姪）。bring up＝〜を育てる（= raise）。modest＝謙虚な・控えめな（immodest は傲慢）。considerate＝思いやりのある（consideration の形容詞形）。'},
-{cat:'💕 恋愛・人生', en:'I introduced Bob to my folks, and they took to him at once.', ja:'私の両親にボブを紹介したら、二人ともすぐに彼のことが好きになった。', tip:'introduce A to B＝AをBに紹介する。folks＝両親・家族（口語）。take to＝〜が好きになる・〜に慣れる。at once＝すぐに・一度に（= immediately）。'},
-{cat:'💕 恋愛・人生', en:'People should be judged not so much by how they look as by who they are.', ja:'人は外見ではなく、むしろ中身で判断されるべきだ。', tip:'not so much A as B＝AというよりむしろB（重要構文）。judge＝判断する・裁く。how they look＝外見。who they are＝その人の中身・人柄。'},
-{cat:'💕 恋愛・人生', en:'"It\'s not your title that counts. That\'s for sure!" exclaimed Bob.', ja:'「大切なのは肩書きなんかじゃない。絶対そうだ！」と、ボブは語気を強めて言った。', tip:'It is ... that ...＝〜こそが…だ（強調構文）。title＝肩書き・タイトル。count＝重要である・数に入る。That\'s for sure!＝絶対そうだ・間違いない（慣用句）。exclaim＝叫ぶ・語気を強めて言う。'},
-{cat:'💕 恋愛・人生', en:'As a self-made man put it, "A man of vision will make good in the end."', ja:'自分の力で成功をつかんだ人が言ったように、「先見の明のある人は最後には成功する」。', tip:'self-made man＝自力で成功した人・叩き上げの人。put it＝表現する・言う（as he put it＝彼の言い方を借りれば）。a man of vision＝先見の明のある人。make good＝成功する・約束を果たす。'},
-{cat:'💕 恋愛・人生', en:'Keep in mind that youth is not eternal.', ja:'若さが永遠のものではないことを忘れてはいけない。', tip:'keep in mind＝〜を肝に銘じる・忘れないでいる（= bear in mind）。youth＝若さ・青春（不可算名詞）。eternal＝永遠の・永久の（= everlasting）。'},
-{cat:'🧠 心理・感情', en:'I can\'t figure out why on earth everybody feels so much contempt for Bob!', ja:'いったいなぜみんながそれほどまでにボブを軽蔑するのか、僕にはわからない。', tip:'figure out＝〜を理解する・解明する。on earth＝いったい全体（疑問詞を強調。What on earth?＝いったい何？）。contempt for＝〜に対する軽蔑（feel contempt for＝〜を軽蔑する）。'},
-{cat:'🧠 心理・感情', en:'I can\'t help laughing at him because he keeps on making stupid mistakes. He\'d be the last person to learn his lesson.', ja:'彼のことを笑わずにはいられない。ばかな間違いを繰り返すからね。きっと彼は懲りないんだろうな。', tip:'can\'t help doing＝〜せずにはいられない（= can\'t help but do）。keep on doing＝〜し続ける。the last person to do＝最も〜しそうにない人。learn one\'s lesson＝懲りる・教訓を得る。'},
-{cat:'🧠 心理・感情', en:'To make matters worse, he isn\'t even conscious of annoying us.', ja:'さらに厄介なことに、彼は私たちに迷惑をかけていることさえわかっていない。', tip:'to make matters worse＝さらに悪いことに（慣用句。to make things worse も同義）。be conscious of＝〜を意識している・気づいている（= be aware of）。annoy＝〜を悩ませる・迷惑をかける。'},
-{cat:'🧠 心理・感情', en:'Since I was in a hurry, I put my gloves on inside out by mistake.', ja:'慌てていたから、手袋を間違えて裏返しにはめてしまった。', tip:'be in a hurry＝急いでいる・慌てている（= be in a rush）。put on＝〜を身に着ける。inside out＝裏返しに（upside down は上下逆さに）。by mistake＝間違えて・誤って（= accidentally）。'},
-{cat:'🧠 心理・感情', en:'Dave is fat and clumsy. When he leaped over the shallow stream, he stumbled and twisted his ankle.', ja:'デイブはデブでドジ。浅い小川を飛び越えた時に、つまずいて足首を捻挫したんだ。', tip:'clumsy＝不器用な・ドジな。leap over＝〜を飛び越える。shallow＝浅い（deep の反対）。stream＝小川・流れ。stumble＝つまずく。twist one\'s ankle＝足首を捻挫する。'},
-{cat:'🧠 心理・感情', en:'"I\'m scared of heights." "You\'re a coward!"', ja:'「僕、高所恐怖症なんだ。」「弱虫っ！」', tip:'be scared of＝〜が怖い・恐怖する（= be afraid of）。heights＝高所（複数形で使う）。coward＝臆病者・弱虫（形容詞は cowardly）。'},
-{cat:'🧠 心理・感情', en:'The passive man seldom, if ever, expresses himself in public.', ja:'消極的なその男性が、人前で自己表現をすることはまずない。', tip:'passive＝消極的な・受け身の（active の反対）。seldom if ever＝ほとんどない・まずない（= rarely if ever）。express oneself＝自己表現する。in public＝人前で・公の場で。'},
-{cat:'🧠 心理・感情', en:'Nick convinced me that all superstitions are irrational.', ja:'迷信はすべて根拠のないものだということが、ニックに言われてよくわかった。', tip:'convince A that ...＝Aに〜だと確信させる・納得させる。superstition＝迷信。irrational＝不合理な・根拠のない（rational の反対）。'},
-{cat:'🧠 心理・感情', en:'I tremble with fear at the thought of an injection.', ja:'注射のことを考えると、怖くて震えてしまう。', tip:'tremble＝震える・おののく（= shiver）。at the thought of＝〜のことを考えると（= when I think of）。injection＝注射（inject＝注射する）。'},
-{cat:'🧠 心理・感情', en:'Since Bob is lazy at heart, he frequently neglects his duties.', ja:'ボブは根が怠け者だから、与えられた仕事をしばしば怠る。', tip:'at heart＝根は・本来は・心の中では。frequently＝しばしば・頻繁に（= often）。neglect＝〜を怠る・無視する。duty＝義務・職務（duties＝職責）。'},
-{cat:'🧠 心理・感情', en:'While Bob was at work, Jennifer was at home absorbed in silly soap operas.', ja:'ボブが働いている間、ジェニファーは家でくだらないメロドラマに夢中になっていた。', tip:'be absorbed in＝〜に夢中になっている・没頭している（= be engrossed in）。silly＝くだらない・馬鹿げた。soap opera＝メロドラマ・昼ドラ（昔、石けん会社がスポンサーだったことから）。'},
-{cat:'🧠 心理・感情', en:'Bob likes cartoons, but I don\'t think much of them. As a matter of fact, they\'re boring.', ja:'ボブはマンガが好きだけど、僕にはそれほどいいものとは思えない。実際、つまらないよ。', tip:'not think much of＝〜をそれほど高く評価しない（think highly of は高く評価する）。as a matter of fact＝実は・実際のところ（= in fact）。boring＝退屈な（bored は「退屈している」状態）。'},
-{cat:'🧠 心理・感情', en:'It occurred to me that he was holding something back, because he wouldn\'t look me in the eye.', ja:'彼が私の目を見ようとしなかったので、何かを隠していると思った。', tip:'it occurs to A that ...＝Aに〜という考えが浮かぶ（重要構文）。hold back＝〜を隠す・控える。look A in the eye＝Aの目を見る（直視する）。wouldn\'t＝どうしても〜しようとしない（拒否の意志）。'},
-{cat:'🧠 心理・感情', en:'When her patience gave out, she grabbed his collar and swore at him.', ja:'彼女は我慢しきれなくなり、襟首をつかんで彼ののしった。', tip:'patience＝忍耐・我慢。give out＝尽きる・限界になる（= run out）。grab＝〜をつかむ・つかみ取る。collar＝襟・えり。swear at＝〜をののしる・悪口を言う（swear-swore-sworn）。'},
-{cat:'🧠 心理・感情', en:'I must admit we quarrel every now and then, but generally we\'re on good terms with each other.', ja:'確かに、私たちは時々口げんかもしますが、普段は仲良くやっています。', tip:'must admit＝認めなければならない。quarrel＝口げんかをする・言い争う。every now and then＝時々・たまに（= occasionally）。on good terms with＝〜と仲が良い（on bad terms は仲が悪い）。'},
-{cat:'💑 人間関係・感情', en:'"Do you mind if I stop by your house?" "No, not at all. Be my guest!"', ja:'「君の家に寄ってもいいかい？」「もちろんいいわよ。気兼ねなく！」', tip:'Do you mind if ...?＝〜してもいいですか（mindは「気にする」）。Not at all.＝全然構いません。Be my guest!＝どうぞご自由に（慣用句）。'},
-{cat:'💑 人間関係・感情', en:'Hold on. I\'ll be right back. Don\'t hang up!', ja:'ちょっと待ってて。すぐ戻るから。切らないでよ！（電話で）', tip:'Hold on.＝ちょっと待って（電話でよく使う）。be right back＝すぐ戻る。hang up＝電話を切る（受話器を「掛ける」イメージから）。'},
-{cat:'💑 人間関係・感情', en:'I can\'t put you up. For one thing, my dad drops in on me from time to time.', ja:'うちには泊められないわ。一つには、時々お父さんがふらっとやって来るから。', tip:'put up＝（人を）泊める。for one thing＝一つには（理由の列挙）。drop in on＝〜にふらっと立ち寄る。from time to time＝時々。'},
-{cat:'💑 人間関係・感情', en:'While Jennifer was standing still, Bob was pacing back and forth along the sidewalk.', ja:'ジェニファーがじっと立っている間、ボブは歩道を行ったり来たりしていた。', tip:'stand still＝じっと立っている（stillは「動かない」）。pace＝（せかせかと）歩く。back and forth＝行ったり来たり。sidewalk＝歩道（米語。英語はpavement）。'},
-{cat:'💑 人間関係・感情', en:'"Let\'s make up, Lisa." "Stop taking me for granted! We\'re through for good this time. I mean it!"', ja:'「仲直りしようよ、リサ。」「私がいて当然だなんて思わないで。私たちは、今度は永遠に終わりよ。本気なんだから！」', tip:'make up＝仲直りする。take ... for granted＝〜を当然のこととして扱う（重要慣用句）。be through＝終わり・関係が終了する。for good＝永遠に。I mean it!＝本気だよ。'},
-{cat:'💑 人間関係・感情', en:'Come on! Don\'t get so emotional, Lisa. I didn\'t mean to hurt you. Let\'s talk it over.', ja:'おいおいリサ、そう感情的になるなよ。君を傷つけるつもりじゃなかったんだ。じっくり話し合おう。', tip:'Come on!＝おいおい・頼むよ（なだめる表現）。mean to＝〜するつもりである。talk over＝〜についてじっくり話し合う。'},
-{cat:'💑 人間関係・感情', en:'"You betrayed me!" "Please forgive me. How can I make it up to you?" "I\'ll get even!"', ja:'「私を裏切ったわね！」「許してくれよ。どうしたら埋め合わせができるかなあ？」「仕返ししてやるっ！」', tip:'betray＝裏切る。make it up to＝〜に埋め合わせをする（慣用句）。get even＝仕返しをする・仕返しをして対等になる。'},
-{cat:'💑 人間関係・感情', en:'You should confess your sins rather than conceal them.', ja:'自分の罪は隠しておかずに告白したほうがいい。', tip:'confess＝告白する・自白する。sin＝罪（宗教的・道徳的な罪）。rather than＝〜よりもむしろ。conceal＝隠す（hide より格式的）。'},
-{cat:'💑 人間関係・感情', en:'Keep your word; otherwise you\'ll end up losing face.', ja:'約束は守りなさい。そうしないと評判を落とすことになりますよ。', tip:'keep one\'s word＝約束を守る（break one\'s word は破る）。otherwise＝さもなければ。end up doing＝結局〜することになる。lose face＝面目を失う・評判を落とす（慣用句）。'},
-{cat:'💑 人間関係・感情', en:'Bob sticks to his moral principles and believes that honesty pays off in the long run.', ja:'ボブは自分の道徳的信条を曲げない男だ。正直にいれば最後には報われると信じている。', tip:'stick to＝〜を守り続ける・固執する。moral principles＝道徳的信条。pay off＝報われる・成果が出る。in the long run＝長い目で見れば・最終的には。'},
-{cat:'💑 人間関係・感情', en:'"Cheer up! You couldn\'t help it." "I did my best." "I know. Don\'t dwell on the past. You can start over!"', ja:'「元気を出して。仕方ないわ。」「やれるだけのことはやったんだ。」「わかってる。過ぎたことにくよくよしないで。やり直せるわよ！」', tip:'cheer up＝元気を出す。couldn\'t help it＝仕方がなかった。dwell on＝〜にくよくよする・こだわる。start over＝やり直す（= start again）。'},
-{cat:'🚗 交通・移動', en:'"Jane, please do me a favor and give me a ride to Times Square." "I wish I could, but I\'m tied up right now."', ja:'「ジェーン、タイムズ・スクエアまで乗せて行って欲しいんだけど。」「そうしてあげたいのは山々だけど。今、全然時間がないの。」', tip:'do me a favor＝お願いを聞いてくれる？。give a ride＝車に乗せる。I wish I could＝できればいいんだけど（できない婉曲表現）。be tied up＝手が離せない・時間がない。'},
-{cat:'🚗 交通・移動', en:'As usual, Mike turned up on time. He\'s very punctual.', ja:'いつものように、マイクは時間通りに現れた。本当に時間に正確な人だ。', tip:'as usual＝いつものように。turn up＝現れる・やって来る（= show up）。on time＝時間通りに（in time は間に合って）。punctual＝時間に正確な。'},
-{cat:'🚗 交通・移動', en:'The other day I ran out of gas in the middle of a busy interstate.', ja:'この前、混雑した幹線道路の真ん中でガス欠してしまった。', tip:'the other day＝この前・先日。run out of＝〜がなくなる・ガス欠になる。gas＝ガソリン（米語）。interstate＝州間高速道路（米）。'},
-{cat:'🚗 交通・移動', en:'A truck driving ahead of me skidded, turned over, and scattered its load all over the road.', ja:'私の前を走っていたトラックがスリップして横転し、積み荷を路面いっぱいに散乱させた。', tip:'skid＝スリップする。turn over＝横転する。scatter＝〜を散乱させる。load＝積み荷・荷物。all over＝〜じゅうに。'},
-{cat:'🚗 交通・移動', en:'He recalled that a collision had been avoided by sheer luck.', ja:'衝突を避けられたのは運が良かっただけだ、と彼は回想した。', tip:'recall＝〜を思い出す・回想する。collision＝衝突（collide の名詞形）。by sheer luck＝全くの運で・運だけで（sheer＝純粋な・全くの）。'},
-{cat:'🚗 交通・移動', en:'In case of an emergency, get in touch with my agent right away.', ja:'緊急の際には、すぐに私の代理人と連絡を取って下さい。', tip:'in case of＝〜の場合には。emergency＝緊急事態。get in touch with＝〜と連絡を取る（= contact）。right away＝すぐに（= immediately）。'},
-{cat:'🚗 交通・移動', en:'"Jane, where are we heading?" "I think we\'re lost. We went in the wrong direction." "Damn! Pull over!"', ja:'「ジェーン、俺たちはどこに向かってるんだ？」「迷ったみたい。違う方向に来ちゃったわ。」「何だよ。車を止めてくれ！」', tip:'head＝〜に向かう。be lost＝道に迷う。wrong direction＝間違った方向。pull over＝（路肩に）車を止める（重要交通表現）。'},
-{cat:'🚗 交通・移動', en:'My rusty Ford broke down, obstructing the intersection.', ja:'僕のさびついたフォードが故障して、交差点をふさいでしまった。', tip:'rusty＝さびた（rust＝さび）。break down＝故障する（機械・車の故障はbreak down）。obstruct＝〜をふさぐ・妨害する。intersection＝交差点。'},
-{cat:'🚗 交通・移動', en:'There are so many fine scratches and dents on its surface, it\'s no use polishing it.', ja:'表面に細かい傷やへこみがたくさんあるから、磨いても無駄だよ。', tip:'scratch＝引っかき傷。dent＝へこみ・凹み。surface＝表面。it\'s no use doing＝〜しても無駄だ（重要構文）。polish＝磨く。'},
-{cat:'🚗 交通・移動', en:'"Hey, we\'re stuck in a traffic jam!" "Chill out, Joe. Let\'s take a shortcut! We\'ll get there in time."', ja:'「おい、渋滞にはまっちゃったよ！」「熱くならないで、ジョー。近道しましょう。時間までには着けるわ。」', tip:'be stuck in a traffic jam＝渋滞にはまる。chill out＝落ち着く・熱くならない（口語）。shortcut＝近道。in time＝間に合って（on time は時間通り）。'},
-{cat:'🚗 交通・移動', en:'"I\'ve got a flat tire. Can you give me a hand?" "I\'d be glad to."', ja:'「パンクしちゃったよ。手を貸してくれる？」「喜んで。」', tip:'flat tire＝パンク（タイヤがflat＝平らになった状態）。give a hand＝手を貸す・助ける。I\'d be glad to.＝喜んで（丁寧な承諾）。'},
-{cat:'🚗 交通・移動', en:'The ambulance went out of control and came close to running over a pedestrian.', ja:'ハンドルがきかなくなった救急車が、危うく歩行者をひきそうになった。', tip:'go out of control＝制御不能になる。come close to doing＝危うく〜しそうになる。run over＝（車で）〜をひく。pedestrian＝歩行者。'},
-{cat:'🌌 宇宙・科学', en:'He contends that primitive life once existed on Mars.', ja:'火星にはかつて原始的な生物が存在していたと彼は説いている。', tip:'contend＝〜と主張する・論じる（claim より学術的）。primitive＝原始的な。once＝かつて。Mars＝火星（ローマ神話の軍神）。'},
-{cat:'🌌 宇宙・科学', en:'The crew is busy preparing for the voyage into outer space.', ja:'乗組員たちは宇宙への航海の準備に忙しい。', tip:'crew＝乗組員（集合名詞）。be busy doing＝〜するのに忙しい。voyage＝航海・長旅（短距離はtrip/journey）。outer space＝宇宙空間。'},
-{cat:'🌌 宇宙・科学', en:'They conducted a series of experiments under zero gravity.', ja:'彼らは無重力状態で一連の実験をおこなった。', tip:'conduct＝〜を行う・実施する（実験・調査に使う）。a series of＝一連の。zero gravity＝無重力（weightlessness とも）。'},
-{cat:'🌌 宇宙・科学', en:'Many astronomers assume that the universe will expand infinitely.', ja:'多くの天文学者は、宇宙は無限に膨張を続けていくものと考えている。', tip:'astronomer＝天文学者（astronomy＝天文学）。assume＝〜と仮定する・考える。universe＝宇宙。expand＝膨張する・拡大する。infinitely＝無限に。'},
-{cat:'🌌 宇宙・科学', en:'The astronauts were greeted with spontaneous applause.', ja:'宇宙飛行士たちは自然と沸き起こった拍手で迎えられた。', tip:'astronaut＝宇宙飛行士（astro-＝星）。be greeted with＝〜で迎えられる。spontaneous＝自然発生的な・自発的な。applause＝拍手（不可算名詞）。'},
-{cat:'🌿 環境・自然', en:'A fund was set up with a view to preserving our endangered planet.', ja:'滅亡の危機に瀕した地球を守ろうと、ある基金が設立された。', tip:'set up＝〜を設立する・設置する。with a view to doing＝〜する目的で。preserve＝〜を保護する・保存する。endangered＝絶滅の危機に瀕した。'},
-{cat:'🌿 環境・自然', en:'The massive flood paralyzed the local transportation network.', ja:'大洪水で現地の交通網が麻痺した。', tip:'massive＝大規模な・莫大な。flood＝洪水。paralyze＝〜を麻痺させる。transportation network＝交通網。'},
-{cat:'🌏 地理・気象', en:'The equator divides the globe into two hemispheres.', ja:'赤道は地球を二つの半球に分ける。', tip:'equator＝赤道（equal＝等しいから：南北を等分）。divide A into B＝AをBに分ける。globe＝地球・地球儀。hemisphere＝半球（hemi-＝半分）。'},
-{cat:'🌿 環境・自然', en:'I think it\'s cruel to trap animals for fur coats.', ja:'毛皮のコートのために動物を罠で捕獲するのは残酷なことだ。', tip:'cruel＝残酷な・非道な。trap＝罠で捕まえる。fur＝毛皮。fur coat＝毛皮のコート。'},
-{cat:'🌿 環境・自然', en:'The organization plays a principal role in wildlife conservation.', ja:'その団体は野生動物の保護において、最も重要な役割を果たしている。', tip:'principal＝主要な・最重要の（= main）。play a role＝役割を果たす。wildlife＝野生動物（集合名詞）。conservation＝保護・保全。'},
-{cat:'🌿 環境・自然', en:'Many fragile species are on the verge of extinction.', ja:'多くの弱い生物種が絶滅の危機に瀕している。', tip:'fragile＝壊れやすい・弱い。species＝種（単複同形）。on the verge of＝〜の瀬戸際に・〜しそうで。extinction＝絶滅（extinct＝絶滅した）。'},
-{cat:'🌿 環境・自然', en:'The prolonged drought did severe damage to the crops.', ja:'長引く干ばつが収穫に甚大な被害をもたらした。', tip:'prolonged＝長引く・長期化した。drought＝干ばつ（発音注意：「ドラウト」）。severe＝深刻な・甚大な。crops＝農作物・収穫（複数形が普通）。'},
-{cat:'🌿 環境・自然', en:'Tropical rain forests are quickly disappearing on a global scale. In part, it\'s due to acid rain.', ja:'熱帯雨林の消滅が地球規模で急速に進んでいます。その原因の一つは酸性雨です。', tip:'tropical rain forest＝熱帯雨林。on a global scale＝地球規模で。in part＝部分的に・一因は。due to＝〜が原因で（= because of）。acid rain＝酸性雨。'},
-{cat:'🌿 環境・自然', en:'It is said that global warming is directly related to carbon dioxide emissions.', ja:'地球温暖化は、二酸化炭素の排出と直接の関係があると言われている。', tip:'global warming＝地球温暖化。be related to＝〜と関係している。carbon dioxide＝二酸化炭素（CO₂）。emission＝排出・放出（emit の名詞形）。'},
-{cat:'🌿 環境・自然', en:'The destruction of the ozone layer affects the environment.', ja:'オゾン層の破壊は環境に影響を及ぼす。', tip:'destruction＝破壊（destroy の名詞形）。ozone layer＝オゾン層。affect＝〜に影響を与える（effect は名詞）。environment＝環境。'},
-{cat:'🌿 環境・自然', en:'The committee called on all nations to work side by side to curb air pollution.', ja:'委員会は、大気汚染を抑制するために互いに協力し合うよう各国に要請した。', tip:'call on A to do＝Aに〜するよう要請する。side by side＝並んで・協力して。curb＝〜を抑制する・制限する。air pollution＝大気汚染。'},
-{cat:'🌌 宇宙・科学', en:'A satellite was launched into orbit to monitor melting glaciers.', ja:'溶け続ける氷河を監視するために、人工衛星が軌道に打ち上げられた。', tip:'satellite＝人工衛星・衛星。launch＝〜を打ち上げる・発射する。orbit＝軌道。monitor＝〜を監視する。glacier＝氷河。'},
+{cat:'💕 恋愛・人生', en:'"Naomi likes to show off her perfect figure. I wish I were thin like her. I envy her." "You could go on a diet."', ja:'「ナオミは自分の完璧なスタイルをひけらかしたがる。私も彼女みたいに痩せていればなあ。彼女が羨ましいわ。」「ダイエットすれば。」', tip:'show off＝〜をひけらかす・見せびらかす。I wish I were ...＝〜だったらなあ（仮定法過去）。envy＝〜を羨む（= be jealous of）。go on a diet＝ダイエットをする。',audio:'card_audio/card_177.mp3'},
+{cat:'💕 恋愛・人生', en:'I fell in love with Naomi at first sight. Three months later, I took a chance and proposed to her, but she turned me down.', ja:'ナオミに一目惚れした。3ヶ月後、思い切って彼女にプロポーズしてみたが振られてしまった。', tip:'fall in love with＝〜に恋をする。at first sight＝一目で・一目惚れで。take a chance＝思い切ってやってみる。propose to＝〜にプロポーズする。turn down＝〜を断る・振る（reject と同義）。',audio:'card_audio/card_178.mp3'},
+{cat:'💕 恋愛・人生', en:'I met the man by chance. He\'s gentle and smart. What\'s more, he\'s single!', ja:'偶然その人に出会ったの。優しくて頭もいいの。おまけに独身！', tip:'by chance＝偶然に（= by accident。on purpose は故意に）。gentle＝優しい・穏やかな。what\'s more＝おまけに・さらに（= moreover・furthermore）。single＝独身の。',audio:'card_audio/card_179.mp3'},
+{cat:'💕 恋愛・人生', en:'His nephew was brought up to be modest and considerate.', ja:'彼の甥は、謙虚で思いやりのある人になるように育てられた。', tip:'nephew＝甥（niece は姪）。bring up＝〜を育てる（= raise）。modest＝謙虚な・控えめな（immodest は傲慢）。considerate＝思いやりのある（consideration の形容詞形）。',audio:'card_audio/card_180.mp3'},
+{cat:'💕 恋愛・人生', en:'I introduced Bob to my folks, and they took to him at once.', ja:'私の両親にボブを紹介したら、二人ともすぐに彼のことが好きになった。', tip:'introduce A to B＝AをBに紹介する。folks＝両親・家族（口語）。take to＝〜が好きになる・〜に慣れる。at once＝すぐに・一度に（= immediately）。',audio:'card_audio/card_181.mp3'},
+{cat:'💕 恋愛・人生', en:'People should be judged not so much by how they look as by who they are.', ja:'人は外見ではなく、むしろ中身で判断されるべきだ。', tip:'not so much A as B＝AというよりむしろB（重要構文）。judge＝判断する・裁く。how they look＝外見。who they are＝その人の中身・人柄。',audio:'card_audio/card_182.mp3'},
+{cat:'💕 恋愛・人生', en:'"It\'s not your title that counts. That\'s for sure!" exclaimed Bob.', ja:'「大切なのは肩書きなんかじゃない。絶対そうだ！」と、ボブは語気を強めて言った。', tip:'It is ... that ...＝〜こそが…だ（強調構文）。title＝肩書き・タイトル。count＝重要である・数に入る。That\'s for sure!＝絶対そうだ・間違いない（慣用句）。exclaim＝叫ぶ・語気を強めて言う。',audio:'card_audio/card_183.mp3'},
+{cat:'💕 恋愛・人生', en:'As a self-made man put it, "A man of vision will make good in the end."', ja:'自分の力で成功をつかんだ人が言ったように、「先見の明のある人は最後には成功する」。', tip:'self-made man＝自力で成功した人・叩き上げの人。put it＝表現する・言う（as he put it＝彼の言い方を借りれば）。a man of vision＝先見の明のある人。make good＝成功する・約束を果たす。',audio:'card_audio/card_184.mp3'},
+{cat:'💕 恋愛・人生', en:'Keep in mind that youth is not eternal.', ja:'若さが永遠のものではないことを忘れてはいけない。', tip:'keep in mind＝〜を肝に銘じる・忘れないでいる（= bear in mind）。youth＝若さ・青春（不可算名詞）。eternal＝永遠の・永久の（= everlasting）。',audio:'card_audio/card_185.mp3'},
+{cat:'🧠 心理・感情', en:'I can\'t figure out why on earth everybody feels so much contempt for Bob!', ja:'いったいなぜみんながそれほどまでにボブを軽蔑するのか、僕にはわからない。', tip:'figure out＝〜を理解する・解明する。on earth＝いったい全体（疑問詞を強調。What on earth?＝いったい何？）。contempt for＝〜に対する軽蔑（feel contempt for＝〜を軽蔑する）。',audio:'card_audio/card_186.mp3'},
+{cat:'🧠 心理・感情', en:'I can\'t help laughing at him because he keeps on making stupid mistakes. He\'d be the last person to learn his lesson.', ja:'彼のことを笑わずにはいられない。ばかな間違いを繰り返すからね。きっと彼は懲りないんだろうな。', tip:'can\'t help doing＝〜せずにはいられない（= can\'t help but do）。keep on doing＝〜し続ける。the last person to do＝最も〜しそうにない人。learn one\'s lesson＝懲りる・教訓を得る。',audio:'card_audio/card_187.mp3'},
+{cat:'🧠 心理・感情', en:'To make matters worse, he isn\'t even conscious of annoying us.', ja:'さらに厄介なことに、彼は私たちに迷惑をかけていることさえわかっていない。', tip:'to make matters worse＝さらに悪いことに（慣用句。to make things worse も同義）。be conscious of＝〜を意識している・気づいている（= be aware of）。annoy＝〜を悩ませる・迷惑をかける。',audio:'card_audio/card_188.mp3'},
+{cat:'🧠 心理・感情', en:'Since I was in a hurry, I put my gloves on inside out by mistake.', ja:'慌てていたから、手袋を間違えて裏返しにはめてしまった。', tip:'be in a hurry＝急いでいる・慌てている（= be in a rush）。put on＝〜を身に着ける。inside out＝裏返しに（upside down は上下逆さに）。by mistake＝間違えて・誤って（= accidentally）。',audio:'card_audio/card_189.mp3'},
+{cat:'🧠 心理・感情', en:'Dave is fat and clumsy. When he leaped over the shallow stream, he stumbled and twisted his ankle.', ja:'デイブはデブでドジ。浅い小川を飛び越えた時に、つまずいて足首を捻挫したんだ。', tip:'clumsy＝不器用な・ドジな。leap over＝〜を飛び越える。shallow＝浅い（deep の反対）。stream＝小川・流れ。stumble＝つまずく。twist one\'s ankle＝足首を捻挫する。',audio:'card_audio/card_190.mp3'},
+{cat:'🧠 心理・感情', en:'"I\'m scared of heights." "You\'re a coward!"', ja:'「僕、高所恐怖症なんだ。」「弱虫っ！」', tip:'be scared of＝〜が怖い・恐怖する（= be afraid of）。heights＝高所（複数形で使う）。coward＝臆病者・弱虫（形容詞は cowardly）。',audio:'card_audio/card_191.mp3'},
+{cat:'🧠 心理・感情', en:'The passive man seldom, if ever, expresses himself in public.', ja:'消極的なその男性が、人前で自己表現をすることはまずない。', tip:'passive＝消極的な・受け身の（active の反対）。seldom if ever＝ほとんどない・まずない（= rarely if ever）。express oneself＝自己表現する。in public＝人前で・公の場で。',audio:'card_audio/card_192.mp3'},
+{cat:'🧠 心理・感情', en:'Nick convinced me that all superstitions are irrational.', ja:'迷信はすべて根拠のないものだということが、ニックに言われてよくわかった。', tip:'convince A that ...＝Aに〜だと確信させる・納得させる。superstition＝迷信。irrational＝不合理な・根拠のない（rational の反対）。',audio:'card_audio/card_193.mp3'},
+{cat:'🧠 心理・感情', en:'I tremble with fear at the thought of an injection.', ja:'注射のことを考えると、怖くて震えてしまう。', tip:'tremble＝震える・おののく（= shiver）。at the thought of＝〜のことを考えると（= when I think of）。injection＝注射（inject＝注射する）。',audio:'card_audio/card_194.mp3'},
+{cat:'🧠 心理・感情', en:'Since Bob is lazy at heart, he frequently neglects his duties.', ja:'ボブは根が怠け者だから、与えられた仕事をしばしば怠る。', tip:'at heart＝根は・本来は・心の中では。frequently＝しばしば・頻繁に（= often）。neglect＝〜を怠る・無視する。duty＝義務・職務（duties＝職責）。',audio:'card_audio/card_195.mp3'},
+{cat:'🧠 心理・感情', en:'While Bob was at work, Jennifer was at home absorbed in silly soap operas.', ja:'ボブが働いている間、ジェニファーは家でくだらないメロドラマに夢中になっていた。', tip:'be absorbed in＝〜に夢中になっている・没頭している（= be engrossed in）。silly＝くだらない・馬鹿げた。soap opera＝メロドラマ・昼ドラ（昔、石けん会社がスポンサーだったことから）。',audio:'card_audio/card_196.mp3'},
+{cat:'🧠 心理・感情', en:'Bob likes cartoons, but I don\'t think much of them. As a matter of fact, they\'re boring.', ja:'ボブはマンガが好きだけど、僕にはそれほどいいものとは思えない。実際、つまらないよ。', tip:'not think much of＝〜をそれほど高く評価しない（think highly of は高く評価する）。as a matter of fact＝実は・実際のところ（= in fact）。boring＝退屈な（bored は「退屈している」状態）。',audio:'card_audio/card_197.mp3'},
+{cat:'🧠 心理・感情', en:'It occurred to me that he was holding something back, because he wouldn\'t look me in the eye.', ja:'彼が私の目を見ようとしなかったので、何かを隠していると思った。', tip:'it occurs to A that ...＝Aに〜という考えが浮かぶ（重要構文）。hold back＝〜を隠す・控える。look A in the eye＝Aの目を見る（直視する）。wouldn\'t＝どうしても〜しようとしない（拒否の意志）。',audio:'card_audio/card_198.mp3'},
+{cat:'🧠 心理・感情', en:'When her patience gave out, she grabbed his collar and swore at him.', ja:'彼女は我慢しきれなくなり、襟首をつかんで彼ののしった。', tip:'patience＝忍耐・我慢。give out＝尽きる・限界になる（= run out）。grab＝〜をつかむ・つかみ取る。collar＝襟・えり。swear at＝〜をののしる・悪口を言う（swear-swore-sworn）。',audio:'card_audio/card_199.mp3'},
+{cat:'🧠 心理・感情', en:'I must admit we quarrel every now and then, but generally we\'re on good terms with each other.', ja:'確かに、私たちは時々口げんかもしますが、普段は仲良くやっています。', tip:'must admit＝認めなければならない。quarrel＝口げんかをする・言い争う。every now and then＝時々・たまに（= occasionally）。on good terms with＝〜と仲が良い（on bad terms は仲が悪い）。',audio:'card_audio/card_200.mp3'},
+{cat:'💑 人間関係・感情', en:'"Do you mind if I stop by your house?" "No, not at all. Be my guest!"', ja:'「君の家に寄ってもいいかい？」「もちろんいいわよ。気兼ねなく！」', tip:'Do you mind if ...?＝〜してもいいですか（mindは「気にする」）。Not at all.＝全然構いません。Be my guest!＝どうぞご自由に（慣用句）。',audio:'card_audio/card_201.mp3'},
+{cat:'💑 人間関係・感情', en:'Hold on. I\'ll be right back. Don\'t hang up!', ja:'ちょっと待ってて。すぐ戻るから。切らないでよ！（電話で）', tip:'Hold on.＝ちょっと待って（電話でよく使う）。be right back＝すぐ戻る。hang up＝電話を切る（受話器を「掛ける」イメージから）。',audio:'card_audio/card_202.mp3'},
+{cat:'💑 人間関係・感情', en:'I can\'t put you up. For one thing, my dad drops in on me from time to time.', ja:'うちには泊められないわ。一つには、時々お父さんがふらっとやって来るから。', tip:'put up＝（人を）泊める。for one thing＝一つには（理由の列挙）。drop in on＝〜にふらっと立ち寄る。from time to time＝時々。',audio:'card_audio/card_203.mp3'},
+{cat:'💑 人間関係・感情', en:'While Jennifer was standing still, Bob was pacing back and forth along the sidewalk.', ja:'ジェニファーがじっと立っている間、ボブは歩道を行ったり来たりしていた。', tip:'stand still＝じっと立っている（stillは「動かない」）。pace＝（せかせかと）歩く。back and forth＝行ったり来たり。sidewalk＝歩道（米語。英語はpavement）。',audio:'card_audio/card_204.mp3'},
+{cat:'💑 人間関係・感情', en:'"Let\'s make up, Lisa." "Stop taking me for granted! We\'re through for good this time. I mean it!"', ja:'「仲直りしようよ、リサ。」「私がいて当然だなんて思わないで。私たちは、今度は永遠に終わりよ。本気なんだから！」', tip:'make up＝仲直りする。take ... for granted＝〜を当然のこととして扱う（重要慣用句）。be through＝終わり・関係が終了する。for good＝永遠に。I mean it!＝本気だよ。',audio:'card_audio/card_205.mp3'},
+{cat:'💑 人間関係・感情', en:'Come on! Don\'t get so emotional, Lisa. I didn\'t mean to hurt you. Let\'s talk it over.', ja:'おいおいリサ、そう感情的になるなよ。君を傷つけるつもりじゃなかったんだ。じっくり話し合おう。', tip:'Come on!＝おいおい・頼むよ（なだめる表現）。mean to＝〜するつもりである。talk over＝〜についてじっくり話し合う。',audio:'card_audio/card_206.mp3'},
+{cat:'💑 人間関係・感情', en:'"You betrayed me!" "Please forgive me. How can I make it up to you?" "I\'ll get even!"', ja:'「私を裏切ったわね！」「許してくれよ。どうしたら埋め合わせができるかなあ？」「仕返ししてやるっ！」', tip:'betray＝裏切る。make it up to＝〜に埋め合わせをする（慣用句）。get even＝仕返しをする・仕返しをして対等になる。',audio:'card_audio/card_207.mp3'},
+{cat:'💑 人間関係・感情', en:'You should confess your sins rather than conceal them.', ja:'自分の罪は隠しておかずに告白したほうがいい。', tip:'confess＝告白する・自白する。sin＝罪（宗教的・道徳的な罪）。rather than＝〜よりもむしろ。conceal＝隠す（hide より格式的）。',audio:'card_audio/card_208.mp3'},
+{cat:'💑 人間関係・感情', en:'Keep your word; otherwise you\'ll end up losing face.', ja:'約束は守りなさい。そうしないと評判を落とすことになりますよ。', tip:'keep one\'s word＝約束を守る（break one\'s word は破る）。otherwise＝さもなければ。end up doing＝結局〜することになる。lose face＝面目を失う・評判を落とす（慣用句）。',audio:'card_audio/card_209.mp3'},
+{cat:'💑 人間関係・感情', en:'Bob sticks to his moral principles and believes that honesty pays off in the long run.', ja:'ボブは自分の道徳的信条を曲げない男だ。正直にいれば最後には報われると信じている。', tip:'stick to＝〜を守り続ける・固執する。moral principles＝道徳的信条。pay off＝報われる・成果が出る。in the long run＝長い目で見れば・最終的には。',audio:'card_audio/card_210.mp3'},
+{cat:'💑 人間関係・感情', en:'"Cheer up! You couldn\'t help it." "I did my best." "I know. Don\'t dwell on the past. You can start over!"', ja:'「元気を出して。仕方ないわ。」「やれるだけのことはやったんだ。」「わかってる。過ぎたことにくよくよしないで。やり直せるわよ！」', tip:'cheer up＝元気を出す。couldn\'t help it＝仕方がなかった。dwell on＝〜にくよくよする・こだわる。start over＝やり直す（= start again）。',audio:'card_audio/card_211.mp3'},
+{cat:'🚗 交通・移動', en:'"Jane, please do me a favor and give me a ride to Times Square." "I wish I could, but I\'m tied up right now."', ja:'「ジェーン、タイムズ・スクエアまで乗せて行って欲しいんだけど。」「そうしてあげたいのは山々だけど。今、全然時間がないの。」', tip:'do me a favor＝お願いを聞いてくれる？。give a ride＝車に乗せる。I wish I could＝できればいいんだけど（できない婉曲表現）。be tied up＝手が離せない・時間がない。',audio:'card_audio/card_212.mp3'},
+{cat:'🚗 交通・移動', en:'As usual, Mike turned up on time. He\'s very punctual.', ja:'いつものように、マイクは時間通りに現れた。本当に時間に正確な人だ。', tip:'as usual＝いつものように。turn up＝現れる・やって来る（= show up）。on time＝時間通りに（in time は間に合って）。punctual＝時間に正確な。',audio:'card_audio/card_213.mp3'},
+{cat:'🚗 交通・移動', en:'The other day I ran out of gas in the middle of a busy interstate.', ja:'この前、混雑した幹線道路の真ん中でガス欠してしまった。', tip:'the other day＝この前・先日。run out of＝〜がなくなる・ガス欠になる。gas＝ガソリン（米語）。interstate＝州間高速道路（米）。',audio:'card_audio/card_214.mp3'},
+{cat:'🚗 交通・移動', en:'A truck driving ahead of me skidded, turned over, and scattered its load all over the road.', ja:'私の前を走っていたトラックがスリップして横転し、積み荷を路面いっぱいに散乱させた。', tip:'skid＝スリップする。turn over＝横転する。scatter＝〜を散乱させる。load＝積み荷・荷物。all over＝〜じゅうに。',audio:'card_audio/card_215.mp3'},
+{cat:'🚗 交通・移動', en:'He recalled that a collision had been avoided by sheer luck.', ja:'衝突を避けられたのは運が良かっただけだ、と彼は回想した。', tip:'recall＝〜を思い出す・回想する。collision＝衝突（collide の名詞形）。by sheer luck＝全くの運で・運だけで（sheer＝純粋な・全くの）。',audio:'card_audio/card_216.mp3'},
+{cat:'🚗 交通・移動', en:'In case of an emergency, get in touch with my agent right away.', ja:'緊急の際には、すぐに私の代理人と連絡を取って下さい。', tip:'in case of＝〜の場合には。emergency＝緊急事態。get in touch with＝〜と連絡を取る（= contact）。right away＝すぐに（= immediately）。',audio:'card_audio/card_217.mp3'},
+{cat:'🚗 交通・移動', en:'"Jane, where are we heading?" "I think we\'re lost. We went in the wrong direction." "Damn! Pull over!"', ja:'「ジェーン、俺たちはどこに向かってるんだ？」「迷ったみたい。違う方向に来ちゃったわ。」「何だよ。車を止めてくれ！」', tip:'head＝〜に向かう。be lost＝道に迷う。wrong direction＝間違った方向。pull over＝（路肩に）車を止める（重要交通表現）。',audio:'card_audio/card_218.mp3'},
+{cat:'🚗 交通・移動', en:'My rusty Ford broke down, obstructing the intersection.', ja:'僕のさびついたフォードが故障して、交差点をふさいでしまった。', tip:'rusty＝さびた（rust＝さび）。break down＝故障する（機械・車の故障はbreak down）。obstruct＝〜をふさぐ・妨害する。intersection＝交差点。',audio:'card_audio/card_219.mp3'},
+{cat:'🚗 交通・移動', en:'There are so many fine scratches and dents on its surface, it\'s no use polishing it.', ja:'表面に細かい傷やへこみがたくさんあるから、磨いても無駄だよ。', tip:'scratch＝引っかき傷。dent＝へこみ・凹み。surface＝表面。it\'s no use doing＝〜しても無駄だ（重要構文）。polish＝磨く。',audio:'card_audio/card_220.mp3'},
+{cat:'🚗 交通・移動', en:'"Hey, we\'re stuck in a traffic jam!" "Chill out, Joe. Let\'s take a shortcut! We\'ll get there in time."', ja:'「おい、渋滞にはまっちゃったよ！」「熱くならないで、ジョー。近道しましょう。時間までには着けるわ。」', tip:'be stuck in a traffic jam＝渋滞にはまる。chill out＝落ち着く・熱くならない（口語）。shortcut＝近道。in time＝間に合って（on time は時間通り）。',audio:'card_audio/card_221.mp3'},
+{cat:'🚗 交通・移動', en:'"I\'ve got a flat tire. Can you give me a hand?" "I\'d be glad to."', ja:'「パンクしちゃったよ。手を貸してくれる？」「喜んで。」', tip:'flat tire＝パンク（タイヤがflat＝平らになった状態）。give a hand＝手を貸す・助ける。I\'d be glad to.＝喜んで（丁寧な承諾）。',audio:'card_audio/card_222.mp3'},
+{cat:'🚗 交通・移動', en:'The ambulance went out of control and came close to running over a pedestrian.', ja:'ハンドルがきかなくなった救急車が、危うく歩行者をひきそうになった。', tip:'go out of control＝制御不能になる。come close to doing＝危うく〜しそうになる。run over＝（車で）〜をひく。pedestrian＝歩行者。',audio:'card_audio/card_223.mp3'},
+{cat:'🌌 宇宙・科学', en:'He contends that primitive life once existed on Mars.', ja:'火星にはかつて原始的な生物が存在していたと彼は説いている。', tip:'contend＝〜と主張する・論じる（claim より学術的）。primitive＝原始的な。once＝かつて。Mars＝火星（ローマ神話の軍神）。',audio:'card_audio/card_224.mp3'},
+{cat:'🌌 宇宙・科学', en:'The crew is busy preparing for the voyage into outer space.', ja:'乗組員たちは宇宙への航海の準備に忙しい。', tip:'crew＝乗組員（集合名詞）。be busy doing＝〜するのに忙しい。voyage＝航海・長旅（短距離はtrip/journey）。outer space＝宇宙空間。',audio:'card_audio/card_225.mp3'},
+{cat:'🌌 宇宙・科学', en:'They conducted a series of experiments under zero gravity.', ja:'彼らは無重力状態で一連の実験をおこなった。', tip:'conduct＝〜を行う・実施する（実験・調査に使う）。a series of＝一連の。zero gravity＝無重力（weightlessness とも）。',audio:'card_audio/card_226.mp3'},
+{cat:'🌌 宇宙・科学', en:'Many astronomers assume that the universe will expand infinitely.', ja:'多くの天文学者は、宇宙は無限に膨張を続けていくものと考えている。', tip:'astronomer＝天文学者（astronomy＝天文学）。assume＝〜と仮定する・考える。universe＝宇宙。expand＝膨張する・拡大する。infinitely＝無限に。',audio:'card_audio/card_227.mp3'},
+{cat:'🌌 宇宙・科学', en:'The astronauts were greeted with spontaneous applause.', ja:'宇宙飛行士たちは自然と沸き起こった拍手で迎えられた。', tip:'astronaut＝宇宙飛行士（astro-＝星）。be greeted with＝〜で迎えられる。spontaneous＝自然発生的な・自発的な。applause＝拍手（不可算名詞）。',audio:'card_audio/card_228.mp3'},
+{cat:'🌿 環境・自然', en:'A fund was set up with a view to preserving our endangered planet.', ja:'滅亡の危機に瀕した地球を守ろうと、ある基金が設立された。', tip:'set up＝〜を設立する・設置する。with a view to doing＝〜する目的で。preserve＝〜を保護する・保存する。endangered＝絶滅の危機に瀕した。',audio:'card_audio/card_229.mp3'},
+{cat:'🌿 環境・自然', en:'The massive flood paralyzed the local transportation network.', ja:'大洪水で現地の交通網が麻痺した。', tip:'massive＝大規模な・莫大な。flood＝洪水。paralyze＝〜を麻痺させる。transportation network＝交通網。',audio:'card_audio/card_230.mp3'},
+{cat:'🌏 地理・気象', en:'The equator divides the globe into two hemispheres.', ja:'赤道は地球を二つの半球に分ける。', tip:'equator＝赤道（equal＝等しいから：南北を等分）。divide A into B＝AをBに分ける。globe＝地球・地球儀。hemisphere＝半球（hemi-＝半分）。',audio:'card_audio/card_231.mp3'},
+{cat:'🌿 環境・自然', en:'I think it\'s cruel to trap animals for fur coats.', ja:'毛皮のコートのために動物を罠で捕獲するのは残酷なことだ。', tip:'cruel＝残酷な・非道な。trap＝罠で捕まえる。fur＝毛皮。fur coat＝毛皮のコート。',audio:'card_audio/card_232.mp3'},
+{cat:'🌿 環境・自然', en:'The organization plays a principal role in wildlife conservation.', ja:'その団体は野生動物の保護において、最も重要な役割を果たしている。', tip:'principal＝主要な・最重要の（= main）。play a role＝役割を果たす。wildlife＝野生動物（集合名詞）。conservation＝保護・保全。',audio:'card_audio/card_233.mp3'},
+{cat:'🌿 環境・自然', en:'Many fragile species are on the verge of extinction.', ja:'多くの弱い生物種が絶滅の危機に瀕している。', tip:'fragile＝壊れやすい・弱い。species＝種（単複同形）。on the verge of＝〜の瀬戸際に・〜しそうで。extinction＝絶滅（extinct＝絶滅した）。',audio:'card_audio/card_234.mp3'},
+{cat:'🌿 環境・自然', en:'The prolonged drought did severe damage to the crops.', ja:'長引く干ばつが収穫に甚大な被害をもたらした。', tip:'prolonged＝長引く・長期化した。drought＝干ばつ（発音注意：「ドラウト」）。severe＝深刻な・甚大な。crops＝農作物・収穫（複数形が普通）。',audio:'card_audio/card_235.mp3'},
+{cat:'🌿 環境・自然', en:'Tropical rain forests are quickly disappearing on a global scale. In part, it\'s due to acid rain.', ja:'熱帯雨林の消滅が地球規模で急速に進んでいます。その原因の一つは酸性雨です。', tip:'tropical rain forest＝熱帯雨林。on a global scale＝地球規模で。in part＝部分的に・一因は。due to＝〜が原因で（= because of）。acid rain＝酸性雨。',audio:'card_audio/card_236.mp3'},
+{cat:'🌿 環境・自然', en:'It is said that global warming is directly related to carbon dioxide emissions.', ja:'地球温暖化は、二酸化炭素の排出と直接の関係があると言われている。', tip:'global warming＝地球温暖化。be related to＝〜と関係している。carbon dioxide＝二酸化炭素（CO₂）。emission＝排出・放出（emit の名詞形）。',audio:'card_audio/card_237.mp3'},
+{cat:'🌿 環境・自然', en:'The destruction of the ozone layer affects the environment.', ja:'オゾン層の破壊は環境に影響を及ぼす。', tip:'destruction＝破壊（destroy の名詞形）。ozone layer＝オゾン層。affect＝〜に影響を与える（effect は名詞）。environment＝環境。',audio:'card_audio/card_238.mp3'},
+{cat:'🌿 環境・自然', en:'The committee called on all nations to work side by side to curb air pollution.', ja:'委員会は、大気汚染を抑制するために互いに協力し合うよう各国に要請した。', tip:'call on A to do＝Aに〜するよう要請する。side by side＝並んで・協力して。curb＝〜を抑制する・制限する。air pollution＝大気汚染。',audio:'card_audio/card_239.mp3'},
+{cat:'🌌 宇宙・科学', en:'A satellite was launched into orbit to monitor melting glaciers.', ja:'溶け続ける氷河を監視するために、人工衛星が軌道に打ち上げられた。', tip:'satellite＝人工衛星・衛星。launch＝〜を打ち上げる・発射する。orbit＝軌道。monitor＝〜を監視する。glacier＝氷河。',audio:'card_audio/card_240.mp3'},
 ];
-const audioFiles=[{file:'16-Section_16.mp4',label:'1'},{file:'17-Section_17.mp4',label:'2'},{file:'18-Section_18.mp4',label:'3'},{file:'19-Section_19.mp4',label:'4'},{file:'20-Section_20.mp4',label:'5'}];
-function makeSrcCandidates(file){
-  const alt=file.includes('_')?file.replace(/_/g,' '):null;
-  return alt?[file,alt]:[file];
+// カードごとのネイティブ音声再生
+let nativeAudioEl=new Audio();
+nativeAudioEl.preload='none';
+function playNativeAudio(audioFile,onEnd,onError){
+  nativeAudioEl.pause();
+  nativeAudioEl.onended=null;
+  nativeAudioEl.onerror=null;
+  if(!audioFile){ if(onError)onError(); return; }
+  nativeAudioEl.src=audioFile;
+  nativeAudioEl.currentTime=0;
+  nativeAudioEl.onended=()=>{ if(onEnd)onEnd(); };
+  const p=nativeAudioEl.play();
+  if(p&&p.catch){ p.catch(()=>{ if(onError)onError(); }); }
 }
-let audioEls=audioFiles.map(f=>{
-  const a=new Audio();
-  a.preload='none';
-  a._candidates=makeSrcCandidates(f.file);
-  a._candIdx=0;
-  a.src='duo_audio/'+encodeURIComponent(a._candidates[0]);
-  return a;
-});
-function advanceCandidate(a){
-  if(a._candIdx<a._candidates.length-1){
-    a._candIdx++;
-    a.src='duo_audio/'+encodeURIComponent(a._candidates[a._candIdx]);
-    return true;
-  }
-  return false;
-}
-(function buildTrackButtons(){
-  const row=document.getElementById('audio-track-row');
-  audioFiles.forEach((f,i)=>{
-    const b=document.createElement('button');
-    b.className='audio-track-btn';
-    b.id='audio-track-'+i;
-    b.textContent=(i+1);
-    b.onclick=()=>toggleTrack(i);
-    row.appendChild(b);
-  });
-  const loopBtn=document.createElement('button');
-  loopBtn.className='audio-loop-all-btn';
-  loopBtn.id='audio-loop-all-btn';
-  loopBtn.textContent='🔁';
-  loopBtn.onclick=toggleLoopAll;
-  row.appendChild(loopBtn);
-})();
-let currentPlayingIdx=-1;
-let loopAllOn=false;
-function stopAllAudio(){
-  audioEls.forEach((a,i)=>{ a.pause(); a.currentTime=0; a.onended=null; const b=document.getElementById('audio-track-'+i); if(b){b.classList.remove('playing');} });
-  currentPlayingIdx=-1;
-}
-function playTrack(i,chain){
-  stopAllAudio();
-  currentPlayingIdx=i;
-  const a=audioEls[i];
-  const btn=document.getElementById('audio-track-'+i);
-  btn.classList.add('playing');
-  try{ a.currentTime=0; }catch(e){}
-  a.onended=()=>{
-    btn.classList.remove('playing');
-    if(chain){
-      const nextIdx=(i+1)%audioFiles.length;
-      playTrack(nextIdx,true);
-    } else {
-      currentPlayingIdx=-1;
-    }
-  };
-  const attempt=()=>{
-    const p=a.play();
-    if(p&&p.catch){
-      p.catch(()=>{
-        if(advanceCandidate(a)){
-          attempt();
-        } else {
-          btn.classList.remove('playing');
-          currentPlayingIdx=-1;
-          loopAllOn=false;
-          const loopBtn=document.getElementById('audio-loop-all-btn');
-          if(loopBtn){loopBtn.classList.remove('on');loopBtn.textContent='🔁';}
-          alert('音声ファイルの再生に失敗しました。\n試したファイル名:\n'+a._candidates.map(c=>'duo_audio/'+c).join('\n')+'\n\nduo_audioフォルダがHTMLファイルと同じ場所にアップロードされているか、ファイル名が一致しているかご確認ください。');
-        }
-      });
-    }
-  };
-  attempt();
-}
-function toggleTrack(i){
-  if(currentPlayingIdx===i){
-    stopAllAudio();
-    loopAllOn=false;
-    document.getElementById('audio-loop-all-btn').classList.remove('on');
-    document.getElementById('audio-loop-all-btn').textContent='🔁';
-  } else {
-    loopAllOn=false;
-    document.getElementById('audio-loop-all-btn').classList.remove('on');
-    document.getElementById('audio-loop-all-btn').textContent='🔁';
-    playTrack(i,false);
-  }
-}
-function toggleLoopAll(){
-  if(loopAllOn){
-    loopAllOn=false;
-    stopAllAudio();
-    document.getElementById('audio-loop-all-btn').classList.remove('on');
-    document.getElementById('audio-loop-all-btn').textContent='🔁';
-  } else {
-    loopAllOn=true;
-    document.getElementById('audio-loop-all-btn').classList.add('on');
-    document.getElementById('audio-loop-all-btn').textContent='⏹';
-    playTrack(0,true);
-  }
-}
+function stopNativeAudio(){ nativeAudioEl.pause(); nativeAudioEl.onended=null; }
 let currentIndex=0,isEnToJa=true,isRandom=false,isRepeating=false;
 let mastered=new Set(),activeCategory='all';
 let isAutoPlaying=false,autoStopped=false,autoTimeout=null;
@@ -378,13 +286,22 @@ function getVoice(){return voices[parseInt(document.getElementById('voice-select
 function updateRate(){speechRate=parseFloat(document.getElementById('rate-slider').value);document.getElementById('rate-val').textContent=speechRate.toFixed(1)+'×';}
 function startKeepAlive(){stopKeepAlive();keepAliveTimer=setInterval(()=>{if(window.speechSynthesis.speaking)window.speechSynthesis.pause(),window.speechSynthesis.resume();},10000);}
 function stopKeepAlive(){if(keepAliveTimer){clearInterval(keepAliveTimer);keepAliveTimer=null;}}
-function speakOne(text,onEnd){window.speechSynthesis.cancel();isSpeaking=false;clearTimeout(speakOne._t);speakOne._t=setTimeout(()=>{const utt=new SpeechSynthesisUtterance(text);const v=getVoice();if(v){utt.voice=v;utt.lang=v.lang;}else{utt.lang=voicePref==='US'?'en-US':'en-GB';}utt.rate=speechRate;utt.onend=()=>{isSpeaking=false;stopKeepAlive();if(onEnd)onEnd();};utt.onerror=()=>{isSpeaking=false;stopKeepAlive();if(onEnd)onEnd();};isSpeaking=true;startKeepAlive();window.speechSynthesis.speak(utt);},80);}
+function speakTTS(text,onEnd){window.speechSynthesis.cancel();isSpeaking=false;clearTimeout(speakOne._t);speakOne._t=setTimeout(()=>{const utt=new SpeechSynthesisUtterance(text);const v=getVoice();if(v){utt.voice=v;utt.lang=v.lang;}else{utt.lang=voicePref==='US'?'en-US':'en-GB';}utt.rate=speechRate;utt.onend=()=>{isSpeaking=false;stopKeepAlive();if(onEnd)onEnd();};utt.onerror=()=>{isSpeaking=false;stopKeepAlive();if(onEnd)onEnd();};isSpeaking=true;startKeepAlive();window.speechSynthesis.speak(utt);},80);}
 speakOne._t=null;
-function speakP(){return new Promise(r=>{const a=getActive();if(!a.length){r();return;}speakOne(a[currentIndex].en,r);});}
-function speakCurrent(){const a=getActive();if(!a.length)return;speakOne(a[currentIndex].en);}
-function speakRepeat(){if(!isRepeating||isAutoPlaying)return;const a=getActive();if(!a.length)return;speakOne(a[currentIndex].en,()=>{if(isRepeating&&!isAutoPlaying){clearTimeout(speakRepeat._t);speakRepeat._t=setTimeout(()=>speakRepeat(),300);}}); }
+function speakOne(card,onEnd){
+  window.speechSynthesis.cancel();
+  stopNativeAudio();
+  if(card&&card.audio){
+    playNativeAudio(card.audio,onEnd,()=>{ speakTTS(card.en,onEnd); });
+  } else {
+    speakTTS(card.en,onEnd);
+  }
+}
+function speakP(){return new Promise(r=>{const a=getActive();if(!a.length){r();return;}speakOne(a[currentIndex],r);});}
+function speakCurrent(){const a=getActive();if(!a.length)return;speakOne(a[currentIndex]);}
+function speakRepeat(){if(!isRepeating||isAutoPlaying)return;const a=getActive();if(!a.length)return;speakOne(a[currentIndex],()=>{if(isRepeating&&!isAutoPlaying){clearTimeout(speakRepeat._t);speakRepeat._t=setTimeout(()=>speakRepeat(),300);}}); }
 speakRepeat._t=null;
-function toggleRepeat(){isRepeating=!isRepeating;const btn=document.getElementById('repeat-btn');btn.textContent=isRepeating?'🔁 繰り返し: ON':'🔁 繰り返し';btn.className=isRepeating?'btn btn-on':'btn btn-secondary';if(isRepeating){const a=getActive();if(a.length)speakRepeat();}else{window.speechSynthesis.cancel();isSpeaking=false;stopKeepAlive();clearTimeout(speakRepeat._t);}}
+function toggleRepeat(){isRepeating=!isRepeating;const btn=document.getElementById('repeat-btn');btn.textContent=isRepeating?'🔁 繰り返し: ON':'🔁 繰り返し';btn.className=isRepeating?'btn btn-on':'btn btn-secondary';if(isRepeating){const a=getActive();if(a.length)speakRepeat();}else{window.speechSynthesis.cancel();stopNativeAudio();isSpeaking=false;stopKeepAlive();clearTimeout(speakRepeat._t);}}
 function update(){const active=getActive();const noEl=document.getElementById('no-active');if(!active.length){noEl.classList.add('show');document.getElementById('main-card').style.display='none';document.getElementById('tap-hint').style.display='none';updateMasterBadge();buildCatRows();return;}noEl.classList.remove('show');document.getElementById('main-card').style.display='';document.getElementById('tap-hint').style.display='';if(currentIndex>=active.length)currentIndex=0;const item=active[currentIndex];const realIdx=phrases.indexOf(item);document.getElementById('card-num').textContent=String(realIdx+OFFSET).padStart(3,'0');document.getElementById('card-cat').textContent=item.cat;document.getElementById('cur-num').textContent=currentIndex+1;document.getElementById('tot-num').textContent=active.length;const pct=active.length>1?((currentIndex/(active.length-1))*100).toFixed(0):100;document.getElementById('progress-bar').style.width=pct+'%';if(isEnToJa){document.getElementById('main-text').innerHTML=item.en;document.getElementById('answer-ja').textContent=item.ja;}else{document.getElementById('main-text').innerHTML=item.ja;document.getElementById('answer-ja').textContent=item.en;}const tipEl=document.getElementById('answer-tip');if(item.tip){tipEl.textContent=item.tip;tipEl.style.display='';}else{tipEl.style.display='none';}document.getElementById('answer-wrap').classList.remove('show');document.getElementById('main-card').classList.remove('revealed');const cb=document.getElementById('master-cb');cb.checked=mastered.has(realIdx);if(mastered.has(realIdx))document.getElementById('mastered-badge').classList.add('show');else document.getElementById('mastered-badge').classList.remove('show');updateMasterBadge();buildCatRows();}
 function updateMasterBadge(){const cnt=mastered.size;document.getElementById('master-badge-top').textContent=`マスター: ${cnt} / ${phrases.length}`;const sumEl=document.getElementById('master-summary');if(cnt>0){sumEl.classList.add('show');sumEl.textContent=`✅ マスター済み: ${cnt}件 — タップしてリスト表示`;renderMasterList();}else sumEl.classList.remove('show');}
 function renderMasterList(){const listEl=document.getElementById('master-list');listEl.innerHTML='';[...mastered].sort((a,b)=>a-b).forEach(idx=>{const item=phrases[idx];const d=document.createElement('div');d.style.cssText='padding:8px 0;border-bottom:1px solid #f8fafc;font-size:12px;';d.innerHTML=`<span style="font-family:monospace;font-size:10px;color:#64748b;">${String(idx+OFFSET).padStart(3,'0')}</span> ${item.en.substring(0,55)}...`;listEl.appendChild(d);});}
@@ -399,7 +316,7 @@ function switchMode(){if(isAutoPlaying)return;isEnToJa=!isEnToJa;update();}
 function delayP(ms){return new Promise(r=>{if(autoStopped){r();return;}autoTimeout=setTimeout(r,ms);});}
 function setAutoPanel(s,i,c){document.getElementById('auto-step-title').textContent=s;document.getElementById('auto-instruction').textContent=i;document.getElementById('auto-count').textContent=c;}
 function enterAutoUI(){isAutoPlaying=true;autoStopped=false;document.getElementById('normal-controls').style.display='none';document.getElementById('auto-controls').style.display='';document.getElementById('auto-panel').classList.add('show');document.getElementById('tap-hint').style.display='none';document.getElementById('master-wrap').classList.add('disabled');document.getElementById('main-card').classList.remove('tappable');document.getElementById('main-card').classList.add('no-tap');}
-function exitAutoUI(){autoStopped=true;isAutoPlaying=false;window.speechSynthesis.cancel();isSpeaking=false;stopKeepAlive();clearTimeout(speakOne._t);if(autoTimeout){clearTimeout(autoTimeout);autoTimeout=null;}document.getElementById('normal-controls').style.display='';document.getElementById('auto-controls').style.display='none';document.getElementById('auto-panel').classList.remove('show');document.getElementById('tap-hint').style.display='';document.getElementById('master-wrap').classList.remove('disabled');document.getElementById('main-card').classList.add('tappable');document.getElementById('main-card').classList.remove('no-tap');}
+function exitAutoUI(){autoStopped=true;isAutoPlaying=false;window.speechSynthesis.cancel();stopNativeAudio();isSpeaking=false;stopKeepAlive();clearTimeout(speakOne._t);if(autoTimeout){clearTimeout(autoTimeout);autoTimeout=null;}document.getElementById('normal-controls').style.display='';document.getElementById('auto-controls').style.display='none';document.getElementById('auto-panel').classList.remove('show');document.getElementById('tap-hint').style.display='';document.getElementById('master-wrap').classList.remove('disabled');document.getElementById('main-card').classList.add('tappable');document.getElementById('main-card').classList.remove('no-tap');}
 function stopAutoPlay(){exitAutoUI();update();}
 function showHidden(){document.getElementById('main-text').textContent='？？？';document.getElementById('answer-wrap').classList.remove('show');document.getElementById('main-card').classList.remove('revealed');}
 function showAll(){const a=getActive();if(!a.length)return;document.getElementById('main-text').innerHTML=a[currentIndex].en;document.getElementById('answer-wrap').classList.add('show');document.getElementById('main-card').classList.add('revealed');}
