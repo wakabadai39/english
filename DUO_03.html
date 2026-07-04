@@ -103,12 +103,10 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);min-height:100vh
 </div>
 
 <div class="top-row">
-<button class="help-btn" onclick="alert('👆カードタップで答え表示\n🔊音声再生（合成音声）\n🗣️シャドウイング4ステップ\n▶連続再生\n🔄英⇄日モード切替\nマスターチェックで次へ\n\n上部の「ネイティブ再生」欄はカードと連動しない復習用の音声プレーヤーです。番号ボタンで個別再生、ループボタンで1〜5を繰り返し再生します。')">❓ 使い方</button>
+<button class="help-btn" onclick="alert('👆カードタップで答え表示\n🔊音声再生（ネイティブ音声。ファイルがない場合のみ合成音声）\n🗣️シャドウイング4ステップ\n▶連続再生\n🔄英⇄日モード切替\nマスターチェックで次へ')">❓ 使い方</button>
 <div class="badge green" id="master-badge-top">マスター: 0 / 51</div>
 </div>
 
-<div class="audio-mini-label">ネイティブ再生</div>
-<div class="audio-track-row" id="audio-track-row"></div>
 <div class="progress-wrap"><div class="progress-bar" id="progress-bar" style="width:2%"></div></div>
 <div class="progress-label">カード <span id="cur-num">1</span> / <span id="tot-num">51</span></div>
 <div class="no-active" id="no-active">✅ このカテゴリをすべてマスターしました！</div>
@@ -191,163 +189,73 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);min-height:100vh
 const OFFSET=126;
 const CATS={'🏠 生活・家事':'#be185d','💰 お金・経済':'#2563eb','🏛️ 社会・政治':'#16a34a','⚔️ 歴史・争い':'#7c3aed','😤 人間関係・性格':'#d97706','📝 学業・論文':'#0891b2','🔬 科学・数学':'#dc2626'};
 const phrases=[
-{cat:'🏠 生活・家事', en:'The auditorium was empty except for a single piece of furniture.', ja:'たった一つの家具を除けば、講堂はがらんどうだった。', tip:'auditorium＝講堂・ホール。except for＝〜を除けば。furniture＝家具（不可算名詞。a piece of furniture＝家具一つ）。'},
-{cat:'🏠 生活・家事', en:'Any apartment will do as long as the rent is low. I\'m not particular about it.', ja:'家賃が安ければ、どんなマンションでも構いません。こだわりはありませんから。', tip:'will do＝〜で十分だ・構わない。as long as＝〜である限り・〜さえすれば。be particular about＝〜にこだわる・うるさい。'},
-{cat:'💰 お金・経済', en:'His sixty-year-old cousin inherited a piece of real estate by a lake.', ja:'彼の60歳のいとこが湖畔の不動産を相続した。', tip:'inherit＝〜を相続する・受け継ぐ。real estate＝不動産（不可算名詞。a piece of real estate＝不動産一件）。by a lake＝湖のほとりに。'},
-{cat:'🏠 生活・家事', en:'So much for small talk. Let\'s get down to business.', ja:'雑談はこの辺にして、本題に入りましょう。', tip:'So much for ...＝〜はこの辺で・〜はそれくらいにして（慣用句）。small talk＝雑談・世間話。get down to business＝本題に入る・仕事に取り掛かる。'},
-{cat:'💰 お金・経済', en:'Lucy resented the aggressive salesman trying to make her sign the contract.', ja:'ルーシーは、契約書にサインさせようとする強引な販売員に腹を立てた。', tip:'resent＝〜に腹を立てる・憤慨する。aggressive＝攻撃的な・強引な。make A do＝Aに〜させる（使役動詞）。sign the contract＝契約書にサインする。'},
-{cat:'💰 お金・経済', en:'There are a number of factors discouraging us from investing in stocks.', ja:'私たちの株式投資への意欲をそぐような要因がかなりある。', tip:'a number of＝かなりの数の（the number of は「〜の数」）。discourage A from doing＝Aが〜するのを妨げる・意欲をそぐ。invest in stocks＝株式に投資する。'},
-{cat:'💰 お金・経済', en:'Japan imports various raw materials and exports manufactured goods.', ja:'日本は様々な原料を輸入し、工業製品を輸出している。', tip:'import＝輸入する（export の反対）。raw materials＝原料・原材料。manufactured goods＝工業製品・製造品（manufacture＝製造する）。'},
-{cat:'🏛️ 社会・政治', en:'In the course of its economic development, Japan has abandoned its traditional values.', ja:'経済発展の過程で、日本はその伝統的価値観を捨ててきた。', tip:'in the course of＝〜の過程で・〜の間に。abandon＝〜を捨てる・放棄する。traditional values＝伝統的価値観。'},
-{cat:'🏛️ 社会・政治', en:'The world is faced with an unprecedented crisis.', ja:'世界はかつてない危機に直面している。', tip:'be faced with＝〜に直面している（face も同義）。unprecedented＝前例のない・かつてない（un+precede+ent+ed）。crisis＝危機（複数形は crises）。'},
-{cat:'🏛️ 社会・政治', en:'In short, the purpose of the regulations is to protect domestic industries.', ja:'要するに、その規制の目的は国内産業の保護だ。', tip:'in short＝要するに・一言で言えば（in brief / in a word も同義）。regulation＝規制・規則。domestic＝国内の（international の反対）。'},
-{cat:'🏛️ 社会・政治', en:'In order to keep up its competitiveness in the world, Japan must undertake sweeping deregulation in earnest.', ja:'世界での競争力を維持するためには、日本は大幅な規制緩和に真剣に着手しなければならない。', tip:'keep up＝〜を維持する。competitiveness＝競争力。undertake＝〜に着手する。sweeping＝大幅な・徹底的な。deregulation＝規制緩和。in earnest＝真剣に・本格的に。'},
-{cat:'🏛️ 社会・政治', en:'We cannot turn our backs on desperate people who are at risk.', ja:'危機にさらされ、わらにもすがる思いでいる人々を、私たちは放っておけない。', tip:'turn one\'s back on＝〜を見捨てる・無視する（慣用句）。desperate＝必死の・絶望的な。at risk＝危険にさらされた。'},
-{cat:'🏛️ 社会・政治', en:'The parliament decided to provide developing countries with financial aid.', ja:'議会は発展途上諸国に財政援助を行うことを決議した。', tip:'parliament＝議会（英国など）。provide A with B＝AにBを提供する（supply A with B も同義）。developing countries＝発展途上国。financial aid＝財政援助。'},
-{cat:'🏛️ 社会・政治', en:'Some say the British monarchy should be abolished. What do you think?', ja:'英国の君主制は廃止されるべきだと言う人もいるけど、あなたはどう思う？', tip:'monarchy＝君主制・王政。abolish＝〜を廃止する。should be abolished＝廃止されるべきだ（受け身の should）。'},
-{cat:'⚔️ 歴史・争い', en:'They sought shelter from the attack but found no place to hide.', ja:'彼らは攻撃を逃れる安全な場所を探したが、隠れる場所はどこにもなかった。', tip:'seek＝〜を求める（seek-sought-sought）。shelter＝避難場所・シェルター。seek shelter from＝〜から身を守る場所を求める。'},
-{cat:'🏛️ 社会・政治', en:'There\'s little prospect that the two countries will make significant progress in disarmament.', ja:'軍縮において、両国が大きな進展を遂げる見込みはほとんどない。', tip:'prospect＝見込み・見通し（little prospect＝ほとんど見込みがない）。make progress＝進展する。significant＝重大な・大きな。disarmament＝軍縮。'},
-{cat:'🏛️ 社会・政治', en:'The negotiations are under way. Before long, they will enter a crucial phase.', ja:'交渉は進行中だ。そろそろ正念場を迎えるだろう。', tip:'negotiation＝交渉（通常複数形）。under way＝進行中（= in progress）。before long＝まもなく・そのうち。crucial＝決定的な・正念場の。phase＝段階・局面。'},
-{cat:'⚔️ 歴史・争い', en:'The slaves were anxious to alter their destinies.', ja:'奴隷たちは自分たちの運命を変えたいと切望していた。', tip:'slave＝奴隷。be anxious to＝〜したくて切望している（be eager to と同義）。alter＝〜を変える・修正する（change より格式的）。destiny＝運命（fate より個人の意志が絡むニュアンス）。'},
-{cat:'⚔️ 歴史・争い', en:'The aristocrats abused their privileges to their hearts\' content.', ja:'貴族たちは思うがままに特権を乱用した。', tip:'aristocrat＝貴族。abuse＝〜を乱用する・虐待する。privilege＝特権。to one\'s heart\'s content＝心ゆくまで・思う存分（慣用句）。'},
-{cat:'⚔️ 歴史・争い', en:'The revolution in itself bore no fruit, after all.', ja:'結局、革命それ自体は何の成果ももたらさなかった。', tip:'revolution＝革命。in itself＝それ自体は。bear fruit＝実を結ぶ・成果を上げる（bear-bore-borne）。after all＝結局・やはり。'},
-{cat:'🏛️ 社会・政治', en:'Bob cut in on our conversation, saying, "I\'m against it!" But everybody ignored him.', ja:'ボブが「それには反対だ！」と言って会話に割り込んできた。けれども、誰も耳を貸さなかった。', tip:'cut in on＝〜に割り込む（cut in だけでも同義）。be against＝〜に反対する（oppose と同義）。ignore＝無視する。'},
-{cat:'🏛️ 社会・政治', en:'We skipped his turn on purpose.', ja:'私たちは彼の順番をわざと飛ばした。', tip:'skip＝〜を飛ばす・省く。turn＝順番（it\'s your turn＝あなたの番）。on purpose＝わざと・故意に（= intentionally。by accident は偶然に）。'},
-{cat:'🏛️ 社会・政治', en:'He saw someone being bullied, but he turned a blind eye.', ja:'誰かがいじめられているのを見たのに、彼は見ないふりをした。', tip:'bully＝いじめる。turn a blind eye＝見て見ぬふりをする（慣用句）。see + O + being done＝Oが〜されているのを見る（知覚動詞＋現在分詞の受け身）。'},
-{cat:'🏛️ 社会・政治', en:'When Nick and I cheated on an exam, I was suspended from school. As for Nick, he got away with it.', ja:'ニックと僕がテストでカンニングしたとき、僕は停学処分。ニックの方はまんまと逃れた。', tip:'cheat on an exam＝試験でカンニングする。be suspended from school＝停学になる。as for＝〜については。get away with＝〜をうまく逃れる・ばれずに済む。'},
-{cat:'🏛️ 社会・政治', en:'They are hostile to Richard because they are jealous of his wealth and status.', ja:'彼らはリチャードの富と地位に対する嫉妬から、彼に敵意を抱いている。', tip:'hostile to＝〜に敵意を抱く・敵対的な。be jealous of＝〜を妬む・嫉妬する（envious of も同義）。wealth＝富・財産。status＝地位・身分。'},
-{cat:'😤 人間関係・性格', en:'I hate him! He behaves as if he were somebody.', ja:'彼のことは大嫌い！まるで自分が大物であるかのように振る舞うのよ。', tip:'behave＝振る舞う。as if + 仮定法過去＝まるで〜であるかのように（現在の事実に反する仮定）。somebody＝重要人物・大物（nobody は誰でもない人）。'},
-{cat:'😤 人間関係・性格', en:'In spite of our compliments, he frowned and turned away. He was so rude!', ja:'僕たちがほめ言葉をかけたのに、彼は顔をしかめてそっぽを向いた。失礼だ！', tip:'in spite of＝〜にもかかわらず（= despite）。compliment＝ほめ言葉・お世辞。frown＝眉をひそめる・顔をしかめる。turn away＝そっぽを向く・立ち去る。rude＝失礼な・無礼な。'},
-{cat:'😤 人間関係・性格', en:'He claimed that the enormous property was at his disposal.', ja:'その莫大な財産は自分が自由にできるものだ、と彼は主張した。', tip:'claim＝〜と主張する（assert より口語的）。enormous＝莫大な・巨大な。property＝財産・不動産。at one\'s disposal＝〜の自由になって・思うがままに（慣用句）。'},
-{cat:'😤 人間関係・性格', en:'The more stubborn you are, the more isolated you become.', ja:'頑固になればなるほど孤立するよ。', tip:'the + 比較級 ..., the + 比較級 ...＝〜すればするほど…。stubborn＝頑固な・意固地な。isolated＝孤立した・孤独な。'},
-{cat:'😤 人間関係・性格', en:'"Don\'t beat around the bush! What am I supposed to do?" "Just wait and see. Time will tell."', ja:'「遠回しな言い方はやめてくれ！僕にどうしろって言うんだ？」「慌てずに待つしかありません。時が経てばわかります。」', tip:'beat around the bush＝遠回しに言う・本題を避ける（慣用句）。be supposed to＝〜することになっている・すべきだ。wait and see＝様子を見る。Time will tell.＝時が経てばわかる（慣用句）。'},
-{cat:'📝 学業・論文', en:'Please hand in your assignment via e-mail no later than 5:00 PM on June 10.', ja:'課題は電子メールで6月10日の午後5時までに提出してください。', tip:'hand in＝〜を提出する（= submit）。assignment＝課題・宿題。via＝〜経由で・〜を通じて。no later than＝〜までに（= by。「遅くとも〜までに」）。'},
-{cat:'📝 学業・論文', en:'Joe is anything but diligent. That\'s why he flunked math again.', ja:'ジョーが勤勉なんてとんでもない。だからまた数学を落としたんだ。', tip:'anything but＝決して〜でない（= far from。nothing but は「〜だけ」）。diligent＝勤勉な・まじめな。flunk＝（試験に）落ちる・不合格になる（口語）。'},
-{cat:'📝 学業・論文', en:'His thesis doesn\'t make sense. To begin with, its theme is obscure.', ja:'彼の論文は意味不明。第一、主題が曖昧だ。', tip:'thesis＝論文・主論（= dissertation）。make sense＝意味をなす・理にかなう。to begin with＝第一に・まず（= first of all）。obscure＝曖昧な・不明瞭な。'},
-{cat:'📝 学業・論文', en:'His essay was concise and to the point.', ja:'彼の小論文は簡潔で要領を得ていた。', tip:'essay＝小論文・エッセイ。concise＝簡潔な・要領を得た（= brief and clear）。to the point＝要領を得た・的を射た（off the point は的外れ）。'},
-{cat:'📝 学業・論文', en:'"How are you going to deal with this complicated problem?" "Leave it to me! It\'s a piece of cake."', ja:'「この複雑な問題をどう処理するつもり？」「任せとけって。朝飯前さ。」', tip:'deal with＝〜に対処する・処理する。complicated＝複雑な。Leave it to me.＝任せてください。a piece of cake＝朝飯前・造作もないこと（慣用句）。'},
-{cat:'📝 学業・論文', en:'"Nick, I want you to look this over before I turn it in." "Sorry, but I have my hands full right now."', ja:'「ニック、これを提出する前にざっと目を通して欲しいの。」「ごめん、今、手が離せないんだ。」', tip:'look over＝〜をざっと目を通す・点検する。turn in＝〜を提出する（= hand in）。have one\'s hands full＝手が離せない・手一杯だ（慣用句）。'},
-{cat:'📝 学業・論文', en:'"What if I don\'t meet the deadline?" "I bet he\'ll get mad at you!"', ja:'「締め切りに間に合わなかったらどうなる？」「きっと彼に怒られるぞ！」', tip:'What if ...?＝〜だったらどうなる？（仮定の問い）。meet the deadline＝締め切りに間に合う。I bet＝きっと〜に違いない（口語）。get mad at＝〜に怒る（= get angry at）。'},
-{cat:'📝 学業・論文', en:'Your summary leaves nothing to be desired apart from the terrible handwriting.', ja:'字が汚いことを別にすれば、君の要約は完璧だ。', tip:'leave nothing to be desired＝申し分ない・完璧だ（慣用句）。apart from＝〜を除けば（= except for）。handwriting＝手書き・筆跡。'},
-{cat:'📝 学業・論文', en:'You ought to think over whether the premise is valid or not.', ja:'その前提が妥当かどうかよく考えるべきだ。', tip:'ought to＝〜すべきだ（= should）。think over＝〜を熟考する・よく考える。premise＝前提・仮定。valid＝妥当な・有効な（invalid は無効な）。'},
-{cat:'🔬 科学・数学', en:'Above all, scientific terms call for precise definitions.', ja:'とりわけ、科学用語には厳密な定義が要求される。', tip:'above all＝とりわけ・何より（= most importantly）。call for＝〜を要求する・必要とする。precise＝厳密な・正確な。definition＝定義。'},
-{cat:'🔬 科学・数学', en:'First of all, learn the formula by heart.', ja:'何よりもまず、公式を暗記しなさい。', tip:'first of all＝何よりもまず・第一に。formula＝公式・式（複数形は formulas または formulae）。learn by heart＝〜を暗記する（= memorize）。'},
-{cat:'🔬 科学・数学', en:'To calculate the volume, multiply the length by the width by the depth.', ja:'体積を計算する場合は、縦と横と深さを掛けます。', tip:'calculate＝計算する。volume＝体積・容積（音量や量の意味もある）。multiply A by B＝AにBを掛ける（divide A by B は割る）。'},
-{cat:'🔬 科学・数学', en:'Tiny cracks were found in the bottom of the barrel.', ja:'樽の底にとても小さなひびがあるのを見つけた。', tip:'tiny＝とても小さな（small より小さいイメージ）。crack＝ひび・亀裂。barrel＝樽・バレル（石油の単位にもなる）。'},
-{cat:'🔬 科学・数学', en:'This chapter will focus on the concepts of geometry.', ja:'この章では幾何学の概念に焦点をあてます。', tip:'focus on＝〜に焦点をあてる・集中する。concept＝概念・コンセプト。geometry＝幾何学（geo＝土地＋metry＝測定）。'},
-{cat:'🔬 科学・数学', en:'Phil is much more interested in academic subjects than in practical skills.', ja:'フィルは実用的な技能よりも学問的なテーマのほうに興味がある。', tip:'be interested in＝〜に興味がある。academic＝学問的な・大学の。practical＝実用的な・実践的な（theoretical は理論的な）。'},
-{cat:'🔬 科学・数学', en:'"Something\'s gone wrong with this microscope. I need to have it repaired." "Let me see it. Maybe I can fix it."', ja:'「この顕微鏡、どこかおかしくなっちゃった。修理してもらわないと。」「見せて。僕が直せるかも。」', tip:'go wrong＝おかしくなる・故障する。have it repaired＝修理してもらう（have + O + 過去分詞＝〜してもらう）。microscope＝顕微鏡（micro＝小さい＋scope＝見る）。'},
-{cat:'🔬 科学・数学', en:'"What is \'an instrument\'?" "For instance, a gauge, such as a thermometer or a barometer."', ja:'「インストゥルメントって何ですか？」「例えば、温度計や気圧計とかの計器がそうです。」', tip:'instrument＝計器・楽器・道具。for instance＝例えば（= for example）。gauge＝計器・ゲージ。thermometer＝温度計。barometer＝気圧計（baro＝重さ）。'},
-{cat:'🔬 科学・数学', en:'The minute particles are barely visible to the naked eye.', ja:'その微粒子は肉眼でもかろうじて見える。', tip:'minute＝微小な（形容詞では「マイニュート」と発音。名詞の「分」は「ミニット」）。particle＝粒子・微粒子。barely＝かろうじて・ほとんど〜ない。naked eye＝肉眼。'},
-{cat:'🔬 科学・数学', en:'Muscle tissue consists of a vast number of cells.', ja:'筋肉組織はおびただしい数の細胞から成っている。', tip:'tissue＝組織・ティッシュ。consist of＝〜から成る・構成される（受け身にしない）。vast＝莫大な・広大な。a vast number of＝おびただしい数の。'},
-{cat:'🔬 科学・数学', en:'This substance is mostly composed of hydrogen and oxygen.', ja:'この物質は主に水素と酸素でできている。', tip:'substance＝物質・実質。be composed of＝〜から成る（= consist of）。mostly＝主に・大部分は。hydrogen＝水素（hydro＝水）。oxygen＝酸素。'},
-{cat:'🔬 科学・数学', en:'The exact temperature is 22.68 degrees Celsius.', ja:'正確な気温は摂氏22.68度です。', tip:'exact＝正確な・厳密な（= precise）。temperature＝温度・気温。Celsius＝摂氏（セルシウス。米では Fahrenheit ＝華氏）。degrees Celsius＝摂氏〜度。'},
+{cat:'🏠 生活・家事', en:'The auditorium was empty except for a single piece of furniture.', ja:'たった一つの家具を除けば、講堂はがらんどうだった。', tip:'auditorium＝講堂・ホール。except for＝〜を除けば。furniture＝家具（不可算名詞。a piece of furniture＝家具一つ）。',audio:'card_audio/card_126.mp3'},
+{cat:'🏠 生活・家事', en:'Any apartment will do as long as the rent is low. I\'m not particular about it.', ja:'家賃が安ければ、どんなマンションでも構いません。こだわりはありませんから。', tip:'will do＝〜で十分だ・構わない。as long as＝〜である限り・〜さえすれば。be particular about＝〜にこだわる・うるさい。',audio:'card_audio/card_127.mp3'},
+{cat:'💰 お金・経済', en:'His sixty-year-old cousin inherited a piece of real estate by a lake.', ja:'彼の60歳のいとこが湖畔の不動産を相続した。', tip:'inherit＝〜を相続する・受け継ぐ。real estate＝不動産（不可算名詞。a piece of real estate＝不動産一件）。by a lake＝湖のほとりに。',audio:'card_audio/card_128.mp3'},
+{cat:'🏠 生活・家事', en:'So much for small talk. Let\'s get down to business.', ja:'雑談はこの辺にして、本題に入りましょう。', tip:'So much for ...＝〜はこの辺で・〜はそれくらいにして（慣用句）。small talk＝雑談・世間話。get down to business＝本題に入る・仕事に取り掛かる。',audio:'card_audio/card_129.mp3'},
+{cat:'💰 お金・経済', en:'Lucy resented the aggressive salesman trying to make her sign the contract.', ja:'ルーシーは、契約書にサインさせようとする強引な販売員に腹を立てた。', tip:'resent＝〜に腹を立てる・憤慨する。aggressive＝攻撃的な・強引な。make A do＝Aに〜させる（使役動詞）。sign the contract＝契約書にサインする。',audio:'card_audio/card_130.mp3'},
+{cat:'💰 お金・経済', en:'There are a number of factors discouraging us from investing in stocks.', ja:'私たちの株式投資への意欲をそぐような要因がかなりある。', tip:'a number of＝かなりの数の（the number of は「〜の数」）。discourage A from doing＝Aが〜するのを妨げる・意欲をそぐ。invest in stocks＝株式に投資する。',audio:'card_audio/card_131.mp3'},
+{cat:'💰 お金・経済', en:'Japan imports various raw materials and exports manufactured goods.', ja:'日本は様々な原料を輸入し、工業製品を輸出している。', tip:'import＝輸入する（export の反対）。raw materials＝原料・原材料。manufactured goods＝工業製品・製造品（manufacture＝製造する）。',audio:'card_audio/card_132.mp3'},
+{cat:'🏛️ 社会・政治', en:'In the course of its economic development, Japan has abandoned its traditional values.', ja:'経済発展の過程で、日本はその伝統的価値観を捨ててきた。', tip:'in the course of＝〜の過程で・〜の間に。abandon＝〜を捨てる・放棄する。traditional values＝伝統的価値観。',audio:'card_audio/card_133.mp3'},
+{cat:'🏛️ 社会・政治', en:'The world is faced with an unprecedented crisis.', ja:'世界はかつてない危機に直面している。', tip:'be faced with＝〜に直面している（face も同義）。unprecedented＝前例のない・かつてない（un+precede+ent+ed）。crisis＝危機（複数形は crises）。',audio:'card_audio/card_134.mp3'},
+{cat:'🏛️ 社会・政治', en:'In short, the purpose of the regulations is to protect domestic industries.', ja:'要するに、その規制の目的は国内産業の保護だ。', tip:'in short＝要するに・一言で言えば（in brief / in a word も同義）。regulation＝規制・規則。domestic＝国内の（international の反対）。',audio:'card_audio/card_135.mp3'},
+{cat:'🏛️ 社会・政治', en:'In order to keep up its competitiveness in the world, Japan must undertake sweeping deregulation in earnest.', ja:'世界での競争力を維持するためには、日本は大幅な規制緩和に真剣に着手しなければならない。', tip:'keep up＝〜を維持する。competitiveness＝競争力。undertake＝〜に着手する。sweeping＝大幅な・徹底的な。deregulation＝規制緩和。in earnest＝真剣に・本格的に。',audio:'card_audio/card_136.mp3'},
+{cat:'🏛️ 社会・政治', en:'We cannot turn our backs on desperate people who are at risk.', ja:'危機にさらされ、わらにもすがる思いでいる人々を、私たちは放っておけない。', tip:'turn one\'s back on＝〜を見捨てる・無視する（慣用句）。desperate＝必死の・絶望的な。at risk＝危険にさらされた。',audio:'card_audio/card_137.mp3'},
+{cat:'🏛️ 社会・政治', en:'The parliament decided to provide developing countries with financial aid.', ja:'議会は発展途上諸国に財政援助を行うことを決議した。', tip:'parliament＝議会（英国など）。provide A with B＝AにBを提供する（supply A with B も同義）。developing countries＝発展途上国。financial aid＝財政援助。',audio:'card_audio/card_138.mp3'},
+{cat:'🏛️ 社会・政治', en:'Some say the British monarchy should be abolished. What do you think?', ja:'英国の君主制は廃止されるべきだと言う人もいるけど、あなたはどう思う？', tip:'monarchy＝君主制・王政。abolish＝〜を廃止する。should be abolished＝廃止されるべきだ（受け身の should）。',audio:'card_audio/card_139.mp3'},
+{cat:'⚔️ 歴史・争い', en:'They sought shelter from the attack but found no place to hide.', ja:'彼らは攻撃を逃れる安全な場所を探したが、隠れる場所はどこにもなかった。', tip:'seek＝〜を求める（seek-sought-sought）。shelter＝避難場所・シェルター。seek shelter from＝〜から身を守る場所を求める。',audio:'card_audio/card_140.mp3'},
+{cat:'🏛️ 社会・政治', en:'There\'s little prospect that the two countries will make significant progress in disarmament.', ja:'軍縮において、両国が大きな進展を遂げる見込みはほとんどない。', tip:'prospect＝見込み・見通し（little prospect＝ほとんど見込みがない）。make progress＝進展する。significant＝重大な・大きな。disarmament＝軍縮。',audio:'card_audio/card_141.mp3'},
+{cat:'🏛️ 社会・政治', en:'The negotiations are under way. Before long, they will enter a crucial phase.', ja:'交渉は進行中だ。そろそろ正念場を迎えるだろう。', tip:'negotiation＝交渉（通常複数形）。under way＝進行中（= in progress）。before long＝まもなく・そのうち。crucial＝決定的な・正念場の。phase＝段階・局面。',audio:'card_audio/card_142.mp3'},
+{cat:'⚔️ 歴史・争い', en:'The slaves were anxious to alter their destinies.', ja:'奴隷たちは自分たちの運命を変えたいと切望していた。', tip:'slave＝奴隷。be anxious to＝〜したくて切望している（be eager to と同義）。alter＝〜を変える・修正する（change より格式的）。destiny＝運命（fate より個人の意志が絡むニュアンス）。',audio:'card_audio/card_143.mp3'},
+{cat:'⚔️ 歴史・争い', en:'The aristocrats abused their privileges to their hearts\' content.', ja:'貴族たちは思うがままに特権を乱用した。', tip:'aristocrat＝貴族。abuse＝〜を乱用する・虐待する。privilege＝特権。to one\'s heart\'s content＝心ゆくまで・思う存分（慣用句）。',audio:'card_audio/card_144.mp3'},
+{cat:'⚔️ 歴史・争い', en:'The revolution in itself bore no fruit, after all.', ja:'結局、革命それ自体は何の成果ももたらさなかった。', tip:'revolution＝革命。in itself＝それ自体は。bear fruit＝実を結ぶ・成果を上げる（bear-bore-borne）。after all＝結局・やはり。',audio:'card_audio/card_145.mp3'},
+{cat:'🏛️ 社会・政治', en:'Bob cut in on our conversation, saying, "I\'m against it!" But everybody ignored him.', ja:'ボブが「それには反対だ！」と言って会話に割り込んできた。けれども、誰も耳を貸さなかった。', tip:'cut in on＝〜に割り込む（cut in だけでも同義）。be against＝〜に反対する（oppose と同義）。ignore＝無視する。',audio:'card_audio/card_146.mp3'},
+{cat:'🏛️ 社会・政治', en:'We skipped his turn on purpose.', ja:'私たちは彼の順番をわざと飛ばした。', tip:'skip＝〜を飛ばす・省く。turn＝順番（it\'s your turn＝あなたの番）。on purpose＝わざと・故意に（= intentionally。by accident は偶然に）。',audio:'card_audio/card_147.mp3'},
+{cat:'🏛️ 社会・政治', en:'He saw someone being bullied, but he turned a blind eye.', ja:'誰かがいじめられているのを見たのに、彼は見ないふりをした。', tip:'bully＝いじめる。turn a blind eye＝見て見ぬふりをする（慣用句）。see + O + being done＝Oが〜されているのを見る（知覚動詞＋現在分詞の受け身）。',audio:'card_audio/card_148.mp3'},
+{cat:'🏛️ 社会・政治', en:'When Nick and I cheated on an exam, I was suspended from school. As for Nick, he got away with it.', ja:'ニックと僕がテストでカンニングしたとき、僕は停学処分。ニックの方はまんまと逃れた。', tip:'cheat on an exam＝試験でカンニングする。be suspended from school＝停学になる。as for＝〜については。get away with＝〜をうまく逃れる・ばれずに済む。',audio:'card_audio/card_149.mp3'},
+{cat:'🏛️ 社会・政治', en:'They are hostile to Richard because they are jealous of his wealth and status.', ja:'彼らはリチャードの富と地位に対する嫉妬から、彼に敵意を抱いている。', tip:'hostile to＝〜に敵意を抱く・敵対的な。be jealous of＝〜を妬む・嫉妬する（envious of も同義）。wealth＝富・財産。status＝地位・身分。',audio:'card_audio/card_150.mp3'},
+{cat:'😤 人間関係・性格', en:'I hate him! He behaves as if he were somebody.', ja:'彼のことは大嫌い！まるで自分が大物であるかのように振る舞うのよ。', tip:'behave＝振る舞う。as if + 仮定法過去＝まるで〜であるかのように（現在の事実に反する仮定）。somebody＝重要人物・大物（nobody は誰でもない人）。',audio:'card_audio/card_151.mp3'},
+{cat:'😤 人間関係・性格', en:'In spite of our compliments, he frowned and turned away. He was so rude!', ja:'僕たちがほめ言葉をかけたのに、彼は顔をしかめてそっぽを向いた。失礼だ！', tip:'in spite of＝〜にもかかわらず（= despite）。compliment＝ほめ言葉・お世辞。frown＝眉をひそめる・顔をしかめる。turn away＝そっぽを向く・立ち去る。rude＝失礼な・無礼な。',audio:'card_audio/card_152.mp3'},
+{cat:'😤 人間関係・性格', en:'He claimed that the enormous property was at his disposal.', ja:'その莫大な財産は自分が自由にできるものだ、と彼は主張した。', tip:'claim＝〜と主張する（assert より口語的）。enormous＝莫大な・巨大な。property＝財産・不動産。at one\'s disposal＝〜の自由になって・思うがままに（慣用句）。',audio:'card_audio/card_153.mp3'},
+{cat:'😤 人間関係・性格', en:'The more stubborn you are, the more isolated you become.', ja:'頑固になればなるほど孤立するよ。', tip:'the + 比較級 ..., the + 比較級 ...＝〜すればするほど…。stubborn＝頑固な・意固地な。isolated＝孤立した・孤独な。',audio:'card_audio/card_154.mp3'},
+{cat:'😤 人間関係・性格', en:'"Don\'t beat around the bush! What am I supposed to do?" "Just wait and see. Time will tell."', ja:'「遠回しな言い方はやめてくれ！僕にどうしろって言うんだ？」「慌てずに待つしかありません。時が経てばわかります。」', tip:'beat around the bush＝遠回しに言う・本題を避ける（慣用句）。be supposed to＝〜することになっている・すべきだ。wait and see＝様子を見る。Time will tell.＝時が経てばわかる（慣用句）。',audio:'card_audio/card_155.mp3'},
+{cat:'📝 学業・論文', en:'Please hand in your assignment via e-mail no later than 5:00 PM on June 10.', ja:'課題は電子メールで6月10日の午後5時までに提出してください。', tip:'hand in＝〜を提出する（= submit）。assignment＝課題・宿題。via＝〜経由で・〜を通じて。no later than＝〜までに（= by。「遅くとも〜までに」）。',audio:'card_audio/card_156.mp3'},
+{cat:'📝 学業・論文', en:'Joe is anything but diligent. That\'s why he flunked math again.', ja:'ジョーが勤勉なんてとんでもない。だからまた数学を落としたんだ。', tip:'anything but＝決して〜でない（= far from。nothing but は「〜だけ」）。diligent＝勤勉な・まじめな。flunk＝（試験に）落ちる・不合格になる（口語）。',audio:'card_audio/card_157.mp3'},
+{cat:'📝 学業・論文', en:'His thesis doesn\'t make sense. To begin with, its theme is obscure.', ja:'彼の論文は意味不明。第一、主題が曖昧だ。', tip:'thesis＝論文・主論（= dissertation）。make sense＝意味をなす・理にかなう。to begin with＝第一に・まず（= first of all）。obscure＝曖昧な・不明瞭な。',audio:'card_audio/card_158.mp3'},
+{cat:'📝 学業・論文', en:'His essay was concise and to the point.', ja:'彼の小論文は簡潔で要領を得ていた。', tip:'essay＝小論文・エッセイ。concise＝簡潔な・要領を得た（= brief and clear）。to the point＝要領を得た・的を射た（off the point は的外れ）。',audio:'card_audio/card_159.mp3'},
+{cat:'📝 学業・論文', en:'"How are you going to deal with this complicated problem?" "Leave it to me! It\'s a piece of cake."', ja:'「この複雑な問題をどう処理するつもり？」「任せとけって。朝飯前さ。」', tip:'deal with＝〜に対処する・処理する。complicated＝複雑な。Leave it to me.＝任せてください。a piece of cake＝朝飯前・造作もないこと（慣用句）。',audio:'card_audio/card_160.mp3'},
+{cat:'📝 学業・論文', en:'"Nick, I want you to look this over before I turn it in." "Sorry, but I have my hands full right now."', ja:'「ニック、これを提出する前にざっと目を通して欲しいの。」「ごめん、今、手が離せないんだ。」', tip:'look over＝〜をざっと目を通す・点検する。turn in＝〜を提出する（= hand in）。have one\'s hands full＝手が離せない・手一杯だ（慣用句）。',audio:'card_audio/card_161.mp3'},
+{cat:'📝 学業・論文', en:'"What if I don\'t meet the deadline?" "I bet he\'ll get mad at you!"', ja:'「締め切りに間に合わなかったらどうなる？」「きっと彼に怒られるぞ！」', tip:'What if ...?＝〜だったらどうなる？（仮定の問い）。meet the deadline＝締め切りに間に合う。I bet＝きっと〜に違いない（口語）。get mad at＝〜に怒る（= get angry at）。',audio:'card_audio/card_162.mp3'},
+{cat:'📝 学業・論文', en:'Your summary leaves nothing to be desired apart from the terrible handwriting.', ja:'字が汚いことを別にすれば、君の要約は完璧だ。', tip:'leave nothing to be desired＝申し分ない・完璧だ（慣用句）。apart from＝〜を除けば（= except for）。handwriting＝手書き・筆跡。',audio:'card_audio/card_163.mp3'},
+{cat:'📝 学業・論文', en:'You ought to think over whether the premise is valid or not.', ja:'その前提が妥当かどうかよく考えるべきだ。', tip:'ought to＝〜すべきだ（= should）。think over＝〜を熟考する・よく考える。premise＝前提・仮定。valid＝妥当な・有効な（invalid は無効な）。',audio:'card_audio/card_164.mp3'},
+{cat:'🔬 科学・数学', en:'Above all, scientific terms call for precise definitions.', ja:'とりわけ、科学用語には厳密な定義が要求される。', tip:'above all＝とりわけ・何より（= most importantly）。call for＝〜を要求する・必要とする。precise＝厳密な・正確な。definition＝定義。',audio:'card_audio/card_165.mp3'},
+{cat:'🔬 科学・数学', en:'First of all, learn the formula by heart.', ja:'何よりもまず、公式を暗記しなさい。', tip:'first of all＝何よりもまず・第一に。formula＝公式・式（複数形は formulas または formulae）。learn by heart＝〜を暗記する（= memorize）。',audio:'card_audio/card_166.mp3'},
+{cat:'🔬 科学・数学', en:'To calculate the volume, multiply the length by the width by the depth.', ja:'体積を計算する場合は、縦と横と深さを掛けます。', tip:'calculate＝計算する。volume＝体積・容積（音量や量の意味もある）。multiply A by B＝AにBを掛ける（divide A by B は割る）。',audio:'card_audio/card_167.mp3'},
+{cat:'🔬 科学・数学', en:'Tiny cracks were found in the bottom of the barrel.', ja:'樽の底にとても小さなひびがあるのを見つけた。', tip:'tiny＝とても小さな（small より小さいイメージ）。crack＝ひび・亀裂。barrel＝樽・バレル（石油の単位にもなる）。',audio:'card_audio/card_168.mp3'},
+{cat:'🔬 科学・数学', en:'This chapter will focus on the concepts of geometry.', ja:'この章では幾何学の概念に焦点をあてます。', tip:'focus on＝〜に焦点をあてる・集中する。concept＝概念・コンセプト。geometry＝幾何学（geo＝土地＋metry＝測定）。',audio:'card_audio/card_169.mp3'},
+{cat:'🔬 科学・数学', en:'Phil is much more interested in academic subjects than in practical skills.', ja:'フィルは実用的な技能よりも学問的なテーマのほうに興味がある。', tip:'be interested in＝〜に興味がある。academic＝学問的な・大学の。practical＝実用的な・実践的な（theoretical は理論的な）。',audio:'card_audio/card_170.mp3'},
+{cat:'🔬 科学・数学', en:'"Something\'s gone wrong with this microscope. I need to have it repaired." "Let me see it. Maybe I can fix it."', ja:'「この顕微鏡、どこかおかしくなっちゃった。修理してもらわないと。」「見せて。僕が直せるかも。」', tip:'go wrong＝おかしくなる・故障する。have it repaired＝修理してもらう（have + O + 過去分詞＝〜してもらう）。microscope＝顕微鏡（micro＝小さい＋scope＝見る）。',audio:'card_audio/card_171.mp3'},
+{cat:'🔬 科学・数学', en:'"What is \'an instrument\'?" "For instance, a gauge, such as a thermometer or a barometer."', ja:'「インストゥルメントって何ですか？」「例えば、温度計や気圧計とかの計器がそうです。」', tip:'instrument＝計器・楽器・道具。for instance＝例えば（= for example）。gauge＝計器・ゲージ。thermometer＝温度計。barometer＝気圧計（baro＝重さ）。',audio:'card_audio/card_172.mp3'},
+{cat:'🔬 科学・数学', en:'The minute particles are barely visible to the naked eye.', ja:'その微粒子は肉眼でもかろうじて見える。', tip:'minute＝微小な（形容詞では「マイニュート」と発音。名詞の「分」は「ミニット」）。particle＝粒子・微粒子。barely＝かろうじて・ほとんど〜ない。naked eye＝肉眼。',audio:'card_audio/card_173.mp3'},
+{cat:'🔬 科学・数学', en:'Muscle tissue consists of a vast number of cells.', ja:'筋肉組織はおびただしい数の細胞から成っている。', tip:'tissue＝組織・ティッシュ。consist of＝〜から成る・構成される（受け身にしない）。vast＝莫大な・広大な。a vast number of＝おびただしい数の。',audio:'card_audio/card_174.mp3'},
+{cat:'🔬 科学・数学', en:'This substance is mostly composed of hydrogen and oxygen.', ja:'この物質は主に水素と酸素でできている。', tip:'substance＝物質・実質。be composed of＝〜から成る（= consist of）。mostly＝主に・大部分は。hydrogen＝水素（hydro＝水）。oxygen＝酸素。',audio:'card_audio/card_175.mp3'},
+{cat:'🔬 科学・数学', en:'The exact temperature is 22.68 degrees Celsius.', ja:'正確な気温は摂氏22.68度です。', tip:'exact＝正確な・厳密な（= precise）。temperature＝温度・気温。Celsius＝摂氏（セルシウス。米では Fahrenheit ＝華氏）。degrees Celsius＝摂氏〜度。',audio:'card_audio/card_176.mp3'},
 ];
-const audioFiles=[{file:'11-Section_11.mp4',label:'1'},{file:'12-Section_12.mp4',label:'2'},{file:'13-Section_13.mp4',label:'3'},{file:'14-Section_14.mp4',label:'4'},{file:'15-Section_15.mp4',label:'5'}];
-function makeSrcCandidates(file){
-  const alt=file.includes('_')?file.replace(/_/g,' '):null;
-  return alt?[file,alt]:[file];
+// カードごとのネイティブ音声再生
+let nativeAudioEl=new Audio();
+nativeAudioEl.preload='none';
+function playNativeAudio(audioFile,onEnd,onError){
+  nativeAudioEl.pause();
+  nativeAudioEl.onended=null;
+  nativeAudioEl.onerror=null;
+  if(!audioFile){ if(onError)onError(); return; }
+  nativeAudioEl.src=audioFile;
+  nativeAudioEl.currentTime=0;
+  nativeAudioEl.onended=()=>{ if(onEnd)onEnd(); };
+  const p=nativeAudioEl.play();
+  if(p&&p.catch){ p.catch(()=>{ if(onError)onError(); }); }
 }
-let audioEls=audioFiles.map(f=>{
-  const a=new Audio();
-  a.preload='none';
-  a._candidates=makeSrcCandidates(f.file);
-  a._candIdx=0;
-  a.src='duo_audio/'+encodeURIComponent(a._candidates[0]);
-  return a;
-});
-function advanceCandidate(a){
-  if(a._candIdx<a._candidates.length-1){
-    a._candIdx++;
-    a.src='duo_audio/'+encodeURIComponent(a._candidates[a._candIdx]);
-    return true;
-  }
-  return false;
-}
-(function buildTrackButtons(){
-  const row=document.getElementById('audio-track-row');
-  audioFiles.forEach((f,i)=>{
-    const b=document.createElement('button');
-    b.className='audio-track-btn';
-    b.id='audio-track-'+i;
-    b.textContent=(i+1);
-    b.onclick=()=>toggleTrack(i);
-    row.appendChild(b);
-  });
-  const loopBtn=document.createElement('button');
-  loopBtn.className='audio-loop-all-btn';
-  loopBtn.id='audio-loop-all-btn';
-  loopBtn.textContent='🔁';
-  loopBtn.onclick=toggleLoopAll;
-  row.appendChild(loopBtn);
-})();
-let currentPlayingIdx=-1;
-let loopAllOn=false;
-function stopAllAudio(){
-  audioEls.forEach((a,i)=>{ a.pause(); a.currentTime=0; a.onended=null; const b=document.getElementById('audio-track-'+i); if(b){b.classList.remove('playing');} });
-  currentPlayingIdx=-1;
-}
-function playTrack(i,chain){
-  stopAllAudio();
-  currentPlayingIdx=i;
-  const a=audioEls[i];
-  const btn=document.getElementById('audio-track-'+i);
-  btn.classList.add('playing');
-  try{ a.currentTime=0; }catch(e){}
-  a.onended=()=>{
-    btn.classList.remove('playing');
-    if(chain){
-      const nextIdx=(i+1)%audioFiles.length;
-      playTrack(nextIdx,true);
-    } else {
-      currentPlayingIdx=-1;
-    }
-  };
-  const attempt=()=>{
-    const p=a.play();
-    if(p&&p.catch){
-      p.catch(()=>{
-        if(advanceCandidate(a)){
-          attempt();
-        } else {
-          btn.classList.remove('playing');
-          currentPlayingIdx=-1;
-          loopAllOn=false;
-          const loopBtn=document.getElementById('audio-loop-all-btn');
-          if(loopBtn){loopBtn.classList.remove('on');loopBtn.textContent='🔁';}
-          alert('音声ファイルの再生に失敗しました。\n試したファイル名:\n'+a._candidates.map(c=>'duo_audio/'+c).join('\n')+'\n\nduo_audioフォルダがHTMLファイルと同じ場所にアップロードされているか、ファイル名が一致しているかご確認ください。');
-        }
-      });
-    }
-  };
-  attempt();
-}
-function toggleTrack(i){
-  if(currentPlayingIdx===i){
-    stopAllAudio();
-    loopAllOn=false;
-    document.getElementById('audio-loop-all-btn').classList.remove('on');
-    document.getElementById('audio-loop-all-btn').textContent='🔁';
-  } else {
-    loopAllOn=false;
-    document.getElementById('audio-loop-all-btn').classList.remove('on');
-    document.getElementById('audio-loop-all-btn').textContent='🔁';
-    playTrack(i,false);
-  }
-}
-function toggleLoopAll(){
-  if(loopAllOn){
-    loopAllOn=false;
-    stopAllAudio();
-    document.getElementById('audio-loop-all-btn').classList.remove('on');
-    document.getElementById('audio-loop-all-btn').textContent='🔁';
-  } else {
-    loopAllOn=true;
-    document.getElementById('audio-loop-all-btn').classList.add('on');
-    document.getElementById('audio-loop-all-btn').textContent='⏹';
-    playTrack(0,true);
-  }
-}
+function stopNativeAudio(){ nativeAudioEl.pause(); nativeAudioEl.onended=null; }
 let currentIndex=0,isEnToJa=true,isRandom=false,isRepeating=false;
 let mastered=new Set(),activeCategory='all';
 let isAutoPlaying=false,autoStopped=false,autoTimeout=null;
@@ -365,13 +273,22 @@ function getVoice(){return voices[parseInt(document.getElementById('voice-select
 function updateRate(){speechRate=parseFloat(document.getElementById('rate-slider').value);document.getElementById('rate-val').textContent=speechRate.toFixed(1)+'×';}
 function startKeepAlive(){stopKeepAlive();keepAliveTimer=setInterval(()=>{if(window.speechSynthesis.speaking)window.speechSynthesis.pause(),window.speechSynthesis.resume();},10000);}
 function stopKeepAlive(){if(keepAliveTimer){clearInterval(keepAliveTimer);keepAliveTimer=null;}}
-function speakOne(text,onEnd){window.speechSynthesis.cancel();isSpeaking=false;clearTimeout(speakOne._t);speakOne._t=setTimeout(()=>{const utt=new SpeechSynthesisUtterance(text);const v=getVoice();if(v){utt.voice=v;utt.lang=v.lang;}else{utt.lang=voicePref==='US'?'en-US':'en-GB';}utt.rate=speechRate;utt.onend=()=>{isSpeaking=false;stopKeepAlive();if(onEnd)onEnd();};utt.onerror=()=>{isSpeaking=false;stopKeepAlive();if(onEnd)onEnd();};isSpeaking=true;startKeepAlive();window.speechSynthesis.speak(utt);},80);}
+function speakTTS(text,onEnd){window.speechSynthesis.cancel();isSpeaking=false;clearTimeout(speakOne._t);speakOne._t=setTimeout(()=>{const utt=new SpeechSynthesisUtterance(text);const v=getVoice();if(v){utt.voice=v;utt.lang=v.lang;}else{utt.lang=voicePref==='US'?'en-US':'en-GB';}utt.rate=speechRate;utt.onend=()=>{isSpeaking=false;stopKeepAlive();if(onEnd)onEnd();};utt.onerror=()=>{isSpeaking=false;stopKeepAlive();if(onEnd)onEnd();};isSpeaking=true;startKeepAlive();window.speechSynthesis.speak(utt);},80);}
 speakOne._t=null;
-function speakP(){return new Promise(r=>{const a=getActive();if(!a.length){r();return;}speakOne(a[currentIndex].en,r);});}
-function speakCurrent(){const a=getActive();if(!a.length)return;speakOne(a[currentIndex].en);}
-function speakRepeat(){if(!isRepeating||isAutoPlaying)return;const a=getActive();if(!a.length)return;speakOne(a[currentIndex].en,()=>{if(isRepeating&&!isAutoPlaying){clearTimeout(speakRepeat._t);speakRepeat._t=setTimeout(()=>speakRepeat(),300);}}); }
+function speakOne(card,onEnd){
+  window.speechSynthesis.cancel();
+  stopNativeAudio();
+  if(card&&card.audio){
+    playNativeAudio(card.audio,onEnd,()=>{ speakTTS(card.en,onEnd); });
+  } else {
+    speakTTS(card.en,onEnd);
+  }
+}
+function speakP(){return new Promise(r=>{const a=getActive();if(!a.length){r();return;}speakOne(a[currentIndex],r);});}
+function speakCurrent(){const a=getActive();if(!a.length)return;speakOne(a[currentIndex]);}
+function speakRepeat(){if(!isRepeating||isAutoPlaying)return;const a=getActive();if(!a.length)return;speakOne(a[currentIndex],()=>{if(isRepeating&&!isAutoPlaying){clearTimeout(speakRepeat._t);speakRepeat._t=setTimeout(()=>speakRepeat(),300);}}); }
 speakRepeat._t=null;
-function toggleRepeat(){isRepeating=!isRepeating;const btn=document.getElementById('repeat-btn');btn.textContent=isRepeating?'🔁 繰り返し: ON':'🔁 繰り返し';btn.className=isRepeating?'btn btn-on':'btn btn-secondary';if(isRepeating){const a=getActive();if(a.length)speakRepeat();}else{window.speechSynthesis.cancel();isSpeaking=false;stopKeepAlive();clearTimeout(speakRepeat._t);}}
+function toggleRepeat(){isRepeating=!isRepeating;const btn=document.getElementById('repeat-btn');btn.textContent=isRepeating?'🔁 繰り返し: ON':'🔁 繰り返し';btn.className=isRepeating?'btn btn-on':'btn btn-secondary';if(isRepeating){const a=getActive();if(a.length)speakRepeat();}else{window.speechSynthesis.cancel();stopNativeAudio();isSpeaking=false;stopKeepAlive();clearTimeout(speakRepeat._t);}}
 function update(){const active=getActive();const noEl=document.getElementById('no-active');if(!active.length){noEl.classList.add('show');document.getElementById('main-card').style.display='none';document.getElementById('tap-hint').style.display='none';updateMasterBadge();buildCatRows();return;}noEl.classList.remove('show');document.getElementById('main-card').style.display='';document.getElementById('tap-hint').style.display='';if(currentIndex>=active.length)currentIndex=0;const item=active[currentIndex];const realIdx=phrases.indexOf(item);document.getElementById('card-num').textContent=String(realIdx+OFFSET).padStart(3,'0');document.getElementById('card-cat').textContent=item.cat;document.getElementById('cur-num').textContent=currentIndex+1;document.getElementById('tot-num').textContent=active.length;const pct=active.length>1?((currentIndex/(active.length-1))*100).toFixed(0):100;document.getElementById('progress-bar').style.width=pct+'%';if(isEnToJa){document.getElementById('main-text').innerHTML=item.en;document.getElementById('answer-ja').textContent=item.ja;}else{document.getElementById('main-text').innerHTML=item.ja;document.getElementById('answer-ja').textContent=item.en;}const tipEl=document.getElementById('answer-tip');if(item.tip){tipEl.textContent=item.tip;tipEl.style.display='';}else{tipEl.style.display='none';}document.getElementById('answer-wrap').classList.remove('show');document.getElementById('main-card').classList.remove('revealed');const cb=document.getElementById('master-cb');cb.checked=mastered.has(realIdx);if(mastered.has(realIdx))document.getElementById('mastered-badge').classList.add('show');else document.getElementById('mastered-badge').classList.remove('show');updateMasterBadge();buildCatRows();}
 function updateMasterBadge(){const cnt=mastered.size;document.getElementById('master-badge-top').textContent=`マスター: ${cnt} / ${phrases.length}`;const sumEl=document.getElementById('master-summary');if(cnt>0){sumEl.classList.add('show');sumEl.textContent=`✅ マスター済み: ${cnt}件 — タップしてリスト表示`;renderMasterList();}else sumEl.classList.remove('show');}
 function renderMasterList(){const listEl=document.getElementById('master-list');listEl.innerHTML='';[...mastered].sort((a,b)=>a-b).forEach(idx=>{const item=phrases[idx];const d=document.createElement('div');d.style.cssText='padding:8px 0;border-bottom:1px solid #f8fafc;font-size:12px;';d.innerHTML=`<span style="font-family:monospace;font-size:10px;color:#64748b;">${String(idx+OFFSET).padStart(3,'0')}</span> ${item.en.substring(0,55)}...`;listEl.appendChild(d);});}
@@ -386,7 +303,7 @@ function switchMode(){if(isAutoPlaying)return;isEnToJa=!isEnToJa;update();}
 function delayP(ms){return new Promise(r=>{if(autoStopped){r();return;}autoTimeout=setTimeout(r,ms);});}
 function setAutoPanel(s,i,c){document.getElementById('auto-step-title').textContent=s;document.getElementById('auto-instruction').textContent=i;document.getElementById('auto-count').textContent=c;}
 function enterAutoUI(){isAutoPlaying=true;autoStopped=false;document.getElementById('normal-controls').style.display='none';document.getElementById('auto-controls').style.display='';document.getElementById('auto-panel').classList.add('show');document.getElementById('tap-hint').style.display='none';document.getElementById('master-wrap').classList.add('disabled');document.getElementById('main-card').classList.remove('tappable');document.getElementById('main-card').classList.add('no-tap');}
-function exitAutoUI(){autoStopped=true;isAutoPlaying=false;window.speechSynthesis.cancel();isSpeaking=false;stopKeepAlive();clearTimeout(speakOne._t);if(autoTimeout){clearTimeout(autoTimeout);autoTimeout=null;}document.getElementById('normal-controls').style.display='';document.getElementById('auto-controls').style.display='none';document.getElementById('auto-panel').classList.remove('show');document.getElementById('tap-hint').style.display='';document.getElementById('master-wrap').classList.remove('disabled');document.getElementById('main-card').classList.add('tappable');document.getElementById('main-card').classList.remove('no-tap');}
+function exitAutoUI(){autoStopped=true;isAutoPlaying=false;window.speechSynthesis.cancel();stopNativeAudio();isSpeaking=false;stopKeepAlive();clearTimeout(speakOne._t);if(autoTimeout){clearTimeout(autoTimeout);autoTimeout=null;}document.getElementById('normal-controls').style.display='';document.getElementById('auto-controls').style.display='none';document.getElementById('auto-panel').classList.remove('show');document.getElementById('tap-hint').style.display='';document.getElementById('master-wrap').classList.remove('disabled');document.getElementById('main-card').classList.add('tappable');document.getElementById('main-card').classList.remove('no-tap');}
 function stopAutoPlay(){exitAutoUI();update();}
 function showHidden(){document.getElementById('main-text').textContent='？？？';document.getElementById('answer-wrap').classList.remove('show');document.getElementById('main-card').classList.remove('revealed');}
 function showAll(){const a=getActive();if(!a.length)return;document.getElementById('main-text').innerHTML=a[currentIndex].en;document.getElementById('answer-wrap').classList.add('show');document.getElementById('main-card').classList.add('revealed');}
