@@ -103,12 +103,10 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);min-height:100vh
 </div>
 
 <div class="top-row">
-<button class="help-btn" onclick="alert('👆カードタップで答え表示\n🔊音声再生（合成音声）\n🗣️シャドウイング4ステップ\n▶連続再生\n🔄英⇄日モード切替\nマスターチェックで次へ\n\n上部の「ネイティブ再生」欄はカードと連動しない復習用の音声プレーヤーです。番号ボタンで個別再生、ループボタンで1〜5を繰り返し再生します。')">❓ 使い方</button>
+<button class="help-btn" onclick="alert('👆カードタップで答え表示\n🔊音声再生（ネイティブ音声。ファイルがない場合のみ合成音声）\n🗣️シャドウイング4ステップ\n▶連続再生\n🔄英⇄日モード切替\nマスターチェックで次へ')">❓ 使い方</button>
 <div class="badge green" id="master-badge-top">マスター: 0 / 63</div>
 </div>
 
-<div class="audio-mini-label">ネイティブ再生</div>
-<div class="audio-track-row" id="audio-track-row"></div>
 <div class="progress-wrap"><div class="progress-bar" id="progress-bar" style="width:2%"></div></div>
 <div class="progress-label">カード <span id="cur-num">1</span> / <span id="tot-num">63</span></div>
 <div class="no-active" id="no-active">✅ このカテゴリをすべてマスターしました！</div>
@@ -191,175 +189,85 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);min-height:100vh
 const OFFSET=63;
 const CATS={'🗣️ 日常会話':'#be185d','💬 議論・論理':'#2563eb','✈️ 交通・事故':'#16a34a','🏠 生活・家事':'#7c3aed','💰 お金・経済':'#d97706','👨‍👩‍👧 家族・子育て':'#0891b2'};
 const phrases=[
-{cat:'🗣️ 日常会話', en:'"Anything else?" "That\'s it." "For here or to go?" "To go."', ja:'「ほかにご注文は？」「それだけです。」「こちらでお召し上がりですか？」「持ち帰ります。」', tip:'That\'s it.＝それだけです・以上です。for here or to go?＝店内かお持ち帰りか（米の定番表現）。to go＝持ち帰り用に。'},
-{cat:'🗣️ 日常会話', en:'"How much is this rug?" "$100 including tax." "OK, I\'ll take it."', ja:'「この敷物はおいくらですか？」「税込みで100ドルです。」「じゃあ、これにします。」', tip:'rug＝敷物・小さなじゅうたん。including tax＝税込みで（excluding taxは税別）。I\'ll take it.＝これにします（買い物の定番表現）。'},
-{cat:'🗣️ 日常会話', en:'I don\'t think those pants look good on you. Try these on. They\'re really in now!', ja:'そのパンツはあなたには似合わないと思う。こっちをはいてみて。今すごく流行っているのよ。', tip:'look good on＝〜に似合う。try on＝試着する（try these on の語順に注意）。in＝流行している（形容詞として）。'},
-{cat:'🗣️ 日常会話', en:'He got out of the cab in haste, saying, "Keep the change."', ja:'彼は「おつりはいらないです」と言って、急いでタクシーを降りた。', tip:'cab＝タクシー（=taxi）。in haste＝急いで（hastily と同義）。Keep the change.＝おつりはとっておいて（チップの慣用表現）。'},
-{cat:'🗣️ 日常会話', en:'Delivery service is available to our customers for a slight extra charge.', ja:'当店のお客様は、わずかな追加料金で配達サービスをご利用できます。', tip:'available＝利用できる・入手できる。slight＝わずかな・少しの。extra charge＝追加料金。'},
-{cat:'🗣️ 日常会話', en:'"It\'s on me." "No. You treat me every time we eat out." "Well, okay. Let\'s split the check then."', ja:'「これは僕のおごり。」「だめよ。外食のときはいつもおごってもらっているし。」「うーん、わかった。じゃあ割り勘にしよう。」', tip:'It\'s on me.＝私のおごりです（慣用句）。treat＝おごる。eat out＝外食する。split the check＝割り勘にする（=go Dutch）。'},
-{cat:'🗣️ 日常会話', en:'While I was hanging out at the mall, I ran into Ken.', ja:'ショッピングセンターをぶらぶらしていたら、偶然ケンに会った。', tip:'hang out＝ぶらぶらする・たむろする（口語）。mall＝ショッピングモール。run into＝〜に偶然出会う（=come across）。'},
-{cat:'🗣️ 日常会話', en:'I was short of cash, so I withdrew the $100 that I had deposited in my bank account last week.', ja:'現金が足りなかったので、先週口座に入れた100ドルを引き出した。', tip:'be short of＝〜が不足している。withdraw＝（預金を）引き出す（withdraw-withdrew-withdrawn）。deposit＝預金する・入金する。'},
-{cat:'🗣️ 日常会話', en:'On her way home she was robbed of her purse.', ja:'彼女は帰宅途中にハンドバッグを奪われた。', tip:'on one\'s way home＝帰宅途中に。be robbed of＝〜を奪われる（rob A of B＝AからBを奪う の受け身）。purse＝（女性用）ハンドバッグ・財布。'},
-{cat:'🗣️ 日常会話', en:'"That\'s odd! Tell me how it happened." "I\'ll explain it to you later."', ja:'「それは変だわ。どうしてそんなことが起きたのか教えて。」「後で説明するよ。」', tip:'odd＝奇妙な・変な（strange より口語的）。explain A to B＝AをBに説明する（explain to him it× → explain it to him ○）。'},
-{cat:'🗣️ 日常会話', en:'My parents gave me a 6 pm curfew as a punishment because I broke my promise.', ja:'私が約束を破ったので、罰として両親に門限を6時にされた。', tip:'curfew＝外出禁止時間・門限。punishment＝罰・刑罰。break a promise＝約束を破る（keep a promise は守る）。'},
-{cat:'🗣️ 日常会話', en:'As the proverb goes, "The end justifies the means."', ja:'諺にある通り、「嘘も方便（目的が手段を正当化する）」。', tip:'as the proverb goes＝諺にある通り。justify＝正当化する。the means＝手段（means は単複同形）。The end justifies the means. は有名な格言。'},
-{cat:'🗣️ 日常会話', en:'Now that I\'ve found that there\'s no one to turn to, I\'ll have to stand on my own two feet.', ja:'誰も頼れる人がいないとわかったのだから、自分の力でやっていくしかない。', tip:'now that＝〜だからには・〜した今は。turn to＝〜に頼る。stand on one\'s own two feet＝自立する・自分の力でやる（慣用句）。'},
-{cat:'💬 議論・論理', en:'The chairman cut me off, saying, "Time to wind things up. Let\'s take a vote."', ja:'議長は私の話を遮って、「話し合いはここまでにして決を採りましょう。」と言った。', tip:'cut off＝〜の話を遮る・中断する。wind up＝〜を締めくくる・終わらせる。take a vote＝投票する・決を採る。'},
-{cat:'💬 議論・論理', en:'We exchanged frank opinions in the meeting, but consensus is yet to be reached regarding this matter.', ja:'我々は会議で率直な意見を交わしたが、この件に関してはまだ全体の意見がまとまらない。', tip:'frank＝率直な・遠慮のない。consensus＝合意・コンセンサス。be yet to do＝まだ〜されていない。regarding＝〜に関して。'},
-{cat:'💬 議論・論理', en:'"Do you agree or disagree with him?" "I\'m on his side."', ja:'「あなたは彼と同じ意見？ それとも違うの？」「彼のほうを支持するよ。」', tip:'agree with＝〜に同意する。disagree with＝〜に反対する。be on one\'s side＝〜の味方をする・〜を支持する。'},
-{cat:'💬 議論・論理', en:'Strictly speaking, his view differs somewhat from mine.', ja:'厳密に言えば、彼の見解は私のものとはいくらか異なる。', tip:'strictly speaking＝厳密に言えば（慣用的な分詞構文）。differ from＝〜と異なる。somewhat＝いくらか・やや。'},
-{cat:'💬 議論・論理', en:'Could you go over it again? I couldn\'t make out what you were getting at.', ja:'もう一度詳しく説明していただけませんか？ お話の意図がわかりませんでした。', tip:'go over＝〜を詳しく説明する・見直す。make out＝〜を理解する・判別する。get at＝〜を言おうとしている・示唆する。'},
-{cat:'💬 議論・論理', en:'No one backed me up at first, but eventually I talked everyone into going along with my plan.', ja:'僕の案を支持してくれる人は最初は誰もいなかったけれど、最後にはみんなを説得して賛同してもらうことができた。', tip:'back up＝支持する・援助する。eventually＝最終的に。talk A into doing＝Aを説得して〜させる。go along with＝〜に同意する・賛同する。'},
-{cat:'💬 議論・論理', en:'"I admire your perseverance, courage and wisdom." "You flatter me!"', ja:'「君の不屈の努力、勇気、そして知恵には感服するよ。」「お世辞でもうれしいわ！」', tip:'admire＝感服する・称賛する。perseverance＝不屈の努力・粘り強さ。flatter＝お世辞を言う・おだてる。You flatter me!＝お世辞を言わないで（謙遜表現）。'},
-{cat:'💬 議論・論理', en:'In making a decision, I rely not on logic but on instinct.', ja:'どうするかを決めるとき、僕は論理ではなく本能を当てにする。', tip:'rely on＝〜を当てにする・頼る。not A but B＝AではなくB（対比構文）。logic＝論理。instinct＝本能・直感。'},
-{cat:'💬 議論・論理', en:'He came up with an ingenious, sensible solution and immediately put it into practice.', ja:'彼は独創的かつ賢明な解決策を考え出し、直ちにそれを実行に移した。', tip:'come up with＝〜を考え出す。ingenious＝独創的な・巧妙な。sensible＝賢明な・分別のある。put into practice＝実行に移す。'},
-{cat:'💬 議論・論理', en:'From an objective viewpoint, the former is inferior to the latter.', ja:'客観的に見れば、前者は後者よりも劣っている。', tip:'objective＝客観的な（subjective は主観的）。viewpoint＝見地・観点。the former / the latter＝前者・後者（重要ペア）。be inferior to＝〜より劣っている（superior to は優れている）。'},
-{cat:'💬 議論・論理', en:'Your idea sounds marvelous in theory, yet I don\'t think it will work in practice.', ja:'あなたの考えは理論上は素晴らしそうだけれども、実際には機能しないと思います。', tip:'marvelous＝素晴らしい・驚くべき。in theory＝理論上は。yet＝しかし（接続詞として）。in practice＝実際には（in theory の対）。'},
-{cat:'💬 議論・論理', en:'We expected him to defeat his opponent, but he failed to live up to our expectations.', ja:'私たちは彼が相手に勝つことを期待したが、彼はその期待に応えられなかった。', tip:'expect A to do＝Aが〜することを期待する。opponent＝対戦相手。fail to＝〜できない・〜しない。live up to one\'s expectations＝期待に応える（重要表現）。'},
-{cat:'💬 議論・論理', en:'Ironically, despite their best endeavors, their mission resulted in complete failure.', ja:'皮肉なことだが、彼らの最善の努力にもかかわらず、任務は完全な失敗に終わった。', tip:'ironically＝皮肉なことに。despite＝〜にもかかわらず（= in spite of）。endeavor＝努力・試み。result in＝〜という結果になる。'},
-{cat:'💬 議論・論理', en:'Her genius makes up for her lack of firsthand experience.', ja:'実地経験の不足は彼女の天賦の才能で補える。', tip:'make up for＝〜を補う・埋め合わせる。genius＝天才・天賦の才。lack of＝〜の不足。firsthand＝直接の・実地の（firsthand experience＝実地経験）。'},
-{cat:'💬 議論・論理', en:'She possesses a great capacity for overcoming any obstacle.', ja:'彼女にはどんな障害をも克服できる素晴らしい能力がある。', tip:'possess＝持っている・所有する（haveより格式的）。capacity for＝〜する能力・〜に対する力量。overcome＝〜を克服する。obstacle＝障害・障壁。'},
-{cat:'💬 議論・論理', en:'Without your solid support, the deal would have fallen through. I\'m grateful to you.', ja:'あなたの強固な支援がなかったら、その取引は成立しなかったでしょう。感謝しています。', tip:'solid＝確固たる・強固な。fall through＝（計画・取引が）失敗する・だめになる。would have + 過去分詞＝仮定法過去完了。be grateful to＝〜に感謝する。'},
-{cat:'✈️ 交通・事故', en:'Bringing flammable items into the cabin is prohibited.', ja:'機内への可燃物の持ち込みは禁止されています。', tip:'flammable＝可燃性の（inflammable も同意）。cabin＝（飛行機の）客室。prohibited＝禁止されている（= forbidden）。'},
-{cat:'✈️ 交通・事故', en:'Our flight to Vienna was delayed on account of a minor accident.', ja:'ちょっとした事故が原因で、私たちのウィーン行きの便に遅れが出た。', tip:'be delayed＝遅延する。on account of＝〜のために・〜が原因で（= because of）。minor＝小さな・軽微な。'},
-{cat:'✈️ 交通・事故', en:'The plane blew up and plunged into the ocean, killing all the people on board.', ja:'飛行機が爆発して海に墜落し、乗っていた全員が死亡した。', tip:'blow up＝爆発する。plunge into＝〜に突っ込む・飛び込む。on board＝乗車・乗船・乗機して（aboard と同義）。'},
-{cat:'✈️ 交通・事故', en:'They are working around the clock looking into the cause of the crash.', ja:'彼らは昼夜休むことなく、その墜落事故の原因を調査している。', tip:'around the clock＝24時間ずっと・昼夜休まず（慣用句）。look into＝〜を調査する・検討する。crash＝墜落・衝突事故。'},
-{cat:'✈️ 交通・事故', en:'Unfortunately, few passengers survived the catastrophe.', ja:'不幸にも、その大惨事で生き残った乗客はほとんどいなかった。', tip:'unfortunately＝不幸にも・残念ながら。few＝ほとんどない（否定的）。passenger＝乗客。survive＝〜を生き延びる。catastrophe＝大惨事・カタストロフ。'},
-{cat:'✈️ 交通・事故', en:'The aviation expert analyzed the statistics in detail.', ja:'航空評論家が統計を詳細に分析した。', tip:'aviation＝航空（aviate＝飛行する）。analyze＝分析する（英: analyse）。statistics＝統計（複数形だが単数扱いも可）。in detail＝詳細に。'},
-{cat:'✈️ 交通・事故', en:'On behalf of all the staff, I\'d like to express our sympathy for the victims.', ja:'全従業員を代表いたしまして、犠牲者の方々に対してお悔やみを申し上げたいと存じます。', tip:'on behalf of＝〜を代表して。express sympathy＝お悔やみを表す・同情を示す。victim＝犠牲者・被害者。'},
-{cat:'✈️ 交通・事故', en:'In a sense, he is to blame for the disaster.', ja:'ある意味、その惨事の責任は彼にある。', tip:'in a sense＝ある意味では。be to blame for＝〜の責任がある・〜のせいである（重要表現）。disaster＝惨事・大災害。'},
-{cat:'✈️ 交通・事故', en:'The vehicles are inspected for defects every three months.', ja:'車両は欠陥がないか3ヶ月に1度検査される。', tip:'vehicle＝乗り物・車両。inspect for＝〜を検査する・調べる。defect＝欠陥・不具合。every three months＝3ヶ月ごとに。'},
-{cat:'🏠 生活・家事', en:'I was amazed to see that our utility bills came to so much!', ja:'うちの光熱費がそんな額になっているのを知ってびっくりした。', tip:'be amazed to do＝〜して驚く。utility bills＝光熱費（electricity, gas, water など）。come to＝（合計が）〜になる。'},
-{cat:'🏠 生活・家事', en:'"Turn the faucet off!" mom yelled in a rage.', ja:'「水道の栓を閉めなさい！」とお母さんがかんかんに怒って叫んだ。', tip:'faucet＝蛇口（米語。英語は tap）。yell＝大声で叫ぶ。in a rage＝かんかんに怒って・激怒して。'},
-{cat:'🏠 生活・家事', en:'Tighten the lid so the food doesn\'t go bad.', ja:'食べ物が腐らないように蓋をしっかり閉めなさい。', tip:'tighten＝きつく締める。lid＝蓋。go bad＝腐る（go＋形容詞＝〜の状態になる）。'},
-{cat:'🏠 生活・家事', en:'"Can I borrow your scissors?" "Sure, here you are."', ja:'「ハサミを貸してもらえる？」「もちろん。はいどうぞ。」', tip:'scissors＝ハサミ（常に複数形）。here you are＝はいどうぞ（物を渡す定番表現）。borrow＝借りる（lend は貸す）。'},
-{cat:'🏠 生活・家事', en:'You can substitute some transparent glue for a needle and thread.', ja:'針と糸の代わりに透明な接着剤を使っても結構です。', tip:'substitute A for B＝BのかわりにAを使う（語順注意！A＝代替品・B＝元のもの）。transparent＝透明な。glue＝接着剤。'},
-{cat:'🏠 生活・家事', en:'I dyed this fabric and it shrank.', ja:'この織物を染めたら縮んでしまった。', tip:'dye＝染める（dye-dyed-dyed）。fabric＝織物・布地。shrink＝縮む（shrink-shrank-shrunk）。'},
-{cat:'🏠 生活・家事', en:'I\'m getting rid of this leather jacket because it\'s worn out at the elbows.', ja:'この革のジャケットは処分するよ。両肘の部分がすり減って穴があいているから。', tip:'get rid of＝〜を処分する・取り除く。worn out＝すり減った・使い古した（wear out の過去分詞）。elbow＝肘。'},
-{cat:'🏠 生活・家事', en:'Add some flour to the mixture and stir it until it becomes thick.', ja:'その混ぜ合わせたものに小麦粉を加えて、とろみがつくまでかき混ぜましょう。', tip:'flour＝小麦粉（flower と同音）。mixture＝混合物。stir＝かき混ぜる。thick＝とろみのある・濃い（thin の反対）。'},
-{cat:'🏠 生活・家事', en:'"What should we do with the leftovers?" "Keep them in the fridge for now. I\'ll heat them in the microwave later."', ja:'「残り物をどうしよう？」「とりあえず冷蔵庫に入れておいて。後で電子レンジで温め直すよ。」', tip:'leftovers＝残り物（複数形）。fridge＝冷蔵庫（refrigerator の略）。for now＝とりあえず・今のところ。microwave＝電子レンジ。'},
-{cat:'💰 お金・経済', en:'I could have laid out all that money on a new PC, but on second thought I decided to put some aside for a rainy day.', ja:'新しいパソコンに全額つぎ込むこともできたが、考え直して、まさかの時のために多少は残しておくことにした。', tip:'lay out＝〜につぎ込む・使う。on second thought＝考え直して。put aside＝〜をとっておく・蓄える。for a rainy day＝まさかの時のために（慣用句）。'},
-{cat:'🏠 生活・家事', en:'A cell phone has become something of a necessity, and I can\'t do without one.', ja:'携帯電話はちょっとした必需品になったことだし、それなしではやっていけない。', tip:'something of a＝ちょっとした〜・ある種の〜。necessity＝必需品・必要性。can\'t do without＝〜なしではやっていけない（重要表現）。'},
-{cat:'🏠 生活・家事', en:'No sooner had I sat back and relaxed than my wife asked me to do the chores.', ja:'イスにゆったり座ってくつろいだ途端、妻に雑用を頼まれた。', tip:'No sooner ... than ...＝〜するや否や（過去完了と過去の組み合わせ）。sit back＝ゆったり座る。chores＝家事・雑用（複数形が普通）。'},
-{cat:'🏠 生活・家事', en:'She laid the baby down and lay down beside him.', ja:'彼女は赤ちゃんを寝かせて自分も隣に横になった。', tip:'lay（他動詞）＝〜を横にする（lay-laid-laid）。lie（自動詞）＝横になる（lie-lay-lain）。紛らわしい動詞の区別が重要。'},
-{cat:'🏠 生活・家事', en:'Put this stuff away! It\'s in the way.', ja:'ここにあるものを片付けなさい。邪魔よ。', tip:'put away＝〜を片付ける・しまう。stuff＝もの・荷物（口語）。in the way＝邪魔になって・じゃまで。'},
-{cat:'👨‍👩‍👧 家族・子育て', en:'When the kids made believe they were dinosaurs, they were scolded by their mother.', ja:'子供たちが恐竜ごっこをしていたら、お母さんに叱られた。', tip:'make believe＝〜のふりをする・ごっこをする（pretend と同義）。scold＝叱る・怒鳴る。'},
-{cat:'🏠 生活・家事', en:'After he bumped into the shelf, the priceless china fell and shattered into fragments.', ja:'彼が棚にぶつかり、とても高価な陶磁器が落ちて粉々に割れてしまった。', tip:'bump into＝〜にぶつかる（偶然出会うという意味もある）。priceless＝値がつけられないほど貴重な。china＝陶磁器（大文字だと中国）。shatter into fragments＝粉々に砕ける。'},
-{cat:'👨‍👩‍👧 家族・子育て', en:'"Can you keep an eye on my kids for a while? I need to pick up Ken." "No problem."', ja:'「うちの子たちをちょっと見ててもらえる？ケンを迎えに行かないといけないの。」「いいよ。」', tip:'keep an eye on＝〜を見張る・目を離さないでいる（慣用句）。pick up＝〜を迎えに行く・拾う。No problem.＝問題ない・いいよ（口語）。'},
-{cat:'👨‍👩‍👧 家族・子育て', en:'Our neighbor told us off for making a mess in his yard.', ja:'隣の家の人が庭をめちゃくちゃにされたと、私たちにがみがみ説教した。', tip:'tell off＝〜をしかる・説教する（口語）。make a mess＝散らかす・めちゃくちゃにする。yard＝庭（米語。英語は garden）。'},
-{cat:'👨‍👩‍👧 家族・子育て', en:'Dolly resembles her big sister in every way. You can\'t tell them apart.', ja:'ドリーはあらゆる面でお姉さんにそっくりだ。二人を見分けることはできないよ。', tip:'resemble＝〜に似ている（進行形・受け身にしない状態動詞）。in every way＝あらゆる面で。tell apart＝〜を見分ける・区別する。'},
-{cat:'👨‍👩‍👧 家族・子育て', en:'As a rule, twins have a lot in common.', ja:'概して、双子には似たところが多い。', tip:'as a rule＝概して・一般に（generally と同義）。twins＝双子。have a lot in common＝共通点が多い（have nothing in common は共通点がない）。'},
-{cat:'🏠 生活・家事', en:'I\'m tired of doing the dishes, doing the laundry, and so on!', ja:'皿洗いとか洗濯とか、そういうことにはもううんざり！', tip:'be tired of＝〜にうんざりしている・飽きている。do the dishes＝皿洗いをする。do the laundry＝洗濯をする。and so on＝〜など（etc. と同義）。'},
-{cat:'🏠 生活・家事', en:'My favorite pastime is strolling along the shore. It\'s pleasant.', ja:'時間があいたときの一番の楽しみは浜辺の散歩です。気持ちいいですよ。', tip:'pastime＝気晴らし・趣味・楽しみ。stroll＝ぶらぶら歩く・散歩する。shore＝岸・浜辺（beach より広い概念）。pleasant＝心地よい・楽しい。'},
-{cat:'🏠 生活・家事', en:'"I\'m exhausted! Let\'s take a break in the shade." "Why not?"', ja:'「私、もうくたくた。日陰で休憩しましょう。」「そうだね。」', tip:'exhausted＝くたくたに疲れた（exhaustingは「疲れさせる」）。take a break＝休憩する。shade＝日陰。Why not?＝もちろん・そうだね（同意の口語表現）。'},
-{cat:'🏠 生活・家事', en:'"Bob, this vending machine is out of order." "Oh no! I\'m dying of thirst!"', ja:'「ボブ、この自動販売機、故障してるわ。」「何だって！喉が渇いて死にそうだよ！」', tip:'out of order＝故障中（out of service も同義）。vending machine＝自動販売機。be dying of＝〜で死にそうだ（誇張表現。dying of thirst＝のどが渇いて死にそう）。'},
-{cat:'🏠 生活・家事', en:'He fainted with hunger and fatigue, but came to after a while.', ja:'彼は空腹と疲労で気を失ったが、しばらくして意識を取り戻した。', tip:'faint＝気を失う・失神する。fatigue＝疲労（名詞）。come to＝意識を取り戻す（come around も同義）。after a while＝しばらくして。'},
+{cat:'🗣️ 日常会話', en:'"Anything else?" "That\'s it." "For here or to go?" "To go."', ja:'「ほかにご注文は？」「それだけです。」「こちらでお召し上がりですか？」「持ち帰ります。」', tip:'That\'s it.＝それだけです・以上です。for here or to go?＝店内かお持ち帰りか（米の定番表現）。to go＝持ち帰り用に。',audio:'card_audio/card_063.mp3'},
+{cat:'🗣️ 日常会話', en:'"How much is this rug?" "$100 including tax." "OK, I\'ll take it."', ja:'「この敷物はおいくらですか？」「税込みで100ドルです。」「じゃあ、これにします。」', tip:'rug＝敷物・小さなじゅうたん。including tax＝税込みで（excluding taxは税別）。I\'ll take it.＝これにします（買い物の定番表現）。',audio:'card_audio/card_064.mp3'},
+{cat:'🗣️ 日常会話', en:'I don\'t think those pants look good on you. Try these on. They\'re really in now!', ja:'そのパンツはあなたには似合わないと思う。こっちをはいてみて。今すごく流行っているのよ。', tip:'look good on＝〜に似合う。try on＝試着する（try these on の語順に注意）。in＝流行している（形容詞として）。',audio:'card_audio/card_065.mp3'},
+{cat:'🗣️ 日常会話', en:'He got out of the cab in haste, saying, "Keep the change."', ja:'彼は「おつりはいらないです」と言って、急いでタクシーを降りた。', tip:'cab＝タクシー（=taxi）。in haste＝急いで（hastily と同義）。Keep the change.＝おつりはとっておいて（チップの慣用表現）。',audio:'card_audio/card_066.mp3'},
+{cat:'🗣️ 日常会話', en:'Delivery service is available to our customers for a slight extra charge.', ja:'当店のお客様は、わずかな追加料金で配達サービスをご利用できます。', tip:'available＝利用できる・入手できる。slight＝わずかな・少しの。extra charge＝追加料金。',audio:'card_audio/card_067.mp3'},
+{cat:'🗣️ 日常会話', en:'"It\'s on me." "No. You treat me every time we eat out." "Well, okay. Let\'s split the check then."', ja:'「これは僕のおごり。」「だめよ。外食のときはいつもおごってもらっているし。」「うーん、わかった。じゃあ割り勘にしよう。」', tip:'It\'s on me.＝私のおごりです（慣用句）。treat＝おごる。eat out＝外食する。split the check＝割り勘にする（=go Dutch）。',audio:'card_audio/card_068.mp3'},
+{cat:'🗣️ 日常会話', en:'While I was hanging out at the mall, I ran into Ken.', ja:'ショッピングセンターをぶらぶらしていたら、偶然ケンに会った。', tip:'hang out＝ぶらぶらする・たむろする（口語）。mall＝ショッピングモール。run into＝〜に偶然出会う（=come across）。',audio:'card_audio/card_069.mp3'},
+{cat:'🗣️ 日常会話', en:'I was short of cash, so I withdrew the $100 that I had deposited in my bank account last week.', ja:'現金が足りなかったので、先週口座に入れた100ドルを引き出した。', tip:'be short of＝〜が不足している。withdraw＝（預金を）引き出す（withdraw-withdrew-withdrawn）。deposit＝預金する・入金する。',audio:'card_audio/card_070.mp3'},
+{cat:'🗣️ 日常会話', en:'On her way home she was robbed of her purse.', ja:'彼女は帰宅途中にハンドバッグを奪われた。', tip:'on one\'s way home＝帰宅途中に。be robbed of＝〜を奪われる（rob A of B＝AからBを奪う の受け身）。purse＝（女性用）ハンドバッグ・財布。',audio:'card_audio/card_071.mp3'},
+{cat:'🗣️ 日常会話', en:'"That\'s odd! Tell me how it happened." "I\'ll explain it to you later."', ja:'「それは変だわ。どうしてそんなことが起きたのか教えて。」「後で説明するよ。」', tip:'odd＝奇妙な・変な（strange より口語的）。explain A to B＝AをBに説明する（explain to him it× → explain it to him ○）。',audio:'card_audio/card_072.mp3'},
+{cat:'🗣️ 日常会話', en:'My parents gave me a 6 pm curfew as a punishment because I broke my promise.', ja:'私が約束を破ったので、罰として両親に門限を6時にされた。', tip:'curfew＝外出禁止時間・門限。punishment＝罰・刑罰。break a promise＝約束を破る（keep a promise は守る）。',audio:'card_audio/card_073.mp3'},
+{cat:'🗣️ 日常会話', en:'As the proverb goes, "The end justifies the means."', ja:'諺にある通り、「嘘も方便（目的が手段を正当化する）」。', tip:'as the proverb goes＝諺にある通り。justify＝正当化する。the means＝手段（means は単複同形）。The end justifies the means. は有名な格言。',audio:'card_audio/card_074.mp3'},
+{cat:'🗣️ 日常会話', en:'Now that I\'ve found that there\'s no one to turn to, I\'ll have to stand on my own two feet.', ja:'誰も頼れる人がいないとわかったのだから、自分の力でやっていくしかない。', tip:'now that＝〜だからには・〜した今は。turn to＝〜に頼る。stand on one\'s own two feet＝自立する・自分の力でやる（慣用句）。',audio:'card_audio/card_075.mp3'},
+{cat:'💬 議論・論理', en:'The chairman cut me off, saying, "Time to wind things up. Let\'s take a vote."', ja:'議長は私の話を遮って、「話し合いはここまでにして決を採りましょう。」と言った。', tip:'cut off＝〜の話を遮る・中断する。wind up＝〜を締めくくる・終わらせる。take a vote＝投票する・決を採る。',audio:'card_audio/card_076.mp3'},
+{cat:'💬 議論・論理', en:'We exchanged frank opinions in the meeting, but consensus is yet to be reached regarding this matter.', ja:'我々は会議で率直な意見を交わしたが、この件に関してはまだ全体の意見がまとまらない。', tip:'frank＝率直な・遠慮のない。consensus＝合意・コンセンサス。be yet to do＝まだ〜されていない。regarding＝〜に関して。',audio:'card_audio/card_077.mp3'},
+{cat:'💬 議論・論理', en:'"Do you agree or disagree with him?" "I\'m on his side."', ja:'「あなたは彼と同じ意見？ それとも違うの？」「彼のほうを支持するよ。」', tip:'agree with＝〜に同意する。disagree with＝〜に反対する。be on one\'s side＝〜の味方をする・〜を支持する。',audio:'card_audio/card_078.mp3'},
+{cat:'💬 議論・論理', en:'Strictly speaking, his view differs somewhat from mine.', ja:'厳密に言えば、彼の見解は私のものとはいくらか異なる。', tip:'strictly speaking＝厳密に言えば（慣用的な分詞構文）。differ from＝〜と異なる。somewhat＝いくらか・やや。',audio:'card_audio/card_079.mp3'},
+{cat:'💬 議論・論理', en:'Could you go over it again? I couldn\'t make out what you were getting at.', ja:'もう一度詳しく説明していただけませんか？ お話の意図がわかりませんでした。', tip:'go over＝〜を詳しく説明する・見直す。make out＝〜を理解する・判別する。get at＝〜を言おうとしている・示唆する。',audio:'card_audio/card_080.mp3'},
+{cat:'💬 議論・論理', en:'No one backed me up at first, but eventually I talked everyone into going along with my plan.', ja:'僕の案を支持してくれる人は最初は誰もいなかったけれど、最後にはみんなを説得して賛同してもらうことができた。', tip:'back up＝支持する・援助する。eventually＝最終的に。talk A into doing＝Aを説得して〜させる。go along with＝〜に同意する・賛同する。',audio:'card_audio/card_081.mp3'},
+{cat:'💬 議論・論理', en:'"I admire your perseverance, courage and wisdom." "You flatter me!"', ja:'「君の不屈の努力、勇気、そして知恵には感服するよ。」「お世辞でもうれしいわ！」', tip:'admire＝感服する・称賛する。perseverance＝不屈の努力・粘り強さ。flatter＝お世辞を言う・おだてる。You flatter me!＝お世辞を言わないで（謙遜表現）。',audio:'card_audio/card_082.mp3'},
+{cat:'💬 議論・論理', en:'In making a decision, I rely not on logic but on instinct.', ja:'どうするかを決めるとき、僕は論理ではなく本能を当てにする。', tip:'rely on＝〜を当てにする・頼る。not A but B＝AではなくB（対比構文）。logic＝論理。instinct＝本能・直感。',audio:'card_audio/card_083.mp3'},
+{cat:'💬 議論・論理', en:'He came up with an ingenious, sensible solution and immediately put it into practice.', ja:'彼は独創的かつ賢明な解決策を考え出し、直ちにそれを実行に移した。', tip:'come up with＝〜を考え出す。ingenious＝独創的な・巧妙な。sensible＝賢明な・分別のある。put into practice＝実行に移す。',audio:'card_audio/card_084.mp3'},
+{cat:'💬 議論・論理', en:'From an objective viewpoint, the former is inferior to the latter.', ja:'客観的に見れば、前者は後者よりも劣っている。', tip:'objective＝客観的な（subjective は主観的）。viewpoint＝見地・観点。the former / the latter＝前者・後者（重要ペア）。be inferior to＝〜より劣っている（superior to は優れている）。',audio:'card_audio/card_085.mp3'},
+{cat:'💬 議論・論理', en:'Your idea sounds marvelous in theory, yet I don\'t think it will work in practice.', ja:'あなたの考えは理論上は素晴らしそうだけれども、実際には機能しないと思います。', tip:'marvelous＝素晴らしい・驚くべき。in theory＝理論上は。yet＝しかし（接続詞として）。in practice＝実際には（in theory の対）。',audio:'card_audio/card_086.mp3'},
+{cat:'💬 議論・論理', en:'We expected him to defeat his opponent, but he failed to live up to our expectations.', ja:'私たちは彼が相手に勝つことを期待したが、彼はその期待に応えられなかった。', tip:'expect A to do＝Aが〜することを期待する。opponent＝対戦相手。fail to＝〜できない・〜しない。live up to one\'s expectations＝期待に応える（重要表現）。',audio:'card_audio/card_087.mp3'},
+{cat:'💬 議論・論理', en:'Ironically, despite their best endeavors, their mission resulted in complete failure.', ja:'皮肉なことだが、彼らの最善の努力にもかかわらず、任務は完全な失敗に終わった。', tip:'ironically＝皮肉なことに。despite＝〜にもかかわらず（= in spite of）。endeavor＝努力・試み。result in＝〜という結果になる。',audio:'card_audio/card_088.mp3'},
+{cat:'💬 議論・論理', en:'Her genius makes up for her lack of firsthand experience.', ja:'実地経験の不足は彼女の天賦の才能で補える。', tip:'make up for＝〜を補う・埋め合わせる。genius＝天才・天賦の才。lack of＝〜の不足。firsthand＝直接の・実地の（firsthand experience＝実地経験）。',audio:'card_audio/card_089.mp3'},
+{cat:'💬 議論・論理', en:'She possesses a great capacity for overcoming any obstacle.', ja:'彼女にはどんな障害をも克服できる素晴らしい能力がある。', tip:'possess＝持っている・所有する（haveより格式的）。capacity for＝〜する能力・〜に対する力量。overcome＝〜を克服する。obstacle＝障害・障壁。',audio:'card_audio/card_090.mp3'},
+{cat:'💬 議論・論理', en:'Without your solid support, the deal would have fallen through. I\'m grateful to you.', ja:'あなたの強固な支援がなかったら、その取引は成立しなかったでしょう。感謝しています。', tip:'solid＝確固たる・強固な。fall through＝（計画・取引が）失敗する・だめになる。would have + 過去分詞＝仮定法過去完了。be grateful to＝〜に感謝する。',audio:'card_audio/card_091.mp3'},
+{cat:'✈️ 交通・事故', en:'Bringing flammable items into the cabin is prohibited.', ja:'機内への可燃物の持ち込みは禁止されています。', tip:'flammable＝可燃性の（inflammable も同意）。cabin＝（飛行機の）客室。prohibited＝禁止されている（= forbidden）。',audio:'card_audio/card_092.mp3'},
+{cat:'✈️ 交通・事故', en:'Our flight to Vienna was delayed on account of a minor accident.', ja:'ちょっとした事故が原因で、私たちのウィーン行きの便に遅れが出た。', tip:'be delayed＝遅延する。on account of＝〜のために・〜が原因で（= because of）。minor＝小さな・軽微な。',audio:'card_audio/card_093.mp3'},
+{cat:'✈️ 交通・事故', en:'The plane blew up and plunged into the ocean, killing all the people on board.', ja:'飛行機が爆発して海に墜落し、乗っていた全員が死亡した。', tip:'blow up＝爆発する。plunge into＝〜に突っ込む・飛び込む。on board＝乗車・乗船・乗機して（aboard と同義）。',audio:'card_audio/card_094.mp3'},
+{cat:'✈️ 交通・事故', en:'They are working around the clock looking into the cause of the crash.', ja:'彼らは昼夜休むことなく、その墜落事故の原因を調査している。', tip:'around the clock＝24時間ずっと・昼夜休まず（慣用句）。look into＝〜を調査する・検討する。crash＝墜落・衝突事故。',audio:'card_audio/card_095.mp3'},
+{cat:'✈️ 交通・事故', en:'Unfortunately, few passengers survived the catastrophe.', ja:'不幸にも、その大惨事で生き残った乗客はほとんどいなかった。', tip:'unfortunately＝不幸にも・残念ながら。few＝ほとんどない（否定的）。passenger＝乗客。survive＝〜を生き延びる。catastrophe＝大惨事・カタストロフ。',audio:'card_audio/card_096.mp3'},
+{cat:'✈️ 交通・事故', en:'The aviation expert analyzed the statistics in detail.', ja:'航空評論家が統計を詳細に分析した。', tip:'aviation＝航空（aviate＝飛行する）。analyze＝分析する（英: analyse）。statistics＝統計（複数形だが単数扱いも可）。in detail＝詳細に。',audio:'card_audio/card_097.mp3'},
+{cat:'✈️ 交通・事故', en:'On behalf of all the staff, I\'d like to express our sympathy for the victims.', ja:'全従業員を代表いたしまして、犠牲者の方々に対してお悔やみを申し上げたいと存じます。', tip:'on behalf of＝〜を代表して。express sympathy＝お悔やみを表す・同情を示す。victim＝犠牲者・被害者。',audio:'card_audio/card_098.mp3'},
+{cat:'✈️ 交通・事故', en:'In a sense, he is to blame for the disaster.', ja:'ある意味、その惨事の責任は彼にある。', tip:'in a sense＝ある意味では。be to blame for＝〜の責任がある・〜のせいである（重要表現）。disaster＝惨事・大災害。',audio:'card_audio/card_099.mp3'},
+{cat:'✈️ 交通・事故', en:'The vehicles are inspected for defects every three months.', ja:'車両は欠陥がないか3ヶ月に1度検査される。', tip:'vehicle＝乗り物・車両。inspect for＝〜を検査する・調べる。defect＝欠陥・不具合。every three months＝3ヶ月ごとに。',audio:'card_audio/card_100.mp3'},
+{cat:'🏠 生活・家事', en:'I was amazed to see that our utility bills came to so much!', ja:'うちの光熱費がそんな額になっているのを知ってびっくりした。', tip:'be amazed to do＝〜して驚く。utility bills＝光熱費（electricity, gas, water など）。come to＝（合計が）〜になる。',audio:'card_audio/card_101.mp3'},
+{cat:'🏠 生活・家事', en:'"Turn the faucet off!" mom yelled in a rage.', ja:'「水道の栓を閉めなさい！」とお母さんがかんかんに怒って叫んだ。', tip:'faucet＝蛇口（米語。英語は tap）。yell＝大声で叫ぶ。in a rage＝かんかんに怒って・激怒して。',audio:'card_audio/card_102.mp3'},
+{cat:'🏠 生活・家事', en:'Tighten the lid so the food doesn\'t go bad.', ja:'食べ物が腐らないように蓋をしっかり閉めなさい。', tip:'tighten＝きつく締める。lid＝蓋。go bad＝腐る（go＋形容詞＝〜の状態になる）。',audio:'card_audio/card_103.mp3'},
+{cat:'🏠 生活・家事', en:'"Can I borrow your scissors?" "Sure, here you are."', ja:'「ハサミを貸してもらえる？」「もちろん。はいどうぞ。」', tip:'scissors＝ハサミ（常に複数形）。here you are＝はいどうぞ（物を渡す定番表現）。borrow＝借りる（lend は貸す）。',audio:'card_audio/card_104.mp3'},
+{cat:'🏠 生活・家事', en:'You can substitute some transparent glue for a needle and thread.', ja:'針と糸の代わりに透明な接着剤を使っても結構です。', tip:'substitute A for B＝BのかわりにAを使う（語順注意！A＝代替品・B＝元のもの）。transparent＝透明な。glue＝接着剤。',audio:'card_audio/card_105.mp3'},
+{cat:'🏠 生活・家事', en:'I dyed this fabric and it shrank.', ja:'この織物を染めたら縮んでしまった。', tip:'dye＝染める（dye-dyed-dyed）。fabric＝織物・布地。shrink＝縮む（shrink-shrank-shrunk）。',audio:'card_audio/card_106.mp3'},
+{cat:'🏠 生活・家事', en:'I\'m getting rid of this leather jacket because it\'s worn out at the elbows.', ja:'この革のジャケットは処分するよ。両肘の部分がすり減って穴があいているから。', tip:'get rid of＝〜を処分する・取り除く。worn out＝すり減った・使い古した（wear out の過去分詞）。elbow＝肘。',audio:'card_audio/card_107.mp3'},
+{cat:'🏠 生活・家事', en:'Add some flour to the mixture and stir it until it becomes thick.', ja:'その混ぜ合わせたものに小麦粉を加えて、とろみがつくまでかき混ぜましょう。', tip:'flour＝小麦粉（flower と同音）。mixture＝混合物。stir＝かき混ぜる。thick＝とろみのある・濃い（thin の反対）。',audio:'card_audio/card_108.mp3'},
+{cat:'🏠 生活・家事', en:'"What should we do with the leftovers?" "Keep them in the fridge for now. I\'ll heat them in the microwave later."', ja:'「残り物をどうしよう？」「とりあえず冷蔵庫に入れておいて。後で電子レンジで温め直すよ。」', tip:'leftovers＝残り物（複数形）。fridge＝冷蔵庫（refrigerator の略）。for now＝とりあえず・今のところ。microwave＝電子レンジ。',audio:'card_audio/card_109.mp3'},
+{cat:'💰 お金・経済', en:'I could have laid out all that money on a new PC, but on second thought I decided to put some aside for a rainy day.', ja:'新しいパソコンに全額つぎ込むこともできたが、考え直して、まさかの時のために多少は残しておくことにした。', tip:'lay out＝〜につぎ込む・使う。on second thought＝考え直して。put aside＝〜をとっておく・蓄える。for a rainy day＝まさかの時のために（慣用句）。',audio:'card_audio/card_110.mp3'},
+{cat:'🏠 生活・家事', en:'A cell phone has become something of a necessity, and I can\'t do without one.', ja:'携帯電話はちょっとした必需品になったことだし、それなしではやっていけない。', tip:'something of a＝ちょっとした〜・ある種の〜。necessity＝必需品・必要性。can\'t do without＝〜なしではやっていけない（重要表現）。',audio:'card_audio/card_111.mp3'},
+{cat:'🏠 生活・家事', en:'No sooner had I sat back and relaxed than my wife asked me to do the chores.', ja:'イスにゆったり座ってくつろいだ途端、妻に雑用を頼まれた。', tip:'No sooner ... than ...＝〜するや否や（過去完了と過去の組み合わせ）。sit back＝ゆったり座る。chores＝家事・雑用（複数形が普通）。',audio:'card_audio/card_112.mp3'},
+{cat:'🏠 生活・家事', en:'She laid the baby down and lay down beside him.', ja:'彼女は赤ちゃんを寝かせて自分も隣に横になった。', tip:'lay（他動詞）＝〜を横にする（lay-laid-laid）。lie（自動詞）＝横になる（lie-lay-lain）。紛らわしい動詞の区別が重要。',audio:'card_audio/card_113.mp3'},
+{cat:'🏠 生活・家事', en:'Put this stuff away! It\'s in the way.', ja:'ここにあるものを片付けなさい。邪魔よ。', tip:'put away＝〜を片付ける・しまう。stuff＝もの・荷物（口語）。in the way＝邪魔になって・じゃまで。',audio:'card_audio/card_114.mp3'},
+{cat:'👨‍👩‍👧 家族・子育て', en:'When the kids made believe they were dinosaurs, they were scolded by their mother.', ja:'子供たちが恐竜ごっこをしていたら、お母さんに叱られた。', tip:'make believe＝〜のふりをする・ごっこをする（pretend と同義）。scold＝叱る・怒鳴る。',audio:'card_audio/card_115.mp3'},
+{cat:'🏠 生活・家事', en:'After he bumped into the shelf, the priceless china fell and shattered into fragments.', ja:'彼が棚にぶつかり、とても高価な陶磁器が落ちて粉々に割れてしまった。', tip:'bump into＝〜にぶつかる（偶然出会うという意味もある）。priceless＝値がつけられないほど貴重な。china＝陶磁器（大文字だと中国）。shatter into fragments＝粉々に砕ける。',audio:'card_audio/card_116.mp3'},
+{cat:'👨‍👩‍👧 家族・子育て', en:'"Can you keep an eye on my kids for a while? I need to pick up Ken." "No problem."', ja:'「うちの子たちをちょっと見ててもらえる？ケンを迎えに行かないといけないの。」「いいよ。」', tip:'keep an eye on＝〜を見張る・目を離さないでいる（慣用句）。pick up＝〜を迎えに行く・拾う。No problem.＝問題ない・いいよ（口語）。',audio:'card_audio/card_117.mp3'},
+{cat:'👨‍👩‍👧 家族・子育て', en:'Our neighbor told us off for making a mess in his yard.', ja:'隣の家の人が庭をめちゃくちゃにされたと、私たちにがみがみ説教した。', tip:'tell off＝〜をしかる・説教する（口語）。make a mess＝散らかす・めちゃくちゃにする。yard＝庭（米語。英語は garden）。',audio:'card_audio/card_118.mp3'},
+{cat:'👨‍👩‍👧 家族・子育て', en:'Dolly resembles her big sister in every way. You can\'t tell them apart.', ja:'ドリーはあらゆる面でお姉さんにそっくりだ。二人を見分けることはできないよ。', tip:'resemble＝〜に似ている（進行形・受け身にしない状態動詞）。in every way＝あらゆる面で。tell apart＝〜を見分ける・区別する。',audio:'card_audio/card_119.mp3'},
+{cat:'👨‍👩‍👧 家族・子育て', en:'As a rule, twins have a lot in common.', ja:'概して、双子には似たところが多い。', tip:'as a rule＝概して・一般に（generally と同義）。twins＝双子。have a lot in common＝共通点が多い（have nothing in common は共通点がない）。',audio:'card_audio/card_120.mp3'},
+{cat:'🏠 生活・家事', en:'I\'m tired of doing the dishes, doing the laundry, and so on!', ja:'皿洗いとか洗濯とか、そういうことにはもううんざり！', tip:'be tired of＝〜にうんざりしている・飽きている。do the dishes＝皿洗いをする。do the laundry＝洗濯をする。and so on＝〜など（etc. と同義）。',audio:'card_audio/card_121.mp3'},
+{cat:'🏠 生活・家事', en:'My favorite pastime is strolling along the shore. It\'s pleasant.', ja:'時間があいたときの一番の楽しみは浜辺の散歩です。気持ちいいですよ。', tip:'pastime＝気晴らし・趣味・楽しみ。stroll＝ぶらぶら歩く・散歩する。shore＝岸・浜辺（beach より広い概念）。pleasant＝心地よい・楽しい。',audio:'card_audio/card_122.mp3'},
+{cat:'🏠 生活・家事', en:'"I\'m exhausted! Let\'s take a break in the shade." "Why not?"', ja:'「私、もうくたくた。日陰で休憩しましょう。」「そうだね。」', tip:'exhausted＝くたくたに疲れた（exhaustingは「疲れさせる」）。take a break＝休憩する。shade＝日陰。Why not?＝もちろん・そうだね（同意の口語表現）。',audio:'card_audio/card_123.mp3'},
+{cat:'🏠 生活・家事', en:'"Bob, this vending machine is out of order." "Oh no! I\'m dying of thirst!"', ja:'「ボブ、この自動販売機、故障してるわ。」「何だって！喉が渇いて死にそうだよ！」', tip:'out of order＝故障中（out of service も同義）。vending machine＝自動販売機。be dying of＝〜で死にそうだ（誇張表現。dying of thirst＝のどが渇いて死にそう）。',audio:'card_audio/card_124.mp3'},
+{cat:'🏠 生活・家事', en:'He fainted with hunger and fatigue, but came to after a while.', ja:'彼は空腹と疲労で気を失ったが、しばらくして意識を取り戻した。', tip:'faint＝気を失う・失神する。fatigue＝疲労（名詞）。come to＝意識を取り戻す（come around も同義）。after a while＝しばらくして。',audio:'card_audio/card_125.mp3'},
 ];
-const audioFiles=[{file:'06-Section_6.mp4',label:'1'},{file:'07-Section_7.mp4',label:'2'},{file:'08-Section_8.mp4',label:'3'},{file:'09-Section_9.mp4',label:'4'},{file:'10-Section_10.mp4',label:'5'}];
-function makeSrcCandidates(file){
-  const alt=file.includes('_')?file.replace(/_/g,' '):null;
-  return alt?[file,alt]:[file];
+// カードごとのネイティブ音声再生
+let nativeAudioEl=new Audio();
+nativeAudioEl.preload='none';
+function playNativeAudio(audioFile,onEnd,onError){
+  nativeAudioEl.pause();
+  nativeAudioEl.onended=null;
+  nativeAudioEl.onerror=null;
+  if(!audioFile){ if(onError)onError(); return; }
+  nativeAudioEl.src=audioFile;
+  nativeAudioEl.currentTime=0;
+  nativeAudioEl.onended=()=>{ if(onEnd)onEnd(); };
+  const p=nativeAudioEl.play();
+  if(p&&p.catch){ p.catch(()=>{ if(onError)onError(); }); }
 }
-let audioEls=audioFiles.map(f=>{
-  const a=new Audio();
-  a.preload='none';
-  a._candidates=makeSrcCandidates(f.file);
-  a._candIdx=0;
-  a.src='duo_audio/'+encodeURIComponent(a._candidates[0]);
-  return a;
-});
-function advanceCandidate(a){
-  if(a._candIdx<a._candidates.length-1){
-    a._candIdx++;
-    a.src='duo_audio/'+encodeURIComponent(a._candidates[a._candIdx]);
-    return true;
-  }
-  return false;
-}
-(function buildTrackButtons(){
-  const row=document.getElementById('audio-track-row');
-  audioFiles.forEach((f,i)=>{
-    const b=document.createElement('button');
-    b.className='audio-track-btn';
-    b.id='audio-track-'+i;
-    b.textContent=(i+1);
-    b.onclick=()=>toggleTrack(i);
-    row.appendChild(b);
-  });
-  const loopBtn=document.createElement('button');
-  loopBtn.className='audio-loop-all-btn';
-  loopBtn.id='audio-loop-all-btn';
-  loopBtn.textContent='🔁';
-  loopBtn.onclick=toggleLoopAll;
-  row.appendChild(loopBtn);
-})();
-let currentPlayingIdx=-1;
-let loopAllOn=false;
-function stopAllAudio(){
-  audioEls.forEach((a,i)=>{ a.pause(); a.currentTime=0; a.onended=null; const b=document.getElementById('audio-track-'+i); if(b){b.classList.remove('playing');} });
-  currentPlayingIdx=-1;
-}
-function playTrack(i,chain){
-  stopAllAudio();
-  currentPlayingIdx=i;
-  const a=audioEls[i];
-  const btn=document.getElementById('audio-track-'+i);
-  btn.classList.add('playing');
-  try{ a.currentTime=0; }catch(e){}
-  a.onended=()=>{
-    btn.classList.remove('playing');
-    if(chain){
-      const nextIdx=(i+1)%audioFiles.length;
-      playTrack(nextIdx,true);
-    } else {
-      currentPlayingIdx=-1;
-    }
-  };
-  const attempt=()=>{
-    const p=a.play();
-    if(p&&p.catch){
-      p.catch(()=>{
-        if(advanceCandidate(a)){
-          attempt();
-        } else {
-          btn.classList.remove('playing');
-          currentPlayingIdx=-1;
-          loopAllOn=false;
-          const loopBtn=document.getElementById('audio-loop-all-btn');
-          if(loopBtn){loopBtn.classList.remove('on');loopBtn.textContent='🔁';}
-          alert('音声ファイルの再生に失敗しました。\n試したファイル名:\n'+a._candidates.map(c=>'duo_audio/'+c).join('\n')+'\n\nduo_audioフォルダがHTMLファイルと同じ場所にアップロードされているか、ファイル名が一致しているかご確認ください。');
-        }
-      });
-    }
-  };
-  attempt();
-}
-function toggleTrack(i){
-  if(currentPlayingIdx===i){
-    stopAllAudio();
-    loopAllOn=false;
-    document.getElementById('audio-loop-all-btn').classList.remove('on');
-    document.getElementById('audio-loop-all-btn').textContent='🔁';
-  } else {
-    loopAllOn=false;
-    document.getElementById('audio-loop-all-btn').classList.remove('on');
-    document.getElementById('audio-loop-all-btn').textContent='🔁';
-    playTrack(i,false);
-  }
-}
-function toggleLoopAll(){
-  if(loopAllOn){
-    loopAllOn=false;
-    stopAllAudio();
-    document.getElementById('audio-loop-all-btn').classList.remove('on');
-    document.getElementById('audio-loop-all-btn').textContent='🔁';
-  } else {
-    loopAllOn=true;
-    document.getElementById('audio-loop-all-btn').classList.add('on');
-    document.getElementById('audio-loop-all-btn').textContent='⏹';
-    playTrack(0,true);
-  }
-}
+function stopNativeAudio(){ nativeAudioEl.pause(); nativeAudioEl.onended=null; }
 let currentIndex=0,isEnToJa=true,isRandom=false,isRepeating=false;
 let mastered=new Set(),activeCategory='all';
 let isAutoPlaying=false,autoStopped=false,autoTimeout=null;
@@ -377,13 +285,22 @@ function getVoice(){return voices[parseInt(document.getElementById('voice-select
 function updateRate(){speechRate=parseFloat(document.getElementById('rate-slider').value);document.getElementById('rate-val').textContent=speechRate.toFixed(1)+'×';}
 function startKeepAlive(){stopKeepAlive();keepAliveTimer=setInterval(()=>{if(window.speechSynthesis.speaking)window.speechSynthesis.pause(),window.speechSynthesis.resume();},10000);}
 function stopKeepAlive(){if(keepAliveTimer){clearInterval(keepAliveTimer);keepAliveTimer=null;}}
-function speakOne(text,onEnd){window.speechSynthesis.cancel();isSpeaking=false;clearTimeout(speakOne._t);speakOne._t=setTimeout(()=>{const utt=new SpeechSynthesisUtterance(text);const v=getVoice();if(v){utt.voice=v;utt.lang=v.lang;}else{utt.lang=voicePref==='US'?'en-US':'en-GB';}utt.rate=speechRate;utt.onend=()=>{isSpeaking=false;stopKeepAlive();if(onEnd)onEnd();};utt.onerror=()=>{isSpeaking=false;stopKeepAlive();if(onEnd)onEnd();};isSpeaking=true;startKeepAlive();window.speechSynthesis.speak(utt);},80);}
+function speakTTS(text,onEnd){window.speechSynthesis.cancel();isSpeaking=false;clearTimeout(speakOne._t);speakOne._t=setTimeout(()=>{const utt=new SpeechSynthesisUtterance(text);const v=getVoice();if(v){utt.voice=v;utt.lang=v.lang;}else{utt.lang=voicePref==='US'?'en-US':'en-GB';}utt.rate=speechRate;utt.onend=()=>{isSpeaking=false;stopKeepAlive();if(onEnd)onEnd();};utt.onerror=()=>{isSpeaking=false;stopKeepAlive();if(onEnd)onEnd();};isSpeaking=true;startKeepAlive();window.speechSynthesis.speak(utt);},80);}
 speakOne._t=null;
-function speakP(){return new Promise(r=>{const a=getActive();if(!a.length){r();return;}speakOne(a[currentIndex].en,r);});}
-function speakCurrent(){const a=getActive();if(!a.length)return;speakOne(a[currentIndex].en);}
-function speakRepeat(){if(!isRepeating||isAutoPlaying)return;const a=getActive();if(!a.length)return;speakOne(a[currentIndex].en,()=>{if(isRepeating&&!isAutoPlaying){clearTimeout(speakRepeat._t);speakRepeat._t=setTimeout(()=>speakRepeat(),300);}}); }
+function speakOne(card,onEnd){
+  window.speechSynthesis.cancel();
+  stopNativeAudio();
+  if(card&&card.audio){
+    playNativeAudio(card.audio,onEnd,()=>{ speakTTS(card.en,onEnd); });
+  } else {
+    speakTTS(card.en,onEnd);
+  }
+}
+function speakP(){return new Promise(r=>{const a=getActive();if(!a.length){r();return;}speakOne(a[currentIndex],r);});}
+function speakCurrent(){const a=getActive();if(!a.length)return;speakOne(a[currentIndex]);}
+function speakRepeat(){if(!isRepeating||isAutoPlaying)return;const a=getActive();if(!a.length)return;speakOne(a[currentIndex],()=>{if(isRepeating&&!isAutoPlaying){clearTimeout(speakRepeat._t);speakRepeat._t=setTimeout(()=>speakRepeat(),300);}}); }
 speakRepeat._t=null;
-function toggleRepeat(){isRepeating=!isRepeating;const btn=document.getElementById('repeat-btn');btn.textContent=isRepeating?'🔁 繰り返し: ON':'🔁 繰り返し';btn.className=isRepeating?'btn btn-on':'btn btn-secondary';if(isRepeating){const a=getActive();if(a.length)speakRepeat();}else{window.speechSynthesis.cancel();isSpeaking=false;stopKeepAlive();clearTimeout(speakRepeat._t);}}
+function toggleRepeat(){isRepeating=!isRepeating;const btn=document.getElementById('repeat-btn');btn.textContent=isRepeating?'🔁 繰り返し: ON':'🔁 繰り返し';btn.className=isRepeating?'btn btn-on':'btn btn-secondary';if(isRepeating){const a=getActive();if(a.length)speakRepeat();}else{window.speechSynthesis.cancel();stopNativeAudio();isSpeaking=false;stopKeepAlive();clearTimeout(speakRepeat._t);}}
 function update(){const active=getActive();const noEl=document.getElementById('no-active');if(!active.length){noEl.classList.add('show');document.getElementById('main-card').style.display='none';document.getElementById('tap-hint').style.display='none';updateMasterBadge();buildCatRows();return;}noEl.classList.remove('show');document.getElementById('main-card').style.display='';document.getElementById('tap-hint').style.display='';if(currentIndex>=active.length)currentIndex=0;const item=active[currentIndex];const realIdx=phrases.indexOf(item);document.getElementById('card-num').textContent=String(realIdx+OFFSET).padStart(3,'0');document.getElementById('card-cat').textContent=item.cat;document.getElementById('cur-num').textContent=currentIndex+1;document.getElementById('tot-num').textContent=active.length;const pct=active.length>1?((currentIndex/(active.length-1))*100).toFixed(0):100;document.getElementById('progress-bar').style.width=pct+'%';if(isEnToJa){document.getElementById('main-text').innerHTML=item.en;document.getElementById('answer-ja').textContent=item.ja;}else{document.getElementById('main-text').innerHTML=item.ja;document.getElementById('answer-ja').textContent=item.en;}const tipEl=document.getElementById('answer-tip');if(item.tip){tipEl.textContent=item.tip;tipEl.style.display='';}else{tipEl.style.display='none';}document.getElementById('answer-wrap').classList.remove('show');document.getElementById('main-card').classList.remove('revealed');const cb=document.getElementById('master-cb');cb.checked=mastered.has(realIdx);if(mastered.has(realIdx))document.getElementById('mastered-badge').classList.add('show');else document.getElementById('mastered-badge').classList.remove('show');updateMasterBadge();buildCatRows();}
 function updateMasterBadge(){const cnt=mastered.size;document.getElementById('master-badge-top').textContent=`マスター: ${cnt} / ${phrases.length}`;const sumEl=document.getElementById('master-summary');if(cnt>0){sumEl.classList.add('show');sumEl.textContent=`✅ マスター済み: ${cnt}件 — タップしてリスト表示`;renderMasterList();}else sumEl.classList.remove('show');}
 function renderMasterList(){const listEl=document.getElementById('master-list');listEl.innerHTML='';[...mastered].sort((a,b)=>a-b).forEach(idx=>{const item=phrases[idx];const d=document.createElement('div');d.style.cssText='padding:8px 0;border-bottom:1px solid #f8fafc;font-size:12px;';d.innerHTML=`<span style="font-family:monospace;font-size:10px;color:#64748b;">${String(idx+OFFSET).padStart(3,'0')}</span> ${item.en.substring(0,55)}...`;listEl.appendChild(d);});}
@@ -398,7 +315,7 @@ function switchMode(){if(isAutoPlaying)return;isEnToJa=!isEnToJa;update();}
 function delayP(ms){return new Promise(r=>{if(autoStopped){r();return;}autoTimeout=setTimeout(r,ms);});}
 function setAutoPanel(s,i,c){document.getElementById('auto-step-title').textContent=s;document.getElementById('auto-instruction').textContent=i;document.getElementById('auto-count').textContent=c;}
 function enterAutoUI(){isAutoPlaying=true;autoStopped=false;document.getElementById('normal-controls').style.display='none';document.getElementById('auto-controls').style.display='';document.getElementById('auto-panel').classList.add('show');document.getElementById('tap-hint').style.display='none';document.getElementById('master-wrap').classList.add('disabled');document.getElementById('main-card').classList.remove('tappable');document.getElementById('main-card').classList.add('no-tap');}
-function exitAutoUI(){autoStopped=true;isAutoPlaying=false;window.speechSynthesis.cancel();isSpeaking=false;stopKeepAlive();clearTimeout(speakOne._t);if(autoTimeout){clearTimeout(autoTimeout);autoTimeout=null;}document.getElementById('normal-controls').style.display='';document.getElementById('auto-controls').style.display='none';document.getElementById('auto-panel').classList.remove('show');document.getElementById('tap-hint').style.display='';document.getElementById('master-wrap').classList.remove('disabled');document.getElementById('main-card').classList.add('tappable');document.getElementById('main-card').classList.remove('no-tap');}
+function exitAutoUI(){autoStopped=true;isAutoPlaying=false;window.speechSynthesis.cancel();stopNativeAudio();isSpeaking=false;stopKeepAlive();clearTimeout(speakOne._t);if(autoTimeout){clearTimeout(autoTimeout);autoTimeout=null;}document.getElementById('normal-controls').style.display='';document.getElementById('auto-controls').style.display='none';document.getElementById('auto-panel').classList.remove('show');document.getElementById('tap-hint').style.display='';document.getElementById('master-wrap').classList.remove('disabled');document.getElementById('main-card').classList.add('tappable');document.getElementById('main-card').classList.remove('no-tap');}
 function stopAutoPlay(){exitAutoUI();update();}
 function showHidden(){document.getElementById('main-text').textContent='？？？';document.getElementById('answer-wrap').classList.remove('show');document.getElementById('main-card').classList.remove('revealed');}
 function showAll(){const a=getActive();if(!a.length)return;document.getElementById('main-text').innerHTML=a[currentIndex].en;document.getElementById('answer-wrap').classList.add('show');document.getElementById('main-card').classList.add('revealed');}
