@@ -328,6 +328,10 @@ function playTrack(i,chain){
         } else {
           btn.classList.remove('playing');
           currentPlayingIdx=-1;
+          loopAllOn=false;
+          const loopBtn=document.getElementById('audio-loop-all-btn');
+          if(loopBtn){loopBtn.classList.remove('on');loopBtn.textContent='🔁';}
+          alert('音声ファイルの再生に失敗しました。\n試したファイル名:\n'+a._candidates.map(c=>'duo_audio/'+c).join('\n')+'\n\nduo_audioフォルダがHTMLファイルと同じ場所にアップロードされているか、ファイル名が一致しているかご確認ください。');
         }
       });
     }
