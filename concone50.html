@@ -885,6 +885,7 @@ const $ = id => document.getElementById(id);
 let ctx, shifter, gainNode;
 let originalBuf=null;
 let pitch=0, speed=1.0, playing=false, raf;
+let savedFrac=0; // 一時停止・再構築の間、再生位置(0〜1)を覚えておく
 
 function getCtx(){
   if(!ctx) ctx=new(window.AudioContext||window.webkitAudioContext)();
@@ -907,7 +908,7 @@ for(let i=1;i<=50;i++){
 
 function selectNum(n){
   hardStop();
-  originalBuf=null; shifter=null;
+  originalBuf=null; shifter=null; savedFrac=0;
   $('audioTitle').textContent=`🎵 第${n}番`;
   renderPDF(pdfpath(n));
   $('progBar').style.width='0'; $('timeDisp').textContent='0:00 / 0:00';
@@ -919,20 +920,32 @@ function selectNum(n){
     .catch(()=>$('status').textContent='ファイルなし');
 }
 
-// SoundTouchJS の PitchShifter を作成（音程・速度は独立して設定可能、WSOLAで高品質に処理）
-function ensureShifter(){
-  if(shifter || !originalBuf) return;
+function destroyShifter(){
+  if(shifter){ try{ shifter.disconnect(); }catch(e){} shifter=null; }
+}
+
+// SoundTouchJS の PitchShifter を新規作成する（音程・速度は生成直後、再生開始前にのみ設定）
+function makeShifter(){
   const c=getCtx();
-  shifter=new PitchShifter(c,originalBuf,4096,()=>{
-    hardStop(); $('progBar').style.width='0'; $('timeDisp').textContent='0:00/'+fmt(originalBuf.duration);
-  });
+  shifter=new PitchShifter(c,originalBuf,4096,onTrackEnd);
   shifter.pitchSemitones=pitch;
   shifter.tempo=speed;
-  gainNode=getCtx().createGain(); gainNode.connect(getCtx().destination);
+  if(savedFrac>0) shifter.percentagePlayed=savedFrac;
+  if(!gainNode){ gainNode=c.createGain(); gainNode.connect(c.destination); }
+}
+
+function onTrackEnd(){
+  hardStop();
+  savedFrac=0;
+  destroyShifter();
+  $('progBar').style.width='0'; $('timeDisp').textContent='0:00/'+fmt(originalBuf.duration);
 }
 
 function hardStop(){
-  if(shifter){ try{ shifter.disconnect(); }catch(e){} }
+  if(shifter && originalBuf){
+    savedFrac=Math.max(0,Math.min(1,shifter.timePlayed/originalBuf.duration));
+    try{ shifter.disconnect(); }catch(e){}
+  }
   playing=false;
   $('playBtn').textContent='▶';
   cancelAnimationFrame(raf);
@@ -941,9 +954,7 @@ function hardStop(){
 
 function startPlay(){
   if(!originalBuf) return;
-  ensureShifter();
-  shifter.pitchSemitones=pitch;
-  shifter.tempo=speed;
+  if(!shifter) makeShifter();
   shifter.connect(gainNode);
   playing=true; $('playBtn').textContent='⏸';
   tick();
@@ -952,7 +963,7 @@ function startPlay(){
 function tick(){
   if(!playing||!shifter) return;
   const pos=Math.min(shifter.timePlayed,originalBuf.duration);
-  $('progBar').style.width=(shifter.percentagePlayed)+'%';
+  $('progBar').style.width=(pos/originalBuf.duration*100)+'%';
   $('timeDisp').textContent=fmt(pos)+'/'+fmt(originalBuf.duration);
   raf=requestAnimationFrame(tick);
 }
@@ -963,18 +974,26 @@ $('playBtn').onclick=()=>{
 };
 $('progWrap').onclick=e=>{
   if(!originalBuf||playing) return;
-  ensureShifter();
   const r=$('progWrap').getBoundingClientRect();
   const frac=Math.max(0,Math.min(1,(e.clientX-r.left)/r.width));
-  shifter.percentagePlayed=frac;
+  savedFrac=frac;
+  destroyShifter(); // 次の再生開始時、新しい位置で作り直す（確実に動かすため）
   $('progBar').style.width=(frac*100)+'%';
   $('timeDisp').textContent=fmt(frac*originalBuf.duration)+'/'+fmt(originalBuf.duration);
 };
 
+// 音程・速度の変更後：再生中なら同じ位置で作り直して継続、停止中なら次回再生時に作り直す
+function rebuildForNewSettings(){
+  const wasPlaying=playing;
+  hardStop();
+  destroyShifter();
+  if(wasPlaying) startPlay();
+}
+
 function changePitch(d){
   pitch=Math.max(-6,Math.min(6,pitch+d));
   $('pitchVal').textContent=pitch===0?'±0':pitch>0?`+${pitch}`:`${pitch}`;
-  if(shifter) shifter.pitchSemitones=pitch;
+  rebuildForNewSettings();
 }
 $('pitchDn').onclick=()=>changePitch(-1);
 $('pitchUp').onclick=()=>changePitch(+1);
@@ -983,7 +1002,7 @@ $('pitchReset').onclick=()=>{pitch=0;changePitch(0);};
 function changeSpeed(d){
   speed=Math.round(Math.max(0.5,Math.min(1.5,speed+d))*100)/100;
   $('speedVal').textContent='x'+speed.toFixed(2).replace(/0$/,'').replace(/\.$/,'.0');
-  if(shifter) shifter.tempo=speed;
+  rebuildForNewSettings();
 }
 $('speedDn').onclick=()=>changeSpeed(-0.1);
 $('speedUp').onclick=()=>changeSpeed(+0.1);
