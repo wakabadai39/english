@@ -103,12 +103,10 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);min-height:100vh
 </div>
 
 <div class="top-row">
-<button class="help-btn" onclick="alert('👆カードタップで答え表示\n🔊音声再生（合成音声）\n🗣️シャドウイング4ステップ\n▶連続再生\n🔄英⇄日モード切替\nマスターチェックで次へ\n\n上部の「ネイティブ再生」欄はカードと連動しない復習用の音声プレーヤーです。番号ボタンで個別再生、ループボタンで1〜5を繰り返し再生します。')">❓ 使い方</button>
+<button class="help-btn" onclick="alert('👆カードタップで答え表示\n🔊音声再生（ネイティブ音声。ファイルがない場合のみ合成音声）\n🗣️シャドウイング4ステップ\n▶連続再生\n🔄英⇄日モード切替\nマスターチェックで次へ')">❓ 使い方</button>
 <div class="badge green" id="master-badge-top">マスター: 0 / 59</div>
 </div>
 
-<div class="audio-mini-label">ネイティブ再生</div>
-<div class="audio-track-row" id="audio-track-row"></div>
 <div class="progress-wrap"><div class="progress-bar" id="progress-bar" style="width:2%"></div></div>
 <div class="progress-label">カード <span id="cur-num">1</span> / <span id="tot-num">59</span></div>
 <div class="no-active" id="no-active">✅ このカテゴリをすべてマスターしました！</div>
@@ -191,171 +189,81 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);min-height:100vh
 const OFFSET=433;
 const CATS={'🌍 国際政治・外交':'#be185d','🌐 社会問題・国際関係':'#2563eb','⚖️ 事件・裁判':'#16a34a','🚨 目撃・事故・災害':'#7c3aed','🏛️ 芸術・歴史・文化':'#d97706','😳 人間関係のドタバタ':'#0891b2'};
 const phrases=[
-{cat:'🌍 国際政治・外交', en:'An immense monument was erected in honor of the noble patriot.', ja:'その高潔な愛国者に敬意を表して、巨大な記念碑が建てられた。', tip:'immense＝巨大な。monument＝記念碑。erect＝〜を建てる。in honor of＝〜に敬意を表して。patriot＝愛国者。'},
-{cat:'🌍 国際政治・外交', en:'He got down on his knees and prayed for the souls of the deceased.', ja:'彼はひざまずいて故人の霊に祈りを捧げた。', tip:'get down on one\'s knees＝ひざまずく。pray for＝〜のために祈る。soul＝魂。the deceased＝故人（集合的に）。'},
-{cat:'🌍 国際政治・外交', en:'The Supreme Court is located near the Imperial Palace.', ja:'最高裁判所は皇居の近くにある。', tip:'Supreme Court＝最高裁判所。be located＝位置している。the Imperial Palace＝皇居。'},
-{cat:'🌍 国際政治・外交', en:'The pro-choice group protested against a ban on abortion.', ja:'中絶合法賛成派グループが中絶の禁止に対して抗議した。', tip:'pro-choice＝（人工妊娠中絶の）合法化賛成の。protest against＝〜に抗議する。ban on＝〜の禁止。abortion＝中絶。'},
-{cat:'🌍 国際政治・外交', en:'Senator Ford remained neutral in the bitter controversy.', ja:'フォード上院議員はその激しい論争において、中立の立場を守った。', tip:'senator＝上院議員。remain neutral＝中立を保つ。bitter＝激しい・辛辣な。controversy＝論争。'},
-{cat:'🌍 国際政治・外交', en:'Ford has been in a difficult situation all week long. He is no longer capable of coping with it.', ja:'フォード氏はここ一週間ずっと困難な立場に置かれている。もはや、彼にはどうすることもできない。', tip:'all week long＝一週間ずっと。no longer＝もはや〜ない。be capable of＝〜する能力がある。cope with＝〜に対処する。'},
-{cat:'🌍 国際政治・外交', en:'The summit talks are to be broadcast simultaneously throughout the world.', ja:'首脳会談は世界中で同時に放送される予定だ。', tip:'summit talks＝首脳会談。be to do＝〜する予定である（be to構文）。broadcast＝〜を放送する。simultaneously＝同時に。'},
-{cat:'🌍 国際政治・外交', en:'Diplomatic dialogue helped put an end to the conflict.', ja:'外交的対話のおかげでその紛争に終止符を打つことができた。', tip:'diplomatic＝外交的な。dialogue＝対話。put an end to＝〜に終止符を打つ。conflict＝紛争。'},
-{cat:'🌍 国際政治・外交', en:'Johnson was appointed as a goodwill ambassador to foster mutual understanding between the two nations.', ja:'ジョンソンさんが親善大使に、両国の相互理解を深めるために任命された。', tip:'appoint A as B＝AをBに任命する。goodwill ambassador＝親善大使。foster＝〜を育む。mutual understanding＝相互理解。'},
-{cat:'🌐 社会問題・国際関係', en:'The specialist predicts international tension will build up.', ja:'その専門家は国際的な緊張が高まっていくと予測している。', tip:'specialist＝専門家。predict＝〜を予測する。tension＝緊張。build up＝高まる・蓄積する。'},
-{cat:'🌐 社会問題・国際関係', en:'In my opinion, permanent peace is nothing but an illusion.', ja:'私の考えでは、恒久的な平和など幻想に過ぎない。', tip:'in my opinion＝私の考えでは。permanent＝恒久的な。nothing but＝〜に過ぎない（= only）。illusion＝幻想。'},
-{cat:'🌐 社会問題・国際関係', en:'Ethnic minorities struggle against prejudice, poverty, and oppression.', ja:'民族的少数派は偏見、貧困、抑圧と戦っている。', tip:'ethnic minority＝民族的少数派。struggle against＝〜と戦う。prejudice＝偏見。oppression＝抑圧。'},
-{cat:'🌐 社会問題・国際関係', en:'We must make every effort to do away with all discrimination.', ja:'すべての差別をなくすために、私たちはあらゆる努力をしなければならない。', tip:'make every effort to＝あらゆる努力をして〜する。do away with＝〜を廃止する・なくす。discrimination＝差別。'},
-{cat:'🌐 社会問題・国際関係', en:'The immigrants have endured physical and mental pain.', ja:'移民たちは肉体的、精神的苦痛に耐えてきた。', tip:'immigrant＝移民。endure＝〜に耐える。physical＝肉体的な。mental＝精神的な。'},
-{cat:'🌐 社会問題・国際関係', en:'The amendment was rejected because it didn\'t take racial diversity into account.', ja:'その改正案は、人種の多様性を考慮していないとの理由で却下された。', tip:'amendment＝改正案。reject＝〜を却下する。take ... into account＝〜を考慮に入れる。racial diversity＝人種の多様性。'},
-{cat:'🌐 社会問題・国際関係', en:'Needless to say, the refugees were longing for freedom.', ja:'言うまでもなく、難民たちは自由を強く求めていた。', tip:'needless to say＝言うまでもなく。refugee＝難民。long for＝〜を切望する。'},
-{cat:'🌐 社会問題・国際関係', en:'According to a survey, three in five people today are indifferent to foreign affairs.', ja:'ある調査によると、今日では5人中3人が外交問題には無関心だそうだ。', tip:'according to＝〜によると。survey＝調査。X in Y＝Y人中X人。be indifferent to＝〜に無関心である。foreign affairs＝外交問題。'},
-{cat:'🌐 社会問題・国際関係', en:'What will become of Japan-U.S. relations if the security treaty expires?', ja:'安全保障条約が期限切れになったら、日米関係はどうなるだろう？', tip:'What will become of ...?＝〜はどうなるだろう。security treaty＝安全保障条約。expire＝期限が切れる。'},
-{cat:'🌐 社会問題・国際関係', en:'Unless Japan eliminates its unfair tariffs, the U.S. will impose sanctions.', ja:'日本が不公平な関税を撤廃しなければ、米国は制裁措置を取るだろう。', tip:'unless＝〜しない限り。eliminate＝〜を撤廃する。tariff＝関税。impose sanctions＝制裁を科す。'},
-{cat:'🌐 社会問題・国際関係', en:'Trade friction might arise between the two nations at any moment.', ja:'両国の間では貿易摩擦がいつ生じてもおかしくない。', tip:'trade friction＝貿易摩擦。arise＝生じる。at any moment＝いつ〜してもおかしくない。'},
-{cat:'🌐 社会問題・国際関係', en:'Our top priority is to settle this dispute once and for all, so we are ready to meet them halfway.', ja:'我々の最優先事項はこの論争にきっぱりと決着を付けることだ。そのためには相手側との妥協も覚悟している。', tip:'top priority＝最優先事項。settle＝〜を解決する。once and for all＝きっぱりと・これを最後に。meet ... halfway＝〜に歩み寄る・妥協する。'},
-{cat:'🌐 社会問題・国際関係', en:'The federal budget was narrowly approved by Congress.', ja:'連邦予算はかろうじて議会の承認を得た。', tip:'federal budget＝連邦予算。narrowly＝かろうじて・辛うじて。approve＝〜を承認する。Congress＝議会（米国議会）。'},
-{cat:'⚖️ 事件・裁判', en:'He argues that the administration must look for alternative sources of revenue.', ja:'政府は別の歳入源を探さなければいけない、と彼は主張している。', tip:'argue that＝〜だと主張する。administration＝政府・行政。alternative＝代わりの。revenue＝歳入。'},
-{cat:'⚖️ 事件・裁判', en:'A poll shows that an overwhelming majority is in favor of the legislation.', ja:'世論調査の結果から、圧倒的多数の人がその法律を支持していることがわかる。', tip:'poll＝世論調査。overwhelming majority＝圧倒的多数。be in favor of＝〜に賛成である。legislation＝法律・立法。'},
-{cat:'⚖️ 事件・裁判', en:'The cops are searching for clues to the brutal murder.', ja:'警察はその残虐な殺人事件の手がかりを捜している。', tip:'cop＝警官（口語、複数形で警察）。clue＝手がかり。brutal＝残虐な。murder＝殺人。'},
-{cat:'⚖️ 事件・裁判', en:'The man must be insane. He can\'t distinguish vice from virtue.', ja:'その男は頭がおかしいに違いない。善悪の区別がつけられないんだ。', tip:'must be＝〜に違いない（強い推量）。insane＝正気でない。distinguish A from B＝AとBを区別する。vice/virtue＝悪徳／美徳。'},
-{cat:'⚖️ 事件・裁判', en:'The fingerprints left on the weapon correspond with the suspect\'s.', ja:'凶器に残された指紋は容疑者のものと一致する。', tip:'fingerprint＝指紋。weapon＝凶器・武器。correspond with＝〜と一致する。suspect＝容疑者。'},
-{cat:'⚖️ 事件・裁判', en:'It took us all by surprise when the noted psychologist was accused of kidnapping.', ja:'その著名な心理学者が誘拐罪で訴えられたことに、私たちはみな驚いた。', tip:'take ... by surprise＝〜を驚かせる。noted＝著名な。psychologist＝心理学者。be accused of＝〜の容疑で訴えられる。'},
-{cat:'⚖️ 事件・裁判', en:'The jury\'s guilty verdict gave rise to widespread debate.', ja:'陪審団による有罪評決が大論争の引き金となった。', tip:'jury＝陪審団。guilty verdict＝有罪評決。give rise to＝〜を引き起こす。widespread＝広範囲にわたる。'},
-{cat:'⚖️ 事件・裁判', en:'The man pleaded for mercy, but he was sentenced to twenty years in prison for his crime.', ja:'男は情状酌量を求めたが、犯した罪に対して20年の懲役刑が言い渡された。', tip:'plead for mercy＝情状酌量を求める。be sentenced to＝〜の刑を宣告される。crime＝犯罪。'},
-{cat:'🚨 目撃・事故・災害', en:'The officer on duty perceived an elderly man coming up behind him.', ja:'勤務中の警官は、一人のお年寄りが自分の背後に近づいてくるのに気付いた。', tip:'on duty＝勤務中の。perceive＝〜に気付く（= notice）。elderly＝年配の。come up behind＝背後から近づく。'},
-{cat:'🚨 目撃・事故・災害', en:'He caught sight of a thief attempting to break into the house.', ja:'彼はその家に押し入ろうとしている泥棒を目にした。', tip:'catch sight of＝〜をふと目にする。attempt to＝〜しようと試みる。break into＝〜に押し入る。'},
-{cat:'🚨 目撃・事故・災害', en:'The day before yesterday he witnessed a weird incident in the wilderness.', ja:'おととい、彼はその原野で奇妙な出来事を目撃した。', tip:'the day before yesterday＝おととい。witness＝〜を目撃する。weird＝奇妙な。wilderness＝原野・荒野。'},
-{cat:'🚨 目撃・事故・災害', en:'I became aware of someone staring at me from across the aisle, so I turned around. But there was no one in sight.', ja:'通路の向こうから、誰かが私をじっと見ているのに気付いたので振り向いた。しかし、誰の姿も見えなかった。', tip:'become aware of＝〜に気付く。stare at＝〜をじっと見る。aisle＝通路。in sight＝見えるところに。'},
-{cat:'🚨 目撃・事故・災害', en:'She screamed with horror as someone took hold of her arm.', ja:'何者かに腕をつかまれ、彼女は怖くて悲鳴を上げた。', tip:'scream with horror＝恐怖で悲鳴を上げる。take hold of＝〜をつかむ。'},
-{cat:'🚨 目撃・事故・災害', en:'Informed of her safety, he breathed a sigh of relief.', ja:'彼女の無事を知らされて、彼は安堵のため息をついた。', tip:'informed of ...＝〜を知らされて（分詞構文）。breathe a sigh of relief＝安堵のため息をつく（慣用句）。'},
-{cat:'🚨 目撃・事故・災害', en:'The bullet penetrated his chest, leaving him in critical condition.', ja:'銃弾が胸を貫通し、彼は危篤状態に陥った。', tip:'bullet＝銃弾。penetrate＝〜を貫通する。leave A in B＝AをBの状態にする。critical condition＝危篤状態。'},
-{cat:'🚨 目撃・事故・災害', en:'At present, it\'s still uncertain whether it was done deliberately or by accident.', ja:'そうなったのが故意なのか過失なのか、現在のところまだはっきりしない。', tip:'at present＝現在のところ。uncertain＝不確かな。deliberately＝故意に。by accident＝偶然に・過失で。'},
-{cat:'🚨 目撃・事故・災害', en:'A deli caught fire and burned down, leaving a heap of ashes.', ja:'デリカテッセンから火災が発生し、灰の山を残して全焼した。', tip:'deli＝総菜店（delicatessenの略）。catch fire＝火事になる。burn down＝全焼する。a heap of ashes＝灰の山。'},
-{cat:'🚨 目撃・事故・災害', en:'All of a sudden the fireworks warehouse exploded, and it took two days to put out the blaze.', ja:'花火の貯蔵庫が突然爆発し、激しい炎を鎮めるまでに2日間を要した。', tip:'all of a sudden＝突然（= suddenly）。warehouse＝倉庫。explode＝爆発する。put out＝〜を消し止める。blaze＝火炎。'},
-{cat:'🚨 目撃・事故・災害', en:'A bomb went off in a thirty-story building, and more than fifty people were seriously wounded.', ja:'30階建てのビルで爆弾が爆発し、50人以上が重傷を負った。', tip:'go off＝（爆弾が）爆発する。thirty-story＝30階建ての。be seriously wounded＝重傷を負う。'},
-{cat:'🚨 目撃・事故・災害', en:'A cargo vessel, bound for Athens, sank in the Mediterranean without a trace.', ja:'アテネへ向かう一隻の貨物船が、何の痕跡も残さずに地中海で沈没した。', tip:'cargo vessel＝貨物船。bound for＝〜行きの。sink（sank）＝沈没する。without a trace＝跡形もなく。'},
-{cat:'🚨 目撃・事故・災害', en:'The reckless men froze to death during their expedition to the Antarctic.', ja:'無謀な男たちが南極探検中に凍死した。', tip:'reckless＝無謀な。freeze to death＝凍死する。expedition＝探検。the Antarctic＝南極。'},
-{cat:'🏛️ 芸術・歴史・文化', en:'The tragedy must be remembered so as not to be repeated.', ja:'同じことが繰り返されないように、その悲劇を忘れてはならない。', tip:'tragedy＝悲劇。so as not to＝〜しないように。repeat＝〜を繰り返す。'},
-{cat:'🏛️ 芸術・歴史・文化', en:'The exhibition offers profound insights into ancient civilization.', ja:'その展覧会に行くと古代文明に対する深い理解が得られる。', tip:'exhibition＝展覧会。profound＝深遠な。insight into＝〜への洞察・理解。ancient civilization＝古代文明。'},
-{cat:'🏛️ 芸術・歴史・文化', en:'Giotto is credited with sowing the seeds of the Italian Renaissance.', ja:'イタリアルネッサンスを開花させるきっかけを作ったのはジョットの功績だ。', tip:'be credited with＝〜の功績があるとされる。sow the seeds of＝〜の種をまく（比喩）。Renaissance＝ルネサンス。'},
-{cat:'🏛️ 芸術・歴史・文化', en:'Bob mounted the portrait in a fancy frame, but it was upside down.', ja:'ボブは装飾された額にその肖像画を収めたけれど、上下逆さまだった。', tip:'mount＝〜を額に入れる。portrait＝肖像画。fancy＝装飾的な・凝った。upside down＝逆さまに。'},
-{cat:'🏛️ 芸術・歴史・文化', en:'This magnificent cathedral dates back to the Middle Ages.', ja:'この荘厳な大聖堂の建立は中世にまでさかのぼる。', tip:'magnificent＝荘厳な。cathedral＝大聖堂。date back to＝〜にさかのぼる。the Middle Ages＝中世。'},
-{cat:'🏛️ 芸術・歴史・文化', en:'Asian religions inspired him to create splendid sculptures.', ja:'アジアの宗教から閃きを得て、彼は複数のすばらしい彫刻作品を生み出した。', tip:'inspire A to do＝Aを刺激して〜させる。splendid＝すばらしい。sculpture＝彫刻。'},
-{cat:'🏛️ 芸術・歴史・文化', en:'They explored the desert in search of buried treasure.', ja:'彼らは埋蔵された宝物を求めて砂漠を探検した。', tip:'explore＝〜を探検する。in search of＝〜を求めて。buried treasure＝埋蔵された宝物。'},
-{cat:'🏛️ 芸術・歴史・文化', en:'The millionaire insisted on acquiring the masterpiece no matter how much it cost.', ja:'たとえいくらかかろうともその傑作を手に入れると、その大富豪は言い張った。', tip:'insist on doing＝〜すると言い張る。acquire＝〜を入手する。masterpiece＝傑作。no matter how much＝いくら〜でも。'},
-{cat:'🏛️ 芸術・歴史・文化', en:'Myths and legends should be handed down from generation to generation.', ja:'神話や伝説は代々語り継がれていくべきだ。', tip:'myth＝神話。legend＝伝説。hand down＝〜を伝える・継承する。from generation to generation＝代々。'},
-{cat:'🏛️ 芸術・歴史・文化', en:'The linguist is fluent in several Chinese dialects.', ja:'その言語学者はいくつかの中国語の方言を流暢に話す。', tip:'linguist＝言語学者。be fluent in＝〜が流暢である。dialect＝方言。'},
-{cat:'🏛️ 芸術・歴史・文化', en:'The tribe worships its ancestors and speaks its own language, which is not familiar to us.', ja:'その部族は祖先を崇拝し、私たちにはなじみのない独自の言語を話す。', tip:'tribe＝部族。worship＝〜を崇拝する。ancestor＝祖先。be familiar to＝〜になじみがある。'},
-{cat:'🏛️ 芸術・歴史・文化', en:'The anthropologist says old customs still prevail in the province.', ja:'その州ではいまだに古い慣習が根強い、とその文化人類学者は言っている。', tip:'anthropologist＝文化人類学者。custom＝慣習。prevail＝広く行われている。province＝州・地方。'},
-{cat:'😳 人間関係のドタバタ', en:'The wicked witch cast an evil spell on the man and turned him into a bug.', ja:'意地の悪い魔女が男にとんでもない魔法をかけて、虫に変えてしまった。', tip:'wicked＝意地の悪い。cast a spell on＝〜に呪文をかける。turn A into B＝AをBに変える。'},
-{cat:'😳 人間関係のドタバタ', en:'They proceeded along the steep path, which was the sole access to the border.', ja:'その険しい小道に沿って彼らは前進した。それは国境へたどり着く唯一の方法だった。', tip:'proceed along＝〜に沿って進む。steep＝険しい。sole access＝唯一の道・手段。border＝国境。'},
-{cat:'😳 人間関係のドタバタ', en:'When a big ape emerged from the cave, they got frightened and ran away.', ja:'洞窟から大きな猿が現れると、彼らはびっくりして逃げて行った。', tip:'emerge from＝〜から現れる。cave＝洞窟。get frightened＝驚く・怖がる。run away＝逃げる。'},
-{cat:'😳 人間関係のドタバタ', en:'"Believe it or not, I saw an alien and then it vanished!" "Give me a break!"', ja:'「信じてくれないかもしれないけど、宇宙人を見たの。で、消えちゃったのよ！」「冗談はよせよ。」', tip:'Believe it or not＝信じようが信じまいが。alien＝宇宙人。vanish＝消える。Give me a break!＝勘弁してよ・冗談はよせ（口語）。'},
+{cat:'🌍 国際政治・外交', en:'An immense monument was erected in honor of the noble patriot.', ja:'その高潔な愛国者に敬意を表して、巨大な記念碑が建てられた。', tip:'immense＝巨大な。monument＝記念碑。erect＝〜を建てる。in honor of＝〜に敬意を表して。patriot＝愛国者。',audio:'card_audio/card_433.mp3'},
+{cat:'🌍 国際政治・外交', en:'He got down on his knees and prayed for the souls of the deceased.', ja:'彼はひざまずいて故人の霊に祈りを捧げた。', tip:'get down on one\'s knees＝ひざまずく。pray for＝〜のために祈る。soul＝魂。the deceased＝故人（集合的に）。',audio:'card_audio/card_434.mp3'},
+{cat:'🌍 国際政治・外交', en:'The Supreme Court is located near the Imperial Palace.', ja:'最高裁判所は皇居の近くにある。', tip:'Supreme Court＝最高裁判所。be located＝位置している。the Imperial Palace＝皇居。',audio:'card_audio/card_435.mp3'},
+{cat:'🌍 国際政治・外交', en:'The pro-choice group protested against a ban on abortion.', ja:'中絶合法賛成派グループが中絶の禁止に対して抗議した。', tip:'pro-choice＝（人工妊娠中絶の）合法化賛成の。protest against＝〜に抗議する。ban on＝〜の禁止。abortion＝中絶。',audio:'card_audio/card_436.mp3'},
+{cat:'🌍 国際政治・外交', en:'Senator Ford remained neutral in the bitter controversy.', ja:'フォード上院議員はその激しい論争において、中立の立場を守った。', tip:'senator＝上院議員。remain neutral＝中立を保つ。bitter＝激しい・辛辣な。controversy＝論争。',audio:'card_audio/card_437.mp3'},
+{cat:'🌍 国際政治・外交', en:'Ford has been in a difficult situation all week long. He is no longer capable of coping with it.', ja:'フォード氏はここ一週間ずっと困難な立場に置かれている。もはや、彼にはどうすることもできない。', tip:'all week long＝一週間ずっと。no longer＝もはや〜ない。be capable of＝〜する能力がある。cope with＝〜に対処する。',audio:'card_audio/card_438.mp3'},
+{cat:'🌍 国際政治・外交', en:'The summit talks are to be broadcast simultaneously throughout the world.', ja:'首脳会談は世界中で同時に放送される予定だ。', tip:'summit talks＝首脳会談。be to do＝〜する予定である（be to構文）。broadcast＝〜を放送する。simultaneously＝同時に。',audio:'card_audio/card_439.mp3'},
+{cat:'🌍 国際政治・外交', en:'Diplomatic dialogue helped put an end to the conflict.', ja:'外交的対話のおかげでその紛争に終止符を打つことができた。', tip:'diplomatic＝外交的な。dialogue＝対話。put an end to＝〜に終止符を打つ。conflict＝紛争。',audio:'card_audio/card_440.mp3'},
+{cat:'🌍 国際政治・外交', en:'Johnson was appointed as a goodwill ambassador to foster mutual understanding between the two nations.', ja:'ジョンソンさんが親善大使に、両国の相互理解を深めるために任命された。', tip:'appoint A as B＝AをBに任命する。goodwill ambassador＝親善大使。foster＝〜を育む。mutual understanding＝相互理解。',audio:'card_audio/card_441.mp3'},
+{cat:'🌐 社会問題・国際関係', en:'The specialist predicts international tension will build up.', ja:'その専門家は国際的な緊張が高まっていくと予測している。', tip:'specialist＝専門家。predict＝〜を予測する。tension＝緊張。build up＝高まる・蓄積する。',audio:'card_audio/card_442.mp3'},
+{cat:'🌐 社会問題・国際関係', en:'In my opinion, permanent peace is nothing but an illusion.', ja:'私の考えでは、恒久的な平和など幻想に過ぎない。', tip:'in my opinion＝私の考えでは。permanent＝恒久的な。nothing but＝〜に過ぎない（= only）。illusion＝幻想。',audio:'card_audio/card_443.mp3'},
+{cat:'🌐 社会問題・国際関係', en:'Ethnic minorities struggle against prejudice, poverty, and oppression.', ja:'民族的少数派は偏見、貧困、抑圧と戦っている。', tip:'ethnic minority＝民族的少数派。struggle against＝〜と戦う。prejudice＝偏見。oppression＝抑圧。',audio:'card_audio/card_444.mp3'},
+{cat:'🌐 社会問題・国際関係', en:'We must make every effort to do away with all discrimination.', ja:'すべての差別をなくすために、私たちはあらゆる努力をしなければならない。', tip:'make every effort to＝あらゆる努力をして〜する。do away with＝〜を廃止する・なくす。discrimination＝差別。',audio:'card_audio/card_445.mp3'},
+{cat:'🌐 社会問題・国際関係', en:'The immigrants have endured physical and mental pain.', ja:'移民たちは肉体的、精神的苦痛に耐えてきた。', tip:'immigrant＝移民。endure＝〜に耐える。physical＝肉体的な。mental＝精神的な。',audio:'card_audio/card_446.mp3'},
+{cat:'🌐 社会問題・国際関係', en:'The amendment was rejected because it didn\'t take racial diversity into account.', ja:'その改正案は、人種の多様性を考慮していないとの理由で却下された。', tip:'amendment＝改正案。reject＝〜を却下する。take ... into account＝〜を考慮に入れる。racial diversity＝人種の多様性。',audio:'card_audio/card_447.mp3'},
+{cat:'🌐 社会問題・国際関係', en:'Needless to say, the refugees were longing for freedom.', ja:'言うまでもなく、難民たちは自由を強く求めていた。', tip:'needless to say＝言うまでもなく。refugee＝難民。long for＝〜を切望する。',audio:'card_audio/card_448.mp3'},
+{cat:'🌐 社会問題・国際関係', en:'According to a survey, three in five people today are indifferent to foreign affairs.', ja:'ある調査によると、今日では5人中3人が外交問題には無関心だそうだ。', tip:'according to＝〜によると。survey＝調査。X in Y＝Y人中X人。be indifferent to＝〜に無関心である。foreign affairs＝外交問題。',audio:'card_audio/card_449.mp3'},
+{cat:'🌐 社会問題・国際関係', en:'What will become of Japan-U.S. relations if the security treaty expires?', ja:'安全保障条約が期限切れになったら、日米関係はどうなるだろう？', tip:'What will become of ...?＝〜はどうなるだろう。security treaty＝安全保障条約。expire＝期限が切れる。',audio:'card_audio/card_450.mp3'},
+{cat:'🌐 社会問題・国際関係', en:'Unless Japan eliminates its unfair tariffs, the U.S. will impose sanctions.', ja:'日本が不公平な関税を撤廃しなければ、米国は制裁措置を取るだろう。', tip:'unless＝〜しない限り。eliminate＝〜を撤廃する。tariff＝関税。impose sanctions＝制裁を科す。',audio:'card_audio/card_451.mp3'},
+{cat:'🌐 社会問題・国際関係', en:'Trade friction might arise between the two nations at any moment.', ja:'両国の間では貿易摩擦がいつ生じてもおかしくない。', tip:'trade friction＝貿易摩擦。arise＝生じる。at any moment＝いつ〜してもおかしくない。',audio:'card_audio/card_452.mp3'},
+{cat:'🌐 社会問題・国際関係', en:'Our top priority is to settle this dispute once and for all, so we are ready to meet them halfway.', ja:'我々の最優先事項はこの論争にきっぱりと決着を付けることだ。そのためには相手側との妥協も覚悟している。', tip:'top priority＝最優先事項。settle＝〜を解決する。once and for all＝きっぱりと・これを最後に。meet ... halfway＝〜に歩み寄る・妥協する。',audio:'card_audio/card_453.mp3'},
+{cat:'🌐 社会問題・国際関係', en:'The federal budget was narrowly approved by Congress.', ja:'連邦予算はかろうじて議会の承認を得た。', tip:'federal budget＝連邦予算。narrowly＝かろうじて・辛うじて。approve＝〜を承認する。Congress＝議会（米国議会）。',audio:'card_audio/card_454.mp3'},
+{cat:'⚖️ 事件・裁判', en:'He argues that the administration must look for alternative sources of revenue.', ja:'政府は別の歳入源を探さなければいけない、と彼は主張している。', tip:'argue that＝〜だと主張する。administration＝政府・行政。alternative＝代わりの。revenue＝歳入。',audio:'card_audio/card_455.mp3'},
+{cat:'⚖️ 事件・裁判', en:'A poll shows that an overwhelming majority is in favor of the legislation.', ja:'世論調査の結果から、圧倒的多数の人がその法律を支持していることがわかる。', tip:'poll＝世論調査。overwhelming majority＝圧倒的多数。be in favor of＝〜に賛成である。legislation＝法律・立法。',audio:'card_audio/card_456.mp3'},
+{cat:'⚖️ 事件・裁判', en:'The cops are searching for clues to the brutal murder.', ja:'警察はその残虐な殺人事件の手がかりを捜している。', tip:'cop＝警官（口語、複数形で警察）。clue＝手がかり。brutal＝残虐な。murder＝殺人。',audio:'card_audio/card_457.mp3'},
+{cat:'⚖️ 事件・裁判', en:'The man must be insane. He can\'t distinguish vice from virtue.', ja:'その男は頭がおかしいに違いない。善悪の区別がつけられないんだ。', tip:'must be＝〜に違いない（強い推量）。insane＝正気でない。distinguish A from B＝AとBを区別する。vice/virtue＝悪徳／美徳。',audio:'card_audio/card_458.mp3'},
+{cat:'⚖️ 事件・裁判', en:'The fingerprints left on the weapon correspond with the suspect\'s.', ja:'凶器に残された指紋は容疑者のものと一致する。', tip:'fingerprint＝指紋。weapon＝凶器・武器。correspond with＝〜と一致する。suspect＝容疑者。',audio:'card_audio/card_459.mp3'},
+{cat:'⚖️ 事件・裁判', en:'It took us all by surprise when the noted psychologist was accused of kidnapping.', ja:'その著名な心理学者が誘拐罪で訴えられたことに、私たちはみな驚いた。', tip:'take ... by surprise＝〜を驚かせる。noted＝著名な。psychologist＝心理学者。be accused of＝〜の容疑で訴えられる。',audio:'card_audio/card_460.mp3'},
+{cat:'⚖️ 事件・裁判', en:'The jury\'s guilty verdict gave rise to widespread debate.', ja:'陪審団による有罪評決が大論争の引き金となった。', tip:'jury＝陪審団。guilty verdict＝有罪評決。give rise to＝〜を引き起こす。widespread＝広範囲にわたる。',audio:'card_audio/card_461.mp3'},
+{cat:'⚖️ 事件・裁判', en:'The man pleaded for mercy, but he was sentenced to twenty years in prison for his crime.', ja:'男は情状酌量を求めたが、犯した罪に対して20年の懲役刑が言い渡された。', tip:'plead for mercy＝情状酌量を求める。be sentenced to＝〜の刑を宣告される。crime＝犯罪。',audio:'card_audio/card_462.mp3'},
+{cat:'🚨 目撃・事故・災害', en:'The officer on duty perceived an elderly man coming up behind him.', ja:'勤務中の警官は、一人のお年寄りが自分の背後に近づいてくるのに気付いた。', tip:'on duty＝勤務中の。perceive＝〜に気付く（= notice）。elderly＝年配の。come up behind＝背後から近づく。',audio:'card_audio/card_463.mp3'},
+{cat:'🚨 目撃・事故・災害', en:'He caught sight of a thief attempting to break into the house.', ja:'彼はその家に押し入ろうとしている泥棒を目にした。', tip:'catch sight of＝〜をふと目にする。attempt to＝〜しようと試みる。break into＝〜に押し入る。',audio:'card_audio/card_464.mp3'},
+{cat:'🚨 目撃・事故・災害', en:'The day before yesterday he witnessed a weird incident in the wilderness.', ja:'おととい、彼はその原野で奇妙な出来事を目撃した。', tip:'the day before yesterday＝おととい。witness＝〜を目撃する。weird＝奇妙な。wilderness＝原野・荒野。',audio:'card_audio/card_465.mp3'},
+{cat:'🚨 目撃・事故・災害', en:'I became aware of someone staring at me from across the aisle, so I turned around. But there was no one in sight.', ja:'通路の向こうから、誰かが私をじっと見ているのに気付いたので振り向いた。しかし、誰の姿も見えなかった。', tip:'become aware of＝〜に気付く。stare at＝〜をじっと見る。aisle＝通路。in sight＝見えるところに。',audio:'card_audio/card_466.mp3'},
+{cat:'🚨 目撃・事故・災害', en:'She screamed with horror as someone took hold of her arm.', ja:'何者かに腕をつかまれ、彼女は怖くて悲鳴を上げた。', tip:'scream with horror＝恐怖で悲鳴を上げる。take hold of＝〜をつかむ。',audio:'card_audio/card_467.mp3'},
+{cat:'🚨 目撃・事故・災害', en:'Informed of her safety, he breathed a sigh of relief.', ja:'彼女の無事を知らされて、彼は安堵のため息をついた。', tip:'informed of ...＝〜を知らされて（分詞構文）。breathe a sigh of relief＝安堵のため息をつく（慣用句）。',audio:'card_audio/card_468.mp3'},
+{cat:'🚨 目撃・事故・災害', en:'The bullet penetrated his chest, leaving him in critical condition.', ja:'銃弾が胸を貫通し、彼は危篤状態に陥った。', tip:'bullet＝銃弾。penetrate＝〜を貫通する。leave A in B＝AをBの状態にする。critical condition＝危篤状態。',audio:'card_audio/card_469.mp3'},
+{cat:'🚨 目撃・事故・災害', en:'At present, it\'s still uncertain whether it was done deliberately or by accident.', ja:'そうなったのが故意なのか過失なのか、現在のところまだはっきりしない。', tip:'at present＝現在のところ。uncertain＝不確かな。deliberately＝故意に。by accident＝偶然に・過失で。',audio:'card_audio/card_470.mp3'},
+{cat:'🚨 目撃・事故・災害', en:'A deli caught fire and burned down, leaving a heap of ashes.', ja:'デリカテッセンから火災が発生し、灰の山を残して全焼した。', tip:'deli＝総菜店（delicatessenの略）。catch fire＝火事になる。burn down＝全焼する。a heap of ashes＝灰の山。',audio:'card_audio/card_471.mp3'},
+{cat:'🚨 目撃・事故・災害', en:'All of a sudden the fireworks warehouse exploded, and it took two days to put out the blaze.', ja:'花火の貯蔵庫が突然爆発し、激しい炎を鎮めるまでに2日間を要した。', tip:'all of a sudden＝突然（= suddenly）。warehouse＝倉庫。explode＝爆発する。put out＝〜を消し止める。blaze＝火炎。',audio:'card_audio/card_472.mp3'},
+{cat:'🚨 目撃・事故・災害', en:'A bomb went off in a thirty-story building, and more than fifty people were seriously wounded.', ja:'30階建てのビルで爆弾が爆発し、50人以上が重傷を負った。', tip:'go off＝（爆弾が）爆発する。thirty-story＝30階建ての。be seriously wounded＝重傷を負う。',audio:'card_audio/card_473.mp3'},
+{cat:'🚨 目撃・事故・災害', en:'A cargo vessel, bound for Athens, sank in the Mediterranean without a trace.', ja:'アテネへ向かう一隻の貨物船が、何の痕跡も残さずに地中海で沈没した。', tip:'cargo vessel＝貨物船。bound for＝〜行きの。sink（sank）＝沈没する。without a trace＝跡形もなく。',audio:'card_audio/card_474.mp3'},
+{cat:'🚨 目撃・事故・災害', en:'The reckless men froze to death during their expedition to the Antarctic.', ja:'無謀な男たちが南極探検中に凍死した。', tip:'reckless＝無謀な。freeze to death＝凍死する。expedition＝探検。the Antarctic＝南極。',audio:'card_audio/card_475.mp3'},
+{cat:'🏛️ 芸術・歴史・文化', en:'The tragedy must be remembered so as not to be repeated.', ja:'同じことが繰り返されないように、その悲劇を忘れてはならない。', tip:'tragedy＝悲劇。so as not to＝〜しないように。repeat＝〜を繰り返す。',audio:'card_audio/card_476.mp3'},
+{cat:'🏛️ 芸術・歴史・文化', en:'The exhibition offers profound insights into ancient civilization.', ja:'その展覧会に行くと古代文明に対する深い理解が得られる。', tip:'exhibition＝展覧会。profound＝深遠な。insight into＝〜への洞察・理解。ancient civilization＝古代文明。',audio:'card_audio/card_477.mp3'},
+{cat:'🏛️ 芸術・歴史・文化', en:'Giotto is credited with sowing the seeds of the Italian Renaissance.', ja:'イタリアルネッサンスを開花させるきっかけを作ったのはジョットの功績だ。', tip:'be credited with＝〜の功績があるとされる。sow the seeds of＝〜の種をまく（比喩）。Renaissance＝ルネサンス。',audio:'card_audio/card_478.mp3'},
+{cat:'🏛️ 芸術・歴史・文化', en:'Bob mounted the portrait in a fancy frame, but it was upside down.', ja:'ボブは装飾された額にその肖像画を収めたけれど、上下逆さまだった。', tip:'mount＝〜を額に入れる。portrait＝肖像画。fancy＝装飾的な・凝った。upside down＝逆さまに。',audio:'card_audio/card_479.mp3'},
+{cat:'🏛️ 芸術・歴史・文化', en:'This magnificent cathedral dates back to the Middle Ages.', ja:'この荘厳な大聖堂の建立は中世にまでさかのぼる。', tip:'magnificent＝荘厳な。cathedral＝大聖堂。date back to＝〜にさかのぼる。the Middle Ages＝中世。',audio:'card_audio/card_480.mp3'},
+{cat:'🏛️ 芸術・歴史・文化', en:'Asian religions inspired him to create splendid sculptures.', ja:'アジアの宗教から閃きを得て、彼は複数のすばらしい彫刻作品を生み出した。', tip:'inspire A to do＝Aを刺激して〜させる。splendid＝すばらしい。sculpture＝彫刻。',audio:'card_audio/card_481.mp3'},
+{cat:'🏛️ 芸術・歴史・文化', en:'They explored the desert in search of buried treasure.', ja:'彼らは埋蔵された宝物を求めて砂漠を探検した。', tip:'explore＝〜を探検する。in search of＝〜を求めて。buried treasure＝埋蔵された宝物。',audio:'card_audio/card_482.mp3'},
+{cat:'🏛️ 芸術・歴史・文化', en:'The millionaire insisted on acquiring the masterpiece no matter how much it cost.', ja:'たとえいくらかかろうともその傑作を手に入れると、その大富豪は言い張った。', tip:'insist on doing＝〜すると言い張る。acquire＝〜を入手する。masterpiece＝傑作。no matter how much＝いくら〜でも。',audio:'card_audio/card_483.mp3'},
+{cat:'🏛️ 芸術・歴史・文化', en:'Myths and legends should be handed down from generation to generation.', ja:'神話や伝説は代々語り継がれていくべきだ。', tip:'myth＝神話。legend＝伝説。hand down＝〜を伝える・継承する。from generation to generation＝代々。',audio:'card_audio/card_484.mp3'},
+{cat:'🏛️ 芸術・歴史・文化', en:'The linguist is fluent in several Chinese dialects.', ja:'その言語学者はいくつかの中国語の方言を流暢に話す。', tip:'linguist＝言語学者。be fluent in＝〜が流暢である。dialect＝方言。',audio:'card_audio/card_485.mp3'},
+{cat:'🏛️ 芸術・歴史・文化', en:'The tribe worships its ancestors and speaks its own language, which is not familiar to us.', ja:'その部族は祖先を崇拝し、私たちにはなじみのない独自の言語を話す。', tip:'tribe＝部族。worship＝〜を崇拝する。ancestor＝祖先。be familiar to＝〜になじみがある。',audio:'card_audio/card_486.mp3'},
+{cat:'🏛️ 芸術・歴史・文化', en:'The anthropologist says old customs still prevail in the province.', ja:'その州ではいまだに古い慣習が根強い、とその文化人類学者は言っている。', tip:'anthropologist＝文化人類学者。custom＝慣習。prevail＝広く行われている。province＝州・地方。',audio:'card_audio/card_487.mp3'},
+{cat:'😳 人間関係のドタバタ', en:'The wicked witch cast an evil spell on the man and turned him into a bug.', ja:'意地の悪い魔女が男にとんでもない魔法をかけて、虫に変えてしまった。', tip:'wicked＝意地の悪い。cast a spell on＝〜に呪文をかける。turn A into B＝AをBに変える。',audio:'card_audio/card_488.mp3'},
+{cat:'😳 人間関係のドタバタ', en:'They proceeded along the steep path, which was the sole access to the border.', ja:'その険しい小道に沿って彼らは前進した。それは国境へたどり着く唯一の方法だった。', tip:'proceed along＝〜に沿って進む。steep＝険しい。sole access＝唯一の道・手段。border＝国境。',audio:'card_audio/card_489.mp3'},
+{cat:'😳 人間関係のドタバタ', en:'When a big ape emerged from the cave, they got frightened and ran away.', ja:'洞窟から大きな猿が現れると、彼らはびっくりして逃げて行った。', tip:'emerge from＝〜から現れる。cave＝洞窟。get frightened＝驚く・怖がる。run away＝逃げる。',audio:'card_audio/card_490.mp3'},
+{cat:'😳 人間関係のドタバタ', en:'"Believe it or not, I saw an alien and then it vanished!" "Give me a break!"', ja:'「信じてくれないかもしれないけど、宇宙人を見たの。で、消えちゃったのよ！」「冗談はよせよ。」', tip:'Believe it or not＝信じようが信じまいが。alien＝宇宙人。vanish＝消える。Give me a break!＝勘弁してよ・冗談はよせ（口語）。',audio:'card_audio/card_491.mp3'},
 ];
-const audioFiles=[{file:'36-Section_36.mp4',label:'1'},{file:'37-Section_37.mp4',label:'2'},{file:'38-Section_38.mp4',label:'3'},{file:'39-Section_39.mp4',label:'4'},{file:'40-Section_40.mp4',label:'5'}];
-function makeSrcCandidates(file){
-  const alt=file.includes('_')?file.replace(/_/g,' '):null;
-  return alt?[file,alt]:[file];
+// カードごとのネイティブ音声再生
+let nativeAudioEl=new Audio();
+nativeAudioEl.preload='none';
+function playNativeAudio(audioFile,onEnd,onError){
+  nativeAudioEl.pause();
+  nativeAudioEl.onended=null;
+  nativeAudioEl.onerror=null;
+  if(!audioFile){ if(onError)onError(); return; }
+  nativeAudioEl.src=audioFile;
+  nativeAudioEl.currentTime=0;
+  nativeAudioEl.onended=()=>{ if(onEnd)onEnd(); };
+  const p=nativeAudioEl.play();
+  if(p&&p.catch){ p.catch(()=>{ if(onError)onError(); }); }
 }
-let audioEls=audioFiles.map(f=>{
-  const a=new Audio();
-  a.preload='none';
-  a._candidates=makeSrcCandidates(f.file);
-  a._candIdx=0;
-  a.src='duo_audio/'+encodeURIComponent(a._candidates[0]);
-  return a;
-});
-function advanceCandidate(a){
-  if(a._candIdx<a._candidates.length-1){
-    a._candIdx++;
-    a.src='duo_audio/'+encodeURIComponent(a._candidates[a._candIdx]);
-    return true;
-  }
-  return false;
-}
-(function buildTrackButtons(){
-  const row=document.getElementById('audio-track-row');
-  audioFiles.forEach((f,i)=>{
-    const b=document.createElement('button');
-    b.className='audio-track-btn';
-    b.id='audio-track-'+i;
-    b.textContent=(i+1);
-    b.onclick=()=>toggleTrack(i);
-    row.appendChild(b);
-  });
-  const loopBtn=document.createElement('button');
-  loopBtn.className='audio-loop-all-btn';
-  loopBtn.id='audio-loop-all-btn';
-  loopBtn.textContent='🔁';
-  loopBtn.onclick=toggleLoopAll;
-  row.appendChild(loopBtn);
-})();
-let currentPlayingIdx=-1;
-let loopAllOn=false;
-function stopAllAudio(){
-  audioEls.forEach((a,i)=>{ a.pause(); a.currentTime=0; a.onended=null; const b=document.getElementById('audio-track-'+i); if(b){b.classList.remove('playing');} });
-  currentPlayingIdx=-1;
-}
-function playTrack(i,chain){
-  stopAllAudio();
-  currentPlayingIdx=i;
-  const a=audioEls[i];
-  const btn=document.getElementById('audio-track-'+i);
-  btn.classList.add('playing');
-  try{ a.currentTime=0; }catch(e){}
-  a.onended=()=>{
-    btn.classList.remove('playing');
-    if(chain){
-      const nextIdx=(i+1)%audioFiles.length;
-      playTrack(nextIdx,true);
-    } else {
-      currentPlayingIdx=-1;
-    }
-  };
-  const attempt=()=>{
-    const p=a.play();
-    if(p&&p.catch){
-      p.catch(()=>{
-        if(advanceCandidate(a)){
-          attempt();
-        } else {
-          btn.classList.remove('playing');
-          currentPlayingIdx=-1;
-          loopAllOn=false;
-          const loopBtn=document.getElementById('audio-loop-all-btn');
-          if(loopBtn){loopBtn.classList.remove('on');loopBtn.textContent='🔁';}
-          alert('音声ファイルの再生に失敗しました。\n試したファイル名:\n'+a._candidates.map(c=>'duo_audio/'+c).join('\n')+'\n\nduo_audioフォルダがHTMLファイルと同じ場所にアップロードされているか、ファイル名が一致しているかご確認ください。');
-        }
-      });
-    }
-  };
-  attempt();
-}
-function toggleTrack(i){
-  if(currentPlayingIdx===i){
-    stopAllAudio();
-    loopAllOn=false;
-    document.getElementById('audio-loop-all-btn').classList.remove('on');
-    document.getElementById('audio-loop-all-btn').textContent='🔁';
-  } else {
-    loopAllOn=false;
-    document.getElementById('audio-loop-all-btn').classList.remove('on');
-    document.getElementById('audio-loop-all-btn').textContent='🔁';
-    playTrack(i,false);
-  }
-}
-function toggleLoopAll(){
-  if(loopAllOn){
-    loopAllOn=false;
-    stopAllAudio();
-    document.getElementById('audio-loop-all-btn').classList.remove('on');
-    document.getElementById('audio-loop-all-btn').textContent='🔁';
-  } else {
-    loopAllOn=true;
-    document.getElementById('audio-loop-all-btn').classList.add('on');
-    document.getElementById('audio-loop-all-btn').textContent='⏹';
-    playTrack(0,true);
-  }
-}
+function stopNativeAudio(){ nativeAudioEl.pause(); nativeAudioEl.onended=null; }
 let currentIndex=0,isEnToJa=true,isRandom=false,isRepeating=false;
 let mastered=new Set(),activeCategory='all';
 let isAutoPlaying=false,autoStopped=false,autoTimeout=null;
@@ -373,13 +281,22 @@ function getVoice(){return voices[parseInt(document.getElementById('voice-select
 function updateRate(){speechRate=parseFloat(document.getElementById('rate-slider').value);document.getElementById('rate-val').textContent=speechRate.toFixed(1)+'×';}
 function startKeepAlive(){stopKeepAlive();keepAliveTimer=setInterval(()=>{if(window.speechSynthesis.speaking)window.speechSynthesis.pause(),window.speechSynthesis.resume();},10000);}
 function stopKeepAlive(){if(keepAliveTimer){clearInterval(keepAliveTimer);keepAliveTimer=null;}}
-function speakOne(text,onEnd){window.speechSynthesis.cancel();isSpeaking=false;clearTimeout(speakOne._t);speakOne._t=setTimeout(()=>{const utt=new SpeechSynthesisUtterance(text);const v=getVoice();if(v){utt.voice=v;utt.lang=v.lang;}else{utt.lang=voicePref==='US'?'en-US':'en-GB';}utt.rate=speechRate;utt.onend=()=>{isSpeaking=false;stopKeepAlive();if(onEnd)onEnd();};utt.onerror=()=>{isSpeaking=false;stopKeepAlive();if(onEnd)onEnd();};isSpeaking=true;startKeepAlive();window.speechSynthesis.speak(utt);},80);}
+function speakTTS(text,onEnd){window.speechSynthesis.cancel();isSpeaking=false;clearTimeout(speakOne._t);speakOne._t=setTimeout(()=>{const utt=new SpeechSynthesisUtterance(text);const v=getVoice();if(v){utt.voice=v;utt.lang=v.lang;}else{utt.lang=voicePref==='US'?'en-US':'en-GB';}utt.rate=speechRate;utt.onend=()=>{isSpeaking=false;stopKeepAlive();if(onEnd)onEnd();};utt.onerror=()=>{isSpeaking=false;stopKeepAlive();if(onEnd)onEnd();};isSpeaking=true;startKeepAlive();window.speechSynthesis.speak(utt);},80);}
 speakOne._t=null;
-function speakP(){return new Promise(r=>{const a=getActive();if(!a.length){r();return;}speakOne(a[currentIndex].en,r);});}
-function speakCurrent(){const a=getActive();if(!a.length)return;speakOne(a[currentIndex].en);}
-function speakRepeat(){if(!isRepeating||isAutoPlaying)return;const a=getActive();if(!a.length)return;speakOne(a[currentIndex].en,()=>{if(isRepeating&&!isAutoPlaying){clearTimeout(speakRepeat._t);speakRepeat._t=setTimeout(()=>speakRepeat(),300);}}); }
+function speakOne(card,onEnd){
+  window.speechSynthesis.cancel();
+  stopNativeAudio();
+  if(card&&card.audio){
+    playNativeAudio(card.audio,onEnd,()=>{ speakTTS(card.en,onEnd); });
+  } else {
+    speakTTS(card.en,onEnd);
+  }
+}
+function speakP(){return new Promise(r=>{const a=getActive();if(!a.length){r();return;}speakOne(a[currentIndex],r);});}
+function speakCurrent(){const a=getActive();if(!a.length)return;speakOne(a[currentIndex]);}
+function speakRepeat(){if(!isRepeating||isAutoPlaying)return;const a=getActive();if(!a.length)return;speakOne(a[currentIndex],()=>{if(isRepeating&&!isAutoPlaying){clearTimeout(speakRepeat._t);speakRepeat._t=setTimeout(()=>speakRepeat(),300);}}); }
 speakRepeat._t=null;
-function toggleRepeat(){isRepeating=!isRepeating;const btn=document.getElementById('repeat-btn');btn.textContent=isRepeating?'🔁 繰り返し: ON':'🔁 繰り返し';btn.className=isRepeating?'btn btn-on':'btn btn-secondary';if(isRepeating){const a=getActive();if(a.length)speakRepeat();}else{window.speechSynthesis.cancel();isSpeaking=false;stopKeepAlive();clearTimeout(speakRepeat._t);}}
+function toggleRepeat(){isRepeating=!isRepeating;const btn=document.getElementById('repeat-btn');btn.textContent=isRepeating?'🔁 繰り返し: ON':'🔁 繰り返し';btn.className=isRepeating?'btn btn-on':'btn btn-secondary';if(isRepeating){const a=getActive();if(a.length)speakRepeat();}else{window.speechSynthesis.cancel();stopNativeAudio();isSpeaking=false;stopKeepAlive();clearTimeout(speakRepeat._t);}}
 function update(){const active=getActive();const noEl=document.getElementById('no-active');if(!active.length){noEl.classList.add('show');document.getElementById('main-card').style.display='none';document.getElementById('tap-hint').style.display='none';updateMasterBadge();buildCatRows();return;}noEl.classList.remove('show');document.getElementById('main-card').style.display='';document.getElementById('tap-hint').style.display='';if(currentIndex>=active.length)currentIndex=0;const item=active[currentIndex];const realIdx=phrases.indexOf(item);document.getElementById('card-num').textContent=String(realIdx+OFFSET).padStart(3,'0');document.getElementById('card-cat').textContent=item.cat;document.getElementById('cur-num').textContent=currentIndex+1;document.getElementById('tot-num').textContent=active.length;const pct=active.length>1?((currentIndex/(active.length-1))*100).toFixed(0):100;document.getElementById('progress-bar').style.width=pct+'%';if(isEnToJa){document.getElementById('main-text').innerHTML=item.en;document.getElementById('answer-ja').textContent=item.ja;}else{document.getElementById('main-text').innerHTML=item.ja;document.getElementById('answer-ja').textContent=item.en;}const tipEl=document.getElementById('answer-tip');if(item.tip){tipEl.textContent=item.tip;tipEl.style.display='';}else{tipEl.style.display='none';}document.getElementById('answer-wrap').classList.remove('show');document.getElementById('main-card').classList.remove('revealed');const cb=document.getElementById('master-cb');cb.checked=mastered.has(realIdx);if(mastered.has(realIdx))document.getElementById('mastered-badge').classList.add('show');else document.getElementById('mastered-badge').classList.remove('show');updateMasterBadge();buildCatRows();}
 function updateMasterBadge(){const cnt=mastered.size;document.getElementById('master-badge-top').textContent=`マスター: ${cnt} / ${phrases.length}`;const sumEl=document.getElementById('master-summary');if(cnt>0){sumEl.classList.add('show');sumEl.textContent=`✅ マスター済み: ${cnt}件 — タップしてリスト表示`;renderMasterList();}else sumEl.classList.remove('show');}
 function renderMasterList(){const listEl=document.getElementById('master-list');listEl.innerHTML='';[...mastered].sort((a,b)=>a-b).forEach(idx=>{const item=phrases[idx];const d=document.createElement('div');d.style.cssText='padding:8px 0;border-bottom:1px solid #f8fafc;font-size:12px;';d.innerHTML=`<span style="font-family:monospace;font-size:10px;color:#64748b;">${String(idx+OFFSET).padStart(3,'0')}</span> ${item.en.substring(0,55)}...`;listEl.appendChild(d);});}
@@ -394,7 +311,7 @@ function switchMode(){if(isAutoPlaying)return;isEnToJa=!isEnToJa;update();}
 function delayP(ms){return new Promise(r=>{if(autoStopped){r();return;}autoTimeout=setTimeout(r,ms);});}
 function setAutoPanel(s,i,c){document.getElementById('auto-step-title').textContent=s;document.getElementById('auto-instruction').textContent=i;document.getElementById('auto-count').textContent=c;}
 function enterAutoUI(){isAutoPlaying=true;autoStopped=false;document.getElementById('normal-controls').style.display='none';document.getElementById('auto-controls').style.display='';document.getElementById('auto-panel').classList.add('show');document.getElementById('tap-hint').style.display='none';document.getElementById('master-wrap').classList.add('disabled');document.getElementById('main-card').classList.remove('tappable');document.getElementById('main-card').classList.add('no-tap');}
-function exitAutoUI(){autoStopped=true;isAutoPlaying=false;window.speechSynthesis.cancel();isSpeaking=false;stopKeepAlive();clearTimeout(speakOne._t);if(autoTimeout){clearTimeout(autoTimeout);autoTimeout=null;}document.getElementById('normal-controls').style.display='';document.getElementById('auto-controls').style.display='none';document.getElementById('auto-panel').classList.remove('show');document.getElementById('tap-hint').style.display='';document.getElementById('master-wrap').classList.remove('disabled');document.getElementById('main-card').classList.add('tappable');document.getElementById('main-card').classList.remove('no-tap');}
+function exitAutoUI(){autoStopped=true;isAutoPlaying=false;window.speechSynthesis.cancel();stopNativeAudio();isSpeaking=false;stopKeepAlive();clearTimeout(speakOne._t);if(autoTimeout){clearTimeout(autoTimeout);autoTimeout=null;}document.getElementById('normal-controls').style.display='';document.getElementById('auto-controls').style.display='none';document.getElementById('auto-panel').classList.remove('show');document.getElementById('tap-hint').style.display='';document.getElementById('master-wrap').classList.remove('disabled');document.getElementById('main-card').classList.add('tappable');document.getElementById('main-card').classList.remove('no-tap');}
 function stopAutoPlay(){exitAutoUI();update();}
 function showHidden(){document.getElementById('main-text').textContent='？？？';document.getElementById('answer-wrap').classList.remove('show');document.getElementById('main-card').classList.remove('revealed');}
 function showAll(){const a=getActive();if(!a.length)return;document.getElementById('main-text').innerHTML=a[currentIndex].en;document.getElementById('answer-wrap').classList.add('show');document.getElementById('main-card').classList.add('revealed');}
