@@ -103,12 +103,10 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);min-height:100vh
 </div>
 
 <div class="top-row">
-<button class="help-btn" onclick="alert('👆カードタップで答え表示\n🔊音声再生（合成音声）\n🗣️シャドウイング4ステップ\n▶連続再生\n🔄英⇄日モード切替\nマスターチェックで次へ\n\n上部の「ネイティブ再生」欄はカードと連動しない復習用の音声プレーヤーです。番号ボタンで個別再生、ループボタンで1〜5を繰り返し再生します。')">❓ 使い方</button>
+<button class="help-btn" onclick="alert('👆カードタップで答え表示\n🔊音声再生（ネイティブ音声。ファイルがない場合のみ合成音声）\n🗣️シャドウイング4ステップ\n▶連続再生\n🔄英⇄日モード切替\nマスターチェックで次へ')">❓ 使い方</button>
 <div class="badge green" id="master-badge-top">マスター: 0 / 62</div>
 </div>
 
-<div class="audio-mini-label">ネイティブ再生</div>
-<div class="audio-track-row" id="audio-track-row"></div>
 <div class="progress-wrap"><div class="progress-bar" id="progress-bar" style="width:2%"></div></div>
 <div class="progress-label">カード <span id="cur-num">1</span> / <span id="tot-num">62</span></div>
 <div class="no-active" id="no-active">✅ このカテゴリをすべてマスターしました！</div>
@@ -191,174 +189,84 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);min-height:100vh
 const OFFSET=304;
 const CATS={'🏠 旅行・日常生活':'#be185d','🏥 健康・体調':'#2563eb','🎓 学業・キャリア':'#16a34a','📐 重要構文・性格表現':'#7c3aed','💰 お金・仕事・キャリア':'#d97706'};
 const phrases=[
-{cat:'🏠 旅行・日常生活', en:'Excuse me. How often do the shuttle buses run to downtown New York?', ja:'すみません。ニューヨーク市街に行くシャトルバスはどの位の間隔で走ってますか？', tip:'How often ...?＝どのくらいの頻度で〜（間隔を尋ねる定番表現）。shuttle bus＝シャトルバス。downtown＝繁華街・中心街。'},
-{cat:'🏠 旅行・日常生活', en:'The motel can accommodate as many as 400 guests.', ja:'そのモーテルは400人もの宿泊客を泊められる。', tip:'accommodate＝〜を収容する。as many as＝〜もの多くの（数の多さを強調）。guest＝宿泊客。'},
-{cat:'🏠 旅行・日常生活', en:'This suite is three times larger than my condominium.', ja:'このスイートルームは、私の持っているマンションの3倍の広さだ。', tip:'suite＝スイートルーム。倍数表現：X times ~er than＝〜のX倍…だ。condominium＝分譲マンション（= condo）。'},
-{cat:'🏠 旅行・日常生活', en:'Littering in this facility is subject to a maximum fine of $500.', ja:'この施設内でのゴミの投げ捨てには、最高500ドルの罰金が科せられることがあります。', tip:'litter＝ゴミを捨てる（littering＝ゴミの投げ捨て）。be subject to＝〜を科せられる可能性がある。fine＝罰金。'},
-{cat:'🏠 旅行・日常生活', en:'That restaurant is always packed. We\'d better make a reservation beforehand.', ja:'あのレストランはいつでも込んでいるから、事前に予約をした方がいい。', tip:'packed＝満員の（= crowded）。had better＝〜した方がよい。beforehand＝あらかじめ（= in advance）。'},
-{cat:'🏠 旅行・日常生活', en:'"Sorry to interrupt your meal but I\'d like a word with you in private." "Can I get back to you later?"', ja:'「食事の邪魔をして悪いんだけど、ちょっと内密に話がしたいの。」「後で君のところに行くよ。」', tip:'interrupt＝〜の邪魔をする。a word with＝〜とのちょっとした話。in private＝内密に（public の対義）。get back to＝〜に後で連絡する。'},
-{cat:'🏠 旅行・日常生活', en:'The cook was astonished at his incredible appetite.', ja:'料理人は彼の信じられないほどの食欲にとても驚いた。', tip:'be astonished at＝〜に驚愕する（= be amazed at）。incredible＝信じられないほどの。appetite＝食欲。'},
-{cat:'🏠 旅行・日常生活', en:'"What\'s going on down there? I\'m curious." "I have no idea."', ja:'「下で何が起こっているの？すごく気になるわ。」「さあ、何だろう。」', tip:'What\'s going on?＝何が起こっているの（定番表現）。curious＝好奇心が強い・気になる。have no idea＝全くわからない。'},
-{cat:'🏠 旅行・日常生活', en:'Excited fans were hanging around the rear exit hoping to catch a glimpse of Michael.', ja:'興奮したファンたちが、マイケルを一目見ようと裏口に群がっていた。', tip:'hang around＝うろうろする・たむろする。rear exit＝裏口。catch a glimpse of＝〜を一目見る（慣用句）。'},
-{cat:'🏠 旅行・日常生活', en:'On encountering the celebrity, they asked for his autograph.', ja:'彼らは有名人と出くわすなり、サインをねだった。', tip:'on doing＝〜するとすぐに（構文）。encounter＝〜に出くわす。celebrity＝有名人。autograph＝サイン（有名人の署名）。'},
-{cat:'🏥 健康・体調', en:'Whenever I go abroad, I suffer from jet lag and diarrhea.', ja:'海外に行くと必ず、時差ボケと下痢に悩まされる。', tip:'whenever＝〜するときはいつも。suffer from＝〜に苦しむ。jet lag＝時差ボケ。diarrhea＝下痢。'},
-{cat:'🏥 健康・体調', en:'"I feel sort of dizzy and I feel like throwing up." "You look pale!"', ja:'「何だか目まいと吐き気がするよ。」「顔が真っ青よ。」', tip:'sort of＝何だか・ちょっと（口語）。dizzy＝めまいがする。feel like doing＝〜したい気がする。throw up＝吐く（= vomit）。pale＝青白い。'},
-{cat:'🏥 健康・体調', en:'Take some aspirin. It will cure you of your headache in no time.', ja:'鎮痛剤を飲めば、すぐに頭痛は治まります。', tip:'aspirin＝アスピリン（鎮痛剤）。cure A of B＝AのBを治す。in no time＝あっという間に・すぐに。'},
-{cat:'🏥 健康・体調', en:'"I\'m afraid I\'m coming down with something." "You should take a day off."', ja:'「何だか体調が悪いなあ。」「一日休みを取った方がいいわよ。」', tip:'I\'m afraid＝残念ながら〜だと思う。come down with＝（軽い病気に）かかる。take a day off＝一日休みを取る。'},
-{cat:'🏥 健康・体調', en:'Some of the ingredients in this beverage are harmful, especially if you are pregnant.', ja:'この飲料に含まれている成分には有害なものもある。とりわけ、妊娠中の人にとっては。', tip:'ingredient＝成分・原材料。beverage＝飲料（格式的）。harmful＝有害な。pregnant＝妊娠している。'},
-{cat:'🏥 健康・体調', en:'Good nutrition is vital for an infant\'s growth.', ja:'十分な栄養摂取は幼児の発育にとって極めて重要です。', tip:'nutrition＝栄養（摂取）。vital＝極めて重要な（= essential）。infant＝幼児。growth＝成長・発育。'},
-{cat:'🏥 健康・体調', en:'Moderate exercise stimulates the circulation of the blood.', ja:'適度な運動は血行をよくする。', tip:'moderate＝適度な。stimulate＝〜を刺激する・促進する。circulation＝循環（血行）。'},
-{cat:'🏥 健康・体調', en:'My physician advised me to refrain from alcohol for the time being.', ja:'当分の間は酒を控えるようにと、医者に忠告された。', tip:'physician＝医者（= doctor）。refrain from＝〜を控える。for the time being＝当分の間。'},
-{cat:'🏥 健康・体調', en:'I do want to get into shape and lose some weight, so I go swimming every morning.', ja:'本当に体調を良くしたいし、減量もしたいから、毎朝泳ぎに行っています。', tip:'do want＝強調のdo（本当に〜したい）。get into shape＝体調を整える。lose weight＝体重を減らす。'},
-{cat:'🏥 健康・体調', en:'He caught a nasty cold because he stayed up late last night.', ja:'昨日の夜更かしがたたって、彼はひどい風邪をひいた。', tip:'catch a cold＝風邪をひく。nasty＝ひどい・不快な。stay up late＝夜更かしする。'},
-{cat:'🏥 健康・体調', en:'The surgeon persuaded him to undergo an organ transplant.', ja:'外科医に説得されて、彼は臓器移植手術を受けることにした。', tip:'surgeon＝外科医。persuade A to do＝Aを説得して〜させる。undergo＝〜を受ける（手術など）。transplant＝移植。'},
-{cat:'🏥 健康・体調', en:'Since our father is bedridden, we take turns looking after him.', ja:'父が寝たきりなので私たちが交代で面倒を見ています。', tip:'bedridden＝寝たきりの。take turns doing＝交代で〜する。look after＝〜の面倒を見る（= take care of）。'},
-{cat:'🏥 健康・体調', en:'Our hypothesis is that eating excessive amounts of junk food contributes to early mortality.', ja:'ジャンクフードの過剰な摂取は早死にの一因になる、というのが我々の仮説だ。', tip:'hypothesis＝仮説。excessive＝過剰な。contribute to＝〜の一因となる。mortality＝死亡率・死。'},
-{cat:'🎓 学業・キャリア', en:'The government did not take appropriate measures to prevent the infection from spreading.', ja:'政府は感染の拡大を未然に防ぐための適切な措置を取らなかった。', tip:'appropriate＝適切な。measure＝対策・措置（通例複数形）。prevent A from doing＝Aが〜するのを防ぐ。'},
-{cat:'🎓 学業・キャリア', en:'The minister was obliged to resign from the Cabinet.', ja:'その大臣は内閣からの辞任を余儀なくされた。', tip:'be obliged to＝〜を余儀なくされる（= be forced to）。resign from＝〜を辞任する。Cabinet＝内閣。'},
-{cat:'🎓 学業・キャリア', en:'Many people regard the current compulsory education system as being obsolete.', ja:'多くの人々は、現行の義務教育制度が時代遅れであると考えている。', tip:'regard A as B＝AをBとみなす。compulsory education＝義務教育。obsolete＝時代遅れの。'},
-{cat:'🎓 学業・キャリア', en:'Many people encouraged me to fulfill my ambitions.', ja:'大きな目標を実現するようにと、たくさんの人が私を励ましてくれた。', tip:'encourage A to do＝Aに〜するよう励ます。fulfill＝〜を実現する・果たす。ambition＝大志・野心。'},
-{cat:'🎓 学業・キャリア', en:'To make his dreams come true, he dropped out of school and made his way to Tokyo.', ja:'自分の夢を実現させるために、彼は学校を中退して東京を目指した。', tip:'make A come true＝Aを実現させる。drop out of＝〜を中退する。make one\'s way to＝〜へ向かう。'},
-{cat:'🎓 学業・キャリア', en:'"What do you do?" "I\'m a college student, a freshman at Harvard." "What\'s your major?" "Philosophy."', ja:'「普段は何をなさってるんですか？」「大学生です。ハーバードの1年です。」「専攻は？」「哲学です。」', tip:'What do you do?＝ご職業は？。freshman＝大学1年生。major＝専攻。'},
-{cat:'🎓 学業・キャリア', en:'Tuition will be raised by nearly ten percent as of April 1, 2001.', ja:'2001年4月1日から授業料が10％近く値上げになります。', tip:'tuition＝授業料。raise A by B＝AをB分引き上げる。as of＝〜時点で・〜付けで。'},
-{cat:'🎓 学業・キャリア', en:'"I\'m of two minds whether to apply for the scholarship or not." "Give it a try!"', ja:'「奨学金を申し込もうかどうか悩んでるの。」「やるだけやってみなよ！」', tip:'be of two minds＝迷っている・決めかねている（慣用句）。apply for＝〜に応募する。scholarship＝奨学金。'},
-{cat:'🎓 学業・キャリア', en:'As soon as he graduated from Keio University, he took over his family\'s business.', ja:'彼は慶応大学を卒業するとすぐに家業を継いだ。', tip:'as soon as＝〜するとすぐに。graduate from＝〜を卒業する。take over＝〜を引き継ぐ。'},
-{cat:'🎓 学業・キャリア', en:'You aren\'t cut out for the military because of its rigid discipline.', ja:'軍の規律は厳格だから、あなたはそっちの世界には向かないわ。', tip:'be cut out for＝〜に向いている（通例否定文で使う）。military＝軍隊。rigid＝厳格な。discipline＝規律。'},
-{cat:'🎓 学業・キャリア', en:'I am determined to make a living as a playwright at all costs.', ja:'私はどんな犠牲を払ってでも、脚本家で食べていくと心に決めている。', tip:'be determined to＝〜すると心に決めている。make a living as＝〜として生計を立てる。at all costs＝どんな犠牲を払ってでも。'},
-{cat:'🎓 学業・キャリア', en:'As he grew up, he learned to put things in perspective.', ja:'彼も大人になって、物事を総合的な視野で見られるようになった。', tip:'grow up＝成長する・大人になる。learn to do＝〜できるようになる。put things in perspective＝物事を大局的に捉える（慣用句）。'},
-{cat:'🎓 学業・キャリア', en:'Conformity is an essential element of our homogeneous community.', ja:'同じような人々からなる私たちの地域社会では、体制に従おうとする意識は不可欠な要素である。', tip:'conformity＝（体制などへの）順応・同調。essential＝不可欠な。homogeneous＝同質の。'},
-{cat:'🎓 学業・キャリア', en:'I\'d rather go my own way than toil away for a company. Trying to fit into a mold gets me nowhere!', ja:'会社のためにあくせく働くよりは、我が道を行くほうがいい。型にはまろうとしたって何の得にもならないよ！', tip:'would rather A than B＝BよりむしろAしたい。toil away＝あくせく働く。fit into a mold＝型にはまる。get one nowhere＝何の役にも立たない。'},
-{cat:'🎓 学業・キャリア', en:'Tom takes after his uncle in personality. I mean, he is obstinate by nature. He never gives in.', ja:'トムは性格が彼のおじに似ている。つまりその、生まれつきの頑固者。彼は絶対に折れない。', tip:'take after＝〜に似ている（血縁関係で）。obstinate＝頑固な。by nature＝生まれつき。give in＝屈する・折れる。'},
-{cat:'📐 重要構文・性格表現', en:'When the time is ripe, be bold and go for it! I\'ll stand by you.', ja:'機が熟したら、大胆に突き進むんだ！僕がいつもそばにいる。', tip:'ripe＝（機が）熟した。bold＝大胆な。go for it＝思い切ってやってみる（口語）。stand by＝〜を支える・味方する。'},
-{cat:'📐 重要構文・性格表現', en:'I\'ll stand up for what I believe in and won\'t yield to any threats.', ja:'自分の信念を守るためには立ち上がるし、いかなる脅威にも屈しないつもりだ。', tip:'stand up for＝〜のために立ち上がる・〜を守る。believe in＝〜を信じる（存在・価値を）。yield to＝〜に屈する。threat＝脅威。'},
-{cat:'📐 重要構文・性格表現', en:'"If only I could conquer my weaknesses!" "It\'s up to you."', ja:'「自分の弱点を克服できさえすればなあ。」「あなた次第よ。」', tip:'If only ...!＝〜でありさえすればなあ（仮定法の願望表現）。conquer＝〜を克服する。It\'s up to you.＝あなた次第だ。'},
-{cat:'📐 重要構文・性格表現', en:'You should make the most of this rare opportunity to demonstrate your talent.', ja:'自分の才能を示すために、めったにないこの機会を最大限に利用するべきだ。', tip:'make the most of＝〜を最大限に活用する。rare＝めったにない。demonstrate＝〜を示す・証明する。'},
-{cat:'📐 重要構文・性格表現', en:'You won\'t let me down. I have great faith in you. You can make it!', ja:'僕をがっかりさせないよね。信頼しているよ。君ならうまくやれるさ！', tip:'let ... down＝〜を失望させる。have faith in＝〜を信頼する。make it＝うまくやり遂げる（口語）。'},
-{cat:'📐 重要構文・性格表現', en:'The spectators were moved by her graceful performance.', ja:'観客たちは彼女の優雅な演技に感動した。', tip:'spectator＝観客（スポーツ・見世物の）。be moved by＝〜に感動する。graceful＝優雅な。'},
-{cat:'📐 重要構文・性格表現', en:'In 1995, Ando received architecture\'s most prestigious award.', ja:'1995年、安藤氏は建築における最も権威ある賞を受賞した。', tip:'architecture＝建築。prestigious＝権威ある・名誉ある。award＝賞。'},
-{cat:'📐 重要構文・性格表現', en:'In the face of adversity, Mike accomplished an extraordinary feat. He deserves praise.', ja:'逆境をものともせず、マイクはすばらしい偉業を成し遂げた。称賛を受けるのは当然だ。', tip:'in the face of＝〜に直面しても・〜をものともせず。adversity＝逆境。feat＝偉業。deserve＝〜に値する。'},
-{cat:'📐 重要構文・性格表現', en:'The audience was impressed by his eloquent lecture.', ja:'聴衆は彼の説得力のある講義に感銘を受けた。', tip:'audience＝聴衆（集合名詞）。be impressed by＝〜に感銘を受ける。eloquent＝雄弁な・説得力のある。'},
-{cat:'💰 お金・仕事・キャリア', en:'From a humble background, John achieved worldwide fame.', ja:'庶民の身から、ジョンは世界的な名声を勝ち取った。', tip:'humble＝庶民の・謙虚な。background＝生い立ち・経歴。achieve＝〜を成し遂げる。fame＝名声。'},
-{cat:'💰 お金・仕事・キャリア', en:'He accumulated a tremendous fortune during the postwar era.', ja:'彼は戦後に莫大な財産を築いた。', tip:'accumulate＝〜を蓄積する。tremendous＝莫大な。fortune＝財産。postwar era＝戦後（の時代）。'},
-{cat:'💰 お金・仕事・キャリア', en:'He used to be well off and generous, but now he lives from hand to mouth.', ja:'彼は以前は裕福で気前もよかったけれど、今ではその日暮らしにならない。', tip:'used to＝以前は〜だった。well off＝裕福な（= wealthy）。generous＝気前のいい。live from hand to mouth＝その日暮らしをする（慣用句）。'},
-{cat:'💰 お金・仕事・キャリア', en:'Nick is by no means satisfied with the reward. He is selfish and greedy.', ja:'ニックは決してその報酬に満足していない。彼は自己中心的で欲が深い。', tip:'by no means＝決して〜ない（強い否定）。reward＝報酬。selfish＝自己中心的な。greedy＝欲深い。'},
-{cat:'💰 お金・仕事・キャリア', en:'"You owe me $200 altogether, Bob. When are you going to pay me back?" "I\'m sorry. I\'m hard up." "There you go again!"', ja:'「全部で200ドル貸してるのよ、ボブ。いつ返すつもりなの？」「ごめん。金欠なんだ。」「またなの？」', tip:'owe＝〜に借りがある。altogether＝合計で。pay back＝返済する。be hard up＝金に困っている（口語）。There you go again!＝またそれか（口語）。'},
-{cat:'💰 お金・仕事・キャリア', en:'To Brian\'s surprise, his debt amounted to a considerable sum.', ja:'ブライアンが驚いたことに、借金はかなりの額になっていた。', tip:'to one\'s surprise＝〜が驚いたことに。debt＝借金。amount to＝〜の額になる。considerable＝かなりの。'},
-{cat:'💰 お金・仕事・キャリア', en:'Stop clinging to your glory days, or you\'ll be left behind.', ja:'過去の栄光にしがみつくのはやめないと、取り残されるわよ。', tip:'cling to＝〜にしがみつく。glory days＝栄光の日々。leave behind＝置き去りにする。'},
-{cat:'💰 お金・仕事・キャリア', en:'You cannot escape from today\'s harsh realities, so you must adapt to them.', ja:'今日の厳しい現実からは逃れられない以上、それに順応しなければならない。', tip:'escape from＝〜から逃れる。harsh＝厳しい。reality＝現実。adapt to＝〜に順応する。'},
-{cat:'💰 お金・仕事・キャリア', en:'Prosperity does not last forever. In other words, it will come to an end one of these days.', ja:'繁栄は永遠に続くものではない。つまり、いつかは終わりを迎えるものだ。', tip:'prosperity＝繁栄。last＝続く（動詞）。in other words＝つまり・言い換えれば。one of these days＝そのうち・いつか。'},
-{cat:'💰 お金・仕事・キャリア', en:'Proper qualifications are required for the position; computer literacy is a must.', ja:'その職種には相応の資格や能力が必要で、コンピューターが使えることは絶対条件である。', tip:'proper＝適切な・相応の。qualification＝資格。position＝職・地位。literacy＝〜を使いこなす能力。a must＝必須事項（名詞）。'},
-{cat:'💰 お金・仕事・キャリア', en:'Enclose your resume in this envelope and submit it to the personnel department.', ja:'この封筒に履歴書も入れて人事部に提出して下さい。', tip:'enclose＝〜を同封する。resume＝履歴書（米語）。submit＝〜を提出する。personnel department＝人事部。'},
-{cat:'💰 お金・仕事・キャリア', en:'It\'s optimistic of you to believe that things will work out. At best there\'s a fifty-fifty chance.', ja:'物事がうまく行くと信じるなんて君も楽観的だね。可能性はせいぜい50%だよ。', tip:'It is + 形容詞 + of 人 + to do＝〜するとは（人）は…だ。work out＝うまくいく。at best＝せいぜい・良くて。fifty-fifty＝五分五分の。'},
-{cat:'💰 お金・仕事・キャリア', en:'Registration forms can be obtained free of charge.', ja:'登録用紙は無料で入手できます。', tip:'registration＝登録。obtain＝〜を入手する（= get）。free of charge＝無料で（= for free）。'},
-{cat:'💰 お金・仕事・キャリア', en:'Please give us a call now if you want to participate in the workshop!', ja:'この講習会に参加をご希望の方は、今すぐお電話下さい。', tip:'give ... a call＝〜に電話する。participate in＝〜に参加する（= take part in）。workshop＝講習会・研修会。'},
-{cat:'💰 お金・仕事・キャリア', en:'For further inquiries, please feel free to contact us toll-free at 1-800-555-1212.', ja:'さらにご質問がありましたら、どうぞご遠慮なくフリーダイヤル1-800-555-1212までお電話下さい。', tip:'inquiry＝問い合わせ。feel free to＝遠慮なく〜する。toll-free＝通話料無料の（フリーダイヤル）。'},
+{cat:'🏠 旅行・日常生活', en:'Excuse me. How often do the shuttle buses run to downtown New York?', ja:'すみません。ニューヨーク市街に行くシャトルバスはどの位の間隔で走ってますか？', tip:'How often ...?＝どのくらいの頻度で〜（間隔を尋ねる定番表現）。shuttle bus＝シャトルバス。downtown＝繁華街・中心街。',audio:'card_audio/card_304.mp3'},
+{cat:'🏠 旅行・日常生活', en:'The motel can accommodate as many as 400 guests.', ja:'そのモーテルは400人もの宿泊客を泊められる。', tip:'accommodate＝〜を収容する。as many as＝〜もの多くの（数の多さを強調）。guest＝宿泊客。',audio:'card_audio/card_305.mp3'},
+{cat:'🏠 旅行・日常生活', en:'This suite is three times larger than my condominium.', ja:'このスイートルームは、私の持っているマンションの3倍の広さだ。', tip:'suite＝スイートルーム。倍数表現：X times ~er than＝〜のX倍…だ。condominium＝分譲マンション（= condo）。',audio:'card_audio/card_306.mp3'},
+{cat:'🏠 旅行・日常生活', en:'Littering in this facility is subject to a maximum fine of $500.', ja:'この施設内でのゴミの投げ捨てには、最高500ドルの罰金が科せられることがあります。', tip:'litter＝ゴミを捨てる（littering＝ゴミの投げ捨て）。be subject to＝〜を科せられる可能性がある。fine＝罰金。',audio:'card_audio/card_307.mp3'},
+{cat:'🏠 旅行・日常生活', en:'That restaurant is always packed. We\'d better make a reservation beforehand.', ja:'あのレストランはいつでも込んでいるから、事前に予約をした方がいい。', tip:'packed＝満員の（= crowded）。had better＝〜した方がよい。beforehand＝あらかじめ（= in advance）。',audio:'card_audio/card_308.mp3'},
+{cat:'🏠 旅行・日常生活', en:'"Sorry to interrupt your meal but I\'d like a word with you in private." "Can I get back to you later?"', ja:'「食事の邪魔をして悪いんだけど、ちょっと内密に話がしたいの。」「後で君のところに行くよ。」', tip:'interrupt＝〜の邪魔をする。a word with＝〜とのちょっとした話。in private＝内密に（public の対義）。get back to＝〜に後で連絡する。',audio:'card_audio/card_309.mp3'},
+{cat:'🏠 旅行・日常生活', en:'The cook was astonished at his incredible appetite.', ja:'料理人は彼の信じられないほどの食欲にとても驚いた。', tip:'be astonished at＝〜に驚愕する（= be amazed at）。incredible＝信じられないほどの。appetite＝食欲。',audio:'card_audio/card_310.mp3'},
+{cat:'🏠 旅行・日常生活', en:'"What\'s going on down there? I\'m curious." "I have no idea."', ja:'「下で何が起こっているの？すごく気になるわ。」「さあ、何だろう。」', tip:'What\'s going on?＝何が起こっているの（定番表現）。curious＝好奇心が強い・気になる。have no idea＝全くわからない。',audio:'card_audio/card_311.mp3'},
+{cat:'🏠 旅行・日常生活', en:'Excited fans were hanging around the rear exit hoping to catch a glimpse of Michael.', ja:'興奮したファンたちが、マイケルを一目見ようと裏口に群がっていた。', tip:'hang around＝うろうろする・たむろする。rear exit＝裏口。catch a glimpse of＝〜を一目見る（慣用句）。',audio:'card_audio/card_312.mp3'},
+{cat:'🏠 旅行・日常生活', en:'On encountering the celebrity, they asked for his autograph.', ja:'彼らは有名人と出くわすなり、サインをねだった。', tip:'on doing＝〜するとすぐに（構文）。encounter＝〜に出くわす。celebrity＝有名人。autograph＝サイン（有名人の署名）。',audio:'card_audio/card_313.mp3'},
+{cat:'🏥 健康・体調', en:'Whenever I go abroad, I suffer from jet lag and diarrhea.', ja:'海外に行くと必ず、時差ボケと下痢に悩まされる。', tip:'whenever＝〜するときはいつも。suffer from＝〜に苦しむ。jet lag＝時差ボケ。diarrhea＝下痢。',audio:'card_audio/card_314.mp3'},
+{cat:'🏥 健康・体調', en:'"I feel sort of dizzy and I feel like throwing up." "You look pale!"', ja:'「何だか目まいと吐き気がするよ。」「顔が真っ青よ。」', tip:'sort of＝何だか・ちょっと（口語）。dizzy＝めまいがする。feel like doing＝〜したい気がする。throw up＝吐く（= vomit）。pale＝青白い。',audio:'card_audio/card_315.mp3'},
+{cat:'🏥 健康・体調', en:'Take some aspirin. It will cure you of your headache in no time.', ja:'鎮痛剤を飲めば、すぐに頭痛は治まります。', tip:'aspirin＝アスピリン（鎮痛剤）。cure A of B＝AのBを治す。in no time＝あっという間に・すぐに。',audio:'card_audio/card_316.mp3'},
+{cat:'🏥 健康・体調', en:'"I\'m afraid I\'m coming down with something." "You should take a day off."', ja:'「何だか体調が悪いなあ。」「一日休みを取った方がいいわよ。」', tip:'I\'m afraid＝残念ながら〜だと思う。come down with＝（軽い病気に）かかる。take a day off＝一日休みを取る。',audio:'card_audio/card_317.mp3'},
+{cat:'🏥 健康・体調', en:'Some of the ingredients in this beverage are harmful, especially if you are pregnant.', ja:'この飲料に含まれている成分には有害なものもある。とりわけ、妊娠中の人にとっては。', tip:'ingredient＝成分・原材料。beverage＝飲料（格式的）。harmful＝有害な。pregnant＝妊娠している。',audio:'card_audio/card_318.mp3'},
+{cat:'🏥 健康・体調', en:'Good nutrition is vital for an infant\'s growth.', ja:'十分な栄養摂取は幼児の発育にとって極めて重要です。', tip:'nutrition＝栄養（摂取）。vital＝極めて重要な（= essential）。infant＝幼児。growth＝成長・発育。',audio:'card_audio/card_319.mp3'},
+{cat:'🏥 健康・体調', en:'Moderate exercise stimulates the circulation of the blood.', ja:'適度な運動は血行をよくする。', tip:'moderate＝適度な。stimulate＝〜を刺激する・促進する。circulation＝循環（血行）。',audio:'card_audio/card_320.mp3'},
+{cat:'🏥 健康・体調', en:'My physician advised me to refrain from alcohol for the time being.', ja:'当分の間は酒を控えるようにと、医者に忠告された。', tip:'physician＝医者（= doctor）。refrain from＝〜を控える。for the time being＝当分の間。',audio:'card_audio/card_321.mp3'},
+{cat:'🏥 健康・体調', en:'I do want to get into shape and lose some weight, so I go swimming every morning.', ja:'本当に体調を良くしたいし、減量もしたいから、毎朝泳ぎに行っています。', tip:'do want＝強調のdo（本当に〜したい）。get into shape＝体調を整える。lose weight＝体重を減らす。',audio:'card_audio/card_322.mp3'},
+{cat:'🏥 健康・体調', en:'He caught a nasty cold because he stayed up late last night.', ja:'昨日の夜更かしがたたって、彼はひどい風邪をひいた。', tip:'catch a cold＝風邪をひく。nasty＝ひどい・不快な。stay up late＝夜更かしする。',audio:'card_audio/card_323.mp3'},
+{cat:'🏥 健康・体調', en:'The surgeon persuaded him to undergo an organ transplant.', ja:'外科医に説得されて、彼は臓器移植手術を受けることにした。', tip:'surgeon＝外科医。persuade A to do＝Aを説得して〜させる。undergo＝〜を受ける（手術など）。transplant＝移植。',audio:'card_audio/card_324.mp3'},
+{cat:'🏥 健康・体調', en:'Since our father is bedridden, we take turns looking after him.', ja:'父が寝たきりなので私たちが交代で面倒を見ています。', tip:'bedridden＝寝たきりの。take turns doing＝交代で〜する。look after＝〜の面倒を見る（= take care of）。',audio:'card_audio/card_325.mp3'},
+{cat:'🏥 健康・体調', en:'Our hypothesis is that eating excessive amounts of junk food contributes to early mortality.', ja:'ジャンクフードの過剰な摂取は早死にの一因になる、というのが我々の仮説だ。', tip:'hypothesis＝仮説。excessive＝過剰な。contribute to＝〜の一因となる。mortality＝死亡率・死。',audio:'card_audio/card_326.mp3'},
+{cat:'🎓 学業・キャリア', en:'The government did not take appropriate measures to prevent the infection from spreading.', ja:'政府は感染の拡大を未然に防ぐための適切な措置を取らなかった。', tip:'appropriate＝適切な。measure＝対策・措置（通例複数形）。prevent A from doing＝Aが〜するのを防ぐ。',audio:'card_audio/card_327.mp3'},
+{cat:'🎓 学業・キャリア', en:'The minister was obliged to resign from the Cabinet.', ja:'その大臣は内閣からの辞任を余儀なくされた。', tip:'be obliged to＝〜を余儀なくされる（= be forced to）。resign from＝〜を辞任する。Cabinet＝内閣。',audio:'card_audio/card_328.mp3'},
+{cat:'🎓 学業・キャリア', en:'Many people regard the current compulsory education system as being obsolete.', ja:'多くの人々は、現行の義務教育制度が時代遅れであると考えている。', tip:'regard A as B＝AをBとみなす。compulsory education＝義務教育。obsolete＝時代遅れの。',audio:'card_audio/card_329.mp3'},
+{cat:'🎓 学業・キャリア', en:'Many people encouraged me to fulfill my ambitions.', ja:'大きな目標を実現するようにと、たくさんの人が私を励ましてくれた。', tip:'encourage A to do＝Aに〜するよう励ます。fulfill＝〜を実現する・果たす。ambition＝大志・野心。',audio:'card_audio/card_330.mp3'},
+{cat:'🎓 学業・キャリア', en:'To make his dreams come true, he dropped out of school and made his way to Tokyo.', ja:'自分の夢を実現させるために、彼は学校を中退して東京を目指した。', tip:'make A come true＝Aを実現させる。drop out of＝〜を中退する。make one\'s way to＝〜へ向かう。',audio:'card_audio/card_331.mp3'},
+{cat:'🎓 学業・キャリア', en:'"What do you do?" "I\'m a college student, a freshman at Harvard." "What\'s your major?" "Philosophy."', ja:'「普段は何をなさってるんですか？」「大学生です。ハーバードの1年です。」「専攻は？」「哲学です。」', tip:'What do you do?＝ご職業は？。freshman＝大学1年生。major＝専攻。',audio:'card_audio/card_332.mp3'},
+{cat:'🎓 学業・キャリア', en:'Tuition will be raised by nearly ten percent as of April 1, 2001.', ja:'2001年4月1日から授業料が10％近く値上げになります。', tip:'tuition＝授業料。raise A by B＝AをB分引き上げる。as of＝〜時点で・〜付けで。',audio:'card_audio/card_333.mp3'},
+{cat:'🎓 学業・キャリア', en:'"I\'m of two minds whether to apply for the scholarship or not." "Give it a try!"', ja:'「奨学金を申し込もうかどうか悩んでるの。」「やるだけやってみなよ！」', tip:'be of two minds＝迷っている・決めかねている（慣用句）。apply for＝〜に応募する。scholarship＝奨学金。',audio:'card_audio/card_334.mp3'},
+{cat:'🎓 学業・キャリア', en:'As soon as he graduated from Keio University, he took over his family\'s business.', ja:'彼は慶応大学を卒業するとすぐに家業を継いだ。', tip:'as soon as＝〜するとすぐに。graduate from＝〜を卒業する。take over＝〜を引き継ぐ。',audio:'card_audio/card_335.mp3'},
+{cat:'🎓 学業・キャリア', en:'You aren\'t cut out for the military because of its rigid discipline.', ja:'軍の規律は厳格だから、あなたはそっちの世界には向かないわ。', tip:'be cut out for＝〜に向いている（通例否定文で使う）。military＝軍隊。rigid＝厳格な。discipline＝規律。',audio:'card_audio/card_336.mp3'},
+{cat:'🎓 学業・キャリア', en:'I am determined to make a living as a playwright at all costs.', ja:'私はどんな犠牲を払ってでも、脚本家で食べていくと心に決めている。', tip:'be determined to＝〜すると心に決めている。make a living as＝〜として生計を立てる。at all costs＝どんな犠牲を払ってでも。',audio:'card_audio/card_337.mp3'},
+{cat:'🎓 学業・キャリア', en:'As he grew up, he learned to put things in perspective.', ja:'彼も大人になって、物事を総合的な視野で見られるようになった。', tip:'grow up＝成長する・大人になる。learn to do＝〜できるようになる。put things in perspective＝物事を大局的に捉える（慣用句）。',audio:'card_audio/card_338.mp3'},
+{cat:'🎓 学業・キャリア', en:'Conformity is an essential element of our homogeneous community.', ja:'同じような人々からなる私たちの地域社会では、体制に従おうとする意識は不可欠な要素である。', tip:'conformity＝（体制などへの）順応・同調。essential＝不可欠な。homogeneous＝同質の。',audio:'card_audio/card_339.mp3'},
+{cat:'🎓 学業・キャリア', en:'I\'d rather go my own way than toil away for a company. Trying to fit into a mold gets me nowhere!', ja:'会社のためにあくせく働くよりは、我が道を行くほうがいい。型にはまろうとしたって何の得にもならないよ！', tip:'would rather A than B＝BよりむしろAしたい。toil away＝あくせく働く。fit into a mold＝型にはまる。get one nowhere＝何の役にも立たない。',audio:'card_audio/card_340.mp3'},
+{cat:'🎓 学業・キャリア', en:'Tom takes after his uncle in personality. I mean, he is obstinate by nature. He never gives in.', ja:'トムは性格が彼のおじに似ている。つまりその、生まれつきの頑固者。彼は絶対に折れない。', tip:'take after＝〜に似ている（血縁関係で）。obstinate＝頑固な。by nature＝生まれつき。give in＝屈する・折れる。',audio:'card_audio/card_341.mp3'},
+{cat:'📐 重要構文・性格表現', en:'When the time is ripe, be bold and go for it! I\'ll stand by you.', ja:'機が熟したら、大胆に突き進むんだ！僕がいつもそばにいる。', tip:'ripe＝（機が）熟した。bold＝大胆な。go for it＝思い切ってやってみる（口語）。stand by＝〜を支える・味方する。',audio:'card_audio/card_342.mp3'},
+{cat:'📐 重要構文・性格表現', en:'I\'ll stand up for what I believe in and won\'t yield to any threats.', ja:'自分の信念を守るためには立ち上がるし、いかなる脅威にも屈しないつもりだ。', tip:'stand up for＝〜のために立ち上がる・〜を守る。believe in＝〜を信じる（存在・価値を）。yield to＝〜に屈する。threat＝脅威。',audio:'card_audio/card_343.mp3'},
+{cat:'📐 重要構文・性格表現', en:'"If only I could conquer my weaknesses!" "It\'s up to you."', ja:'「自分の弱点を克服できさえすればなあ。」「あなた次第よ。」', tip:'If only ...!＝〜でありさえすればなあ（仮定法の願望表現）。conquer＝〜を克服する。It\'s up to you.＝あなた次第だ。',audio:'card_audio/card_344.mp3'},
+{cat:'📐 重要構文・性格表現', en:'You should make the most of this rare opportunity to demonstrate your talent.', ja:'自分の才能を示すために、めったにないこの機会を最大限に利用するべきだ。', tip:'make the most of＝〜を最大限に活用する。rare＝めったにない。demonstrate＝〜を示す・証明する。',audio:'card_audio/card_345.mp3'},
+{cat:'📐 重要構文・性格表現', en:'You won\'t let me down. I have great faith in you. You can make it!', ja:'僕をがっかりさせないよね。信頼しているよ。君ならうまくやれるさ！', tip:'let ... down＝〜を失望させる。have faith in＝〜を信頼する。make it＝うまくやり遂げる（口語）。',audio:'card_audio/card_346.mp3'},
+{cat:'📐 重要構文・性格表現', en:'The spectators were moved by her graceful performance.', ja:'観客たちは彼女の優雅な演技に感動した。', tip:'spectator＝観客（スポーツ・見世物の）。be moved by＝〜に感動する。graceful＝優雅な。',audio:'card_audio/card_347.mp3'},
+{cat:'📐 重要構文・性格表現', en:'In 1995, Ando received architecture\'s most prestigious award.', ja:'1995年、安藤氏は建築における最も権威ある賞を受賞した。', tip:'architecture＝建築。prestigious＝権威ある・名誉ある。award＝賞。',audio:'card_audio/card_348.mp3'},
+{cat:'📐 重要構文・性格表現', en:'In the face of adversity, Mike accomplished an extraordinary feat. He deserves praise.', ja:'逆境をものともせず、マイクはすばらしい偉業を成し遂げた。称賛を受けるのは当然だ。', tip:'in the face of＝〜に直面しても・〜をものともせず。adversity＝逆境。feat＝偉業。deserve＝〜に値する。',audio:'card_audio/card_349.mp3'},
+{cat:'📐 重要構文・性格表現', en:'The audience was impressed by his eloquent lecture.', ja:'聴衆は彼の説得力のある講義に感銘を受けた。', tip:'audience＝聴衆（集合名詞）。be impressed by＝〜に感銘を受ける。eloquent＝雄弁な・説得力のある。',audio:'card_audio/card_350.mp3'},
+{cat:'💰 お金・仕事・キャリア', en:'From a humble background, John achieved worldwide fame.', ja:'庶民の身から、ジョンは世界的な名声を勝ち取った。', tip:'humble＝庶民の・謙虚な。background＝生い立ち・経歴。achieve＝〜を成し遂げる。fame＝名声。',audio:'card_audio/card_351.mp3'},
+{cat:'💰 お金・仕事・キャリア', en:'He accumulated a tremendous fortune during the postwar era.', ja:'彼は戦後に莫大な財産を築いた。', tip:'accumulate＝〜を蓄積する。tremendous＝莫大な。fortune＝財産。postwar era＝戦後（の時代）。',audio:'card_audio/card_352.mp3'},
+{cat:'💰 お金・仕事・キャリア', en:'He used to be well off and generous, but now he lives from hand to mouth.', ja:'彼は以前は裕福で気前もよかったけれど、今ではその日暮らしにならない。', tip:'used to＝以前は〜だった。well off＝裕福な（= wealthy）。generous＝気前のいい。live from hand to mouth＝その日暮らしをする（慣用句）。',audio:'card_audio/card_353.mp3'},
+{cat:'💰 お金・仕事・キャリア', en:'Nick is by no means satisfied with the reward. He is selfish and greedy.', ja:'ニックは決してその報酬に満足していない。彼は自己中心的で欲が深い。', tip:'by no means＝決して〜ない（強い否定）。reward＝報酬。selfish＝自己中心的な。greedy＝欲深い。',audio:'card_audio/card_354.mp3'},
+{cat:'💰 お金・仕事・キャリア', en:'"You owe me $200 altogether, Bob. When are you going to pay me back?" "I\'m sorry. I\'m hard up." "There you go again!"', ja:'「全部で200ドル貸してるのよ、ボブ。いつ返すつもりなの？」「ごめん。金欠なんだ。」「またなの？」', tip:'owe＝〜に借りがある。altogether＝合計で。pay back＝返済する。be hard up＝金に困っている（口語）。There you go again!＝またそれか（口語）。',audio:'card_audio/card_355.mp3'},
+{cat:'💰 お金・仕事・キャリア', en:'To Brian\'s surprise, his debt amounted to a considerable sum.', ja:'ブライアンが驚いたことに、借金はかなりの額になっていた。', tip:'to one\'s surprise＝〜が驚いたことに。debt＝借金。amount to＝〜の額になる。considerable＝かなりの。',audio:'card_audio/card_356.mp3'},
+{cat:'💰 お金・仕事・キャリア', en:'Stop clinging to your glory days, or you\'ll be left behind.', ja:'過去の栄光にしがみつくのはやめないと、取り残されるわよ。', tip:'cling to＝〜にしがみつく。glory days＝栄光の日々。leave behind＝置き去りにする。',audio:'card_audio/card_357.mp3'},
+{cat:'💰 お金・仕事・キャリア', en:'You cannot escape from today\'s harsh realities, so you must adapt to them.', ja:'今日の厳しい現実からは逃れられない以上、それに順応しなければならない。', tip:'escape from＝〜から逃れる。harsh＝厳しい。reality＝現実。adapt to＝〜に順応する。',audio:'card_audio/card_358.mp3'},
+{cat:'💰 お金・仕事・キャリア', en:'Prosperity does not last forever. In other words, it will come to an end one of these days.', ja:'繁栄は永遠に続くものではない。つまり、いつかは終わりを迎えるものだ。', tip:'prosperity＝繁栄。last＝続く（動詞）。in other words＝つまり・言い換えれば。one of these days＝そのうち・いつか。',audio:'card_audio/card_359.mp3'},
+{cat:'💰 お金・仕事・キャリア', en:'Proper qualifications are required for the position; computer literacy is a must.', ja:'その職種には相応の資格や能力が必要で、コンピューターが使えることは絶対条件である。', tip:'proper＝適切な・相応の。qualification＝資格。position＝職・地位。literacy＝〜を使いこなす能力。a must＝必須事項（名詞）。',audio:'card_audio/card_360.mp3'},
+{cat:'💰 お金・仕事・キャリア', en:'Enclose your resume in this envelope and submit it to the personnel department.', ja:'この封筒に履歴書も入れて人事部に提出して下さい。', tip:'enclose＝〜を同封する。resume＝履歴書（米語）。submit＝〜を提出する。personnel department＝人事部。',audio:'card_audio/card_361.mp3'},
+{cat:'💰 お金・仕事・キャリア', en:'It\'s optimistic of you to believe that things will work out. At best there\'s a fifty-fifty chance.', ja:'物事がうまく行くと信じるなんて君も楽観的だね。可能性はせいぜい50%だよ。', tip:'It is + 形容詞 + of 人 + to do＝〜するとは（人）は…だ。work out＝うまくいく。at best＝せいぜい・良くて。fifty-fifty＝五分五分の。',audio:'card_audio/card_362.mp3'},
+{cat:'💰 お金・仕事・キャリア', en:'Registration forms can be obtained free of charge.', ja:'登録用紙は無料で入手できます。', tip:'registration＝登録。obtain＝〜を入手する（= get）。free of charge＝無料で（= for free）。',audio:'card_audio/card_363.mp3'},
+{cat:'💰 お金・仕事・キャリア', en:'Please give us a call now if you want to participate in the workshop!', ja:'この講習会に参加をご希望の方は、今すぐお電話下さい。', tip:'give ... a call＝〜に電話する。participate in＝〜に参加する（= take part in）。workshop＝講習会・研修会。',audio:'card_audio/card_364.mp3'},
+{cat:'💰 お金・仕事・キャリア', en:'For further inquiries, please feel free to contact us toll-free at 1-800-555-1212.', ja:'さらにご質問がありましたら、どうぞご遠慮なくフリーダイヤル1-800-555-1212までお電話下さい。', tip:'inquiry＝問い合わせ。feel free to＝遠慮なく〜する。toll-free＝通話料無料の（フリーダイヤル）。',audio:'card_audio/card_365.mp3'},
 ];
-const audioFiles=[{file:'26-Section_26.mp4',label:'1'},{file:'27-Section_27.mp4',label:'2'},{file:'28-Section_28.mp4',label:'3'},{file:'29-Section_29.mp4',label:'4'},{file:'30-Section_30.mp4',label:'5'}];
-function makeSrcCandidates(file){
-  const alt=file.includes('_')?file.replace(/_/g,' '):null;
-  return alt?[file,alt]:[file];
+// カードごとのネイティブ音声再生
+let nativeAudioEl=new Audio();
+nativeAudioEl.preload='none';
+function playNativeAudio(audioFile,onEnd,onError){
+  nativeAudioEl.pause();
+  nativeAudioEl.onended=null;
+  nativeAudioEl.onerror=null;
+  if(!audioFile){ if(onError)onError(); return; }
+  nativeAudioEl.src=audioFile;
+  nativeAudioEl.currentTime=0;
+  nativeAudioEl.onended=()=>{ if(onEnd)onEnd(); };
+  const p=nativeAudioEl.play();
+  if(p&&p.catch){ p.catch(()=>{ if(onError)onError(); }); }
 }
-let audioEls=audioFiles.map(f=>{
-  const a=new Audio();
-  a.preload='none';
-  a._candidates=makeSrcCandidates(f.file);
-  a._candIdx=0;
-  a.src='duo_audio/'+encodeURIComponent(a._candidates[0]);
-  return a;
-});
-function advanceCandidate(a){
-  if(a._candIdx<a._candidates.length-1){
-    a._candIdx++;
-    a.src='duo_audio/'+encodeURIComponent(a._candidates[a._candIdx]);
-    return true;
-  }
-  return false;
-}
-(function buildTrackButtons(){
-  const row=document.getElementById('audio-track-row');
-  audioFiles.forEach((f,i)=>{
-    const b=document.createElement('button');
-    b.className='audio-track-btn';
-    b.id='audio-track-'+i;
-    b.textContent=(i+1);
-    b.onclick=()=>toggleTrack(i);
-    row.appendChild(b);
-  });
-  const loopBtn=document.createElement('button');
-  loopBtn.className='audio-loop-all-btn';
-  loopBtn.id='audio-loop-all-btn';
-  loopBtn.textContent='🔁';
-  loopBtn.onclick=toggleLoopAll;
-  row.appendChild(loopBtn);
-})();
-let currentPlayingIdx=-1;
-let loopAllOn=false;
-function stopAllAudio(){
-  audioEls.forEach((a,i)=>{ a.pause(); a.currentTime=0; a.onended=null; const b=document.getElementById('audio-track-'+i); if(b){b.classList.remove('playing');} });
-  currentPlayingIdx=-1;
-}
-function playTrack(i,chain){
-  stopAllAudio();
-  currentPlayingIdx=i;
-  const a=audioEls[i];
-  const btn=document.getElementById('audio-track-'+i);
-  btn.classList.add('playing');
-  try{ a.currentTime=0; }catch(e){}
-  a.onended=()=>{
-    btn.classList.remove('playing');
-    if(chain){
-      const nextIdx=(i+1)%audioFiles.length;
-      playTrack(nextIdx,true);
-    } else {
-      currentPlayingIdx=-1;
-    }
-  };
-  const attempt=()=>{
-    const p=a.play();
-    if(p&&p.catch){
-      p.catch(()=>{
-        if(advanceCandidate(a)){
-          attempt();
-        } else {
-          btn.classList.remove('playing');
-          currentPlayingIdx=-1;
-          loopAllOn=false;
-          const loopBtn=document.getElementById('audio-loop-all-btn');
-          if(loopBtn){loopBtn.classList.remove('on');loopBtn.textContent='🔁';}
-          alert('音声ファイルの再生に失敗しました。\n試したファイル名:\n'+a._candidates.map(c=>'duo_audio/'+c).join('\n')+'\n\nduo_audioフォルダがHTMLファイルと同じ場所にアップロードされているか、ファイル名が一致しているかご確認ください。');
-        }
-      });
-    }
-  };
-  attempt();
-}
-function toggleTrack(i){
-  if(currentPlayingIdx===i){
-    stopAllAudio();
-    loopAllOn=false;
-    document.getElementById('audio-loop-all-btn').classList.remove('on');
-    document.getElementById('audio-loop-all-btn').textContent='🔁';
-  } else {
-    loopAllOn=false;
-    document.getElementById('audio-loop-all-btn').classList.remove('on');
-    document.getElementById('audio-loop-all-btn').textContent='🔁';
-    playTrack(i,false);
-  }
-}
-function toggleLoopAll(){
-  if(loopAllOn){
-    loopAllOn=false;
-    stopAllAudio();
-    document.getElementById('audio-loop-all-btn').classList.remove('on');
-    document.getElementById('audio-loop-all-btn').textContent='🔁';
-  } else {
-    loopAllOn=true;
-    document.getElementById('audio-loop-all-btn').classList.add('on');
-    document.getElementById('audio-loop-all-btn').textContent='⏹';
-    playTrack(0,true);
-  }
-}
+function stopNativeAudio(){ nativeAudioEl.pause(); nativeAudioEl.onended=null; }
 let currentIndex=0,isEnToJa=true,isRandom=false,isRepeating=false;
 let mastered=new Set(),activeCategory='all';
 let isAutoPlaying=false,autoStopped=false,autoTimeout=null;
@@ -376,13 +284,22 @@ function getVoice(){return voices[parseInt(document.getElementById('voice-select
 function updateRate(){speechRate=parseFloat(document.getElementById('rate-slider').value);document.getElementById('rate-val').textContent=speechRate.toFixed(1)+'×';}
 function startKeepAlive(){stopKeepAlive();keepAliveTimer=setInterval(()=>{if(window.speechSynthesis.speaking)window.speechSynthesis.pause(),window.speechSynthesis.resume();},10000);}
 function stopKeepAlive(){if(keepAliveTimer){clearInterval(keepAliveTimer);keepAliveTimer=null;}}
-function speakOne(text,onEnd){window.speechSynthesis.cancel();isSpeaking=false;clearTimeout(speakOne._t);speakOne._t=setTimeout(()=>{const utt=new SpeechSynthesisUtterance(text);const v=getVoice();if(v){utt.voice=v;utt.lang=v.lang;}else{utt.lang=voicePref==='US'?'en-US':'en-GB';}utt.rate=speechRate;utt.onend=()=>{isSpeaking=false;stopKeepAlive();if(onEnd)onEnd();};utt.onerror=()=>{isSpeaking=false;stopKeepAlive();if(onEnd)onEnd();};isSpeaking=true;startKeepAlive();window.speechSynthesis.speak(utt);},80);}
+function speakTTS(text,onEnd){window.speechSynthesis.cancel();isSpeaking=false;clearTimeout(speakOne._t);speakOne._t=setTimeout(()=>{const utt=new SpeechSynthesisUtterance(text);const v=getVoice();if(v){utt.voice=v;utt.lang=v.lang;}else{utt.lang=voicePref==='US'?'en-US':'en-GB';}utt.rate=speechRate;utt.onend=()=>{isSpeaking=false;stopKeepAlive();if(onEnd)onEnd();};utt.onerror=()=>{isSpeaking=false;stopKeepAlive();if(onEnd)onEnd();};isSpeaking=true;startKeepAlive();window.speechSynthesis.speak(utt);},80);}
 speakOne._t=null;
-function speakP(){return new Promise(r=>{const a=getActive();if(!a.length){r();return;}speakOne(a[currentIndex].en,r);});}
-function speakCurrent(){const a=getActive();if(!a.length)return;speakOne(a[currentIndex].en);}
-function speakRepeat(){if(!isRepeating||isAutoPlaying)return;const a=getActive();if(!a.length)return;speakOne(a[currentIndex].en,()=>{if(isRepeating&&!isAutoPlaying){clearTimeout(speakRepeat._t);speakRepeat._t=setTimeout(()=>speakRepeat(),300);}}); }
+function speakOne(card,onEnd){
+  window.speechSynthesis.cancel();
+  stopNativeAudio();
+  if(card&&card.audio){
+    playNativeAudio(card.audio,onEnd,()=>{ speakTTS(card.en,onEnd); });
+  } else {
+    speakTTS(card.en,onEnd);
+  }
+}
+function speakP(){return new Promise(r=>{const a=getActive();if(!a.length){r();return;}speakOne(a[currentIndex],r);});}
+function speakCurrent(){const a=getActive();if(!a.length)return;speakOne(a[currentIndex]);}
+function speakRepeat(){if(!isRepeating||isAutoPlaying)return;const a=getActive();if(!a.length)return;speakOne(a[currentIndex],()=>{if(isRepeating&&!isAutoPlaying){clearTimeout(speakRepeat._t);speakRepeat._t=setTimeout(()=>speakRepeat(),300);}}); }
 speakRepeat._t=null;
-function toggleRepeat(){isRepeating=!isRepeating;const btn=document.getElementById('repeat-btn');btn.textContent=isRepeating?'🔁 繰り返し: ON':'🔁 繰り返し';btn.className=isRepeating?'btn btn-on':'btn btn-secondary';if(isRepeating){const a=getActive();if(a.length)speakRepeat();}else{window.speechSynthesis.cancel();isSpeaking=false;stopKeepAlive();clearTimeout(speakRepeat._t);}}
+function toggleRepeat(){isRepeating=!isRepeating;const btn=document.getElementById('repeat-btn');btn.textContent=isRepeating?'🔁 繰り返し: ON':'🔁 繰り返し';btn.className=isRepeating?'btn btn-on':'btn btn-secondary';if(isRepeating){const a=getActive();if(a.length)speakRepeat();}else{window.speechSynthesis.cancel();stopNativeAudio();isSpeaking=false;stopKeepAlive();clearTimeout(speakRepeat._t);}}
 function update(){const active=getActive();const noEl=document.getElementById('no-active');if(!active.length){noEl.classList.add('show');document.getElementById('main-card').style.display='none';document.getElementById('tap-hint').style.display='none';updateMasterBadge();buildCatRows();return;}noEl.classList.remove('show');document.getElementById('main-card').style.display='';document.getElementById('tap-hint').style.display='';if(currentIndex>=active.length)currentIndex=0;const item=active[currentIndex];const realIdx=phrases.indexOf(item);document.getElementById('card-num').textContent=String(realIdx+OFFSET).padStart(3,'0');document.getElementById('card-cat').textContent=item.cat;document.getElementById('cur-num').textContent=currentIndex+1;document.getElementById('tot-num').textContent=active.length;const pct=active.length>1?((currentIndex/(active.length-1))*100).toFixed(0):100;document.getElementById('progress-bar').style.width=pct+'%';if(isEnToJa){document.getElementById('main-text').innerHTML=item.en;document.getElementById('answer-ja').textContent=item.ja;}else{document.getElementById('main-text').innerHTML=item.ja;document.getElementById('answer-ja').textContent=item.en;}const tipEl=document.getElementById('answer-tip');if(item.tip){tipEl.textContent=item.tip;tipEl.style.display='';}else{tipEl.style.display='none';}document.getElementById('answer-wrap').classList.remove('show');document.getElementById('main-card').classList.remove('revealed');const cb=document.getElementById('master-cb');cb.checked=mastered.has(realIdx);if(mastered.has(realIdx))document.getElementById('mastered-badge').classList.add('show');else document.getElementById('mastered-badge').classList.remove('show');updateMasterBadge();buildCatRows();}
 function updateMasterBadge(){const cnt=mastered.size;document.getElementById('master-badge-top').textContent=`マスター: ${cnt} / ${phrases.length}`;const sumEl=document.getElementById('master-summary');if(cnt>0){sumEl.classList.add('show');sumEl.textContent=`✅ マスター済み: ${cnt}件 — タップしてリスト表示`;renderMasterList();}else sumEl.classList.remove('show');}
 function renderMasterList(){const listEl=document.getElementById('master-list');listEl.innerHTML='';[...mastered].sort((a,b)=>a-b).forEach(idx=>{const item=phrases[idx];const d=document.createElement('div');d.style.cssText='padding:8px 0;border-bottom:1px solid #f8fafc;font-size:12px;';d.innerHTML=`<span style="font-family:monospace;font-size:10px;color:#64748b;">${String(idx+OFFSET).padStart(3,'0')}</span> ${item.en.substring(0,55)}...`;listEl.appendChild(d);});}
@@ -397,7 +314,7 @@ function switchMode(){if(isAutoPlaying)return;isEnToJa=!isEnToJa;update();}
 function delayP(ms){return new Promise(r=>{if(autoStopped){r();return;}autoTimeout=setTimeout(r,ms);});}
 function setAutoPanel(s,i,c){document.getElementById('auto-step-title').textContent=s;document.getElementById('auto-instruction').textContent=i;document.getElementById('auto-count').textContent=c;}
 function enterAutoUI(){isAutoPlaying=true;autoStopped=false;document.getElementById('normal-controls').style.display='none';document.getElementById('auto-controls').style.display='';document.getElementById('auto-panel').classList.add('show');document.getElementById('tap-hint').style.display='none';document.getElementById('master-wrap').classList.add('disabled');document.getElementById('main-card').classList.remove('tappable');document.getElementById('main-card').classList.add('no-tap');}
-function exitAutoUI(){autoStopped=true;isAutoPlaying=false;window.speechSynthesis.cancel();isSpeaking=false;stopKeepAlive();clearTimeout(speakOne._t);if(autoTimeout){clearTimeout(autoTimeout);autoTimeout=null;}document.getElementById('normal-controls').style.display='';document.getElementById('auto-controls').style.display='none';document.getElementById('auto-panel').classList.remove('show');document.getElementById('tap-hint').style.display='';document.getElementById('master-wrap').classList.remove('disabled');document.getElementById('main-card').classList.add('tappable');document.getElementById('main-card').classList.remove('no-tap');}
+function exitAutoUI(){autoStopped=true;isAutoPlaying=false;window.speechSynthesis.cancel();stopNativeAudio();isSpeaking=false;stopKeepAlive();clearTimeout(speakOne._t);if(autoTimeout){clearTimeout(autoTimeout);autoTimeout=null;}document.getElementById('normal-controls').style.display='';document.getElementById('auto-controls').style.display='none';document.getElementById('auto-panel').classList.remove('show');document.getElementById('tap-hint').style.display='';document.getElementById('master-wrap').classList.remove('disabled');document.getElementById('main-card').classList.add('tappable');document.getElementById('main-card').classList.remove('no-tap');}
 function stopAutoPlay(){exitAutoUI();update();}
 function showHidden(){document.getElementById('main-text').textContent='？？？';document.getElementById('answer-wrap').classList.remove('show');document.getElementById('main-card').classList.remove('revealed');}
 function showAll(){const a=getActive();if(!a.length)return;document.getElementById('main-text').innerHTML=a[currentIndex].en;document.getElementById('answer-wrap').classList.add('show');document.getElementById('main-card').classList.add('revealed');}
