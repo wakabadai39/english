@@ -67,6 +67,7 @@ header h1 { font-size:12px; font-weight:700; white-space:nowrap; }
 </div>
 <div class="audio-bar">
   <span class="audio-title" id="audioTitle">🎵 第１番</span>
+  <button class="reset-btn" id="restartBtn">⏮最初から</button>
   <button class="play-btn" id="playBtn">▶</button>
   <div class="prog-wrap" id="progWrap"><div class="prog-bar" id="progBar"></div></div>
   <span class="time" id="timeDisp">0:00 / 0:00</span>
@@ -944,8 +945,8 @@ function onTrackEnd(){
 function hardStop(){
   if(shifter && originalBuf){
     savedFrac=Math.max(0,Math.min(1,shifter.timePlayed/originalBuf.duration));
-    try{ shifter.disconnect(); }catch(e){}
   }
+  destroyShifter();
   playing=false;
   $('playBtn').textContent='▶';
   cancelAnimationFrame(raf);
@@ -972,6 +973,15 @@ $('playBtn').onclick=()=>{
   if(!originalBuf) return;
   if(playing){hardStop();}else startPlay();
 };
+$('restartBtn').onclick=()=>{
+  if(!originalBuf) return;
+  const wasPlaying=playing;
+  hardStop();
+  savedFrac=0;
+  $('progBar').style.width='0';
+  $('timeDisp').textContent='0:00/'+fmt(originalBuf.duration);
+  if(wasPlaying) startPlay();
+};
 $('progWrap').onclick=e=>{
   if(!originalBuf||playing) return;
   const r=$('progWrap').getBoundingClientRect();
@@ -986,7 +996,6 @@ $('progWrap').onclick=e=>{
 function rebuildForNewSettings(){
   const wasPlaying=playing;
   hardStop();
-  destroyShifter();
   if(wasPlaying) startPlay();
 }
 
