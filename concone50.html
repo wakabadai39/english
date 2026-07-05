@@ -59,6 +59,11 @@ header h1 { font-size:12px; font-weight:700; white-space:nowrap; }
   <span class="pitch-val" id="pitchVal">±0</span>
   <button class="ctrl-btn" id="pitchUp">＋</button>
   <button class="reset-btn" id="pitchReset">戻す</button>
+  <span class="ctrl-label" style="margin-left:10px;">速度</span>
+  <button class="ctrl-btn" id="speedDn">−</button>
+  <span class="pitch-val" id="speedVal">x1.0</span>
+  <button class="ctrl-btn" id="speedUp">＋</button>
+  <button class="reset-btn" id="speedReset">戻す</button>
 </div>
 <div class="audio-bar">
   <span class="audio-title" id="audioTitle">🎵 第１番</span>
@@ -84,8 +89,8 @@ const $ = id => document.getElementById(id);
 
 // ─── MP3再生 ───────────────────────────────────────────────
 let ctx, src, gainNode;
-let originalBuf=null, processedBuf=null, cachedPitch=null;
-let pitch=0, playing=false, startCtxTime=0, pausePos=0, raf;
+let originalBuf=null, processedBuf=null, cachedPitch=null, cachedSpeed=null;
+let pitch=0, speed=1.0, playing=false, startCtxTime=0, pausePos=0, raf;
 let processing=false;
 
 function getCtx(){
@@ -99,7 +104,7 @@ const pdfpath = n=>`scores/Concone50_${String(n).padStart(2,'0')}.pdf`;
 const fmt = s=>!s||isNaN(s)?'0:00':Math.floor(s/60)+':'+String(Math.floor(s%60)).padStart(2,'0');
 
 function setControlsDisabled(d){
-  ['pitchDn','pitchUp','pitchReset','numSelect'].forEach(id=>$(id).disabled=d);
+  ['pitchDn','pitchUp','pitchReset','speedDn','speedUp','speedReset','numSelect'].forEach(id=>$(id).disabled=d);
 }
 
 for(let i=1;i<=50;i++){
@@ -109,7 +114,7 @@ for(let i=1;i<=50;i++){
 
 function selectNum(n){
   hardStop();
-  originalBuf=null; processedBuf=null; cachedPitch=null; pausePos=0;
+  originalBuf=null; processedBuf=null; cachedPitch=null; cachedSpeed=null; pausePos=0;
   $('audioTitle').textContent=`🎵 第${n}番`;
   renderPDF(pdfpath(n));
   $('progBar').style.width='0'; $('timeDisp').textContent='0:00 / 0:00';
@@ -121,20 +126,58 @@ function selectNum(n){
     .catch(()=>$('status').textContent='ファイルなし');
 }
 
-function shiftPitch(buffer,semitones){
-  if(semitones===0) return buffer;
-  const ratio=Math.pow(2,semitones/12);
+// タイムストレッチ（オーバーラップアド）：音程を変えずに長さだけを stretchFactor 倍にする
+function timeStretch(buffer,stretchFactor){
+  if(stretchFactor===1) return buffer;
   const ch=buffer.numberOfChannels,origLen=buffer.length,SR=buffer.sampleRate;
-  const newLen=Math.round(origLen/ratio);
+  const outLen=Math.max(1,Math.round(origLen*stretchFactor));
+  const c=getCtx(), out=c.createBuffer(ch,outLen,SR);
+  const grainSize=4096, hopOut=Math.floor(grainSize/4), hopIn=hopOut/stretchFactor;
+  const win=new Float32Array(grainSize);
+  for(let i=0;i<grainSize;i++) win[i]=0.5-0.5*Math.cos(2*Math.PI*i/(grainSize-1));
+  for(let ci=0;ci<ch;ci++){
+    const inp=buffer.getChannelData(ci), op=out.getChannelData(ci);
+    const weight=new Float32Array(outLen);
+    let readPos=0;
+    for(let writePos=0; writePos<outLen; writePos+=hopOut){
+      const grainLen=Math.min(grainSize, outLen-writePos);
+      for(let i=0;i<grainLen;i++){
+        const s=readPos+i, lo=Math.floor(s), hi=lo+1, f=s-lo;
+        const v0=(lo>=0&&lo<origLen)?inp[lo]:0;
+        const v1=(hi>=0&&hi<origLen)?inp[hi]:0;
+        op[writePos+i]+=(v0+(v1-v0)*f)*win[i];
+        weight[writePos+i]+=win[i];
+      }
+      readPos+=hopIn;
+    }
+    for(let i=0;i<outLen;i++){ if(weight[i]>0.0001) op[i]/=weight[i]; }
+  }
+  return out;
+}
+
+// 単純リサンプル：長さと音程を同時に ratio 倍に変える（内部処理用）
+function naiveResample(buffer,ratio){
+  const ch=buffer.numberOfChannels,origLen=buffer.length,SR=buffer.sampleRate;
+  const newLen=Math.max(1,Math.round(origLen/ratio));
   const c=getCtx(), out=c.createBuffer(ch,newLen,SR);
   for(let ci=0;ci<ch;ci++){
-    const inp=buffer.getChannelData(ci),op=out.getChannelData(ci);
+    const inp=buffer.getChannelData(ci), op=out.getChannelData(ci);
     for(let i=0;i<newLen;i++){
-      const s=i*ratio,lo=Math.floor(s),hi=lo+1,f=s-lo;
+      const s=i*ratio, lo=Math.floor(s), hi=lo+1, f=s-lo;
       op[i]=(lo<origLen?inp[lo]:0)*(1-f)+(hi<origLen?inp[hi]:0)*f;
     }
   }
   return out;
+}
+
+// 音程と速度を独立に変更する（2段階処理）
+function processAudio(buffer,semitones,spd){
+  if(semitones===0 && spd===1) return buffer;
+  const pitchRatio=Math.pow(2,semitones/12);
+  const stretchFactor=pitchRatio/spd;
+  const stage1=(stretchFactor===1)?buffer:timeStretch(buffer,stretchFactor);
+  if(pitchRatio===1) return stage1;
+  return naiveResample(stage1,pitchRatio);
 }
 
 function hardStop(){
@@ -153,12 +196,12 @@ function currentProcPos(){
 
 async function startPlay(){
   if(!originalBuf) return;
-  const tp=pitch;
-  if(cachedPitch!==tp){
+  const tp=pitch, ts=speed;
+  if(cachedPitch!==tp || cachedSpeed!==ts){
     processing=true; setControlsDisabled(true); $('status').textContent='処理中…';
     try{
       await new Promise(r=>setTimeout(r,10));
-      processedBuf=shiftPitch(originalBuf,tp); cachedPitch=tp;
+      processedBuf=processAudio(originalBuf,tp,ts); cachedPitch=tp; cachedSpeed=ts;
     }catch(e){$('status').textContent='エラー';}
     finally{processing=false;$('status').textContent='';setControlsDisabled(false);}
   }
@@ -197,11 +240,20 @@ $('progWrap').onclick=e=>{
 function changePitch(d){
   pitch=Math.max(-6,Math.min(6,pitch+d));
   $('pitchVal').textContent=pitch===0?'±0':pitch>0?`+${pitch}`:`${pitch}`;
-  processedBuf=null; cachedPitch=null; pausePos=0; $('progBar').style.width='0';
+  pausePos=0; $('progBar').style.width='0';
 }
 $('pitchDn').onclick=()=>changePitch(-1);
 $('pitchUp').onclick=()=>changePitch(+1);
 $('pitchReset').onclick=()=>{pitch=0;changePitch(0);};
+
+function changeSpeed(d){
+  speed=Math.round(Math.max(0.5,Math.min(1.5,speed+d))*100)/100;
+  $('speedVal').textContent='x'+speed.toFixed(2).replace(/0$/,'').replace(/\.$/,'.0');
+  pausePos=0; $('progBar').style.width='0';
+}
+$('speedDn').onclick=()=>changeSpeed(-0.1);
+$('speedUp').onclick=()=>changeSpeed(+0.1);
+$('speedReset').onclick=()=>{speed=1.0;changeSpeed(0);};
 
 // ─── PDF.js 楽譜描画 ──────────────────────────────────────
 pdfjsLib.GlobalWorkerOptions.workerSrc =
