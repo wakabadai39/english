@@ -103,12 +103,10 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);min-height:100vh
 </div>
 
 <div class="top-row">
-<button class="help-btn" onclick="alert('👆カードタップで答え表示\n🔊音声再生（合成音声）\n🗣️シャドウイング4ステップ\n▶連続再生\n🔄英⇄日モード切替\nマスターチェックで次へ\n\n上部の「ネイティブ再生」欄はカードと連動しない復習用の音声プレーヤーです。番号ボタンで個別再生、ループボタンで1〜5を繰り返し再生します。')">❓ 使い方</button>
+<button class="help-btn" onclick="alert('👆カードタップで答え表示\n🔊音声再生（ネイティブ音声。ファイルがない場合のみ合成音声）\n🗣️シャドウイング4ステップ\n▶連続再生\n🔄英⇄日モード切替\nマスターチェックで次へ')">❓ 使い方</button>
 <div class="badge green" id="master-badge-top">マスター: 0 / 69</div>
 </div>
 
-<div class="audio-mini-label">ネイティブ再生</div>
-<div class="audio-track-row" id="audio-track-row"></div>
 <div class="progress-wrap"><div class="progress-bar" id="progress-bar" style="width:2%"></div></div>
 <div class="progress-label">カード <span id="cur-num">1</span> / <span id="tot-num">69</span></div>
 <div class="no-active" id="no-active">✅ このカテゴリをすべてマスターしました！</div>
@@ -191,181 +189,91 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);min-height:100vh
 const OFFSET=492;
 const CATS={'😳 人間関係のドタバタ':'#be185d','📚 社会適応・日常':'#2563eb','💔 恋愛のもつれ':'#16a34a','💕 恋愛・結婚の行方':'#7c3aed','🙏 日常の締めくくり':'#d97706'};
 const phrases=[
-{cat:'😳 人間関係のドタバタ', en:'Quite a few people have been invited to celebrate the couple\'s anniversary.', ja:'かなりの数の人々が、その夫婦の結婚記念のお祝いに招待されている。', tip:'quite a few＝かなり多くの。celebrate＝〜を祝う。anniversary＝記念日。'},
-{cat:'😳 人間関係のドタバタ', en:'It won\'t be long before everything is ready. In the meantime, help yourself to some snacks.', ja:'もうすぐ準備完了です。その間、軽食をご自由につまんでいて下さい。', tip:'It won\'t be long before ...＝まもなく〜だ。in the meantime＝その間に。help yourself to＝〜を自由に取って食べる。'},
-{cat:'😳 人間関係のドタバタ', en:'Dressed in a loud and peculiar outfit, she stood out in the crowd.', ja:'けばけばしい奇妙な服を着ていた彼女は、人込みの中でもひときわ目立った。', tip:'dressed in ...＝〜を着て（分詞構文）。loud＝（服装が）派手な。peculiar＝奇妙な。stand out＝目立つ。'},
-{cat:'😳 人間関係のドタバタ', en:'All the guests were touched by her hospitality.', ja:'招かれた人は皆、彼女のもてなしに心を打たれた。', tip:'guest＝招待客。be touched by＝〜に感動する。hospitality＝もてなし・歓待。'},
-{cat:'😳 人間関係のドタバタ', en:'Her shabby clothes were not suitable for the occasion.', ja:'彼女のよれよれの服は、その場にはふさわしくなかった。', tip:'shabby＝みすぼらしい・よれよれの。suitable for＝〜にふさわしい。occasion＝場面・状況。'},
-{cat:'😳 人間関係のドタバタ', en:'That topic is too intimate to share with casual acquaintances.', ja:'たまたま知り合った人たちと話すには、その話題は立ち入りすぎている。', tip:'too ... to ~＝〜するには…すぎる。intimate＝親密な・個人的な。casual acquaintance＝ちょっとした知り合い。'},
-{cat:'😳 人間関係のドタバタ', en:'When Tom gets drunk, he gets crude and offensive. Stay away from him.', ja:'トムは酔っぱらうと下品になって、人に不快な思いをさせるから、近づいちゃだめだよ。', tip:'get drunk＝酔っ払う。crude＝下品な。offensive＝不快な・失礼な。stay away from＝〜に近づかない。'},
-{cat:'😳 人間関係のドタバタ', en:'He could hardly comprehend what she was implying.', ja:'彼女がほのめかしていることを彼はほとんど理解できなかった。', tip:'can hardly＝ほとんど〜できない。comprehend＝〜を理解する。imply＝〜をほのめかす。'},
-{cat:'😳 人間関係のドタバタ', en:'Bob felt embarrassed when he was teased in front of some girls.', ja:'女の子の前でからかわれて、ボブは恥ずかしかった。', tip:'feel embarrassed＝恥ずかしく感じる。tease＝〜をからかう。in front of＝〜の前で。'},
-{cat:'😳 人間関係のドタバタ', en:'His ambiguous reply made her all the more irritated.', ja:'彼の曖昧な返事はなおさら彼女をいらいらさせた。', tip:'ambiguous＝曖昧な。all the more＝なおさら・かえって。irritated＝いらいらした。'},
-{cat:'😳 人間関係のドタバタ', en:'Bob is very timid and blushes when chatting with girls.', ja:'ボブはとても臆病で女の子とおしゃべりすると赤面してしまう。', tip:'timid＝臆病な・内気な。blush＝赤面する。chat with＝〜とおしゃべりする。'},
-{cat:'😳 人間関係のドタバタ', en:'Nick looks down on anyone who comes from a rural area.', ja:'ニックは地方出身者なら誰であろうと見下している。', tip:'look down on＝〜を見下す（⇔ look up to）。rural area＝地方・田舎。'},
-{cat:'😳 人間関係のドタバタ', en:'"What\'s the matter, Bob? You look so miserable." "Leave me alone. It\'s none of your business."', ja:'「どうしたの、ボブ？そんなに暗い顔をして。」「ほっといてくれよ。君には関係ないことだ。」', tip:'What\'s the matter?＝どうしたの。miserable＝惨めな・浮かない顔の。Leave me alone.＝ほっといて。It\'s none of your business.＝あなたには関係ない。'},
-{cat:'😳 人間関係のドタバタ', en:'Although Bob was in disguise, I recognized him at a glance.', ja:'ボブは変装していたけれども、一目で彼だとわかった。', tip:'in disguise＝変装して。recognize＝〜を見分ける・認識する。at a glance＝一目で。'},
-{cat:'😳 人間関係のドタバタ', en:'"What are you chuckling about?" "Bob, you have your sweatshirt on backwards!" "Oops!"', ja:'「何をくすくす笑ってるんだ？」「ボブ、トレーナーが後ろ前よ。」「あっ！」', tip:'chuckle＝くすくす笑う。have ... on backwards＝〜を前後逆に着ている。Oops!＝あっ（失敗時の間投詞）。'},
-{cat:'😳 人間関係のドタバタ', en:'He is not good at making friends and always keeps to himself.', ja:'彼は友達作りが苦手で、いつも一人ぼっちでいる。', tip:'be not good at＝〜が苦手だ。make friends＝友達を作る。keep to oneself＝人と交わらない・一人でいる。'},
-{cat:'📚 社会適応・日常', en:'Having found no place he felt he belonged, he was extremely uneasy and lonely.', ja:'自分が受け入れられる場所を見つけられず、彼は極度の不安と孤独に陥っていた。', tip:'having found ...＝〜が見つからず（分詞構文の完了形）。belong＝所属する・居場所がある。uneasy＝不安な。'},
-{cat:'📚 社会適応・日常', en:'I found it pretty hard to adjust to my new surroundings.', ja:'新しい環境に順応するのはかなり大変なことだとわかった。', tip:'find it ... to do＝〜するのが…だとわかる。adjust to＝〜に順応する。surroundings＝周囲の環境。'},
-{cat:'📚 社会適応・日常', en:'I felt utterly out of place among those sophisticated people.', ja:'ああいう洗練された人たちの中で、自分はまったく場違いな気がした。', tip:'utterly＝まったく・完全に。out of place＝場違いな。sophisticated＝洗練された。'},
-{cat:'📚 社会適応・日常', en:'To tell the truth, I don\'t like classical music. On the other hand, Molly is really into it.', ja:'正直言って私はクラシック音楽は好きじゃない。かたや、モリーのほうは完全にはまっている。', tip:'to tell the truth＝正直に言うと。on the other hand＝一方で。be into＝〜にはまっている（口語）。'},
-{cat:'📚 社会適応・日常', en:'Bob derives pleasure from observing insects.', ja:'ボブは昆虫の観察に楽しみを感じている。', tip:'derive A from B＝BからAを得る。observe＝〜を観察する。insect＝昆虫。'},
-{cat:'📚 社会適応・日常', en:'"How about playing cards or something for a change?" "Sorry, I\'m not up for it."', ja:'「気分転換にトランプか何かしない？」「悪いけど、そういう気分じゃないよ。」', tip:'How about ...?＝〜はどう？。for a change＝気分転換に。be up for＝〜する気がある（口語）。'},
-{cat:'📚 社会適応・日常', en:'"After you." "No please, you go ahead." "Thanks." "You\'re welcome."', ja:'「お先にどうぞ。」「いや、あなたの方こそお先にどうぞ。」「すみません。」「どういたしまして。」', tip:'After you.＝お先にどうぞ（定番表現）。go ahead＝先に行く・進める。You\'re welcome.＝どういたしまして。'},
-{cat:'📚 社会適応・日常', en:'His niece is sociable and mature for her age. She could pass for twenty-something.', ja:'彼の姪は年の割には社交的で大人だ。二十代と言っても通用する。', tip:'niece＝姪。sociable＝社交的な。mature for one\'s age＝年齢の割に大人びている。pass for＝〜で通用する。'},
-{cat:'📚 社会適応・日常', en:'"Take care of yourself and say hi to your family for me." "I will. See you later."', ja:'「じゃあね。家族のみんなによろしく。」「ああ。またね。」', tip:'take care of yourself＝お大事に・元気でね。say hi to ... for me＝〜によろしく伝えて。See you later.＝またね。'},
-{cat:'📚 社会適応・日常', en:'I\'m looking forward to hearing from you. Sincerely, ((IN A LETTER))', ja:'お返事頂けるのを楽しみにしております。敬具 ((手紙で))', tip:'look forward to doing＝〜するのを楽しみにする。hear from＝〜から連絡がある。Sincerely＝敬具（手紙の結び）。'},
-{cat:'📚 社会適応・日常', en:'Can you spare a minute? I\'d like to discuss something of importance to both of us.', ja:'ちょっと時間を割いてくれませんか？二人にとって大事なことを話し合いたいんです。', tip:'spare＝〜を割く・都合をつける。discuss＝〜について話し合う。of importance＝重要な（= important）。'},
-{cat:'📚 社会適応・日常', en:'It may seem trivial to you but for me it\'s worth paying attention to.', ja:'あなたには些細なことに思えるかも知れませんが、私にとってそれは注意すべきことなんです。', tip:'trivial＝些細な。be worth doing＝〜する価値がある。pay attention to＝〜に注意を払う。'},
-{cat:'💔 恋愛のもつれ', en:'As far as Bob is concerned, anything goes. By contrast, Jane is very cautious.', ja:'ボブについて言えば、彼はどんなことでも受け入れるタイプだが、対照的にジェーンはとても慎重派だ。', tip:'as far as ... is concerned＝〜に関する限り。anything goes＝何でもあり。by contrast＝対照的に。cautious＝慎重な。'},
-{cat:'💔 恋愛のもつれ', en:'After an awkward pause, Bill took her by the hand and dragged her upstairs.', ja:'気まずい沈黙の後、ビルは彼女の手を取って上の階に引っ張って行った。', tip:'awkward pause＝気まずい間・沈黙。take ... by the hand＝〜の手を取る。drag＝〜を引っ張る。'},
-{cat:'💔 恋愛のもつれ', en:'Bill just wanted to comfort Monica, but she interpreted it as romantic interest.', ja:'ビルはただモニカを慰めたかっただけなのに、彼女は彼が自分に気があるのだと解釈した。', tip:'comfort＝〜を慰める。interpret A as B＝AをBと解釈する。romantic interest＝恋愛的な関心。'},
-{cat:'💔 恋愛のもつれ', en:'After making sure she was sound asleep, he crept out of the room and set off.', ja:'彼女が熟睡しているのを確かめて、彼はこっそり部屋を抜け出して旅立った。', tip:'make sure＝〜を確かめる。sound asleep＝ぐっすり眠って。creep out＝こっそり抜け出す。set off＝出発する。'},
-{cat:'💔 恋愛のもつれ', en:'Between you and me, Lisa, I came across Nick passionately embracing a woman.', ja:'ここだけの話だけど、リサ、女の人を熱く抱擁してるニックを見ちゃったんだ。', tip:'between you and me＝ここだけの話だが。come across＝〜に偶然出くわす。embrace＝〜を抱擁する。'},
-{cat:'💔 恋愛のもつれ', en:'Such a remark is open to misunderstanding.', ja:'そういう発言は誤解を招きやすい。', tip:'remark＝発言・意見。be open to＝〜を招きやすい・余地がある。misunderstanding＝誤解。'},
-{cat:'💔 恋愛のもつれ', en:'"I can\'t stand it anymore!" "Calm down. I\'ll come over as soon as possible." ((ON THE PHONE))', ja:'「もう我慢できないっ！」「落ちつけよ。すぐそこに行くから。」', tip:'stand＝〜を我慢する（否定文で）。calm down＝落ち着く。come over＝（相手のところへ）行く。'},
-{cat:'💔 恋愛のもつれ', en:'Don\'t take it literally. He is inclined to exaggerate.', ja:'そんなこと真に受けちゃだめだよ。彼は大げさに言う傾向があるから。', tip:'take ... literally＝〜を文字通りに受け取る。be inclined to＝〜する傾向がある。exaggerate＝誇張する。'},
-{cat:'💔 恋愛のもつれ', en:'"You should apologize to Lisa for making fun of her. You went too far this time." "Yeah.. I will, sometime when she\'s in a better mood."', ja:'「リサをばかにしたことを謝るべきだわ。今回はやりすぎよ。」「ああ、そうするよ。そのうち彼女の機嫌が直ったらね。」', tip:'apologize for＝〜のことで謝る。make fun of＝〜をからかう。go too far＝やり過ぎる。'},
-{cat:'💔 恋愛のもつれ', en:'"Lisa, are you getting along with Nick?" "Once in a while, I think of divorcing him." "You must be kidding!"', ja:'「リサ、ニックとうまくやってる？」「時々、離婚を考えることがあるわ。」「冗談だろ！」', tip:'get along with＝〜とうまくやる。once in a while＝時々。You must be kidding!＝冗談でしょう！'},
-{cat:'💔 恋愛のもつれ', en:'In tears, she tore up his letter and threw it away.', ja:'彼女は泣きながら、彼からの手紙をめちゃくちゃに引き裂いて捨てた。', tip:'in tears＝涙を流して。tear up＝〜を引き裂く。throw away＝〜を捨てる。'},
-{cat:'💔 恋愛のもつれ', en:'"Jennifer deceived me!" "You should have known better than to trust her."', ja:'「ジェニファーにだまされた！」「彼女を信じないくらいの分別があってもよかったのに。」', tip:'deceive＝〜をだます。should have known better＝もっと分別があってよかったのに。'},
-{cat:'💔 恋愛のもつれ', en:'Tom regretted having wasted a great deal of his life.', ja:'トムは自分の人生の多くを無駄にしてきたことを後悔した。', tip:'regret doing＝〜したことを後悔する。regret having done＝過去の完了を強調。waste＝〜を無駄にする。'},
-{cat:'💔 恋愛のもつれ', en:'I cannot look back on my adolescence without feeling depressed.', ja:'自分の思春期を振り返ると、いつも憂鬱な気分になる。', tip:'cannot ... without ~＝〜せずには…できない（二重否定）。look back on＝〜を振り返る。adolescence＝思春期。'},
-{cat:'💔 恋愛のもつれ', en:'"Jennifer left me for another guy." "Oh, you must be upset." "Not really. I\'m used to it."', ja:'「ジェニファーが俺をふって他の男のところにいったよ。」「えっ、それは辛いわね。」「そうでもないよ。慣れてるよ。」', tip:'leave A for B＝Aを捨ててBのところへ行く。be upset＝動揺している。be used to＝〜に慣れている。'},
-{cat:'💔 恋愛のもつれ', en:'"No wonder she didn\'t show up to see him off." "How come?" "They broke up." "Oh, what a pity!"', ja:'「彼女が見送りに来なかったのも当然だよ。」「どうして？」「二人は別れたんだ。」「えっ、かわいそうに！」', tip:'no wonder＝〜も当然だ。show up＝現れる。see ... off＝〜を見送る。break up＝別れる。'},
-{cat:'💔 恋愛のもつれ', en:'"Living here all by myself is torture!" he sobbed.', ja:'「ここで自分一人だけで生きていくなんて拷問だ」と彼はすすり泣きして言った。', tip:'all by myself＝完全に一人で。torture＝拷問（比喩的に苦痛）。sob＝すすり泣く。'},
-{cat:'💕 恋愛・結婚の行方', en:'"To be honest, I\'m crazy about Ken because he\'s brave, self-confident, and never afraid of taking risks." "If I were you, I\'d ask him out!"', ja:'「正直言うと私、ケンに夢中なの。だって、勇敢で自分に自信を持っていて、それに危険を冒すことを決して恐れないでしょ。」「私ならデートに誘うわ。」', tip:'be crazy about＝〜に夢中である。self-confident＝自信のある。ask ... out＝〜をデートに誘う。'},
-{cat:'💕 恋愛・結婚の行方', en:'"I\'ve been going with Jennifer on and off for ages." "You\'re as indecisive as ever. Isn\'t it about time you settled down?"', ja:'「ずいぶん長い間、ジェニファーとは付き合ったり別れたりの繰り返しだよ。」「相変わらず優柔不断ね。そろそろ落ち着いたらどう？」', tip:'go with＝〜と付き合う。on and off＝断続的に。indecisive＝優柔不断な。It\'s about time ...＝そろそろ〜する頃だ。'},
-{cat:'💕 恋愛・結婚の行方', en:'"It dawned on me that I had been taken in by Jennifer all along." "How naive! Didn\'t you see through her?"', ja:'「ジェニファーにずっとだまされていたのがわかってきたよ。」「何てうぶなの。彼女の本性が見抜けなかったの？」', tip:'It dawns on ... that ~＝〜だと（人）はわかってくる。be taken in＝だまされる。see through＝〜の本性を見抜く。'},
-{cat:'💕 恋愛・結婚の行方', en:'Even though she is seeing someone else, I won\'t give her up.', ja:'実際、彼女は誰かと付き合っているけれども、僕は彼女をあきらめない。', tip:'even though＝〜だけれども。see someone＝（恋愛的に）付き合う。give up＝〜をあきらめる。'},
-{cat:'💕 恋愛・結婚の行方', en:'"Hi, Jane. What\'s up?" "Not much. How about you?" "I got married to Jennifer." "Wow! Congratulations!"', ja:'「やあ、ジェーン。最近どう？」「別に。あなたは？」「ジェニファーと結婚したんだ。」「ええっ、おめでとう！」', tip:'What\'s up?＝どうしてる（口語挨拶）。Not much.＝特に何も（決まり文句）。get married to＝〜と結婚する。'},
-{cat:'💕 恋愛・結婚の行方', en:'Whenever you\'re in trouble or feeling down, I\'ll be there for you.', ja:'大変なことがあったり、落ち込んだりしたときはいつでも、私があなたのそばにいるわ。', tip:'whenever＝〜するときはいつも。be in trouble＝困っている。feel down＝落ち込む。be there for＝〜のそばにいる・支える。'},
-{cat:'💕 恋愛・結婚の行方', en:'"Delight" is the opposite of "sorrow."', ja:'「喜び」は「悲しみ」の反対です。', tip:'delight＝喜び。opposite＝反対のもの。sorrow＝悲しみ。'},
-{cat:'💕 恋愛・結婚の行方', en:'"Jennifer went so far as to call me an idiot and she wouldn\'t take it back." "Serves you right! You provoked her, didn\'t you?"', ja:'「ジェニファーは僕をばか呼ばわりまでして、しかもそれを撤回しないんだ。」「自業自得よ！あなたからけしかけたんでしょう？」', tip:'go so far as to＝〜しさえする。take back＝（発言を）撤回する。Serves you right!＝自業自得だ。provoke＝〜を挑発する。'},
-{cat:'💕 恋愛・結婚の行方', en:'"Why do you put up with her arrogance? She\'s just taking advantage of you." "Shut up!"', ja:'「彼女の傲慢さにどうして我慢しているの？利用されているだけよ。」「うるさい！」', tip:'put up with＝〜を我慢する。arrogance＝傲慢さ。take advantage of＝〜を利用する。Shut up!＝黙れ（口語・強い表現）。'},
-{cat:'💕 恋愛・結婚の行方', en:'Take your time. I know you need a couple of days to reflect on it.', ja:'慌てなくていいですよ。そのことをじっくり考えるには2、3日必要でしょうから。', tip:'Take your time.＝ゆっくりでいい。a couple of＝2、3の。reflect on＝〜についてじっくり考える。'},
-{cat:'🙏 日常の締めくくり', en:'Bob has to get through this ordeal on his own.', ja:'ボブは自分の力でこの厳しい試練を乗り切らなければいけない。', tip:'get through＝〜を乗り切る。ordeal＝試練。on one\'s own＝自分の力で。'},
-{cat:'🙏 日常の締めくくり', en:'Flies and mosquitoes interfered with his meditation.', ja:'ハエと蚊が彼の瞑想の邪魔をした。', tip:'fly（複数flies）＝ハエ。mosquito＝蚊。interfere with＝〜の邪魔をする。meditation＝瞑想。'},
-{cat:'🙏 日常の締めくくり', en:'The sacred ritual took place after being postponed twice.', ja:'2度の延期の後、その神聖な儀式は執り行われた。', tip:'sacred＝神聖な。ritual＝儀式。take place＝行われる。postpone＝〜を延期する。'},
-{cat:'🙏 日常の締めくくり', en:'All at once, the Buddhist priest burst into laughter, spoiling the solemn atmosphere.', ja:'お坊さんが突然大声で笑い出し、厳粛な雰囲気を台無しにした。', tip:'all at once＝突然（= suddenly）。burst into laughter＝突然笑い出す。spoil＝〜を台無しにする。solemn＝厳粛な。'},
-{cat:'🙏 日常の締めくくり', en:'Cover your mouth when you cough, sneeze, or yawn.', ja:'咳、くしゃみ、あくびをするときは口を手で隠しなさい。', tip:'cover＝〜を覆う。cough＝咳をする。sneeze＝くしゃみをする。yawn＝あくびをする。'},
-{cat:'🙏 日常の締めくくり', en:'"One of her relatives passed away three days ago." "Oh, that\'s too bad. I\'m so sorry."', ja:'「彼女の親戚が3日前に亡くなったんだ。」「えっ、それは大変ね。お気の毒だわ。」', tip:'relative＝親戚。pass away＝亡くなる（dieの婉曲表現）。That\'s too bad.＝それは大変・気の毒に。'},
-{cat:'🙏 日常の締めくくり', en:'Besides attending the funeral, she needs to make all the arrangements.', ja:'彼女は葬儀に参列するだけでなく、すべての段取りをつけなければならない。', tip:'besides＝〜に加えて（前置詞）。attend＝〜に出席する。funeral＝葬儀。make arrangements＝手はずを整える。'},
-{cat:'🙏 日常の締めくくり', en:'"I feel for you, Jane. Grief doesn\'t fade away quickly." "I\'m OK. I\'ll get over it."', ja:'「ジェーン、気持ちはわかるよ。悲しみはすぐに消えるものじゃない。」「大丈夫。乗り越えてみせるわ。」', tip:'feel for＝〜に同情する。grief＝深い悲しみ。fade away＝薄れて消える。get over＝〜を乗り越える。'},
-{cat:'🙏 日常の締めくくり', en:'She cherishes the precious memories of her childhood.', ja:'彼女は子供の頃のかけがえのない思い出を大切にしている。', tip:'cherish＝〜を大切にする。precious＝かけがえのない・貴重な。memory＝思い出。'},
-{cat:'🙏 日常の締めくくり', en:'"Speaking of Jennifer, she got engaged to a businessman." "I\'m at a loss for words! I hope she won\'t break it off."', ja:'「ジェニファーと言えば、彼女、実業家と婚約したんだよ。」「あきれてものが言えないわ。破談にならなきゃいいけどね。」', tip:'speaking of＝〜と言えば。get engaged to＝〜と婚約する。be at a loss for words＝言葉に詰まる。break it off＝（婚約などを）解消する。'},
-{cat:'🙏 日常の締めくくり', en:'These days, the motives for marriage are not necessarily pure. Take Jennifer for example.', ja:'近ごろでは、結婚の動機は必ずしも純粋とは限らない。例えば、ジェニファーを見てごらんよ。', tip:'these days＝近ごろ。motive＝動機。not necessarily＝必ずしも〜とは限らない。take ... for example＝〜を例に取ると。'},
-{cat:'🙏 日常の締めくくり', en:'Go easy on Bob. You know, he\'s been going through a rough period recently.', ja:'ボブにはやさしく接してあげてくれよ。ほら、彼は最近ずっと辛いこと続きなんだ。', tip:'go easy on＝〜に優しく接する・手加減する。go through＝〜を経験する（困難など）。rough period＝辛い時期。'},
-{cat:'🙏 日常の締めくくり', en:'"By the way, do you have the time?" "Let\'s see.. it\'s a quarter to eight."', ja:'「ところで、今何時？」「え〜っと、8時15分前だよ。」', tip:'by the way＝ところで。Do you have the time?＝今何時ですか（Do you have time?＝時間ある？と区別）。a quarter to eight＝8時15分前。'},
-{cat:'🙏 日常の締めくくり', en:'"Let\'s call it a day, Bob. I\'m starved." "Yep. I\'ll buy you dinner."', ja:'「ボブ、今日はこの辺までにしましょう。お腹がぺこぺこ。」「ああ。晩飯は僕がおごるよ。」', tip:'call it a day＝今日はこれで終わりにする（慣用句）。starved＝ひどく空腹の。buy ... dinner＝〜に夕食をおごる。'},
+{cat:'😳 人間関係のドタバタ', en:'Quite a few people have been invited to celebrate the couple\'s anniversary.', ja:'かなりの数の人々が、その夫婦の結婚記念のお祝いに招待されている。', tip:'quite a few＝かなり多くの。celebrate＝〜を祝う。anniversary＝記念日。',audio:'card_audio/card_492.mp3'},
+{cat:'😳 人間関係のドタバタ', en:'It won\'t be long before everything is ready. In the meantime, help yourself to some snacks.', ja:'もうすぐ準備完了です。その間、軽食をご自由につまんでいて下さい。', tip:'It won\'t be long before ...＝まもなく〜だ。in the meantime＝その間に。help yourself to＝〜を自由に取って食べる。',audio:'card_audio/card_493.mp3'},
+{cat:'😳 人間関係のドタバタ', en:'Dressed in a loud and peculiar outfit, she stood out in the crowd.', ja:'けばけばしい奇妙な服を着ていた彼女は、人込みの中でもひときわ目立った。', tip:'dressed in ...＝〜を着て（分詞構文）。loud＝（服装が）派手な。peculiar＝奇妙な。stand out＝目立つ。',audio:'card_audio/card_494.mp3'},
+{cat:'😳 人間関係のドタバタ', en:'All the guests were touched by her hospitality.', ja:'招かれた人は皆、彼女のもてなしに心を打たれた。', tip:'guest＝招待客。be touched by＝〜に感動する。hospitality＝もてなし・歓待。',audio:'card_audio/card_495.mp3'},
+{cat:'😳 人間関係のドタバタ', en:'Her shabby clothes were not suitable for the occasion.', ja:'彼女のよれよれの服は、その場にはふさわしくなかった。', tip:'shabby＝みすぼらしい・よれよれの。suitable for＝〜にふさわしい。occasion＝場面・状況。',audio:'card_audio/card_496.mp3'},
+{cat:'😳 人間関係のドタバタ', en:'That topic is too intimate to share with casual acquaintances.', ja:'たまたま知り合った人たちと話すには、その話題は立ち入りすぎている。', tip:'too ... to ~＝〜するには…すぎる。intimate＝親密な・個人的な。casual acquaintance＝ちょっとした知り合い。',audio:'card_audio/card_497.mp3'},
+{cat:'😳 人間関係のドタバタ', en:'When Tom gets drunk, he gets crude and offensive. Stay away from him.', ja:'トムは酔っぱらうと下品になって、人に不快な思いをさせるから、近づいちゃだめだよ。', tip:'get drunk＝酔っ払う。crude＝下品な。offensive＝不快な・失礼な。stay away from＝〜に近づかない。',audio:'card_audio/card_498.mp3'},
+{cat:'😳 人間関係のドタバタ', en:'He could hardly comprehend what she was implying.', ja:'彼女がほのめかしていることを彼はほとんど理解できなかった。', tip:'can hardly＝ほとんど〜できない。comprehend＝〜を理解する。imply＝〜をほのめかす。',audio:'card_audio/card_499.mp3'},
+{cat:'😳 人間関係のドタバタ', en:'Bob felt embarrassed when he was teased in front of some girls.', ja:'女の子の前でからかわれて、ボブは恥ずかしかった。', tip:'feel embarrassed＝恥ずかしく感じる。tease＝〜をからかう。in front of＝〜の前で。',audio:'card_audio/card_500.mp3'},
+{cat:'😳 人間関係のドタバタ', en:'His ambiguous reply made her all the more irritated.', ja:'彼の曖昧な返事はなおさら彼女をいらいらさせた。', tip:'ambiguous＝曖昧な。all the more＝なおさら・かえって。irritated＝いらいらした。',audio:'card_audio/card_501.mp3'},
+{cat:'😳 人間関係のドタバタ', en:'Bob is very timid and blushes when chatting with girls.', ja:'ボブはとても臆病で女の子とおしゃべりすると赤面してしまう。', tip:'timid＝臆病な・内気な。blush＝赤面する。chat with＝〜とおしゃべりする。',audio:'card_audio/card_502.mp3'},
+{cat:'😳 人間関係のドタバタ', en:'Nick looks down on anyone who comes from a rural area.', ja:'ニックは地方出身者なら誰であろうと見下している。', tip:'look down on＝〜を見下す（⇔ look up to）。rural area＝地方・田舎。',audio:'card_audio/card_503.mp3'},
+{cat:'😳 人間関係のドタバタ', en:'"What\'s the matter, Bob? You look so miserable." "Leave me alone. It\'s none of your business."', ja:'「どうしたの、ボブ？そんなに暗い顔をして。」「ほっといてくれよ。君には関係ないことだ。」', tip:'What\'s the matter?＝どうしたの。miserable＝惨めな・浮かない顔の。Leave me alone.＝ほっといて。It\'s none of your business.＝あなたには関係ない。',audio:'card_audio/card_504.mp3'},
+{cat:'😳 人間関係のドタバタ', en:'Although Bob was in disguise, I recognized him at a glance.', ja:'ボブは変装していたけれども、一目で彼だとわかった。', tip:'in disguise＝変装して。recognize＝〜を見分ける・認識する。at a glance＝一目で。',audio:'card_audio/card_505.mp3'},
+{cat:'😳 人間関係のドタバタ', en:'"What are you chuckling about?" "Bob, you have your sweatshirt on backwards!" "Oops!"', ja:'「何をくすくす笑ってるんだ？」「ボブ、トレーナーが後ろ前よ。」「あっ！」', tip:'chuckle＝くすくす笑う。have ... on backwards＝〜を前後逆に着ている。Oops!＝あっ（失敗時の間投詞）。',audio:'card_audio/card_506.mp3'},
+{cat:'😳 人間関係のドタバタ', en:'He is not good at making friends and always keeps to himself.', ja:'彼は友達作りが苦手で、いつも一人ぼっちでいる。', tip:'be not good at＝〜が苦手だ。make friends＝友達を作る。keep to oneself＝人と交わらない・一人でいる。',audio:'card_audio/card_507.mp3'},
+{cat:'📚 社会適応・日常', en:'Having found no place he felt he belonged, he was extremely uneasy and lonely.', ja:'自分が受け入れられる場所を見つけられず、彼は極度の不安と孤独に陥っていた。', tip:'having found ...＝〜が見つからず（分詞構文の完了形）。belong＝所属する・居場所がある。uneasy＝不安な。',audio:'card_audio/card_508.mp3'},
+{cat:'📚 社会適応・日常', en:'I found it pretty hard to adjust to my new surroundings.', ja:'新しい環境に順応するのはかなり大変なことだとわかった。', tip:'find it ... to do＝〜するのが…だとわかる。adjust to＝〜に順応する。surroundings＝周囲の環境。',audio:'card_audio/card_509.mp3'},
+{cat:'📚 社会適応・日常', en:'I felt utterly out of place among those sophisticated people.', ja:'ああいう洗練された人たちの中で、自分はまったく場違いな気がした。', tip:'utterly＝まったく・完全に。out of place＝場違いな。sophisticated＝洗練された。',audio:'card_audio/card_510.mp3'},
+{cat:'📚 社会適応・日常', en:'To tell the truth, I don\'t like classical music. On the other hand, Molly is really into it.', ja:'正直言って私はクラシック音楽は好きじゃない。かたや、モリーのほうは完全にはまっている。', tip:'to tell the truth＝正直に言うと。on the other hand＝一方で。be into＝〜にはまっている（口語）。',audio:'card_audio/card_511.mp3'},
+{cat:'📚 社会適応・日常', en:'Bob derives pleasure from observing insects.', ja:'ボブは昆虫の観察に楽しみを感じている。', tip:'derive A from B＝BからAを得る。observe＝〜を観察する。insect＝昆虫。',audio:'card_audio/card_512.mp3'},
+{cat:'📚 社会適応・日常', en:'"How about playing cards or something for a change?" "Sorry, I\'m not up for it."', ja:'「気分転換にトランプか何かしない？」「悪いけど、そういう気分じゃないよ。」', tip:'How about ...?＝〜はどう？。for a change＝気分転換に。be up for＝〜する気がある（口語）。',audio:'card_audio/card_513.mp3'},
+{cat:'📚 社会適応・日常', en:'"After you." "No please, you go ahead." "Thanks." "You\'re welcome."', ja:'「お先にどうぞ。」「いや、あなたの方こそお先にどうぞ。」「すみません。」「どういたしまして。」', tip:'After you.＝お先にどうぞ（定番表現）。go ahead＝先に行く・進める。You\'re welcome.＝どういたしまして。',audio:'card_audio/card_514.mp3'},
+{cat:'📚 社会適応・日常', en:'His niece is sociable and mature for her age. She could pass for twenty-something.', ja:'彼の姪は年の割には社交的で大人だ。二十代と言っても通用する。', tip:'niece＝姪。sociable＝社交的な。mature for one\'s age＝年齢の割に大人びている。pass for＝〜で通用する。',audio:'card_audio/card_515.mp3'},
+{cat:'📚 社会適応・日常', en:'"Take care of yourself and say hi to your family for me." "I will. See you later."', ja:'「じゃあね。家族のみんなによろしく。」「ああ。またね。」', tip:'take care of yourself＝お大事に・元気でね。say hi to ... for me＝〜によろしく伝えて。See you later.＝またね。',audio:'card_audio/card_516.mp3'},
+{cat:'📚 社会適応・日常', en:'I\'m looking forward to hearing from you. Sincerely, ((IN A LETTER))', ja:'お返事頂けるのを楽しみにしております。敬具 ((手紙で))', tip:'look forward to doing＝〜するのを楽しみにする。hear from＝〜から連絡がある。Sincerely＝敬具（手紙の結び）。',audio:'card_audio/card_517.mp3'},
+{cat:'📚 社会適応・日常', en:'Can you spare a minute? I\'d like to discuss something of importance to both of us.', ja:'ちょっと時間を割いてくれませんか？二人にとって大事なことを話し合いたいんです。', tip:'spare＝〜を割く・都合をつける。discuss＝〜について話し合う。of importance＝重要な（= important）。',audio:'card_audio/card_518.mp3'},
+{cat:'📚 社会適応・日常', en:'It may seem trivial to you but for me it\'s worth paying attention to.', ja:'あなたには些細なことに思えるかも知れませんが、私にとってそれは注意すべきことなんです。', tip:'trivial＝些細な。be worth doing＝〜する価値がある。pay attention to＝〜に注意を払う。',audio:'card_audio/card_519.mp3'},
+{cat:'💔 恋愛のもつれ', en:'As far as Bob is concerned, anything goes. By contrast, Jane is very cautious.', ja:'ボブについて言えば、彼はどんなことでも受け入れるタイプだが、対照的にジェーンはとても慎重派だ。', tip:'as far as ... is concerned＝〜に関する限り。anything goes＝何でもあり。by contrast＝対照的に。cautious＝慎重な。',audio:'card_audio/card_520.mp3'},
+{cat:'💔 恋愛のもつれ', en:'After an awkward pause, Bill took her by the hand and dragged her upstairs.', ja:'気まずい沈黙の後、ビルは彼女の手を取って上の階に引っ張って行った。', tip:'awkward pause＝気まずい間・沈黙。take ... by the hand＝〜の手を取る。drag＝〜を引っ張る。',audio:'card_audio/card_521.mp3'},
+{cat:'💔 恋愛のもつれ', en:'Bill just wanted to comfort Monica, but she interpreted it as romantic interest.', ja:'ビルはただモニカを慰めたかっただけなのに、彼女は彼が自分に気があるのだと解釈した。', tip:'comfort＝〜を慰める。interpret A as B＝AをBと解釈する。romantic interest＝恋愛的な関心。',audio:'card_audio/card_522.mp3'},
+{cat:'💔 恋愛のもつれ', en:'After making sure she was sound asleep, he crept out of the room and set off.', ja:'彼女が熟睡しているのを確かめて、彼はこっそり部屋を抜け出して旅立った。', tip:'make sure＝〜を確かめる。sound asleep＝ぐっすり眠って。creep out＝こっそり抜け出す。set off＝出発する。',audio:'card_audio/card_523.mp3'},
+{cat:'💔 恋愛のもつれ', en:'Between you and me, Lisa, I came across Nick passionately embracing a woman.', ja:'ここだけの話だけど、リサ、女の人を熱く抱擁してるニックを見ちゃったんだ。', tip:'between you and me＝ここだけの話だが。come across＝〜に偶然出くわす。embrace＝〜を抱擁する。',audio:'card_audio/card_524.mp3'},
+{cat:'💔 恋愛のもつれ', en:'Such a remark is open to misunderstanding.', ja:'そういう発言は誤解を招きやすい。', tip:'remark＝発言・意見。be open to＝〜を招きやすい・余地がある。misunderstanding＝誤解。',audio:'card_audio/card_525.mp3'},
+{cat:'💔 恋愛のもつれ', en:'"I can\'t stand it anymore!" "Calm down. I\'ll come over as soon as possible." ((ON THE PHONE))', ja:'「もう我慢できないっ！」「落ちつけよ。すぐそこに行くから。」', tip:'stand＝〜を我慢する（否定文で）。calm down＝落ち着く。come over＝（相手のところへ）行く。',audio:'card_audio/card_526.mp3'},
+{cat:'💔 恋愛のもつれ', en:'Don\'t take it literally. He is inclined to exaggerate.', ja:'そんなこと真に受けちゃだめだよ。彼は大げさに言う傾向があるから。', tip:'take ... literally＝〜を文字通りに受け取る。be inclined to＝〜する傾向がある。exaggerate＝誇張する。',audio:'card_audio/card_527.mp3'},
+{cat:'💔 恋愛のもつれ', en:'"You should apologize to Lisa for making fun of her. You went too far this time." "Yeah.. I will, sometime when she\'s in a better mood."', ja:'「リサをばかにしたことを謝るべきだわ。今回はやりすぎよ。」「ああ、そうするよ。そのうち彼女の機嫌が直ったらね。」', tip:'apologize for＝〜のことで謝る。make fun of＝〜をからかう。go too far＝やり過ぎる。',audio:'card_audio/card_528.mp3'},
+{cat:'💔 恋愛のもつれ', en:'"Lisa, are you getting along with Nick?" "Once in a while, I think of divorcing him." "You must be kidding!"', ja:'「リサ、ニックとうまくやってる？」「時々、離婚を考えることがあるわ。」「冗談だろ！」', tip:'get along with＝〜とうまくやる。once in a while＝時々。You must be kidding!＝冗談でしょう！',audio:'card_audio/card_529.mp3'},
+{cat:'💔 恋愛のもつれ', en:'In tears, she tore up his letter and threw it away.', ja:'彼女は泣きながら、彼からの手紙をめちゃくちゃに引き裂いて捨てた。', tip:'in tears＝涙を流して。tear up＝〜を引き裂く。throw away＝〜を捨てる。',audio:'card_audio/card_530.mp3'},
+{cat:'💔 恋愛のもつれ', en:'"Jennifer deceived me!" "You should have known better than to trust her."', ja:'「ジェニファーにだまされた！」「彼女を信じないくらいの分別があってもよかったのに。」', tip:'deceive＝〜をだます。should have known better＝もっと分別があってよかったのに。',audio:'card_audio/card_531.mp3'},
+{cat:'💔 恋愛のもつれ', en:'Tom regretted having wasted a great deal of his life.', ja:'トムは自分の人生の多くを無駄にしてきたことを後悔した。', tip:'regret doing＝〜したことを後悔する。regret having done＝過去の完了を強調。waste＝〜を無駄にする。',audio:'card_audio/card_532.mp3'},
+{cat:'💔 恋愛のもつれ', en:'I cannot look back on my adolescence without feeling depressed.', ja:'自分の思春期を振り返ると、いつも憂鬱な気分になる。', tip:'cannot ... without ~＝〜せずには…できない（二重否定）。look back on＝〜を振り返る。adolescence＝思春期。',audio:'card_audio/card_533.mp3'},
+{cat:'💔 恋愛のもつれ', en:'"Jennifer left me for another guy." "Oh, you must be upset." "Not really. I\'m used to it."', ja:'「ジェニファーが俺をふって他の男のところにいったよ。」「えっ、それは辛いわね。」「そうでもないよ。慣れてるよ。」', tip:'leave A for B＝Aを捨ててBのところへ行く。be upset＝動揺している。be used to＝〜に慣れている。',audio:'card_audio/card_534.mp3'},
+{cat:'💔 恋愛のもつれ', en:'"No wonder she didn\'t show up to see him off." "How come?" "They broke up." "Oh, what a pity!"', ja:'「彼女が見送りに来なかったのも当然だよ。」「どうして？」「二人は別れたんだ。」「えっ、かわいそうに！」', tip:'no wonder＝〜も当然だ。show up＝現れる。see ... off＝〜を見送る。break up＝別れる。',audio:'card_audio/card_535.mp3'},
+{cat:'💔 恋愛のもつれ', en:'"Living here all by myself is torture!" he sobbed.', ja:'「ここで自分一人だけで生きていくなんて拷問だ」と彼はすすり泣きして言った。', tip:'all by myself＝完全に一人で。torture＝拷問（比喩的に苦痛）。sob＝すすり泣く。',audio:'card_audio/card_536.mp3'},
+{cat:'💕 恋愛・結婚の行方', en:'"To be honest, I\'m crazy about Ken because he\'s brave, self-confident, and never afraid of taking risks." "If I were you, I\'d ask him out!"', ja:'「正直言うと私、ケンに夢中なの。だって、勇敢で自分に自信を持っていて、それに危険を冒すことを決して恐れないでしょ。」「私ならデートに誘うわ。」', tip:'be crazy about＝〜に夢中である。self-confident＝自信のある。ask ... out＝〜をデートに誘う。',audio:'card_audio/card_537.mp3'},
+{cat:'💕 恋愛・結婚の行方', en:'"I\'ve been going with Jennifer on and off for ages." "You\'re as indecisive as ever. Isn\'t it about time you settled down?"', ja:'「ずいぶん長い間、ジェニファーとは付き合ったり別れたりの繰り返しだよ。」「相変わらず優柔不断ね。そろそろ落ち着いたらどう？」', tip:'go with＝〜と付き合う。on and off＝断続的に。indecisive＝優柔不断な。It\'s about time ...＝そろそろ〜する頃だ。',audio:'card_audio/card_538.mp3'},
+{cat:'💕 恋愛・結婚の行方', en:'"It dawned on me that I had been taken in by Jennifer all along." "How naive! Didn\'t you see through her?"', ja:'「ジェニファーにずっとだまされていたのがわかってきたよ。」「何てうぶなの。彼女の本性が見抜けなかったの？」', tip:'It dawns on ... that ~＝〜だと（人）はわかってくる。be taken in＝だまされる。see through＝〜の本性を見抜く。',audio:'card_audio/card_539.mp3'},
+{cat:'💕 恋愛・結婚の行方', en:'Even though she is seeing someone else, I won\'t give her up.', ja:'実際、彼女は誰かと付き合っているけれども、僕は彼女をあきらめない。', tip:'even though＝〜だけれども。see someone＝（恋愛的に）付き合う。give up＝〜をあきらめる。',audio:'card_audio/card_540.mp3'},
+{cat:'💕 恋愛・結婚の行方', en:'"Hi, Jane. What\'s up?" "Not much. How about you?" "I got married to Jennifer." "Wow! Congratulations!"', ja:'「やあ、ジェーン。最近どう？」「別に。あなたは？」「ジェニファーと結婚したんだ。」「ええっ、おめでとう！」', tip:'What\'s up?＝どうしてる（口語挨拶）。Not much.＝特に何も（決まり文句）。get married to＝〜と結婚する。',audio:'card_audio/card_541.mp3'},
+{cat:'💕 恋愛・結婚の行方', en:'Whenever you\'re in trouble or feeling down, I\'ll be there for you.', ja:'大変なことがあったり、落ち込んだりしたときはいつでも、私があなたのそばにいるわ。', tip:'whenever＝〜するときはいつも。be in trouble＝困っている。feel down＝落ち込む。be there for＝〜のそばにいる・支える。',audio:'card_audio/card_542.mp3'},
+{cat:'💕 恋愛・結婚の行方', en:'"Delight" is the opposite of "sorrow."', ja:'「喜び」は「悲しみ」の反対です。', tip:'delight＝喜び。opposite＝反対のもの。sorrow＝悲しみ。',audio:'card_audio/card_543.mp3'},
+{cat:'💕 恋愛・結婚の行方', en:'"Jennifer went so far as to call me an idiot and she wouldn\'t take it back." "Serves you right! You provoked her, didn\'t you?"', ja:'「ジェニファーは僕をばか呼ばわりまでして、しかもそれを撤回しないんだ。」「自業自得よ！あなたからけしかけたんでしょう？」', tip:'go so far as to＝〜しさえする。take back＝（発言を）撤回する。Serves you right!＝自業自得だ。provoke＝〜を挑発する。',audio:'card_audio/card_544.mp3'},
+{cat:'💕 恋愛・結婚の行方', en:'"Why do you put up with her arrogance? She\'s just taking advantage of you." "Shut up!"', ja:'「彼女の傲慢さにどうして我慢しているの？利用されているだけよ。」「うるさい！」', tip:'put up with＝〜を我慢する。arrogance＝傲慢さ。take advantage of＝〜を利用する。Shut up!＝黙れ（口語・強い表現）。',audio:'card_audio/card_545.mp3'},
+{cat:'💕 恋愛・結婚の行方', en:'Take your time. I know you need a couple of days to reflect on it.', ja:'慌てなくていいですよ。そのことをじっくり考えるには2、3日必要でしょうから。', tip:'Take your time.＝ゆっくりでいい。a couple of＝2、3の。reflect on＝〜についてじっくり考える。',audio:'card_audio/card_546.mp3'},
+{cat:'🙏 日常の締めくくり', en:'Bob has to get through this ordeal on his own.', ja:'ボブは自分の力でこの厳しい試練を乗り切らなければいけない。', tip:'get through＝〜を乗り切る。ordeal＝試練。on one\'s own＝自分の力で。',audio:'card_audio/card_547.mp3'},
+{cat:'🙏 日常の締めくくり', en:'Flies and mosquitoes interfered with his meditation.', ja:'ハエと蚊が彼の瞑想の邪魔をした。', tip:'fly（複数flies）＝ハエ。mosquito＝蚊。interfere with＝〜の邪魔をする。meditation＝瞑想。',audio:'card_audio/card_548.mp3'},
+{cat:'🙏 日常の締めくくり', en:'The sacred ritual took place after being postponed twice.', ja:'2度の延期の後、その神聖な儀式は執り行われた。', tip:'sacred＝神聖な。ritual＝儀式。take place＝行われる。postpone＝〜を延期する。',audio:'card_audio/card_549.mp3'},
+{cat:'🙏 日常の締めくくり', en:'All at once, the Buddhist priest burst into laughter, spoiling the solemn atmosphere.', ja:'お坊さんが突然大声で笑い出し、厳粛な雰囲気を台無しにした。', tip:'all at once＝突然（= suddenly）。burst into laughter＝突然笑い出す。spoil＝〜を台無しにする。solemn＝厳粛な。',audio:'card_audio/card_550.mp3'},
+{cat:'🙏 日常の締めくくり', en:'Cover your mouth when you cough, sneeze, or yawn.', ja:'咳、くしゃみ、あくびをするときは口を手で隠しなさい。', tip:'cover＝〜を覆う。cough＝咳をする。sneeze＝くしゃみをする。yawn＝あくびをする。',audio:'card_audio/card_551.mp3'},
+{cat:'🙏 日常の締めくくり', en:'"One of her relatives passed away three days ago." "Oh, that\'s too bad. I\'m so sorry."', ja:'「彼女の親戚が3日前に亡くなったんだ。」「えっ、それは大変ね。お気の毒だわ。」', tip:'relative＝親戚。pass away＝亡くなる（dieの婉曲表現）。That\'s too bad.＝それは大変・気の毒に。',audio:'card_audio/card_552.mp3'},
+{cat:'🙏 日常の締めくくり', en:'Besides attending the funeral, she needs to make all the arrangements.', ja:'彼女は葬儀に参列するだけでなく、すべての段取りをつけなければならない。', tip:'besides＝〜に加えて（前置詞）。attend＝〜に出席する。funeral＝葬儀。make arrangements＝手はずを整える。',audio:'card_audio/card_553.mp3'},
+{cat:'🙏 日常の締めくくり', en:'"I feel for you, Jane. Grief doesn\'t fade away quickly." "I\'m OK. I\'ll get over it."', ja:'「ジェーン、気持ちはわかるよ。悲しみはすぐに消えるものじゃない。」「大丈夫。乗り越えてみせるわ。」', tip:'feel for＝〜に同情する。grief＝深い悲しみ。fade away＝薄れて消える。get over＝〜を乗り越える。',audio:'card_audio/card_554.mp3'},
+{cat:'🙏 日常の締めくくり', en:'She cherishes the precious memories of her childhood.', ja:'彼女は子供の頃のかけがえのない思い出を大切にしている。', tip:'cherish＝〜を大切にする。precious＝かけがえのない・貴重な。memory＝思い出。',audio:'card_audio/card_555.mp3'},
+{cat:'🙏 日常の締めくくり', en:'"Speaking of Jennifer, she got engaged to a businessman." "I\'m at a loss for words! I hope she won\'t break it off."', ja:'「ジェニファーと言えば、彼女、実業家と婚約したんだよ。」「あきれてものが言えないわ。破談にならなきゃいいけどね。」', tip:'speaking of＝〜と言えば。get engaged to＝〜と婚約する。be at a loss for words＝言葉に詰まる。break it off＝（婚約などを）解消する。',audio:'card_audio/card_556.mp3'},
+{cat:'🙏 日常の締めくくり', en:'These days, the motives for marriage are not necessarily pure. Take Jennifer for example.', ja:'近ごろでは、結婚の動機は必ずしも純粋とは限らない。例えば、ジェニファーを見てごらんよ。', tip:'these days＝近ごろ。motive＝動機。not necessarily＝必ずしも〜とは限らない。take ... for example＝〜を例に取ると。',audio:'card_audio/card_557.mp3'},
+{cat:'🙏 日常の締めくくり', en:'Go easy on Bob. You know, he\'s been going through a rough period recently.', ja:'ボブにはやさしく接してあげてくれよ。ほら、彼は最近ずっと辛いこと続きなんだ。', tip:'go easy on＝〜に優しく接する・手加減する。go through＝〜を経験する（困難など）。rough period＝辛い時期。',audio:'card_audio/card_558.mp3'},
+{cat:'🙏 日常の締めくくり', en:'"By the way, do you have the time?" "Let\'s see.. it\'s a quarter to eight."', ja:'「ところで、今何時？」「え〜っと、8時15分前だよ。」', tip:'by the way＝ところで。Do you have the time?＝今何時ですか（Do you have time?＝時間ある？と区別）。a quarter to eight＝8時15分前。',audio:'card_audio/card_559.mp3'},
+{cat:'🙏 日常の締めくくり', en:'"Let\'s call it a day, Bob. I\'m starved." "Yep. I\'ll buy you dinner."', ja:'「ボブ、今日はこの辺までにしましょう。お腹がぺこぺこ。」「ああ。晩飯は僕がおごるよ。」', tip:'call it a day＝今日はこれで終わりにする（慣用句）。starved＝ひどく空腹の。buy ... dinner＝〜に夕食をおごる。',audio:'card_audio/card_560.mp3'},
 ];
-const audioFiles=[{file:'41-Section_41.mp4',label:'1'},{file:'42-Section_42.mp4',label:'2'},{file:'43-Section_43.mp4',label:'3'},{file:'44-Section_44.mp4',label:'4'},{file:'45-Section_45.mp4',label:'5'}];
-function makeSrcCandidates(file){
-  const alt=file.includes('_')?file.replace(/_/g,' '):null;
-  return alt?[file,alt]:[file];
+// カードごとのネイティブ音声再生
+let nativeAudioEl=new Audio();
+nativeAudioEl.preload='none';
+function playNativeAudio(audioFile,onEnd,onError){
+  nativeAudioEl.pause();
+  nativeAudioEl.onended=null;
+  nativeAudioEl.onerror=null;
+  if(!audioFile){ if(onError)onError(); return; }
+  nativeAudioEl.src=audioFile;
+  nativeAudioEl.currentTime=0;
+  nativeAudioEl.onended=()=>{ if(onEnd)onEnd(); };
+  const p=nativeAudioEl.play();
+  if(p&&p.catch){ p.catch(()=>{ if(onError)onError(); }); }
 }
-let audioEls=audioFiles.map(f=>{
-  const a=new Audio();
-  a.preload='none';
-  a._candidates=makeSrcCandidates(f.file);
-  a._candIdx=0;
-  a.src='duo_audio/'+encodeURIComponent(a._candidates[0]);
-  return a;
-});
-function advanceCandidate(a){
-  if(a._candIdx<a._candidates.length-1){
-    a._candIdx++;
-    a.src='duo_audio/'+encodeURIComponent(a._candidates[a._candIdx]);
-    return true;
-  }
-  return false;
-}
-(function buildTrackButtons(){
-  const row=document.getElementById('audio-track-row');
-  audioFiles.forEach((f,i)=>{
-    const b=document.createElement('button');
-    b.className='audio-track-btn';
-    b.id='audio-track-'+i;
-    b.textContent=(i+1);
-    b.onclick=()=>toggleTrack(i);
-    row.appendChild(b);
-  });
-  const loopBtn=document.createElement('button');
-  loopBtn.className='audio-loop-all-btn';
-  loopBtn.id='audio-loop-all-btn';
-  loopBtn.textContent='🔁';
-  loopBtn.onclick=toggleLoopAll;
-  row.appendChild(loopBtn);
-})();
-let currentPlayingIdx=-1;
-let loopAllOn=false;
-function stopAllAudio(){
-  audioEls.forEach((a,i)=>{ a.pause(); a.currentTime=0; a.onended=null; const b=document.getElementById('audio-track-'+i); if(b){b.classList.remove('playing');} });
-  currentPlayingIdx=-1;
-}
-function playTrack(i,chain){
-  stopAllAudio();
-  currentPlayingIdx=i;
-  const a=audioEls[i];
-  const btn=document.getElementById('audio-track-'+i);
-  btn.classList.add('playing');
-  try{ a.currentTime=0; }catch(e){}
-  a.onended=()=>{
-    btn.classList.remove('playing');
-    if(chain){
-      const nextIdx=(i+1)%audioFiles.length;
-      playTrack(nextIdx,true);
-    } else {
-      currentPlayingIdx=-1;
-    }
-  };
-  const attempt=()=>{
-    const p=a.play();
-    if(p&&p.catch){
-      p.catch(()=>{
-        if(advanceCandidate(a)){
-          attempt();
-        } else {
-          btn.classList.remove('playing');
-          currentPlayingIdx=-1;
-          loopAllOn=false;
-          const loopBtn=document.getElementById('audio-loop-all-btn');
-          if(loopBtn){loopBtn.classList.remove('on');loopBtn.textContent='🔁';}
-          alert('音声ファイルの再生に失敗しました。\n試したファイル名:\n'+a._candidates.map(c=>'duo_audio/'+c).join('\n')+'\n\nduo_audioフォルダがHTMLファイルと同じ場所にアップロードされているか、ファイル名が一致しているかご確認ください。');
-        }
-      });
-    }
-  };
-  attempt();
-}
-function toggleTrack(i){
-  if(currentPlayingIdx===i){
-    stopAllAudio();
-    loopAllOn=false;
-    document.getElementById('audio-loop-all-btn').classList.remove('on');
-    document.getElementById('audio-loop-all-btn').textContent='🔁';
-  } else {
-    loopAllOn=false;
-    document.getElementById('audio-loop-all-btn').classList.remove('on');
-    document.getElementById('audio-loop-all-btn').textContent='🔁';
-    playTrack(i,false);
-  }
-}
-function toggleLoopAll(){
-  if(loopAllOn){
-    loopAllOn=false;
-    stopAllAudio();
-    document.getElementById('audio-loop-all-btn').classList.remove('on');
-    document.getElementById('audio-loop-all-btn').textContent='🔁';
-  } else {
-    loopAllOn=true;
-    document.getElementById('audio-loop-all-btn').classList.add('on');
-    document.getElementById('audio-loop-all-btn').textContent='⏹';
-    playTrack(0,true);
-  }
-}
+function stopNativeAudio(){ nativeAudioEl.pause(); nativeAudioEl.onended=null; }
 let currentIndex=0,isEnToJa=true,isRandom=false,isRepeating=false;
 let mastered=new Set(),activeCategory='all';
 let isAutoPlaying=false,autoStopped=false,autoTimeout=null;
@@ -383,13 +291,22 @@ function getVoice(){return voices[parseInt(document.getElementById('voice-select
 function updateRate(){speechRate=parseFloat(document.getElementById('rate-slider').value);document.getElementById('rate-val').textContent=speechRate.toFixed(1)+'×';}
 function startKeepAlive(){stopKeepAlive();keepAliveTimer=setInterval(()=>{if(window.speechSynthesis.speaking)window.speechSynthesis.pause(),window.speechSynthesis.resume();},10000);}
 function stopKeepAlive(){if(keepAliveTimer){clearInterval(keepAliveTimer);keepAliveTimer=null;}}
-function speakOne(text,onEnd){window.speechSynthesis.cancel();isSpeaking=false;clearTimeout(speakOne._t);speakOne._t=setTimeout(()=>{const utt=new SpeechSynthesisUtterance(text);const v=getVoice();if(v){utt.voice=v;utt.lang=v.lang;}else{utt.lang=voicePref==='US'?'en-US':'en-GB';}utt.rate=speechRate;utt.onend=()=>{isSpeaking=false;stopKeepAlive();if(onEnd)onEnd();};utt.onerror=()=>{isSpeaking=false;stopKeepAlive();if(onEnd)onEnd();};isSpeaking=true;startKeepAlive();window.speechSynthesis.speak(utt);},80);}
+function speakTTS(text,onEnd){window.speechSynthesis.cancel();isSpeaking=false;clearTimeout(speakOne._t);speakOne._t=setTimeout(()=>{const utt=new SpeechSynthesisUtterance(text);const v=getVoice();if(v){utt.voice=v;utt.lang=v.lang;}else{utt.lang=voicePref==='US'?'en-US':'en-GB';}utt.rate=speechRate;utt.onend=()=>{isSpeaking=false;stopKeepAlive();if(onEnd)onEnd();};utt.onerror=()=>{isSpeaking=false;stopKeepAlive();if(onEnd)onEnd();};isSpeaking=true;startKeepAlive();window.speechSynthesis.speak(utt);},80);}
 speakOne._t=null;
-function speakP(){return new Promise(r=>{const a=getActive();if(!a.length){r();return;}speakOne(a[currentIndex].en,r);});}
-function speakCurrent(){const a=getActive();if(!a.length)return;speakOne(a[currentIndex].en);}
-function speakRepeat(){if(!isRepeating||isAutoPlaying)return;const a=getActive();if(!a.length)return;speakOne(a[currentIndex].en,()=>{if(isRepeating&&!isAutoPlaying){clearTimeout(speakRepeat._t);speakRepeat._t=setTimeout(()=>speakRepeat(),300);}}); }
+function speakOne(card,onEnd){
+  window.speechSynthesis.cancel();
+  stopNativeAudio();
+  if(card&&card.audio){
+    playNativeAudio(card.audio,onEnd,()=>{ speakTTS(card.en,onEnd); });
+  } else {
+    speakTTS(card.en,onEnd);
+  }
+}
+function speakP(){return new Promise(r=>{const a=getActive();if(!a.length){r();return;}speakOne(a[currentIndex],r);});}
+function speakCurrent(){const a=getActive();if(!a.length)return;speakOne(a[currentIndex]);}
+function speakRepeat(){if(!isRepeating||isAutoPlaying)return;const a=getActive();if(!a.length)return;speakOne(a[currentIndex],()=>{if(isRepeating&&!isAutoPlaying){clearTimeout(speakRepeat._t);speakRepeat._t=setTimeout(()=>speakRepeat(),300);}}); }
 speakRepeat._t=null;
-function toggleRepeat(){isRepeating=!isRepeating;const btn=document.getElementById('repeat-btn');btn.textContent=isRepeating?'🔁 繰り返し: ON':'🔁 繰り返し';btn.className=isRepeating?'btn btn-on':'btn btn-secondary';if(isRepeating){const a=getActive();if(a.length)speakRepeat();}else{window.speechSynthesis.cancel();isSpeaking=false;stopKeepAlive();clearTimeout(speakRepeat._t);}}
+function toggleRepeat(){isRepeating=!isRepeating;const btn=document.getElementById('repeat-btn');btn.textContent=isRepeating?'🔁 繰り返し: ON':'🔁 繰り返し';btn.className=isRepeating?'btn btn-on':'btn btn-secondary';if(isRepeating){const a=getActive();if(a.length)speakRepeat();}else{window.speechSynthesis.cancel();stopNativeAudio();isSpeaking=false;stopKeepAlive();clearTimeout(speakRepeat._t);}}
 function update(){const active=getActive();const noEl=document.getElementById('no-active');if(!active.length){noEl.classList.add('show');document.getElementById('main-card').style.display='none';document.getElementById('tap-hint').style.display='none';updateMasterBadge();buildCatRows();return;}noEl.classList.remove('show');document.getElementById('main-card').style.display='';document.getElementById('tap-hint').style.display='';if(currentIndex>=active.length)currentIndex=0;const item=active[currentIndex];const realIdx=phrases.indexOf(item);document.getElementById('card-num').textContent=String(realIdx+OFFSET).padStart(3,'0');document.getElementById('card-cat').textContent=item.cat;document.getElementById('cur-num').textContent=currentIndex+1;document.getElementById('tot-num').textContent=active.length;const pct=active.length>1?((currentIndex/(active.length-1))*100).toFixed(0):100;document.getElementById('progress-bar').style.width=pct+'%';if(isEnToJa){document.getElementById('main-text').innerHTML=item.en;document.getElementById('answer-ja').textContent=item.ja;}else{document.getElementById('main-text').innerHTML=item.ja;document.getElementById('answer-ja').textContent=item.en;}const tipEl=document.getElementById('answer-tip');if(item.tip){tipEl.textContent=item.tip;tipEl.style.display='';}else{tipEl.style.display='none';}document.getElementById('answer-wrap').classList.remove('show');document.getElementById('main-card').classList.remove('revealed');const cb=document.getElementById('master-cb');cb.checked=mastered.has(realIdx);if(mastered.has(realIdx))document.getElementById('mastered-badge').classList.add('show');else document.getElementById('mastered-badge').classList.remove('show');updateMasterBadge();buildCatRows();}
 function updateMasterBadge(){const cnt=mastered.size;document.getElementById('master-badge-top').textContent=`マスター: ${cnt} / ${phrases.length}`;const sumEl=document.getElementById('master-summary');if(cnt>0){sumEl.classList.add('show');sumEl.textContent=`✅ マスター済み: ${cnt}件 — タップしてリスト表示`;renderMasterList();}else sumEl.classList.remove('show');}
 function renderMasterList(){const listEl=document.getElementById('master-list');listEl.innerHTML='';[...mastered].sort((a,b)=>a-b).forEach(idx=>{const item=phrases[idx];const d=document.createElement('div');d.style.cssText='padding:8px 0;border-bottom:1px solid #f8fafc;font-size:12px;';d.innerHTML=`<span style="font-family:monospace;font-size:10px;color:#64748b;">${String(idx+OFFSET).padStart(3,'0')}</span> ${item.en.substring(0,55)}...`;listEl.appendChild(d);});}
@@ -404,7 +321,7 @@ function switchMode(){if(isAutoPlaying)return;isEnToJa=!isEnToJa;update();}
 function delayP(ms){return new Promise(r=>{if(autoStopped){r();return;}autoTimeout=setTimeout(r,ms);});}
 function setAutoPanel(s,i,c){document.getElementById('auto-step-title').textContent=s;document.getElementById('auto-instruction').textContent=i;document.getElementById('auto-count').textContent=c;}
 function enterAutoUI(){isAutoPlaying=true;autoStopped=false;document.getElementById('normal-controls').style.display='none';document.getElementById('auto-controls').style.display='';document.getElementById('auto-panel').classList.add('show');document.getElementById('tap-hint').style.display='none';document.getElementById('master-wrap').classList.add('disabled');document.getElementById('main-card').classList.remove('tappable');document.getElementById('main-card').classList.add('no-tap');}
-function exitAutoUI(){autoStopped=true;isAutoPlaying=false;window.speechSynthesis.cancel();isSpeaking=false;stopKeepAlive();clearTimeout(speakOne._t);if(autoTimeout){clearTimeout(autoTimeout);autoTimeout=null;}document.getElementById('normal-controls').style.display='';document.getElementById('auto-controls').style.display='none';document.getElementById('auto-panel').classList.remove('show');document.getElementById('tap-hint').style.display='';document.getElementById('master-wrap').classList.remove('disabled');document.getElementById('main-card').classList.add('tappable');document.getElementById('main-card').classList.remove('no-tap');}
+function exitAutoUI(){autoStopped=true;isAutoPlaying=false;window.speechSynthesis.cancel();stopNativeAudio();isSpeaking=false;stopKeepAlive();clearTimeout(speakOne._t);if(autoTimeout){clearTimeout(autoTimeout);autoTimeout=null;}document.getElementById('normal-controls').style.display='';document.getElementById('auto-controls').style.display='none';document.getElementById('auto-panel').classList.remove('show');document.getElementById('tap-hint').style.display='';document.getElementById('master-wrap').classList.remove('disabled');document.getElementById('main-card').classList.add('tappable');document.getElementById('main-card').classList.remove('no-tap');}
 function stopAutoPlay(){exitAutoUI();update();}
 function showHidden(){document.getElementById('main-text').textContent='？？？';document.getElementById('answer-wrap').classList.remove('show');document.getElementById('main-card').classList.remove('revealed');}
 function showAll(){const a=getActive();if(!a.length)return;document.getElementById('main-text').innerHTML=a[currentIndex].en;document.getElementById('answer-wrap').classList.add('show');document.getElementById('main-card').classList.add('revealed');}
