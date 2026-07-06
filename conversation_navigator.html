@@ -42,7 +42,7 @@ select,button{font-family:inherit;}
 .speed-box label{font-size:12px;color:var(--muted);white-space:nowrap;}
 .speed-box input[type=range]{flex:1;accent-color:var(--primary);}
 .speed-val{font-size:13px;font-weight:700;color:var(--primary);min-width:44px;text-align:right;}
-.jump-box{display:flex;gap:8px;align-items:center;margin-top:10px;}
+.jump-box{display:flex;gap:8px;align-items:center;margin-top:10px;flex-wrap:wrap;}
 .jump-box input{border:1px solid var(--border);border-radius:8px;padding:6px 10px;font-size:13px;width:90px;}
 .jump-box button{border:none;background:var(--primary-light);color:var(--primary);border-radius:8px;padding:6px 12px;font-size:12px;font-weight:700;cursor:pointer;}
 .status{font-size:12px;color:var(--muted);text-align:center;margin-top:6px;min-height:16px;}
@@ -94,6 +94,7 @@ select,button{font-family:inherit;}
     <div class="jump-box">
       <input type="text" id="jumpInput" placeholder="例 12:30">
       <button id="jumpBtn">この時刻へ</button>
+      <button id="copyTimeBtn">📋現在時刻をコピー</button>
       <span id="curTimeDisp" style="font-size:12px;color:var(--muted);margin-left:auto;">0:00 / 0:00</span>
     </div>
     <div class="status" id="status">読み込み中…</div>
@@ -160,6 +161,14 @@ function fmt(s){
   const h=Math.floor(s/3600), m=Math.floor((s%3600)/60), sec=Math.floor(s%60);
   if(h>0) return h+':'+String(m).padStart(2,'0')+':'+String(sec).padStart(2,'0');
   return m+':'+String(sec).padStart(2,'0');
+}
+function fmtPrecise(s){
+  if(!isFinite(s)||s<0) s=0;
+  s=Math.round(s*10)/10; // 丸め誤差で 60.0 にならないよう先に丸める
+  const h=Math.floor(s/3600), m=Math.floor((s%3600)/60), sec=(s%60);
+  const secStr=sec.toFixed(1).padStart(4,'0'); // e.g. "07.3"
+  if(h>0) return h+':'+String(m).padStart(2,'0')+':'+secStr;
+  return m+':'+secStr;
 }
 
 function resizeCanvases(){
@@ -254,7 +263,7 @@ function updateLoopInfo(){
   }
   toggleBtn.disabled=false;
   el.innerHTML=
-    '<span>選択区間: '+fmt(loopStart)+' 〜 '+fmt(loopEnd)+' ('+(loopEnd-loopStart).toFixed(1)+'秒)</span>'+
+    '<span>選択区間: '+fmtPrecise(loopStart)+' 〜 '+fmtPrecise(loopEnd)+' ('+(loopEnd-loopStart).toFixed(1)+'秒)</span>'+
     '<span class="nudge-group">'+
       '<button class="nudge-btn" data-nudge="s-1">−</button>'+
       '<span style="font-size:11px;align-self:center;">始</span>'+
@@ -402,13 +411,29 @@ $('jumpBtn').onclick=()=>{
   setView(t);
 };
 
+$('copyTimeBtn').onclick=()=>{
+  const g=getGlobalTime();
+  const text=fmtPrecise(g);
+  const done=()=>{
+    const btn=$('copyTimeBtn');
+    const orig=btn.textContent;
+    btn.textContent='✅ '+text+' コピーしました';
+    setTimeout(()=>{btn.textContent=orig;},1200);
+  };
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(done).catch(()=>{prompt('この時刻をコピーしてください',text);});
+  } else {
+    prompt('この時刻をコピーしてください',text);
+  }
+};
+
 // ---- main loop (rAF) : loop-boundary check + UI update ----
 function tick(){
   const g=getGlobalTime();
   if(loopOn && loopEnd!=null && !audioEl.paused && g>=loopEnd){
     playFrom(loopStart);
   }
-  $('curTimeDisp').textContent=fmt(g)+' / '+fmt(duration);
+  $('curTimeDisp').textContent=fmtPrecise(g)+' / '+fmt(duration);
   drawOverview();
   drawZoom();
   requestAnimationFrame(tick);
