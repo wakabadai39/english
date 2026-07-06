@@ -340,16 +340,22 @@ function playFrom(t){
   if(currentPartIdx!==idx){
     currentPartIdx=idx;
     audioEl.src=PARTS[idx].file;
+    try{ audioEl.currentTime=local; }catch(e){}
+    const p=audioEl.play();
+    if(p&&p.catch) p.catch(()=>{});
     const onReady=()=>{
       audioEl.removeEventListener('loadedmetadata',onReady);
-      audioEl.currentTime=local;
-      audioEl.play();
+      if(Math.abs(audioEl.currentTime-local)>0.3){
+        audioEl.currentTime=local;
+        const p2=audioEl.play();
+        if(p2&&p2.catch) p2.catch(()=>{});
+      }
     };
     audioEl.addEventListener('loadedmetadata',onReady);
-    audioEl.load();
   } else {
     audioEl.currentTime=local;
-    audioEl.play();
+    const p=audioEl.play();
+    if(p&&p.catch) p.catch(()=>{});
   }
 }
 function togglePlay(){
