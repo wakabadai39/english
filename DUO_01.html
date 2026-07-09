@@ -94,6 +94,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);min-height:100vh
 .audio-track-btn.playing{background:#0891b2;color:#fff;border-color:#0891b2;}
 .audio-loop-all-btn{border:1px solid var(--border);border-radius:99px;padding:4px 11px;font-size:11px;font-weight:700;cursor:pointer;background:#e2e8f0;color:var(--text);}
 .audio-loop-all-btn.on{background:var(--green);color:#fff;border-color:var(--green);}
+.profile-select{font-family:'Noto Sans JP',sans-serif;font-size:11px;font-weight:700;color:var(--primary);background:var(--primary-light);border:1px solid var(--border);border-radius:99px;padding:5px 10px;cursor:pointer;max-width:120px;}
 </style>
 </head>
 <body>
@@ -104,6 +105,8 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);min-height:100vh
 
 <div class="top-row">
 <button class="help-btn" onclick="alert('👆カードタップで答え表示\n🔊音声再生（ネイティブ音声。ファイルがない場合のみ合成音声）\n🗣️シャドウイング4ステップ\n▶連続再生\n🔄英⇄日モード切替\nマスターチェックで次へ')">❓ 使い方</button>
+<select class="profile-select" id="profile-select" onchange="switchProfile(this.value)"></select>
+
 <div class="badge green" id="master-badge-top">マスター: 0 / 62</div>
 </div>
 
@@ -268,6 +271,19 @@ function playNativeAudio(audioFile,onEnd,onError){
 function stopNativeAudio(){ nativeAudioEl.pause(); nativeAudioEl.onended=null; }
 let currentIndex=0,isEnToJa=true,isRandom=false,isRepeating=false;
 let mastered=new Set(),activeCategory='all';
+const APP_ID='duo01';
+const PROFILES_KEY='duo_profiles';
+const CURRENT_PROFILE_KEY='duo_current_profile';
+function getProfiles(){try{const raw=localStorage.getItem(PROFILES_KEY);const arr=raw?JSON.parse(raw):[];return arr.length?arr:['本人'];}catch(e){return ['本人'];}}
+function saveProfiles(arr){try{localStorage.setItem(PROFILES_KEY,JSON.stringify(arr));}catch(e){}}
+function getCurrentProfile(){try{return localStorage.getItem(CURRENT_PROFILE_KEY)||getProfiles()[0];}catch(e){return '本人';}}
+function setCurrentProfile(name){try{localStorage.setItem(CURRENT_PROFILE_KEY,name);}catch(e){}}
+function masteredStorageKey(profile){return 'duo_mastered_'+APP_ID+'_'+profile;}
+function loadMastered(){const profile=getCurrentProfile();try{const raw=localStorage.getItem(masteredStorageKey(profile));mastered=new Set(raw?JSON.parse(raw):[]);}catch(e){mastered=new Set();}}
+function saveMastered(){const profile=getCurrentProfile();try{localStorage.setItem(masteredStorageKey(profile),JSON.stringify([...mastered]));}catch(e){}}
+function renderProfileSelect(){const sel=document.getElementById('profile-select');if(!sel)return;const profiles=getProfiles();const current=getCurrentProfile();sel.innerHTML=profiles.map(p=>'<option value="'+p+'"'+(p===current?' selected':'')+'>'+p+'</option>').join('')+'<option value="__new__">＋ 新しいユーザー…</option>';}
+function switchProfile(value){if(value==='__new__'){const name=prompt('新しいユーザー名を入力してください（例：妻、孫）');if(!name){renderProfileSelect();return;}const trimmed=name.trim();if(!trimmed){renderProfileSelect();return;}const profiles=getProfiles();if(!profiles.includes(trimmed)){profiles.push(trimmed);saveProfiles(profiles);}setCurrentProfile(trimmed);}else{setCurrentProfile(value);}loadMastered();currentIndex=0;renderProfileSelect();update();}
+
 let isAutoPlaying=false,autoStopped=false,autoTimeout=null;
 let isSpeaking=false,keepAliveTimer=null,speechRate=1.0,voices=[];
 function getActive(){return phrases.filter((p,i)=>{if(activeCategory!=='all'&&p.cat!==activeCategory)return false;if(mastered.has(i))return false;return true;});}
@@ -302,9 +318,9 @@ function update(){const active=getActive();const noEl=document.getElementById('n
 function updateMasterBadge(){const cnt=mastered.size;document.getElementById('master-badge-top').textContent=`マスター: ${cnt} / ${phrases.length}`;const sumEl=document.getElementById('master-summary');if(cnt>0){sumEl.classList.add('show');sumEl.textContent=`✅ マスター済み: ${cnt}件 — タップしてリスト表示`;renderMasterList();}else sumEl.classList.remove('show');}
 function renderMasterList(){const listEl=document.getElementById('master-list');listEl.innerHTML='';[...mastered].sort((a,b)=>a-b).forEach(idx=>{const item=phrases[idx];const d=document.createElement('div');d.style.cssText='padding:8px 0;border-bottom:1px solid #f8fafc;font-size:12px;';d.innerHTML=`<span style="font-family:monospace;font-size:10px;color:#64748b;">${String(idx+OFFSET).padStart(3,'0')}</span> ${item.en.substring(0,55)}...`;listEl.appendChild(d);});}
 function toggleMasterList(){const w=document.getElementById('master-list-wrap');w.style.display=w.style.display==='none'?'':'none';}
-function clearAllMaster(){if(!confirm('マスター済みをすべて解除しますか？'))return;mastered.clear();currentIndex=0;update();document.getElementById('master-list-wrap').style.display='none';}
+function clearAllMaster(){if(!confirm('マスター済みをすべて解除しますか？'))return;mastered.clear();saveMastered();currentIndex=0;update();document.getElementById('master-list-wrap').style.display='none';}
 function handleTap(){if(isAutoPlaying)return;const wrap=document.getElementById('answer-wrap');if(!wrap.classList.contains('show')){wrap.classList.add('show');document.getElementById('main-card').classList.add('revealed');}}
-function toggleMaster(e){const active=getActive();if(!active.length)return;const item=active[currentIndex];const realIdx=phrases.indexOf(item);if(e.target.checked){mastered.add(realIdx);document.getElementById('mastered-badge').classList.add('show');setTimeout(()=>{if(currentIndex>=getActive().length)currentIndex=0;update();},400);}else{mastered.delete(realIdx);document.getElementById('mastered-badge').classList.remove('show');}updateMasterBadge();buildCatRows();}
+function toggleMaster(e){const active=getActive();if(!active.length)return;const item=active[currentIndex];const realIdx=phrases.indexOf(item);if(e.target.checked){mastered.add(realIdx);document.getElementById('mastered-badge').classList.add('show');setTimeout(()=>{if(currentIndex>=getActive().length)currentIndex=0;update();},400);}else{mastered.delete(realIdx);document.getElementById('mastered-badge').classList.remove('show');}saveMastered();updateMasterBadge();buildCatRows();}
 function next(){const a=getActive();if(!a.length)return;if(isRandom)currentIndex=Math.floor(Math.random()*a.length);else currentIndex=(currentIndex+1)%a.length;update();if(isRepeating){clearTimeout(speakRepeat._t);speakRepeat();}}
 function prev(){const a=getActive();if(!a.length)return;currentIndex=(currentIndex-1+a.length)%a.length;update();if(isRepeating){clearTimeout(speakRepeat._t);speakRepeat();}}
 function toggleRandom(){isRandom=!isRandom;const btn=document.getElementById('random-btn');btn.textContent=isRandom?'🔀 ランダム: ON':'🔀 ランダム: OFF';btn.className=isRandom?'btn btn-on':'btn btn-secondary';}
@@ -320,7 +336,7 @@ async function runShadowing(){const active=getActive();if(!active.length){stopAu
 function startShadowing(){if(!getActive().length){alert('出題できるカードがありません。');return;}enterAutoUI();runShadowing();}
 async function runContinuous(){let lc=0;while(!autoStopped){const active=getActive();if(!active.length){stopAutoPlay();return;}lc++;const si=currentIndex;for(let i=0;i<active.length;i++){if(autoStopped)break;currentIndex=(si+i)%active.length;update();document.getElementById('answer-wrap').classList.add('show');document.getElementById('main-card').classList.add('revealed');setAutoPanel(`連続再生 ${i+1}/${active.length}（${lc}周目）`,'▶ 英語音声を再生中 — ⏹ 停止ボタンで終了','');await speakP();if(autoStopped)break;await delayP(500);}if(!autoStopped)currentIndex=0;}}
 function startContinuous(){if(!getActive().length){alert('出題できるカードがありません。');return;}enterAutoUI();runContinuous();}
-buildCatRows();updateFilterLabel();update();
+loadMastered();renderProfileSelect();buildCatRows();updateFilterLabel();update();
 </script>
 <script>
 (function() {
