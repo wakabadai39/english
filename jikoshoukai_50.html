@@ -260,6 +260,7 @@ body {
 .gti { display:inline-block;padding:1px 7px;border-radius:99px;font-size:10px;font-weight:700;vertical-align:middle; }
 .gti-a { background:#fef3c7;color:#92400e; }
 .gti-b { background:#dbeafe;color:#1e40af; }
+.profile-select{font-family:'Noto Sans JP',sans-serif;font-size:11px;font-weight:700;color:var(--primary);background:var(--primary-light);border:1px solid var(--border);border-radius:99px;padding:5px 10px;cursor:pointer;max-width:140px;margin-top:6px;}
 </style>
 </head>
 <body>
@@ -269,6 +270,8 @@ body {
   <h2>🎒 小5 自己紹介英語 50</h2>
   <p>Elementary 5 Self-Introduction Phrases</p>
   <button class="help-btn" onclick="openGuide()">❓ 使い方ガイド</button>
+  <select class="profile-select" id="profile-select" onchange="switchProfile(this.value)"></select>
+
 </div>
 
 <div class="badges">
@@ -463,7 +466,6 @@ const CATS = {
 };
 
 const phrases = [
-  // ── 好きな科目 (8枚) ──────────────────────────────────────────
   {cat:"好きな科目", en:"I enjoy science because I like doing experiments.", ja:"実験が好きなので理科が楽しいです。"},
   {cat:"好きな科目", en:"I'm interested in history because I want to know how people lived in the past.", ja:"昔の人の生活に興味があるので歴史が好きです。"},
   {cat:"好きな科目", en:"I like English because I want to talk with people from other countries.", ja:"他の国の人と話したいので英語が好きです。"},
@@ -473,7 +475,6 @@ const phrases = [
   {cat:"好きな科目", en:"I'm good at music because I have been playing the piano since I was five.", ja:"5歳からピアノを弾いているので音楽が得意です。"},
   {cat:"好きな科目", en:"I find social studies interesting because I like learning about different countries.", ja:"いろいろな国について学ぶのが楽しいので社会が好きです。"},
 
-  // ── 性格・特徴 (8枚) ──────────────────────────────────────────
   {cat:"性格・特徴", en:"I'm shy at first, but I open up once I get to know people.", ja:"最初は恥ずかしがり屋だけど、仲良くなると話せます。"},
   {cat:"性格・特徴", en:"I'm a calm person, but I get passionate about things I like.", ja:"普段は落ち着いているけど、好きなことには熱中します。"},
   {cat:"性格・特徴", en:"I'm responsible and try to finish my work on time.", ja:"責任感があり、課題は期限内に終わらせます。"},
@@ -483,7 +484,6 @@ const phrases = [
   {cat:"性格・特徴", en:"I'm cheerful and I try to make people around me smile.", ja:"明るい性格で、周りの人を笑顔にしようとします。"},
   {cat:"性格・特徴", en:"I'm patient and I don't give up easily when something is hard.", ja:"粘り強く、難しいことでも簡単にあきらめません。"},
 
-  // ── 目標・夢 (8枚) ────────────────────────────────────────────
   {cat:"目標・夢", en:"I want to improve my English so I can make friends from different countries.", ja:"英語を上達させていろんな国の友達を作りたいです。"},
   {cat:"目標・夢", en:"I want to learn more about technology because it's changing the world.", ja:"世界を変えているテクノロジーについてもっと学びたいです。"},
   {cat:"目標・夢", en:"I want to become more confident when I speak in class.", ja:"クラスで発言するときもっと自信を持ちたいです。"},
@@ -493,7 +493,6 @@ const phrases = [
   {cat:"目標・夢", en:"My dream is to become a doctor and help sick people.", ja:"夢はお医者さんになって病気の人を助けることです。"},
   {cat:"目標・夢", en:"I want to travel around the world and experience different cultures.", ja:"世界中を旅していろんな文化を体験したいです。"},
 
-  // ── 家族・出身 (8枚) ──────────────────────────────────────────
   {cat:"家族・出身", en:"I live with my parents and my younger brother.", ja:"両親と弟と住んでいます。"},
   {cat:"家族・出身", en:"My family likes traveling, so we visit different places during holidays.", ja:"家族は旅行が好きで、休みにいろいろな場所に行きます。"},
   {cat:"家族・出身", en:"I'm from Japan, and I want to share my culture with my classmates.", ja:"日本出身で、文化をクラスメイトに紹介したいです。"},
@@ -503,7 +502,6 @@ const phrases = [
   {cat:"家族・出身", en:"I was born in Tokyo, but I moved to a new city last year.", ja:"東京生まれですが、去年新しい街に引っ越しました。"},
   {cat:"家族・出身", en:"My father works overseas, so I'm used to hearing English at home.", ja:"父が海外で働いているので、家で英語を聞くことに慣れています。"},
 
-  // ── 趣味・好きなもの (10枚) ───────────────────────────────────
   {cat:"趣味・好きなもの", en:"I love playing soccer with my friends after school.", ja:"放課後に友達とサッカーをするのが大好きです。"},
   {cat:"趣味・好きなもの", en:"I enjoy reading books, especially adventure stories.", ja:"本を読むのが好きで、特に冒険の話が好きです。"},
   {cat:"趣味・好きなもの", en:"I like drawing characters from my favorite anime.", ja:"好きなアニメのキャラクターを描くのが好きです。"},
@@ -515,7 +513,6 @@ const phrases = [
   {cat:"趣味・好きなもの", en:"My favorite food is ramen, especially the kind with a soy sauce broth.", ja:"大好きな食べ物はラーメンで、特に醤油スープが好きです。"},
   {cat:"趣味・好きなもの", en:"I enjoy collecting stickers and trading cards.", ja:"シールとトレーディングカードを集めるのが好きです。"},
 
-  // ── 学校生活 (8枚) ────────────────────────────────────────────
   {cat:"学校生活", en:"I walk to school every morning with my neighbor.", ja:"毎朝、近所の人と一緒に歩いて学校に行きます。"},
   {cat:"学校生活", en:"My favorite part of the school day is lunchtime.", ja:"学校で一番好きな時間は昼ごはんの時間です。"},
   {cat:"学校生活", en:"I'm in the science club, and we do experiments every week.", ja:"科学クラブに入っていて、毎週実験をしています。"},
@@ -540,7 +537,19 @@ let repeatTimer    = null;
 let autoMode       = '';
 let autoStopped    = false;
 let autoTimeout    = null;
-let masterSet = new Set(JSON.parse(localStorage.getItem('jiko50_master') || '[]'));
+let masterSet = new Set();
+const APP_ID='jiko50';
+const PROFILES_KEY='duo_profiles';
+const CURRENT_PROFILE_KEY='duo_current_profile';
+function getProfiles(){try{const raw=localStorage.getItem(PROFILES_KEY);const arr=raw?JSON.parse(raw):[];return arr.length?arr:['本人'];}catch(e){return ['本人'];}}
+function saveProfiles(arr){try{localStorage.setItem(PROFILES_KEY,JSON.stringify(arr));}catch(e){}}
+function getCurrentProfile(){try{return localStorage.getItem(CURRENT_PROFILE_KEY)||getProfiles()[0];}catch(e){return '本人';}}
+function setCurrentProfile(name){try{localStorage.setItem(CURRENT_PROFILE_KEY,name);}catch(e){}}
+function masteredStorageKey(profile){return APP_ID+'_'+profile;}
+function loadMastered(){const profile=getCurrentProfile();try{const raw=localStorage.getItem(masteredStorageKey(profile));masterSet=new Set(raw?JSON.parse(raw):[]);}catch(e){masterSet=new Set();}}
+function renderProfileSelect(){const sel=document.getElementById('profile-select');if(!sel)return;const profiles=getProfiles();const current=getCurrentProfile();sel.innerHTML=profiles.map(p=>'<option value="'+p+'"'+(p===current?' selected':'')+'>'+p+'</option>').join('')+'<option value="__new__">＋ 新しいユーザー…</option>';}
+function switchProfile(value){if(value==='__new__'){const name=prompt('新しいユーザー名を入力してください（例：太郎、花子）');if(!name){renderProfileSelect();return;}const trimmed=name.trim();if(!trimmed){renderProfileSelect();return;}const profiles=getProfiles();if(!profiles.includes(trimmed)){profiles.push(trimmed);saveProfiles(profiles);}setCurrentProfile(trimmed);}else{setCurrentProfile(value);}loadMastered();currentIndex=0;renderProfileSelect();update();}
+
 
 // ── Voice setup ───────────────────────────────────────────────────
 let enVoices = [];
@@ -725,7 +734,7 @@ function getActive() {
     .map((p,i) => ({...p, globalIdx:i}))
     .filter(p => !masterSet.has(p.globalIdx) && (activeCategory==='all' || p.cat===activeCategory));
 }
-function saveMaster() { localStorage.setItem('jiko50_master', JSON.stringify([...masterSet])); }
+function saveMaster() { localStorage.setItem(masteredStorageKey(getCurrentProfile()), JSON.stringify([...masterSet])); }
 
 // ── Update UI ─────────────────────────────────────────────────────
 function update() {
@@ -947,13 +956,13 @@ function openGuide() { document.getElementById('guide-overlay').classList.add('s
 function closeGuide() { document.getElementById('guide-overlay').classList.remove('show'); }
 function handleOverlayClick(e) { if (e.target === document.getElementById('guide-overlay')) closeGuide(); }
 
-// ── Init ──────────────────────────────────────────────────────────
+loadMastered();
+renderProfileSelect();
 buildCatRows();
 updateFilterLabel();
 update();
 </script>
 <script>
-// スワイプ機能
 (function() {
   let startX = 0, startY = 0;
   document.addEventListener('touchstart', e => {

@@ -350,6 +350,7 @@ body {
 .gti-g { background:var(--primary-light);color:#166534; }
 .gti-a { background:#fef3c7;color:#92400e; }
 .gti-b { background:#dbeafe;color:#1e40af; }
+.profile-select{font-family:'Noto Sans JP',sans-serif;font-size:11px;font-weight:700;color:var(--primary);background:var(--primary-light);border:1px solid var(--border);border-radius:99px;padding:5px 10px;cursor:pointer;max-width:140px;margin-top:6px;}
 </style>
 </head>
 <body>
@@ -359,6 +360,8 @@ body {
   <h2>👩‍🏫 Teacher's Instructions 50 – Grade 5</h2>
   <p>小学5年生向け｜先生の英語を聞き取る練習フレーズ集</p>
   <button class="help-btn" onclick="openGuide()">❓ 使い方ガイド</button>
+  <select class="profile-select" id="profile-select" onchange="switchProfile(this.value)"></select>
+
 </div>
 
 <div class="badges">
@@ -684,16 +687,26 @@ let isAutoPlaying  = false;
 let autoMode       = '';   // 'shadow' | 'continuous'
 let autoStopped    = false;
 let autoTimeout    = null;
-let masterSet = new Set(JSON.parse(localStorage.getItem('ti50_g5_master') || '[]'));
+let masterSet = new Set();
+const APP_ID='ti50_g5';
+const PROFILES_KEY='duo_profiles';
+const CURRENT_PROFILE_KEY='duo_current_profile';
+function getProfiles(){try{const raw=localStorage.getItem(PROFILES_KEY);const arr=raw?JSON.parse(raw):[];return arr.length?arr:['本人'];}catch(e){return ['本人'];}}
+function saveProfiles(arr){try{localStorage.setItem(PROFILES_KEY,JSON.stringify(arr));}catch(e){}}
+function getCurrentProfile(){try{return localStorage.getItem(CURRENT_PROFILE_KEY)||getProfiles()[0];}catch(e){return '本人';}}
+function setCurrentProfile(name){try{localStorage.setItem(CURRENT_PROFILE_KEY,name);}catch(e){}}
+function masteredStorageKey(profile){return APP_ID+'_'+profile;}
+function loadMastered(){const profile=getCurrentProfile();try{const raw=localStorage.getItem(masteredStorageKey(profile));masterSet=new Set(raw?JSON.parse(raw):[]);}catch(e){masterSet=new Set();}}
+function renderProfileSelect(){const sel=document.getElementById('profile-select');if(!sel)return;const profiles=getProfiles();const current=getCurrentProfile();sel.innerHTML=profiles.map(p=>'<option value="'+p+'"'+(p===current?' selected':'')+'>'+p+'</option>').join('')+'<option value="__new__">＋ 新しいユーザー…</option>';}
+function switchProfile(value){if(value==='__new__'){const name=prompt('新しいユーザー名を入力してください（例：太郎、花子）');if(!name){renderProfileSelect();return;}const trimmed=name.trim();if(!trimmed){renderProfileSelect();return;}const profiles=getProfiles();if(!profiles.includes(trimmed)){profiles.push(trimmed);saveProfiles(profiles);}setCurrentProfile(trimmed);}else{setCurrentProfile(value);}loadMastered();currentIndex=0;renderProfileSelect();update();}
+
 
 // ── Voice setup ───────────────────────────────────────────────────
 let enVoices = [];
 
 function populateVoices() {
   const all = window.speechSynthesis.getVoices();
-  // 動作確認済みの完全な音声名リスト（完全一致）
   const okNames = new Set([
-    // en-US
     'Microsoft Ava Online (Natural) - English (United States)',
     'Microsoft Andrew Online (Natural) - English (United States)',
     'Microsoft Emma Online (Natural) - English (United States)',
@@ -710,7 +723,6 @@ function populateVoices() {
     'Microsoft Andrew Multilingual Online (Natural) - English (United States)',
     'Microsoft Emma Multilingual Online (Natural) - English (United States)',
     'Microsoft Brian Multilingual Online (Natural) - English (United States)',
-    // en-GB
     'Microsoft Hazel - English (United Kingdom)',
     'Microsoft Susan - English (United Kingdom)',
     'Microsoft George - English (United Kingdom)',
@@ -719,37 +731,25 @@ function populateVoices() {
     'Microsoft Thomas Online (Natural) - English (United Kingdom)',
     'Microsoft Sonia Online (Natural) - English (United Kingdom)',
     'Microsoft Ryan Online (Natural) - English (United Kingdom)',
-    // en-AU
     'Microsoft William Online (Natural) - English (Australia)',
     'Microsoft Natasha Online (Natural) - English (Australia)',
-    // en-CA
     'Microsoft Clara Online (Natural) - English (Canada)',
     'Microsoft Liam Online (Natural) - English (Canada)',
-    // en-ZA
     'Microsoft Leah Online (Natural) - English (South Africa)',
     'Microsoft Luke Online (Natural) - English (South Africa)',
-    // en-IE
     'Microsoft Emily Online (Natural) - English (Ireland)',
     'Microsoft Connor Online (Natural) - English (Ireland)',
-    // en-HK
     'Microsoft Yan Online (Natural) - English (Hong Kong SAR)',
     'Microsoft Sam Online (Natural) - English (Hong Kong SAR)',
-    // en-KE
     'Microsoft Asilia Online (Natural) - English (Kenya)',
     'Microsoft Chilemba Online (Natural) - English (Kenya)',
-    // en-NG
     'Microsoft Ezinne Online (Natural) - English (Nigeria)',
     'Microsoft Abeo Online (Natural) - English (Nigeria)',
-    // en-NZ
     'Microsoft Molly Online (Natural) - English (New Zealand)',
-    // en-SG
     'Microsoft Luna Online (Natural) - English (Singapore)',
-    // en-TZ
     'Microsoft Imani Online (Natural) - English (Tanzania)',
     'Microsoft Elimu Online (Natural) - English (Tanzania)',
-    // en-PH
     'Microsoft James Online (Natural) - English (Philippines)',
-    // en-IN
     'Microsoft Neerja Online (Natural) - English (India)',
     'Microsoft Prabhat Online (Natural) - English (India)',
   ]);
@@ -776,7 +776,6 @@ function applyVoicePref() {
     o.value = i; o.textContent = `${v.name} (${v.lang})`;
     sel.appendChild(o);
   });
-  // store sorted in enVoices for getVoice()
   enVoices = sorted;
 }
 
@@ -793,7 +792,6 @@ function updateRate() {
   document.getElementById('rate-val').textContent = getRate().toFixed(1) + '×';
 }
 
-// iOS keepalive
 let keepAlive = null;
 function startKeepAlive() {
   stopKeepAlive();
@@ -818,9 +816,8 @@ function speakOne(text, onEnd) {
     const v = getVoice();
     if (v) {
       utt.voice = v;
-      utt.lang  = v.lang;  // 音声のlangを明示的に設定
+      utt.lang  = v.lang;
     } else {
-      // フォールバック：voice-prefの設定に応じてlangを設定
       const pref = document.getElementById('voice-pref').value;
       utt.lang = pref === 'US' ? 'en-US' : 'en-GB';
     }
@@ -835,7 +832,6 @@ function speakOne(text, onEnd) {
 function stripTags(html) { return html.replace(/<[^>]+>/g,'').replace(/\s+/g,' ').trim(); }
 
 function getSpeechText(item) {
-  // speech: フィールドがあればそちらを優先、なければ en: のタグを除去して読む
   if (item.speech) return item.speech;
   return stripTags(item.en);
 }
@@ -853,7 +849,6 @@ function speakP() {
   });
 }
 
-// ── Category ─────────────────────────────────────────────────────
 const allCats = [...new Set(phrases.map(p => p.cat))];
 
 function buildCatRows() {
@@ -894,7 +889,6 @@ function selectCategory(cat) {
   buildCatRows(); updateFilterLabel(); update();
 }
 
-// ── Helpers ───────────────────────────────────────────────────────
 function getActive() {
   return phrases
     .map((p,i) => ({...p, globalIdx:i}))
@@ -902,10 +896,9 @@ function getActive() {
 }
 
 function saveMaster() {
-  localStorage.setItem('ti50_g5_master', JSON.stringify([...masterSet]));
+  localStorage.setItem(masteredStorageKey(getCurrentProfile()), JSON.stringify([...masterSet]));
 }
 
-// ── Update UI ─────────────────────────────────────────────────────
 function update() {
   const active = getActive();
   const noActive = document.getElementById('no-active');
@@ -929,18 +922,15 @@ function update() {
   const item  = active[currentIndex];
   const color = CATS[item.cat] || '#16a34a';
 
-  // progress
   document.getElementById('cur-num').textContent = currentIndex + 1;
   document.getElementById('tot-num').textContent = active.length;
   document.getElementById('progress-bar').style.width = ((currentIndex+1)/active.length*100)+'%';
   document.getElementById('progress-bar').style.background = color;
 
-  // card
   document.getElementById('card-num').textContent  = String(item.globalIdx+1).padStart(2,'0');
   document.getElementById('card-cat').textContent  = item.cat;
   document.getElementById('card-cat').style.color  = color;
 
-  // content
   const displayHTML = isEnToJa ? item.en : item.ja;
   document.getElementById('main-text').innerHTML   = displayHTML;
   document.getElementById('answer-ja').innerHTML   = isEnToJa ? item.ja : item.en;
@@ -950,12 +940,10 @@ function update() {
 
   document.getElementById('mode-badge').textContent = isEnToJa ? '📖 英 → 日' : '📖 日 → 英';
 
-  // reset reveal
   isRevealed = false;
   document.getElementById('answer-wrap').classList.remove('show');
   mainCard.classList.remove('revealed');
 
-  // master
   document.getElementById('master-cb').checked = masterSet.has(item.globalIdx);
   document.getElementById('mastered-badge').classList.toggle('show', masterSet.has(item.globalIdx));
 
@@ -984,7 +972,6 @@ function updateMasterUI() {
   }
 }
 
-// ── Actions ───────────────────────────────────────────────────────
 function handleTap() {
   if (isAutoPlaying) return;
   if (!isRevealed) {
@@ -1003,11 +990,9 @@ function toggleMaster(e) {
     saveMaster();
     updateMasterUI(); buildCatRows(); updateFilterLabel();
     document.getElementById('master-badge').textContent = `マスター: ${masterSet.size} / ${TOTAL}`;
-    // チェックしたら少し待って次のカードへ
     setTimeout(() => {
       const nextActive = getActive();
       if (nextActive.length === 0) { update(); return; }
-      // currentIndex はそのまま（マスター済みが消えるので自動的に次が表示される）
       if (currentIndex >= nextActive.length) currentIndex = 0;
       update();
     }, 400);
@@ -1032,7 +1017,6 @@ function clearAllMasterStep1() {
   btn.style.background = '#e11d48';
   btn.style.color = '#fff';
   btn.onclick = clearAllMasterStep2;
-  // 3秒後に戻す
   setTimeout(() => {
     if (btn.textContent === '本当に全解除？') {
       btn.textContent = '全解除';
@@ -1091,7 +1075,6 @@ function switchMode() {
   update();
 }
 
-// ── Auto-play helpers ─────────────────────────────────────────────
 function delayP(ms) {
   return new Promise(r => {
     if (autoStopped) { r(); return; }
@@ -1133,18 +1116,15 @@ function exitAutoUI() {
 
 function stopAutoPlay() {
   exitAutoUI();
-  update(); // 現在のカードから再開できるよう index を保持
+  update();
 }
 
-// ── Shadowing auto-play ───────────────────────────────────────────
 function showHidden() {
-  // 画面を？？？にする（英文も隠す）
   document.getElementById('main-text').textContent = '？？？';
   document.getElementById('answer-wrap').classList.remove('show');
   document.getElementById('main-card').classList.remove('revealed');
 }
 function showEnOnly() {
-  // 英文のみ表示、日本語・解説は隠す
   const active = getActive();
   if (!active.length) return;
   const item = active[currentIndex];
@@ -1153,7 +1133,6 @@ function showEnOnly() {
   document.getElementById('main-card').classList.remove('revealed');
 }
 function showAll() {
-  // 英文＋日本語訳＋解説を全て表示
   const active = getActive();
   if (!active.length) return;
   const item = active[currentIndex];
@@ -1173,28 +1152,24 @@ async function runShadowing() {
     update();
     const n = i+1, tot = active.length;
 
-    // Step1: ？？？表示で2回聴く
     showHidden();
     setAutoPanel(`カード ${n}/${tot} — STEP 1`,'👂 発話せずに2回聴いてください。（画面は見なくてOK）','1/2回目…');
     await speakP(); if(autoStopped) break; await delayP(350); if(autoStopped) break;
     setAutoPanel(`カード ${n}/${tot} — STEP 1`,'👂 発話せずに2回聴いてください。（画面は見なくてOK）','2/2回目…');
     await speakP(); if(autoStopped) break; await delayP(450); if(autoStopped) break;
 
-    // Step2: ？？？のまま音声に合わせてシャドウイング×2
     showHidden();
     setAutoPanel(`カード ${n}/${tot} — STEP 2`,'🗣️ 音声に合わせてシャドウイングしてください。（画面は見なくてOK）','1/2回目…');
     await speakP(); if(autoStopped) break; await delayP(350); if(autoStopped) break;
     setAutoPanel(`カード ${n}/${tot} — STEP 2`,'🗣️ 音声に合わせてシャドウイングしてください。（画面は見なくてOK）','2/2回目…');
     await speakP(); if(autoStopped) break; await delayP(450); if(autoStopped) break;
 
-    // Step3: 英文＋日本語訳＋解説を全表示でシャドウイング×2
     showAll();
     setAutoPanel(`カード ${n}/${tot} — STEP 3`,'📖 英文・日本語訳・解説を見ながら2回シャドウイングしてください。','1/2回目…');
     await speakP(); if(autoStopped) break; await delayP(350); if(autoStopped) break;
     setAutoPanel(`カード ${n}/${tot} — STEP 3`,'📖 英文・日本語訳・解説を見ながら2回シャドウイングしてください。','2/2回目…');
     await speakP(); if(autoStopped) break; await delayP(450); if(autoStopped) break;
 
-    // Step4: ？？？表示で何も見ずにシャドウイング×2
     showHidden();
     setAutoPanel(`カード ${n}/${tot} — STEP 4`,'🙈 何も見ずに2回シャドウイングしてください。','1/2回目…');
     await speakP(); if(autoStopped) break; await delayP(350); if(autoStopped) break;
@@ -1215,7 +1190,6 @@ function startShadowing() {
   runShadowing();
 }
 
-// ── Continuous play (英語連続再生・全表示) ────────────────────────
 async function runContinuous() {
   let loopCount = 0;
   while (!autoStopped) {
@@ -1228,7 +1202,6 @@ async function runContinuous() {
       if (autoStopped) break;
       currentIndex = (startIdx + i) % active.length;
       update();
-      // 全部表示
       document.getElementById('answer-wrap').classList.add('show');
       document.getElementById('main-card').classList.add('revealed');
 
@@ -1241,7 +1214,6 @@ async function runContinuous() {
       await speakP(); if(autoStopped) break;
       await delayP(500);
     }
-    // 一周したら先頭に戻してループ継続
     if (!autoStopped) {
       currentIndex = 0;
     }
@@ -1255,7 +1227,6 @@ function startContinuous() {
   runContinuous();
 }
 
-// ── Guide modal ───────────────────────────────────────────────────
 function openGuide() {
   document.getElementById('guide-overlay').classList.add('show');
   document.getElementById('guide-overlay').scrollTop = 0;
@@ -1267,7 +1238,8 @@ function handleOverlayClick(e) {
   if (e.target === document.getElementById('guide-overlay')) closeGuide();
 }
 
-// ── Init ──────────────────────────────────────────────────────────
+loadMastered();
+renderProfileSelect();
 buildCatRows();
 updateFilterLabel();
 update();
