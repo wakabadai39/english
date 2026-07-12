@@ -89,6 +89,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);min-height:100vh
 .g-s-badge{min-width:52px;padding:2px 0;text-align:center;border-radius:99px;font-size:10px;font-weight:700;flex-shrink:0;margin-top:2px;}
 .gsb-g{background:var(--primary-light);color:#7c2d12;}.gsb-b{background:#dbeafe;color:#1e40af;}
 .g-s-text{font-size:11px;color:var(--muted);line-height:1.75;}
+.profile-select{font-family:'Noto Sans JP',sans-serif;font-size:11px;font-weight:700;color:var(--primary);background:var(--primary-light);border:1px solid var(--border);border-radius:99px;padding:5px 10px;cursor:pointer;max-width:140px;margin-top:6px;}
 </style>
 </head>
 <body>
@@ -97,6 +98,8 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);min-height:100vh
 <h2>🇪🇸 スペイン語カード 段階５</h2>
 <p>抽象概念・文化・文学・高度な表現・ことわざ</p>
 <button class="help-btn" onclick="openGuide()">❓ 使い方ガイド</button>
+  <select class="profile-select" id="profile-select" onchange="switchProfile(this.value)"></select>
+
 </div>
 <div class="badges">
 <div class="badge" id="mode-badge">📖 西 → 日</div>
@@ -293,7 +296,19 @@ const TOTAL=phrases.length;
 let currentIndex=0,isRandom=false,isEnToJa=true,isRevealed=false;
 let activeCategory='all',isAutoPlaying=false,isRepeating=false;
 let repeatTimer=null,autoStopped=false,autoTimeout=null;
-let masterSet=new Set(JSON.parse(localStorage.getItem('es_lv5_master')||'[]'));
+let masterSet = new Set();
+const APP_ID='es_lv5';
+const PROFILES_KEY='duo_profiles';
+const CURRENT_PROFILE_KEY='duo_current_profile';
+function getProfiles(){try{const raw=localStorage.getItem(PROFILES_KEY);const arr=raw?JSON.parse(raw):[];return arr.length?arr:['本人'];}catch(e){return ['本人'];}}
+function saveProfiles(arr){try{localStorage.setItem(PROFILES_KEY,JSON.stringify(arr));}catch(e){}}
+function getCurrentProfile(){try{return localStorage.getItem(CURRENT_PROFILE_KEY)||getProfiles()[0];}catch(e){return '本人';}}
+function setCurrentProfile(name){try{localStorage.setItem(CURRENT_PROFILE_KEY,name);}catch(e){}}
+function masteredStorageKey(profile){return APP_ID+'_'+profile;}
+function loadMastered(){const profile=getCurrentProfile();try{const raw=localStorage.getItem(masteredStorageKey(profile));masterSet=new Set(raw?JSON.parse(raw):[]);}catch(e){masterSet=new Set();}}
+function renderProfileSelect(){const sel=document.getElementById('profile-select');if(!sel)return;const profiles=getProfiles();const current=getCurrentProfile();sel.innerHTML=profiles.map(p=>'<option value="'+p+'"'+(p===current?' selected':'')+'>'+p+'</option>').join('')+'<option value="__new__">＋ 新しいユーザー…</option>';}
+function switchProfile(value){if(value==='__new__'){const name=prompt('新しいユーザー名を入力してください（例：太郎、花子）');if(!name){renderProfileSelect();return;}const trimmed=name.trim();if(!trimmed){renderProfileSelect();return;}const profiles=getProfiles();if(!profiles.includes(trimmed)){profiles.push(trimmed);saveProfiles(profiles);}setCurrentProfile(trimmed);}else{setCurrentProfile(value);}loadMastered();currentIndex=0;renderProfileSelect();update();}
+
 
 let esVoices=[];
 function populateVoices(){const all=window.speechSynthesis.getVoices();esVoices=all.filter(v=>v.lang.startsWith('es'));if(!esVoices.length)esVoices=all;applyVoicePref();}
@@ -320,7 +335,7 @@ function toggleFilterPanel(){filterOpen=!filterOpen;document.getElementById('fil
 function updateFilterLabel(){const a=getActive();document.getElementById('filter-current-label').textContent=activeCategory==='all'?`すべて（${a.length}）`:`${activeCategory}（${a.length}）`;}
 function selectCategory(cat){if(isAutoPlaying)return;activeCategory=cat;currentIndex=0;filterOpen=false;document.getElementById('filter-chips-wrap').className='filter-chips-wrap';document.getElementById('filter-toggle-icon').className='filter-toggle-icon';buildCatRows();updateFilterLabel();update();}
 function getActive(){return phrases.map((p,i)=>({...p,globalIdx:i})).filter(p=>!masterSet.has(p.globalIdx)&&(activeCategory==='all'||p.cat===activeCategory));}
-function saveMaster(){localStorage.setItem('es_lv5_master',JSON.stringify([...masterSet]));}
+function saveMaster() { localStorage.setItem(masteredStorageKey(getCurrentProfile()), JSON.stringify([...masterSet])); }
 function update(){const active=getActive();document.getElementById('master-badge').textContent=`マスター: ${masterSet.size} / ${TOTAL}`;if(!active.length){document.getElementById('no-active').classList.add('show');document.getElementById('main-card').style.display='none';document.getElementById('tap-hint').style.display='none';updateMasterUI();buildCatRows();updateFilterLabel();return;}document.getElementById('no-active').classList.remove('show');document.getElementById('main-card').style.display='';document.getElementById('tap-hint').style.display='';if(currentIndex>=active.length)currentIndex=0;const item=active[currentIndex];const color=CATS[item.cat]||'#c2410c';document.getElementById('cur-num').textContent=currentIndex+1;document.getElementById('tot-num').textContent=active.length;document.getElementById('progress-bar').style.width=((currentIndex+1)/active.length*100)+'%';document.getElementById('progress-bar').style.background=color;document.getElementById('card-num').textContent=String(item.globalIdx+1).padStart(2,'0');document.getElementById('card-cat').textContent=item.cat;document.getElementById('card-cat').style.color=color;document.getElementById('main-text').innerHTML=isEnToJa?item.en:item.ja;document.getElementById('answer-ja').innerHTML=isEnToJa?item.ja:item.en;const tipEl=document.getElementById('answer-tip');if(item.tip){tipEl.textContent=item.tip;tipEl.style.display='';}else tipEl.style.display='none';document.getElementById('mode-badge').textContent=isEnToJa?'📖 西 → 日':'📖 日 → 西';isRevealed=false;document.getElementById('answer-wrap').classList.remove('show');document.getElementById('main-card').classList.remove('revealed');document.getElementById('master-cb').checked=masterSet.has(item.globalIdx);document.getElementById('mastered-badge').classList.toggle('show',masterSet.has(item.globalIdx));updateMasterUI();buildCatRows();updateFilterLabel();}
 function updateMasterUI(){const count=masterSet.size;const summary=document.getElementById('master-summary');if(count>0){summary.classList.add('show');summary.textContent=`✅ ${count}枚マスター済 — タップして一覧表示 / 解除`;const listEl=document.getElementById('master-list');listEl.innerHTML='';[...masterSet].sort((a,b)=>a-b).forEach(idx=>{const p=phrases[idx];if(!p)return;const row=document.createElement('div');row.style.cssText='display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid #e2e8f0;font-size:12px;';row.innerHTML=`<span style="flex:1;line-height:1.5;"><span style="color:${CATS[p.cat]};font-weight:800;">${p.cat}</span><br>${stripTags(p.en)}</span><button onclick="removeMaster(${idx})" style="border:none;background:#e11d48;color:#fff;border-radius:99px;padding:3px 10px;font-size:11px;font-weight:700;cursor:pointer;">解除</button>`;listEl.appendChild(row);});}else{summary.classList.remove('show');document.getElementById('master-list-wrap').style.display='none';}}
 function handleTap(){if(isAutoPlaying)return;if(!isRevealed){isRevealed=true;document.getElementById('answer-wrap').classList.add('show');document.getElementById('main-card').classList.add('revealed');}}
@@ -347,7 +362,11 @@ function startContinuous(){if(!getActive().length){alert('出題できるカー�
 function openGuide(){document.getElementById('guide-overlay').classList.add('show');document.getElementById('guide-overlay').scrollTop=0;}
 function closeGuide(){document.getElementById('guide-overlay').classList.remove('show');}
 function handleOverlayClick(e){if(e.target===document.getElementById('guide-overlay'))closeGuide();}
-buildCatRows();updateFilterLabel();update();
+loadMastered();
+renderProfileSelect();
+buildCatRows();
+updateFilterLabel();
+update();
 </script>
 <script>
 (function(){let startX=0,startY=0;document.addEventListener('touchstart',e=>{startX=e.touches[0].clientX;startY=e.touches[0].clientY;},{passive:true});document.addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-startX;const dy=e.changedTouches[0].clientY-startY;if(Math.abs(dx)>Math.abs(dy)&&Math.abs(dx)>50){if(dx<0)next();else prev();}},{passive:true});})();

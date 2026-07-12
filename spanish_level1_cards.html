@@ -252,6 +252,7 @@ cursor: pointer; font-family: 'Noto Sans JP', sans-serif;
 .gbd-blue { background:#2563eb;color:#fff; }
 .g-note { background: #fff7ed; border: 1px solid #fdba74; border-radius: 10px; padding: 10px 12px; font-size: 12px; color: #7c2d12; line-height: 1.8; margin-top: 10px; }
 .g-note strong { font-weight: 700; }
+.profile-select{font-family:'Noto Sans JP',sans-serif;font-size:11px;font-weight:700;color:var(--primary);background:var(--primary-light);border:1px solid var(--border);border-radius:99px;padding:5px 10px;cursor:pointer;max-width:140px;margin-top:6px;}
 </style>
 </head>
 <body>
@@ -260,6 +261,8 @@ cursor: pointer; font-family: 'Noto Sans JP', sans-serif;
 <h2>🇪🇸 スペイン語カード 段階１</h2>
 <p>挨拶・自己紹介・数字・日常表現</p>
 <button class="help-btn" onclick="openGuide()">❓ 使い方ガイド</button>
+  <select class="profile-select" id="profile-select" onchange="switchProfile(this.value)"></select>
+
 </div>
 <div class="badges">
 <div class="badge" id="mode-badge">📖 西 → 日</div>
@@ -503,7 +506,19 @@ let isRepeating = false;
 let repeatTimer = null;
 let autoStopped = false;
 let autoTimeout = null;
-let masterSet = new Set(JSON.parse(localStorage.getItem('es_lv1_master') || '[]'));
+let masterSet = new Set();
+const APP_ID='es_lv1';
+const PROFILES_KEY='duo_profiles';
+const CURRENT_PROFILE_KEY='duo_current_profile';
+function getProfiles(){try{const raw=localStorage.getItem(PROFILES_KEY);const arr=raw?JSON.parse(raw):[];return arr.length?arr:['本人'];}catch(e){return ['本人'];}}
+function saveProfiles(arr){try{localStorage.setItem(PROFILES_KEY,JSON.stringify(arr));}catch(e){}}
+function getCurrentProfile(){try{return localStorage.getItem(CURRENT_PROFILE_KEY)||getProfiles()[0];}catch(e){return '本人';}}
+function setCurrentProfile(name){try{localStorage.setItem(CURRENT_PROFILE_KEY,name);}catch(e){}}
+function masteredStorageKey(profile){return APP_ID+'_'+profile;}
+function loadMastered(){const profile=getCurrentProfile();try{const raw=localStorage.getItem(masteredStorageKey(profile));masterSet=new Set(raw?JSON.parse(raw):[]);}catch(e){masterSet=new Set();}}
+function renderProfileSelect(){const sel=document.getElementById('profile-select');if(!sel)return;const profiles=getProfiles();const current=getCurrentProfile();sel.innerHTML=profiles.map(p=>'<option value="'+p+'"'+(p===current?' selected':'')+'>'+p+'</option>').join('')+'<option value="__new__">＋ 新しいユーザー…</option>';}
+function switchProfile(value){if(value==='__new__'){const name=prompt('新しいユーザー名を入力してください（例：太郎、花子）');if(!name){renderProfileSelect();return;}const trimmed=name.trim();if(!trimmed){renderProfileSelect();return;}const profiles=getProfiles();if(!profiles.includes(trimmed)){profiles.push(trimmed);saveProfiles(profiles);}setCurrentProfile(trimmed);}else{setCurrentProfile(value);}loadMastered();currentIndex=0;renderProfileSelect();update();}
+
 
 let esVoices = [];
 function populateVoices() {
@@ -619,7 +634,7 @@ function selectCategory(cat) {
 function getActive() {
   return phrases.map((p,i) => ({...p, globalIdx:i})).filter(p => !masterSet.has(p.globalIdx) && (activeCategory==='all' || p.cat===activeCategory));
 }
-function saveMaster() { localStorage.setItem('es_lv1_master', JSON.stringify([...masterSet])); }
+function saveMaster() { localStorage.setItem(masteredStorageKey(getCurrentProfile()), JSON.stringify([...masterSet])); }
 
 function update() {
   const active = getActive();
@@ -829,6 +844,8 @@ function openGuide() { document.getElementById('guide-overlay').classList.add('s
 function closeGuide() { document.getElementById('guide-overlay').classList.remove('show'); }
 function handleOverlayClick(e) { if (e.target === document.getElementById('guide-overlay')) closeGuide(); }
 
+loadMastered();
+renderProfileSelect();
 buildCatRows();
 updateFilterLabel();
 update();
