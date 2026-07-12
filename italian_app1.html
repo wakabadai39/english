@@ -260,6 +260,7 @@ body {
 .gti { display:inline-block;padding:1px 7px;border-radius:99px;font-size:10px;font-weight:700;vertical-align:middle; }
 .gti-a { background:#fef3c7;color:#92400e; }
 .gti-b { background:#dbeafe;color:#1e40af; }
+.profile-select{font-family:'Noto Sans JP',sans-serif;font-size:11px;font-weight:700;color:var(--primary);background:var(--primary-light);border:1px solid var(--border);border-radius:99px;padding:5px 10px;cursor:pointer;max-width:140px;margin-top:6px;}
 </style>
 </head>
 <body>
@@ -269,6 +270,8 @@ body {
   <h2>🇮🇹 イタリア語①　挨拶・数字・日常</h2>
   <p>挨拶・自己紹介・基本表現</p>
   <button class="help-btn" onclick="openGuide()">❓ 使い方ガイド</button>
+  <select class="profile-select" id="profile-select" onchange="switchProfile(this.value)"></select>
+
 </div>
 
 <div class="badges">
@@ -462,80 +465,80 @@ const CATS = {
 
 const phrases = [
   // ===== 挨拶 =====
-  {cat:'🗣️ 挨拶', en:'Buongiorno!', ja:'おはようございます！／こんにちは！', tip:'Buongiorno=おはよう・こんにちは（buono「良い」+giorno「日」の合成語）。昼まで使う挨拶'},
-  {cat:'🗣️ 挨拶', en:'Buonasera!', ja:'こんばんは！', tip:'Buonasera=こんばんは（buono+sera「夕方」の合成語）。午後から夜にかけて使う'},
-  {cat:'🗣️ 挨拶', en:'Buonanotte!', ja:'おやすみなさい！', tip:'Buonanotte=おやすみ（buono+notte「夜」の合成語）。就寝時に使う'},
-  {cat:'🗣️ 挨拶', en:'Ciao! / Salve!', ja:'やあ！（カジュアル）／こんにちは！（やや丁寧）', tip:'ciao=やあ・じゃあね（出会いと別れ両方に使えるカジュアルな挨拶）。salve=こんにちは（ciaoよりやや丁寧、初対面でも使える）'},
-  {cat:'🗣️ 挨拶', en:'Come sta? / Come stai?', ja:'お元気ですか？（丁寧）／元気？（友人）', tip:'come sta=お元気ですか（stareの3人称敬語、Lei=あなたに対する敬称）。come stai=元気？（stareの2人称、tu=親しい相手に対して）'},
-  {cat:'🗣️ 挨拶', en:'Bene, grazie. E Lei? / E tu?', ja:'元気です、ありがとう。あなたは？', tip:'bene=元気で（副詞）。grazie=ありがとう。e Lei=そしてあなたは（敬語）。e tu=そしてあなたは（親しい間柄）'},
-  {cat:'🗣️ 挨拶', en:'Così così. / Non c\'è male.', ja:'まあまあです。／悪くないです。', tip:'così così=まあまあ（直訳「こんな感じ・こんな感じ」、繰り返しで「普通」を表す）。non c\'è male=悪くない（c\'è+male「悪い」の否定、控えめな肯定）'},
-  {cat:'🗣️ 挨拶', en:'Arrivederci! / A presto! / A dopo!', ja:'さようなら！／またすぐ！／またあとで！', tip:'arrivederci=さようなら（a+rivedersi「再び会う」が語源）。a presto=また近いうちに（presto=すぐに）。a dopo=またあとで（dopo=あとで）'},
-  {cat:'🗣️ 挨拶', en:'Grazie mille! / Prego! / Di niente!', ja:'どうもありがとう！／どういたしまして！／なんでもないよ！', tip:'grazie mille=どうもありがとう（直訳「千のありがとう」、mille=千）。prego=どういたしまして・どうぞ（pregareの命令形「お願いします」が語源、多用途表現）。di niente=なんでもないよ（di+niente「無」、カジュアルな返答）'},
-  {cat:'🗣️ 挨拶', en:'Mi dispiace. / Scusi! / Permesso!', ja:'申し訳ありません。／すみません！／通してください！', tip:'mi dispiace=申し訳ありません（dispiacereの3人称+目的語mi、「私には残念だ」が直訳）。scusi=すみません（scusareの敬語命令、敬語）。permesso=失礼します（人混みや部屋に入る時の決まり文句、permettereの過去分詞由来）'},
-  {cat:'🗣️ 挨拶', en:'Non capisco. / Può ripetere, per favore?', ja:'わかりません。／もう一度言っていただけますか？', tip:'non capisco=わかりません（capireの1人称否定）。può ripetere=繰り返していただけますか（potereの3人称敬語+ripetere）。per favore=お願いします'},
-  {cat:'🗣️ 挨拶', en:'Parli più lentamente, per favore.', ja:'もっとゆっくり話していただけますか？', tip:'parli=話してください（parlareの敬語命令）。più lentamente=もっとゆっくりと（lentamenteの比較級、lento「遅い」が語源）。per favore=お願いします'},
-  {cat:'🗣️ 挨拶', en:'Come si dice "grazie" in giapponese? / Come si chiama questo in italiano?', ja:'「ありがとう」は日本語で何と言いますか？／これはイタリア語で何と言いますか？', tip:'come si dice=どう言いますか（dire「言う」の非人称、決まり文句）。in giapponese=日本語で。come si chiama=何と呼ばれますか（chiamarsiの非人称、物の名前を尋ねる時にも使う）。in italiano=イタリア語で'},
-  {cat:'🗣️ 挨拶', en:'Non lo so. / Forse. / Certo!', ja:'わかりません。／たぶん。／もちろん！', tip:'non lo so=知りません・わかりません（sapereの1人称否定+目的語lo、知識として知らないことを表す）。forse=たぶん。certo=もちろん・確かに'},
+  {cat:'🗣️ 挨拶', en:'Buongiorno!', ja:'おはようございます！／こんにちは！', tip:'Buon = 良い; giorno = 日。昼まで使う'},
+  {cat:'🗣️ 挨拶', en:'Buonasera!', ja:'こんばんは！', tip:'sera = 夕方・夜。午後から使う'},
+  {cat:'🗣️ 挨拶', en:'Buonanotte!', ja:'おやすみなさい！', tip:'notte = 夜。就寝時に使う'},
+  {cat:'🗣️ 挨拶', en:'Ciao! / Salve!', ja:'やあ！（カジュアル）／こんにちは！（やや丁寧）', tip:'Salve は初対面や少し改まった場面に使える'},
+  {cat:'🗣️ 挨拶', en:'Come sta? / Come stai?', ja:'お元気ですか？（丁寧）／元気？（友人）', tip:'sta = 敬語形（Lei）; stai = 親しい相手（tu）'},
+  {cat:'🗣️ 挨拶', en:'Bene, grazie. E Lei? / E tu?', ja:'元気です、ありがとう。あなたは？', tip:'Lei = 敬語の「あなた」; tu = 親しい相手'},
+  {cat:'🗣️ 挨拶', en:'Così così. / Non c\'è male.', ja:'まあまあです。／悪くないです。', tip:'「こんな感じ・こんな感じ」が直訳。体調が普通のとき'},
+  {cat:'🗣️ 挨拶', en:'Arrivederci! / A presto! / A dopo!', ja:'さようなら！／またすぐ！／またあとで！', tip:'presto = すぐ; dopo = あとで'},
+  {cat:'🗣️ 挨拶', en:'Grazie mille! / Prego! / Di niente!', ja:'どうもありがとう！／どういたしまして！／なんでもないよ！', tip:'Di niente = 「なんでもないことです」のカジュアル版'},
+  {cat:'🗣️ 挨拶', en:'Mi dispiace. / Scusi! / Permesso!', ja:'申し訳ありません。／すみません！／通してください！', tip:'Permesso は人混みや部屋に入るときに使う'},
+  {cat:'🗣️ 挨拶', en:'Non capisco. / Può ripetere, per favore?', ja:'わかりません。／もう一度言っていただけますか？', tip:'ripetere = 繰り返す; può = できる（敬語）'},
+  {cat:'🗣️ 挨拶', en:'Parli più lentamente, per favore.', ja:'もっとゆっくり話していただけますか？', tip:'lentamente = ゆっくりと; parli = 話す（敬語命令）'},
+  {cat:'🗣️ 挨拶', en:'Come si dice "grazie" in giapponese? / Come si chiama questo in italiano?', ja:'「ありがとう」は日本語で何と言いますか？／これはイタリア語で何と言いますか？', tip:'come si dice = どう言う; in italiano = イタリア語で'},
+  {cat:'🗣️ 挨拶', en:'Non lo so. / Forse. / Certo!', ja:'わかりません。／たぶん。／もちろん！', tip:'forse = たぶん; certo = 確かな'},
   // ===== 自己紹介 =====
-  {cat:'🙋 自己紹介', en:'Mi chiamo Anna Rossi. / Il mio nome è Anna.', ja:'私はアンナ・ロッシと申します。／私の名前はアンナです。', tip:'mi chiamo=私は〜という名前です（chiamarsiの再帰動詞、直訳「私は自分を呼ぶ」）。Anna Rossi=人名（Rossiはイタリアで最も多い姓の一つ）。il mio nome è=私の名前は〜です（nome=名前）'},
-  {cat:'🙋 自己紹介', en:'Sono giapponese. / Vengo dal Giappone.', ja:'私は日本人です。／日本から来ました。', tip:'sono giapponese=私は日本人です（giapponese=日本の・日本人、男女同形の形容詞）。vengo dal Giappone=日本から来ました（venireの1人称+da+il、dal=da+il）'},
-  {cat:'🙋 自己紹介', en:'Abito a Tokyo da dieci anni.', ja:'東京に10年住んでいます。', tip:'abito=私は住んでいる（abitareの1人称）。a Tokyo=東京に（都市名にはaを使う）。da dieci anni=10年前から（da+期間で「〜から継続して」を表す。日本語と違いイタリア語は現在形のまま使う）'},
-  {cat:'🙋 自己紹介', en:'Ho trent\'anni. / Quanti anni ha?', ja:'私は30歳です。／おいくつですか？', tip:'ho trent\'anni=私は30歳です（avere+anniで年齢を表す決まり文句、直訳「30年を持つ」）。quanti anni ha=おいくつですか（quantiは数を尋ねる疑問形容詞、haはavereの3人称敬語）'},
-  {cat:'🙋 自己紹介', en:'Sono insegnante. / Lavoro in un\'azienda informatica.', ja:'教師をしています。／IT企業で働いています。', tip:'sono insegnante=私は教師です（insegnante=教師、男女同形）。lavoro in un\'azienda informatica=IT企業で働いています（lavorareの1人称、azienda=会社、informatica=情報技術）'},
-  {cat:'🙋 自己紹介', en:'Studio l\'italiano da sei mesi.', ja:'6ヶ月間イタリア語を勉強しています。', tip:'studio=私は勉強する（studiareの1人称）。l\'italiano=イタリア語。da sei mesi=6ヶ月前から（da+期間）'},
-  {cat:'🙋 自己紹介', en:'Sono sposata e ho due figli.', ja:'既婚で子供が2人います。', tip:'sono sposata=既婚です（sposataはsposatoの女性形、essereと共に状態を表す）。e ho due figli=そして子供が2人います（avereの1人称、figli=子供たち、男女混合や男児を含む場合の複数形）'},
-  {cat:'🙋 自己紹介', en:'Nel tempo libero mi piace cucinare e viaggiare.', ja:'空き時間には料理と旅行が好きです。', tip:'nel tempo libero=空き時間に（tempo libero=自由な時間、nel=in+il）。mi piace cucinare e viaggiare=料理と旅行が好きです（piacereは主語と目的語が日本語と逆、不定詞が主語になる）'},
-  {cat:'🙋 自己紹介', en:'Piacere di conoscerla. / Piacere mio!', ja:'お会いできて嬉しいです。／こちらこそ！', tip:'piacere di conoscerla=お会いできて嬉しいです（piacere=喜び、conoscereの不定詞+敬語の目的語la、フォーマルな初対面表現）。piacere mio=こちらこそ（直訳「私の喜び」）'},
+  {cat:'🙋 自己紹介', en:'Mi chiamo Anna Rossi. / Il mio nome è Anna.', ja:'私はアンナ・ロッシと申します。／私の名前はアンナです。', tip:'chiamarsi = 〜という名前だ（再帰動詞）'},
+  {cat:'🙋 自己紹介', en:'Sono giapponese. / Vengo dal Giappone.', ja:'私は日本人です。／日本から来ました。', tip:'venire da = 〜から来る; dal = da + il'},
+  {cat:'🙋 自己紹介', en:'Abito a Tokyo da dieci anni.', ja:'東京に10年住んでいます。', tip:'da + 期間 = 〜から（継続）。現在形で使う'},
+  {cat:'🙋 自己紹介', en:'Ho trent\'anni. / Quanti anni ha?', ja:'私は30歳です。／おいくつですか？', tip:'年齢は avere で表す。avere + anni'},
+  {cat:'🙋 自己紹介', en:'Sono insegnante. / Lavoro in un\'azienda informatica.', ja:'教師をしています。／IT企業で働いています。', tip:'informatica = 情報技術; azienda = 会社'},
+  {cat:'🙋 自己紹介', en:'Studio l\'italiano da sei mesi.', ja:'6ヶ月間イタリア語を勉強しています。', tip:'da + 期間 + 現在形 = 〜からずっと〜している'},
+  {cat:'🙋 自己紹介', en:'Sono sposata e ho due figli.', ja:'既婚で子供が2人います。', tip:'figlio = 息子; figlia = 娘; figli = 子供たち'},
+  {cat:'🙋 自己紹介', en:'Nel tempo libero mi piace cucinare e viaggiare.', ja:'空き時間には料理と旅行が好きです。', tip:'nel tempo libero = 空き時間に; mi piace = 好き'},
+  {cat:'🙋 自己紹介', en:'Piacere di conoscerla. / Piacere mio!', ja:'お会いできて嬉しいです。／こちらこそ！', tip:'conoscere = 知り合う; mio = 私の'},
   // ===== 数字 =====
-  {cat:'🔢 数字', en:'uno, due, tre, quattro, cinque', ja:'1、2、3、4、5', tip:'uno=1（単独で使う形。名詞の前ではunになる）。due=2（女性形なし、男女共通）。tre=3。quattro=4。cinque=5'},
-  {cat:'🔢 数字', en:'sei, sette, otto, nove, dieci', ja:'6、7、8、9、10', tip:'sei=6。sette=7。otto=8（英語のeightと同語源）。nove=9。dieci=10（英語のdecimalと同語源）'},
-  {cat:'🔢 数字', en:'undici, dodici, tredici, quattordici, quindici', ja:'11、12、13、14、15', tip:'undici=11。dodici=12。tredici=13。quattordici=14。quindici=15（11〜15はそれぞれ固有の形を持つ）'},
-  {cat:'🔢 数字', en:'sedici, diciassette, diciotto, diciannove, venti', ja:'16、17、18、19、20', tip:'sedici=16。diciassette=17（dieci+setteから変化、nが消える）。diciotto=18（dieci+ottoから変化）。diciannove=19。venti=20'},
-  {cat:'🔢 数字', en:'ventuno, ventidue, ventitré, trenta, quaranta', ja:'21、22、23、30、40', tip:'ventuno=21（venti+unoでiが脱落）。ventidue=22。ventitré=23（accent記号に注意）。trenta=30。quaranta=40'},
-  {cat:'🔢 数字', en:'cinquanta, sessanta, settanta, ottanta, novanta', ja:'50、60、70、80、90', tip:'cinquanta=50。sessanta=60。settanta=70（setteのnが消える）。ottanta=80。novanta=90'},
-  {cat:'🔢 数字', en:'cento, duecento, mille, duemila, un milione', ja:'100、200、1000、2000、100万', tip:'cento=100（無変化で使う）。duecento=200。mille=1000（複数になるとmilaに変化）。duemila=2000。un milione=100万（女性名詞milioneの前にunが付く）'},
-  {cat:'🔢 数字', en:'Costa venti euro. / Sono trenta euro in tutto.', ja:'20ユーロです。／全部で30ユーロです。', tip:'costa=値段がする（costareの3人称）。venti euro=20ユーロ。sono trenta euro=30ユーロです（金額にはsono=essereの複数形を使う）。in tutto=全部で'},
-  {cat:'🔢 数字', en:'Il mio numero di telefono è 090-1234-5678.', ja:'私の電話番号は090-1234-5678です。', tip:'il mio numero di telefono=私の電話番号（numero di telefono=電話番号）。è=〜です（essereの3人称）。電話番号は数字を一つずつ読む'},
-  {cat:'🔢 数字', en:'primo, secondo, terzo, quarto, quinto', ja:'第1・第2・第3・第4・第5（序数）', tip:'primo=第1の（序数、形容詞なので名詞に性数一致する）。secondo=第2の。terzo=第3の。quarto=第4の。quinto=第5の'},
-  {cat:'🔢 数字', en:'Abito al terzo piano. / Prendo il primo treno.', ja:'3階に住んでいます。／最初の電車に乗ります。', tip:'abito al terzo piano=3階に住んでいます（abitareの1人称、al=a+il、piano=階）。prendo il primo treno=最初の電車に乗ります（prendereの1人称、primo=最初の）'},
+  {cat:'🔢 数字', en:'uno, due, tre, quattro, cinque', ja:'1、2、3、4、5', tip:'due には女性形なし。tre は tré とも書く'},
+  {cat:'🔢 数字', en:'sei, sette, otto, nove, dieci', ja:'6、7、8、9、10', tip:'dieci = 10（英語のdecimalと同語源）'},
+  {cat:'🔢 数字', en:'undici, dodici, tredici, quattordici, quindici', ja:'11、12、13、14、15', tip:'11〜15はそれぞれ固有の形'},
+  {cat:'🔢 数字', en:'sedici, diciassette, diciotto, diciannove, venti', ja:'16、17、18、19、20', tip:'diciotto（18）は dieci + otto から変化'},
+  {cat:'🔢 数字', en:'ventuno, ventidue, ventitré, trenta, quaranta', ja:'21、22、23、30、40', tip:'uno/una がつくと venti の末尾 i が消える'},
+  {cat:'🔢 数字', en:'cinquanta, sessanta, settanta, ottanta, novanta', ja:'50、60、70、80、90', tip:'ottanta（80）は otto から変化'},
+  {cat:'🔢 数字', en:'cento, duecento, mille, duemila, un milione', ja:'100、200、1000、2000、100万', tip:'mille（千）の複数は mila。un milione di...'},
+  {cat:'🔢 数字', en:'Costa venti euro. / Sono trenta euro in tutto.', ja:'20ユーロです。／全部で30ユーロです。', tip:'in tutto = 全部で; costare = 〜の値段がする'},
+  {cat:'🔢 数字', en:'Il mio numero di telefono è 090-1234-5678.', ja:'私の電話番号は090-1234-5678です。', tip:'数字を一つずつ読む。zero = 0'},
+  {cat:'🔢 数字', en:'primo, secondo, terzo, quarto, quinto', ja:'第1・第2・第3・第4・第5（序数）', tip:'序数は形容詞なので名詞に性数一致する'},
+  {cat:'🔢 数字', en:'Abito al terzo piano. / Prendo il primo treno.', ja:'3階に住んでいます。／最初の電車に乗ります。', tip:'piano = 階; primo = 最初の'},
   // ===== 曜日・月・日付 =====
-  {cat:'📅 曜日・月・日付', en:'lunedì, martedì, mercoledì, giovedì', ja:'月曜日、火曜日、水曜日、木曜日', tip:'lunedì=月曜日。martedì=火曜日。mercoledì=水曜日。giovedì=木曜日（曜日は全て男性名詞、小文字で書く）'},
-  {cat:'📅 曜日・月・日付', en:'venerdì, sabato, domenica', ja:'金曜日、土曜日、日曜日', tip:'venerdì=金曜日。sabato=土曜日。domenica=日曜日（domenicaだけ-a語尾で女性名詞）'},
-  {cat:'📅 曜日・月・日付', en:'Il lunedì vado in palestra.', ja:'月曜日はジムに行きます。', tip:'il lunedì=毎週月曜日に（定冠詞il+曜日で習慣的な「毎週〜曜日に」を表す）。vado in palestra=ジムに行く（andareの1人称、palestra=体育館・ジム）'},
-  {cat:'📅 曜日・月・日付', en:'gennaio, febbraio, marzo, aprile, maggio, giugno', ja:'1月、2月、3月、4月、5月、6月', tip:'gennaio=1月。febbraio=2月。marzo=3月。aprile=4月。maggio=5月。giugno=6月（月名は全て男性名詞、小文字で書く）'},
-  {cat:'📅 曜日・月・日付', en:'luglio, agosto, settembre, ottobre, novembre, dicembre', ja:'7月、8月、9月、10月、11月、12月', tip:'luglio=7月。agosto=8月。settembre=9月。ottobre=10月。novembre=11月。dicembre=12月'},
-  {cat:'📅 曜日・月・日付', en:'Oggi è il tre marzo duemilaventicinque.', ja:'今日は2025年3月3日です。', tip:'oggi è=今日は〜です（essereの3人称）。il tre marzo=3月3日（定冠詞il+数字+月名の順、1日だけはil primo「1番目」を使う）。duemilaventicinque=2025（年号、数字を一続きの単語で表す）'},
-  {cat:'📅 曜日・月・日付', en:'Sono nata il quindici agosto.', ja:'8月15日生まれです。', tip:'sono nata=私は生まれました（nascereの近過去、essereを使う移動・状態変化動詞、女性形過去分詞）。il quindici agosto=8月15日（定冠詞il+数字+月名）'},
-  {cat:'📅 曜日・月・日付', en:'La riunione è fissata per venerdì prossimo.', ja:'会議は来週金曜日に予定されています。', tip:'la riunione=会議（女性名詞）。è fissata per=〜に設定されている（fissareの過去分詞、essereと共に受動を表す、per=〜のために）。venerdì prossimo=来週の金曜日（prossimo=次の）'},
+  {cat:'📅 曜日・月・日付', en:'lunedì, martedì, mercoledì, giovedì', ja:'月曜日、火曜日、水曜日、木曜日', tip:'曜日は小文字。冠詞なしで「〜曜日に」の意味になる'},
+  {cat:'📅 曜日・月・日付', en:'venerdì, sabato, domenica', ja:'金曜日、土曜日、日曜日', tip:'domenica だけ -a 語尾（女性名詞）'},
+  {cat:'📅 曜日・月・日付', en:'Il lunedì vado in palestra.', ja:'月曜日はジムに行きます。', tip:'il + 曜日 = 毎週〜曜日に（習慣）'},
+  {cat:'📅 曜日・月・日付', en:'gennaio, febbraio, marzo, aprile, maggio, giugno', ja:'1月、2月、3月、4月、5月、6月', tip:'月名も小文字。in gennaio = 1月に'},
+  {cat:'📅 曜日・月・日付', en:'luglio, agosto, settembre, ottobre, novembre, dicembre', ja:'7月、8月、9月、10月、11月、12月', tip:'luglio・agosto が夏のバカンスシーズン'},
+  {cat:'📅 曜日・月・日付', en:'Oggi è il tre marzo duemilaventicinque.', ja:'今日は2025年3月3日です。', tip:'il + 数字 + 月名 + 年号。1日だけ「il primo」'},
+  {cat:'📅 曜日・月・日付', en:'Sono nata il quindici agosto.', ja:'8月15日生まれです。', tip:'nata = 生まれた（女性形）; il + 日付'},
+  {cat:'📅 曜日・月・日付', en:'La riunione è fissata per venerdì prossimo.', ja:'会議は来週金曜日に予定されています。', tip:'fissata = 設定された; prossimo = 次の'},
   // ===== 時間 =====
-  {cat:'⏰ 時間', en:'Che ore sono? / Sono le tre e un quarto.', ja:'今何時ですか？／3時15分です。', tip:'che ore sono=今何時ですか（ore=時間の複数形、複数形で時刻を尋ねる）。sono le tre e un quarto=3時15分です（leは時刻の定冠詞、un quarto=15分・4分の1）'},
-  {cat:'⏰ 時間', en:'È l\'una meno venti. / Sono le otto e mezza.', ja:'12時40分です。／8時半です。', tip:'è l\'una meno venti=12時40分です（直訳「1時マイナス20分」、メノ+分数で「〜分前」を表す。1時だけunaで単数扱い）。sono le otto e mezza=8時半です（e mezzaは「〜と半分」で30分を表す）'},
-  {cat:'⏰ 時間', en:'A che ora parte il treno? / Alle diciassette e trenta.', ja:'電車は何時に出発しますか？／17時30分です。', tip:'a che ora parte il treno=電車は何時に出発しますか（partireの3人称）。alle diciassette e trenta=17時30分に（alle=a+le、時刻の前にはalleを使う）'},
-  {cat:'⏰ 時間', en:'ieri / oggi / domani / dopodomani / l\'altro ieri', ja:'昨日／今日／明日／明後日／一昨日', tip:'ieri=昨日。oggi=今日。domani=明日。dopodomani=明後日（dopo「後」+domani）。l\'altro ieri=一昨日（直訳「もう一つの昨日」）'},
-  {cat:'⏰ 時間', en:'questa settimana / la settimana scorsa / il mese prossimo', ja:'今週／先週／来月', tip:'questa settimana=今週（questo「この」の女性形）。la settimana scorsa=先週（scorso=過ぎた）。il mese prossimo=来月（prossimo=次の）'},
-  {cat:'⏰ 時間', en:'di mattina / di pomeriggio / di sera / di notte', ja:'午前に／午後に／夕方・夜に／夜中に', tip:'di mattina=朝に。di pomeriggio=午後に。di sera=夕方・夜に。di notte=夜中に（diは時間帯を表す前置詞、いずれも決まった組み合わせ）'},
-  {cat:'⏰ 時間', en:'Ci vediamo alle sei di sera.', ja:'夕方6時に会いましょう。', tip:'ci vediamo=会いましょう（vedersiの再帰動詞「会う」、1人称複数）。alle sei di sera=夕方6時に（alle=a+le、di seraで時間帯を明示）'},
+  {cat:'⏰ 時間', en:'Che ore sono? / Sono le tre e un quarto.', ja:'今何時ですか？／3時15分です。', tip:'un quarto = 15分; e mezza = 30分'},
+  {cat:'⏰ 時間', en:'È l\'una meno venti. / Sono le otto e mezza.', ja:'12時40分です。／8時半です。', tip:'meno + 分数 = 〜分前; e mezza = 30分'},
+  {cat:'⏰ 時間', en:'A che ora parte il treno? / Alle diciassette e trenta.', ja:'電車は何時に出発しますか？／17時30分です。', tip:'alle + 時刻 = 〜時に; 24時間表記はビジネス・交通で一般的'},
+  {cat:'⏰ 時間', en:'ieri / oggi / domani / dopodomani / l\'altro ieri', ja:'昨日／今日／明日／明後日／一昨日', tip:'l\'altro ieri = 一昨日。覚えておくと便利'},
+  {cat:'⏰ 時間', en:'questa settimana / la settimana scorsa / il mese prossimo', ja:'今週／先週／来月', tip:'scorso = 過ぎた; prossimo = 次の'},
+  {cat:'⏰ 時間', en:'di mattina / di pomeriggio / di sera / di notte', ja:'午前に／午後に／夕方・夜に／夜中に', tip:'時間帯を表す前置詞句。曜日と組み合わせて使う'},
+  {cat:'⏰ 時間', en:'Ci vediamo alle sei di sera.', ja:'夕方6時に会いましょう。', tip:'ci vediamo = 会いましょう（再帰）; alle sei = 6時に'},
   // ===== 日常表現 =====
-  {cat:'💬 日常表現', en:'Ho fame. / Ho sete. / Ho sonno. / Ho freddo.', ja:'お腹が空いた／喉が渇いた／眠い／寒い', tip:'ho fame=お腹が空いた（avere fameで「空腹がある」の意、avere+名詞で身体の状態を表す決まり文句）。ho sete=喉が渇いた。ho sonno=眠い。ho freddo=寒い'},
-  {cat:'💬 日常表現', en:'Sono stanca. / Mi sento male. / Sto bene.', ja:'疲れています。／気分が悪いです。／元気です。', tip:'sono stanca=疲れています（stancaはstancoの女性形）。mi sento male=気分が悪いです（sentirsiは体調を表す再帰動詞）。sto bene=元気です（stareの1人称、bene=良く）'},
-  {cat:'💬 日常表現', en:'Dov\'è il bagno? / C\'è un bagno qui vicino?', ja:'トイレはどこですか？／近くにトイレはありますか？', tip:'dov\'è il bagno=トイレはどこですか（dove+èの縮約、bagno=浴室・トイレ）。c\'è un bagno qui vicino=近くにトイレはありますか（c\'è=〜がある、qui vicino=この近くに）'},
-  {cat:'💬 日常表現', en:'Quanto costa? / È troppo caro. / Mi fa uno sconto?', ja:'いくらですか？／高すぎます。／値引きしてもらえますか？', tip:'quanto costa=いくらですか（costareの3人称、決まり文句）。è troppo caro=高すぎます（troppo=〜すぎる、caroは「高い」「親愛な」両方の意味を持つ形容詞）。mi fa uno sconto=値引きしてもらえますか（fareの3人称+目的語mi、sconto=割引）'},
-  {cat:'💬 日常表現', en:'Può aiutarmi? / Ho bisogno di aiuto. / Ho una domanda.', ja:'助けていただけますか？／助けが必要です。／質問があります。', tip:'può aiutarmi=助けていただけますか（potereの3人称敬語+aiutare+目的語mi）。ho bisogno di aiuto=助けが必要です（avere bisogno di=〜が必要だという熟語）。ho una domanda=質問があります（domanda=質問）'},
-  {cat:'💬 日常表現', en:'Va bene! / Perfetto! / Ottimo!', ja:'了解です！／完璧です！／素晴らしいです！', tip:'va bene=大丈夫です（andareの3人称、直訳「うまく行く」、決まり文句）。perfetto=完璧です。ottimo=最高です（buonoの絶対最上級）'},
-  {cat:'💬 日常表現', en:'Davvero? / Che sorpresa! / Non ci credo!', ja:'本当ですか？／なんと驚き！／信じられない！', tip:'davvero=本当ですか（副詞「本当に」が疑問文として使われる）。che sorpresa=なんという驚き（che+名詞で感嘆文、sorpresa=驚き）。non ci credo=信じられません（credereの1人称否定+ci「それを」）'},
-  {cat:'💬 日常表現', en:'Mi piace molto. / Non mi piace per niente.', ja:'とても好きです。／全く好きではありません。', tip:'mi piace molto=とても好きです（piacereは主語と目的語が日本語と逆、moltoは「とても」）。non mi piace per niente=全く好きではありません（per nienteは「全く〜ない」という強い否定）'},
-  {cat:'💬 日常表現', en:'Che bello! / Che peccato! / Meno male!', ja:'なんて素敵！／残念！／よかった！', tip:'che bello=なんて素敵（che+形容詞で感嘆文）。che peccato=残念ですね（peccato=直訳「罪」、転じて「残念」の意味の決まり文句）。meno male=よかった（直訳「悪さが少ない」、安堵を表す決まり文句）'},
-  {cat:'💬 日常表現', en:'Come mai? / Per quale motivo? / A cosa serve?', ja:'どうして？／どういう理由で？／何の役に立つの？', tip:'come mai=どうして？（驚きを伴うカジュアルな「なぜ」、comeとmaiの組み合わせ）。per quale motivo=どういう理由で（motivo=理由、quale=どの）。a cosa serve=何の役に立ちますか（servireの3人称、a cosaは「何に」）'},
-  {cat:'💬 日常表現', en:'Dipende. / Più o meno. / In ogni caso.', ja:'場合によります。／だいたい。／いずれにせよ。', tip:'dipende=場合によります（dipenereの3人称、主語省略の決まり文句）。più o meno=だいたい（直訳「多いか少ないか」）。in ogni caso=いずれにせよ（ogni caso=どの場合も）'},
-  {cat:'💬 日常表現', en:'Un attimo! / Aspetta! / Subito!', ja:'ちょっと待って！／待って！／すぐに！', tip:'un attimo=ちょっと待って（直訳「一瞬」、attimo=瞬間）。aspetta=待って（aspettareの命令形、親しい間柄）。subito=すぐに'},
-  {cat:'💬 日常表現', en:'Posso usare il tuo telefono? / Hai il caricabatterie?', ja:'電話を使わせてもらえますか？／充電器を持っていますか？', tip:'posso usare=使ってもいいですか（potereの1人称+usare）。il tuo telefono=あなたの電話。hai il caricabatterie=充電器を持っていますか（averの2人称、caricabatterie=充電器）'},
-  {cat:'💬 日常表現', en:'C\'è il Wi-Fi qui? / Qual è la password?', ja:'ここにWi-Fiはありますか？／パスワードは何ですか？', tip:'c\'è il Wi-Fi qui=ここにWi-Fiはありますか（c\'è+定冠詞+名詞、qui=ここに）。qual è la password=パスワードは何ですか（qual è=quale+è、何ですかと尋ねる定番表現）'},
-  {cat:'💬 日常表現', en:'Devo andare. / Mi fa compagnia?', ja:'行かなければなりません。／一緒に来ませんか？', tip:'devo andare=行かなければなりません（dovereの1人称+andare）。mi fa compagnia=一緒に来ませんか（fare compagniaで「付き合う・同伴する」という熟語、主語と目的語が日本語と逆）'},
-  {cat:'💬 日常表現', en:'È la prima volta che vengo in Italia.', ja:'イタリアは初めてです。', tip:'è la prima volta che vengo in Italia=イタリアは初めてです（è la prima volta che+現在形で「初めて〜する」、vengoはvenireの1人称）'},
-  {cat:'💬 日常表現', en:'Mi manca l\'Italia. / Mi manchi!', ja:'イタリアが恋しいです。／あなたが恋しいです！', tip:'mi manca l\'Italia=イタリアが恋しいです（mancareは主語と目的語が日本語と逆、直訳「イタリアが私に欠けている」）。mi manchi=あなたが恋しいです（同じ構文の2人称版）'},
-  {cat:'💬 日常表現', en:'Non vedo l\'ora! / Sono impaziente!', ja:'待ちきれません！／我慢できません！', tip:'non vedo l\'ora=待ちきれません（直訳「時を見られない」、楽しみで待ちきれない時の決まり文句）。sono impaziente=我慢できません（impazienteは「我慢できない・せっかちな」、男女同形）'},
-  {cat:'💬 日常表現', en:'Facciamo così. / È un\'idea!', ja:'そうしましょう。／いい考えですね！', tip:'facciamo così=そうしましょう（fareの1人称複数、提案の決まり文句）。è un\'idea=いい考えですね（直訳「一つのアイデアだ」、軽い同意を表す）'},
-  {cat:'💬 日常表現', en:'A proposito... / Tra l\'altro... / Comunque...', ja:'ところで...／その上...／とにかく...', tip:'a proposito=ところで（話題を変える時の決まり文句）。tra l\'altro=その上・ちなみに（直訳「他のものの間に」）。comunque=とにかく・いずれにせよ（接続詞的に使う副詞）'},
+  {cat:'💬 日常表現', en:'Ho fame. / Ho sete. / Ho sonno. / Ho freddo.', ja:'お腹が空いた／喉が渇いた／眠い／寒い', tip:'avere + 名詞で身体・感情の状態を表す'},
+  {cat:'💬 日常表現', en:'Sono stanca. / Mi sento male. / Sto bene.', ja:'疲れています。／気分が悪いです。／元気です。', tip:'sentirsi = 感じる（再帰）; stare bene = 調子がいい'},
+  {cat:'💬 日常表現', en:'Dov\'è il bagno? / C\'è un bagno qui vicino?', ja:'トイレはどこですか？／近くにトイレはありますか？', tip:'c\'è = 〜がある; vicino = 近く'},
+  {cat:'💬 日常表現', en:'Quanto costa? / È troppo caro. / Mi fa uno sconto?', ja:'いくらですか？／高すぎます。／値引きしてもらえますか？', tip:'sconto = 割引; troppo = 〜すぎる'},
+  {cat:'💬 日常表現', en:'Può aiutarmi? / Ho bisogno di aiuto. / Ho una domanda.', ja:'助けていただけますか？／助けが必要です。／質問があります。', tip:'bisogno = 必要; aiutare = 助ける'},
+  {cat:'💬 日常表現', en:'Va bene! / Perfetto! / Ottimo!', ja:'了解です！／完璧です！／素晴らしいです！', tip:'ottimo = 最高の（buono の最上級）'},
+  {cat:'💬 日常表現', en:'Davvero? / Che sorpresa! / Non ci credo!', ja:'本当ですか？／なんと驚き！／信じられない！', tip:'sorpresa = 驚き; credere = 信じる'},
+  {cat:'💬 日常表現', en:'Mi piace molto. / Non mi piace per niente.', ja:'とても好きです。／全く好きではありません。', tip:'per niente = 全く〜ない（強い否定）'},
+  {cat:'💬 日常表現', en:'Che bello! / Che peccato! / Meno male!', ja:'なんて素敵！／残念！／よかった！', tip:'che + 名詞/形容詞 = なんて〜！; meno male = 直訳「悪さが減った」'},
+  {cat:'💬 日常表現', en:'Come mai? / Per quale motivo? / A cosa serve?', ja:'どうして？／どういう理由で？／何の役に立つの？', tip:'come mai = 驚きを伴う「なんで？」; motivo = 理由'},
+  {cat:'💬 日常表現', en:'Dipende. / Più o meno. / In ogni caso.', ja:'場合によります。／だいたい。／いずれにせよ。', tip:'in ogni caso = とにかく・いずれにせよ'},
+  {cat:'💬 日常表現', en:'Un attimo! / Aspetta! / Subito!', ja:'ちょっと待って！／待って！／すぐに！', tip:'un attimo = 一瞬; subito = すぐに（日常頻出）'},
+  {cat:'💬 日常表現', en:'Posso usare il tuo telefono? / Hai il caricabatterie?', ja:'電話を使わせてもらえますか？／充電器を持っていますか？', tip:'caricabatterie = 充電器（現代の必須語彙）'},
+  {cat:'💬 日常表現', en:'C\'è il Wi-Fi qui? / Qual è la password?', ja:'ここにWi-Fiはありますか？／パスワードは何ですか？', tip:'password の発音はイタリア語でも「パスワード」に近い'},
+  {cat:'💬 日常表現', en:'Devo andare. / Mi fa compagnia?', ja:'行かなければなりません。／一緒に来ませんか？', tip:'fare compagnia = 付き合う・同伴する'},
+  {cat:'💬 日常表現', en:'È la prima volta che vengo in Italia.', ja:'イタリアは初めてです。', tip:'è la prima volta che + 現在形 = 初めて〜する'},
+  {cat:'💬 日常表現', en:'Mi manca l\'Italia. / Mi manchi!', ja:'イタリアが恋しいです。／あなたが恋しいです！', tip:'mancare = 〜がいなくて寂しい。主語と目的語が日本語と逆'},
+  {cat:'💬 日常表現', en:'Non vedo l\'ora! / Sono impaziente!', ja:'待ちきれません！／我慢できません！', tip:'non vedere l\'ora = 直訳「時を見られない」→ 待ちきれない'},
+  {cat:'💬 日常表現', en:'Facciamo così. / È un\'idea!', ja:'そうしましょう。／いい考えですね！', tip:'facciamo così = 「そうしよう」提案の定番表現'},
+  {cat:'💬 日常表現', en:'A proposito... / Tra l\'altro... / Comunque...', ja:'ところで...／その上...／とにかく...', tip:'会話のつなぎ言葉。自然な会話に欠かせない'},
 ];
 
 
@@ -553,7 +556,19 @@ let repeatTimer    = null;
 let autoMode       = '';
 let autoStopped    = false;
 let autoTimeout    = null;
-let masterSet = new Set(JSON.parse(localStorage.getItem('jiko50_master') || '[]'));
+let masterSet = new Set();
+const APP_ID='ita1';
+const PROFILES_KEY='duo_profiles';
+const CURRENT_PROFILE_KEY='duo_current_profile';
+function getProfiles(){try{const raw=localStorage.getItem(PROFILES_KEY);const arr=raw?JSON.parse(raw):[];return arr.length?arr:['本人'];}catch(e){return ['本人'];}}
+function saveProfiles(arr){try{localStorage.setItem(PROFILES_KEY,JSON.stringify(arr));}catch(e){}}
+function getCurrentProfile(){try{return localStorage.getItem(CURRENT_PROFILE_KEY)||getProfiles()[0];}catch(e){return '本人';}}
+function setCurrentProfile(name){try{localStorage.setItem(CURRENT_PROFILE_KEY,name);}catch(e){}}
+function masteredStorageKey(profile){return APP_ID+'_'+profile;}
+function loadMastered(){const profile=getCurrentProfile();try{const raw=localStorage.getItem(masteredStorageKey(profile));masterSet=new Set(raw?JSON.parse(raw):[]);}catch(e){masterSet=new Set();}}
+function renderProfileSelect(){const sel=document.getElementById('profile-select');if(!sel)return;const profiles=getProfiles();const current=getCurrentProfile();sel.innerHTML=profiles.map(p=>'<option value="'+p+'"'+(p===current?' selected':'')+'>'+p+'</option>').join('')+'<option value="__new__">＋ 新しいユーザー…</option>';}
+function switchProfile(value){if(value==='__new__'){const name=prompt('新しいユーザー名を入力してください（例：太郎、花子）');if(!name){renderProfileSelect();return;}const trimmed=name.trim();if(!trimmed){renderProfileSelect();return;}const profiles=getProfiles();if(!profiles.includes(trimmed)){profiles.push(trimmed);saveProfiles(profiles);}setCurrentProfile(trimmed);}else{setCurrentProfile(value);}loadMastered();currentIndex=0;renderProfileSelect();update();}
+
 
 // ── Voice setup ───────────────────────────────────────────────────
 let enVoices = [];
@@ -722,7 +737,7 @@ function getActive() {
     .map((p,i) => ({...p, globalIdx:i}))
     .filter(p => !masterSet.has(p.globalIdx) && (activeCategory==='all' || p.cat===activeCategory));
 }
-function saveMaster() { localStorage.setItem('jiko50_master', JSON.stringify([...masterSet])); }
+function saveMaster() { localStorage.setItem(masteredStorageKey(getCurrentProfile()), JSON.stringify([...masterSet])); }
 
 // ── Update UI ─────────────────────────────────────────────────────
 function update() {
@@ -949,6 +964,8 @@ function closeGuide() { document.getElementById('guide-overlay').classList.remov
 function handleOverlayClick(e) { if (e.target === document.getElementById('guide-overlay')) closeGuide(); }
 
 // ── Init ──────────────────────────────────────────────────────────
+loadMastered();
+renderProfileSelect();
 buildCatRows();
 updateFilterLabel();
 update();

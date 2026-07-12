@@ -260,6 +260,7 @@ body {
 .gti { display:inline-block;padding:1px 7px;border-radius:99px;font-size:10px;font-weight:700;vertical-align:middle; }
 .gti-a { background:#fef3c7;color:#92400e; }
 .gti-b { background:#dbeafe;color:#1e40af; }
+.profile-select{font-family:'Noto Sans JP',sans-serif;font-size:11px;font-weight:700;color:var(--primary);background:var(--primary-light);border:1px solid var(--border);border-radius:99px;padding:5px 10px;cursor:pointer;max-width:140px;margin-top:6px;}
 </style>
 </head>
 <body>
@@ -269,6 +270,8 @@ body {
   <h2>🇮🇹 イタリア語④　時制・文法応用</h2>
   <p>挨拶・自己紹介・基本表現</p>
   <button class="help-btn" onclick="openGuide()">❓ 使い方ガイド</button>
+  <select class="profile-select" id="profile-select" onchange="switchProfile(this.value)"></select>
+
 </div>
 
 <div class="badges">
@@ -462,71 +465,71 @@ const CATS = {
 
 const phrases = [
   // ===== 近過去 =====
-  {cat:'📚 近過去', en:'Ho mangiato troppo ieri sera. Stamattina mi sentivo ancora piena.', ja:'昨夜食べすぎました。今朝もまだお腹がいっぱいでした。', tip:'ho mangiato=食べた（mangiareの近過去）。troppo=〜すぎる。ieri sera=昨夜。mi sentivo ancora piena=まだお腹がいっぱいだった（sentirsiの半過去、女性形。継続的な状態には半過去を使う）'},
-  {cat:'📚 近過去', en:'Abbiamo visitato il Colosseo stamattina. La fila era lunghissima, ma ne è valsa la pena.', ja:'今朝コロッセオを見学しました。列がとても長かったですが、その価値がありました。', tip:'abbiamo visitato=訪れた（visitareの近過去複数）。il Colosseo=コロッセオ。stamattina=今朝。la fila era lunghissima=列がとても長かった（fila=列、lunghissimaはlungoの絶対最上級）。ne è valsa la pena=その価値があった（valere la penaの近過去、neは「それの」）'},
-  {cat:'📚 近過去', en:'Lui ha letto tutto il libro in un pomeriggio. Non riesco a capire come faccia.', ja:'彼は午後一杯でその本を全部読みました。どうやっているのか理解できません。', tip:'lui ha letto=彼は読んだ（leggereの不規則過去分詞letto、近過去）。tutto il libro=その本全部。in un pomeriggio=午後一杯で。non riesco a capire=理解できない（riuscire a+不定詞）。come faccia=どうやっているのか（fareの接続法、間接疑問で使われる）'},
-  {cat:'📚 近過去', en:'Non l\'ho capito quando l\'ha detto. Avrei dovuto chiedergli di ripetere.', ja:'彼が言った時わかりませんでした。繰り返すよう頼めばよかったです。', tip:'non l\'ho capito=理解しなかった（capireの近過去否定、l\'=lo）。quando l\'ha detto=彼がそれを言った時（direの不規則過去分詞detto）。avrei dovuto+不定詞=〜すべきだった（dovereの条件法過去、後悔を表す）。chiedergli di ripetere=彼に繰り返すよう頼む（chiedere+gli+di+不定詞）'},
-  {cat:'📚 近過去', en:'Sono andata a Milano per lavoro la settimana scorsa. Ho fatto tardi ogni sera.', ja:'先週仕事でミラノに行きました。毎晩遅くなりました。', tip:'sono andata=行った（andareの近過去、essereを使う移動動詞、女性形）。a Milano per lavoro=仕事でミラノへ。la settimana scorsa=先週。ho fatto tardi=遅くなった（fareの近過去、tardiは「遅く」）。ogni sera=毎晩'},
-  {cat:'📚 近過去', en:'Mi sono svegliata tardi e ho perso il treno. Ho dovuto aspettare un\'ora il prossimo.', ja:'寝坊して電車を乗り過ごしました。次を1時間待たなければなりませんでした。', tip:'mi sono svegliata tardi=遅く目が覚めた（svegliarsiの近過去、女性形）。ho perso il treno=電車を逃した（perdereの近過去）。ho dovuto aspettare=待たなければならなかった（dovereの近過去+aspettare）。un\'ora=1時間。il prossimo=次の（電車を指す）'},
-  {cat:'📚 近過去', en:'Hai già mangiato? Stavo per prepararti qualcosa, ma se hai già mangiato...', ja:'もう食べましたか？何か作ろうとしていたんですが、もう食べたなら…', tip:'hai già mangiato=もう食べましたか（mangiareの近過去、giàは「すでに」）。stavo per+不定詞=〜しようとしていた（stare per、直前の未来を表す半過去進行形）。prepararti qualcosa=あなたに何かを準備する（preparare+ti）。ma se hai già mangiato=でももう食べたなら'},
-  {cat:'📚 近過去', en:'Non siamo mai state a Napoli. È il momento di andarci, no?', ja:'ナポリには一度も行ったことがありません。そろそろ行く時ですよね？', tip:'non siamo mai state=一度も行ったことがない（essereの近過去否定、複数女性形state、maiは「一度も〜ない」）。a Napoli=ナポリに。è il momento di+不定詞=〜する時だ（決まり文句）。andarci=そこへ行く（andare+ci）'},
-  {cat:'📚 近過去', en:'Quanto tempo fa sei arrivata in Italia? Parli già molto bene!', ja:'イタリアに来てどのくらいになりますか？もうとても上手ですね！', tip:'quanto tempo fa=どのくらい前に。sei arrivata=あなたは到着した（arrivareの近過去、essereを使う、女性形）。in Italia=イタリアに。parli già molto bene=もうとても上手に話す（parlareの2人称、giàは「すでに」）'},
+  {cat:'📚 近過去', en:'Ho mangiato troppo ieri sera. Stamattina mi sentivo ancora piena.', ja:'昨夜食べすぎました。今朝もまだお腹がいっぱいでした。', tip:'mi sentivo ancora piena = まだお腹がいっぱいだった（半過去・女性形）'},
+  {cat:'📚 近過去', en:'Abbiamo visitato il Colosseo stamattina. La fila era lunghissima, ma ne è valsa la pena.', ja:'今朝コロッセオを見学しました。列がとても長かったですが、その価値がありました。', tip:'ne è valsa la pena = その価値があった。旅行の感想によく使う'},
+  {cat:'📚 近過去', en:'Lui ha letto tutto il libro in un pomeriggio. Non riesco a capire come faccia.', ja:'彼は午後一杯でその本を全部読みました。どうやっているのか理解できません。', tip:'non riesco a capire come faccia = どうやっているか理解できない'},
+  {cat:'📚 近過去', en:'Non l\'ho capito quando l\'ha detto. Avrei dovuto chiedergli di ripetere.', ja:'彼が言った時わかりませんでした。繰り返すよう頼めばよかったです。', tip:'avrei dovuto = 〜すればよかった（条件法過去）'},
+  {cat:'📚 近過去', en:'Sono andata a Milano per lavoro la settimana scorsa. Ho fatto tardi ogni sera.', ja:'先週仕事でミラノに行きました。毎晩遅くなりました。', tip:'ho fatto tardi = 遅くなった; settimana scorsa = 先週'},
+  {cat:'📚 近過去', en:'Mi sono svegliata tardi e ho perso il treno. Ho dovuto aspettare un\'ora il prossimo.', ja:'寝坊して電車を乗り過ごしました。次を1時間待たなければなりませんでした。', tip:'ho dovuto aspettare = 待たなければならなかった'},
+  {cat:'📚 近過去', en:'Hai già mangiato? Stavo per prepararti qualcosa, ma se hai già mangiato...', ja:'もう食べましたか？何か作ろうとしていたんですが、もう食べたなら…', tip:'stavo per = 〜しようとしていた（半過去進行形）'},
+  {cat:'📚 近過去', en:'Non siamo mai state a Napoli. È il momento di andarci, no?', ja:'ナポリには一度も行ったことがありません。そろそろ行く時ですよね？', tip:'siamo state = 行ったことがある（女性複数）; è il momento di = 〜する時だ'},
+  {cat:'📚 近過去', en:'Quanto tempo fa sei arrivata in Italia? Parli già molto bene!', ja:'イタリアに来てどのくらいになりますか？もうとても上手ですね！', tip:'quanto tempo fa = どのくらい前に; parli già = もう話せる'},
   // ===== 半過去 =====
-  {cat:'📖 半過去', en:'Quando ero piccola, passavo tutte le estati al mare con i nonni. Erano i momenti più belli.', ja:'子供の頃、毎年夏を祖父母と海で過ごしていました。最高の思い出です。', tip:'quando ero piccola=子供の頃（essereの半過去、女性形）。passavo tutte le estati=毎年夏を過ごしていた（passareの半過去、習慣的な過去）。al mare=海で。con i nonni=祖父母と。erano i momenti più belli=最高の瞬間だった（essereの半過去複数、più belliはbelloの優等比較）'},
-  {cat:'📖 半過去', en:'Ogni domenica mattina ci alzavamo tardi e facevamo una colazione lunghissima. Mi manca quella vita.', ja:'毎週日曜の朝は遅く起きて、とても長い朝食をとっていました。あの生活が恋しいです。', tip:'ogni domenica mattina=毎週日曜の朝。ci alzavamo tardi=私たちは遅く起きていた（alzarsiの半過去複数、習慣）。facevamo una colazione lunghissima=とても長い朝食をとっていた（fareの半過去複数、lunghissimaは絶対最上級）。mi manca quella vita=あの生活が恋しい（mancareは主語と目的語が日本語と逆）'},
-  {cat:'📖 半過去', en:'Era una giornata perfetta. Il sole splendeva, c\'era una brezza leggera e il mare era calmo.', ja:'完璧な一日でした。太陽が輝いていて、そよ風があって、海は穏やかでした。', tip:'era una giornata perfetta=完璧な一日だった（essereの半過去、giornata=一日）。il sole splendeva=太陽が輝いていた（splendereの半過去）。c\'era una brezza leggera=そよ風があった（c\'eraはc\'èの半過去、brezza=そよ風、leggera=軽い）。il mare era calmo=海は穏やかだった'},
-  {cat:'📖 半過去', en:'Mentre dormivo, qualcuno ha suonato il campanello. Mi sono alzata, ma non c\'era nessuno.', ja:'眠っている間に誰かがベルを鳴らしました。起き上がりましたが、誰もいませんでした。', tip:'mentre dormivo=私が眠っている間（mentre+半過去、背景を表す）。qualcuno ha suonato il campanello=誰かがベルを鳴らした（suonareの近過去、出来事を表す）。mi sono alzata=起き上がった（alzarsiの近過去、女性形）。ma non c\'era nessuno=でも誰もいなかった（c\'eraは半過去、nessunoは「誰も〜ない」）'},
-  {cat:'📖 半過去', en:'Non sapevo che parlavi così bene il francese! Dove l\'hai imparato?', ja:'あなたがそんなにフランス語が上手とは知りませんでした！どこで習いましたか？', tip:'non sapevo che parlavi=あなたが話すとは知らなかった（sapereの半過去否定+che+半過去、知識の対象が継続的な状態の時は接続法を使わずに直説法半過去で表すこともある）。così bene il francese=そんなに上手にフランス語を。dove l\'hai imparato=どこでそれを習いましたか（impararの近過去+l\'=lo）'},
-  {cat:'📖 半過去', en:'Da bambina odiavo le verdure. Ora le mangio volentieri, come sono cambiata!', ja:'子供の頃は野菜が嫌いでした。今は喜んで食べます、随分変わったものです！', tip:'da bambina=子供の頃（bambinaは女性形）。odiavo le verdure=野菜が嫌いだった（odiareの半過去、verdure=野菜の複数）。ora le mangio volentieri=今は喜んで食べる（mangiareの1人称+目的語le=それらを、volentieri=喜んで）。come sono cambiata=なんと変わったことか（cambiareの近過去、essereを使う変化動詞、女性形、感嘆文）'},
+  {cat:'📖 半過去', en:'Quando ero piccola, passavo tutte le estati al mare con i nonni. Erano i momenti più belli.', ja:'子供の頃、毎年夏を祖父母と海で過ごしていました。最高の思い出です。', tip:'passavo = 過ごしていた（習慣）; erano i momenti più belli = 最高の時間だった'},
+  {cat:'📖 半過去', en:'Ogni domenica mattina ci alzavamo tardi e facevamo una colazione lunghissima. Mi manca quella vita.', ja:'毎週日曜の朝は遅く起きて、とても長い朝食をとっていました。あの生活が恋しいです。', tip:'mi manca quella vita = あの生活が恋しい。mi manca の使い方'},
+  {cat:'📖 半過去', en:'Era una giornata perfetta. Il sole splendeva, c\'era una brezza leggera e il mare era calmo.', ja:'完璧な一日でした。太陽が輝いていて、そよ風があって、海は穏やかでした。', tip:'splendeva = 輝いていた; brezza leggera = そよ風; calmo = 穏やかな'},
+  {cat:'📖 半過去', en:'Mentre dormivo, qualcuno ha suonato il campanello. Mi sono alzata, ma non c\'era nessuno.', ja:'眠っている間に誰かがベルを鳴らしました。起き上がりましたが、誰もいませんでした。', tip:'mentre dormivo = 眠っている間; non c\'era nessuno = 誰もいなかった'},
+  {cat:'📖 半過去', en:'Non sapevo che parlavi così bene il francese! Dove l\'hai imparato?', ja:'あなたがそんなにフランス語が上手とは知りませんでした！どこで習いましたか？', tip:'non sapevo che + 半過去 = 〜とは知らなかった'},
+  {cat:'📖 半過去', en:'Da bambina odiavo le verdure. Ora le mangio volentieri, come sono cambiata!', ja:'子供の頃は野菜が嫌いでした。今は喜んで食べます、随分変わったものです！', tip:'odiavo = 嫌いだった（半過去）; come sono cambiata = 随分変わった（女性形）'},
   // ===== 未来形 =====
-  {cat:'🔮 未来形', en:'L\'anno prossimo andrò in Italia per tre mesi. Voglio migliorare il mio italiano sul campo.', ja:'来年3ヶ月間イタリアに行くつもりです。現地でイタリア語を上達させたいです。', tip:'l\'anno prossimo=来年。andrò=私は行くだろう（andareの未来形）。in Italia per tre mesi=イタリアに3ヶ月間。voglio migliorare=上達させたい（volereの1人称+migliorare）。il mio italiano sul campo=現地での私のイタリア語'},
-  {cat:'🔮 未来形', en:'Domani pioverà tutto il giorno. Ho controllato le previsioni stamattina.', ja:'明日は一日中雨でしょう。今朝天気予報を確認しました。', tip:'domani pioverà tutto il giorno=明日は一日中雨が降るだろう（piovereの未来形、非人称動詞）。ho controllato le previsioni=予報を確認した（controllareの近過去、previsioni=予報）。stamattina=今朝'},
-  {cat:'🔮 未来形', en:'Quando finirò questa università, andrò a lavorare all\'estero per qualche anno.', ja:'大学を卒業したら、数年間海外で働きに行くつもりです。', tip:'quando finirò questa università=この大学を終える時（finireの未来形、quando+未来形は「〜する時」を表す。イタリア語では従属節も未来形にする）。andrò a lavorare=働きに行くだろう（andareの未来形+lavorare）。all\'estero=海外へ。per qualche anno=数年間'},
-  {cat:'🔮 未来形', en:'Avrà cinquant\'anni, più o meno. Comunque non è più giovane.', ja:'50歳くらいでしょうか。まあ、もう若くはないですね。', tip:'avrà cinquant\'anni=50歳くらいだろう（avereの未来形、年齢の推量を表す用法）。più o meno=だいたい。comunque=まあ・とにかく。non è più giovane=もう若くない（non...più=もう〜ない）'},
-  {cat:'🔮 未来形', en:'Se arrivi in tempo, ti aspetto al bar davanti alla stazione. Altrimenti parto senza di te.', ja:'時間通りに来たら、駅前のバールで待っています。そうでなければ先に行きます。', tip:'se arrivi in tempo=時間通りに来たら（se+現在形、実現可能な条件）。ti aspetto=あなたを待つ（aspettareの1人称+目的語ti）。al bar davanti alla stazione=駅前のバールで。altrimenti=そうでなければ。parto senza di te=あなたなしで出発する（partireの1人称、senza di+人称代名詞）'},
+  {cat:'🔮 未来形', en:'L\'anno prossimo andrò in Italia per tre mesi. Voglio migliorare il mio italiano sul campo.', ja:'来年3ヶ月間イタリアに行くつもりです。現地でイタリア語を上達させたいです。', tip:'sul campo = 現地で・実地で'},
+  {cat:'🔮 未来形', en:'Domani pioverà tutto il giorno. Ho controllato le previsioni stamattina.', ja:'明日は一日中雨でしょう。今朝天気予報を確認しました。', tip:'previsioni = 予報; ho controllato = 確認した'},
+  {cat:'🔮 未来形', en:'Quando finirò questa università, andrò a lavorare all\'estero per qualche anno.', ja:'大学を卒業したら、数年間海外で働きに行くつもりです。', tip:'quando finirò = 卒業したら（未来形+未来形）; all\'estero = 海外で'},
+  {cat:'🔮 未来形', en:'Avrà cinquant\'anni, più o meno. Comunque non è più giovane.', ja:'50歳くらいでしょうか。まあ、もう若くはないですね。', tip:'avrà = 〜だろう（未来の推量）; più o meno = だいたい'},
+  {cat:'🔮 未来形', en:'Se arrivi in tempo, ti aspetto al bar davanti alla stazione. Altrimenti parto senza di te.', ja:'時間通りに来たら、駅前のバールで待っています。そうでなければ先に行きます。', tip:'altrimenti = そうでなければ; senza di te = あなたなしで'},
   // ===== 条件法 =====
-  {cat:'✨ 条件法', en:'Vorrei prenotare una camera per due notti. Avete ancora disponibilità per questo fine settimana?', ja:'2泊部屋を予約したいのですが。今週末まだ空いていますか？', tip:'vorrei prenotare=予約したいのですが（volereの条件法、丁寧な依頼）。una camera per due notti=2泊分の部屋。avete ancora disponibilità=まだ空きはありますか（avereの2人称複数、ancoraは「まだ」、disponibilità=空き状況）。per questo fine settimana=今週末分'},
-  {cat:'✨ 条件法', en:'Potrebbe parlare più lentamente? Sto imparando l\'italiano e faccio fatica a seguire.', ja:'もう少しゆっくり話していただけますか？イタリア語を学んでいて、ついていくのが大変なんです。', tip:'potrebbe parlare=話していただけますか（potereの条件法敬語、最も丁寧な依頼）。più lentamente=もっとゆっくり（lentamenteの比較級）。sto imparando=学んでいる（stare+ジェルンディオの進行形）。faccio fatica a seguire=ついていくのが大変（fare faticaで「苦労する」）'},
-  {cat:'✨ 条件法', en:'Al suo posto, io non avrei detto niente. A volte il silenzio è la risposta migliore.', ja:'あなたの立場なら、何も言わなかったでしょう。時には沈黙が最善の答えです。', tip:'al suo posto=あなたの立場なら（決まり文句、仮定を表す）。io non avrei detto niente=私なら何も言わなかっただろう（direの条件法過去、nienteは「何も〜ない」）。a volte=時々。il silenzio è la risposta migliore=沈黙が最善の答えだ（migliore=buonoの優等比較）'},
-  {cat:'✨ 条件法', en:'Se avessi più soldi, viaggerei di più. Ma con questo stipendio è impossibile.', ja:'もっとお金があれば、もっと旅行するのに。でもこの給料では無理です。', tip:'se avessi più soldi=もっとお金があれば（avereの接続法半過去、非現実の仮定）。viaggerei di più=もっと旅行するだろう（viaggiareの条件法、di piùは「もっと」）。ma con questo stipendio=でもこの給料では（stipendio=給料）。è impossibile=不可能だ'},
-  {cat:'✨ 条件法', en:'Mi piacerebbe vivere in Italia, almeno per qualche anno. È un sogno che ho da sempre.', ja:'イタリアに住めたらいいなと思います、少なくとも数年間。ずっと持ち続けている夢です。', tip:'mi piacerebbe vivere=住めたらいいなと思う（piacereの条件法、丁寧な願望表現）。in Italia=イタリアに。almeno per qualche anno=少なくとも数年間。è un sogno che ho da sempre=ずっと前から持っている夢だ（che=関係代名詞、da sempre=ずっと前から）'},
-  {cat:'✨ 条件法', en:'Sarebbe meglio partire presto domani. Il traffico di lunedì mattina è terribile.', ja:'明日は早めに出発した方がいいでしょう。月曜の朝の渋滞はひどいです。', tip:'sarebbe meglio partire=出発した方がいいだろう（essereの条件法+meglio+不定詞、丁寧な提案）。presto domani=明日早く。il traffico di lunedì mattina=月曜の朝の交通（traffico=交通・渋滞）。è terribile=ひどい'},
+  {cat:'✨ 条件法', en:'Vorrei prenotare una camera per due notti. Avete ancora disponibilità per questo fine settimana?', ja:'2泊部屋を予約したいのですが。今週末まだ空いていますか？', tip:'vorrei = 〜したい（丁寧）; disponibilità = 空き'},
+  {cat:'✨ 条件法', en:'Potrebbe parlare più lentamente? Sto imparando l\'italiano e faccio fatica a seguire.', ja:'もう少しゆっくり話していただけますか？イタリア語を学んでいて、ついていくのが大変なんです。', tip:'faccio fatica a seguire = ついていくのが大変'},
+  {cat:'✨ 条件法', en:'Al suo posto, io non avrei detto niente. A volte il silenzio è la risposta migliore.', ja:'あなたの立場なら、何も言わなかったでしょう。時には沈黙が最善の答えです。', tip:'al suo posto = あなたの立場なら; silenzio = 沈黙'},
+  {cat:'✨ 条件法', en:'Se avessi più soldi, viaggerei di più. Ma con questo stipendio è impossibile.', ja:'もっとお金があれば、もっと旅行するのに。でもこの給料では無理です。', tip:'stipendio = 給料; è impossibile = 無理だ'},
+  {cat:'✨ 条件法', en:'Mi piacerebbe vivere in Italia, almeno per qualche anno. È un sogno che ho da sempre.', ja:'イタリアに住めたらいいなと思います、少なくとも数年間。ずっと持ち続けている夢です。', tip:'da sempre = ずっと前から; almeno = 少なくとも'},
+  {cat:'✨ 条件法', en:'Sarebbe meglio partire presto domani. Il traffico di lunedì mattina è terribile.', ja:'明日は早めに出発した方がいいでしょう。月曜の朝の渋滞はひどいです。', tip:'traffico = 渋滞・交通; terribile = ひどい'},
   // ===== 受動態 =====
-  {cat:'📖 受動態', en:'Questo palazzo è stato costruito nel Cinquecento. È uno degli edifici più belli della città.', ja:'この宮殿は16世紀に建てられました。街で最も美しい建物の一つです。', tip:'questo palazzo=この宮殿（男性名詞）。è stato costruito=建てられた（costruireの過去分詞、essere+過去分詞で受動態）。nel Cinquecento=16世紀に（nel+世紀名で「〜世紀に」）。uno degli edifici più belli=最も美しい建物の一つ（uno degli+最上級+複数名詞、edifici=建物）'},
-  {cat:'📖 受動態', en:'Il mio telefono è stato rubato in autobus. Sono rimasta senza per una settimana.', ja:'バスの中でスマホが盗まれました。1週間なしで過ごしました。', tip:'il mio telefono=私の携帯電話。è stato rubato=盗まれた（rubareの過去分詞、受動態）。in autobus=バスの中で。sono rimasta senza=なしで過ごした（rimanereの近過去、essereを使う、女性形、senzaは「〜なしで」）。per una settimana=1週間'},
-  {cat:'📖 受動態', en:'La partita è stata rinviata a causa della pioggia. I tifosi erano molto delusi.', ja:'試合は雨のために延期されました。ファンはとても失望していました。', tip:'la partita=試合（女性名詞）。è stata rinviata=延期された（rinviareの過去分詞、essere+過去分詞の受動態、女性形）。a causa della pioggia=雨のために（a causa di=〜のために、della=di+la）。i tifosi=ファン（複数）。erano molto delusi=とても失望していた（essereの半過去複数、delusiはdelusoの男性複数）'},
-  {cat:'📖 受動態', en:'In questo negozio si parla giapponese. Mi ha sorpreso molto trovarlo a Roma.', ja:'この店では日本語が話されています。ローマでそれを見つけてとても驚きました。', tip:'in questo negozio=この店では。si parla giapponese=日本語が話されている（si+動詞で非人称受動を表す）。mi ha sorpreso molto=私をとても驚かせた（sorprendereの近過去+目的語mi）。trovarlo a Roma=ローマでそれを見つけること（trovareの不定詞+lo）'},
+  {cat:'📖 受動態', en:'Questo palazzo è stato costruito nel Cinquecento. È uno degli edifici più belli della città.', ja:'この宮殿は16世紀に建てられました。街で最も美しい建物の一つです。', tip:'Cinquecento = 16世紀（500年代）; edificio = 建物'},
+  {cat:'📖 受動態', en:'Il mio telefono è stato rubato in autobus. Sono rimasta senza per una settimana.', ja:'バスの中でスマホが盗まれました。1週間なしで過ごしました。', tip:'sono rimasta senza = なしで過ごした（女性形）'},
+  {cat:'📖 受動態', en:'La partita è stata rinviata a causa della pioggia. I tifosi erano molto delusi.', ja:'試合は雨のために延期されました。ファンはとても失望していました。', tip:'rinviata = 延期された; tifosi = ファン; delusi = 失望した'},
+  {cat:'📖 受動態', en:'In questo negozio si parla giapponese. Mi ha sorpreso molto trovarlo a Roma.', ja:'この店では日本語が話されています。ローマでそれを見つけてとても驚きました。', tip:'si parla = 話されている（非人称受動）; mi ha sorpreso = 驚いた'},
   // ===== 接続詞・複文 =====
-  {cat:'🔗 接続詞・複文', en:'Studio l\'italiano perché voglio capire i film senza i sottotitoli. Ci sto quasi riuscendo.', ja:'字幕なしで映画を理解したくてイタリア語を勉強しています。もうほとんどできるようになりました。', tip:'studio l\'italiano=イタリア語を勉強する（studiareの1人称）。perché voglio capire i film=映画を理解したいので（volereの1人称+capire）。senza i sottotitoli=字幕なしで（senza=〜なしで）。ci sto quasi riuscendo=もうほとんどできるようになっている（stare+ジェルンディオの進行形、riuscireは「うまくいく」、ciは「それに」）'},
-  {cat:'🔗 接続詞・複文', en:'Sono stanca morta, ma devo finire questa relazione prima di dormire.', ja:'くたくたですが、寝る前にこのレポートを終わらせなければなりません。', tip:'sono stanca morta=くたくたに疲れている（stancaはstancoの女性形、mortaは強調の慣用句で「死ぬほど」）。ma devo finire=でも終わらせなければならない（dovereの1人称）。questa relazione=このレポート。prima di dormire=寝る前に'},
-  {cat:'🔗 接続詞・複文', en:'Prima di firmare il contratto, leggetelo attentamente. Una volta firmato, non si torna indietro.', ja:'契約書に署名する前に、注意深く読んでください。一度署名したら後戻りはできません。', tip:'prima di firmare il contratto=契約書に署名する前に（prima di+不定詞）。leggetelo attentamente=注意深く読んでください（leggereの命令形複数+目的語lo、attentamente=注意深く）。una volta firmato=一度署名したら（una voltaは「一度〜したら」、firmatoは過去分詞）。non si torna indietro=後戻りはできない（si torna=非人称のtornare、indietro=後ろへ）'},
-  {cat:'🔗 接続詞・複文', en:'Questo è il quartiere dove sono cresciuta. È cambiato tantissimo da quando ero bambina.', ja:'これは私が育った地区です。子供の頃からとても変わりました。', tip:'questo è il quartiere=これがその地区です。dove sono cresciuta=私が育った（dove=関係副詞、crescereの近過去、essereを使う、女性形）。è cambiato tantissimo=とても大きく変わった（cambiareの近過去、essereを使う変化動詞、tantissimoはtantoの絶対最上級）。da quando ero bambina=子供の頃から（da quando=〜の時から）'},
-  {cat:'🔗 接続詞・複文', en:'Più studio, più mi rendo conto di quanto ancora non so. L\'italiano è davvero ricco.', ja:'勉強すればするほど、いかに知らないことが多いかがわかります。イタリア語は本当に豊かです。', tip:'più studio, più mi rendo conto=勉強すればするほど気づく（più...più=〜すればするほど、比例構文。rendersi contoは再帰動詞「気づく」）。di quanto ancora non so=まだ知らないことがどれほどあるか（quanto=どれほど、non soはsapereの否定）。l\'italiano è davvero ricco=イタリア語は本当に豊かだ（davvero=本当に、ricco=豊かな）'},
+  {cat:'🔗 接続詞・複文', en:'Studio l\'italiano perché voglio capire i film senza i sottotitoli. Ci sto quasi riuscendo.', ja:'字幕なしで映画を理解したくてイタリア語を勉強しています。もうほとんどできるようになりました。', tip:'sottotitoli = 字幕; ci sto riuscendo = できるようになっている（進行形）'},
+  {cat:'🔗 接続詞・複文', en:'Sono stanca morta, ma devo finire questa relazione prima di dormire.', ja:'くたくたですが、寝る前にこのレポートを終わらせなければなりません。', tip:'stanca morta = くたくたに疲れた（女性形）; prima di dormire = 寝る前に'},
+  {cat:'🔗 接続詞・複文', en:'Prima di firmare il contratto, leggetelo attentamente. Una volta firmato, non si torna indietro.', ja:'契約書に署名する前に、注意深く読んでください。一度署名したら後戻りはできません。', tip:'leggetelo attentamente = 注意深く読む; non si torna indietro = 後戻りはできない'},
+  {cat:'🔗 接続詞・複文', en:'Questo è il quartiere dove sono cresciuta. È cambiato tantissimo da quando ero bambina.', ja:'これは私が育った地区です。子供の頃からとても変わりました。', tip:'dove sono cresciuta = 育った（女性形・関係副詞）; tantissimo = とても大きく'},
+  {cat:'🔗 接続詞・複文', en:'Più studio, più mi rendo conto di quanto ancora non so. L\'italiano è davvero ricco.', ja:'勉強すればするほど、いかに知らないことが多いかがわかります。イタリア語は本当に豊かです。', tip:'mi rendo conto = 気づく（再帰）; ricco = 豊かな'},
   // ===== 語彙・日常 =====
-  {cat:'🗂️ 語彙', en:'Ho preso un giorno di ferie per stare a casa con mio figlio. Era malato e non poteva andare a scuola.', ja:'息子と家にいるために有給を1日取りました。具合が悪くて学校に行けなかったんです。', tip:'ho preso=取った（prendereの近過去）。un giorno di ferie=1日の有給休暇（ferie=休暇、複数形のみ）。per stare a casa con mio figlio=息子と家にいるために（stare a casa=家にいる）。era malato=具合が悪かった（essereの半過去、malato=病気の）。non poteva andare a scuola=学校に行けなかった（potereの半過去否定）'},
-  {cat:'🗂️ 語彙', en:'Ho voglia di pizza stasera. Che ne dici se la ordiniamo invece di cucinare?', ja:'今夜ピザが食べたい気分です。料理する代わりに注文するのはどうでしょう？', tip:'ho voglia di pizza=ピザが食べたい気分だ（avere voglia diで「〜したい気がする」という熟語、avereの近過去ではなく現在形に近い意味の慣用表現）。stasera=今夜。che ne dici se=〜するのはどうですか（che ne dici=あなたはどう思いますか、提案の決まり文句）。la ordiniamo invece di cucinare=料理する代わりにそれを注文する（ordinareの1人称複数+目的語la、invece di=〜の代わりに）'},
-  {cat:'🗂️ 語彙', en:'Mi sono dimenticata di pagare la bolletta. Ora c\'è una mora da pagare oltre al normale.', ja:'請求書の支払いを忘れました。今は通常分に加えて延滞料を払わなければなりません。', tip:'mi sono dimenticata di pagare=払うのを忘れた（dimenticarsi diの近過去、女性形）。la bolletta=公共料金の請求書。ora c\'è una mora da pagare=今は払うべき延滞料がある（mora=延滞料、da pagare=払うべき）。oltre al normale=通常分に加えて（oltre a=〜に加えて）'},
-  {cat:'🗂️ 語彙', en:'Sono stufa di questo lavoro. Faccio la stessa cosa da dieci anni, è ora di cambiare.', ja:'この仕事にうんざりしています。10年間同じことをしています、変える時です。', tip:'sono stufa di+名詞=〜にうんざりしている（stufaはstufoの女性形）。questo lavoro=この仕事。faccio la stessa cosa=同じことをしている（fareの1人称、stessa cosa=同じこと）。da dieci anni=10年前から。è ora di+不定詞=〜する時だ（決まり文句）'},
-  {cat:'🗂️ 語彙', en:'Non riesco a dormire bene da quando ho cambiato appartamento. Il letto nuovo non è comodo.', ja:'アパートを変えてからよく眠れません。新しいベッドが快適ではありません。', tip:'non riesco a dormire bene=よく眠れない（riuscire a+不定詞=〜できる、の否定）。da quando ho cambiato appartamento=アパートを変えてから（da quando=〜の時から、cambiareの近過去）。il letto nuovo non è comodo=新しいベッドが快適でない（comodo=快適な）'},
-  {cat:'🗂️ 語彙', en:'In Italia si usa dare del tu anche con persone che non si conosce bene. All\'inizio mi sorprendeva.', ja:'イタリアではあまり知らない人にもタメ口を使います。最初は驚きました。', tip:'in Italia si usa dare del tu=イタリアではタメ口を使う習慣がある（si usa=非人称の「使われる」、dare del tuは「タメ口を使う」という慣用表現）。anche con persone che non si conosce bene=あまりよく知らない人とも（che=関係代名詞、non si conosceは非人称受動「知られていない」）。all\'inizio mi sorprendeva=最初は驚かせていた（sorprendereの半過去+目的語mi、習慣的だった驚き）'},
-  {cat:'🗂️ 語彙', en:'Il mio capo mi ha detto che farò una presentazione davanti a tutto il team. Sono terrorizzata.', ja:'上司から、チーム全員の前でプレゼンをすることになったと言われました。恐ろしいです。', tip:'il mio capo mi ha detto che=私の上司が私に〜と言った（capo=上司、direの近過去+目的語mi）。farò una presentazione=プレゼンをすることになるだろう（fareの未来形）。davanti a tutto il team=チーム全員の前で。sono terrorizzata=恐ろしい・震え上がっている（terrorizzataはterrorizzatoの女性形）'},
-  {cat:'🗂️ 語彙', en:'Bisogna prenotare il ristorante con almeno una settimana di anticipo. È sempre pieno.', ja:'少なくとも1週間前にレストランを予約する必要があります。いつも満員なんです。', tip:'bisogna+不定詞=〜する必要がある（非人称動詞）。prenotare il ristorante=レストランを予約する。con almeno una settimana di anticipo=少なくとも1週間前に（almeno=少なくとも、anticipo=前もって）。è sempre pieno=いつも満員だ（pieno=満ちた）'},
-  {cat:'🗂️ 語彙', en:'Abito in periferia perché gli affitti in centro sono proibitivi. Ci vuole un\'ora per arrivare al lavoro.', ja:'中心部の家賃が高すぎて郊外に住んでいます。仕事まで1時間かかります。', tip:'abito in periferia=郊外に住んでいる（abitareの1人称、periferia=郊外）。perché gli affitti in centro sono proibitivi=中心部の家賃が法外に高いので（affitti=家賃の複数、proibitivi=法外に高い）。ci vuole un\'ora=1時間かかる（volerciという非人称表現）。per arrivare al lavoro=仕事に到着するために'},
-  {cat:'🗂️ 語彙', en:'Ho fatto amicizia con i miei vicini di casa. A volte ceniamo insieme il venerdì sera.', ja:'隣人と友達になりました。時々金曜の夜に一緒に夕食を食べます。', tip:'ho fatto amicizia con=〜と友達になった（fare amiciziaで「友達になる」という熟語、近過去）。i miei vicini di casa=私の隣人たち（vicini di casa=隣人）。a volte=時々。ceniamo insieme=一緒に夕食を食べる（cenareの1人称複数、insieme=一緒に）。il venerdì sera=金曜の夜に'},
-  {cat:'🗂️ 語彙', en:'Da quando vado in palestra, dormo meglio e ho più energia durante il giorno.', ja:'ジムに行くようになってから、よく眠れて日中のエネルギーも増えました。', tip:'da quando vado in palestra=ジムに行くようになってから（da quando=〜の時から、andareの1人称現在）。dormo meglio=よく眠れる（dormireの1人称、meglio=より良く）。ho più energia=もっとエネルギーがある（avereの1人称、più=もっと）。durante il giorno=日中に'},
-  {cat:'📖 半過去', en:'Pensavo che tu fossi già partita. Meno male che sei ancora qui!', ja:'もう出発したかと思っていました。まだいてくれてよかった！', tip:'pensavo che tu fossi già partita=もうあなたが出発したと思っていた（pensareの半過去+che+接続法半過去fossi、partitaは女性形過去分詞）。meno male che sei ancora qui=まだここにいてよかった（meno male che=〜でよかった、決まり文句）'},
-  {cat:'✨ 条件法', en:'Dovrebbe mangiare meno zucchero. Il medico glielo ha detto chiaramente.', ja:'砂糖をもっと減らすべきです。医師にはっきりそう言われています。', tip:'dovrebbe mangiare meno zucchero=砂糖をもっと減らすべきだ（dovereの条件法敬語、丁寧なアドバイス）。il medico glielo ha detto chiaramente=医師ははっきりそう言った（direの近過去+glie+lo、chiaramente=はっきりと）'},
-  {cat:'📚 近過去', en:'Ho finalmente trovato un appartamento dopo tre mesi di ricerche. Costa un po\' tanto, ma ne valeva la pena.', ja:'3ヶ月の探索の末ついにアパートを見つけました。少し高いですが、その価値がありました。', tip:'ho finalmente trovato=ついに見つけた（trovareの近過去、finalmente=ついに）。un appartamento dopo tre mesi di ricerche=3ヶ月の探索の末アパートを（ricerche=探索の複数）。costa un po\' tanto=少し高い（costareの3人称、un po\' tanto=少し〜すぎる）。ma ne valeva la pena=でもその価値があった（valere la penaの半過去、neは「それの」）'},
-  {cat:'📚 近過去', en:'Ci siamo persi nella vecchia città. Ma in fondo è stato bello scoprire posti sconosciuti.', ja:'旧市街で道に迷いました。でも結局、知らない場所を発見するのは良かったです。', tip:'ci siamo persi=道に迷った（perdersiの近過去複数、再帰動詞）。nella vecchia città=旧市街で（nella=in+la、vecchia=古い）。ma in fondo è stato bello=でも結局良かった（in fondo=結局、essereの近過去）。scoprire posti sconosciuti=知らない場所を発見すること（scoprire=発見する、sconosciuti=知らない）'},
-  {cat:'🔮 未来形', en:'Non so ancora cosa farò dopo la laurea. Ho tante idee, ma non riesco a decidere.', ja:'卒業後に何をするかまだわかりません。たくさんアイデアがありますが、決めることができません。', tip:'non so ancora=まだわからない（sapereの1人称否定+ancora）。cosa farò dopo la laurea=卒業後に何をするか（fareの未来形、laurea=学位・卒業）。ho tante idee=たくさんアイデアがある（avereの1人称、tante=たくさんの）。ma non riesco a decidere=でも決めることができない（riuscire a+不定詞の否定）'},
-  {cat:'🔮 未来形', en:'Mio padre andrà in pensione il prossimo anno. Dopo tanti anni di lavoro, se lo merita.', ja:'父は来年退職します。長年の仕事の後、それに値します。', tip:'mio padre andrà in pensione=父は退職するだろう（andareの未来形、andare in pensioneで「退職する」という熟語）。il prossimo anno=来年。dopo tanti anni di lavoro=長年の仕事の後。se lo merita=それに値する（meritarsiの再帰動詞、loは「それを」）'},
-  {cat:'🔗 接続詞・複文', en:'L\'uomo che ho incontrato ieri al corso di italiano è il mio nuovo capo.', ja:'昨日イタリア語コースで会った男性が、私の新しい上司です。', tip:'l\'uomo che ho incontrato ieri=昨日出会った男性（che=関係代名詞、incontrareの近過去）。al corso di italiano=イタリア語コースで。è il mio nuovo capo=私の新しい上司だ（capo=上司）'},
-  {cat:'🔗 接続詞・複文', en:'Ho vissuto dieci anni all\'estero, poi ho deciso di tornare in Giappone. Mi mancava troppo.', ja:'10年間海外で暮らしましたが、その後日本に戻ることを決めました。恋しすぎました。', tip:'ho vissuto dieci anni=10年間暮らした（vivereの近過去、不規則過去分詞vissuto）。all\'estero=海外で。poi ho deciso di tornare=その後戻ることを決めた（decidere diの近過去+不定詞）。in Giappone=日本に。mi mancava troppo=恋しすぎた（mancareの半過去、主語と目的語が日本語と逆）'},
-  {cat:'📖 受動態', en:'La mostra sarà inaugurata il prossimo mese. Ci sono già cinquemila prenotazioni.', ja:'展覧会は来月オープンします。すでに5000件の予約があります。', tip:'la mostra=展覧会（女性名詞）。sarà inaugurata=開幕されるだろう（inaugurareの過去分詞+essereの未来形、受動態の未来）。il prossimo mese=来月。ci sono già cinquemila prenotazioni=すでに5000件の予約がある（c\'è/ci sonoの複数形、giàは「すでに」）'},
-  {cat:'📖 半過去', en:'Mio marito abitava in un piccolo appartamento quando ci siamo conosciuti. Eravamo entrambi quasi senza soldi.', ja:'夫は私たちが知り合った時、小さなアパートに住んでいました。二人ともほとんどお金がありませんでした。', tip:'mio marito=私の夫。abitava=住んでいた（abitareの半過去）。in un piccolo appartamento=小さなアパートに。quando ci siamo conosciuti=私たちが知り合った時（conoscersiの近過去、再帰動詞）。eravamo entrambi quasi senza soldi=二人ともほとんどお金がなかった（essereの半過去複数、entrambi=二人とも）'},
-  {cat:'✨ 条件法', en:'Se potessi tornare indietro, studierei musica invece di economia. Ma non è mai troppo tardi.', ja:'過去に戻れたなら、経済ではなく音楽を勉強していたでしょう。でも遅すぎることは決してありません。', tip:'se potessi tornare indietro=過去に戻れたなら（potereの接続法半過去、非現実の仮定）。studierei musica invece di economia=経済の代わりに音楽を勉強するだろう（studiareの条件法、invece di=〜の代わりに）。ma non è mai troppo tardi=でも遅すぎることは決してない（non...mai=決して〜ない）'},
-  {cat:'📚 近過去', en:'Ho trovato il portafoglio che avevo perso la settimana scorsa. Era finito sotto il divano.', ja:'先週なくした財布が見つかりました。ソファの下に落ちていました。', tip:'ho trovato=見つけた（trovareの近過去）。il portafoglio che avevo perso=なくしていた財布（che=関係代名詞、perdereの大過去avevo perso、近過去より前の出来事）。la settimana scorsa=先週。era finito sotto il divano=ソファの下に落ちていた（finireの大過去、sottoは「〜の下に」）'},
-  {cat:'📚 近過去', en:'Mio fratello è arrivato in ritardo alla riunione. Il capo non era affatto contento.', ja:'兄が会議に遅刻しました。上司は全く満足していませんでした。', tip:'mio fratello=私の兄・弟。è arrivato in ritardo=遅刻して到着した（arrivareの近過去、essereを使う、in ritardo=遅れて）。alla riunione=会議に。il capo non era affatto contento=上司は全く満足していなかった（essereの半過去否定、affattoは「全く」、contentoは「満足した」）'},
+  {cat:'🗂️ 語彙', en:'Ho preso un giorno di ferie per stare a casa con mio figlio. Era malato e non poteva andare a scuola.', ja:'息子と家にいるために有給を1日取りました。具合が悪くて学校に行けなかったんです。', tip:'ho preso un giorno di ferie = 有給を取った; era malato = 具合が悪かった'},
+  {cat:'🗂️ 語彙', en:'Ho voglia di pizza stasera. Che ne dici se la ordiniamo invece di cucinare?', ja:'今夜ピザが食べたい気分です。料理する代わりに注文するのはどうでしょう？', tip:'che ne dici se = 〜するのはどう？; invece di = 〜する代わりに'},
+  {cat:'🗂️ 語彙', en:'Mi sono dimenticata di pagare la bolletta. Ora c\'è una mora da pagare oltre al normale.', ja:'請求書の支払いを忘れました。今は通常分に加えて延滞料を払わなければなりません。', tip:'bolletta = 公共料金の請求書; mora = 延滞料'},
+  {cat:'🗂️ 語彙', en:'Sono stufa di questo lavoro. Faccio la stessa cosa da dieci anni, è ora di cambiare.', ja:'この仕事にうんざりしています。10年間同じことをしています、変える時です。', tip:'sono stufa di = 〜にうんざりしている（女性形）; è ora di = 〜する時だ'},
+  {cat:'🗂️ 語彙', en:'Non riesco a dormire bene da quando ho cambiato appartamento. Il letto nuovo non è comodo.', ja:'アパートを変えてからよく眠れません。新しいベッドが快適ではありません。', tip:'da quando ho cambiato = 変えてから; non è comodo = 快適でない'},
+  {cat:'🗂️ 語彙', en:'In Italia si usa dare del tu anche con persone che non si conosce bene. All\'inizio mi sorprendeva.', ja:'イタリアではあまり知らない人にもタメ口を使います。最初は驚きました。', tip:'dare del tu = タメ口を使う; mi sorprendeva = 驚いていた（半過去）'},
+  {cat:'🗂️ 語彙', en:'Il mio capo mi ha detto che farò una presentazione davanti a tutto il team. Sono terrorizzata.', ja:'上司から、チーム全員の前でプレゼンをすることになったと言われました。恐ろしいです。', tip:'terrorizzata = 恐ろしい・震え上がっている（女性形）'},
+  {cat:'🗂️ 語彙', en:'Bisogna prenotare il ristorante con almeno una settimana di anticipo. È sempre pieno.', ja:'少なくとも1週間前にレストランを予約する必要があります。いつも満員なんです。', tip:'di anticipo = 前もって; è sempre pieno = いつも満員'},
+  {cat:'🗂️ 語彙', en:'Abito in periferia perché gli affitti in centro sono proibitivi. Ci vuole un\'ora per arrivare al lavoro.', ja:'中心部の家賃が高すぎて郊外に住んでいます。仕事まで1時間かかります。', tip:'affitti = 家賃; proibitivi = 法外に高い; ci vuole un\'ora = 1時間かかる'},
+  {cat:'🗂️ 語彙', en:'Ho fatto amicizia con i miei vicini di casa. A volte ceniamo insieme il venerdì sera.', ja:'隣人と友達になりました。時々金曜の夜に一緒に夕食を食べます。', tip:'ho fatto amicizia con = 友達になった; vicini di casa = 隣人'},
+  {cat:'🗂️ 語彙', en:'Da quando vado in palestra, dormo meglio e ho più energia durante il giorno.', ja:'ジムに行くようになってから、よく眠れて日中のエネルギーも増えました。', tip:'da quando = 〜するようになってから; durante il giorno = 日中'},
+  {cat:'📖 半過去', en:'Pensavo che tu fossi già partita. Meno male che sei ancora qui!', ja:'もう出発したかと思っていました。まだいてくれてよかった！', tip:'meno male = よかった; sei ancora qui = まだここにいる'},
+  {cat:'✨ 条件法', en:'Dovrebbe mangiare meno zucchero. Il medico glielo ha detto chiaramente.', ja:'砂糖をもっと減らすべきです。医師にはっきりそう言われています。', tip:'dovrebbe = 〜すべき（丁寧なアドバイス）; chiaramente = はっきりと'},
+  {cat:'📚 近過去', en:'Ho finalmente trovato un appartamento dopo tre mesi di ricerche. Costa un po\' tanto, ma ne valeva la pena.', ja:'3ヶ月の探索の末ついにアパートを見つけました。少し高いですが、その価値がありました。', tip:'finalmente = ついに; ne valeva la pena = その価値があった'},
+  {cat:'📚 近過去', en:'Ci siamo persi nella vecchia città. Ma in fondo è stato bello scoprire posti sconosciuti.', ja:'旧市街で道に迷いました。でも結局、知らない場所を発見するのは良かったです。', tip:'in fondo = 結局; scoprire = 発見する; sconosciuti = 知らない'},
+  {cat:'🔮 未来形', en:'Non so ancora cosa farò dopo la laurea. Ho tante idee, ma non riesco a decidere.', ja:'卒業後に何をするかまだわかりません。たくさんアイデアがありますが、決めることができません。', tip:'dopo la laurea = 卒業後; non riesco a decidere = 決めることができない'},
+  {cat:'🔮 未来形', en:'Mio padre andrà in pensione il prossimo anno. Dopo tanti anni di lavoro, se lo merita.', ja:'父は来年退職します。長年の仕事の後、それに値します。', tip:'andare in pensione = 退職する; se lo merita = それに値する'},
+  {cat:'🔗 接続詞・複文', en:'L\'uomo che ho incontrato ieri al corso di italiano è il mio nuovo capo.', ja:'昨日イタリア語コースで会った男性が、私の新しい上司です。', tip:'l\'uomo che ho incontrato = 出会った男性（関係代名詞）'},
+  {cat:'🔗 接続詞・複文', en:'Ho vissuto dieci anni all\'estero, poi ho deciso di tornare in Giappone. Mi mancava troppo.', ja:'10年間海外で暮らしましたが、その後日本に戻ることを決めました。恋しすぎました。', tip:'poi = それから; mi mancava troppo = 恋しすぎた'},
+  {cat:'📖 受動態', en:'La mostra sarà inaugurata il prossimo mese. Ci sono già cinquemila prenotazioni.', ja:'展覧会は来月オープンします。すでに5000件の予約があります。', tip:'inaugurata = 開幕される; prenotazioni = 予約'},
+  {cat:'📖 半過去', en:'Mio marito abitava in un piccolo appartamento quando ci siamo conosciuti. Eravamo entrambi quasi senza soldi.', ja:'夫は私たちが知り合った時、小さなアパートに住んでいました。二人ともほとんどお金がありませんでした。', tip:'mio marito = 私の夫; entrambi = 二人とも'},
+  {cat:'✨ 条件法', en:'Se potessi tornare indietro, studierei musica invece di economia. Ma non è mai troppo tardi.', ja:'過去に戻れたなら、経済ではなく音楽を勉強していたでしょう。でも遅すぎることは決してありません。', tip:'se potessi tornare indietro = 過去に戻れたなら; non è mai troppo tardi = 遅すぎることはない'},
+  {cat:'📚 近過去', en:'Ho trovato il portafoglio che avevo perso la settimana scorsa. Era finito sotto il divano.', ja:'先週なくした財布が見つかりました。ソファの下に落ちていました。', tip:'era finito sotto = 〜の下に落ちていた（大過去）'},
+  {cat:'📚 近過去', en:'Mio fratello è arrivato in ritardo alla riunione. Il capo non era affatto contento.', ja:'兄が会議に遅刻しました。上司は全く満足していませんでした。', tip:'mio fratello = 私の兄・弟; non era affatto contento = 全く満足していなかった'},
 ];
 
 
@@ -544,7 +547,19 @@ let repeatTimer    = null;
 let autoMode       = '';
 let autoStopped    = false;
 let autoTimeout    = null;
-let masterSet = new Set(JSON.parse(localStorage.getItem('jiko50_master') || '[]'));
+let masterSet = new Set();
+const APP_ID='ita4';
+const PROFILES_KEY='duo_profiles';
+const CURRENT_PROFILE_KEY='duo_current_profile';
+function getProfiles(){try{const raw=localStorage.getItem(PROFILES_KEY);const arr=raw?JSON.parse(raw):[];return arr.length?arr:['本人'];}catch(e){return ['本人'];}}
+function saveProfiles(arr){try{localStorage.setItem(PROFILES_KEY,JSON.stringify(arr));}catch(e){}}
+function getCurrentProfile(){try{return localStorage.getItem(CURRENT_PROFILE_KEY)||getProfiles()[0];}catch(e){return '本人';}}
+function setCurrentProfile(name){try{localStorage.setItem(CURRENT_PROFILE_KEY,name);}catch(e){}}
+function masteredStorageKey(profile){return APP_ID+'_'+profile;}
+function loadMastered(){const profile=getCurrentProfile();try{const raw=localStorage.getItem(masteredStorageKey(profile));masterSet=new Set(raw?JSON.parse(raw):[]);}catch(e){masterSet=new Set();}}
+function renderProfileSelect(){const sel=document.getElementById('profile-select');if(!sel)return;const profiles=getProfiles();const current=getCurrentProfile();sel.innerHTML=profiles.map(p=>'<option value="'+p+'"'+(p===current?' selected':'')+'>'+p+'</option>').join('')+'<option value="__new__">＋ 新しいユーザー…</option>';}
+function switchProfile(value){if(value==='__new__'){const name=prompt('新しいユーザー名を入力してください（例：太郎、花子）');if(!name){renderProfileSelect();return;}const trimmed=name.trim();if(!trimmed){renderProfileSelect();return;}const profiles=getProfiles();if(!profiles.includes(trimmed)){profiles.push(trimmed);saveProfiles(profiles);}setCurrentProfile(trimmed);}else{setCurrentProfile(value);}loadMastered();currentIndex=0;renderProfileSelect();update();}
+
 
 // ── Voice setup ───────────────────────────────────────────────────
 let enVoices = [];
@@ -713,7 +728,7 @@ function getActive() {
     .map((p,i) => ({...p, globalIdx:i}))
     .filter(p => !masterSet.has(p.globalIdx) && (activeCategory==='all' || p.cat===activeCategory));
 }
-function saveMaster() { localStorage.setItem('jiko50_master', JSON.stringify([...masterSet])); }
+function saveMaster() { localStorage.setItem(masteredStorageKey(getCurrentProfile()), JSON.stringify([...masterSet])); }
 
 // ── Update UI ─────────────────────────────────────────────────────
 function update() {
@@ -940,6 +955,8 @@ function closeGuide() { document.getElementById('guide-overlay').classList.remov
 function handleOverlayClick(e) { if (e.target === document.getElementById('guide-overlay')) closeGuide(); }
 
 // ── Init ──────────────────────────────────────────────────────────
+loadMastered();
+renderProfileSelect();
 buildCatRows();
 updateFilterLabel();
 update();

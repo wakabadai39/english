@@ -260,6 +260,7 @@ body {
 .gti { display:inline-block;padding:1px 7px;border-radius:99px;font-size:10px;font-weight:700;vertical-align:middle; }
 .gti-a { background:#fef3c7;color:#92400e; }
 .gti-b { background:#dbeafe;color:#1e40af; }
+.profile-select{font-family:'Noto Sans JP',sans-serif;font-size:11px;font-weight:700;color:var(--primary);background:var(--primary-light);border:1px solid var(--border);border-radius:99px;padding:5px 10px;cursor:pointer;max-width:140px;margin-top:6px;}
 </style>
 </head>
 <body>
@@ -269,6 +270,8 @@ body {
   <h2>🇮🇹 イタリア語②　旅行・サバイバル</h2>
   <p>挨拶・自己紹介・基本表現</p>
   <button class="help-btn" onclick="openGuide()">❓ 使い方ガイド</button>
+  <select class="profile-select" id="profile-select" onchange="switchProfile(this.value)"></select>
+
 </div>
 
 <div class="badges">
@@ -462,76 +465,76 @@ const CATS = {
 
 const phrases = [
   // ===== ホテル =====
-  {cat:'🏨 ホテル', en:'Buonasera, ha una prenotazione? — Sì, a nome Tanaka, per due notti.', ja:'こんばんは、ご予約はございますか？ — はい、田中の名前で2泊です。', tip:'ha=持つ（averの2人称敬語・疑問形）。prenotazione=予約。a nome=〜の名前で。per due notti=2泊（perは期間を表す前置詞）'},
-  {cat:'🏨 ホテル', en:'Avete una camera libera per stanotte? — Mi dispiace, siamo al completo.', ja:'今夜空いている部屋はありますか？ — 申し訳ありません、満室です。', tip:'libera=空いている（liberoの女性形・cameraに性数一致）。per stanotte=今夜のために。mi dispiace=残念です・申し訳ない。al completo=満室で（completo=満ちた・完了した）'},
-  {cat:'🏨 ホテル', en:'Quanto costa a notte? — Sono ottanta euro, colazione inclusa.', ja:'1泊いくらですか？ — 80ユーロです、朝食込みで。', tip:'quanto costa=いくらですか（costare=値段がする）。a notte=1泊あたり。sono+数字=〜です（金額を言う時の決まり文句）。inclusa=含まれた（includereの過去分詞・女性形）'},
-  {cat:'🏨 ホテル', en:'A che ora è il check-out? — Entro le undici, per favore.', ja:'チェックアウトは何時ですか？ — 11時までにお願いします。', tip:'a che ora=何時に。check-out=チェックアウト（英語からの外来語）。entro=〜以内に・〜までに（期限を表す前置詞）'},
-  {cat:'🏨 ホテル', en:'Posso lasciare i bagagli qui? — Certo, può lasciarli alla reception.', ja:'荷物をここに預けられますか？ — もちろんです、フロントに預けられます。', tip:'posso=私はできますか（potereの1人称）。lasciare=残す・預ける。i bagagli=荷物（複数形、単数はbagaglio）。può lasciarli=それらを預けられます（potereの3人称+lasciare+li）。reception=フロント（英語からの外来語）'},
-  {cat:'🏨 ホテル', en:'L\'aria condizionata non funziona. — Mando subito qualcuno a controllare.', ja:'エアコンが動きません。 — すぐに点検の者を向かわせます。', tip:'l\'aria condizionata=エアコン（直訳：空調された空気）。non funziona=機能しない（funzionareの否定）。mando=私は送る（mandareの1人称）。subito=すぐに。qualcuno=誰か。controllare=点検する'},
-  {cat:'🏨 ホテル', en:'Può chiamarmi un taxi? — Certo, per che ora?', ja:'タクシーを呼んでもらえますか？ — もちろんです、何時にしましょうか？', tip:'può=できますか（potereの3人称敬語）。chiamarmi=私を呼ぶ（chiamare+mi、目的語代名詞が動詞末尾につく）。un taxi=タクシー1台。per che ora=何時のために（時間を尋ねる表現）'},
-  {cat:'🏨 ホテル', en:'La camera è molto pulita. — Grazie, siamo contenti che le piaccia.', ja:'部屋はとても清潔です。 — ありがとうございます、お気に召して嬉しいです。', tip:'molto=とても。pulita=清潔な（pulitoの女性形）。siamo contenti=私たちは嬉しい（contento=満足した、essereの複数）。che le piaccia=あなたが気に入っていることが（piacereの接続法、感情を表す表現の後では接続法を使う）'},
-  {cat:'🏨 ホテル', en:'C\'è il Wi-Fi in camera? — Sì, la password è sul tavolo.', ja:'部屋にWi-Fiはありますか？ — はい、パスワードはテーブルの上にあります。', tip:'c\'è=〜がある（c\'è+単数名詞）。in camera=部屋に。la password=パスワード（女性名詞扱い）。sul tavolo=テーブルの上に（su+il=sulの縮合形）'},
-  {cat:'🏨 ホテル', en:'Vorrei prolungare di una notte. — Controllo subito la disponibilità.', ja:'1泊延長したいのですが。 — すぐに空きを確認します。', tip:'vorrei=〜したいのですが（volereの条件法、丁寧な依頼）。prolungare=延長する。di una notte=1泊分（diで数量・差分を表す）。controllo=私は確認する（controllareの1人称）。disponibilità=空き状況（女性名詞）'},
-  {cat:'🏨 ホテル', en:'A che ora servite la colazione? — Dalle sette alle dieci.', ja:'朝食は何時からですか？ — 7時から10時までです。', tip:'a che ora=何時に。servite=あなた方は提供する（servireの2人称複数敬語）。colazione=朝食。dalle...alle=〜から〜まで（時間の範囲を表す前置詞の組み合わせ）'},
-  {cat:'🏨 ホテル', en:'C\'è un parcheggio? — Sì, è gratuito per gli ospiti.', ja:'駐車場はありますか？ — はい、宿泊者は無料です。', tip:'c\'è=〜がある。un parcheggio=駐車場（男性名詞）。gratuito=無料の（gratuitoの男性形）。per gli ospiti=宿泊客のために（ospite=客、gliは複数定冠詞）'},
+  {cat:'🏨 ホテル', en:'Buonasera, ha una prenotazione? — Sì, a nome Tanaka, per due notti.', ja:'こんばんは、ご予約はございますか？ — はい、田中の名前で2泊です。', tip:'a nome di = 〜の名前で'},
+  {cat:'🏨 ホテル', en:'Avete una camera libera per stanotte? — Mi dispiace, siamo al completo.', ja:'今夜空いている部屋はありますか？ — 申し訳ありません、満室です。', tip:'al completo = 満室の'},
+  {cat:'🏨 ホテル', en:'Quanto costa a notte? — Sono ottanta euro, colazione inclusa.', ja:'1泊いくらですか？ — 80ユーロです、朝食込みで。', tip:'inclusa = 含まれた'},
+  {cat:'🏨 ホテル', en:'A che ora è il check-out? — Entro le undici, per favore.', ja:'チェックアウトは何時ですか？ — 11時までにお願いします。', tip:'entro = 〜までに'},
+  {cat:'🏨 ホテル', en:'Posso lasciare i bagagli qui? — Certo, può lasciarli alla reception.', ja:'荷物をここに預けられますか？ — もちろんです、フロントに預けられます。', tip:'reception = フロント'},
+  {cat:'🏨 ホテル', en:'L\'aria condizionata non funziona. — Mando subito qualcuno a controllare.', ja:'エアコンが動きません。 — すぐに点検の者を向かわせます。', tip:'controllare = 点検する'},
+  {cat:'🏨 ホテル', en:'Può chiamarmi un taxi? — Certo, per che ora?', ja:'タクシーを呼んでもらえますか？ — もちろんです、何時にしましょうか？', tip:'chiamare = 呼ぶ'},
+  {cat:'🏨 ホテル', en:'La camera è molto pulita. — Grazie, siamo contenti che le piaccia.', ja:'部屋はとても清潔です。 — ありがとうございます、お気に召して嬉しいです。', tip:'pulita = 清潔な'},
+  {cat:'🏨 ホテル', en:'C\'è il Wi-Fi in camera? — Sì, la password è sul tavolo.', ja:'部屋にWi-Fiはありますか？ — はい、パスワードはテーブルの上にあります。', tip:'password = パスワード'},
+  {cat:'🏨 ホテル', en:'Vorrei prolungare di una notte. — Controllo subito la disponibilità.', ja:'1泊延長したいのですが。 — すぐに空きを確認します。', tip:'disponibilità = 空き状況'},
+  {cat:'🏨 ホテル', en:'A che ora servite la colazione? — Dalle sette alle dieci.', ja:'朝食は何時からですか？ — 7時から10時までです。', tip:'servire = 提供する'},
+  {cat:'🏨 ホテル', en:'C\'è un parcheggio? — Sì, è gratuito per gli ospiti.', ja:'駐車場はありますか？ — はい、宿泊者は無料です。', tip:'gratuito = 無料の'},
   // ===== レストラン =====
-  {cat:'🍽️ レストラン', en:'Avete un tavolo per due? — Sì, da questa parte, prego.', ja:'2名のテーブルはありますか？ — はい、こちらへどうぞ。', tip:'avete=あなた方は持っていますか（averの2人称複数）。un tavolo per due=2人用のテーブル（perは用途・目的を表す）。da questa parte=こちらへ（道案内の決まり文句）。prego=どうぞ'},
-  {cat:'🍽️ レストラン', en:'Cosa mi consiglia? — Le consiglio la pasta al pomodoro.', ja:'何がおすすめですか？ — トマトパスタがおすすめです。', tip:'cosa=何を。mi consiglia=私に勧めますか（consigliareの3人称敬語+目的語mi）。le consiglio=あなたに勧めます（consigliareの1人称+目的語le、敬語の間接目的語）。al pomodoro=トマトの（alはa+ilの縮合）'},
-  {cat:'🍽️ レストラン', en:'Sono allergica ai frutti di mare. — Capito, eviterò i frutti di mare.', ja:'魚介類アレルギーがあります。 — 承知しました、魚介類は避けます。', tip:'sono allergica=私はアレルギーです（allergicoの女性形、利用者が女性のため）。ai frutti di mare=魚介類に（aiはa+i複数の縮合）。capito=わかりました（capireの過去分詞、口語の相槌）。eviterò=私は避けるつもりです（evitareの未来形）'},
-  {cat:'🍽️ レストラン', en:'Tutto bene con il piatto? — Sì, era squisito, grazie.', ja:'お料理はいかがですか？ — はい、絶品でした、ありがとう。', tip:'tutto bene=全て順調ですか（決まり文句）。con il piatto=料理について。era=〜でした（essereの半過去）。squisito=絶品の・極上の'},
-  {cat:'🍽️ レストラン', en:'Il conto, per favore. — Certo, arrivo subito.', ja:'お会計をお願いします。 — かしこまりました、すぐに参ります。', tip:'il conto=お会計。per favore=お願いします。certo=もちろん。arrivo=私は参ります（arrivareの1人称、未来の意味で現在形を使う用法）。subito=すぐに'},
-  {cat:'🍽️ レストラン', en:'Separati o insieme? — Insieme, grazie.', ja:'別々ですか、一緒ですか？ — 一緒で、お願いします。', tip:'separati=別々に（separatoの複数形）。insieme=一緒に。grazie=ありがとう（このやり取りでは「一緒でお願いします」の省略形）'},
-  {cat:'🍽️ レストラン', en:'Avete un menù vegetariano? — Sì, eccolo qui.', ja:'ベジタリアンメニューはありますか？ — はい、こちらです。', tip:'avete=あなた方は持っていますか。un menù vegetariano=ベジタリアンメニュー（vegetarianoは男性形でmenùに一致）。eccolo=ほら、これです（ecco+lo、提示の決まり文句）'},
-  {cat:'🍽️ レストラン', en:'Potrei avere ancora del pane? — Certo, glielo porto subito.', ja:'パンをもう少しいただけますか？ — もちろんです、すぐにお持ちします。', tip:'potrei=いただけますか（potereの条件法、最も丁寧な依頼）。avere=持つ。ancora del pane=パンをもう少し（del=di+il、部分冠詞で「いくらかの」の意味）。glielo porto=それをあなたにお持ちします（glie+lo、間接・直接目的語の組み合わせ）'},
-  {cat:'🍽️ レストラン', en:'Posso avere il menù, per favore? — Eccolo, prego.', ja:'メニューをいただけますか？ — どうぞ、こちらです。', tip:'posso=私はできますか（potereの1人称）。avere il menù=メニューをいただく。per favore=お願いします。eccolo=ほら、これです（提示の決まり文句）'},
-  {cat:'🍽️ レストラン', en:'È compreso il servizio? — No, il dieci percento è a parte.', ja:'サービス料は込みですか？ — いいえ、10%は別です。', tip:'è compreso=含まれていますか（comprendereの過去分詞、essereと共に受動的に使う）。il servizio=サービス料。il dieci percento=10パーセント。a parte=別途（直訳：部分に分けて）'},
+  {cat:'🍽️ レストラン', en:'Avete un tavolo per due? — Sì, da questa parte, prego.', ja:'2名のテーブルはありますか？ — はい、こちらへどうぞ。', tip:'da questa parte = こちらへ'},
+  {cat:'🍽️ レストラン', en:'Cosa mi consiglia? — Le consiglio la pasta al pomodoro.', ja:'何がおすすめですか？ — トマトパスタがおすすめです。', tip:'consigliare = 勧める'},
+  {cat:'🍽️ レストラン', en:'Sono allergica ai frutti di mare. — Capito, eviterò i frutti di mare.', ja:'魚介類アレルギーがあります。 — 承知しました、魚介類は避けます。', tip:'evitare = 避ける'},
+  {cat:'🍽️ レストラン', en:'Tutto bene con il piatto? — Sì, era squisito, grazie.', ja:'お料理はいかがですか？ — はい、絶品でした、ありがとう。', tip:'squisito = 絶品の'},
+  {cat:'🍽️ レストラン', en:'Il conto, per favore. — Certo, arrivo subito.', ja:'お会計をお願いします。 — かしこまりました、すぐに参ります。', tip:'subito = すぐに'},
+  {cat:'🍽️ レストラン', en:'Separati o insieme? — Insieme, grazie.', ja:'別々ですか、一緒ですか？ — 一緒で、お願いします。', tip:'insieme = 一緒'},
+  {cat:'🍽️ レストラン', en:'Avete un menù vegetariano? — Sì, eccolo qui.', ja:'ベジタリアンメニューはありますか？ — はい、こちらです。', tip:'vegetariano = ベジタリアンの'},
+  {cat:'🍽️ レストラン', en:'Potrei avere ancora del pane? — Certo, glielo porto subito.', ja:'パンをもう少しいただけますか？ — もちろんです、すぐにお持ちします。', tip:'ancora = もう少し'},
+  {cat:'🍽️ レストラン', en:'Posso avere il menù, per favore? — Eccolo, prego.', ja:'メニューをいただけますか？ — どうぞ、こちらです。', tip:'menù = メニュー'},
+  {cat:'🍽️ レストラン', en:'È compreso il servizio? — No, il dieci percento è a parte.', ja:'サービス料は込みですか？ — いいえ、10%は別です。', tip:'a parte = 別途'},
   // ===== 交通 =====
-  {cat:'🚆 交通', en:'Un biglietto per Roma, per favore. — Andata e ritorno o solo andata?', ja:'ローマ行きの切符を1枚お願いします。 — 往復ですか片道ですか？', tip:'un biglietto=切符1枚。per Roma=ローマ行きの（perは行き先を表す）。per favore=お願いします。andata e ritorno=往復（andata=行き、ritorno=帰り）。solo andata=片道のみ'},
-  {cat:'🚆 交通', en:'Da quale binario parte? — Dal binario sette.', ja:'何番線から出ますか？ — 7番線からです。', tip:'da quale binario=どのホームから（quale=どの、疑問形容詞）。parte=出発する（partireの3人称）。dal binario sette=7番線から（dal=da+il）'},
-  {cat:'🚆 交通', en:'Devo cambiare treno? — Sì, deve cambiare a Bologna.', ja:'乗り換えが必要ですか？ — はい、ボローニャで乗り換えてください。', tip:'devo=私は〜しなければなりませんか（dovereの1人称疑問）。cambiare treno=電車を乗り換える。deve cambiare=あなたは乗り換える必要があります（dovereの3人称敬語）。a Bologna=ボローニャで'},
-  {cat:'🚆 交通', en:'Mi scusi, mi sono persa. — Vada dritto e poi giri a destra.', ja:'すみません、道に迷いました。 — まっすぐ行って右に曲がってください。', tip:'mi scusi=すみません（scusareの敬語命令形、自分を許してくださいの意）。mi sono persa=私は道に迷いました（perdersiの近過去、再帰動詞はessereを使う）。vada=行ってください（andareの敬語命令）。dritto=まっすぐ。giri=曲がってください（girareの敬語命令）'},
-  {cat:'🚆 交通', en:'Quanto tempo ci vuole? — Circa venti minuti a piedi.', ja:'どのくらい時間がかかりますか？ — 徒歩で約20分です。', tip:'quanto tempo=どのくらいの時間。ci vuole=かかります（volerciという非人称表現、時間や労力に使う）。circa=約。venti minuti=20分。a piedi=徒歩で'},
-  {cat:'🚆 交通', en:'Questo autobus va al centro? — Sì, scenda alla terza fermata.', ja:'このバスは中心部に行きますか？ — はい、3つ目の停留所で降りてください。', tip:'questo autobus=このバス。va al centro=中心部に行きますか（andareの3人称、al=a+il）。scenda=降りてください（scendereの敬語命令）。alla terza fermata=3つ目の停留所で（terzaは序数詞の女性形）'},
-  {cat:'🚆 交通', en:'Vorrei noleggiare una macchina. — Per quanti giorni?', ja:'車を借りたいのですが。 — 何日間ですか？', tip:'vorrei=〜したいのですが（volereの条件法）。noleggiare=（車などを）借りる。una macchina=車1台。per quanti giorni=何日間（quantiは数を尋ねる疑問形容詞の複数形）'},
-  {cat:'🚆 交通', en:'Il treno è in ritardo? — Sì, di circa dieci minuti.', ja:'電車は遅れていますか？ — はい、約10分です。', tip:'il treno=電車。è in ritardo=遅れていますか（essere+in ritardoで「遅刻している」という状態を表す）。di circa dieci minuti=約10分（diで差分を表す）'},
+  {cat:'🚆 交通', en:'Un biglietto per Roma, per favore. — Andata e ritorno o solo andata?', ja:'ローマ行きの切符を1枚お願いします。 — 往復ですか片道ですか？', tip:'andata e ritorno = 往復'},
+  {cat:'🚆 交通', en:'Da quale binario parte? — Dal binario sette.', ja:'何番線から出ますか？ — 7番線からです。', tip:'binario = ホーム'},
+  {cat:'🚆 交通', en:'Devo cambiare treno? — Sì, deve cambiare a Bologna.', ja:'乗り換えが必要ですか？ — はい、ボローニャで乗り換えてください。', tip:'cambiare = 乗り換える'},
+  {cat:'🚆 交通', en:'Mi scusi, mi sono persa. — Vada dritto e poi giri a destra.', ja:'すみません、道に迷いました。 — まっすぐ行って右に曲がってください。', tip:'perdersi = 迷う'},
+  {cat:'🚆 交通', en:'Quanto tempo ci vuole? — Circa venti minuti a piedi.', ja:'どのくらい時間がかかりますか？ — 徒歩で約20分です。', tip:'ci vuole = かかる'},
+  {cat:'🚆 交通', en:'Questo autobus va al centro? — Sì, scenda alla terza fermata.', ja:'このバスは中心部に行きますか？ — はい、3つ目の停留所で降りてください。', tip:'fermata = 停留所'},
+  {cat:'🚆 交通', en:'Vorrei noleggiare una macchina. — Per quanti giorni?', ja:'車を借りたいのですが。 — 何日間ですか？', tip:'noleggiare = 借りる'},
+  {cat:'🚆 交通', en:'Il treno è in ritardo? — Sì, di circa dieci minuti.', ja:'電車は遅れていますか？ — はい、約10分です。', tip:'in ritardo = 遅れて'},
   // ===== 買い物 =====
-  {cat:'🛒 買い物', en:'Posso aiutarla? — Sto solo guardando, grazie.', ja:'お手伝いしましょうか？ — 見ているだけです、ありがとう。', tip:'posso aiutarla=お手伝いしましょうか（aiutareの1人称+目的語la、敬語の直接目的語）。sto solo guardando=見ているだけです（stare+ジェルンディオで進行形、soloは「だけ」の意味の副詞）'},
-  {cat:'🛒 買い物', en:'Ha questa taglia in M? — Sì, gliela porto subito.', ja:'Mサイズはありますか？ — はい、すぐにお持ちします。', tip:'ha=持っていますか（averの3人称敬語）。questa taglia=このサイズ（taglia=サイズ、女性名詞）。in M=Mサイズで。gliela porto=それをあなたにお持ちします（glie+la）'},
-  {cat:'🛒 買い物', en:'Posso provarlo? — Certo, il camerino è lì.', ja:'試着できますか？ — もちろんです、試着室はあちらです。', tip:'posso provarlo=試着できますか（provareの1人称+目的語lo、provarsiでも可）。certo=もちろん。il camerino=試着室（男性名詞）。è lì=あちらにあります'},
-  {cat:'🛒 買い物', en:'Quanto costa questo? — Sono trenta euro.', ja:'これはいくらですか？ — 30ユーロです。', tip:'quanto costa=いくらですか（costareの3人称、値段を尋ねる決まり文句）。questo=これ。sono trenta euro=30ユーロです（金額にはsono=essereの複数形を使う）'},
-  {cat:'🛒 買い物', en:'Ha qualcosa di meno caro? — Sì, questo modello è più economico.', ja:'もっと安いものはありますか？ — はい、こちらのモデルがお手頃です。', tip:'ha=持っていますか。qualcosa di meno caro=もっと安い何か（meno caroはcaroの劣等比較）。questo modello=このモデル。più economico=より経済的・お手頃（economicoの優等比較）'},
-  {cat:'🛒 買い物', en:'Posso pagare con la carta? — Certo, accettiamo tutte le carte.', ja:'カードで払えますか？ — もちろんです、全てのカードに対応しています。', tip:'posso pagare=払えますか（pagareの1人称）。con la carta=カードで。accettiamo=私たちは受け付けます（accettareの1人称複数）。tutte le carte=全てのカード（tutteは形容詞「全ての」の女性複数形）'},
-  {cat:'🛒 買い物', en:'Posso avere lo scontrino? — Certo, eccolo.', ja:'レシートをもらえますか？ — もちろんです、どうぞ。', tip:'posso avere=いただけますか。lo scontrino=レシート（男性名詞）。certo=もちろん。eccolo=ほら、これです（ecco+lo）'},
-  {cat:'🛒 買い物', en:'Lo prendo. — Benissimo, glielo incarto subito.', ja:'これをいただきます。 — かしこまりました、すぐに包みます。', tip:'lo prendo=これをいただきます（prendereの1人称+目的語lo）。benissimo=とても良いです（beneの最上級）。glielo incarto=それをあなたのために包みます（glie+lo+incartare）。subito=すぐに'},
+  {cat:'🛒 買い物', en:'Posso aiutarla? — Sto solo guardando, grazie.', ja:'お手伝いしましょうか？ — 見ているだけです、ありがとう。', tip:'guardare = 見る'},
+  {cat:'🛒 買い物', en:'Ha questa taglia in M? — Sì, gliela porto subito.', ja:'Mサイズはありますか？ — はい、すぐにお持ちします。', tip:'taglia = サイズ'},
+  {cat:'🛒 買い物', en:'Posso provarlo? — Certo, il camerino è lì.', ja:'試着できますか？ — もちろんです、試着室はあちらです。', tip:'camerino = 試着室'},
+  {cat:'🛒 買い物', en:'Quanto costa questo? — Sono trenta euro.', ja:'これはいくらですか？ — 30ユーロです。', tip:'costare = 値段がする'},
+  {cat:'🛒 買い物', en:'Ha qualcosa di meno caro? — Sì, questo modello è più economico.', ja:'もっと安いものはありますか？ — はい、こちらのモデルがお手頃です。', tip:'economico = 経済的な'},
+  {cat:'🛒 買い物', en:'Posso pagare con la carta? — Certo, accettiamo tutte le carte.', ja:'カードで払えますか？ — もちろんです、全てのカードに対応しています。', tip:'accettare = 受け付ける'},
+  {cat:'🛒 買い物', en:'Posso avere lo scontrino? — Certo, eccolo.', ja:'レシートをもらえますか？ — もちろんです、どうぞ。', tip:'scontrino = レシート'},
+  {cat:'🛒 買い物', en:'Lo prendo. — Benissimo, glielo incarto subito.', ja:'これをいただきます。 — かしこまりました、すぐに包みます。', tip:'incartare = 包む'},
   // ===== 観光 =====
-  {cat:'🏛️ 観光', en:'A che ora apre il museo? — Apre alle nove e chiude alle sei.', ja:'博物館は何時に開きますか？ — 9時に開いて6時に閉まります。', tip:'a che ora=何時に。apre il museo=美術館は開きますか（aprireの3人称）。alle nove=9時に（alle=a+le、時刻にはleを使う）。chiude=閉まる（chiudereの3人称）。alle sei=6時に'},
-  {cat:'🏛️ 観光', en:'C\'è uno sconto per studenti? — Sì, con la tessera dello studente.', ja:'学生割引はありますか？ — はい、学生証があれば。', tip:'c\'è uno sconto=割引はありますか（sconto=割引、男性名詞）。per studenti=学生のために。con la tessera dello studente=学生証があれば（tessera=証明書、dello=di+lo）'},
-  {cat:'🏛️ 観光', en:'Posso fare una foto qui? — Mi dispiace, è vietato.', ja:'ここで写真を撮っていいですか？ — 申し訳ありません、禁止されています。', tip:'posso fare una foto=写真を撮ってもいいですか（fare una foto=写真を撮るという決まり文句）。mi dispiace=残念ですが。è vietato=禁止されています（vietareの過去分詞、essereと共に受動を表す）'},
-  {cat:'🏛️ 観光', en:'Quanto costa il biglietto? — Sono quindici euro.', ja:'チケットはいくらですか？ — 15ユーロです。', tip:'quanto costa=いくらですか。il biglietto=チケット（男性名詞）。sono quindici euro=15ユーロです'},
-  {cat:'🏛️ 観光', en:'C\'è una visita guidata in inglese? — Sì, alle dieci e alle due.', ja:'英語のガイドツアーはありますか？ — はい、10時と2時にあります。', tip:'c\'è=ありますか。una visita guidata=ガイドツアー（visita=訪問、guidata=案内された、過去分詞の形容詞用法）。in inglese=英語での。alle dieci e alle due=10時と2時に'},
-  {cat:'🏛️ 観光', en:'Mi può consigliare un ristorante vicino? — Certo, ce n\'è uno ottimo qui all\'angolo.', ja:'近くのレストランを教えてもらえますか？ — もちろんです、角にとても良いお店があります。', tip:'mi può consigliare=勧めていただけますか（potereの3人称+consigliare）。un ristorante vicino=近くのレストラン。ce n\'è uno ottimo=とても良いものがあります（ce ne è、ne=それの、数量を表す）。all\'angolo=角に（all\'=a+l\'）'},
+  {cat:'🏛️ 観光', en:'A che ora apre il museo? — Apre alle nove e chiude alle sei.', ja:'博物館は何時に開きますか？ — 9時に開いて6時に閉まります。', tip:'aprire/chiudere = 開く/閉まる'},
+  {cat:'🏛️ 観光', en:'C\'è uno sconto per studenti? — Sì, con la tessera dello studente.', ja:'学生割引はありますか？ — はい、学生証があれば。', tip:'tessera = 証明書'},
+  {cat:'🏛️ 観光', en:'Posso fare una foto qui? — Mi dispiace, è vietato.', ja:'ここで写真を撮っていいですか？ — 申し訳ありません、禁止されています。', tip:'vietato = 禁止された'},
+  {cat:'🏛️ 観光', en:'Quanto costa il biglietto? — Sono quindici euro.', ja:'チケットはいくらですか？ — 15ユーロです。', tip:'biglietto = チケット'},
+  {cat:'🏛️ 観光', en:'C\'è una visita guidata in inglese? — Sì, alle dieci e alle due.', ja:'英語のガイドツアーはありますか？ — はい、10時と2時にあります。', tip:'visita guidata = ガイドツアー'},
+  {cat:'🏛️ 観光', en:'Mi può consigliare un ristorante vicino? — Certo, ce n\'è uno ottimo qui all\'angolo.', ja:'近くのレストランを教えてもらえますか？ — もちろんです、角にとても良いお店があります。', tip:'all\'angolo = 角に'},
   // ===== 電話・予約 =====
-  {cat:'📞 電話・予約', en:'Pronto, chi parla? — Sono Tanaka, vorrei prenotare un tavolo.', ja:'もしもし、どちら様ですか？ — 田中です、テーブルを予約したいのですが。', tip:'pronto=もしもし（電話に出る時の決まり文句、直訳は「準備OK」）。chi parla=どなたですか（parlareの3人称、電話での決まり文句）。vorrei prenotare=予約したいのですが（volereの条件法+不定詞）。un tavolo=テーブル1卓'},
-  {cat:'📞 電話・予約', en:'Per quante persone? — Per quattro, alle otto.', ja:'何名様ですか？ — 4名で、8時にお願いします。', tip:'per quante persone=何名様で（quanteは数を尋ねる疑問形容詞の女性複数形、personeが女性名詞のため）。per quattro=4名で。alle otto=8時に'},
-  {cat:'📞 電話・予約', en:'A che nome? — A nome Tanaka, grazie.', ja:'お名前は？ — 田中の名前で、お願いします。', tip:'a che nome=何という名前で（予約の際に必ず聞かれる表現）。a nome Tanaka=田中の名前で。grazie=ありがとう'},
-  {cat:'📞 電話・予約', en:'Vorrei annullare la prenotazione. — Mi può dire il numero di prenotazione?', ja:'予約をキャンセルしたいのですが。 — 予約番号を教えていただけますか？', tip:'vorrei annullare=キャンセルしたいのですが（volereの条件法+annullare）。la prenotazione=予約。mi può dire=教えていただけますか（potereの3人称+direの不定詞）。il numero di prenotazione=予約番号'},
-  {cat:'📞 電話・予約', en:'È libero per venerdì sera? — Sì, abbiamo un tavolo alle nove.', ja:'金曜の夜は空いていますか？ — はい、9時のテーブルがございます。', tip:'è libero=空いていますか（liberoの男性単数、tavoloに一致するため）。per venerdì sera=金曜の夜は。abbiamo=私たちは持っています（averの1人称複数）。un tavolo alle nove=9時のテーブル'},
+  {cat:'📞 電話・予約', en:'Pronto, chi parla? — Sono Tanaka, vorrei prenotare un tavolo.', ja:'もしもし、どちら様ですか？ — 田中です、テーブルを予約したいのですが。', tip:'prenotare = 予約する'},
+  {cat:'📞 電話・予約', en:'Per quante persone? — Per quattro, alle otto.', ja:'何名様ですか？ — 4名で、8時にお願いします。', tip:'persone = 人々'},
+  {cat:'📞 電話・予約', en:'A che nome? — A nome Tanaka, grazie.', ja:'お名前は？ — 田中の名前で、お願いします。', tip:'a nome = 〜の名前で'},
+  {cat:'📞 電話・予約', en:'Vorrei annullare la prenotazione. — Mi può dire il numero di prenotazione?', ja:'予約をキャンセルしたいのですが。 — 予約番号を教えていただけますか？', tip:'annullare = キャンセルする'},
+  {cat:'📞 電話・予約', en:'È libero per venerdì sera? — Sì, abbiamo un tavolo alle nove.', ja:'金曜の夜は空いていますか？ — はい、9時のテーブルがございます。', tip:'libero = 空いている'},
   // ===== 天気・季節 =====
-  {cat:'🌤️ 天気・季節', en:'Che tempo fa oggi? — Fa caldo, ma domani pioverà.', ja:'今日の天気はどうですか？ — 暑いですが、明日は雨でしょう。', tip:'che tempo fa=天気はどうですか（決まり文句）。fa caldo=暑い（fareを使う天候表現）。ma=しかし。domani pioverà=明日は雨が降るでしょう（piovereの未来形）'},
-  {cat:'🌤️ 天気・季節', en:'Devo portare l\'ombrello? — Sì, meglio portarlo.', ja:'傘を持って行くべきですか？ — はい、持って行った方がいいです。', tip:'devo portare=持って行くべきですか（dovereの1人称+portare）。l\'ombrello=傘（男性名詞）。meglio portarlo=それを持って行く方がいい（meglio+不定詞で「〜した方がいい」の意味）'},
-  {cat:'🌤️ 天気・季節', en:'Fa molto freddo stasera? — Sì, sotto i dieci gradi.', ja:'今夜はとても寒いですか？ — はい、10度を下回ります。', tip:'fa molto freddo=とても寒いですか（fareを使う天候表現）。stasera=今夜。sotto i dieci gradi=10度を下回って（sotto=〜の下に、gradi=度数）'},
+  {cat:'🌤️ 天気・季節', en:'Che tempo fa oggi? — Fa caldo, ma domani pioverà.', ja:'今日の天気はどうですか？ — 暑いですが、明日は雨でしょう。', tip:'pioverà = 未来形'},
+  {cat:'🌤️ 天気・季節', en:'Devo portare l\'ombrello? — Sì, meglio portarlo.', ja:'傘を持って行くべきですか？ — はい、持って行った方がいいです。', tip:'meglio = 〜した方がいい'},
+  {cat:'🌤️ 天気・季節', en:'Fa molto freddo stasera? — Sì, sotto i dieci gradi.', ja:'今夜はとても寒いですか？ — はい、10度を下回ります。', tip:'gradi = 度（温度）'},
   // ===== 食べ物・飲み物 =====
-  {cat:'🍕 食べ物・飲み物', en:'Un caffè, per favore. — Subito, signora.', ja:'コーヒーをお願いします。 — すぐにお持ちします。', tip:'un caffè=エスプレッソ1杯（イタリアのcaffèはエスプレッソを指す）。per favore=お願いします。subito=すぐに。signora=奥様（女性への丁寧な呼びかけ）'},
-  {cat:'🍕 食べ物・飲み物', en:'Questo vino è molto buono. — È il vino della casa.', ja:'このワインはとても美味しいです。 — これはハウスワインです。', tip:'questo vino=このワイン（男性名詞）。molto buono=とても美味しい。è il vino della casa=ハウスワインです（della=di+la、「店の」を意味する）'},
-  {cat:'🍕 食べ物・飲み物', en:'Cosa mi consiglia da bere? — Le consiglio un bicchiere di Chianti.', ja:'飲み物は何がおすすめですか？ — キアンティを一杯お勧めします。', tip:'cosa mi consiglia=何をお勧めですか。da bere=飲み物として（daは用途を表す前置詞）。le consiglio=あなたにお勧めします。un bicchiere di Chianti=キアンティ1杯（bicchiere=グラス、Chiantiはトスカーナの赤ワイン）'},
-  {cat:'🍕 食べ物・飲み物', en:'Posso avere un\'acqua naturale? — Certo, gassata o naturale?', ja:'ミネラルウォーターをいただけますか？ — もちろんです、炭酸入りか普通か？', tip:'posso avere=いただけますか。un\'acqua naturale=ミネラルウォーター（炭酸なし）。certo=もちろん。gassata o naturale=炭酸入りか普通か（gassataはgas=ガスから派生した形容詞）'},
+  {cat:'🍕 食べ物・飲み物', en:'Un caffè, per favore. — Subito, signora.', ja:'コーヒーをお願いします。 — すぐにお持ちします。', tip:'subito = すぐに'},
+  {cat:'🍕 食べ物・飲み物', en:'Questo vino è molto buono. — È il vino della casa.', ja:'このワインはとても美味しいです。 — これはハウスワインです。', tip:'della casa = ハウスの'},
+  {cat:'🍕 食べ物・飲み物', en:'Cosa mi consiglia da bere? — Le consiglio un bicchiere di Chianti.', ja:'飲み物は何がおすすめですか？ — キアンティを一杯お勧めします。', tip:'bicchiere = グラス'},
+  {cat:'🍕 食べ物・飲み物', en:'Posso avere un\'acqua naturale? — Certo, gassata o naturale?', ja:'ミネラルウォーターをいただけますか？ — もちろんです、炭酸入りか普通か？', tip:'gassata = 炭酸入り'},
   // ===== 緊急 =====
-  {cat:'🚨 緊急', en:'Aiuto! Chiamate un medico! — Cosa è successo?', ja:'助けて！医者を呼んでください！ — 何が起きましたか？', tip:'aiuto=助けて！（命令的な間投詞）。chiamate=呼んでください（chiamareの命令形複数）。un medico=医師。cosa è successo=何が起きましたか（succedereの近過去、essereを使う非人称動詞）'},
-  {cat:'🚨 緊急', en:'Ho perso il passaporto. — Deve andare alla questura.', ja:'パスポートをなくしました。 — 警察署に行く必要があります。', tip:'ho perso=なくしました（perdereの近過去・1人称）。il passaporto=パスポート。deve andare=行く必要があります（dovereの3人称敬語）。alla questura=警察署に（alla=a+la）'},
-  {cat:'🚨 緊急', en:'Mi hanno rubato la borsa. — Mi dispiace, le faccio subito la denuncia.', ja:'バッグが盗まれました。 — お気の毒です、すぐに被害届をお作りします。', tip:'mi hanno rubato=（彼らが）私に盗みました＝盗まれました（rubareの近過去複数、受け身的に使う）。la borsa=バッグ。mi dispiace=お気の毒です。le faccio=あなたのために作ります（fareの1人称+敬語目的語le）。la denuncia=被害届'},
-  {cat:'🚨 緊急', en:'Dov\'è l\'ospedale più vicino? — È a due isolati da qui.', ja:'最寄りの病院はどこですか？ — ここから2ブロック先です。', tip:'dov\'è=どこにありますか（dove+è）。l\'ospedale più vicino=最寄りの病院（vicinoの最上級）。è a due isolati da qui=ここから2ブロック先です（isolato=ブロック、街区）'},
-  {cat:'🚨 緊急', en:'Sono allergica alla penicillina. — Lo segnaliamo subito al dottore.', ja:'ペニシリンアレルギーがあります。 — すぐに医師に伝えます。', tip:'sono allergica=私はアレルギーです（女性形）。alla penicillina=ペニシリンに。lo segnaliamo=それを伝えます（segnalareの1人称複数+目的語lo）。subito=すぐに。al dottore=医師に'},
-  {cat:'🚨 緊急', en:'Mi sento male. — Si sieda qui, chiamo subito un\'ambulanza.', ja:'気分が悪いです。 — ここに座ってください、すぐに救急車を呼びます。', tip:'mi sento male=気分が悪いです（sentirsiの再帰、体調を表す決まり文句）。si sieda=座ってください（sedersiの敬語命令）。chiamo=私は呼びます（chiamareの1人称）。un\'ambulanza=救急車'},
+  {cat:'🚨 緊急', en:'Aiuto! Chiamate un medico! — Cosa è successo?', ja:'助けて！医者を呼んでください！ — 何が起きましたか？', tip:'succedere = 起こる'},
+  {cat:'🚨 緊急', en:'Ho perso il passaporto. — Deve andare alla questura.', ja:'パスポートをなくしました。 — 警察署に行く必要があります。', tip:'questura = 警察署'},
+  {cat:'🚨 緊急', en:'Mi hanno rubato la borsa. — Mi dispiace, le faccio subito la denuncia.', ja:'バッグが盗まれました。 — お気の毒です、すぐに被害届をお作りします。', tip:'denuncia = 被害届'},
+  {cat:'🚨 緊急', en:'Dov\'è l\'ospedale più vicino? — È a due isolati da qui.', ja:'最寄りの病院はどこですか？ — ここから2ブロック先です。', tip:'isolato = ブロック'},
+  {cat:'🚨 緊急', en:'Sono allergica alla penicillina. — Lo segnaliamo subito al dottore.', ja:'ペニシリンアレルギーがあります。 — すぐに医師に伝えます。', tip:'segnalare = 伝える・知らせる'},
+  {cat:'🚨 緊急', en:'Mi sento male. — Si sieda qui, chiamo subito un\'ambulanza.', ja:'気分が悪いです。 — ここに座ってください、すぐに救急車を呼びます。', tip:'ambulanza = 救急車'},
 ];
 
 
@@ -549,7 +552,19 @@ let repeatTimer    = null;
 let autoMode       = '';
 let autoStopped    = false;
 let autoTimeout    = null;
-let masterSet = new Set(JSON.parse(localStorage.getItem('jiko50_master') || '[]'));
+let masterSet = new Set();
+const APP_ID='ita2';
+const PROFILES_KEY='duo_profiles';
+const CURRENT_PROFILE_KEY='duo_current_profile';
+function getProfiles(){try{const raw=localStorage.getItem(PROFILES_KEY);const arr=raw?JSON.parse(raw):[];return arr.length?arr:['本人'];}catch(e){return ['本人'];}}
+function saveProfiles(arr){try{localStorage.setItem(PROFILES_KEY,JSON.stringify(arr));}catch(e){}}
+function getCurrentProfile(){try{return localStorage.getItem(CURRENT_PROFILE_KEY)||getProfiles()[0];}catch(e){return '本人';}}
+function setCurrentProfile(name){try{localStorage.setItem(CURRENT_PROFILE_KEY,name);}catch(e){}}
+function masteredStorageKey(profile){return APP_ID+'_'+profile;}
+function loadMastered(){const profile=getCurrentProfile();try{const raw=localStorage.getItem(masteredStorageKey(profile));masterSet=new Set(raw?JSON.parse(raw):[]);}catch(e){masterSet=new Set();}}
+function renderProfileSelect(){const sel=document.getElementById('profile-select');if(!sel)return;const profiles=getProfiles();const current=getCurrentProfile();sel.innerHTML=profiles.map(p=>'<option value="'+p+'"'+(p===current?' selected':'')+'>'+p+'</option>').join('')+'<option value="__new__">＋ 新しいユーザー…</option>';}
+function switchProfile(value){if(value==='__new__'){const name=prompt('新しいユーザー名を入力してください（例：太郎、花子）');if(!name){renderProfileSelect();return;}const trimmed=name.trim();if(!trimmed){renderProfileSelect();return;}const profiles=getProfiles();if(!profiles.includes(trimmed)){profiles.push(trimmed);saveProfiles(profiles);}setCurrentProfile(trimmed);}else{setCurrentProfile(value);}loadMastered();currentIndex=0;renderProfileSelect();update();}
+
 
 // ── Voice setup ───────────────────────────────────────────────────
 let enVoices = [];
@@ -718,7 +733,7 @@ function getActive() {
     .map((p,i) => ({...p, globalIdx:i}))
     .filter(p => !masterSet.has(p.globalIdx) && (activeCategory==='all' || p.cat===activeCategory));
 }
-function saveMaster() { localStorage.setItem('jiko50_master', JSON.stringify([...masterSet])); }
+function saveMaster() { localStorage.setItem(masteredStorageKey(getCurrentProfile()), JSON.stringify([...masterSet])); }
 
 // ── Update UI ─────────────────────────────────────────────────────
 function update() {
@@ -945,6 +960,8 @@ function closeGuide() { document.getElementById('guide-overlay').classList.remov
 function handleOverlayClick(e) { if (e.target === document.getElementById('guide-overlay')) closeGuide(); }
 
 // ── Init ──────────────────────────────────────────────────────────
+loadMastered();
+renderProfileSelect();
 buildCatRows();
 updateFilterLabel();
 update();
