@@ -750,6 +750,7 @@ let autoStopped    = false;
 let autoTimeout    = null;
 let masterSet = new Set();
 let masteredReview = {};
+let reviewSessionDone = new Set();
 let reviewMode = false;
 let reviewFilter = 'due';
 let reviewMasteredMode = false;
@@ -964,6 +965,7 @@ function getActive() {
       if (activeCategory!=='all' && p.cat!==activeCategory) return false;
       if (reviewMode) {
         if (!masterSet.has(p.globalIdx)) return false;
+        if (reviewSessionDone.has(p.globalIdx)) return false;
         const rd = masteredReview[p.globalIdx];
         const stage = rd ? rd.stage : 0;
         const due = rd ? rd.due : 0;
@@ -1186,6 +1188,7 @@ function setAutoPanel(step, instr, count) {
 
 function enterAutoUI() {
   reviewMode = false;
+  reviewSessionDone.clear();
   const rb0 = document.getElementById('review-toggle-btn'); if (rb0) { rb0.textContent = '🔁 復習モード: OFF'; rb0.className = 'btn btn-secondary'; }
   const rar1 = document.getElementById('review-action-row'); if (rar1) rar1.style.display = 'none';
   isAutoPlaying = true; autoStopped = false;
@@ -1344,6 +1347,8 @@ function confirmReviewed() {
   const active = getActive(); if (!active.length) return;
   const item = active[currentIndex];
   const realIdx = item.globalIdx;
+  if (reviewSessionDone.has(realIdx)) return;
+  reviewSessionDone.add(realIdx);
   const intervals = [1,3,7,14,30];
   const prev = masteredReview[realIdx];
   const stage = Math.min((prev ? prev.stage : -1) + 1, intervals.length - 1);
@@ -1357,6 +1362,7 @@ function confirmReviewed() {
 
 function toggleReviewMode() {
   reviewMode = !reviewMode;
+  if (reviewMode) reviewSessionDone.clear();
   const btn = document.getElementById('review-toggle-btn');
   if (reviewMode) { btn.textContent = '🔁 復習モード: ON'; btn.className = 'btn btn-on'; }
   else { btn.textContent = '🔁 復習モード: OFF'; btn.className = 'btn btn-secondary'; }
