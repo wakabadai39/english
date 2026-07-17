@@ -3,14 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🇨🇿 チェコ語カード 段階３</title>
+<title>🇨🇿 チェコ語カード 段階０</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&family=Noto+Sans+JP:wght@400;700;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root {
   --bg: #f0f9f4;
   --surface: #ffffff;
-  --primary: #7c3aed;
-  --primary-light: #7c3aed22;
+  --primary: #16a34a;
+  --primary-light: #16a34a22;
   --accent: #0891b2;
   --green: #16a34a;
   --green-light: #dcfce7;
@@ -45,7 +45,7 @@ body {
 }
 .badge.green { background: var(--green-light); color: var(--green); border-color: #86efac; }
 .badge.amber { background: var(--amber-light); color: var(--amber); border-color: #fcd34d; }
-.progress-wrap { background: #7c3aed33; border-radius: 99px; height: 6px; margin-bottom: 4px; overflow: hidden; }
+.progress-wrap { background: #16a34a33; border-radius: 99px; height: 6px; margin-bottom: 4px; overflow: hidden; }
 .progress-bar { height: 100%; background: var(--primary); border-radius: 99px; transition: width 0.4s ease; }
 .progress-label { text-align: center; font-size: 12px; color: var(--muted); margin-bottom: 10px; }
 .tap-hint { font-size: 11px; color: var(--muted); margin-bottom: 6px; text-align: center; }
@@ -265,14 +265,14 @@ body {
 <body>
 <div class="container">
 <div class="header">
-<h2>🇨🇿 チェコ語カード 段階３</h2>
-<p>過去・未来・条件法・複文・受動態</p>
+<h2>🇨🇿 チェコ語カード 段階０</h2>
+<p>アルファベット・発音入門</p>
 <button class="help-btn" onclick="openGuide()">❓ 使い方ガイド</button>
 </div>
 <div class="badges">
 <div class="badge" id="mode-badge">📖 英 → 日</div>
 <div class="badge" id="order-badge">順番通り</div>
-<div class="badge green" id="master-badge">マスター: 0 / 50</div>
+<div class="badge green" id="master-badge">マスター: 0 / 31</div>
 </div>
 <div class="progress-wrap"><div class="progress-bar" id="progress-bar" style="width:2%"></div></div>
 <div class="progress-label">カード <span id="cur-num">1</span> / <span id="tot-num">50</span></div>
@@ -364,7 +364,7 @@ body {
 <div class="guide-overlay" id="guide-overlay" onclick="handleOverlayClick(event)">
 <div class="guide-modal">
 <div class="guide-modal-header">
-<h2>🇨🇿 チェコ語カード 段階３</h2>
+<h2>🇨🇿 チェコ語カード 段階０</h2>
 <button class="guide-close" onclick="closeGuide()">✕ 閉じる</button>
 </div>
 <div class="guide-body">
@@ -444,311 +444,196 @@ body {
 
 <script>
 // ── Data ─────────────────────────────────────────────────────────
-const CATS = {"📚 過去形": "#7c3aed", "📚 過去進行・習慣": "#0369a1", "🔮 未来": "#16a34a", "✨ 条件法": "#d97706", "🔗 接続詞・複文": "#e85d26", "📖 受動態": "#dc2626", "📝 形容詞・比較": "#7c3aed"};
+const CATS = {"🔤 まぎらわしい文字": "#16a34a", "ˇ ハーチェク子音": "#0369a1", "´ 長母音（チャールカ）": "#d97706", "ě の読み方": "#e85d26", "📏 発音・アクセントの基本": "#7c3aed"};
 
 const phrases = [
 {
-"cat": "📚 過去形",
-"en": "Včera jsem dobře spal.",
-"ja": "昨日はよく眠りました。（男性）",
-"tip": "spát → spal（過去形）"
+"cat": "🔤 まぎらわしい文字",
+"en": "co",
+"ja": "「ツォ」＝ 何",
+"tip": "c は英語の ts に近い音。k や s にはならない"
 },
 {
-"cat": "📚 過去形",
-"en": "Navštívili jsme muzeum.",
-"ja": "私たちは博物館を訪れました。",
-"tip": "navštívit → navštívili（過去形・複数）"
+"cat": "🔤 まぎらわしい文字",
+"en": "já",
+"ja": "「ヤー」＝ 私",
+"tip": "j は英語の y に近い音（ヤ行）。英語の j（ジャ行）にはならない"
 },
 {
-"cat": "📚 過去形",
-"en": "Přečetl knihu.",
-"ja": "彼はその本を読みました。",
-"tip": "přečíst → přečetl（完了体過去）"
+"cat": "🔤 まぎらわしい文字",
+"en": "hodina",
+"ja": "「ホヂナ」＝ 時間",
+"tip": "h は息を強く出す有声音。英語の h よりのどの奥を使う"
 },
 {
-"cat": "📚 過去形",
-"en": "Napsala dopis.",
-"ja": "彼女は手紙を書きました。",
-"tip": "napsat → napsala"
+"cat": "🔤 まぎらわしい文字",
+"en": "chléb",
+"ja": "「フレープ」＝ パン",
+"tip": "ch は2文字で1つの音（のどの奥をこする「フ」）。アルファベット順でも独立した1文字として扱われる"
 },
 {
-"cat": "📚 過去形",
-"en": "Nevěděl jsem o tom.",
-"ja": "それは知りませんでした。",
-"tip": "vědět → věděl（不完了体過去）"
+"cat": "🔤 まぎらわしい文字",
+"en": "byt, bít",
+"ja": "発音は同じ「イ」でも綴りが違う（byt=部屋、bít=殴る）",
+"tip": "直前の子音が「硬音」か「軟音」かで y か i かが決まる。発音自体は同じ"
 },
 {
-"cat": "📚 過去形",
-"en": "Co jsi dělal o víkendu?",
-"ja": "週末に何をしましたか？",
-"tip": "dělat → dělal（過去形・2人称）"
+"cat": "ˇ ハーチェク子音",
+"en": "čaj",
+"ja": "「チャイ」＝ お茶",
+"tip": "č は英語の church の ch の音"
 },
 {
-"cat": "📚 過去形",
-"en": "Žil jsem v Římě.",
-"ja": "私はローマに住んでいました。",
-"tip": "žít → žil"
+"cat": "ˇ ハーチェク子音",
+"en": "škola",
+"ja": "「シュコラ」＝ 学校",
+"tip": "š は英語の shoe の sh の音"
 },
 {
-"cat": "📚 過去形",
-"en": "Už jsi jedl?",
-"ja": "もう食べましたか？",
-"tip": "jíst → jedl"
+"cat": "ˇ ハーチェク子音",
+"en": "žena",
+"ja": "「ジェナ」＝ 女性",
+"tip": "ž はフランス語の j に近い、舌を震わせないジュ"
 },
 {
-"cat": "📚 過去形",
-"en": "Jel jsem do Milána.",
-"ja": "ミラノに行きました。",
-"tip": "jet → jel"
+"cat": "ˇ ハーチェク子音",
+"en": "řeka",
+"ja": "「r」と「ž」を同時に出す音＝ 川",
+"tip": "ř はチェコ語特有の音。ネイティブの子供でも習得が難しいとされる"
 },
 {
-"cat": "📚 過去形",
-"en": "Vstala v osm hodin.",
-"ja": "彼女は8時に起きました。",
-"tip": "vstát → vstala"
+"cat": "ˇ ハーチェク子音",
+"en": "kůň",
+"ja": "「クーニ」＝ 馬",
+"tip": "ň は日本語の「ニャ行」に近い柔らかい n"
 },
 {
-"cat": "📚 過去形",
-"en": "Šli jsme do divadla.",
-"ja": "私たちは劇場に行きました。",
-"tip": "jít → šli（複数）"
+"cat": "ˇ ハーチェク子音",
+"en": "chuť",
+"ja": "「フット」＝ 味",
+"tip": "ť は日本語の「チ」に近い柔らかい t"
 },
 {
-"cat": "📚 過去形",
-"en": "Přijel pozdě.",
-"ja": "彼は遅く着きました。",
-"tip": "přijet → přijel"
+"cat": "ˇ ハーチェク子音",
+"en": "loď",
+"ja": "「ロヂ」＝ 船",
+"tip": "ď は日本語の「ヂ」に近い柔らかい d"
 },
 {
-"cat": "📚 過去形",
-"en": "Dnes ráno jsem vstal brzy.",
-"ja": "今朝は早く起きました。",
-"tip": "vstát → vstal; brzy = 早く"
+"cat": "´ 長母音（チャールカ）",
+"en": "máma",
+"ja": "「マーマ」＝ ママ",
+"tip": "á は「アー」と長く伸ばす。2つ目の a（短母音）と長さが違う"
 },
 {
-"cat": "📚 過去進行・習慣",
-"en": "Když jsem byl mladý, žil jsem v Neapoli.",
-"ja": "若い頃、ナポリに住んでいました。",
-"tip": "když = 〜の時; byl = だった（過去形）"
+"cat": "´ 長母音（チャールカ）",
+"en": "mléko",
+"ja": "「ムレーコ」＝ 牛乳",
+"tip": "é は「エー」と長く伸ばす"
 },
 {
-"cat": "📚 過去進行・習慣",
-"en": "Byl to krásný den.",
-"ja": "美しい日でした。",
-"tip": "byl = だった（být動詞の過去形）"
+"cat": "´ 長母音（チャールカ）",
+"en": "víno",
+"ja": "「ヴィーノ」＝ ワイン",
+"tip": "í は「イー」と長く伸ばす"
 },
 {
-"cat": "📚 過去進行・習慣",
-"en": "Měl mnoho přátel.",
-"ja": "彼にはたくさんの友人がいました。",
-"tip": "mít → měl（過去形）"
+"cat": "´ 長母音（チャールカ）",
+"en": "balón",
+"ja": "「バローン」＝ 風船",
+"tip": "ó は主に外来語にのみ現れる珍しい長母音"
 },
 {
-"cat": "📚 過去進行・習慣",
-"en": "Bohužel bylo počasí špatné.",
-"ja": "残念ながら天気は悪かった。",
-"tip": "bohužel = 残念ながら"
+"cat": "´ 長母音（チャールカ）",
+"en": "úterý",
+"ja": "「ウーテリー」＝ 火曜日",
+"tip": "ú は主に語頭で使われる長い「ウー」"
 },
 {
-"cat": "🔮 未来",
-"en": "Zítra budu pracovat.",
-"ja": "明日は仕事をするつもりです。",
-"tip": "budu + 不定形 = 未来形"
+"cat": "´ 長母音（チャールカ）",
+"en": "dům",
+"ja": "「ドゥーム」＝ 家",
+"tip": "ů は語の途中・語末で使われる長い「ウー」（ú と発音は同じ、位置で綴りが変わる）"
 },
 {
-"cat": "🔮 未来",
-"en": "Přijede příští týden.",
-"ja": "彼女は来週来るでしょう。",
-"tip": "přijet（完了体未来）"
+"cat": "´ 長母音（チャールカ）",
+"en": "milý",
+"ja": "「ミリー」＝ 親愛な",
+"tip": "ý は「イー」と長く伸ばす（y の長母音版）"
 },
 {
-"cat": "🔮 未来",
-"en": "Dokončíme projekt.",
-"ja": "私たちはプロジェクトを完了させます。",
-"tip": "dokončit（完了体未来）"
+"cat": "ě の読み方",
+"en": "děti",
+"ja": "「ヂェチ」＝ 子供たち",
+"tip": "dě は「ヂェ」と読む（軟音化）"
 },
 {
-"cat": "🔮 未来",
-"en": "Zítra bude pršet.",
-"ja": "明日は雨が降るでしょう。",
-"tip": "pršet = 雨が降る"
+"cat": "ě の読み方",
+"en": "pět",
+"ja": "「ピェット」＝ 5",
+"tip": "tě は「チェ」と読む（軟音化）"
 },
 {
-"cat": "🔮 未来",
-"en": "Nezapomenu na to.",
-"ja": "それを忘れないでしょう。",
-"tip": "zapomenout（完了体・否定未来）"
+"cat": "ě の読み方",
+"en": "němčina",
+"ja": "「ニェムチナ」＝ ドイツ語",
+"tip": "ně は「ニェ」と読む"
 },
 {
-"cat": "✨ 条件法",
-"en": "Chtěl bych jet do Itálie.",
-"ja": "イタリアに旅行したいのですが。",
-"tip": "chtěl bych = 〜したい（条件法）"
+"cat": "ě の読み方",
+"en": "běžet",
+"ja": "「ビェジェット」＝ 走る",
+"tip": "bě は「ビェ」と読む"
 },
 {
-"cat": "✨ 条件法",
-"en": "Mohli byste pomoci?",
-"ja": "助けていただけますか？（丁寧）",
-"tip": "mohli byste = できますか（条件法・敬語）"
+"cat": "ě の読み方",
+"en": "pěkný",
+"ja": "「ピェクニー」＝ きれいな",
+"tip": "pě も「ピェ」と読む（tě とは別の子音の軟音化）"
 },
 {
-"cat": "✨ 条件法",
-"en": "Máte chvilku?",
-"ja": "少しお時間はありますか？",
-"tip": "chvilka = 少しの時間"
+"cat": "ě の読み方",
+"en": "věda",
+"ja": "「ヴィェダ」＝ 科学",
+"tip": "vě は「ヴィェ」と読む"
 },
 {
-"cat": "✨ 条件法",
-"en": "Kdybych měl čas, hrál bych na piano.",
-"ja": "時間があれば、ピアノを弾くのに。",
-"tip": "kdyby + 過去 + by = 非現実の仮定"
+"cat": "ě の読み方",
+"en": "měsíc",
+"ja": "「ムニェシーツ」＝ 月",
+"tip": "mě だけ特殊で「ムニェ」と読む（他の ě と規則が違う）"
 },
 {
-"cat": "✨ 条件法",
-"en": "To by bylo od vás velmi milé.",
-"ja": "それはとてもご親切ですね。",
-"tip": "bylo by = だろう（条件法）"
+"cat": "📏 発音・アクセントの基本",
+"en": "Praha",
+"ja": "「プラハ」＝ プラハ（首都名）",
+"tip": "アクセント（一番強く読む部分）は常に第1音節。英語のような不規則さはない"
 },
 {
-"cat": "✨ 条件法",
-"en": "Já bych to udělal jinak.",
-"ja": "私ならそれを違う方法でするでしょう。",
-"tip": "udělal bych = するだろう（条件法）"
+"cat": "📏 発音・アクセントの基本",
+"en": "zmrzlina",
+"ja": "「ズムルズリナ」＝ アイスクリーム",
+"tip": "単語が長くてもアクセントは常に最初の音節のまま動かない"
 },
 {
-"cat": "✨ 条件法",
-"en": "Kdybych měl čas, pomohl bych ti.",
-"ja": "時間があれば、あなたを手伝っていたのに。",
-"tip": "kdyby + 過去 + by = 非現実の仮定"
+"cat": "📏 発音・アクセントの基本",
+"en": "auto",
+"ja": "「アウト」＝ 車",
+"tip": "長母音があっても、アクセントの位置とは無関係。長さと強さは別のルール"
 },
 {
-"cat": "🔗 接続詞・複文",
-"en": "Učím se česky, protože je to zábavné.",
-"ja": "楽しいのでチェコ語を勉強しています。",
-"tip": "protože = 〜なので"
+"cat": "📏 発音・アクセントの基本",
+"en": "hrad",
+"ja": "「フラット」＝ 城",
+"tip": "語末の有声子音 d は無声化して t に近い音になる"
 },
 {
-"cat": "🔗 接続詞・複文",
-"en": "Ačkoli pršelo, šli jsme ven.",
-"ja": "雨が降っていたけれど、外出しました。",
-"tip": "ačkoli = 〜にもかかわらず"
-},
-{
-"cat": "🔗 接続詞・複文",
-"en": "Nevím, jestli přijde.",
-"ja": "彼が来るかどうかわかりません。",
-"tip": "jestli = 〜かどうか"
-},
-{
-"cat": "🔗 接続詞・複文",
-"en": "Než půjdu spát, čtu si knihu.",
-"ja": "寝る前に本を読みます。",
-"tip": "než = 〜の前に"
-},
-{
-"cat": "🔗 接続詞・複文",
-"en": "Po jídle usnul.",
-"ja": "食事を終えた後、眠りにつきました。",
-"tip": "po = 〜の後で"
-},
-{
-"cat": "🔗 接続詞・複文",
-"en": "Čím více se učím, tím lepší jsem.",
-"ja": "勉強すればするほど上手くなります。",
-"tip": "čím...tím = 〜すればするほど"
-},
-{
-"cat": "🔗 接続詞・複文",
-"en": "Buď půjdeš se mnou, nebo půjdu sám.",
-"ja": "あなたが一緒に来るか、私が一人で行くかのどちらかです。",
-"tip": "buď...nebo = 〜か〜かのどちらか"
-},
-{
-"cat": "🔗 接続詞・複文",
-"en": "Jak čeština, tak francouzština jsou krásné jazyky.",
-"ja": "チェコ語もフランス語も両方美しい言語です。",
-"tip": "jak...tak = 〜も〜も両方"
-},
-{
-"cat": "🔗 接続詞・複文",
-"en": "To je kniha, kterou jsem přečetl.",
-"ja": "これは私が読んだ本です。",
-"tip": "kterou = 関係代名詞（目的格）"
-},
-{
-"cat": "🔗 接続詞・複文",
-"en": "Muž, který tam stojí, je můj otec.",
-"ja": "そこに立っている男性は私の父です。",
-"tip": "který = 関係代名詞（主格）"
-},
-{
-"cat": "🔗 接続詞・複文",
-"en": "Žena, se kterou jsem mluvil, je učitelka.",
-"ja": "私が話した女性は教師です。",
-"tip": "se kterou = 〜と（関係代名詞）"
-},
-{
-"cat": "📖 受動態",
-"en": "Kniha se čte.",
-"ja": "その本は読まれています。",
-"tip": "se + 動詞 = 受動的な構文（再帰的受動）"
-},
-{
-"cat": "📖 受動態",
-"en": "Dům byl postaven.",
-"ja": "その家は建てられました。",
-"tip": "byl postaven = 建てられた（受動態過去）"
-},
-{
-"cat": "📖 受動態",
-"en": "Zkouška se bude konat příští týden.",
-"ja": "試験は来週行われます。",
-"tip": "konat se = 行われる"
-},
-{
-"cat": "📖 受動態",
-"en": "Dopis byl napsán jím.",
-"ja": "その手紙は彼によって書かれました。",
-"tip": "jím = 〜によって（動作主を表す）"
-},
-{
-"cat": "📝 形容詞・比較",
-"en": "Rád pijí studenou kávu.",
-"ja": "冷たいコーヒーが好きです。",
-"tip": "rád = 好んで; studená = 冷たい"
-},
-{
-"cat": "📝 形容詞・比較",
-"en": "To je zajímavá kniha.",
-"ja": "それは興味深い本です。",
-"tip": "zajímavá = 興味深い"
-},
-{
-"cat": "📝 形容詞・比較",
-"en": "To je nejlepší řešení.",
-"ja": "これが最善の解決策です。",
-"tip": "nejlepší = 最も良い（最上級）"
-},
-{
-"cat": "📝 形容詞・比較",
-"en": "Je vyšší než jeho bratr.",
-"ja": "彼は兄（弟）より背が高い。",
-"tip": "než = 〜より（比較級）"
-},
-{
-"cat": "📝 形容詞・比較",
-"en": "Tato restaurace je tak dobrá jako ta.",
-"ja": "このレストランはあのレストランと同じくらい良い。",
-"tip": "tak...jako = 〜と同じくらい（同等比較）"
-},
-{
-"cat": "📝 形容詞・比較",
-"en": "Tato taška je krásnější než ta druhá.",
-"ja": "このバッグはあちらより美しいです。",
-"tip": "krásnější než = より美しい（比較級）"
+"cat": "📏 発音・アクセントの基本",
+"en": "kdy",
+"ja": "「グディ」＝ いつ",
+"tip": "k は後ろの有声子音 d に引っ張られて g に近い音になる（子音の同化）"
 }
 ];
-
 const TOTAL = phrases.length;
 
 // ── State ─────────────────────────────────────────────────────────
@@ -763,7 +648,7 @@ let repeatTimer = null;
 let autoMode = '';
 let autoStopped = false;
 let autoTimeout = null;
-let masterSet = new Set(JSON.parse(localStorage.getItem('czech_level3_master') || '[]'));
+let masterSet = new Set(JSON.parse(localStorage.getItem('czech_level0_master') || '[]'));
 
 // ── Voice setup ───────────────────────────────────────────────────
 let enVoices = [];
@@ -901,7 +786,7 @@ function getActive() {
     .map((p,i) => ({...p, globalIdx:i}))
     .filter(p => !masterSet.has(p.globalIdx) && (activeCategory==='all' || p.cat===activeCategory));
 }
-function saveMaster() { localStorage.setItem('czech_level3_master', JSON.stringify([...masterSet])); }
+function saveMaster() { localStorage.setItem('czech_level0_master', JSON.stringify([...masterSet])); }
 
 // ── Update UI ─────────────────────────────────────────────────────
 function update() {
@@ -909,7 +794,7 @@ function update() {
   const noActive = document.getElementById('no-active');
   const mainCard = document.getElementById('main-card');
   const tapHint = document.getElementById('tap-hint');
-  document.getElementById('master-badge').textContent = `マスター: ${masterSet.size} / $50`;
+  document.getElementById('master-badge').textContent = `マスター: ${masterSet.size} / $31`;
   if (!active.length) {
     noActive.classList.add('show'); mainCard.style.display = 'none'; tapHint.style.display = 'none';
     updateMasterUI(); buildCatRows(); updateFilterLabel(); return;
@@ -973,7 +858,7 @@ function toggleMaster(e) {
   if (e.target.checked) {
     masterSet.add(item.globalIdx); saveMaster();
     updateMasterUI(); buildCatRows(); updateFilterLabel();
-    document.getElementById('master-badge').textContent = `マスター: ${masterSet.size} / $50`;
+    document.getElementById('master-badge').textContent = `マスター: ${masterSet.size} / $31`;
     setTimeout(() => {
       const nextActive = getActive();
       if (nextActive.length === 0) { update(); return; }
@@ -984,7 +869,7 @@ function toggleMaster(e) {
     masterSet.delete(item.globalIdx); saveMaster();
     document.getElementById('mastered-badge').classList.remove('show');
     updateMasterUI(); buildCatRows(); updateFilterLabel();
-    document.getElementById('master-badge').textContent = `マスター: ${masterSet.size} / $50`;
+    document.getElementById('master-badge').textContent = `マスター: ${masterSet.size} / $31`;
   }
 }
 function removeMaster(idx) { masterSet.delete(idx); saveMaster(); if (!masterSet.size) document.getElementById('master-list-wrap').style.display='none'; update(); }
