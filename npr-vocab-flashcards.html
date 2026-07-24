@@ -132,10 +132,12 @@
   .word{
     font-family:'Spectral', serif;
     font-weight: 600;
-    font-size: 2.4rem;
+    font-size: 1.7rem;
     line-height: 1.15;
     margin: 0 0 18px;
-    word-break: break-word;
+    white-space: nowrap;
+    overflow: hidden;
+    max-width: 100%;
   }
 
   .speak-btn{
@@ -339,7 +341,7 @@
   .checkmark-flash.show{ opacity:1; }
 
   @media (max-width: 380px){
-    .word{ font-size: 1.9rem; }
+    .word{ font-size: 1.4rem; }
     .stage{ height: 320px; }
   }
 
@@ -519,11 +521,81 @@
     padding: 3px 8px;
     border-radius: 8px;
   }
+  .master-checkbox-row{
+    position:absolute;
+    top: 16px;
+    right: 16px;
+    display:flex;
+    align-items:center;
+    gap: 5px;
+    font-size: 0.7rem;
+    color: var(--ink-soft);
+    cursor:pointer;
+  }
+  .master-checkbox-row input[type=checkbox]{
+    width: 16px;
+    height: 16px;
+    accent-color: var(--done);
+    cursor:pointer;
+  }
   .review-date{
     font-size: 0.72rem;
     color: var(--ink-soft);
     white-space: nowrap;
   }
+  .box-badge{
+    position:absolute;
+    top: 16px;
+    left: 16px;
+    font-size: 0.68rem;
+    color: var(--ink-soft);
+    background: var(--bg-deep);
+    padding: 3px 8px;
+    border-radius: 8px;
+  }
+  .review-date{
+    font-size: 0.72rem;
+    color: var(--ink-soft);
+    white-space: nowrap;
+  }
+  .review-mode-row{
+    width:100%;
+    max-width:480px;
+    display:flex;
+    gap: 8px;
+    margin-top: 10px;
+    align-items:center;
+  }
+  .review-mode-row #reviewToggleBtn{ flex: 1; }
+  .review-mode-row #reviewFilterSelect{
+    flex: 1.2;
+    padding: 9px 10px;
+    border-radius: 8px;
+    border: 1px solid var(--line);
+    background: #fff;
+    color: var(--ink);
+    font-family:'Inter', sans-serif;
+    font-size: 0.8rem;
+  }
+  .btn-small.btn-on{
+    background: var(--done);
+    border-color: var(--done);
+    color: #fff;
+  }
+  .review-banner{
+    width:100%;
+    max-width:480px;
+    text-align:center;
+    font-size: 0.78rem;
+    color: var(--done);
+    background: #eef3ea;
+    border-radius: 8px;
+    padding: 6px 10px;
+    margin-top: 10px;
+    display:none;
+  }
+  .review-banner.show{ display:block; }
+  .example-en{ cursor: pointer; }
 </style>
 </head>
 <body>
@@ -538,7 +610,7 @@
 </div>
 
 <div class="stats-row" id="statsRow">
-  <span id="dueLabel">本日の復習: 0語</span>
+  <span id="dueLabel">本日の新規・復習: 0語</span>
   <span id="totalLabel">全カード: 0語</span>
 </div>
 
@@ -558,6 +630,21 @@
   <button class="btn-small" id="restartBtn">⟲ 最初に戻る</button>
 </div>
 
+<div class="review-mode-row">
+  <button class="btn-small" id="reviewToggleBtn">🔁 これまでの単語を復習する</button>
+  <select id="reviewFilterSelect">
+    <option value="due" selected>本日復習（出題対象のみ）</option>
+    <option value="b1">1日サイクル</option>
+    <option value="b2">3日サイクル</option>
+    <option value="b3">7日サイクル</option>
+    <option value="b4">14日サイクル</option>
+    <option value="b5">30日サイクル</option>
+    <option value="all">すべて</option>
+  </select>
+</div>
+
+<div class="review-banner" id="reviewBanner">🔁 復習モード中：これまでに「習得済み ✓」にした単語をまとめて出題しています</div>
+
 <div class="position-label" id="positionLabel"></div>
 
 <div class="footer-row">
@@ -565,20 +652,12 @@
   <button class="reset-link" id="resetBtn">すべてリセット</button>
 </div>
 
-<div class="panel-toggle">
-  <button class="reset-link" id="masteredToggleBtn">学習記録一覧 ▾</button>
-</div>
-
-<div class="mastered-panel" id="masteredPanel">
-  <h3>学習記録（復習スケジュール）</h3>
-  <ul class="mastered-list" id="masteredList"></ul>
-</div>
-
 <script>
-const WORDS = [{"word":"Limiting (limit)","hint":"制限する","source":"Visa (Trump/Universities)"},{"word":"Implications","hint":"影響、波及効果","source":"Visa (Trump/Universities)"},{"word":"Correspondent","hint":"特派員、記者","source":"Visa (Trump/Universities)"},{"word":"Historically","hint":"歴史的に、これまでは","source":"Visa (Trump/Universities)"},{"word":"Academic","hint":"学業の、大学の","source":"Visa (Trump/Universities)"},{"word":"Program","hint":"課程、プログラム","source":"Visa (Trump/Universities)"},{"word":"Fixed","hint":"固定された","source":"Visa (Trump/Universities)"},{"word":"Period","hint":"期間","source":"Visa (Trump/Universities)"},{"word":"Apply for","hint":"〜に申請する、申し込む","source":"Visa (Trump/Universities)"},{"word":"Formal","hint":"正式な、公式の","source":"Visa (Trump/Universities)"},{"word":"Extension","hint":"延長、引き延ばし","source":"Visa (Trump/Universities)"},{"word":"Fee","hint":"手数料、料金","source":"Visa (Trump/Universities)"},{"word":"Impact (verb)","hint":"〜に影響を与える","source":"Visa (Trump/Universities)"},{"word":"Medical","hint":"医学の、医療の","source":"Visa (Trump/Universities)"},{"word":"PhD","hint":"博士号","source":"Visa (Trump/Universities)"},{"word":"Restrictions","hint":"制限、規制","source":"Visa (Trump/Universities)"},{"word":"Majors","hint":"専攻（専門科目）","source":"Visa (Trump/Universities)"},{"word":"Administration","hint":"政権、政府","source":"Visa (Trump/Universities)"},{"word":"Crackdown","hint":"厳重な取り締まり","source":"Visa (Trump/Universities)"},{"word":"Immigration","hint":"出入国管理、移民","source":"Visa (Trump/Universities)"},{"word":"Tackling (tackle)","hint":"（問題に）取り組む、対処する","source":"Visa (Trump/Universities)"},{"word":"Abuse","hint":"悪用、濫用","source":"Visa (Trump/Universities)"},{"word":"Department of Homeland Security","hint":"国土安全保障省","source":"Visa (Trump/Universities)"},{"word":"Strengthen","hint":"強化する","source":"Visa (Trump/Universities)"},{"word":"Vetting","hint":"事前審査、身元調査","source":"Visa (Trump/Universities)"},{"word":"Quote (as a verbal aside)","hint":"引用（「〜」と言う時の前置き）","source":"Visa (Trump/Universities)"},{"word":"Perpetually","hint":"永久に、絶え間なく","source":"Visa (Trump/Universities)"},{"word":"Enrolling (enroll)","hint":"在籍する、登録する","source":"Visa (Trump/Universities)"},{"word":"Advocates (verb)","hint":"主張する、擁護する","source":"Visa (Trump/Universities)"},{"word":"Potentially","hint":"潜在的に、場合によっては","source":"Visa (Trump/Universities)"},{"word":"Circumstances","hint":"状況、事情","source":"Visa (Trump/Universities)"},{"word":"Qualify","hint":"資格を得る、適格である","source":"Visa (Trump/Universities)"},{"word":"Reacting (react)","hint":"反応する","source":"Visa (Trump/Universities)"},{"word":"Diversity","hint":"多様性","source":"Visa (Trump/Universities)"},{"word":"Worldview","hint":"世界観","source":"Visa (Trump/Universities)"},{"word":"Bureaucracy","hint":"官僚主義、面倒な手続き","source":"Visa (Trump/Universities)"},{"word":"Executive","hint":"幹部、執行部","source":"Visa (Trump/Universities)"},{"word":"Preeminence","hint":"優位性、圧倒的なトップであること","source":"Visa (Trump/Universities)"},{"word":"Shoot oneself in the foot","hint":"墓穴を掘る、自滅する","source":"Visa (Trump/Universities)"},{"word":"Broadly","hint":"広く、一般的に","source":"Visa (Trump/Universities)"},{"word":"Declines (noun)","hint":"減少、低下","source":"Visa (Trump/Universities)"},{"word":"Enrollment","hint":"入学、登録者数","source":"Visa (Trump/Universities)"},{"word":"Stepping up","hint":"強化する、促進する","source":"Visa (Trump/Universities)"},{"word":"Recruiting","hint":"勧誘、集めること","source":"Visa (Trump/Universities)"},{"word":"Lure","hint":"引きつける、誘い込む","source":"Visa (Trump/Universities)"},{"word":"Markup","hint":"上乗せ価格、割増料金","source":"Avocado Oil"},{"word":"Boast","hint":"誇る、〜であることを売りにする","source":"Avocado Oil"},{"word":"Puzzled","hint":"戸惑った、困惑した","source":"Avocado Oil"},{"word":"Purity","hint":"純度","source":"Avocado Oil"},{"word":"Slew","hint":"大量、多数","source":"Avocado Oil"},{"word":"Extract (verb)","hint":"抽出する","source":"Avocado Oil"},{"word":"Adulterate(d)","hint":"混ぜ物をする、品質を落とす","source":"Avocado Oil"},{"word":"Authentic","hint":"本物の","source":"Avocado Oil"},{"word":"Inconsistent with","hint":"〜と一致しない","source":"Avocado Oil"},{"word":"For comparison's sake","hint":"比較のために","source":"Avocado Oil"},{"word":"Findings","hint":"調査結果","source":"Avocado Oil"},{"word":"Disheartening","hint":"気落ちさせる、がっかりさせる","source":"Avocado Oil"},{"word":"Commercially bottled","hint":"商業的に瓶詰めされた","source":"Avocado Oil"},{"word":"Premium price","hint":"割増価格","source":"Avocado Oil"},{"word":"Yield (verb)","hint":"産出する、もたらす","source":"Avocado Oil"},{"word":"To begin with","hint":"そもそも、そもそもの話","source":"Avocado Oil"},{"word":"Refine","hint":"精製する","source":"Avocado Oil"},{"word":"Undercut","hint":"値段で出し抜く、安値で対抗する","source":"Avocado Oil"},{"word":"Cheater","hint":"不正をする者、いんちきをする者","source":"Avocado Oil"},{"word":"Health halo","hint":"健康的だという（過大な）印象・お墨付き","source":"Avocado Oil"},{"word":"Alternative","hint":"代替品、代替の","source":"Avocado Oil"},{"word":"Seed oil","hint":"種子油","source":"Avocado Oil"},{"word":"Incentive","hint":"動機、誘因","source":"Avocado Oil"},{"word":"Regulatory action","hint":"規制措置","source":"Avocado Oil"},{"word":"Nutrition","hint":"栄養（学）","source":"Avocado Oil"},{"word":"Browse","hint":"（店内などを）見て回る","source":"Avocado Oil"},{"word":"Infected (with)","hint":"感染した、（比喩的に）侵された","source":"Smithsonian Museum"},{"word":"Woke ideology","hint":"過度に政治的公正・社会正義に敏感なイデオロギー","source":"Smithsonian Museum"},{"word":"Subcommittee","hint":"小委員会","source":"Smithsonian Museum"},{"word":"Chair (person)","hint":"委員長","source":"Smithsonian Museum"},{"word":"Founded on","hint":"〜の上に築かれた","source":"Smithsonian Museum"},{"word":"Oppressor","hint":"抑圧する者","source":"Smithsonian Museum"},{"word":"Oppressed","hint":"抑圧される者","source":"Smithsonian Museum"},{"word":"Mirror (verb)","hint":"（それと）似ている、反映する","source":"Smithsonian Museum"},{"word":"Domestic Policy Council","hint":"国内政策会議","source":"Smithsonian Museum"},{"word":"Underemphasize","hint":"軽視する、十分に強調しない","source":"Smithsonian Museum"},{"word":"Founding Fathers","hint":"建国の父たち","source":"Smithsonian Museum"},{"word":"Anniversary","hint":"記念日、周年","source":"Smithsonian Museum"},{"word":"Hew to","hint":"（方針・立場などに）従う、沿う","source":"Smithsonian Museum"},{"word":"Govern","hint":"〜を規律する、統制する","source":"Smithsonian Museum"},{"word":"Scholarship","hint":"学問、学識","source":"Smithsonian Museum"},{"word":"Nonpartisanship","hint":"党派に偏らないこと、超党派性","source":"Smithsonian Museum"},{"word":"Take sides","hint":"どちらかの側につく","source":"Smithsonian Museum"},{"word":"Breadth","hint":"広がり、幅","source":"Smithsonian Museum"},{"word":"Rebuttal","hint":"反論","source":"Smithsonian Museum"},{"word":"Undermine","hint":"（信頼などを）損なう、弱める","source":"Smithsonian Museum"},{"word":"Trustworthiness","hint":"信頼性","source":"Smithsonian Museum"},{"word":"Reshape","hint":"作り変える、再構成する","source":"Smithsonian Museum"},{"word":"Narrative","hint":"物語、語り口","source":"Smithsonian Museum"},{"word":"Institution","hint":"施設、機関","source":"Smithsonian Museum"},{"word":"Allow","hint":"許す","source":"Smithsonian Museum"},{"word":"Capitol Hill","hint":"（アメリカ）連邦議会議事堂","source":"Smithsonian Museum"},{"word":"Adjunct instructor","hint":"非常勤講師","source":"Male Nurses"},{"word":"Mock","hint":"模擬の、実物そっくりの","source":"Male Nurses"},{"word":"Scrub","hint":"手洗い消毒、スクラブ（医療用の手洗い）","source":"Male Nurses"},{"word":"Elective","hint":"選択科目","source":"Male Nurses"},{"word":"Specialty","hint":"専門分野","source":"Male Nurses"},{"word":"Mannequin","hint":"マネキン、人体模型","source":"Male Nurses"},{"word":"Feature (verb)","hint":"（人・物を）目玉として取り上げる","source":"Male Nurses"},{"word":"Faculty","hint":"教員（全体）","source":"Male Nurses"},{"word":"Calling","hint":"天職、使命","source":"Male Nurses"},{"word":"Volunteer fireman","hint":"ボランティアの消防士","source":"Male Nurses"},{"word":"Quota","hint":"割り当て数、定員","source":"Male Nurses"},{"word":"Wake-up (a wake-up)","hint":"目覚めさせるもの、気づきのきっかけ","source":"Male Nurses"},{"word":"Stereotype","hint":"固定観念、ステレオタイプ","source":"Male Nurses"},{"word":"NICU (neonatal intensive care)","hint":"新生児集中治療室","source":"Male Nurses"},{"word":"Defensive (get defensive)","hint":"防御的になる、身構える","source":"Male Nurses"},{"word":"Breastfeeding","hint":"母乳育児","source":"Male Nurses"},{"word":"Skin-to-skin","hint":"肌と肌の触れ合い（カンガルーケア）","source":"Male Nurses"},{"word":"Inclusiveness","hint":"包摂性、受け入れる姿勢","source":"Male Nurses"},{"word":"Outcome","hint":"（治療などの）結果、転帰","source":"Male Nurses"},{"word":"Clinical rotation","hint":"臨床実習","source":"Male Nurses"},{"word":"Relieved","hint":"安心した、ほっとした","source":"Male Nurses"},{"word":"Bedside","hint":"病床のそば、ベッドサイド","source":"Male Nurses"},{"word":"Persist","hint":"根強く残る、存続する","source":"Male Nurses"},{"word":"Mistaken for","hint":"〜と間違えられて","source":"Male Nurses"},{"word":"Gender neutral","hint":"性別による区別のない","source":"Male Nurses"},{"word":"Designate","hint":"（正式に）指定する、認定する","source":"Male Nurses"},{"word":"Chant","hint":"（連呼する）掛け声、シュプレヒコール","source":"Nolan Wells"},{"word":"Somber","hint":"厳粛な、陰鬱な","source":"Nolan Wells"},{"word":"By all accounts","hint":"誰に聞いても、あらゆる話を総合すると","source":"Nolan Wells"},{"word":"Officiate","hint":"（式などを）執り行う","source":"Nolan Wells"},{"word":"Reward","hint":"懸賞金、報奨金","source":"Nolan Wells"},{"word":"Backtrack","hint":"話を戻す、後戻りする","source":"Nolan Wells"},{"word":"Spark (verb)","hint":"（議論などを）引き起こす","source":"Nolan Wells"},{"word":"Racial element","hint":"人種的な要素","source":"Nolan Wells"},{"word":"Foul play","hint":"犯罪行為、不正な行為","source":"Nolan Wells"},{"word":"Speculation","hint":"憶測","source":"Nolan Wells"},{"word":"Pending","hint":"保留中の、係属中の","source":"Nolan Wells"},{"word":"Medical examiner","hint":"検視官","source":"Nolan Wells"},{"word":"Toxicology report","hint":"毒物検査報告書","source":"Nolan Wells"},{"word":"Autopsy","hint":"司法解剖、検死解剖","source":"Nolan Wells"},{"word":"Independent (adj)","hint":"独立した、第三者による","source":"Nolan Wells"},{"word":"Cellphone","hint":"携帯電話","source":"Nolan Wells"},{"word":"Track back to","hint":"〜までたどる","source":"Nolan Wells"},{"word":"Digital evidence","hint":"デジタル証拠","source":"Nolan Wells"},{"word":"Figure out","hint":"解明する、理解する","source":"Nolan Wells"},{"word":"Civil rights attorney","hint":"公民権派弁護士","source":"Nolan Wells"},{"word":"Draw attention","hint":"注目を集める","source":"Nolan Wells"},{"word":"Investigation","hint":"捜査","source":"Nolan Wells"},{"word":"Law enforcement","hint":"法執行機関、警察","source":"Nolan Wells"},{"word":"Unanswered","hint":"未解決の、答えの出ていない","source":"Nolan Wells"},{"word":"Involved in (be involved in)","hint":"〜に関与している","source":"Nolan Wells"},{"word":"Delete","hint":"削除する","source":"Nolan Wells"},{"word":"Benefit concert","hint":"チャリティーコンサート","source":"Marx Brothers"},{"word":"Archivist","hint":"アーカイブ専門家、資料保管の専門家","source":"Marx Brothers"},{"word":"Restoration","hint":"修復","source":"Marx Brothers"},{"word":"Longtime","hint":"長年の","source":"Marx Brothers"},{"word":"Tape","hint":"テープ、録音テープ","source":"Marx Brothers"},{"word":"Accidentally","hint":"偶然に","source":"Marx Brothers"},{"word":"Extensive","hint":"大規模な、広範囲の","source":"Marx Brothers"},{"word":"Instrument","hint":"楽器","source":"Marx Brothers"},{"word":"Narrate","hint":"ナレーションをする、語る","source":"Marx Brothers"},{"word":"Meadow","hint":"草原、牧草地","source":"Marx Brothers"},{"word":"Escape","hint":"逃げる","source":"Marx Brothers"},{"word":"Libretto","hint":"台本、リブレット（オペラなどの）","source":"Marx Brothers"},{"word":"Outspoken","hint":"率直にものを言う","source":"Marx Brothers"},{"word":"Co-write","hint":"共作する","source":"Marx Brothers"},{"word":"Primary (election)","hint":"予備選挙","source":"Marx Brothers"},{"word":"Heat up","hint":"（状況が）激化する、盛り上がる","source":"Marx Brothers"},{"word":"Triumphant","hint":"勝利の、意気揚々とした","source":"Marx Brothers"},{"word":"Procession","hint":"行進","source":"Marx Brothers"},{"word":"Hunter","hint":"狩人","source":"Marx Brothers"},{"word":"Grateful","hint":"感謝している","source":"Marx Brothers"},{"word":"Retire","hint":"引退する","source":"Marx Brothers"},{"word":"Lose sight of","hint":"〜を見失う","source":"Marx Brothers"},{"word":"Restore (verb)","hint":"修復する","source":"Marx Brothers"},{"word":"Benefit (adj., e.g. benefit concert)","hint":"慈善の","source":"Marx Brothers"},{"word":"Whistle","hint":"口笛","source":"Marx Brothers"},{"word":"Applause","hint":"拍手","source":"Marx Brothers"},{"word":"Disclose","hint":"公表する、明らかにする","source":"Ebola Outbreak"},{"word":"Grief","hint":"悲しみ、悲嘆","source":"Ebola Outbreak"},{"word":"Epidemic","hint":"（感染症の）流行","source":"Ebola Outbreak"},{"word":"Outbreak","hint":"（病気などの）発生、アウトブレイク","source":"Ebola Outbreak"},{"word":"Incident manager","hint":"緊急対応責任者","source":"Ebola Outbreak"},{"word":"Implement","hint":"実行する、実施する","source":"Ebola Outbreak"},{"word":"In-depth","hint":"徹底的な、詳細な","source":"Ebola Outbreak"},{"word":"Contact (noun)","hint":"接触者","source":"Ebola Outbreak"},{"word":"Pillar","hint":"柱、基盤","source":"Ebola Outbreak"},{"word":"Epicenter","hint":"震源地、中心地","source":"Ebola Outbreak"},{"word":"Confirmed case","hint":"確定症例","source":"Ebola Outbreak"},{"word":"Passable","hint":"（道が）通行可能な","source":"Ebola Outbreak"},{"word":"Armed group","hint":"武装勢力","source":"Ebola Outbreak"},{"word":"Wage war","hint":"戦争を行う","source":"Ebola Outbreak"},{"word":"Displacement camp","hint":"避難民キャンプ","source":"Ebola Outbreak"},{"word":"Access to","hint":"〜へのアクセス、利用機会","source":"Ebola Outbreak"},{"word":"Symptom","hint":"症状","source":"Ebola Outbreak"},{"word":"Resemble","hint":"〜に似ている","source":"Ebola Outbreak"},{"word":"Malaria","hint":"マラリア","source":"Ebola Outbreak"},{"word":"Trading hub","hint":"交易拠点","source":"Ebola Outbreak"},{"word":"Downstream","hint":"下流に","source":"Ebola Outbreak"},{"word":"Panic","hint":"パニック、恐慌","source":"Ebola Outbreak"},{"word":"Case load","hint":"症例数","source":"Ebola Outbreak"},{"word":"Sicken","hint":"病気になる","source":"Ebola Outbreak"},{"word":"Seek treatment","hint":"治療を求める","source":"Ebola Outbreak"},{"word":"Catch up","hint":"追いつく","source":"Ebola Outbreak"},{"word":"Census","hint":"（動植物の）個体数調査","source":"Catfish Cancer"},{"word":"Startle","hint":"驚かせる","source":"Catfish Cancer"},{"word":"Blotch","hint":"（皮膚などの）斑点、染み","source":"Catfish Cancer"},{"word":"Melanoma","hint":"メラノーマ、悪性黒色腫","source":"Catfish Cancer"},{"word":"Leech (verb)","hint":"（液体などが）染み出す、しみ込む","source":"Catfish Cancer"},{"word":"Pollutant","hint":"汚染物質","source":"Catfish Cancer"},{"word":"Genome sequence","hint":"ゲノム配列","source":"Catfish Cancer"},{"word":"Erupt","hint":"（急に）発生する、噴出する","source":"Catfish Cancer"},{"word":"Awry (go awry)","hint":"おかしくなる、うまくいかなくなる","source":"Catfish Cancer"},{"word":"Host (biology)","hint":"宿主","source":"Catfish Cancer"},{"word":"Clone","hint":"クローン","source":"Catfish Cancer"},{"word":"Infectious agent","hint":"感染性病原体","source":"Catfish Cancer"},{"word":"Aquatic environment","hint":"水中環境","source":"Catfish Cancer"},{"word":"Transmissible","hint":"感染性の、伝染しうる","source":"Catfish Cancer"},{"word":"Mollusk","hint":"軟体動物","source":"Catfish Cancer"},{"word":"Aggregate (verb)","hint":"集まる、群がる","source":"Catfish Cancer"},{"word":"Spine","hint":"とげ","source":"Catfish Cancer"},{"word":"Avenue","hint":"（比喩的に）道、手段、経路","source":"Catfish Cancer"},{"word":"Invade","hint":"侵入する","source":"Catfish Cancer"},{"word":"Evolutionary biologist","hint":"進化生物学者","source":"Catfish Cancer"},{"word":"Dead end","hint":"行き止まり","source":"Catfish Cancer"},{"word":"Advantageous","hint":"有利な","source":"Catfish Cancer"},{"word":"Migrate","hint":"移動する","source":"Catfish Cancer"},{"word":"Metastasize","hint":"転移する","source":"Catfish Cancer"},{"word":"Metastasis (pl. metastases)","hint":"転移（がんの）","source":"Catfish Cancer"},{"word":"A ways off","hint":"まだ先で、かなり先で","source":"Catfish Cancer"},{"word":"Box office","hint":"興行収入","source":"The Odyssey"},{"word":"Blockbuster","hint":"大ヒット作","source":"The Odyssey"},{"word":"Epic (poem)","hint":"叙事詩","source":"The Odyssey"},{"word":"Adaptation","hint":"翻案、脚色作品","source":"The Odyssey"},{"word":"Miniseries","hint":"ミニシリーズ","source":"The Odyssey"},{"word":"Engaged (keep someone engaged)","hint":"興味を引きつけられた状態","source":"The Odyssey"},{"word":"Dated","hint":"時代遅れの、古臭い","source":"The Odyssey"},{"word":"Gratitude","hint":"感謝","source":"The Odyssey"},{"word":"On behalf of","hint":"〜を代表して","source":"The Odyssey"},{"word":"Mortal","hint":"人間、死すべき存在","source":"The Odyssey"},{"word":"Hospitality","hint":"もてなし、歓待","source":"The Odyssey"},{"word":"Equal (noun)","hint":"対等な者","source":"The Odyssey"},{"word":"In awe","hint":"畏敬の念を抱いて、圧倒されて","source":"The Odyssey"},{"word":"Cheesy","hint":"安っぽい、ベタな","source":"The Odyssey"},{"word":"Toolbox","hint":"道具箱","source":"The Odyssey"},{"word":"Multilingual learner","hint":"複数言語を学ぶ生徒","source":"The Odyssey"},{"word":"Linguistically diverse","hint":"言語的に多様な","source":"The Odyssey"},{"word":"Suitor","hint":"求婚者","source":"The Odyssey"},{"word":"Unit (of a course)","hint":"単元","source":"The Odyssey"},{"word":"Immigrant","hint":"移民","source":"The Odyssey"},{"word":"Foundations of storytelling","hint":"物語の基礎","source":"The Odyssey"},{"word":"Perspective","hint":"視点、観点","source":"The Odyssey"},{"word":"Take convincing","hint":"説得が必要である","source":"The Odyssey"},{"word":"Tall order","hint":"難題、無理な注文","source":"The Odyssey"},{"word":"Stretch out","hint":"引き延ばす、長期間にわたって行う","source":"The Odyssey"},{"word":"Head out into the world","hint":"世界へ旅立つ","source":"The Odyssey"},{"word":"Unsung hero","hint":"縁の下の力持ち、隠れた英雄","source":"My Unsung Hero"},{"word":"Impression (leave an impression)","hint":"印象（を残す）","source":"My Unsung Hero"},{"word":"Stutter","hint":"吃音、どもる","source":"My Unsung Hero"},{"word":"Peer","hint":"同級生、仲間","source":"My Unsung Hero"},{"word":"Excuse (be excused from)","hint":"（義務などを）免除される","source":"My Unsung Hero"},{"word":"Recite","hint":"暗唱する","source":"My Unsung Hero"},{"word":"Minor (adj.)","hint":"些細な","source":"My Unsung Hero"},{"word":"Empowering","hint":"力を与えるような","source":"My Unsung Hero"},{"word":"Corporate trainer","hint":"企業研修講師","source":"My Unsung Hero"},{"word":"Embarrass","hint":"恥ずかしい思いをさせる","source":"My Unsung Hero"},{"word":"Life-changing","hint":"人生を変えるような","source":"My Unsung Hero"},{"word":"Kindness","hint":"優しさ、親切","source":"My Unsung Hero"},{"word":"Air (be aired)","hint":"（番組などが）放送される","source":"My Unsung Hero"},{"word":"Reach out to","hint":"〜に連絡を取る","source":"My Unsung Hero"},{"word":"Voice memo","hint":"ボイスメモ","source":"My Unsung Hero"},{"word":"Podcast","hint":"ポッドキャスト","source":"My Unsung Hero"},{"word":"Big whoop","hint":"たいしたことじゃない（口語）","source":"My Unsung Hero"},{"word":"Get up there","hint":"（人前に）立つ、登壇する","source":"My Unsung Hero"},{"word":"One-on-one","hint":"一対一で","source":"My Unsung Hero"},{"word":"Lasting","hint":"長く続く、永続的な","source":"My Unsung Hero"},{"word":"Make a point to do","hint":"（意識して）必ず〜するようにする","source":"Idioms & Set Phrases"},{"word":"Open up to","hint":"〜に心を開く","source":"Idioms & Set Phrases"},{"word":"Find oneself doing","hint":"気づけば〜している","source":"Idioms & Set Phrases"},{"word":"Have got to (got to)","hint":"〜しなければならない（口語）","source":"Idioms & Set Phrases"},{"word":"If you will","hint":"いわば、言うなれば","source":"Idioms & Set Phrases"},{"word":"Sort of","hint":"なんというか、ある意味","source":"Idioms & Set Phrases"},{"word":"Have a moment","hint":"（一時的に）注目を集める、話題になる","source":"Idioms & Set Phrases"},{"word":"On record","hint":"記録が残っている中で、史上","source":"Idioms & Set Phrases"},{"word":"That's not the case","hint":"そうではない","source":"Idioms & Set Phrases"},{"word":"A life of its own","hint":"それ自体の生命・独立した存在","source":"Idioms & Set Phrases"},{"word":"What S calls X","hint":"Sがいわゆる X と呼ぶもの","source":"Idioms & Set Phrases"},{"word":"There is no way (that) S V","hint":"〜するなんてあり得ない","source":"Idioms & Set Phrases"}];
-const STORAGE_KEY = 'npr-vocab-flashcards-progress-v1';
+const WORDS = [{"word":"limit","general":"制限する、限定する","example":"The doctor told him to limit his salt intake.","example_ja":"医者は彼に塩分摂取を制限するよう伝えた。","source":"Visa (Trump/Universities)"},{"word":"implication","general":"①影響、結果（通例 implications と複数形）②ほのめかし、含み、含意③（犯罪などへの）関与","example":"The decision could have serious implications for small businesses.","example_ja":"その決定は中小企業に深刻な影響を及ぼしかねない。","source":"Visa (Trump/Universities)"},{"word":"correspondent","general":"特派員、通信員","example":"Our correspondent in Tokyo filed the story this morning.","example_ja":"東京の特派員が今朝この記事を送ってきた。","source":"Visa (Trump/Universities)"},{"word":"historically","general":"歴史的に見て、昔から","example":"Historically, the region has relied on farming.","example_ja":"歴史的に見て、この地域は農業に頼ってきた。","source":"Visa (Trump/Universities)"},{"word":"academic","general":"学業の、学問上の","example":"She has a strong academic record.","example_ja":"彼女は優れた学業成績を持っている。","source":"Visa (Trump/Universities)"},{"word":"program","general":"①（教育・活動の）プログラム、課程②（テレビ・ラジオの）番組③計画する（動詞）","example":"He's enrolled in a two-year training program.","example_ja":"彼は2年間の研修プログラムに入っている。","source":"Visa (Trump/Universities)"},{"word":"fixed","general":"固定された、決まった","example":"We pay a fixed amount every month.","example_ja":"私たちは毎月決まった額を支払っている。","source":"Visa (Trump/Universities)"},{"word":"period","general":"①期間、時期②（文の終わりの）ピリオド③生理、月経（口語）","example":"He worked there for a period of five years.","example_ja":"彼は5年間そこで働いた。","source":"Visa (Trump/Universities)"},{"word":"apply for","general":"〜に申し込む、応募する","example":"She applied for a scholarship.","example_ja":"彼女は奨学金に応募した。","source":"Visa (Trump/Universities)"},{"word":"formal","general":"正式な、形式ばった","example":"He sent a formal apology to the company.","example_ja":"彼はその会社に正式な謝罪文を送った。","source":"Visa (Trump/Universities)"},{"word":"extension","general":"延長、拡張","example":"They asked for a one-week extension on the deadline.","example_ja":"彼らは締め切りの1週間の延長を求めた。","source":"Visa (Trump/Universities)"},{"word":"fee","general":"手数料、料金","example":"The application fee is $50.","example_ja":"申請手数料は50ドルだ。","source":"Visa (Trump/Universities)"},{"word":"impact","general":"①（名詞）影響、衝撃②〜に影響を与える（動詞）","example":"The new policy will impact thousands of families.","example_ja":"その新しい政策は何千もの家庭に影響を与えるだろう。","source":"Visa (Trump/Universities)"},{"word":"medical","general":"医学の、医療の","example":"She needs urgent medical attention.","example_ja":"彼女は緊急の医療処置を必要としている。","source":"Visa (Trump/Universities)"},{"word":"PhD","general":"博士号。Doctor of Philosophy（哲学博士）の略で、文系・理系を問わず最高位の学位を指す","example":"He earned his PhD in physics last year.","example_ja":"彼は昨年、物理学の博士号を取得した。","source":"Visa (Trump/Universities)"},{"word":"restriction","general":"制限、規制","example":"There are strict restrictions on fishing in this area.","example_ja":"この地域では漁業に厳しい規制がある。","source":"Visa (Trump/Universities)"},{"word":"major","general":"①専攻科目（名詞）②主要な、重大な（形容詞）③陸軍少佐（名詞、階級）","example":"Her major is computer science.","example_ja":"彼女の専攻はコンピューターサイエンスだ。","source":"Visa (Trump/Universities)"},{"word":"administration","general":"①政権、行政（府）②管理、運営","example":"The current administration has raised taxes twice.","example_ja":"現政権は2度増税した。","source":"Visa (Trump/Universities)"},{"word":"crackdown","general":"厳重な取り締まり","example":"Police launched a crackdown on illegal parking.","example_ja":"警察は違法駐車の取り締まりを開始した。","source":"Visa (Trump/Universities)"},{"word":"immigration","general":"移民、出入国管理","example":"Immigration rules have become stricter in recent years.","example_ja":"近年、移民に関する規則は厳しくなっている。","source":"Visa (Trump/Universities)"},{"word":"tackle","general":"（問題に）取り組む、対処する","example":"The city needs to tackle its traffic problem.","example_ja":"その市は交通問題に取り組む必要がある。","source":"Visa (Trump/Universities)"},{"word":"abuse","general":"①悪用、濫用（名詞）②虐待する、悪用する（動詞）","example":"The report criticized the abuse of public funds.","example_ja":"その報告書は公金の濫用を批判した。","source":"Visa (Trump/Universities)"},{"word":"Department of Homeland Security","general":"アメリカ国土安全保障省（DHS）。テロ対策や出入国管理などを担う省庁","example":"The Department of Homeland Security announced new border rules.","example_ja":"国土安全保障省は新たな国境規則を発表した。","source":"Visa (Trump/Universities)"},{"word":"strengthen","general":"強化する","example":"Regular exercise helps strengthen your heart.","example_ja":"定期的な運動は心臓を強くするのに役立つ。","source":"Visa (Trump/Universities)"},{"word":"vet","general":"①（人物などを）審査する、身元調査する（動詞）②獣医（名詞、veterinarianの略）","example":"All new employees are carefully vetted.","example_ja":"新入社員は全員、慎重に審査される。","source":"Visa (Trump/Universities)"},{"word":"quote","general":"①引用する（動詞）②見積もりを出す（動詞）③引用句（名詞）","example":"She quoted a line from her favorite novel.","example_ja":"彼女はお気に入りの小説の一節を引用した。","source":"Visa (Trump/Universities)"},{"word":"perpetually","general":"永久に、絶え間なく","example":"The office seems to be perpetually understaffed.","example_ja":"そのオフィスは常に人手不足のようだ。","source":"Visa (Trump/Universities)"},{"word":"enroll","general":"（学校などに）入学する、登録する","example":"He enrolled in a local college last fall.","example_ja":"彼は去年の秋、地元の大学に入学した。","source":"Visa (Trump/Universities)"},{"word":"advocate","general":"①（〜を）主張する、擁護する（動詞）②支持者、擁護者（名詞）","example":"She advocates for stronger environmental laws.","example_ja":"彼女はより強力な環境法を主張している。","source":"Visa (Trump/Universities)"},{"word":"potentially","general":"潜在的に、場合によっては","example":"The chemical is potentially dangerous.","example_ja":"その化学物質は場合によっては危険だ。","source":"Visa (Trump/Universities)"},{"word":"circumstance","general":"状況、事情（通例 circumstances と複数形で使われることが多い）","example":"Under normal circumstances, the flight takes six hours.","example_ja":"通常の状況では、その便は6時間かかる。","source":"Visa (Trump/Universities)"},{"word":"qualify","general":"資格を得る、条件を満たす","example":"You must be over 18 to qualify for the program.","example_ja":"そのプログラムの対象となるには18歳以上でなければならない。","source":"Visa (Trump/Universities)"},{"word":"react","general":"反応する","example":"How did your parents react to the news?","example_ja":"ご両親はその知らせにどう反応しましたか？","source":"Visa (Trump/Universities)"},{"word":"diversity","general":"多様性","example":"The company values diversity in its workforce.","example_ja":"その会社は従業員の多様性を重視している。","source":"Visa (Trump/Universities)"},{"word":"worldview","general":"世界観","example":"Travel broadened her worldview.","example_ja":"旅行は彼女の世界観を広げた。","source":"Visa (Trump/Universities)"},{"word":"bureaucracy","general":"官僚主義、面倒な手続き","example":"It took months to get through the bureaucracy.","example_ja":"その面倒な手続きを終えるのに数か月かかった。","source":"Visa (Trump/Universities)"},{"word":"executive","general":"①幹部、重役（名詞）②行政の、実行の（形容詞）","example":"She's a senior executive at a tech company.","example_ja":"彼女はテック企業の幹部だ。","source":"Visa (Trump/Universities)"},{"word":"preeminence","general":"優位性、卓越性","example":"The university is known for its preeminence in medicine.","example_ja":"その大学は医学における卓越性で知られている。","source":"Visa (Trump/Universities)"},{"word":"shoot oneself in the foot","general":"自分の足を撃つ＝自ら墓穴を掘る、自滅的な行動をとる（自分を傷つける動作から生まれた比喩表現）","example":"By ignoring customer complaints, the company shot itself in the foot.","example_ja":"顧客の苦情を無視したことで、その会社は自ら墓穴を掘った。","source":"Visa (Trump/Universities)"},{"word":"broadly","general":"広く、一般的に","example":"Broadly speaking, the plan was well received.","example_ja":"大まかに言うと、その計画はおおむね好評だった。","source":"Visa (Trump/Universities)"},{"word":"decline","general":"①減少する、低下する（動詞）②断る、辞退する（動詞）③減少（名詞）","example":"Sales have declined sharply this year.","example_ja":"今年、売上は急激に減少した。","source":"Visa (Trump/Universities)"},{"word":"enrollment","general":"入学、登録者数","example":"School enrollment has dropped in recent years.","example_ja":"近年、学校の入学者数は減少している。","source":"Visa (Trump/Universities)"},{"word":"step up","general":"（取り組みなどを）強化する。もともと『一段上へ踏み出す』という動作から『力を入れる』の意味に","example":"The team needs to step up its efforts before the deadline.","example_ja":"チームは締め切り前に取り組みを強化する必要がある。","source":"Visa (Trump/Universities)"},{"word":"recruit","general":"①（人を）勧誘する、募集する（動詞）②新兵、新入り（名詞）","example":"The company is recruiting new engineers.","example_ja":"その会社は新しいエンジニアを募集している。","source":"Visa (Trump/Universities)"},{"word":"lure","general":"①引きつける、誘い込む（動詞）②魅力、誘惑（名詞）","example":"Cheap flights lure many tourists to the island.","example_ja":"格安航空券が多くの観光客をその島へ誘い込む。","source":"Visa (Trump/Universities)"},{"word":"markup","general":"上乗せ価格、値上げ幅","example":"The store adds a 40% markup on imported goods.","example_ja":"その店は輸入品に40%の上乗せ価格を加えている。","source":"Avocado Oil"},{"word":"boast","general":"誇る、自慢する","example":"The hotel boasts a stunning ocean view.","example_ja":"そのホテルは見事な海の眺めを誇っている。","source":"Avocado Oil"},{"word":"puzzled","general":"戸惑った、困惑した","example":"She looked puzzled by the question.","example_ja":"彼女はその質問に戸惑った様子だった。","source":"Avocado Oil"},{"word":"purity","general":"純度、純粋さ","example":"The lab tested the purity of the gold.","example_ja":"研究室はその金の純度を検査した。","source":"Avocado Oil"},{"word":"slew","general":"大量、多数","example":"The company released a slew of new products.","example_ja":"その会社は大量の新製品を発売した。","source":"Avocado Oil"},{"word":"extract","general":"①抽出する（動詞）②抜粋、エキス（名詞）","example":"The machine extracts oil from the seeds.","example_ja":"その機械は種子から油を抽出する。","source":"Avocado Oil"},{"word":"adulterate","general":"混ぜ物をする、品質を落とす","example":"It's illegal to adulterate food with harmful substances.","example_ja":"食品に有害物質で混ぜ物をすることは違法だ。","source":"Avocado Oil"},{"word":"authentic","general":"本物の","example":"This restaurant serves authentic Italian pasta.","example_ja":"このレストランは本物のイタリアンパスタを出す。","source":"Avocado Oil"},{"word":"inconsistent with","general":"〜と一致しない","example":"His story is inconsistent with what witnesses said.","example_ja":"彼の話は目撃者の証言と一致しない。","source":"Avocado Oil"},{"word":"for comparison's sake","general":"比較のために","example":"For comparison's sake, let's look at last year's numbers too.","example_ja":"比較のために、去年の数字も見てみましょう。","source":"Avocado Oil"},{"word":"finding","general":"（調査・研究の）結果、判明した事実。通例 findings と複数形で使われる","example":"The study's findings surprised many scientists.","example_ja":"その研究結果は多くの科学者を驚かせた。","source":"Avocado Oil"},{"word":"disheartening","general":"気落ちさせる、がっかりさせる","example":"It's disheartening to see so much food wasted.","example_ja":"これほど多くの食品が無駄になるのを見るとがっかりする。","source":"Avocado Oil"},{"word":"commercially bottled","general":"商業的に瓶詰めされた","example":"Commercially bottled water often costs more than tap water.","example_ja":"市販の瓶入り水は水道水よりも高いことが多い。","source":"Avocado Oil"},{"word":"premium price","general":"割増価格","example":"Customers pay a premium price for organic vegetables.","example_ja":"客は有機野菜に割増価格を払う。","source":"Avocado Oil"},{"word":"yield","general":"①産出する、もたらす（動詞）②譲る、屈する（動詞）③収穫高（名詞）","example":"The farm yields about ten tons of wheat a year.","example_ja":"その農場は年間約10トンの小麦を産出する。","source":"Avocado Oil"},{"word":"to begin with","general":"そもそも、そもそもの話","example":"To begin with, the plan was never realistic.","example_ja":"そもそも、その計画は現実的ではなかった。","source":"Avocado Oil"},{"word":"refine","general":"①精製する②洗練させる","example":"The factory refines crude oil into gasoline.","example_ja":"その工場は原油を精製してガソリンにする。","source":"Avocado Oil"},{"word":"undercut","general":"値段で出し抜く、安値で対抗する","example":"The new store undercut all its local competitors.","example_ja":"その新しい店は地元の競合他社をすべて安値で出し抜いた。","source":"Avocado Oil"},{"word":"cheater","general":"不正をする者","example":"The teacher caught a cheater during the exam.","example_ja":"教師は試験中に不正をする生徒を見つけた。","source":"Avocado Oil"},{"word":"health halo","general":"健康的だという（過大な）印象。halo（後光・光輪）が比喩で、実際以上に『健康に良い』というオーラをまとって見える現象","example":"Granola bars often have a health halo they don't deserve.","example_ja":"グラノーラバーには、実態以上の健康的なイメージがついていることが多い。","source":"Avocado Oil"},{"word":"alternative","general":"代替品、代替の","example":"Soy milk is a popular alternative to dairy.","example_ja":"豆乳は乳製品の代替として人気がある。","source":"Avocado Oil"},{"word":"seed oil","general":"種子油","example":"Canola oil is a common type of seed oil.","example_ja":"キャノーラ油はよくある種子油の一種だ。","source":"Avocado Oil"},{"word":"incentive","general":"動機、誘因、奨励金","example":"The government offers tax incentives for solar panels.","example_ja":"政府は太陽光パネルに対する税制優遇を提供している。","source":"Avocado Oil"},{"word":"regulatory action","general":"規制措置","example":"The agency may take regulatory action against the company.","example_ja":"その機関はその会社に規制措置を取るかもしれない。","source":"Avocado Oil"},{"word":"nutrition","general":"栄養（学）","example":"Good nutrition is essential for children's growth.","example_ja":"良い栄養は子供の成長に不可欠だ。","source":"Avocado Oil"},{"word":"browse","general":"①（店内などを）見て回る②（インターネットを）閲覧する","example":"She likes to browse bookstores on weekends.","example_ja":"彼女は週末に本屋を見て回るのが好きだ。","source":"Avocado Oil"},{"word":"be infected with","general":"〜に感染している、〜に冒されている。もとは病気の感染を表すが、比喩的に『悪い考えに染まっている』の意味でも使う","example":"The whole team seems infected with excitement before the game.","example_ja":"試合前、チーム全体が興奮に浮き足立っているようだ。","source":"Smithsonian Museum"},{"word":"woke ideology","general":"過度に政治的公正・社会正義に敏感なイデオロギー。wokeはもともと『（人種差別など社会の不正義に）目覚めている』という俗語だったが、近年は批判的な意味で使われることが多い","example":"Critics accused the show of pushing a woke ideology.","example_ja":"批評家たちはその番組が過度に政治的公正なイデオロギーを押し付けていると批判した。","source":"Smithsonian Museum"},{"word":"subcommittee","general":"小委員会","example":"The bill was reviewed by a Senate subcommittee.","example_ja":"その法案は上院の小委員会で審査された。","source":"Smithsonian Museum"},{"word":"chair","general":"①委員長、議長（名詞）②椅子（名詞）③司会を務める（動詞）","example":"She will chair tomorrow's meeting.","example_ja":"彼女が明日の会議の司会を務める。","source":"Smithsonian Museum"},{"word":"be founded on","general":"〜の上に築かれている、〜に基づいている","example":"Their friendship is founded on mutual trust.","example_ja":"彼らの友情は相互の信頼の上に築かれている。","source":"Smithsonian Museum"},{"word":"oppressor","general":"抑圧する者","example":"The novel tells the story from the oppressor's point of view.","example_ja":"その小説は抑圧する側の視点から語られる。","source":"Smithsonian Museum"},{"word":"oppressed","general":"抑圧される者","example":"The charity supports oppressed communities worldwide.","example_ja":"その慈善団体は世界中の抑圧された地域社会を支援している。","source":"Smithsonian Museum"},{"word":"mirror","general":"①鏡（名詞）②〜に似ている、反映する（動詞）","example":"His views mirror those of his father.","example_ja":"彼の考えは父親の考えを反映している。","source":"Smithsonian Museum"},{"word":"Domestic Policy Council","general":"（米大統領直属の）国内政策会議","example":"The Domestic Policy Council advises the president on domestic issues.","example_ja":"国内政策会議は国内問題について大統領に助言する。","source":"Smithsonian Museum"},{"word":"underemphasize","general":"軽視する、十分に強調しない","example":"The textbook tends to underemphasize local history.","example_ja":"その教科書は地元の歴史を軽視しがちだ。","source":"Smithsonian Museum"},{"word":"Founding Fathers","general":"アメリカ建国の父たち","example":"The Founding Fathers drafted the Constitution in 1787.","example_ja":"建国の父たちは1787年に憲法を起草した。","source":"Smithsonian Museum"},{"word":"anniversary","general":"記念日、周年","example":"They celebrated their tenth wedding anniversary.","example_ja":"彼らは結婚10周年を祝った。","source":"Smithsonian Museum"},{"word":"hew to","general":"（方針・立場などに）忠実に従う","example":"The new manager hews closely to company policy.","example_ja":"新しいマネージャーは会社の方針に忠実に従っている。","source":"Smithsonian Museum"},{"word":"govern","general":"〜を規律する、統制する、統治する","example":"Strict rules govern how the data can be used.","example_ja":"厳しい規則がそのデータの使用方法を規律している。","source":"Smithsonian Museum"},{"word":"scholarship","general":"①学問、学識②奨学金","example":"He received a scholarship to study abroad.","example_ja":"彼は留学するための奨学金を受けた。","source":"Smithsonian Museum"},{"word":"nonpartisanship","general":"党派に偏らないこと、超党派性","example":"The judge is respected for her nonpartisanship.","example_ja":"その判事は超党派の姿勢で尊敬されている。","source":"Smithsonian Museum"},{"word":"take sides","general":"どちらかの側につく","example":"As a mediator, she refused to take sides.","example_ja":"調停者として、彼女はどちらの側にもつくことを拒んだ。","source":"Smithsonian Museum"},{"word":"breadth","general":"広がり、幅","example":"The exhibit covers the breadth of the artist's career.","example_ja":"その展示はその芸術家のキャリアの幅広さを網羅している。","source":"Smithsonian Museum"},{"word":"rebuttal","general":"反論","example":"The lawyer offered a strong rebuttal to the accusation.","example_ja":"その弁護士はその告発に強く反論した。","source":"Smithsonian Museum"},{"word":"undermine","general":"（信頼などを）損なう、弱める","example":"Constant criticism can undermine a child's confidence.","example_ja":"絶え間ない批判は子供の自信を損ないかねない。","source":"Smithsonian Museum"},{"word":"trustworthiness","general":"信頼性","example":"The witness's trustworthiness was questioned in court.","example_ja":"その証人の信頼性は法廷で疑問視された。","source":"Smithsonian Museum"},{"word":"reshape","general":"作り変える、再構成する","example":"The internet has reshaped how we communicate.","example_ja":"インターネットは私たちのコミュニケーションの仕方を作り変えた。","source":"Smithsonian Museum"},{"word":"narrative","general":"物語、語り口","example":"The film offers a powerful narrative about survival.","example_ja":"その映画は生存についての力強い物語を提供している。","source":"Smithsonian Museum"},{"word":"institution","general":"①施設、機関②制度、慣習","example":"The university is one of the oldest institutions in the country.","example_ja":"その大学は国内で最も古い機関の一つだ。","source":"Smithsonian Museum"},{"word":"allow","general":"許す","example":"The rules don't allow pets in the building.","example_ja":"その規則は建物内でのペットの飼育を許していない。","source":"Smithsonian Museum"},{"word":"Capitol Hill","general":"アメリカ連邦議会議事堂","example":"The senator spent the day on Capitol Hill.","example_ja":"その上院議員は一日を連邦議会議事堂で過ごした。","source":"Smithsonian Museum"},{"word":"adjunct instructor","general":"非常勤講師","example":"She works as an adjunct instructor at two colleges.","example_ja":"彼女は2つの大学で非常勤講師として働いている。","source":"Male Nurses"},{"word":"mock","general":"①模擬の、実物そっくりの（形容詞）②あざける、ばかにする（動詞）","example":"Students took part in a mock interview.","example_ja":"学生たちは模擬面接に参加した。","source":"Male Nurses"},{"word":"scrub","general":"①ごしごし洗う（動詞）②手洗い消毒（名詞）③低木地（名詞）","example":"Surgeons scrub their hands before every operation.","example_ja":"外科医は毎回の手術の前に手を念入りに洗う。","source":"Male Nurses"},{"word":"elective","general":"①選択科目（名詞）②選択の（形容詞）","example":"She's taking an elective in photography this semester.","example_ja":"彼女は今学期、写真の選択科目を取っている。","source":"Male Nurses"},{"word":"specialty","general":"専門分野","example":"Cardiology is his medical specialty.","example_ja":"循環器学は彼の医学の専門分野だ。","source":"Male Nurses"},{"word":"mannequin","general":"マネキン、人体模型","example":"The students practiced CPR on a mannequin.","example_ja":"学生たちはマネキンで心肺蘇生法を練習した。","source":"Male Nurses"},{"word":"feature","general":"①特集、呼び物（名詞）②特徴（名詞）③（人・物を）目玉として取り上げる（動詞）","example":"The magazine ran a feature on local artists.","example_ja":"その雑誌は地元アーティストの特集を組んだ。","source":"Male Nurses"},{"word":"faculty","general":"①教員（全体）②能力、機能","example":"The faculty voted to change the curriculum.","example_ja":"教員たちはカリキュラム変更に投票した。","source":"Male Nurses"},{"word":"calling","general":"天職、使命（神に呼ばれた、というイメージの語）","example":"Teaching is more than a job to her; it's a calling.","example_ja":"教えることは彼女にとって単なる仕事以上のもの、天職なのだ。","source":"Male Nurses"},{"word":"volunteer fireman","general":"ボランティアの消防士","example":"He served as a volunteer fireman for over a decade.","example_ja":"彼は10年以上ボランティアの消防士を務めた。","source":"Male Nurses"},{"word":"quota","general":"割り当て数、定員","example":"The factory has to meet a daily production quota.","example_ja":"その工場は1日あたりの生産割当を満たさなければならない。","source":"Male Nurses"},{"word":"wake-up","general":"目覚めさせるもの、気づきのきっかけ","example":"The accident was a wake-up call for the whole industry.","example_ja":"その事故は業界全体にとって目を覚まさせる出来事だった。","source":"Male Nurses"},{"word":"stereotype","general":"固定観念、ステレオタイプ","example":"The movie challenges common stereotypes about aging.","example_ja":"その映画は老いに関するよくある固定観念に一石を投じている。","source":"Male Nurses"},{"word":"NICU","general":"新生児集中治療室。Neonatal Intensive Care Unitの略","example":"The premature baby spent two weeks in the NICU.","example_ja":"その未熟児は2週間、新生児集中治療室で過ごした。","source":"Male Nurses"},{"word":"get defensive","general":"防御的になる、身構える","example":"He gets defensive whenever someone questions his work.","example_ja":"彼は自分の仕事に疑問を投げかけられると、いつも身構える。","source":"Male Nurses"},{"word":"breastfeeding","general":"母乳育児","example":"Breastfeeding has many benefits for newborns.","example_ja":"母乳育児は新生児にとって多くの利点がある。","source":"Male Nurses"},{"word":"skin-to-skin","general":"肌と肌の触れ合い（カンガルーケア）。赤ちゃんと親が直接肌を触れ合わせるケア方法","example":"Nurses encouraged skin-to-skin contact right after birth.","example_ja":"看護師たちは出産直後の肌と肌の触れ合いを勧めた。","source":"Male Nurses"},{"word":"inclusiveness","general":"包摂性、受け入れる姿勢","example":"The school is known for its inclusiveness toward all students.","example_ja":"その学校はすべての生徒への包摂的な姿勢で知られている。","source":"Male Nurses"},{"word":"outcome","general":"（治療などの）結果、転帰","example":"Early treatment usually leads to a better outcome.","example_ja":"早期の治療は通常、より良い結果につながる。","source":"Male Nurses"},{"word":"clinical rotation","general":"臨床実習","example":"Nursing students complete several clinical rotations before graduating.","example_ja":"看護学生は卒業前にいくつもの臨床実習をこなす。","source":"Male Nurses"},{"word":"relieved","general":"安心した、ほっとした","example":"She felt relieved when the test results came back normal.","example_ja":"検査結果が正常だと分かって彼女はほっとした。","source":"Male Nurses"},{"word":"bedside","general":"病床のそば、ベッドサイド","example":"The doctor spent extra time at the patient's bedside.","example_ja":"医師は患者のベッドサイドで長めに時間を過ごした。","source":"Male Nurses"},{"word":"persist","general":"根強く残る、存続する、しつこく続ける","example":"Old habits often persist even after we try to change them.","example_ja":"古い習慣は変えようとしても根強く残ることが多い。","source":"Male Nurses"},{"word":"be mistaken for","general":"〜と間違えられる","example":"He's often mistaken for his older brother.","example_ja":"彼はよく兄と間違えられる。","source":"Male Nurses"},{"word":"gender neutral","general":"性別による区別のない","example":"The company introduced gender neutral restrooms.","example_ja":"その会社は性別を問わない化粧室を導入した。","source":"Male Nurses"},{"word":"designate","general":"（正式に）指定する、認定する","example":"The area was designated a national park in 1980.","example_ja":"その地域は1980年に国立公園に指定された。","source":"Male Nurses"},{"word":"chant","general":"①掛け声、シュプレヒコール（名詞）②連呼する（動詞）","example":"The crowd began to chant the team's name.","example_ja":"群衆はそのチームの名前を連呼し始めた。","source":"Nolan Wells"},{"word":"somber","general":"厳粛な、陰鬱な","example":"A somber mood filled the room after the announcement.","example_ja":"その発表の後、部屋は陰鬱な雰囲気に包まれた。","source":"Nolan Wells"},{"word":"by all accounts","general":"誰に聞いても、あらゆる話を総合すると","example":"By all accounts, she was a wonderful teacher.","example_ja":"誰に聞いても、彼女は素晴らしい教師だった。","source":"Nolan Wells"},{"word":"officiate","general":"（式などを）執り行う","example":"A local judge officiated at their wedding.","example_ja":"地元の裁判官が彼らの結婚式を執り行った。","source":"Nolan Wells"},{"word":"reward","general":"①報酬、懸賞金（名詞）②報いる（動詞）","example":"Police offered a reward for information about the theft.","example_ja":"警察はその窃盗に関する情報に懸賞金を提示した。","source":"Nolan Wells"},{"word":"backtrack","general":"話を戻す、後戻りする","example":"Let me backtrack a little and explain how it started.","example_ja":"少し話を戻して、それがどう始まったか説明させてください。","source":"Nolan Wells"},{"word":"spark","general":"①火花（名詞）②（議論などを）引き起こす（動詞）","example":"The comment sparked a heated debate online.","example_ja":"そのコメントはネット上で激しい議論を引き起こした。","source":"Nolan Wells"},{"word":"racial element","general":"人種的な要素","example":"Investigators are looking into whether there was a racial element to the attack.","example_ja":"捜査員たちはその襲撃に人種的な要素があったかどうかを調べている。","source":"Nolan Wells"},{"word":"foul play","general":"犯罪行為、不正な行為（スポーツの反則＝foulから転じた表現）","example":"Police found no evidence of foul play in his death.","example_ja":"警察は彼の死に犯罪性の証拠を見つけなかった。","source":"Nolan Wells"},{"word":"speculation","general":"憶測","example":"There has been a lot of speculation about the company's future.","example_ja":"その会社の将来については多くの憶測が飛び交っている。","source":"Nolan Wells"},{"word":"pending","general":"保留中の、係属中の","example":"The case is still pending in court.","example_ja":"その事件はまだ裁判で係属中だ。","source":"Nolan Wells"},{"word":"medical examiner","general":"検視官","example":"The medical examiner determined the cause of death.","example_ja":"検視官が死因を特定した。","source":"Nolan Wells"},{"word":"toxicology report","general":"毒物検査報告書","example":"The toxicology report should be ready next week.","example_ja":"毒物検査報告書は来週には出るはずだ。","source":"Nolan Wells"},{"word":"autopsy","general":"司法解剖、検死解剖","example":"An autopsy revealed the man had a heart condition.","example_ja":"司法解剖の結果、その男性には心臓の疾患があったことが分かった。","source":"Nolan Wells"},{"word":"independent","general":"独立した、第三者による","example":"They hired an independent auditor to check the accounts.","example_ja":"彼らは会計を確認するために独立した監査人を雇った。","source":"Nolan Wells"},{"word":"cellphone","general":"携帯電話","example":"She left her cellphone at home by mistake.","example_ja":"彼女は間違えて携帯電話を家に置いてきた。","source":"Nolan Wells"},{"word":"track back to","general":"〜までたどる","example":"Investigators tracked the call back to a house nearby.","example_ja":"捜査員たちはその電話を近くの家までたどった。","source":"Nolan Wells"},{"word":"digital evidence","general":"デジタル証拠","example":"Digital evidence played a key role in solving the case.","example_ja":"デジタル証拠がその事件解決に重要な役割を果たした。","source":"Nolan Wells"},{"word":"figure out","general":"解明する、理解する","example":"It took hours to figure out what went wrong.","example_ja":"何が悪かったのかを解明するのに何時間もかかった。","source":"Nolan Wells"},{"word":"civil rights attorney","general":"公民権派弁護士","example":"A civil rights attorney is representing the family.","example_ja":"公民権派弁護士がその家族を代理している。","source":"Nolan Wells"},{"word":"draw attention","general":"注目を集める","example":"The unusual case drew attention from across the country.","example_ja":"その異例の事件は全国から注目を集めた。","source":"Nolan Wells"},{"word":"investigation","general":"捜査、調査","example":"The investigation is expected to take several months.","example_ja":"その捜査は数か月かかると見られている。","source":"Nolan Wells"},{"word":"law enforcement","general":"法執行機関、警察","example":"Local law enforcement is working with the FBI.","example_ja":"地元の法執行機関はFBIと連携している。","source":"Nolan Wells"},{"word":"unanswered","general":"未解決の、答えの出ていない","example":"Many questions about the accident remain unanswered.","example_ja":"その事故については多くの疑問が未解決のままだ。","source":"Nolan Wells"},{"word":"be involved in","general":"〜に関与している","example":"Three people were involved in the decision.","example_ja":"3人がその決定に関与していた。","source":"Nolan Wells"},{"word":"delete","general":"削除する","example":"He accidentally deleted an important file.","example_ja":"彼は誤って重要なファイルを削除してしまった。","source":"Nolan Wells"},{"word":"benefit concert","general":"チャリティーコンサート","example":"The band played a benefit concert for flood victims.","example_ja":"そのバンドは洪水の被災者のためのチャリティーコンサートを行った。","source":"Marx Brothers"},{"word":"archivist","general":"アーカイブ専門家","example":"The museum hired an archivist to organize old records.","example_ja":"その博物館は古い記録を整理するためにアーカイブ専門家を雇った。","source":"Marx Brothers"},{"word":"restoration","general":"修復","example":"The painting underwent a two-year restoration.","example_ja":"その絵画は2年間の修復作業を経た。","source":"Marx Brothers"},{"word":"longtime","general":"長年の","example":"He's a longtime fan of the team.","example_ja":"彼はそのチームの長年のファンだ。","source":"Marx Brothers"},{"word":"tape","general":"①テープ、録音テープ（名詞）②テープで留める（動詞）","example":"She still has the old tape of her grandmother's voice.","example_ja":"彼女は今でも祖母の声が入った古いテープを持っている。","source":"Marx Brothers"},{"word":"accidentally","general":"偶然に、誤って","example":"I accidentally deleted the message.","example_ja":"私は誤ってそのメッセージを削除してしまった。","source":"Marx Brothers"},{"word":"extensive","general":"大規模な、広範囲の","example":"The house needs extensive repairs.","example_ja":"その家は大規模な修理が必要だ。","source":"Marx Brothers"},{"word":"instrument","general":"①楽器②道具、手段","example":"She's been playing the piano, her favorite instrument, since age five.","example_ja":"彼女は5歳のときから、お気に入りの楽器であるピアノを弾いている。","source":"Marx Brothers"},{"word":"narrate","general":"ナレーションをする、語る","example":"The documentary is narrated by a famous actor.","example_ja":"そのドキュメンタリーは有名な俳優がナレーションをしている。","source":"Marx Brothers"},{"word":"meadow","general":"草原、牧草地","example":"The children played in a meadow full of wildflowers.","example_ja":"子供たちは野花でいっぱいの草原で遊んだ。","source":"Marx Brothers"},{"word":"escape","general":"①逃げる（動詞）②逃避、脱出（名詞）","example":"The prisoner tried to escape but was caught.","example_ja":"その囚人は逃げようとしたが捕まった。","source":"Marx Brothers"},{"word":"libretto","general":"台本、リブレット（オペラや音楽劇の台本を指すイタリア語由来の語）","example":"He wrote the libretto for a new opera.","example_ja":"彼は新しいオペラの台本を書いた。","source":"Marx Brothers"},{"word":"outspoken","general":"率直にものを言う","example":"She's outspoken about climate change.","example_ja":"彼女は気候変動について率直に発言する。","source":"Marx Brothers"},{"word":"co-write","general":"共作する","example":"The two musicians co-wrote the song together.","example_ja":"その2人のミュージシャンはその曲を共作した。","source":"Marx Brothers"},{"word":"primary","general":"①主要な、第一の（形容詞）②予備選挙（名詞、主にアメリカ）","example":"He's leading in the polls ahead of the primary.","example_ja":"彼は予備選挙を前に世論調査でリードしている。","source":"Marx Brothers"},{"word":"heat up","general":"（状況が）激化する、盛り上がる","example":"The competition really heated up in the final round.","example_ja":"その競争は最終ラウンドで本当に激化した。","source":"Marx Brothers"},{"word":"triumphant","general":"勝利の、意気揚々とした","example":"The team returned home in a triumphant mood.","example_ja":"そのチームは意気揚々とした様子で帰国した。","source":"Marx Brothers"},{"word":"procession","general":"行進","example":"A long procession followed the parade route.","example_ja":"長い行進がパレードのルートに沿って続いた。","source":"Marx Brothers"},{"word":"hunter","general":"狩人","example":"The hunter tracked the deer for hours.","example_ja":"その狩人は何時間もその鹿を追跡した。","source":"Marx Brothers"},{"word":"grateful","general":"感謝している","example":"I'm grateful for everything you've done.","example_ja":"あなたがしてくれたすべてに感謝しています。","source":"Marx Brothers"},{"word":"retire","general":"①引退する②（軍が）撤退する③就寝する（やや古風）","example":"He plans to retire at 65.","example_ja":"彼は65歳で引退する予定だ。","source":"Marx Brothers"},{"word":"lose sight of","general":"〜を見失う","example":"Don't lose sight of your original goal.","example_ja":"本来の目標を見失わないように。","source":"Marx Brothers"},{"word":"restore","general":"①修復する②回復させる、返還する","example":"Workers are restoring the old church.","example_ja":"作業員たちはその古い教会を修復している。","source":"Marx Brothers"},{"word":"benefit","general":"①利益（名詞）②慈善の（形容詞、例：benefit concert）③恩恵を受ける（動詞）","example":"Everyone will benefit from the new policy.","example_ja":"誰もがその新しい政策から恩恵を受けるだろう。","source":"Marx Brothers"},{"word":"whistle","general":"①口笛（名詞）②口笛を吹く（動詞）","example":"He walked down the street, whistling a tune.","example_ja":"彼は口笛で曲を吹きながら通りを歩いた。","source":"Marx Brothers"},{"word":"applause","general":"拍手","example":"The speech was met with loud applause.","example_ja":"そのスピーチは大きな拍手で迎えられた。","source":"Marx Brothers"},{"word":"disclose","general":"公表する、明らかにする","example":"The company refused to disclose its profits.","example_ja":"その会社は利益を公表することを拒んだ。","source":"Ebola Outbreak"},{"word":"grief","general":"悲しみ、悲嘆","example":"It takes time to recover from grief.","example_ja":"悲しみから立ち直るには時間がかかる。","source":"Ebola Outbreak"},{"word":"epidemic","general":"（感染症の）流行","example":"The city declared a flu epidemic last winter.","example_ja":"その市は昨冬、インフルエンザの流行を宣言した。","source":"Ebola Outbreak"},{"word":"outbreak","general":"（病気などの）発生","example":"Health officials are investigating the outbreak.","example_ja":"保健当局はその発生について調査している。","source":"Ebola Outbreak"},{"word":"incident manager","general":"緊急対応責任者","example":"The incident manager coordinated the emergency response.","example_ja":"緊急対応責任者が緊急対応を統括した。","source":"Ebola Outbreak"},{"word":"implement","general":"①実行する、実施する（動詞）②道具（名詞）","example":"The school will implement a new grading system.","example_ja":"その学校は新しい採点システムを実施する予定だ。","source":"Ebola Outbreak"},{"word":"in-depth","general":"徹底的な、詳細な","example":"The magazine ran an in-depth interview with the director.","example_ja":"その雑誌はその監督への詳細なインタビューを掲載した。","source":"Ebola Outbreak"},{"word":"contact","general":"①連絡、接触（名詞）②接触者（感染症の、名詞）③連絡を取る（動詞）","example":"Health workers traced everyone the patient had contact with.","example_ja":"保健員はその患者が接触したすべての人をたどった。","source":"Ebola Outbreak"},{"word":"pillar","general":"柱、基盤","example":"Trust is a pillar of any good relationship.","example_ja":"信頼はどんな良い関係においても柱となるものだ。","source":"Ebola Outbreak"},{"word":"epicenter","general":"震源地、中心地","example":"The town was the epicenter of the earthquake.","example_ja":"その町はその地震の震源地だった。","source":"Ebola Outbreak"},{"word":"confirmed case","general":"確定症例","example":"There are now over 100 confirmed cases in the region.","example_ja":"その地域では今や100件を超える確定症例がある。","source":"Ebola Outbreak"},{"word":"passable","general":"（道が）通行可能な","example":"The mountain road is barely passable after the storm.","example_ja":"その山道は嵐の後、かろうじて通行可能だ。","source":"Ebola Outbreak"},{"word":"armed group","general":"武装勢力","example":"An armed group has controlled the region for years.","example_ja":"武装勢力が何年もその地域を支配してきた。","source":"Ebola Outbreak"},{"word":"wage war","general":"戦争を行う","example":"The two nations waged war for a decade.","example_ja":"その2国は10年間戦争を続けた。","source":"Ebola Outbreak"},{"word":"displacement camp","general":"避難民キャンプ","example":"Thousands live in a displacement camp near the border.","example_ja":"何千人もが国境近くの避難民キャンプで暮らしている。","source":"Ebola Outbreak"},{"word":"access to","general":"〜へのアクセス、利用機会","example":"Many villages still lack access to clean water.","example_ja":"多くの村ではいまだにきれいな水へのアクセスがない。","source":"Ebola Outbreak"},{"word":"symptom","general":"症状","example":"Fever is a common symptom of the flu.","example_ja":"発熱はインフルエンザによくある症状だ。","source":"Ebola Outbreak"},{"word":"resemble","general":"〜に似ている","example":"She strongly resembles her mother.","example_ja":"彼女は母親に強く似ている。","source":"Ebola Outbreak"},{"word":"malaria","general":"マラリア","example":"Malaria is spread by mosquitoes.","example_ja":"マラリアは蚊によって媒介される。","source":"Ebola Outbreak"},{"word":"trading hub","general":"交易拠点","example":"The port city has long been a trading hub.","example_ja":"その港湾都市は長らく交易拠点であった。","source":"Ebola Outbreak"},{"word":"downstream","general":"下流に","example":"The factory is located downstream from the dam.","example_ja":"その工場はそのダムの下流に位置している。","source":"Ebola Outbreak"},{"word":"panic","general":"①パニック、恐慌（名詞）②パニックになる（動詞）","example":"There was widespread panic when the alarm went off.","example_ja":"警報が鳴ったとき、広範囲にパニックが広がった。","source":"Ebola Outbreak"},{"word":"case load","general":"症例数","example":"Doctors are struggling with a heavy case load.","example_ja":"医師たちは多い症例数に苦労している。","source":"Ebola Outbreak"},{"word":"sicken","general":"病気になる、うんざりさせる","example":"Hundreds of workers were sickened by the chemical leak.","example_ja":"何百人もの労働者がその化学物質の漏出で病気になった。","source":"Ebola Outbreak"},{"word":"seek treatment","general":"治療を求める","example":"Many patients don't seek treatment until it's too late.","example_ja":"多くの患者は手遅れになるまで治療を求めない。","source":"Ebola Outbreak"},{"word":"catch up","general":"追いつく","example":"Hospitals are struggling to catch up with demand.","example_ja":"病院は需要に追いつこうと苦労している。","source":"Ebola Outbreak"},{"word":"census","general":"（動植物の）個体数調査、国勢調査","example":"The census showed the town's population had grown.","example_ja":"国勢調査はその町の人口が増えたことを示した。","source":"Catfish Cancer"},{"word":"startle","general":"驚かせる","example":"A loud noise startled the cat.","example_ja":"大きな音がその猫を驚かせた。","source":"Catfish Cancer"},{"word":"blotch","general":"（皮膚などの）斑点、染み","example":"He noticed a red blotch on his arm.","example_ja":"彼は自分の腕に赤い斑点があるのに気づいた。","source":"Catfish Cancer"},{"word":"melanoma","general":"メラノーマ、悪性黒色腫","example":"Doctors recommend checking your skin regularly for signs of melanoma.","example_ja":"医師はメラノーマの兆候がないか定期的に皮膚を確認するよう勧めている。","source":"Catfish Cancer"},{"word":"leech","general":"①（液体などが）染み出す、しみ込む（動詞）②ヒル（名詞、血を吸う生物）③人にたかる人（比喩、名詞）","example":"Chemicals from the factory leeched into the river.","example_ja":"その工場からの化学物質が川に染み出した。","source":"Catfish Cancer"},{"word":"pollutant","general":"汚染物質","example":"Cars release pollutants into the air.","example_ja":"自動車は大気中に汚染物質を排出する。","source":"Catfish Cancer"},{"word":"genome sequence","general":"ゲノム配列","example":"Scientists mapped the genome sequence of the virus.","example_ja":"科学者たちはそのウイルスのゲノム配列を解析した。","source":"Catfish Cancer"},{"word":"erupt","general":"①噴出する②（怒りなどが）爆発する","example":"The volcano could erupt at any time.","example_ja":"その火山はいつでも噴火しうる。","source":"Catfish Cancer"},{"word":"go awry","general":"おかしくなる、うまくいかなくなる","example":"Their plans went awry when it started to rain.","example_ja":"雨が降り始めたとき、彼らの計画はおかしくなった。","source":"Catfish Cancer"},{"word":"host","general":"①主人、ホスト（名詞）②宿主（生物学、名詞）③司会者（名詞）","example":"The mosquito needs a host to survive.","example_ja":"その蚊は生き延びるために宿主を必要とする。","source":"Catfish Cancer"},{"word":"clone","general":"①クローン（名詞）②複製する（動詞）","example":"Scientists successfully cloned the sheep in 1996.","example_ja":"科学者たちは1996年にその羊のクローン作成に成功した。","source":"Catfish Cancer"},{"word":"infectious agent","general":"感染性病原体","example":"The infectious agent spreads through contaminated water.","example_ja":"その感染性病原体は汚染された水を通じて広がる。","source":"Catfish Cancer"},{"word":"aquatic environment","general":"水中環境","example":"Pollution has damaged the local aquatic environment.","example_ja":"汚染がその地域の水中環境に損害を与えた。","source":"Catfish Cancer"},{"word":"transmissible","general":"感染性の、伝染しうる","example":"The disease is highly transmissible between animals.","example_ja":"その病気は動物間で非常に感染しやすい。","source":"Catfish Cancer"},{"word":"mollusk","general":"軟体動物","example":"Clams and oysters are types of mollusks.","example_ja":"ハマグリやカキは軟体動物の一種だ。","source":"Catfish Cancer"},{"word":"aggregate","general":"①集まる（動詞）②合計の（形容詞）③集合体（名詞）","example":"Fish often aggregate near warm water outlets.","example_ja":"魚はしばしば温水の排出口の近くに集まる。","source":"Catfish Cancer"},{"word":"spine","general":"①背骨②とげ③（本の）背表紙","example":"A porcupine's spines protect it from predators.","example_ja":"ヤマアラシのとげは捕食者から身を守る。","source":"Catfish Cancer"},{"word":"avenue","general":"①大通り②（比喩的に）道、手段、経路","example":"The team explored every avenue to solve the problem.","example_ja":"そのチームはその問題を解決するためにあらゆる手段を探った。","source":"Catfish Cancer"},{"word":"invade","general":"侵入する","example":"Weeds have invaded the entire garden.","example_ja":"雑草が庭全体に侵入した。","source":"Catfish Cancer"},{"word":"evolutionary biologist","general":"進化生物学者","example":"An evolutionary biologist explained how the trait developed.","example_ja":"進化生物学者がその特徴がどう発達したかを説明した。","source":"Catfish Cancer"},{"word":"dead end","general":"行き止まり","example":"The road turned out to be a dead end.","example_ja":"その道は行き止まりだと判明した。","source":"Catfish Cancer"},{"word":"advantageous","general":"有利な","example":"It's advantageous to book flights early.","example_ja":"航空券は早めに予約すると有利だ。","source":"Catfish Cancer"},{"word":"migrate","general":"移動する、（データなどを）移行する","example":"Birds migrate south for the winter.","example_ja":"鳥は冬になると南へ移動する。","source":"Catfish Cancer"},{"word":"metastasize","general":"転移する","example":"The cancer had already begun to metastasize.","example_ja":"そのがんはすでに転移し始めていた。","source":"Catfish Cancer"},{"word":"metastasis","general":"転移（がんの）","example":"Doctors watched closely for signs of metastasis.","example_ja":"医師たちは転移の兆候がないか注意深く見守った。","source":"Catfish Cancer"},{"word":"a ways off","general":"まだ先で、かなり先で","example":"A cure is still a ways off, researchers say.","example_ja":"治療法の確立はまだ先の話だと研究者たちは言う。","source":"Catfish Cancer"},{"word":"box office","general":"①切符売り場（名詞）②興行収入（名詞）","example":"The movie broke box office records last weekend.","example_ja":"その映画は先週末、興行収入の記録を破った。","source":"The Odyssey"},{"word":"blockbuster","general":"大ヒット作","example":"The studio is hoping for another summer blockbuster.","example_ja":"その制作会社は夏のもう一つの大ヒット作を期待している。","source":"The Odyssey"},{"word":"epic","general":"①叙事詩（名詞）②壮大な、雄大な（形容詞）","example":"Homer's epic tells the story of a ten-year war.","example_ja":"ホメロスの叙事詩は10年に及ぶ戦争の物語を語る。","source":"The Odyssey"},{"word":"adaptation","general":"①翻案、脚色作品②適応","example":"The film is a modern adaptation of a classic novel.","example_ja":"その映画は古典小説の現代版の翻案だ。","source":"The Odyssey"},{"word":"miniseries","general":"ミニシリーズ","example":"The book was turned into a four-part miniseries.","example_ja":"その本は4部構成のミニシリーズになった。","source":"The Odyssey"},{"word":"keep someone engaged","general":"（人の）興味を引きつけ続ける","example":"Good teachers know how to keep students engaged.","example_ja":"優れた教師は生徒の興味を引きつけ続ける方法を知っている。","source":"The Odyssey"},{"word":"dated","general":"時代遅れの、古臭い","example":"The special effects in that film look pretty dated now.","example_ja":"その映画の特殊効果は今見るとかなり古臭く見える。","source":"The Odyssey"},{"word":"gratitude","general":"感謝","example":"She expressed her gratitude to everyone who helped.","example_ja":"彼女は助けてくれたすべての人に感謝の意を表した。","source":"The Odyssey"},{"word":"on behalf of","general":"〜を代表して","example":"He accepted the award on behalf of the whole team.","example_ja":"彼はチーム全体を代表してその賞を受け取った。","source":"The Odyssey"},{"word":"mortal","general":"①人間、死すべき存在（名詞）②死すべき運命の、致命的な（形容詞）","example":"In the myth, a god falls in love with a mortal.","example_ja":"その神話では、神が人間に恋をする。","source":"The Odyssey"},{"word":"hospitality","general":"もてなし、歓待","example":"We were treated with great hospitality during our visit.","example_ja":"私たちは訪問中、大変な歓待を受けた。","source":"The Odyssey"},{"word":"equal","general":"①対等な者（名詞）②等しい（形容詞）③匹敵する（動詞）","example":"The law treats every citizen as an equal.","example_ja":"その法律はすべての市民を対等な者として扱う。","source":"The Odyssey"},{"word":"in awe","general":"畏敬の念を抱いて、圧倒されて","example":"The tourists stood in awe of the ancient temple.","example_ja":"観光客たちはその古代の神殿に圧倒されて立ち尽くした。","source":"The Odyssey"},{"word":"cheesy","general":"安っぽい、ベタな（チーズのように『くさい』演出、という俗語表現）","example":"The dialogue in that old movie is a bit cheesy.","example_ja":"その古い映画のセリフは少し安っぽい。","source":"The Odyssey"},{"word":"toolbox","general":"道具箱","example":"Every teacher needs a good toolbox of strategies.","example_ja":"どの教師も戦略の充実した道具箱が必要だ。","source":"The Odyssey"},{"word":"multilingual learner","general":"複数言語を学ぶ生徒","example":"The class includes several multilingual learners.","example_ja":"そのクラスには複数言語を学ぶ生徒が何人かいる。","source":"The Odyssey"},{"word":"linguistically diverse","general":"言語的に多様な","example":"The neighborhood is linguistically diverse.","example_ja":"その地域は言語的に多様だ。","source":"The Odyssey"},{"word":"suitor","general":"求婚者","example":"In the story, dozens of suitors compete for her hand.","example_ja":"その物語では、何十人もの求婚者が彼女をめぐって争う。","source":"The Odyssey"},{"word":"unit","general":"①単位②（授業の）単元③（アパートなどの）1戸","example":"We're starting a new unit on ancient Greece.","example_ja":"私たちは古代ギリシャの新しい単元を始める。","source":"The Odyssey"},{"word":"immigrant","general":"移民","example":"Her grandparents were immigrants from Italy.","example_ja":"彼女の祖父母はイタリアからの移民だった。","source":"The Odyssey"},{"word":"foundations of storytelling","general":"物語の基礎","example":"The course teaches the foundations of storytelling.","example_ja":"その講座は物語の基礎を教える。","source":"The Odyssey"},{"word":"perspective","general":"視点、観点","example":"Try to see the situation from her perspective.","example_ja":"彼女の視点からその状況を見てみよう。","source":"The Odyssey"},{"word":"take convincing","general":"説得が必要である","example":"He didn't take much convincing to join the trip.","example_ja":"彼はその旅行に参加するのにあまり説得を必要としなかった。","source":"The Odyssey"},{"word":"tall order","general":"難題、無理な注文（背の高い＝『達成しにくい』要求という比喩）","example":"Finishing the project in a week is a tall order.","example_ja":"1週間でそのプロジェクトを終わらせるのは難題だ。","source":"The Odyssey"},{"word":"stretch out","general":"引き延ばす、長期間にわたって行う","example":"They stretched the project out over several months.","example_ja":"彼らはそのプロジェクトを数か月にわたって引き延ばした。","source":"The Odyssey"},{"word":"head out into the world","general":"世界へ旅立つ","example":"After graduation, she headed out into the world alone.","example_ja":"卒業後、彼女は一人で世界へ旅立った。","source":"The Odyssey"},{"word":"unsung hero","general":"縁の下の力持ち、隠れた英雄。unsung（歌われていない＝称賛されていない）＋hero（英雄）から","example":"The volunteers are the unsung heroes of this festival.","example_ja":"ボランティアたちはこの祭りの縁の下の力持ちだ。","source":"My Unsung Hero"},{"word":"leave a lasting impression","general":"忘れられない印象を残す","example":"Her kindness left a lasting impression on me.","example_ja":"彼女の優しさは私に忘れられない印象を残した。","source":"My Unsung Hero"},{"word":"stutter","general":"①どもる（動詞）②吃音（名詞）","example":"He tends to stutter when he's nervous.","example_ja":"彼は緊張するとどもりがちだ。","source":"My Unsung Hero"},{"word":"peer","general":"同級生、仲間","example":"Teenagers often care deeply about what their peers think.","example_ja":"十代の若者は仲間の意見をとても気にすることが多い。","source":"My Unsung Hero"},{"word":"be excused from","general":"（義務などを）免除される","example":"She was excused from gym class after the injury.","example_ja":"彼女はけがの後、体育の授業を免除された。","source":"My Unsung Hero"},{"word":"recite","general":"暗唱する","example":"Each student had to recite a poem in front of the class.","example_ja":"各生徒はクラスの前で詩を暗唱しなければならなかった。","source":"My Unsung Hero"},{"word":"minor","general":"①些細な（形容詞）②未成年者（名詞）③副専攻（大学、名詞）","example":"It was just a minor mistake, nothing serious.","example_ja":"それはほんの些細な間違いで、大したことではなかった。","source":"My Unsung Hero"},{"word":"empowering","general":"力を与えるような","example":"Learning to say no can be empowering.","example_ja":"断ることを学ぶのは力を与えてくれることがある。","source":"My Unsung Hero"},{"word":"corporate trainer","general":"企業研修講師","example":"She works as a corporate trainer, teaching leadership skills.","example_ja":"彼女はリーダーシップスキルを教える企業研修講師として働いている。","source":"My Unsung Hero"},{"word":"embarrass","general":"恥ずかしい思いをさせる","example":"He didn't want to embarrass himself in front of his friends.","example_ja":"彼は友人たちの前で恥をかきたくなかった。","source":"My Unsung Hero"},{"word":"life-changing","general":"人生を変えるような","example":"Moving abroad was a life-changing experience for her.","example_ja":"海外に引っ越すことは彼女にとって人生を変える経験だった。","source":"My Unsung Hero"},{"word":"kindness","general":"優しさ、親切","example":"A small act of kindness can make someone's day.","example_ja":"ちょっとした親切な行為が誰かの一日を明るくすることがある。","source":"My Unsung Hero"},{"word":"be aired","general":"（番組などが）放送される","example":"The interview will be aired next Sunday.","example_ja":"そのインタビューは次の日曜日に放送される。","source":"My Unsung Hero"},{"word":"reach out to","general":"〜に連絡を取る","example":"She decided to reach out to an old friend.","example_ja":"彼女は昔の友人に連絡を取ることにした。","source":"My Unsung Hero"},{"word":"voice memo","general":"ボイスメモ","example":"He recorded a voice memo to remember the idea.","example_ja":"彼はそのアイデアを覚えておくためにボイスメモを録音した。","source":"My Unsung Hero"},{"word":"podcast","general":"ポッドキャスト","example":"I listen to a history podcast on my commute.","example_ja":"私は通勤中に歴史のポッドキャストを聞いている。","source":"My Unsung Hero"},{"word":"big whoop","general":"たいしたことじゃない（皮肉っぽく軽く言う口語表現）","example":"So I made a mistake, big whoop.","example_ja":"まあ、私はミスをしたけど、それがどうしたって感じ。","source":"My Unsung Hero"},{"word":"get up there","general":"（人前に）立つ、登壇する","example":"I was too nervous to get up there and speak.","example_ja":"私は緊張しすぎて人前に立って話すことができなかった。","source":"My Unsung Hero"},{"word":"one-on-one","general":"一対一で","example":"The teacher offered one-on-one help after class.","example_ja":"その教師は放課後に一対一の手助けを提供した。","source":"My Unsung Hero"},{"word":"lasting","general":"長く続く、永続的な","example":"The trip left a lasting memory.","example_ja":"その旅行は長く残る思い出になった。","source":"My Unsung Hero"},{"word":"make a point to do","general":"（意識して）必ず〜するようにする","example":"I make a point to call my parents every Sunday.","example_ja":"私は毎週日曜日、必ず両親に電話するようにしている。","source":"Idioms & Set Phrases"},{"word":"open up to","general":"〜に心を開く","example":"It took a while for her to open up to her new coworkers.","example_ja":"彼女が新しい同僚に心を開くまでには時間がかかった。","source":"Idioms & Set Phrases"},{"word":"find oneself doing","general":"気づけば〜している","example":"He found himself agreeing with her, even though he'd planned to argue.","example_ja":"反論するつもりだったのに、彼は気づけば彼女に同意していた。","source":"Idioms & Set Phrases"},{"word":"have got to","general":"〜しなければならない（口語）。got to と短縮して発音されることも多い","example":"We've got to leave now or we'll miss the train.","example_ja":"今すぐ出発しなければ、電車に乗り遅れてしまう。","source":"Idioms & Set Phrases"},{"word":"if you will","general":"いわば、言うなれば（相手に『こう言ってもよければ』と断る丁寧な言い回しから）","example":"It's a kind of modern fairy tale, if you will.","example_ja":"それは、いわば現代のおとぎ話のようなものだ。","source":"Idioms & Set Phrases"},{"word":"sort of","general":"なんというか、ある意味（断定を避けてぼかす口語表現）","example":"I sort of understand what you mean.","example_ja":"あなたの言いたいこと、なんとなく分かります。","source":"Idioms & Set Phrases"},{"word":"have a moment","general":"（一時的に）注目を集める、話題になる","example":"That song is really having a moment right now.","example_ja":"あの曲は今まさに話題になっている。","source":"Idioms & Set Phrases"},{"word":"on record","general":"記録が残っている中で、史上","example":"This was the hottest summer on record.","example_ja":"これは記録に残る中で最も暑い夏だった。","source":"Idioms & Set Phrases"},{"word":"that's not the case","general":"そうではない、実情はそれとは違う","example":"People assume the job is easy, but that's not the case.","example_ja":"その仕事は簡単だと人は思うが、実際はそうではない。","source":"Idioms & Set Phrases"},{"word":"a life of its own","general":"それ自体の生命・独立した存在。もともとの持ち主の意図を離れて『独り歩きする』様子を表す","example":"The rumor took on a life of its own online.","example_ja":"そのうわさはネット上で独り歩きし始めた。","source":"Idioms & Set Phrases"},{"word":"what S calls X","general":"Sがいわゆる X と呼ぶもの（S・Xは文法上の主語・目的語を表す記号）","example":"She practices what psychologists call active listening.","example_ja":"彼女は心理学者がいわゆる『傾聴』と呼ぶものを実践している。","source":"Idioms & Set Phrases"},{"word":"there is no way","general":"〜するなんてあり得ない。後ろにthat節が続くこともある（強い否定を表す口語表現）","example":"There is no way I'm eating that.","example_ja":"それを食べるなんて絶対にあり得ない。","source":"Idioms & Set Phrases"}];
+const STORAGE_KEY = 'npr-vocab-flashcards-progress-v4';
+WORDS.forEach((w, i) => { w.idx = i; });
 
-const BOX_INTERVALS_DAYS = [1, 3, 7, 14, 30]; // index 0..4 corresponds to box 1..5
+const BOX_INTERVALS_DAYS = [1, 3, 7, 14, 30];
 const MAX_BOX = 5;
 
 function todayStr(){
@@ -591,17 +670,20 @@ function addDays(dateStr, days){
   return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
 }
 
-let progress = {}; // map: word -> box/nextReview state
+let progress = {};
 try{
   progress = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
 }catch(e){ progress = {}; }
 
 let currentSource = 'ALL';
+let reviewMode = false;
+let reviewFilter = 'due';
+let reviewIndex = 0;
+let reviewConfirmed = new Set();
 let deck = [];
 let originalOrder = [];
 let history = [];
 let flipped = false;
-let panelOpen = false;
 let loopingWord = null;
 
 function saveProgress(){
@@ -610,8 +692,8 @@ function saveProgress(){
   }catch(e){}
 }
 
-function getState(word){
-  return progress[word] || { box: 0, nextReview: todayStr() };
+function getState(idx){
+  return progress[idx] || { box: 0, nextReview: todayStr() };
 }
 
 function sourceFilteredWords(){
@@ -619,14 +701,35 @@ function sourceFilteredWords(){
   return WORDS.filter(w => w.source === currentSource);
 }
 
-function isDue(word){
-  const st = getState(word);
+function isDue(idx){
+  const st = getState(idx);
   return st.box === 0 || st.nextReview <= todayStr();
 }
 
+// Review mode: loads ALL matching learned words into the deck at once
+// (like DUO 3.0), so they can be swiped through with 次へ／習得済み ✓
+// just like normal study — no need to click each word individually.
+// reviewFilter 'due' = only words whose scheduled date has arrived.
+// reviewFilter 'all' = every word ever marked 習得済み, regardless of date
+// (use this to review everything you just learned today in one session).
 function buildDeck(){
   const pool = sourceFilteredWords();
-  deck = pool.filter(w => isDue(w.word));
+  if(reviewMode){
+    const learned = pool.filter(w => getState(w.idx).box >= 1);
+    let filtered;
+    if(reviewFilter === 'all'){
+      filtered = learned;
+    } else if(reviewFilter === 'due'){
+      filtered = learned.filter(w => isDue(w.idx));
+    } else {
+      const wantBox = parseInt(reviewFilter.slice(1), 10);
+      filtered = learned.filter(w => getState(w.idx).box === wantBox);
+    }
+    filtered.sort((a, b) => getState(a.idx).nextReview.localeCompare(getState(b.idx).nextReview));
+    deck = filtered;
+  } else {
+    deck = pool.filter(w => isDue(w.idx));
+  }
   originalOrder = deck.slice();
   history = [];
 }
@@ -690,14 +793,16 @@ function stopLoop(){
 
 function updateProgress(){
   const total = WORDS.length;
-  const learnedAtLeastOnce = WORDS.filter(w => getState(w.word).box >= 1).length;
-  const masteredCount = WORDS.filter(w => getState(w.word).box >= MAX_BOX).length;
+  const learnedAtLeastOnce = WORDS.filter(w => getState(w.idx).box >= 1).length;
+  const masteredCount = WORDS.filter(w => getState(w.idx).box >= MAX_BOX).length;
   const pool = sourceFilteredWords();
-  const dueCount = pool.filter(w => isDue(w.word)).length;
+  const dueCount = pool.filter(w => isDue(w.idx)).length;
 
   document.getElementById('progressLabel').textContent = `${masteredCount} / ${total} 定着`;
   document.getElementById('progressFill').style.width = `${(learnedAtLeastOnce/total)*100}%`;
-  document.getElementById('dueLabel').textContent = `本日の復習: ${dueCount}語`;
+  document.getElementById('dueLabel').textContent = reviewMode
+    ? `復習対象: ${deck.length}語`
+    : `本日の新規・復習: ${dueCount}語`;
   document.getElementById('totalLabel').textContent = `全カード: ${total}語`;
 
   const remaining = deck.length;
@@ -706,34 +811,59 @@ function updateProgress(){
   const positionLabel = document.getElementById('positionLabel');
   const prevBtn = document.getElementById('prevBtn');
   const restartBtn = document.getElementById('restartBtn');
-  if(remaining > 0 && originalOrder.length > 0){
-    const idx = originalOrder.findIndex(w => w.word === deck[0].word);
-    const displayIdx = idx >= 0 ? idx + 1 : '?';
+  const curForLabel = reviewMode ? deck[reviewIndex] : deck[0];
+  if(remaining > 0 && originalOrder.length > 0 && curForLabel){
+    const posIdx = originalOrder.findIndex(w => w.idx === curForLabel.idx);
+    const displayIdx = posIdx >= 0 ? posIdx + 1 : '?';
     positionLabel.textContent = `${displayIdx} / ${originalOrder.length} 枚目`;
   } else {
     positionLabel.textContent = '';
   }
   if(prevBtn) prevBtn.disabled = history.length === 0;
   if(restartBtn) restartBtn.disabled = originalOrder.length === 0;
-
-  renderMasteredList();
 }
 
 function speakerIcon(){
   return `<svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.06c1.48-.74 2.5-2.26 2.5-4.03zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>`;
 }
 
-function boxLabel(word){
-  const st = getState(word);
+function boxLabel(idx){
+  const st = getState(idx);
   if(st.box >= MAX_BOX) return '定着済み';
   if(st.box === 0) return '新規';
   return `Box ${st.box}`;
 }
 
+// ---- Auto-fit headword to a single line (never wraps mid-word) ----
+function fitWordFont(){
+  const wordEl = document.querySelector('#currentCard .word');
+  const row = document.querySelector('#currentCard .word-row');
+  if(!wordEl || !row) return;
+  const speakBtn = row.querySelector('.speak-btn');
+  const reserve = speakBtn ? speakBtn.offsetWidth + 18 : 0;
+  const available = row.clientWidth - reserve - 4;
+  let size = 30;
+  const minSize = 14;
+  wordEl.style.whiteSpace = 'nowrap';
+  wordEl.style.display = 'inline-block';
+  wordEl.style.fontSize = size + 'px';
+  while(wordEl.scrollWidth > available && size > minSize){
+    size -= 1;
+    wordEl.style.fontSize = size + 'px';
+  }
+}
+
 function frontHTML(current){
+  const st = getState(current.idx);
+  const isMastered = st.box >= 1;
   return `
     <span class="source-tag">${current.source}</span>
-    <div class="box-badge">${boxLabel(current.word)}</div>
+    <div class="box-badge">${boxLabel(current.idx)}</div>
+    ${!reviewMode ? `
+    <label class="master-checkbox-row">
+      <input type="checkbox" id="masterCb" ${isMastered ? 'checked' : ''}>
+      <span>マスター</span>
+    </label>` : ''}
     <div class="eyebrow">タップして意味を見る</div>
     <div class="word-row">
       <div class="word">${current.word}</div>
@@ -744,32 +874,16 @@ function frontHTML(current){
 }
 
 function backHTML(current){
-  const generalBlock = current.general ? `
-      <div class="general-block">
-        <div class="general-label">本来の意味</div>
-        <div class="general-text">${current.general}</div>
-      </div>` : '';
-
-  const exampleBlock = current.example ? `
-        <div class="example-label">Example</div>
-        <div class="example-text">${current.example}</div>
-        <div class="example-ja-text">${current.example_ja || ''}</div>` : '';
-
-  const noteBlock = current.note ? `
-      <div class="note-block">
-        <div class="note-label">ヒント</div>
-        <div class="note-text">${current.note}</div>
-      </div>` : '';
-
   return `
     <div class="back-scroll">
       <div class="hint-block">
-        <span class="source-tag">${current.source}</span>
         <div class="hint-label">意味</div>
-        <div class="hint-text">${current.hint}</div>
-        ${generalBlock}
-        ${exampleBlock}
-        ${noteBlock}
+        <div class="hint-text">${current.general}</div>
+        <div class="general-block">
+          <div class="general-label">EXAMPLE（タップで読み上げ）</div>
+          <div class="general-text example-en" id="exampleSentence">${current.example}</div>
+          <div class="example-ja-text">${current.example_ja}</div>
+        </div>
       </div>
       <div class="back-tap-hint tap-hint">タップで単語に戻る</div>
     </div>
@@ -788,35 +902,83 @@ function attachSpeakHandler(current){
       }
     });
   }
+  const exampleEl = document.getElementById('exampleSentence');
+  if(exampleEl){
+    exampleEl.addEventListener('click', (e) => {
+      e.stopPropagation();
+      speakOnce(current.example, () => {});
+    });
+  }
+  const masterCb = document.getElementById('masterCb');
+  if(masterCb){
+    masterCb.addEventListener('click', (e) => e.stopPropagation());
+    masterCb.addEventListener('change', (e) => {
+      if(reviewMode) return;
+      nextCard(e.target.checked);
+    });
+  }
+}
+
+function currentCard(){
+  if(reviewMode){
+    if(deck.length === 0) return null;
+    if(reviewIndex >= deck.length) reviewIndex = 0;
+    return deck[reviewIndex];
+  }
+  return deck[0] || null;
 }
 
 function render(){
   stopLoop();
   const stage = document.getElementById('stage');
   const controls = document.getElementById('controls');
+  const skipBtn = document.getElementById('skipBtn');
+  const masterBtn = document.getElementById('masterBtn');
+  const controlsSecondary = document.getElementById('controlsSecondary');
 
-  if(deck.length === 0){
+  // Relabel the two main buttons depending on mode.
+  // Review mode = pure browsing (← 前へ / 次へ →) plus a separate,
+  // explicit confirm action. Simply moving between cards NEVER changes
+  // a word's box or schedule — only pressing 復習完了 does.
+  if(reviewMode){
+    skipBtn.textContent = '次へ（スキップ）';
+    masterBtn.textContent = '✓ 覚えている（復習完了）';
+    masterBtn.style.display = '';
+    controlsSecondary.style.display = 'none';
+  } else {
+    skipBtn.textContent = '次へ（まだ）';
+    masterBtn.style.display = 'none';
+  }
+
+  const current = currentCard();
+
+  if(!current){
     stage.innerHTML = `
       <div class="empty-state">
-        <div class="word">よくできました</div>
-        <p>本日復習すべきカードはこれで終わりです。<br>「学習記録一覧」からいつでも前倒しで復習したり、「すべてリセット」で最初からやり直すこともできます。</p>
+        <div class="word">${reviewMode ? '復習する単語がありません' : 'よくできました'}</div>
+        <p>${reviewMode
+          ? (reviewFilter === 'due'
+              ? '今日、復習日を迎えている単語は今のところありません。<br>上のプルダウンで「すべて」に切り替えると、日付に関係なくこれまでマスターした単語をまとめて確認できます。'
+              : reviewFilter === 'all'
+                ? 'まだ一度も「マスター」にチェックを入れた単語がありません。<br>通常モードで単語を学習すると、ここに復習対象として表示されます。'
+                : 'このサイクルに該当する単語は今のところありません。')
+          : '本日の新規学習・復習はこれで終わりです。<br>「🔁 これまでの単語を復習する」で、今までマスターした単語をまとめて確認できます。'}</p>
       </div>
     `;
     controls.style.display = 'none';
-    document.getElementById('controlsSecondary').style.display = 'none';
+    controlsSecondary.style.display = 'none';
     updateProgress();
     return;
   }
 
   controls.style.display = 'flex';
-  document.getElementById('controlsSecondary').style.display = 'flex';
+  if(!reviewMode) controlsSecondary.style.display = 'flex';
   flipped = false;
 
-  const current = deck[0];
-  const next = deck[1];
+  const nextPeek = reviewMode ? null : deck[1];
 
   stage.innerHTML = `
-    ${next ? `<div class="card behind"></div>` : ''}
+    ${nextPeek ? `<div class="card behind"></div>` : ''}
     <div class="card front" id="currentCard">
       ${frontHTML(current)}
     </div>
@@ -828,6 +990,7 @@ function render(){
   });
 
   attachSpeakHandler(current);
+  requestAnimationFrame(fitWordFont);
 
   updateProgress();
 }
@@ -839,45 +1002,51 @@ function flipCard(){
   }
   stopLoop();
   const card = document.getElementById('currentCard');
-  const current = deck[0];
+  const current = currentCard();
+  if(!current) return;
   flipped = true;
 
   card.classList.add('flipping');
   setTimeout(() => {
     card.classList.add('flipped-card');
     card.innerHTML = backHTML(current);
+    attachSpeakHandler(current);
     card.classList.remove('flipping');
   }, 220);
 }
 
 function showFront(){
   const card = document.getElementById('currentCard');
-  const current = deck[0];
+  const current = currentCard();
+  if(!current) return;
   flipped = false;
   card.classList.add('flipping');
   setTimeout(() => {
     card.classList.remove('flipped-card');
     card.innerHTML = frontHTML(current);
     attachSpeakHandler(current);
+    requestAnimationFrame(fitWordFont);
     card.classList.remove('flipping');
   }, 220);
 }
 
+// ---------- Normal (first-time learning) mode ----------
+// Grading here intentionally shrinks the live queue as you go, since the
+// point of this mode is to whittle down to only the words you don't know yet.
 function nextCard(gotIt){
   const card = document.getElementById('currentCard');
   if(!card){ return; }
 
   const current = deck[0];
-  const prevState = Object.assign({}, getState(current.word));
+  const prevState = Object.assign({}, getState(current.idx));
 
-  // save state for undo
   history.push({
-    word: current.word,
+    idx: current.idx,
     gotIt: gotIt,
     prevState: prevState
   });
 
-  const st = getState(current.word);
+  const st = getState(current.idx);
   if(gotIt){
     st.box = Math.min(MAX_BOX, st.box + 1);
     st.nextReview = addDays(todayStr(), BOX_INTERVALS_DAYS[st.box - 1]);
@@ -885,14 +1054,12 @@ function nextCard(gotIt){
     st.box = 0;
     st.nextReview = todayStr();
   }
-  progress[current.word] = st;
+  progress[current.idx] = st;
   saveProgress();
 
   card.classList.add('exit-left');
 
   setTimeout(() => {
-    // card leaves today's session regardless of result;
-    // it will reappear automatically once its nextReview date arrives
     deck.shift();
     render();
   }, 260);
@@ -902,13 +1069,51 @@ function prevCard(){
   if(history.length === 0) return;
   const last = history.pop();
 
-  progress[last.word] = last.prevState;
+  progress[last.idx] = last.prevState;
   saveProgress();
 
-  const w = WORDS.find(item => item.word === last.word);
+  const w = WORDS[last.idx];
   if(w) deck.unshift(w);
 
   render();
+}
+
+// ---------- Review mode ----------
+// Browsing (←前へ / 次へ→) NEVER touches box/schedule data — it is pure
+// navigation over a fixed list that loops around. Only the explicit
+// 復習完了 button advances a word's box, and the word stays in the list
+// so you can keep browsing back to it in the same session.
+function reviewNext(){
+  if(deck.length === 0) return;
+  reviewIndex = (reviewIndex + 1) % deck.length;
+  render();
+}
+
+function reviewPrev(){
+  if(deck.length === 0) return;
+  reviewIndex = (reviewIndex - 1 + deck.length) % deck.length;
+  render();
+}
+
+function confirmReview(){
+  const current = currentCard();
+  if(!current) return;
+  if(reviewConfirmed.has(current.idx)) return;
+  reviewConfirmed.add(current.idx);
+  const st = getState(current.idx);
+  st.box = Math.min(MAX_BOX, st.box + 1);
+  st.nextReview = addDays(todayStr(), BOX_INTERVALS_DAYS[st.box - 1]);
+  progress[current.idx] = st;
+  saveProgress();
+  const card = document.getElementById('currentCard');
+  if(card) card.classList.add('confirmed-flash');
+  setTimeout(() => {
+    const pos = deck.findIndex(w => w.idx === current.idx);
+    if(pos !== -1) deck.splice(pos, 1);
+    if(reviewIndex >= deck.length) reviewIndex = 0;
+    reviewConfirmed.delete(current.idx);
+    render();
+  }, 260);
 }
 
 function restartDeck(){
@@ -916,50 +1121,12 @@ function restartDeck(){
   render();
 }
 
-function renderMasteredList(){
-  const list = document.getElementById('masteredList');
-  const learnedWords = WORDS.filter(w => getState(w.word).box >= 1);
-
-  if(learnedWords.length === 0){
-    list.innerHTML = `<li class="mastered-empty" style="background:none;">まだ学習記録はありません。</li>`;
-    return;
-  }
-
-  learnedWords.sort((a, b) => getState(a.word).nextReview.localeCompare(getState(b.word).nextReview));
-
-  list.innerHTML = learnedWords.map(w => {
-    const st = getState(w.word);
-    const label = st.box >= MAX_BOX ? '定着済み' : `Box ${st.box}`;
-    return `
-    <li>
-      <span class="m-word">${w.word} <span class="review-date">(${label} · 次回 ${st.nextReview})</span></span>
-      <button class="restore-btn" data-word="${w.word}">今すぐ復習</button>
-    </li>
-  `;
-  }).join('');
-
-  list.querySelectorAll('.restore-btn').forEach(btn => {
-    btn.addEventListener('click', () => restoreWord(btn.dataset.word));
-  });
-}
-
-function restoreWord(word){
-  const st = getState(word);
-  st.nextReview = todayStr();
-  progress[word] = st;
-  saveProgress();
-  const w = WORDS.find(item => item.word === word);
-  if(w && !deck.some(d => d.word === word)){
-    deck.unshift(w);
-  }
-  if(w && !originalOrder.some(d => d.word === word)){
-    originalOrder.unshift(w);
-  }
-  render();
-}
-
-document.getElementById('skipBtn').addEventListener('click', () => nextCard(false));
-document.getElementById('masterBtn').addEventListener('click', () => nextCard(true));
+document.getElementById('skipBtn').addEventListener('click', () => {
+  if(reviewMode) reviewNext(); else nextCard(false);
+});
+document.getElementById('masterBtn').addEventListener('click', () => {
+  if(reviewMode) confirmReview(); else nextCard(true);
+});
 document.getElementById('prevBtn').addEventListener('click', () => prevCard());
 document.getElementById('restartBtn').addEventListener('click', () => restartDeck());
 
@@ -972,13 +1139,26 @@ document.getElementById('resetBtn').addEventListener('click', () => {
   }
 });
 
-document.getElementById('masteredToggleBtn').addEventListener('click', () => {
-  panelOpen = !panelOpen;
-  const panel = document.getElementById('masteredPanel');
-  const btn = document.getElementById('masteredToggleBtn');
-  panel.classList.toggle('open', panelOpen);
-  btn.textContent = panelOpen ? '学習記録一覧 ▴' : '学習記録一覧 ▾';
-  if(panelOpen) renderMasteredList();
+document.getElementById('reviewToggleBtn').addEventListener('click', () => {
+  reviewMode = !reviewMode;
+  reviewIndex = 0;
+  reviewConfirmed.clear();
+  const btn = document.getElementById('reviewToggleBtn');
+  const banner = document.getElementById('reviewBanner');
+  btn.textContent = reviewMode ? '↩ 学習モードに戻る' : '🔁 これまでの単語を復習する';
+  btn.classList.toggle('btn-on', reviewMode);
+  banner.classList.toggle('show', reviewMode);
+  buildDeck();
+  render();
+});
+
+document.getElementById('reviewFilterSelect').addEventListener('change', (e) => {
+  reviewFilter = e.target.value;
+  reviewIndex = 0;
+  if(reviewMode){
+    buildDeck();
+    render();
+  }
 });
 
 document.addEventListener('keydown', (e) => {
@@ -986,13 +1166,15 @@ document.addEventListener('keydown', (e) => {
     e.preventDefault();
     flipCard();
   } else if(e.code === 'ArrowRight'){
-    nextCard(false);
+    if(reviewMode) reviewNext(); else nextCard(false);
   } else if(e.code === 'ArrowLeft'){
-    prevCard();
+    if(reviewMode) reviewPrev(); else prevCard();
   } else if(e.code === 'Enter'){
-    nextCard(true);
+    if(reviewMode) confirmReview(); else nextCard(true);
   }
 });
+
+window.addEventListener('resize', () => { if(!flipped) fitWordFont(); });
 
 renderSourceFilter();
 buildDeck();
