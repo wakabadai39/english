@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NPR英語学習 単語帳（復習管理つき）</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap');
+
+  :root{
+    --bg: #e9e9e6;
+    --bg-deep: #dcdcd8;
+    --ink: #2b2b2b;
+    --ink-soft: #6b6b68;
+    --line: #c7c7c2;
+    --card: #f4f3ef;
+    --accent: #b3422e;
+    --accent-soft: #d98f7e;
+    --done: #7c8a6e;
+  }
+
+  *{ box-sizing: border-box; }
+
+  body{
+    margin:0;
+    min-height:100vh;
+    background: var(--bg);
+    background-image:
+      radial-gradient(circle at 15% 20%, rgba(0,0,0,0.02) 0%, transparent 40%),
+      radial-gradient(circle at 85% 80%, rgba(0,0,0,0.02) 0%, transparent 40%);
+    color: var(--ink);
+    font-family: 'Inter', 'Noto Sans JP', sans-serif;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    padding: 28px 16px 60px;
+  }
+
+  .topbar{
+    width:100%;
+    max-width:480px;
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+    margin-bottom: 6px;
+  }
+
+  .title{
+    font-family:'Spectral', serif;
+    font-weight:600;
+    font-size: 1.5rem;
+    letter-spacing: 0.01em;
+  }
+  .title .accent{ color: var(--accent); font-style: italic; }
+
+  .progress-label{
+    font-size: 0.78rem;
+    color: var(--ink-soft);
+    font-variant-numeric: tabular-nums;
+    text-align:right;
+  }
+
+  .progress-track{
+    width:100%;
+    max-width:480px;
+    height: 3px;
+    background: var(--line);
+    border-radius: 2px;
+    margin: 10px 0 28px;
+    overflow:hidden;
+  }
+  .progress-fill{
+    height:100%;
+    background: var(--accent);
+    transition: width 0.4s ease;
+  }
+
+  .stage{
+    width:100%;
+    max-width:480px;
+    position:relative;
+    height: 340px;
+    perspective: 1200px;
+  }
+
+  .card{
+    position:absolute;
+    inset:0;
+    border-radius: 14px;
+    background: var(--card);
+    border: 1px solid var(--line);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 12px 28px -16px rgba(0,0,0,0.18);
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    padding: 28px 26px;
+    cursor:pointer;
+    transition: transform 0.45s cubic-bezier(.22,.61,.36,1), opacity 0.3s ease, box-shadow 0.3s;
+    backface-visibility:hidden;
+    user-select:none;
+  }
+
+  .card.behind{
+    transform: scale(0.96) translateY(10px);
+    box-shadow: none;
+    z-index: 0;
+    opacity: 0.6;
+  }
+
+  .card.front{ z-index: 1; }
+
+  .card.flipping{
+    transform: rotateY(90deg) scale(0.96);
+    opacity: 0;
+  }
+
+  .card.exit-left{
+    transform: translateX(-130%) rotate(-8deg);
+    opacity: 0;
+  }
+
+  .eyebrow{
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin-bottom: 18px;
+  }
+
+  .word{
+    font-family:'Spectral', serif;
+    font-weight: 600;
+    font-size: 2.4rem;
+    line-height: 1.15;
+    margin: 0 0 18px;
+    word-break: break-word;
+  }
+
+  .speak-btn{
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    border: 1px solid var(--line);
+    background: #fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    transition: background 0.2s, transform 0.15s, border-color 0.2s;
+    flex-shrink:0;
+  }
+  .speak-btn:hover{ border-color: var(--accent-soft); }
+  .speak-btn:active{ transform: scale(0.92); }
+  .speak-btn svg{ width:20px; height:20px; fill: var(--accent); }
+  .speak-btn.speaking svg{ animation: pulse 0.6s ease infinite alternate; }
+  .speak-btn.looping{ background: var(--accent); border-color: var(--accent); }
+  .speak-btn.looping svg{ fill: #fff; animation: pulse 0.6s ease infinite alternate; }
+  @keyframes pulse{ from{ opacity:1; } to{ opacity:0.45; } }
+
+  .word-row{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap: 14px;
+    margin-bottom: 6px;
+  }
+
+  .tap-hint{
+    font-size: 0.78rem;
+    color: var(--ink-soft);
+    margin-top: 16px;
+  }
+
+  .hint-block{
+    width:100%;
+  }
+  .hint-label{
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 10px;
+  }
+  .hint-text{
+    font-size: 1.15rem;
+    font-weight: 500;
+    margin-bottom: 22px;
+    line-height: 1.6;
+  }
+  .example-label{
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin-bottom: 8px;
+  }
+  .example-text{
+    font-family:'Spectral', serif;
+    font-style: italic;
+    font-size: 1.05rem;
+    line-height: 1.6;
+    color: var(--ink);
+  }
+
+  .controls{
+    width:100%;
+    max-width:480px;
+    display:flex;
+    gap: 12px;
+    margin-top: 26px;
+  }
+
+  .btn{
+    flex:1;
+    border: 1px solid var(--line);
+    background: var(--card);
+    color: var(--ink);
+    font-family:'Inter', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 500;
+    padding: 14px 16px;
+    border-radius: 10px;
+    cursor:pointer;
+    transition: background 0.2s, border-color 0.2s, transform 0.1s;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap: 8px;
+  }
+  .btn:active{ transform: scale(0.98); }
+  .btn.skip:hover{ border-color: var(--ink-soft); }
+
+  .btn.master{
+    background: var(--done);
+    color: #fff;
+    border-color: var(--done);
+  }
+  .btn.master:hover{ background: #6c7a5e; }
+
+  .controls-secondary{
+    width:100%;
+    max-width:480px;
+    display:flex;
+    gap: 12px;
+    margin-top: 10px;
+  }
+  .btn-small{
+    flex:1;
+    border: 1px solid var(--line);
+    background: transparent;
+    color: var(--ink-soft);
+    font-family:'Inter', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 500;
+    padding: 9px 12px;
+    border-radius: 8px;
+    cursor:pointer;
+    transition: background 0.2s, border-color 0.2s, color 0.2s, transform 0.1s;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap: 6px;
+  }
+  .btn-small:active{ transform: scale(0.98); }
+  .btn-small:hover{ border-color: var(--accent-soft); color: var(--accent); }
+  .btn-small:disabled{
+    opacity: 0.4;
+    cursor: default;
+  }
+  .btn-small:disabled:hover{ border-color: var(--line); color: var(--ink-soft); }
+
+  .position-label{
+    font-size: 0.78rem;
+    color: var(--ink-soft);
+    font-variant-numeric: tabular-nums;
+    text-align:center;
+    margin-top: 12px;
+  }
+
+  .empty-state{
+    width:100%;
+    max-width:480px;
+    height: 340px;
+    border-radius:14px;
+    border: 1px dashed var(--line);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding: 30px;
+    gap: 14px;
+  }
+  .empty-state .word{ font-size: 1.6rem; }
+  .empty-state p{
+    color: var(--ink-soft);
+    font-size: 0.92rem;
+    line-height: 1.7;
+    margin:0;
+  }
+
+  .footer-row{
+    width:100%;
+    max-width:480px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-top: 30px;
+    font-size: 0.78rem;
+    color: var(--ink-soft);
+  }
+
+  .reset-link{
+    color: var(--ink-soft);
+    text-decoration: underline;
+    text-decoration-color: var(--line);
+    cursor:pointer;
+    background:none;
+    border:none;
+    font-family:inherit;
+    font-size: inherit;
+    padding:0;
+  }
+  .reset-link:hover{ color: var(--accent); }
+
+  .checkmark-flash{
+    position:absolute;
+    top: 16px;
+    right: 16px;
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--done);
+    opacity:0;
+    transition: opacity 0.3s;
+  }
+  .checkmark-flash.show{ opacity:1; }
+
+  @media (max-width: 380px){
+    .word{ font-size: 1.9rem; }
+    .stage{ height: 320px; }
+  }
+
+  .card.flipped-card{
+    padding: 24px 24px;
+    overflow-y: auto;
+    align-items: stretch;
+    text-align: left;
+  }
+
+  .back-scroll{
+    width:100%;
+    overflow-y: auto;
+    max-height: 100%;
+    padding-right: 4px;
+  }
+
+  .general-block{
+    background: var(--bg-deep);
+    border-radius: 8px;
+    padding: 10px 12px;
+    margin-bottom: 16px;
+  }
+  .general-label{
+    font-size: 0.68rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin-bottom: 6px;
+  }
+  .general-text{
+    font-size: 0.92rem;
+    line-height: 1.6;
+    color: var(--ink);
+  }
+
+  .example-ja-text{
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: var(--ink-soft);
+    margin-top: 6px;
+  }
+
+  .note-block{
+    margin-top: 18px;
+    border-top: 1px dashed var(--line);
+    padding-top: 14px;
+  }
+  .note-label{
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 8px;
+  }
+  .note-text{
+    font-size: 0.9rem;
+    line-height: 1.7;
+    color: var(--ink);
+  }
+
+  .back-tap-hint{
+    text-align:center;
+    margin-top: 18px;
+  }
+
+  /* Mastered list panel */
+  .panel-toggle{
+    width:100%;
+    max-width:480px;
+    display:flex;
+    justify-content:flex-end;
+    margin-top: 10px;
+  }
+  .mastered-panel{
+    width:100%;
+    max-width:480px;
+    margin-top: 14px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: var(--card);
+    padding: 16px;
+    display:none;
+  }
+  .mastered-panel.open{ display:block; }
+  .mastered-panel h3{
+    font-family:'Spectral', serif;
+    font-size: 1.05rem;
+    font-weight: 600;
+    margin: 0 0 12px;
+  }
+  .mastered-list{
+    list-style:none;
+    margin:0;
+    padding:0;
+    max-height: 280px;
+    overflow-y:auto;
+    display:flex;
+    flex-direction:column;
+    gap: 6px;
+  }
+  .mastered-list li{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap: 10px;
+    padding: 8px 10px;
+    background: var(--bg-deep);
+    border-radius: 8px;
+    font-size: 0.92rem;
+  }
+  .mastered-list li .m-word{
+    font-family:'Spectral', serif;
+    font-weight: 500;
+  }
+  .restore-btn{
+    border: 1px solid var(--line);
+    background: #fff;
+    color: var(--ink);
+    font-size: 0.78rem;
+    padding: 6px 10px;
+    border-radius: 8px;
+    cursor:pointer;
+    flex-shrink:0;
+    white-space: nowrap;
+  }
+  .restore-btn:hover{ border-color: var(--accent-soft); color: var(--accent); }
+  .mastered-empty{
+    color: var(--ink-soft);
+    font-size: 0.88rem;
+    text-align:center;
+    padding: 10px 0;
+  }
+
+  .stats-row{
+    width:100%;
+    max-width:480px;
+    display:flex;
+    justify-content:space-between;
+    font-size: 0.76rem;
+    color: var(--ink-soft);
+    margin-bottom: 10px;
+  }
+  .source-select-row{
+    width:100%;
+    max-width:480px;
+    margin-bottom: 16px;
+  }
+  #sourceFilter{
+    width:100%;
+    padding: 8px 10px;
+    border-radius: 8px;
+    border: 1px solid var(--line);
+    background: #fff;
+    color: var(--ink);
+    font-family:'Inter', sans-serif;
+    font-size: 0.85rem;
+  }
+  .source-tag{
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    background: var(--bg-deep);
+    padding: 3px 9px;
+    border-radius: 10px;
+    display:inline-block;
+    margin-bottom: 14px;
+  }
+  .box-badge{
+    position:absolute;
+    top: 16px;
+    left: 16px;
+    font-size: 0.68rem;
+    color: var(--ink-soft);
+    background: var(--bg-deep);
+    padding: 3px 8px;
+    border-radius: 8px;
+  }
+  .review-date{
+    font-size: 0.72rem;
+    color: var(--ink-soft);
+    white-space: nowrap;
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="title">NPR <span class="accent">単語帳</span></div>
+  <div class="progress-label" id="progressLabel">0 / 0 習得</div>
+</div>
+
+<div class="progress-track">
+  <div class="progress-fill" id="progressFill" style="width:0%"></div>
+</div>
+
+<div class="stats-row" id="statsRow">
+  <span id="dueLabel">本日の復習: 0語</span>
+  <span id="totalLabel">全カード: 0語</span>
+</div>
+
+<div class="source-select-row">
+  <select id="sourceFilter"></select>
+</div>
+
+<div class="stage" id="stage"></div>
+
+<div class="controls" id="controls">
+  <button class="btn skip" id="skipBtn">次へ (まだ)</button>
+  <button class="btn master" id="masterBtn">習得済み ✓</button>
+</div>
+
+<div class="controls-secondary" id="controlsSecondary">
+  <button class="btn-small" id="prevBtn">← 一つ前に戻る</button>
+  <button class="btn-small" id="restartBtn">⟲ 最初に戻る</button>
+</div>
+
+<div class="position-label" id="positionLabel"></div>
+
+<div class="footer-row">
+  <span id="remainingLabel"></span>
+  <button class="reset-link" id="resetBtn">すべてリセット</button>
+</div>
+
+<div class="panel-toggle">
+  <button class="reset-link" id="masteredToggleBtn">学習記録一覧 ▾</button>
+</div>
+
+<div class="mastered-panel" id="masteredPanel">
+  <h3>学習記録（復習スケジュール）</h3>
+  <ul class="mastered-list" id="masteredList"></ul>
+</div>
+
+<script>
+const WORDS = [{"word":"Limiting (limit)","hint":"制限する","source":"Visa (Trump/Universities)"},{"word":"Implications","hint":"影響、波及効果","source":"Visa (Trump/Universities)"},{"word":"Correspondent","hint":"特派員、記者","source":"Visa (Trump/Universities)"},{"word":"Historically","hint":"歴史的に、これまでは","source":"Visa (Trump/Universities)"},{"word":"Academic","hint":"学業の、大学の","source":"Visa (Trump/Universities)"},{"word":"Program","hint":"課程、プログラム","source":"Visa (Trump/Universities)"},{"word":"Fixed","hint":"固定された","source":"Visa (Trump/Universities)"},{"word":"Period","hint":"期間","source":"Visa (Trump/Universities)"},{"word":"Apply for","hint":"〜に申請する、申し込む","source":"Visa (Trump/Universities)"},{"word":"Formal","hint":"正式な、公式の","source":"Visa (Trump/Universities)"},{"word":"Extension","hint":"延長、引き延ばし","source":"Visa (Trump/Universities)"},{"word":"Fee","hint":"手数料、料金","source":"Visa (Trump/Universities)"},{"word":"Impact (verb)","hint":"〜に影響を与える","source":"Visa (Trump/Universities)"},{"word":"Medical","hint":"医学の、医療の","source":"Visa (Trump/Universities)"},{"word":"PhD","hint":"博士号","source":"Visa (Trump/Universities)"},{"word":"Restrictions","hint":"制限、規制","source":"Visa (Trump/Universities)"},{"word":"Majors","hint":"専攻（専門科目）","source":"Visa (Trump/Universities)"},{"word":"Administration","hint":"政権、政府","source":"Visa (Trump/Universities)"},{"word":"Crackdown","hint":"厳重な取り締まり","source":"Visa (Trump/Universities)"},{"word":"Immigration","hint":"出入国管理、移民","source":"Visa (Trump/Universities)"},{"word":"Tackling (tackle)","hint":"（問題に）取り組む、対処する","source":"Visa (Trump/Universities)"},{"word":"Abuse","hint":"悪用、濫用","source":"Visa (Trump/Universities)"},{"word":"Department of Homeland Security","hint":"国土安全保障省","source":"Visa (Trump/Universities)"},{"word":"Strengthen","hint":"強化する","source":"Visa (Trump/Universities)"},{"word":"Vetting","hint":"事前審査、身元調査","source":"Visa (Trump/Universities)"},{"word":"Quote (as a verbal aside)","hint":"引用（「〜」と言う時の前置き）","source":"Visa (Trump/Universities)"},{"word":"Perpetually","hint":"永久に、絶え間なく","source":"Visa (Trump/Universities)"},{"word":"Enrolling (enroll)","hint":"在籍する、登録する","source":"Visa (Trump/Universities)"},{"word":"Advocates (verb)","hint":"主張する、擁護する","source":"Visa (Trump/Universities)"},{"word":"Potentially","hint":"潜在的に、場合によっては","source":"Visa (Trump/Universities)"},{"word":"Circumstances","hint":"状況、事情","source":"Visa (Trump/Universities)"},{"word":"Qualify","hint":"資格を得る、適格である","source":"Visa (Trump/Universities)"},{"word":"Reacting (react)","hint":"反応する","source":"Visa (Trump/Universities)"},{"word":"Diversity","hint":"多様性","source":"Visa (Trump/Universities)"},{"word":"Worldview","hint":"世界観","source":"Visa (Trump/Universities)"},{"word":"Bureaucracy","hint":"官僚主義、面倒な手続き","source":"Visa (Trump/Universities)"},{"word":"Executive","hint":"幹部、執行部","source":"Visa (Trump/Universities)"},{"word":"Preeminence","hint":"優位性、圧倒的なトップであること","source":"Visa (Trump/Universities)"},{"word":"Shoot oneself in the foot","hint":"墓穴を掘る、自滅する","source":"Visa (Trump/Universities)"},{"word":"Broadly","hint":"広く、一般的に","source":"Visa (Trump/Universities)"},{"word":"Declines (noun)","hint":"減少、低下","source":"Visa (Trump/Universities)"},{"word":"Enrollment","hint":"入学、登録者数","source":"Visa (Trump/Universities)"},{"word":"Stepping up","hint":"強化する、促進する","source":"Visa (Trump/Universities)"},{"word":"Recruiting","hint":"勧誘、集めること","source":"Visa (Trump/Universities)"},{"word":"Lure","hint":"引きつける、誘い込む","source":"Visa (Trump/Universities)"},{"word":"Markup","hint":"上乗せ価格、割増料金","source":"Avocado Oil"},{"word":"Boast","hint":"誇る、〜であることを売りにする","source":"Avocado Oil"},{"word":"Puzzled","hint":"戸惑った、困惑した","source":"Avocado Oil"},{"word":"Purity","hint":"純度","source":"Avocado Oil"},{"word":"Slew","hint":"大量、多数","source":"Avocado Oil"},{"word":"Extract (verb)","hint":"抽出する","source":"Avocado Oil"},{"word":"Adulterate(d)","hint":"混ぜ物をする、品質を落とす","source":"Avocado Oil"},{"word":"Authentic","hint":"本物の","source":"Avocado Oil"},{"word":"Inconsistent with","hint":"〜と一致しない","source":"Avocado Oil"},{"word":"For comparison's sake","hint":"比較のために","source":"Avocado Oil"},{"word":"Findings","hint":"調査結果","source":"Avocado Oil"},{"word":"Disheartening","hint":"気落ちさせる、がっかりさせる","source":"Avocado Oil"},{"word":"Commercially bottled","hint":"商業的に瓶詰めされた","source":"Avocado Oil"},{"word":"Premium price","hint":"割増価格","source":"Avocado Oil"},{"word":"Yield (verb)","hint":"産出する、もたらす","source":"Avocado Oil"},{"word":"To begin with","hint":"そもそも、そもそもの話","source":"Avocado Oil"},{"word":"Refine","hint":"精製する","source":"Avocado Oil"},{"word":"Undercut","hint":"値段で出し抜く、安値で対抗する","source":"Avocado Oil"},{"word":"Cheater","hint":"不正をする者、いんちきをする者","source":"Avocado Oil"},{"word":"Health halo","hint":"健康的だという（過大な）印象・お墨付き","source":"Avocado Oil"},{"word":"Alternative","hint":"代替品、代替の","source":"Avocado Oil"},{"word":"Seed oil","hint":"種子油","source":"Avocado Oil"},{"word":"Incentive","hint":"動機、誘因","source":"Avocado Oil"},{"word":"Regulatory action","hint":"規制措置","source":"Avocado Oil"},{"word":"Nutrition","hint":"栄養（学）","source":"Avocado Oil"},{"word":"Browse","hint":"（店内などを）見て回る","source":"Avocado Oil"},{"word":"Infected (with)","hint":"感染した、（比喩的に）侵された","source":"Smithsonian Museum"},{"word":"Woke ideology","hint":"過度に政治的公正・社会正義に敏感なイデオロギー","source":"Smithsonian Museum"},{"word":"Subcommittee","hint":"小委員会","source":"Smithsonian Museum"},{"word":"Chair (person)","hint":"委員長","source":"Smithsonian Museum"},{"word":"Founded on","hint":"〜の上に築かれた","source":"Smithsonian Museum"},{"word":"Oppressor","hint":"抑圧する者","source":"Smithsonian Museum"},{"word":"Oppressed","hint":"抑圧される者","source":"Smithsonian Museum"},{"word":"Mirror (verb)","hint":"（それと）似ている、反映する","source":"Smithsonian Museum"},{"word":"Domestic Policy Council","hint":"国内政策会議","source":"Smithsonian Museum"},{"word":"Underemphasize","hint":"軽視する、十分に強調しない","source":"Smithsonian Museum"},{"word":"Founding Fathers","hint":"建国の父たち","source":"Smithsonian Museum"},{"word":"Anniversary","hint":"記念日、周年","source":"Smithsonian Museum"},{"word":"Hew to","hint":"（方針・立場などに）従う、沿う","source":"Smithsonian Museum"},{"word":"Govern","hint":"〜を規律する、統制する","source":"Smithsonian Museum"},{"word":"Scholarship","hint":"学問、学識","source":"Smithsonian Museum"},{"word":"Nonpartisanship","hint":"党派に偏らないこと、超党派性","source":"Smithsonian Museum"},{"word":"Take sides","hint":"どちらかの側につく","source":"Smithsonian Museum"},{"word":"Breadth","hint":"広がり、幅","source":"Smithsonian Museum"},{"word":"Rebuttal","hint":"反論","source":"Smithsonian Museum"},{"word":"Undermine","hint":"（信頼などを）損なう、弱める","source":"Smithsonian Museum"},{"word":"Trustworthiness","hint":"信頼性","source":"Smithsonian Museum"},{"word":"Reshape","hint":"作り変える、再構成する","source":"Smithsonian Museum"},{"word":"Narrative","hint":"物語、語り口","source":"Smithsonian Museum"},{"word":"Institution","hint":"施設、機関","source":"Smithsonian Museum"},{"word":"Allow","hint":"許す","source":"Smithsonian Museum"},{"word":"Capitol Hill","hint":"（アメリカ）連邦議会議事堂","source":"Smithsonian Museum"},{"word":"Adjunct instructor","hint":"非常勤講師","source":"Male Nurses"},{"word":"Mock","hint":"模擬の、実物そっくりの","source":"Male Nurses"},{"word":"Scrub","hint":"手洗い消毒、スクラブ（医療用の手洗い）","source":"Male Nurses"},{"word":"Elective","hint":"選択科目","source":"Male Nurses"},{"word":"Specialty","hint":"専門分野","source":"Male Nurses"},{"word":"Mannequin","hint":"マネキン、人体模型","source":"Male Nurses"},{"word":"Feature (verb)","hint":"（人・物を）目玉として取り上げる","source":"Male Nurses"},{"word":"Faculty","hint":"教員（全体）","source":"Male Nurses"},{"word":"Calling","hint":"天職、使命","source":"Male Nurses"},{"word":"Volunteer fireman","hint":"ボランティアの消防士","source":"Male Nurses"},{"word":"Quota","hint":"割り当て数、定員","source":"Male Nurses"},{"word":"Wake-up (a wake-up)","hint":"目覚めさせるもの、気づきのきっかけ","source":"Male Nurses"},{"word":"Stereotype","hint":"固定観念、ステレオタイプ","source":"Male Nurses"},{"word":"NICU (neonatal intensive care)","hint":"新生児集中治療室","source":"Male Nurses"},{"word":"Defensive (get defensive)","hint":"防御的になる、身構える","source":"Male Nurses"},{"word":"Breastfeeding","hint":"母乳育児","source":"Male Nurses"},{"word":"Skin-to-skin","hint":"肌と肌の触れ合い（カンガルーケア）","source":"Male Nurses"},{"word":"Inclusiveness","hint":"包摂性、受け入れる姿勢","source":"Male Nurses"},{"word":"Outcome","hint":"（治療などの）結果、転帰","source":"Male Nurses"},{"word":"Clinical rotation","hint":"臨床実習","source":"Male Nurses"},{"word":"Relieved","hint":"安心した、ほっとした","source":"Male Nurses"},{"word":"Bedside","hint":"病床のそば、ベッドサイド","source":"Male Nurses"},{"word":"Persist","hint":"根強く残る、存続する","source":"Male Nurses"},{"word":"Mistaken for","hint":"〜と間違えられて","source":"Male Nurses"},{"word":"Gender neutral","hint":"性別による区別のない","source":"Male Nurses"},{"word":"Designate","hint":"（正式に）指定する、認定する","source":"Male Nurses"},{"word":"Chant","hint":"（連呼する）掛け声、シュプレヒコール","source":"Nolan Wells"},{"word":"Somber","hint":"厳粛な、陰鬱な","source":"Nolan Wells"},{"word":"By all accounts","hint":"誰に聞いても、あらゆる話を総合すると","source":"Nolan Wells"},{"word":"Officiate","hint":"（式などを）執り行う","source":"Nolan Wells"},{"word":"Reward","hint":"懸賞金、報奨金","source":"Nolan Wells"},{"word":"Backtrack","hint":"話を戻す、後戻りする","source":"Nolan Wells"},{"word":"Spark (verb)","hint":"（議論などを）引き起こす","source":"Nolan Wells"},{"word":"Racial element","hint":"人種的な要素","source":"Nolan Wells"},{"word":"Foul play","hint":"犯罪行為、不正な行為","source":"Nolan Wells"},{"word":"Speculation","hint":"憶測","source":"Nolan Wells"},{"word":"Pending","hint":"保留中の、係属中の","source":"Nolan Wells"},{"word":"Medical examiner","hint":"検視官","source":"Nolan Wells"},{"word":"Toxicology report","hint":"毒物検査報告書","source":"Nolan Wells"},{"word":"Autopsy","hint":"司法解剖、検死解剖","source":"Nolan Wells"},{"word":"Independent (adj)","hint":"独立した、第三者による","source":"Nolan Wells"},{"word":"Cellphone","hint":"携帯電話","source":"Nolan Wells"},{"word":"Track back to","hint":"〜までたどる","source":"Nolan Wells"},{"word":"Digital evidence","hint":"デジタル証拠","source":"Nolan Wells"},{"word":"Figure out","hint":"解明する、理解する","source":"Nolan Wells"},{"word":"Civil rights attorney","hint":"公民権派弁護士","source":"Nolan Wells"},{"word":"Draw attention","hint":"注目を集める","source":"Nolan Wells"},{"word":"Investigation","hint":"捜査","source":"Nolan Wells"},{"word":"Law enforcement","hint":"法執行機関、警察","source":"Nolan Wells"},{"word":"Unanswered","hint":"未解決の、答えの出ていない","source":"Nolan Wells"},{"word":"Involved in (be involved in)","hint":"〜に関与している","source":"Nolan Wells"},{"word":"Delete","hint":"削除する","source":"Nolan Wells"},{"word":"Benefit concert","hint":"チャリティーコンサート","source":"Marx Brothers"},{"word":"Archivist","hint":"アーカイブ専門家、資料保管の専門家","source":"Marx Brothers"},{"word":"Restoration","hint":"修復","source":"Marx Brothers"},{"word":"Longtime","hint":"長年の","source":"Marx Brothers"},{"word":"Tape","hint":"テープ、録音テープ","source":"Marx Brothers"},{"word":"Accidentally","hint":"偶然に","source":"Marx Brothers"},{"word":"Extensive","hint":"大規模な、広範囲の","source":"Marx Brothers"},{"word":"Instrument","hint":"楽器","source":"Marx Brothers"},{"word":"Narrate","hint":"ナレーションをする、語る","source":"Marx Brothers"},{"word":"Meadow","hint":"草原、牧草地","source":"Marx Brothers"},{"word":"Escape","hint":"逃げる","source":"Marx Brothers"},{"word":"Libretto","hint":"台本、リブレット（オペラなどの）","source":"Marx Brothers"},{"word":"Outspoken","hint":"率直にものを言う","source":"Marx Brothers"},{"word":"Co-write","hint":"共作する","source":"Marx Brothers"},{"word":"Primary (election)","hint":"予備選挙","source":"Marx Brothers"},{"word":"Heat up","hint":"（状況が）激化する、盛り上がる","source":"Marx Brothers"},{"word":"Triumphant","hint":"勝利の、意気揚々とした","source":"Marx Brothers"},{"word":"Procession","hint":"行進","source":"Marx Brothers"},{"word":"Hunter","hint":"狩人","source":"Marx Brothers"},{"word":"Grateful","hint":"感謝している","source":"Marx Brothers"},{"word":"Retire","hint":"引退する","source":"Marx Brothers"},{"word":"Lose sight of","hint":"〜を見失う","source":"Marx Brothers"},{"word":"Restore (verb)","hint":"修復する","source":"Marx Brothers"},{"word":"Benefit (adj., e.g. benefit concert)","hint":"慈善の","source":"Marx Brothers"},{"word":"Whistle","hint":"口笛","source":"Marx Brothers"},{"word":"Applause","hint":"拍手","source":"Marx Brothers"},{"word":"Disclose","hint":"公表する、明らかにする","source":"Ebola Outbreak"},{"word":"Grief","hint":"悲しみ、悲嘆","source":"Ebola Outbreak"},{"word":"Epidemic","hint":"（感染症の）流行","source":"Ebola Outbreak"},{"word":"Outbreak","hint":"（病気などの）発生、アウトブレイク","source":"Ebola Outbreak"},{"word":"Incident manager","hint":"緊急対応責任者","source":"Ebola Outbreak"},{"word":"Implement","hint":"実行する、実施する","source":"Ebola Outbreak"},{"word":"In-depth","hint":"徹底的な、詳細な","source":"Ebola Outbreak"},{"word":"Contact (noun)","hint":"接触者","source":"Ebola Outbreak"},{"word":"Pillar","hint":"柱、基盤","source":"Ebola Outbreak"},{"word":"Epicenter","hint":"震源地、中心地","source":"Ebola Outbreak"},{"word":"Confirmed case","hint":"確定症例","source":"Ebola Outbreak"},{"word":"Passable","hint":"（道が）通行可能な","source":"Ebola Outbreak"},{"word":"Armed group","hint":"武装勢力","source":"Ebola Outbreak"},{"word":"Wage war","hint":"戦争を行う","source":"Ebola Outbreak"},{"word":"Displacement camp","hint":"避難民キャンプ","source":"Ebola Outbreak"},{"word":"Access to","hint":"〜へのアクセス、利用機会","source":"Ebola Outbreak"},{"word":"Symptom","hint":"症状","source":"Ebola Outbreak"},{"word":"Resemble","hint":"〜に似ている","source":"Ebola Outbreak"},{"word":"Malaria","hint":"マラリア","source":"Ebola Outbreak"},{"word":"Trading hub","hint":"交易拠点","source":"Ebola Outbreak"},{"word":"Downstream","hint":"下流に","source":"Ebola Outbreak"},{"word":"Panic","hint":"パニック、恐慌","source":"Ebola Outbreak"},{"word":"Case load","hint":"症例数","source":"Ebola Outbreak"},{"word":"Sicken","hint":"病気になる","source":"Ebola Outbreak"},{"word":"Seek treatment","hint":"治療を求める","source":"Ebola Outbreak"},{"word":"Catch up","hint":"追いつく","source":"Ebola Outbreak"},{"word":"Census","hint":"（動植物の）個体数調査","source":"Catfish Cancer"},{"word":"Startle","hint":"驚かせる","source":"Catfish Cancer"},{"word":"Blotch","hint":"（皮膚などの）斑点、染み","source":"Catfish Cancer"},{"word":"Melanoma","hint":"メラノーマ、悪性黒色腫","source":"Catfish Cancer"},{"word":"Leech (verb)","hint":"（液体などが）染み出す、しみ込む","source":"Catfish Cancer"},{"word":"Pollutant","hint":"汚染物質","source":"Catfish Cancer"},{"word":"Genome sequence","hint":"ゲノム配列","source":"Catfish Cancer"},{"word":"Erupt","hint":"（急に）発生する、噴出する","source":"Catfish Cancer"},{"word":"Awry (go awry)","hint":"おかしくなる、うまくいかなくなる","source":"Catfish Cancer"},{"word":"Host (biology)","hint":"宿主","source":"Catfish Cancer"},{"word":"Clone","hint":"クローン","source":"Catfish Cancer"},{"word":"Infectious agent","hint":"感染性病原体","source":"Catfish Cancer"},{"word":"Aquatic environment","hint":"水中環境","source":"Catfish Cancer"},{"word":"Transmissible","hint":"感染性の、伝染しうる","source":"Catfish Cancer"},{"word":"Mollusk","hint":"軟体動物","source":"Catfish Cancer"},{"word":"Aggregate (verb)","hint":"集まる、群がる","source":"Catfish Cancer"},{"word":"Spine","hint":"とげ","source":"Catfish Cancer"},{"word":"Avenue","hint":"（比喩的に）道、手段、経路","source":"Catfish Cancer"},{"word":"Invade","hint":"侵入する","source":"Catfish Cancer"},{"word":"Evolutionary biologist","hint":"進化生物学者","source":"Catfish Cancer"},{"word":"Dead end","hint":"行き止まり","source":"Catfish Cancer"},{"word":"Advantageous","hint":"有利な","source":"Catfish Cancer"},{"word":"Migrate","hint":"移動する","source":"Catfish Cancer"},{"word":"Metastasize","hint":"転移する","source":"Catfish Cancer"},{"word":"Metastasis (pl. metastases)","hint":"転移（がんの）","source":"Catfish Cancer"},{"word":"A ways off","hint":"まだ先で、かなり先で","source":"Catfish Cancer"},{"word":"Box office","hint":"興行収入","source":"The Odyssey"},{"word":"Blockbuster","hint":"大ヒット作","source":"The Odyssey"},{"word":"Epic (poem)","hint":"叙事詩","source":"The Odyssey"},{"word":"Adaptation","hint":"翻案、脚色作品","source":"The Odyssey"},{"word":"Miniseries","hint":"ミニシリーズ","source":"The Odyssey"},{"word":"Engaged (keep someone engaged)","hint":"興味を引きつけられた状態","source":"The Odyssey"},{"word":"Dated","hint":"時代遅れの、古臭い","source":"The Odyssey"},{"word":"Gratitude","hint":"感謝","source":"The Odyssey"},{"word":"On behalf of","hint":"〜を代表して","source":"The Odyssey"},{"word":"Mortal","hint":"人間、死すべき存在","source":"The Odyssey"},{"word":"Hospitality","hint":"もてなし、歓待","source":"The Odyssey"},{"word":"Equal (noun)","hint":"対等な者","source":"The Odyssey"},{"word":"In awe","hint":"畏敬の念を抱いて、圧倒されて","source":"The Odyssey"},{"word":"Cheesy","hint":"安っぽい、ベタな","source":"The Odyssey"},{"word":"Toolbox","hint":"道具箱","source":"The Odyssey"},{"word":"Multilingual learner","hint":"複数言語を学ぶ生徒","source":"The Odyssey"},{"word":"Linguistically diverse","hint":"言語的に多様な","source":"The Odyssey"},{"word":"Suitor","hint":"求婚者","source":"The Odyssey"},{"word":"Unit (of a course)","hint":"単元","source":"The Odyssey"},{"word":"Immigrant","hint":"移民","source":"The Odyssey"},{"word":"Foundations of storytelling","hint":"物語の基礎","source":"The Odyssey"},{"word":"Perspective","hint":"視点、観点","source":"The Odyssey"},{"word":"Take convincing","hint":"説得が必要である","source":"The Odyssey"},{"word":"Tall order","hint":"難題、無理な注文","source":"The Odyssey"},{"word":"Stretch out","hint":"引き延ばす、長期間にわたって行う","source":"The Odyssey"},{"word":"Head out into the world","hint":"世界へ旅立つ","source":"The Odyssey"},{"word":"Unsung hero","hint":"縁の下の力持ち、隠れた英雄","source":"My Unsung Hero"},{"word":"Impression (leave an impression)","hint":"印象（を残す）","source":"My Unsung Hero"},{"word":"Stutter","hint":"吃音、どもる","source":"My Unsung Hero"},{"word":"Peer","hint":"同級生、仲間","source":"My Unsung Hero"},{"word":"Excuse (be excused from)","hint":"（義務などを）免除される","source":"My Unsung Hero"},{"word":"Recite","hint":"暗唱する","source":"My Unsung Hero"},{"word":"Minor (adj.)","hint":"些細な","source":"My Unsung Hero"},{"word":"Empowering","hint":"力を与えるような","source":"My Unsung Hero"},{"word":"Corporate trainer","hint":"企業研修講師","source":"My Unsung Hero"},{"word":"Embarrass","hint":"恥ずかしい思いをさせる","source":"My Unsung Hero"},{"word":"Life-changing","hint":"人生を変えるような","source":"My Unsung Hero"},{"word":"Kindness","hint":"優しさ、親切","source":"My Unsung Hero"},{"word":"Air (be aired)","hint":"（番組などが）放送される","source":"My Unsung Hero"},{"word":"Reach out to","hint":"〜に連絡を取る","source":"My Unsung Hero"},{"word":"Voice memo","hint":"ボイスメモ","source":"My Unsung Hero"},{"word":"Podcast","hint":"ポッドキャスト","source":"My Unsung Hero"},{"word":"Big whoop","hint":"たいしたことじゃない（口語）","source":"My Unsung Hero"},{"word":"Get up there","hint":"（人前に）立つ、登壇する","source":"My Unsung Hero"},{"word":"One-on-one","hint":"一対一で","source":"My Unsung Hero"},{"word":"Lasting","hint":"長く続く、永続的な","source":"My Unsung Hero"},{"word":"Make a point to do","hint":"（意識して）必ず〜するようにする","source":"Idioms & Set Phrases"},{"word":"Open up to","hint":"〜に心を開く","source":"Idioms & Set Phrases"},{"word":"Find oneself doing","hint":"気づけば〜している","source":"Idioms & Set Phrases"},{"word":"Have got to (got to)","hint":"〜しなければならない（口語）","source":"Idioms & Set Phrases"},{"word":"If you will","hint":"いわば、言うなれば","source":"Idioms & Set Phrases"},{"word":"Sort of","hint":"なんというか、ある意味","source":"Idioms & Set Phrases"},{"word":"Have a moment","hint":"（一時的に）注目を集める、話題になる","source":"Idioms & Set Phrases"},{"word":"On record","hint":"記録が残っている中で、史上","source":"Idioms & Set Phrases"},{"word":"That's not the case","hint":"そうではない","source":"Idioms & Set Phrases"},{"word":"A life of its own","hint":"それ自体の生命・独立した存在","source":"Idioms & Set Phrases"},{"word":"What S calls X","hint":"Sがいわゆる X と呼ぶもの","source":"Idioms & Set Phrases"},{"word":"There is no way (that) S V","hint":"〜するなんてあり得ない","source":"Idioms & Set Phrases"}];
+const STORAGE_KEY = 'npr-vocab-flashcards-progress-v1';
+
+const BOX_INTERVALS_DAYS = [1, 3, 7, 14, 30]; // index 0..4 corresponds to box 1..5
+const MAX_BOX = 5;
+
+function todayStr(){
+  const d = new Date();
+  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+}
+function addDays(dateStr, days){
+  const d = new Date(dateStr + 'T00:00:00');
+  d.setDate(d.getDate() + days);
+  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+}
+
+let progress = {}; // map: word -> box/nextReview state
+try{
+  progress = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+}catch(e){ progress = {}; }
+
+let currentSource = 'ALL';
+let deck = [];
+let originalOrder = [];
+let history = [];
+let flipped = false;
+let panelOpen = false;
+let loopingWord = null;
+
+function saveProgress(){
+  try{
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
+  }catch(e){}
+}
+
+function getState(word){
+  return progress[word] || { box: 0, nextReview: todayStr() };
+}
+
+function sourceFilteredWords(){
+  if(currentSource === 'ALL') return WORDS;
+  return WORDS.filter(w => w.source === currentSource);
+}
+
+function isDue(word){
+  const st = getState(word);
+  return st.box === 0 || st.nextReview <= todayStr();
+}
+
+function buildDeck(){
+  const pool = sourceFilteredWords();
+  deck = pool.filter(w => isDue(w.word));
+  originalOrder = deck.slice();
+  history = [];
+}
+
+function renderSourceFilter(){
+  const sel = document.getElementById('sourceFilter');
+  const sources = Array.from(new Set(WORDS.map(w => w.source)));
+  sel.innerHTML = '';
+  const optAll = document.createElement('option');
+  optAll.value = 'ALL';
+  optAll.textContent = 'すべての記事（' + WORDS.length + '語）';
+  sel.appendChild(optAll);
+  sources.forEach(s => {
+    const count = WORDS.filter(w => w.source === s).length;
+    const opt = document.createElement('option');
+    opt.value = s;
+    opt.textContent = s + '（' + count + '語）';
+    sel.appendChild(opt);
+  });
+  sel.addEventListener('change', () => {
+    currentSource = sel.value;
+    buildDeck();
+    render();
+  });
+}
+
+function speakOnce(word, onEnd){
+  const utter = new SpeechSynthesisUtterance(word);
+  utter.lang = 'en-US';
+  utter.rate = 0.85;
+  utter.onend = onEnd;
+  utter.onerror = onEnd;
+  window.speechSynthesis.speak(utter);
+}
+
+function startLoop(word){
+  if(!('speechSynthesis' in window)) return;
+  window.speechSynthesis.cancel();
+  loopingWord = word;
+  const btn = document.querySelector('.speak-btn');
+  if(btn) btn.classList.add('looping');
+
+  const playNext = () => {
+    if(loopingWord !== word) return;
+    speakOnce(word, () => {
+      if(loopingWord !== word) return;
+      setTimeout(() => {
+        if(loopingWord === word) playNext();
+      }, 500);
+    });
+  };
+  playNext();
+}
+
+function stopLoop(){
+  loopingWord = null;
+  window.speechSynthesis.cancel();
+  const btn = document.querySelector('.speak-btn');
+  if(btn) btn.classList.remove('looping');
+}
+
+function updateProgress(){
+  const total = WORDS.length;
+  const learnedAtLeastOnce = WORDS.filter(w => getState(w.word).box >= 1).length;
+  const masteredCount = WORDS.filter(w => getState(w.word).box >= MAX_BOX).length;
+  const pool = sourceFilteredWords();
+  const dueCount = pool.filter(w => isDue(w.word)).length;
+
+  document.getElementById('progressLabel').textContent = `${masteredCount} / ${total} 定着`;
+  document.getElementById('progressFill').style.width = `${(learnedAtLeastOnce/total)*100}%`;
+  document.getElementById('dueLabel').textContent = `本日の復習: ${dueCount}語`;
+  document.getElementById('totalLabel').textContent = `全カード: ${total}語`;
+
+  const remaining = deck.length;
+  document.getElementById('remainingLabel').textContent = remaining > 0 ? `残り ${remaining} 語` : '';
+
+  const positionLabel = document.getElementById('positionLabel');
+  const prevBtn = document.getElementById('prevBtn');
+  const restartBtn = document.getElementById('restartBtn');
+  if(remaining > 0 && originalOrder.length > 0){
+    const idx = originalOrder.findIndex(w => w.word === deck[0].word);
+    const displayIdx = idx >= 0 ? idx + 1 : '?';
+    positionLabel.textContent = `${displayIdx} / ${originalOrder.length} 枚目`;
+  } else {
+    positionLabel.textContent = '';
+  }
+  if(prevBtn) prevBtn.disabled = history.length === 0;
+  if(restartBtn) restartBtn.disabled = originalOrder.length === 0;
+
+  renderMasteredList();
+}
+
+function speakerIcon(){
+  return `<svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.06c1.48-.74 2.5-2.26 2.5-4.03zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>`;
+}
+
+function boxLabel(word){
+  const st = getState(word);
+  if(st.box >= MAX_BOX) return '定着済み';
+  if(st.box === 0) return '新規';
+  return `Box ${st.box}`;
+}
+
+function frontHTML(current){
+  return `
+    <span class="source-tag">${current.source}</span>
+    <div class="box-badge">${boxLabel(current.word)}</div>
+    <div class="eyebrow">タップして意味を見る</div>
+    <div class="word-row">
+      <div class="word">${current.word}</div>
+      <button class="speak-btn" id="speakBtn" title="発音を聞く">${speakerIcon()}</button>
+    </div>
+    <div class="tap-hint">単語をタップ / クリック</div>
+  `;
+}
+
+function backHTML(current){
+  const generalBlock = current.general ? `
+      <div class="general-block">
+        <div class="general-label">本来の意味</div>
+        <div class="general-text">${current.general}</div>
+      </div>` : '';
+
+  const exampleBlock = current.example ? `
+        <div class="example-label">Example</div>
+        <div class="example-text">${current.example}</div>
+        <div class="example-ja-text">${current.example_ja || ''}</div>` : '';
+
+  const noteBlock = current.note ? `
+      <div class="note-block">
+        <div class="note-label">ヒント</div>
+        <div class="note-text">${current.note}</div>
+      </div>` : '';
+
+  return `
+    <div class="back-scroll">
+      <div class="hint-block">
+        <span class="source-tag">${current.source}</span>
+        <div class="hint-label">意味</div>
+        <div class="hint-text">${current.hint}</div>
+        ${generalBlock}
+        ${exampleBlock}
+        ${noteBlock}
+      </div>
+      <div class="back-tap-hint tap-hint">タップで単語に戻る</div>
+    </div>
+  `;
+}
+
+function attachSpeakHandler(current){
+  const speakBtn = document.getElementById('speakBtn');
+  if(speakBtn){
+    speakBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if(loopingWord === current.word){
+        stopLoop();
+      } else {
+        startLoop(current.word);
+      }
+    });
+  }
+}
+
+function render(){
+  stopLoop();
+  const stage = document.getElementById('stage');
+  const controls = document.getElementById('controls');
+
+  if(deck.length === 0){
+    stage.innerHTML = `
+      <div class="empty-state">
+        <div class="word">よくできました</div>
+        <p>本日復習すべきカードはこれで終わりです。<br>「学習記録一覧」からいつでも前倒しで復習したり、「すべてリセット」で最初からやり直すこともできます。</p>
+      </div>
+    `;
+    controls.style.display = 'none';
+    document.getElementById('controlsSecondary').style.display = 'none';
+    updateProgress();
+    return;
+  }
+
+  controls.style.display = 'flex';
+  document.getElementById('controlsSecondary').style.display = 'flex';
+  flipped = false;
+
+  const current = deck[0];
+  const next = deck[1];
+
+  stage.innerHTML = `
+    ${next ? `<div class="card behind"></div>` : ''}
+    <div class="card front" id="currentCard">
+      ${frontHTML(current)}
+    </div>
+  `;
+
+  document.getElementById('currentCard').addEventListener('click', (e) => {
+    if(e.target.closest('.speak-btn')) return;
+    flipCard();
+  });
+
+  attachSpeakHandler(current);
+
+  updateProgress();
+}
+
+function flipCard(){
+  if(flipped) {
+    showFront();
+    return;
+  }
+  stopLoop();
+  const card = document.getElementById('currentCard');
+  const current = deck[0];
+  flipped = true;
+
+  card.classList.add('flipping');
+  setTimeout(() => {
+    card.classList.add('flipped-card');
+    card.innerHTML = backHTML(current);
+    card.classList.remove('flipping');
+  }, 220);
+}
+
+function showFront(){
+  const card = document.getElementById('currentCard');
+  const current = deck[0];
+  flipped = false;
+  card.classList.add('flipping');
+  setTimeout(() => {
+    card.classList.remove('flipped-card');
+    card.innerHTML = frontHTML(current);
+    attachSpeakHandler(current);
+    card.classList.remove('flipping');
+  }, 220);
+}
+
+function nextCard(gotIt){
+  const card = document.getElementById('currentCard');
+  if(!card){ return; }
+
+  const current = deck[0];
+  const prevState = Object.assign({}, getState(current.word));
+
+  // save state for undo
+  history.push({
+    word: current.word,
+    gotIt: gotIt,
+    prevState: prevState
+  });
+
+  const st = getState(current.word);
+  if(gotIt){
+    st.box = Math.min(MAX_BOX, st.box + 1);
+    st.nextReview = addDays(todayStr(), BOX_INTERVALS_DAYS[st.box - 1]);
+  } else {
+    st.box = 0;
+    st.nextReview = todayStr();
+  }
+  progress[current.word] = st;
+  saveProgress();
+
+  card.classList.add('exit-left');
+
+  setTimeout(() => {
+    // card leaves today's session regardless of result;
+    // it will reappear automatically once its nextReview date arrives
+    deck.shift();
+    render();
+  }, 260);
+}
+
+function prevCard(){
+  if(history.length === 0) return;
+  const last = history.pop();
+
+  progress[last.word] = last.prevState;
+  saveProgress();
+
+  const w = WORDS.find(item => item.word === last.word);
+  if(w) deck.unshift(w);
+
+  render();
+}
+
+function restartDeck(){
+  buildDeck();
+  render();
+}
+
+function renderMasteredList(){
+  const list = document.getElementById('masteredList');
+  const learnedWords = WORDS.filter(w => getState(w.word).box >= 1);
+
+  if(learnedWords.length === 0){
+    list.innerHTML = `<li class="mastered-empty" style="background:none;">まだ学習記録はありません。</li>`;
+    return;
+  }
+
+  learnedWords.sort((a, b) => getState(a.word).nextReview.localeCompare(getState(b.word).nextReview));
+
+  list.innerHTML = learnedWords.map(w => {
+    const st = getState(w.word);
+    const label = st.box >= MAX_BOX ? '定着済み' : `Box ${st.box}`;
+    return `
+    <li>
+      <span class="m-word">${w.word} <span class="review-date">(${label} · 次回 ${st.nextReview})</span></span>
+      <button class="restore-btn" data-word="${w.word}">今すぐ復習</button>
+    </li>
+  `;
+  }).join('');
+
+  list.querySelectorAll('.restore-btn').forEach(btn => {
+    btn.addEventListener('click', () => restoreWord(btn.dataset.word));
+  });
+}
+
+function restoreWord(word){
+  const st = getState(word);
+  st.nextReview = todayStr();
+  progress[word] = st;
+  saveProgress();
+  const w = WORDS.find(item => item.word === word);
+  if(w && !deck.some(d => d.word === word)){
+    deck.unshift(w);
+  }
+  if(w && !originalOrder.some(d => d.word === word)){
+    originalOrder.unshift(w);
+  }
+  render();
+}
+
+document.getElementById('skipBtn').addEventListener('click', () => nextCard(false));
+document.getElementById('masterBtn').addEventListener('click', () => nextCard(true));
+document.getElementById('prevBtn').addEventListener('click', () => prevCard());
+document.getElementById('restartBtn').addEventListener('click', () => restartDeck());
+
+document.getElementById('resetBtn').addEventListener('click', () => {
+  if(confirm('学習の記録（復習スケジュール）をすべてリセットしますか？')){
+    progress = {};
+    saveProgress();
+    buildDeck();
+    render();
+  }
+});
+
+document.getElementById('masteredToggleBtn').addEventListener('click', () => {
+  panelOpen = !panelOpen;
+  const panel = document.getElementById('masteredPanel');
+  const btn = document.getElementById('masteredToggleBtn');
+  panel.classList.toggle('open', panelOpen);
+  btn.textContent = panelOpen ? '学習記録一覧 ▴' : '学習記録一覧 ▾';
+  if(panelOpen) renderMasteredList();
+});
+
+document.addEventListener('keydown', (e) => {
+  if(e.code === 'Space'){
+    e.preventDefault();
+    flipCard();
+  } else if(e.code === 'ArrowRight'){
+    nextCard(false);
+  } else if(e.code === 'ArrowLeft'){
+    prevCard();
+  } else if(e.code === 'Enter'){
+    nextCard(true);
+  }
+});
+
+renderSourceFilter();
+buildDeck();
+render();
+</script>
+
+</body>
+</html>
