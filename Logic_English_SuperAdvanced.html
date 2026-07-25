@@ -1463,10 +1463,8 @@ function confirmReviewed() {
   const stage = Math.min((prev ? prev.stage : -1) + 1, intervals.length - 1);
   masteredReview[realIdx] = { stage: stage, due: reviewDueDate(intervals[stage]) };
   saveMaster();
-  setTimeout(() => {
-    if (currentIndex >= getActive().length) currentIndex = 0;
-    update();
-  }, 300);
+  if (currentIndex >= getActive().length) currentIndex = 0;
+  update();
 }
 
 function toggleReviewMode() {
