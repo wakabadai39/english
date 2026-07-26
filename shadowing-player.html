@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>音源プレーヤー — シャドウイング用</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#161b26;
+  --panel:#1f2536;
+  --panel-raised:#262d42;
+  --cream:#e9e5da;
+  --cream-dim:#9aa1b5;
+  --amber:#e2a23b;
+  --amber-dim:#8a6a34;
+  --line:#333c54;
+  --radius:20px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;}
+body{
+  background:var(--ink);
+  font-family:'Noto Sans JP',sans-serif;
+  color:var(--cream);
+  min-height:100vh;
+  padding:22px 16px 40px;
+}
+.wrap{max-width:520px;margin:0 auto;}
+
+.header{text-align:center;margin-bottom:18px;}
+.header .eyebrow{font-size:11px;letter-spacing:.18em;color:var(--amber-dim);text-transform:uppercase;font-weight:700;}
+.header h1{font-size:19px;font-weight:900;margin-top:4px;color:var(--cream);}
+
+/* ── load area ── */
+.load-row{
+  display:flex;gap:8px;margin-bottom:16px;
+}
+.load-btn{
+  flex:1;
+  background:var(--panel);
+  border:1.5px dashed var(--line);
+  border-radius:14px;
+  padding:14px;
+  text-align:center;
+  font-size:13px;
+  font-weight:700;
+  color:var(--cream-dim);
+  cursor:pointer;
+  transition:border-color .15s,color .15s;
+}
+.load-btn:active{border-color:var(--amber);color:var(--amber);}
+input[type=file]{display:none;}
+
+/* ── now playing card ── */
+.deck{
+  background:var(--panel);
+  border-radius:var(--radius);
+  padding:22px 20px 18px;
+  margin-bottom:14px;
+  border:1px solid var(--line);
+  position:relative;
+  overflow:hidden;
+}
+.deck::before{
+  content:'';
+  position:absolute; inset:0;
+  background:radial-gradient(circle at 85% -10%, rgba(226,162,59,0.10), transparent 55%);
+  pointer-events:none;
+}
+.track-title{
+  font-size:14px;font-weight:700;color:var(--cream);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  margin-bottom:2px;
+}
+.track-sub{font-size:11px;color:var(--cream-dim);margin-bottom:16px;}
+
+.waveform{
+  display:flex; align-items:flex-end; justify-content:center;
+  gap:3px; height:34px; margin-bottom:14px;
+}
+.waveform span{
+  width:4px; border-radius:2px; background:var(--amber-dim);
+  height:6px;
+  transition:background .2s;
+}
+.waveform.playing span{ animation:bounce 1.1s ease-in-out infinite; background:var(--amber); }
+.waveform span:nth-child(1){animation-delay:0s;}
+.waveform span:nth-child(2){animation-delay:.08s;}
+.waveform span:nth-child(3){animation-delay:.16s;}
+.waveform span:nth-child(4){animation-delay:.24s;}
+.waveform span:nth-child(5){animation-delay:.32s;}
+.waveform span:nth-child(6){animation-delay:.24s;}
+.waveform span:nth-child(7){animation-delay:.16s;}
+.waveform span:nth-child(8){animation-delay:.08s;}
+.waveform span:nth-child(9){animation-delay:0s;}
+@keyframes bounce{
+  0%,100%{height:6px;}
+  50%{height:30px;}
+}
+
+.time-row{
+  display:flex;justify-content:space-between;align-items:center;
+  font-family:'JetBrains Mono',monospace;
+  font-size:12px; color:var(--cream-dim); margin-bottom:6px;
+}
+.time-row .now{color:var(--amber);font-weight:700;}
+.seek{
+  width:100%; height:5px; -webkit-appearance:none; appearance:none;
+  background:var(--line); border-radius:99px; outline:none; margin-bottom:18px;
+}
+.seek::-webkit-slider-thumb{
+  -webkit-appearance:none; width:15px; height:15px; border-radius:50%;
+  background:var(--amber); cursor:pointer;
+}
+
+.transport{
+  display:flex; align-items:center; justify-content:center; gap:14px;
+  margin-bottom:16px;
+}
+.transport button{
+  background:var(--panel-raised); border:1px solid var(--line); color:var(--cream);
+  border-radius:99px; cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+  font-family:'Noto Sans JP',sans-serif;
+}
+.transport .side-btn{ width:44px; height:44px; font-size:16px; }
+.transport .play-btn{ width:60px; height:60px; font-size:22px; background:var(--amber); color:var(--ink); border:none; }
+.transport button:active{ transform:scale(0.93); }
+
+.option-row{
+  display:flex; gap:8px; align-items:center;
+}
+.speed-select{
+  flex:1;
+  background:var(--panel-raised); color:var(--cream);
+  border:1px solid var(--line); border-radius:10px;
+  padding:9px 10px; font-size:13px; font-weight:700;
+  font-family:'JetBrains Mono',monospace;
+}
+.loop-toggle{
+  display:flex; align-items:center; gap:6px;
+  background:var(--panel-raised); border:1px solid var(--line); border-radius:10px;
+  padding:9px 12px; font-size:12px; font-weight:700; color:var(--cream-dim);
+  cursor:pointer; white-space:nowrap;
+}
+.loop-toggle input{ width:15px; height:15px; accent-color:var(--amber); cursor:pointer; }
+.loop-toggle.active{ color:var(--amber); border-color:var(--amber-dim); }
+
+/* ── playlist ── */
+.playlist-head{
+  font-size:11px; font-weight:700; color:var(--cream-dim);
+  text-transform:uppercase; letter-spacing:.08em;
+  margin:18px 0 8px 4px;
+}
+.playlist{ list-style:none; }
+.playlist li{
+  display:flex; align-items:center; gap:10px;
+  background:var(--panel); border:1px solid var(--line); border-radius:12px;
+  padding:11px 12px; margin-bottom:6px;
+  cursor:pointer; transition:border-color .15s,background .15s;
+}
+.playlist li.active{ border-color:var(--amber-dim); background:var(--panel-raised); }
+.playlist li .idx{
+  font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--cream-dim);
+  min-width:20px;
+}
+.playlist li.active .idx{ color:var(--amber); }
+.playlist li .name{
+  flex:1; font-size:12.5px; color:var(--cream);
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.playlist li .now-tag{
+  font-size:10px; font-weight:700; color:var(--amber);
+}
+
+.empty-hint{
+  text-align:center; color:var(--cream-dim); font-size:12.5px;
+  padding:30px 10px; line-height:1.8;
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="header">
+    <div class="eyebrow">Shadowing Player</div>
+    <h1>🎧 音源プレーヤー</h1>
+  </div>
+
+  <div class="load-row">
+    <label class="load-btn" for="fileInput">📂 音声ファイルを選ぶ（複数選択OK）</label>
+    <input type="file" id="fileInput" accept="audio/*" multiple>
+  </div>
+
+  <div class="deck">
+    <div class="track-title" id="trackTitle">ファイルが選ばれていません</div>
+    <div class="track-sub" id="trackSub">上のボタンからMP3などを選んでください</div>
+
+    <div class="waveform" id="waveform">
+      <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+    </div>
+
+    <div class="time-row">
+      <span class="now" id="curTime">0:00</span>
+      <span id="durTime">0:00</span>
+    </div>
+    <input type="range" class="seek" id="seekBar" min="0" max="100" value="0">
+
+    <div class="transport">
+      <button class="side-btn" id="prevBtn" title="前の曲">⏮</button>
+      <button class="play-btn" id="playBtn" title="再生/一時停止">▶</button>
+      <button class="side-btn" id="nextBtn" title="次の曲">⏭</button>
+    </div>
+
+    <div class="option-row">
+      <select class="speed-select" id="speedSelect"></select>
+      <label class="loop-toggle" id="loopToggle">
+        <input type="checkbox" id="loopCb">
+        <span>この曲だけリピート</span>
+      </label>
+    </div>
+  </div>
+
+  <div id="playlistArea" style="display:none;">
+    <div class="playlist-head">再生リスト</div>
+    <ul class="playlist" id="playlist"></ul>
+  </div>
+
+  <div class="empty-hint" id="emptyHint">
+    iPhoneの場合、「ファイルを選ぶ」からOneDrive上の音声ファイルも直接開けます（あらかじめiPhoneの「ファイル」アプリでOneDriveを連携しておいてください）。<br><br>
+    複数選ぶと、順番に自動で連続再生されます。「この曲だけリピート」にチェックを入れると、その1曲だけを繰り返します。
+  </div>
+
+</div>
+
+<audio id="audioEl"></audio>
+
+<script>
+const audio = document.getElementById('audioEl');
+audio.preservesPitch = true;
+audio.mozPreservesPitch = true;
+audio.webkitPreservesPitch = true;
+
+let files = [];
+let currentIndex = -1;
+let objectUrl = null;
+
+const fileInput = document.getElementById('fileInput');
+const trackTitle = document.getElementById('trackTitle');
+const trackSub = document.getElementById('trackSub');
+const waveform = document.getElementById('waveform');
+const curTimeEl = document.getElementById('curTime');
+const durTimeEl = document.getElementById('durTime');
+const seekBar = document.getElementById('seekBar');
+const playBtn = document.getElementById('playBtn');
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+const speedSelect = document.getElementById('speedSelect');
+const loopCb = document.getElementById('loopCb');
+const loopToggle = document.getElementById('loopToggle');
+const playlistArea = document.getElementById('playlistArea');
+const playlistEl = document.getElementById('playlist');
+const emptyHint = document.getElementById('emptyHint');
+
+// build speed options: 0.5–2.5, step 0.1
+(function buildSpeedOptions(){
+  for(let v = 0.5; v <= 2.501; v += 0.1){
+    const val = Math.round(v * 10) / 10;
+    const opt = document.createElement('option');
+    opt.value = val;
+    opt.textContent = val.toFixed(1) + '×';
+    if(Math.abs(val - 1.0) < 0.001) opt.selected = true;
+    speedSelect.appendChild(opt);
+  }
+})();
+
+function formatTime(sec){
+  if(!isFinite(sec) || sec < 0) sec = 0;
+  const m = Math.floor(sec / 60);
+  const s = Math.floor(sec % 60);
+  return m + ':' + String(s).padStart(2, '0');
+}
+
+function renderPlaylist(){
+  if(files.length <= 1){
+    playlistArea.style.display = 'none';
+    return;
+  }
+  playlistArea.style.display = '';
+  playlistEl.innerHTML = files.map((f, i) => `
+    <li class="${i === currentIndex ? 'active' : ''}" data-idx="${i}">
+      <span class="idx">${String(i + 1).padStart(2, '0')}</span>
+      <span class="name">${f.name}</span>
+      ${i === currentIndex ? '<span class="now-tag">再生中</span>' : ''}
+    </li>
+  `).join('');
+  playlistEl.querySelectorAll('li').forEach(li => {
+    li.addEventListener('click', () => loadTrack(parseInt(li.dataset.idx, 10)));
+  });
+}
+
+function loadTrack(idx){
+  if(idx < 0 || idx >= files.length) return;
+  currentIndex = idx;
+  if(objectUrl) URL.revokeObjectURL(objectUrl);
+  objectUrl = URL.createObjectURL(files[idx]);
+  audio.src = objectUrl;
+  audio.playbackRate = parseFloat(speedSelect.value);
+  audio.preservesPitch = true;
+  audio.mozPreservesPitch = true;
+  audio.webkitPreservesPitch = true;
+  trackTitle.textContent = files[idx].name;
+  trackSub.textContent = files.length > 1
+    ? `${idx + 1} / ${files.length} 曲目`
+    : '1曲を再生中';
+  emptyHint.style.display = 'none';
+  audio.play().catch(() => {});
+  renderPlaylist();
+}
+
+fileInput.addEventListener('change', (e) => {
+  const list = Array.from(e.target.files || []);
+  if(!list.length) return;
+  files = list;
+  loadTrack(0);
+});
+
+playBtn.addEventListener('click', () => {
+  if(!audio.src) return;
+  if(audio.paused){ audio.play(); } else { audio.pause(); }
+});
+
+prevBtn.addEventListener('click', () => {
+  if(currentIndex > 0) loadTrack(currentIndex - 1);
+});
+nextBtn.addEventListener('click', () => {
+  if(currentIndex < files.length - 1) loadTrack(currentIndex + 1);
+});
+
+audio.addEventListener('play', () => {
+  playBtn.textContent = '⏸';
+  waveform.classList.add('playing');
+});
+audio.addEventListener('pause', () => {
+  playBtn.textContent = '▶';
+  waveform.classList.remove('playing');
+});
+audio.addEventListener('ended', () => {
+  if(currentIndex < files.length - 1){
+    loadTrack(currentIndex + 1);
+  } else {
+    waveform.classList.remove('playing');
+    playBtn.textContent = '▶';
+  }
+});
+
+audio.addEventListener('loadedmetadata', () => {
+  durTimeEl.textContent = formatTime(audio.duration);
+  seekBar.max = Math.floor(audio.duration) || 100;
+});
+audio.addEventListener('timeupdate', () => {
+  curTimeEl.textContent = formatTime(audio.currentTime);
+  if(!seekBar.dragging){
+    seekBar.value = Math.floor(audio.currentTime);
+  }
+});
+seekBar.addEventListener('input', () => {
+  seekBar.dragging = true;
+});
+seekBar.addEventListener('change', () => {
+  audio.currentTime = parseFloat(seekBar.value);
+  seekBar.dragging = false;
+});
+
+speedSelect.addEventListener('change', () => {
+  audio.playbackRate = parseFloat(speedSelect.value);
+});
+
+loopCb.addEventListener('change', () => {
+  audio.loop = loopCb.checked;
+  loopToggle.classList.toggle('active', loopCb.checked);
+});
+</script>
+</body>
+</html>
