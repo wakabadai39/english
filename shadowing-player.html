@@ -50,6 +50,16 @@ body{
   transition:border-color .15s,color .15s;
 }
 .load-btn:active{border-color:var(--amber);color:var(--amber);}
+.clear-btn{
+  background:var(--panel);
+  border:1.5px solid var(--line);
+  border-radius:14px;
+  padding:14px 12px;
+  font-size:17px;
+  color:var(--cream-dim);
+  cursor:pointer;
+}
+.clear-btn:active{border-color:#e05252;color:#e05252;}
 input[type=file]{display:none;}
 
 /* ── now playing card ── */
@@ -191,6 +201,7 @@ input[type=file]{display:none;}
   <div class="load-row">
     <label class="load-btn" for="fileInput">📂 音声ファイルを選ぶ（複数選択OK）</label>
     <input type="file" id="fileInput" multiple>
+    <button class="clear-btn" id="clearCacheBtn" title="保存した音源を消去">🗑</button>
   </div>
 
   <div class="deck">
@@ -247,6 +258,7 @@ let currentIndex = -1;
 let objectUrl = null;
 
 const fileInput = document.getElementById('fileInput');
+const clearCacheBtn = document.getElementById('clearCacheBtn');
 const trackTitle = document.getElementById('trackTitle');
 const trackSub = document.getElementById('trackSub');
 const waveform = document.getElementById('waveform');
@@ -262,6 +274,66 @@ const loopToggle = document.getElementById('loopToggle');
 const playlistArea = document.getElementById('playlistArea');
 const playlistEl = document.getElementById('playlist');
 const emptyHint = document.getElementById('emptyHint');
+
+// ── IndexedDB: cache selected files so they survive page reloads ──
+const DB_NAME = 'shadowingPlayerDB';
+const DB_VERSION = 1;
+const STORE_NAME = 'files';
+
+function openDB(){
+  return new Promise((resolve, reject) => {
+    const req = indexedDB.open(DB_NAME, DB_VERSION);
+    req.onupgradeneeded = () => {
+      const db = req.result;
+      if(!db.objectStoreNames.contains(STORE_NAME)){
+        db.createObjectStore(STORE_NAME, { keyPath: 'order' });
+      }
+    };
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => reject(req.error);
+  });
+}
+
+async function saveFilesToDB(fileList){
+  const entries = await Promise.all(fileList.map(async (f, i) => ({
+    order: i,
+    name: f.name,
+    type: f.type || 'audio/mpeg',
+    data: await f.arrayBuffer()
+  })));
+  const db = await openDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(STORE_NAME, 'readwrite');
+    const store = tx.objectStore(STORE_NAME);
+    store.clear();
+    entries.forEach(e => store.put(e));
+    tx.oncomplete = () => resolve();
+    tx.onerror = () => reject(tx.error);
+  });
+}
+
+async function loadFilesFromDB(){
+  const db = await openDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(STORE_NAME, 'readonly');
+    const req = tx.objectStore(STORE_NAME).getAll();
+    req.onsuccess = () => {
+      const entries = (req.result || []).sort((a, b) => a.order - b.order);
+      resolve(entries.map(e => new File([e.data], e.name, { type: e.type })));
+    };
+    req.onerror = () => reject(req.error);
+  });
+}
+
+async function clearFilesInDB(){
+  const db = await openDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(STORE_NAME, 'readwrite');
+    tx.objectStore(STORE_NAME).clear();
+    tx.oncomplete = () => resolve();
+    tx.onerror = () => reject(tx.error);
+  });
+}
 
 // build speed options: 0.5–2.5, step 0.1
 (function buildSpeedOptions(){
@@ -300,7 +372,7 @@ function renderPlaylist(){
   });
 }
 
-function loadTrack(idx){
+function loadTrack(idx, autoplay = true){
   if(idx < 0 || idx >= files.length) return;
   currentIndex = idx;
   if(objectUrl) URL.revokeObjectURL(objectUrl);
@@ -315,11 +387,11 @@ function loadTrack(idx){
     ? `${idx + 1} / ${files.length} 曲目`
     : '1曲を再生中';
   emptyHint.style.display = 'none';
-  audio.play().catch(() => {});
+  if(autoplay) audio.play().catch(() => {});
   renderPlaylist();
 }
 
-fileInput.addEventListener('change', (e) => {
+fileInput.addEventListener('change', async (e) => {
   const all = Array.from(e.target.files || []);
   // Only exclude files we're SURE aren't audio (e.g. images/video).
   // Files with an empty/unknown type (common via OneDrive) are kept.
@@ -327,7 +399,39 @@ fileInput.addEventListener('change', (e) => {
   if(!list.length) return;
   files = list;
   loadTrack(0);
+  try { await saveFilesToDB(list); } catch(err) { console.warn('保存に失敗しました', err); }
 });
+
+clearCacheBtn.addEventListener('click', async () => {
+  if(!confirm('保存されている音源を消去しますか？')) return;
+  try { await clearFilesInDB(); } catch(err) {}
+  files = [];
+  currentIndex = -1;
+  if(objectUrl){ URL.revokeObjectURL(objectUrl); objectUrl = null; }
+  audio.pause();
+  audio.removeAttribute('src');
+  audio.load();
+  trackTitle.textContent = 'ファイルが選ばれていません';
+  trackSub.textContent = '上のボタンからMP3などを選んでください';
+  playlistArea.style.display = 'none';
+  emptyHint.style.display = '';
+  playBtn.textContent = '▶';
+  curTimeEl.textContent = '0:00';
+  durTimeEl.textContent = '0:00';
+  seekBar.value = 0;
+});
+
+// restore previously cached files, without auto-playing
+(async function restoreFromCache(){
+  try {
+    const restored = await loadFilesFromDB();
+    if(restored.length){
+      files = restored;
+      loadTrack(0, false);
+      trackSub.textContent = `前回の音源を復元しました（全${files.length}曲）`;
+    }
+  } catch(err) { /* IndexedDB unavailable or empty — ignore */ }
+})();
 
 playBtn.addEventListener('click', () => {
   if(!audio.src) return;
