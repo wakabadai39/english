@@ -190,7 +190,7 @@ input[type=file]{display:none;}
 
   <div class="load-row">
     <label class="load-btn" for="fileInput">📂 音声ファイルを選ぶ（複数選択OK）</label>
-    <input type="file" id="fileInput" accept="audio/*" multiple>
+    <input type="file" id="fileInput" multiple>
   </div>
 
   <div class="deck">
@@ -320,7 +320,10 @@ function loadTrack(idx){
 }
 
 fileInput.addEventListener('change', (e) => {
-  const list = Array.from(e.target.files || []);
+  const all = Array.from(e.target.files || []);
+  // Only exclude files we're SURE aren't audio (e.g. images/video).
+  // Files with an empty/unknown type (common via OneDrive) are kept.
+  const list = all.filter(f => !f.type || f.type.startsWith('audio/') || (!f.type.startsWith('image/') && !f.type.startsWith('video/') && !f.type.startsWith('text/')));
   if(!list.length) return;
   files = list;
   loadTrack(0);
