@@ -178,6 +178,21 @@
   .hint-block{
     width:100%;
   }
+  .word-back-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    margin-bottom:16px;
+    padding-bottom:14px;
+    border-bottom:1px solid var(--line);
+  }
+  .word-back{
+    font-family:'Spectral', serif;
+    font-weight:600;
+    font-size:1.35rem;
+    line-height:1.2;
+  }
   .hint-label{
     font-size: 0.7rem;
     letter-spacing: 0.18em;
@@ -876,6 +891,10 @@ function frontHTML(current){
 function backHTML(current){
   return `
     <div class="back-scroll">
+      <div class="word-back-row">
+        <div class="word-back">${current.word}</div>
+        <button class="speak-btn" id="speakBtn" title="発音を聞く">${speakerIcon()}</button>
+      </div>
       <div class="hint-block">
         <div class="hint-label">意味</div>
         <div class="hint-text">${current.general}</div>
