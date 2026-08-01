@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>オペラ談義 DUO — No. 1〜100</title>
+<link rel="apple-touch-icon" href="data:image/png;base64,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">
+<meta name="apple-mobile-web-app-title" content="オペラ談義">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+--bg:#fdf2f8;--surface:#ffffff;--primary:#be185d;--primary-light:#fce7f3;
+--accent:#c026d3;--green:#16a34a;--green-light:#dcfce7;--amber:#d97706;--amber-light:#fef3c7;
+--red:#e11d48;--text:#1e293b;--muted:#64748b;--border:#f9a8d4;
+--shadow:0 4px 24px rgba(190,24,93,0.10);--radius:18px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);min-height:100vh;padding:2px 12px 48px;color:var(--text);}
+.container{max-width:560px;margin:auto;}
+.header{text-align:center;margin-bottom:4px;}
+.header h2{font-size:18px;font-weight:900;color:var(--primary);}
+.header p{font-size:12px;color:var(--muted);margin-top:2px;}
+.badges{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-bottom:10px;}
+.badge{display:inline-flex;align-items:center;gap:4px;padding:4px 12px;border-radius:99px;font-size:11px;font-weight:700;background:var(--primary-light);color:var(--primary);border:1px solid var(--border);}
+.badge.green{background:var(--green-light);color:var(--green);border-color:#86efac;}
+.progress-wrap{background:#fbcfe8;border-radius:99px;height:6px;margin-bottom:4px;overflow:hidden;}
+.progress-bar{height:100%;background:var(--primary);border-radius:99px;transition:width 0.4s ease;}
+.progress-label{text-align:center;font-size:12px;color:var(--muted);margin-bottom:8px;}
+.tap-hint{font-size:11px;color:var(--muted);}
+.card{background:var(--surface);border-radius:var(--radius);padding:16px 20px 20px;box-shadow:var(--shadow);margin-bottom:12px;position:relative;border:2px solid var(--border);min-height:160px;cursor:pointer;user-select:none;transition:transform .1s,border-color .2s;}
+.card.tappable:active{transform:scale(0.985);}
+.card.revealed{border-color:var(--primary);}
+.card.no-tap{cursor:default;}
+.card-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;}
+.card-num{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);}
+.cat-label{font-size:11px;font-weight:700;letter-spacing:.06em;color:var(--primary);text-align:center;flex:1;}
+.master-wrap{display:flex;align-items:center;gap:4px;font-size:11px;color:var(--muted);}
+.master-wrap input[type=checkbox]{width:17px;height:17px;accent-color:var(--green);cursor:pointer;}
+.master-wrap.disabled{opacity:.3;pointer-events:none;}
+.main-text{font-size:clamp(14px,3.8vw,18px);font-weight:700;line-height:1.65;text-align:center;margin-bottom:14px;}
+.answer-wrap{opacity:0;transform:translateY(5px);transition:opacity .25s,transform .25s;pointer-events:none;}
+.answer-wrap.show{opacity:1;transform:translateY(0);pointer-events:auto;}
+.answer-ja{font-size:clamp(13px,3.5vw,15px);font-weight:700;color:var(--accent);text-align:center;line-height:1.6;background:#fdf4ff;border-radius:10px;padding:10px 14px;margin-bottom:8px;}
+.answer-tip{font-size:12px;font-weight:600;color:var(--green);text-align:left;padding:0 4px;line-height:1.6;}
+.answer-tip::before{content:'💡 ';}
+.master-badge{display:none;text-align:center;margin-top:8px;background:var(--green-light);color:var(--green);padding:2px 10px;border-radius:99px;font-size:10px;font-weight:700;}
+.master-badge.show{display:block;}
+.no-active{background:var(--amber-light);border-radius:12px;padding:16px;text-align:center;font-size:14px;color:var(--amber);font-weight:700;display:none;margin-bottom:12px;}
+.no-active.show{display:block;}
+.auto-panel{background:var(--surface);border-radius:var(--radius);padding:14px 18px;box-shadow:var(--shadow);margin-bottom:12px;display:none;border-left:4px solid var(--primary);}
+.auto-panel.show{display:block;}
+.auto-step-title{font-size:12px;font-weight:900;color:var(--primary);margin-bottom:4px;}
+.auto-instruction{font-size:14px;font-weight:700;color:var(--text);line-height:1.5;}
+.auto-count{font-family:'DM Mono',monospace;font-size:12px;color:var(--muted);margin-top:4px;}
+.filter-panel{background:var(--surface);border-radius:var(--radius);padding:6px 8px;border:1px solid var(--border);margin-bottom:5px;}
+.filter-header{display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none;}
+.filter-header-left{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;}
+.filter-current{font-size:12px;font-weight:700;color:var(--primary);background:var(--primary-light);padding:3px 10px;border-radius:99px;border:1px solid var(--border);max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.filter-toggle-icon{font-size:12px;color:var(--muted);transition:transform .2s;margin-left:6px;}
+.filter-toggle-icon.open{transform:rotate(180deg);}
+.filter-chips-wrap{display:none;margin-top:10px;}
+.filter-chips-wrap.open{display:block;}
+.chip-all{display:block;width:100%;padding:6px 12px;margin-bottom:6px;border-radius:10px;font-size:12px;font-weight:700;cursor:pointer;border:2px solid var(--border);background:#fff;color:var(--muted);text-align:left;font-family:'Noto Sans JP',sans-serif;transition:all .15s;}
+.chip-all.active{background:var(--primary-light);color:var(--primary);border-color:var(--primary);}
+.cat-row{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:10px;cursor:pointer;border:2px solid transparent;background:#fff;margin-bottom:4px;transition:all .15s;user-select:none;}
+.cat-row.active{background:var(--primary-light);border-color:var(--primary);}
+.cat-row-name{flex:1;font-size:13px;font-weight:700;color:var(--text);}
+.cat-row.active .cat-row-name{color:var(--primary);}
+.cat-row-count{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);background:#f1f5f9;padding:2px 8px;border-radius:99px;font-weight:600;}
+.cat-row.active .cat-row-count{background:#fff;color:var(--primary);}
+.cat-dot{width:8px;height:8px;border-radius:50%;background:#e2e8f0;flex-shrink:0;}
+.cat-dot.done{background:var(--green);}
+.panel{background:var(--surface);border-radius:var(--radius);padding:6px 8px;border:1px solid var(--border);margin-bottom:5px;}
+.panel-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.panel-row+.panel-row{margin-top:8px;}
+.panel label{font-size:12px;color:var(--muted);font-weight:700;white-space:nowrap;}
+.panel select{flex:1;font-size:12px;border:1px solid var(--border);border-radius:8px;padding:4px 8px;background:#fff;color:var(--text);font-family:'Noto Sans JP',sans-serif;}
+.panel input[type=range]{flex:1;min-width:80px;accent-color:var(--primary);}
+.speed-val{font-family:'DM Mono',monospace;font-size:13px;font-weight:600;color:var(--primary);min-width:32px;}
+.btn-row{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:10px;}
+.btn{border:none;border-radius:99px;padding:8px 14px;font-size:13px;font-weight:700;font-family:'Noto Sans JP',sans-serif;cursor:pointer;transition:opacity .15s,transform .1s;display:inline-flex;align-items:center;gap:5px;}
+.btn:active{transform:scale(0.94);opacity:.85;}
+.btn-primary{background:var(--primary);color:#fff;}
+.btn-secondary{background:#e2e8f0;color:var(--text);}
+.btn-red{background:var(--red);color:#fff;}
+.btn-amber{background:var(--amber);color:#fff;}
+.btn-blue{background:#2563eb;color:#fff;}
+.btn-on{background:var(--green);color:#fff;}
+.master-summary{background:var(--green-light);border-radius:12px;padding:7px 12px;font-size:12px;color:var(--green);font-weight:700;text-align:center;margin-bottom:8px;display:none;cursor:pointer;user-select:none;}
+.master-summary.show{display:block;}
+.help-btn{display:inline-flex;align-items:center;gap:5px;padding:5px 14px;border-radius:99px;border:1px solid var(--border);background:var(--primary-light);color:var(--primary);font-size:12px;font-weight:700;cursor:pointer;font-family:'Noto Sans JP',sans-serif;}
+.top-row{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:8px;}
+.audio-mini-label{font-size:10px;color:var(--muted);text-align:center;margin-bottom:4px;font-weight:700;}
+.audio-track-row{display:flex;align-items:center;justify-content:center;gap:11px;margin:0 0 16px;flex-wrap:wrap;}
+.audio-track-btn{border:1px solid #99f6e4;border-radius:99px;padding:4px 11px;font-size:11px;font-weight:700;cursor:pointer;background:#f0fdfa;color:#0891b2;font-family:'DM Mono',monospace;}
+.audio-track-btn.playing{background:#0891b2;color:#fff;border-color:#0891b2;}
+.audio-loop-all-btn{border:1px solid var(--border);border-radius:99px;padding:4px 11px;font-size:11px;font-weight:700;cursor:pointer;background:#e2e8f0;color:var(--text);}
+.audio-loop-all-btn.on{background:var(--green);color:#fff;border-color:var(--green);}
+.profile-select{font-family:'Noto Sans JP',sans-serif;font-size:11px;font-weight:700;color:var(--primary);background:var(--primary-light);border:1px solid var(--border);border-radius:99px;padding:5px 10px;cursor:pointer;max-width:120px;}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="header">
+<h2>🎭 オペラ談義 DUO — No. 1〜100</h2>
+</div>
+
+<div class="top-row">
+<button class="help-btn" onclick="alert('👆カードタップで答え表示\n🔊音声再生（ネイティブ音声。ファイルがない場合のみ合成音声）\n🗣️シャドウイング4ステップ\n▶連続再生\n🔄英⇄日モード切替\nマスターチェックで次へ\n\n【復習モードの仕組み】\nマスター済みカードは 1日目→3日目→7日目→14日目→30日目→60日目→90日目 の順で自動的に間隔が伸びます\n「覚えていた」を押すたびに次のサイクルへ進みます\n「忘れていた」場合はマスターのチェックを外してください（次にマスターしたらまた1日目から）\nプルダウンで見たいサイクルを選べます（本日復習 / 1日 / 3日 / 7日 / 14日 / 30日 / 60日 / 90日 / すべて）')">❓ 使い方</button>
+<select class="profile-select" id="profile-select" onchange="switchProfile(this.value)"></select>
+
+<div class="badge green" id="master-badge-top">マスター: 0 / 100</div>
+</div>
+
+<div class="progress-wrap"><div class="progress-bar" id="progress-bar" style="width:2%"></div></div>
+<div class="progress-label">カード <span id="cur-num">1</span>/<span id="tot-num">100</span> <span id="tap-hint">・👆タップで訳を表示</span></div>
+<div class="no-active" id="no-active">✅ このカテゴリをすべてマスターしました！</div>
+<div class="auto-panel" id="auto-panel">
+<div class="auto-step-title" id="auto-step-title">STEP 1</div>
+<div class="auto-instruction" id="auto-instruction">音声を聴いてください。</div>
+<div class="auto-count" id="auto-count"></div>
+</div>
+<div class="card tappable" id="main-card" onclick="handleTap()">
+<div class="card-top">
+<div class="card-num" id="card-num">1</div>
+<div class="cat-label" id="card-cat"></div>
+<div class="master-wrap" id="master-wrap">
+<span>マスター</span>
+<input type="checkbox" id="master-cb" onchange="toggleMaster(event)" onclick="event.stopPropagation()">
+</div>
+</div>
+<div class="main-text" id="main-text">Loading...</div>
+<div class="answer-wrap" id="answer-wrap">
+<div class="answer-ja" id="answer-ja"></div>
+<div class="answer-tip" id="answer-tip" style="display:none"></div>
+</div>
+<div class="master-badge" id="mastered-badge">✔ マスター済</div>
+</div>
+<div class="btn-row" id="review-action-row" style="display:none;gap:8px;margin:-4px 0 10px;">
+<button class="btn btn-on" style="flex:1;font-size:12px;padding:8px;" onclick="confirmReviewed()">✅ 覚えていた（今日の日付で更新）</button>
+</div>
+<div class="master-summary" id="master-summary" onclick="toggleMasterList()"></div>
+<div id="master-list-wrap" style="display:none;margin-bottom:12px;">
+<div style="background:#fff;border-radius:16px;padding:14px 16px;box-shadow:var(--shadow);">
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+<span style="font-size:13px;font-weight:900;color:var(--green);">✅ マスター済みリスト</span>
+<button class="btn btn-secondary" id="clear-all-btn" style="padding:4px 12px;font-size:11px;" onclick="clearAllMasterStep1()">全解除</button>
+</div>
+<div id="master-list"></div>
+</div>
+</div>
+<div class="filter-panel">
+<div class="filter-header" onclick="toggleFilterPanel()">
+<div class="filter-header-left">📂 カテゴリを選ぶ</div>
+<div style="display:flex;align-items:center;gap:4px;">
+<div class="filter-current" id="filter-current-label">すべて</div>
+<span class="filter-toggle-icon" id="filter-toggle-icon">▼</span>
+</div>
+</div>
+<div class="filter-chips-wrap" id="filter-chips-wrap">
+<button class="chip-all active" id="chip-all" onclick="selectCategory('all')">🎯 すべて表示</button>
+<div id="cat-rows"></div>
+</div>
+</div>
+<div class="panel">
+<div class="panel-row">
+<label>速度</label>
+<select id="rate-slider" onchange="updateRate()" style="flex:1;font-size:12px;padding:6px 8px;border:1px solid var(--border);border-radius:8px;background:#fff;color:var(--text);font-family:'Noto Sans JP',sans-serif;">
+<option value="0.5">0.5×</option>
+<option value="0.6">0.6×</option>
+<option value="0.7">0.7×</option>
+<option value="0.8">0.8×</option>
+<option value="0.9">0.9×</option>
+<option value="1.0" selected>1.0×</option>
+<option value="1.1">1.1×</option>
+<option value="1.2">1.2×</option>
+<option value="1.3">1.3×</option>
+<option value="1.4">1.4×</option>
+<option value="1.5">1.5×</option>
+<option value="1.75">1.75×</option>
+<option value="2.0">2.0×</option>
+</select>
+<button class="btn btn-on" style="font-size:11px;padding:6px 10px;" onclick="startMasteredReview()">✅ マスター済み再生</button>
+</div>
+</div>
+<div id="normal-controls">
+<div class="btn-row">
+<button class="btn btn-secondary" onclick="prev()">← 戻る</button>
+<button class="btn btn-primary" onclick="speakCurrent()">🔊 音声</button>
+<button class="btn btn-secondary" onclick="next()">次へ →</button>
+<button class="btn btn-secondary" style="font-size:11px;padding:8px 6px;" onclick="switchMode()">🔄 英⇄日</button>
+</div>
+<div class="btn-row" style="gap:4px;">
+<button class="btn btn-secondary" style="font-size:11px;padding:7px 5px;" id="random-btn" onclick="toggleRandom()">🔀 ランダム</button>
+<button class="btn btn-secondary" style="font-size:11px;padding:7px 5px;" id="repeat-btn" onclick="toggleRepeat()">🔁 繰り返し</button>
+<button class="btn btn-blue" style="font-size:11px;padding:7px 5px;" onclick="startContinuous()">▶ 連続再生</button>
+<button class="btn btn-amber" style="font-size:11px;padding:7px 5px;" onclick="startShadowing()">🗣️ シャドウ</button>
+</div>
+<div class="btn-row" style="gap:4px;">
+<select id="review-filter-select" style="flex:1;font-size:11px;padding:6px;border:1px solid var(--border);border-radius:8px;background:#fff;color:var(--text);font-family:'Noto Sans JP',sans-serif;" onchange="changeReviewFilter()">
+<option value="due" selected>本日復習（出題対象のみ）</option>
+<option value="s0">1日サイクル</option>
+<option value="s1">3日サイクル</option>
+<option value="s2">7日サイクル</option>
+<option value="s3">14日サイクル</option>
+<option value="s4">30日サイクル</option>
+<option value="s5">60日サイクル</option>
+<option value="s6">90日サイクル</option>
+<option value="all">すべて</option>
+</select>
+<button class="btn btn-secondary" id="review-toggle-btn" style="font-size:11px;padding:7px 8px;flex:1;" onclick="toggleReviewMode()">🔁 復習モード: OFF</button>
+</div>
+</div>
+<div id="auto-controls" style="display:none;">
+<div class="btn-row"><button class="btn btn-red" onclick="stopAutoPlay()">⏹ 停止</button></div>
+</div>
+</div>
+<script>
+const OFFSET=1;
+const CATS={'モーツァルト':'#9b2226','ワーグナー':'#3d5a80','リヒャルト・シュトラウス':'#6a4c93','プッチーニ':'#2a6f6f','ヴェルディ':'#a4508b','ビゼー':'#bb6b1a','マスネ':'#4a7c59','グノー':'#7a5195'};
+const phrases=[
+{cat:'モーツァルト', en:'"Have you seen the new production of The Marriage of Figaro?" "Yes, the Count was absolutely riveting."', ja:'「『フィガロの結婚』の新演出は見た？」「見たよ、伯爵役が本当に釘付けになるほど良かった。」', tip:'『フィガロの結婚』は1786年初演。ダ・ポンテ台本によるモーツァルトの傑作喜劇。'},
+{cat:'モーツァルト', en:'"I still think Don Giovanni is Mozart\'s darkest and most complex opera." "I couldn\'t agree more."', ja:'「『ドン・ジョヴァンニ』は今でもモーツァルトの最も暗く複雑なオペラだと思う。」「まったく同感だ。」', tip:'1787年プラハ初演。「陽気な悲劇（ドランマ・ジョコーソ）」という副題を持つ。'},
+{cat:'モーツァルト', en:'"The overture to The Magic Flute always gives me chills." "Especially those three solemn chords at the start."', ja:'「『魔笛』の序曲はいつも鳥肌が立つよ。」「特に冒頭の荘重な三つの和音がね。」', tip:'1791年初演。三つの和音はフリーメイソンの象徴（3という数字）に関連するとされる。'},
+{cat:'モーツァルト', en:'"Who\'s your favorite Queen of the Night?" "Honestly, nobody has topped Diana Damrau for me."', ja:'「お気に入りの『夜の女王』は誰？」「正直、ダイアナ・ダムラウを超える人はいないな。」', tip:'「夜の女王のアリア」は超高音域を要する、ソプラノの技巧を試す難役として有名。'},
+{cat:'モーツァルト', en:'"Così fan tutte gets criticized for its plot, but the music is sublime." "Exactly—Mozart redeems any silliness in the libretto."', ja:'「『コジ・ファン・トゥッテ』は筋書きが批判されるけど、音楽は崇高だよね。」「その通り。台本の馬鹿げた部分をモーツァルトの音楽が救っている。」', tip:'1790年初演。恋人を交換する筋書きが議論を呼ぶが、音楽的完成度は非常に高い。'},
+{cat:'モーツァルト', en:'"The Count\'s aria \'Dove sono\' in Figaro always brings me to tears." "The Countess\'s forgiveness at the end is devastating."', ja:'「『フィガロ』の「Dove sono（どこに行ったの）」を歌う伯爵夫人のアリアはいつも泣かされる。」「最後の伯爵夫人の許しの場面は胸に迫るね。」', tip:'正しくはアリアは伯爵夫人が歌う。過ぎ去った幸せな日々を回想する名アリア。'},
+{cat:'モーツァルト', en:'"Do you prefer Don Giovanni as a comedy or a tragedy?" "I think Mozart deliberately leaves that ambiguous."', ja:'「『ドン・ジョヴァンニ』は喜劇として好き？　それとも悲劇として？」「モーツァルトはあえて曖昧なままにしていると思うよ。」', tip:'地獄落ちの場面は悲劇的だが、その後に道徳を歌う陽気な終幕が続く独特の構成。'},
+{cat:'モーツァルト', en:'"La Clemenza di Tito doesn\'t get performed as often as it deserves." "It was written in a hurry, but there are real gems in it."', ja:'「『皇帝ティートの慈悲』は、もっと上演されてもいいのにあまり演奏されないね。」「急いで書かれた作品だけど、本当に素晴らしい部分もあるよ。」', tip:'1791年、レオポルト2世戴冠式のため短期間で作曲された、モーツァルト最後のオペラ・セリア。'},
+{cat:'モーツァルト', en:'"The letter duet in Figaro is pure perfection." "Susanna and the Countess conspiring together—brilliant theater."', ja:'「『フィガロ』の「手紙の二重唱」はまさに完璧だ。」「スザンナと伯爵夫人が共謀する場面、見事な演劇性だよね。」', tip:'「そよ風の二重唱」とも呼ばれる、映画『ショーシャンクの空に』でも使われた有名な場面。'},
+{cat:'モーツァルト', en:'"I love how the finale of Act Two in Figaro just keeps building." "It\'s one of the greatest ensemble scenes in all of opera."', ja:'「『フィガロ』第2幕のフィナーレがどんどん盛り上がっていくのが好きだな。」「オペラ史上最高のアンサンブル場面の一つだね。」', tip:'20分近く途切れることなく音楽が続く、登場人物が次々加わる圧巻の構成。'},
+{cat:'モーツァルト', en:'"Sarastro\'s arias always sound so noble to me." "His low register in \'O Isis und Osiris\' is stunning."', ja:'「ザラストロのアリアはいつも気高く聞こえるよ。」「「オー・イジスとオシリスよ」の低音域は圧巻だ。」', tip:'ザラストロは『魔笛』の賢者役。バス歌手にとって重要な低音域の名場面。'},
+{cat:'モーツァルト', en:'"Idomeneo is underrated, don\'t you think?" "Definitely—it shows Mozart mastering opera seria."', ja:'「『イドメネオ』は過小評価されていると思わない？」「確かに。モーツァルトがオペラ・セリアを完全に習得したことを示しているね。」', tip:'1781年初演。ミュンヘンで作曲された、モーツァルト初期の重要な正歌劇。'},
+{cat:'モーツァルト', en:'"Papageno is such a lovable character." "He grounds the whole opera with his humanity and humor."', ja:'「パパゲーノは本当に愛すべきキャラクターだね。」「彼の人間味とユーモアがオペラ全体を地に足のついたものにしている。」', tip:'鳥刺しパパゲーノは庶民的な役柄で、貴族的なタミーノとの対比を成す。'},
+{cat:'モーツァルト', en:'"The trio in Così fan tutte where they say farewell is so touching." "Mozart makes even deception sound heartbreakingly sincere."', ja:'「『コジ・ファン・トゥッテ』の別れの三重唱はとても感動的だね。」「モーツァルトは欺瞞さえも胸が張り裂けるほど真摯に響かせる。」', tip:'「Soave sia il vento（そよ風よ穏やかに）」という有名な三重唱。'},
+{cat:'モーツァルト', en:'"Mozart composed The Magic Flute in the same year he died, 1791." "It\'s remarkable how much vitality is in that score."', ja:'「モーツァルトは亡くなった1791年に『魔笛』を作曲したんだね。」「あの譜面にどれだけ生命力があるか、驚くべきことだよ。」', tip:'1791年12月にモーツァルトは35歳で死去。『魔笛』はその数か月前に初演された。'},
+{cat:'ワーグナー', en:'"Have you ever sat through the entire Ring cycle in one week?" "Twice, actually—it\'s exhausting but transformative."', ja:'「『ニーベルングの指環』全曲を1週間かけて通しで観たことある？」「実は2回あるよ。疲れるけど、人生観が変わるほどの体験だ。」', tip:'『指環』4部作は1876年バイロイトで完全初演。上演には通常4夜、計約15時間を要する。'},
+{cat:'ワーグナー', en:'"Tristan und Isolde changed the course of music history." "That opening chord alone rewrote the rules of harmony."', ja:'「『トリスタンとイゾルデ』は音楽史の流れを変えたね。」「あの冒頭の和音だけで、和声のルールを書き換えてしまった。」', tip:'1865年初演。冒頭の「トリスタン和音」は調性音楽崩壊の先駆けとされる。'},
+{cat:'ワーグナー', en:'"Who\'s your ideal Brünnhilde?" "For me, nobody compares to Birgit Nilsson."', ja:'「理想のブリュンヒルデは誰？」「僕にとっては、ビルギット・ニルソンに勝る人はいないな。」', tip:'ブリュンヒルデは『指環』の中心的女性役。強靭な声量が求められる大役。'},
+{cat:'ワーグナー', en:'"The prelude to Das Rheingold is pure genius—it just grows out of a single chord." "Wagner makes you feel the birth of the world."', ja:'「『ラインの黄金』の前奏曲はまさに天才的だね。一つの和音から音楽が育っていく。」「ワーグナーは世界の誕生を実感させてくれる。」', tip:'変ホ長調の一つの和音が136小節にわたって持続する、革新的な開始部分。'},
+{cat:'ワーグナー', en:'"I find Parsifal almost unbearably slow." "That\'s the point—it\'s meant to feel ritualistic, not theatrical."', ja:'「『パルジファル』はほとんど耐えられないくらい遅く感じるよ。」「それが狙いなんだ。演劇的というより儀式的に感じさせたいんだよ。」', tip:'1882年初演、ワーグナー最後の作品。「舞台神聖祝典劇」という独自のジャンルとされる。'},
+{cat:'ワーグナー', en:'"Wagner insisted on building his own opera house at Bayreuth." "He wanted total control over the acoustics and staging."', ja:'「ワーグナーは自分専用の歌劇場をバイロイトに建てることにこだわったね。」「音響と演出を完全にコントロールしたかったんだ。」', tip:'バイロイト祝祭劇場は1876年開場。今も毎年夏にワーグナー音楽祭が開かれる。'},
+{cat:'ワーグナー', en:'"The Ride of the Valkyries always gives me goosebumps." "It\'s overused in films, but live in the opera house, it\'s thrilling."', ja:'「「ワルキューレの騎行」はいつも鳥肌が立つよ。」「映画で使われすぎているけど、劇場で生で聴くとやっぱり興奮するね。」', tip:'『ワルキューレ』第3幕冒頭の有名な場面。映画『地獄の黙示録』での使用でも知られる。'},
+{cat:'ワーグナー', en:'"Do you think Wagner\'s leitmotifs are genius or gimmicky?" "Genius—they let the orchestra narrate the drama."', ja:'「ワーグナーのライトモティーフは天才的だと思う？　それとも小手先の技だと？」「天才的だよ。オーケストラにドラマを語らせているんだから。」', tip:'ライトモティーフは登場人物や観念に結びつく反復的な音楽動機。楽劇全体を貫く技法。'},
+{cat:'ワーグナー', en:'"Siegfried is such a difficult tenor role to cast." "You need a Heldentenor with enormous stamina."', ja:'「ジークフリートは配役がとても難しい役だね。」「膨大なスタミナを持つヘルデンテノールが必要だ。」', tip:'ヘルデンテノール（英雄的テノール）はワーグナー作品特有の重厚な声質を要する役柄。'},
+{cat:'ワーグナー', en:'"I can\'t listen to Wagner\'s writings without thinking of his politics." "It\'s a real tension for many opera lovers."', ja:'「ワーグナーの著述を読むと、彼の政治思想を考えずにはいられないよ。」「多くのオペラ愛好家にとって、本当に難しい葛藤だね。」', tip:'ワーグナーの反ユダヤ主義的著述は、その音楽的業績とは別に今も議論の的となっている。'},
+{cat:'ワーグナー', en:'"The love duet in Tristan seems to go on forever." "That\'s exactly why it feels so overwhelming."', ja:'「『トリスタン』の愛の二重唱は永遠に続くように感じるね。」「まさにそれこそが、あれほど圧倒的に感じる理由なんだ。」', tip:'第2幕の長大な愛の二重唱。官能と死への憧れが交錯する場面として知られる。'},
+{cat:'ワーグナー', en:'"Die Meistersinger is Wagner\'s only comedy, isn\'t it?" "Yes, and it\'s surprisingly warm-hearted for him."', ja:'「『ニュルンベルクのマイスタージンガー』はワーグナー唯一の喜劇だよね？」「そう、彼にしては驚くほど温かみのある作品だ。」', tip:'1868年初演。ワーグナー作品中、唯一の喜劇的性格を持つ大作。'},
+{cat:'ワーグナー', en:'"How long does a full performance of Götterdämmerung usually run?" "Around six hours, including intermissions."', ja:'「『神々の黄昏』の通しの上演時間はどれくらい？」「休憩を含めて、だいたい6時間くらいだね。」', tip:'『指環』四部作の最終作。単独でも最も長大な楽劇の一つ。'},
+{cat:'ワーグナー', en:'"Wagner\'s Ring cycle took him over twenty-five years to complete." "He started the libretto in 1848 and finished the score in 1874."', ja:'「ワーグナーの『指環』完成には25年以上かかったんだね。」「台本を1848年に書き始め、作曲を1874年に終えている。」', tip:'構想から完成まで四半世紀以上を要した、ワーグナー最大規模のプロジェクト。'},
+{cat:'ワーグナー', en:'"I always cry during the immolation scene at the end of the Ring." "It\'s the ultimate operatic catharsis."', ja:'「僕は『指環』最後の自己犠牲の場面でいつも泣いてしまうよ。」「オペラにおける究極のカタルシスだね。」', tip:'ブリュンヒルデが炎の中に身を投じる終幕の場面。四部作全体の壮大な結末。'},
+{cat:'リヒャルト・シュトラウス', en:'"Der Rosenkavalier is basically a love letter to old Vienna." "Strauss and Hofmannsthal captured that nostalgia perfectly."', ja:'「『ばらの騎士』は、いわば古き良きウィーンへのラブレターだね。」「シュトラウスとホフマンスタールは、あの郷愁を完璧に捉えている。」', tip:'1911年初演。台本作家ホフマンスタールとの長年の共同作業による代表作。'},
+{cat:'リヒャルト・シュトラウス', en:'"The Marschallin\'s monologue about time always moves me deeply." "It\'s one of the most philosophical moments in opera."', ja:'「元帥夫人の時間についての独白はいつも深く心を動かされるよ。」「オペラの中でも最も哲学的な瞬間の一つだね。」', tip:'第1幕、時の流れの残酷さを歌う元帥夫人の名場面。'},
+{cat:'リヒャルト・シュトラウス', en:'"Salome shocked audiences when it premiered in 1905." "The Dance of the Seven Veils still feels daring today."', ja:'「『サロメ』は1905年の初演当時、観客に衝撃を与えたんだね。」「七つのヴェールの踊りは今でも大胆に感じる。」', tip:'オスカー・ワイルドの戯曲に基づく。当時としては過激な内容で物議を醸した。'},
+{cat:'リヒャルト・シュトラウス', en:'"Have you seen a soprano actually kiss the severed head in Salome?" "It\'s grotesque, but that\'s exactly Strauss\'s intention."', ja:'「『サロメ』で本当に切られた首にキスするソプラノを見たことある？」「グロテスクだけど、それこそまさにシュトラウスの意図なんだ。」', tip:'終幕、ヨカナーンの生首に語りかける場面。表現主義的な過剰さが特徴。'},
+{cat:'リヒャルト・シュトラウス', en:'"Elektra is so intense that I need a break afterward." "Strauss pushes the orchestra to its absolute limits there."', ja:'「『エレクトラ』はあまりに激しくて、観た後は休憩が必要だよ。」「シュトラウスはあそこでオーケストラを極限まで駆り立てている。」', tip:'1909年初演。不協和音を多用した、シュトラウス最も先鋭的な作品の一つ。'},
+{cat:'リヒャルト・シュトラウス', en:'"I think the final trio in Der Rosenkavalier is one of opera\'s greatest moments." "Three sopranos blending like that—it\'s sublime."', ja:'「『ばらの騎士』最後の三重唱は、オペラ史上最も偉大な瞬間の一つだと思う。」「3人のソプラノがあんな風に溶け合うなんて、崇高だね。」', tip:'元帥夫人、オクタヴィアン、ゾフィーによる有名な三重唱。第3幕の頂点。'},
+{cat:'リヒャルト・シュトラウス', en:'"Ariadne auf Naxos has such an unusual structure." "Yes, mixing opera seria and commedia dell\'arte in one work."', ja:'「『ナクソス島のアリアドネ』は変わった構成をしているね。」「そう、オペラ・セリアとコンメディア・デラルテを一つの作品に混ぜているんだ。」', tip:'1912年初演（改訂版1916年）。悲劇と喜劇が同時進行する実験的な構造。'},
+{cat:'リヒャルト・シュトラウス', en:'"Strauss composed Four Last Songs near the very end of his life." "They were completed in 1948, the year before he died."', ja:'「シュトラウスは晩年に『四つの最後の歌』を作曲したね。」「彼が亡くなる前年、1948年に完成させている。」', tip:'オペラではなく管弦楽伴奏付き歌曲。シュトラウス最晩年の到達点とされる。'},
+{cat:'リヒャルト・シュトラウス', en:'"Do you prefer Strauss\'s early tone poems or his operas?" "Honestly, I love both equally, for different reasons."', ja:'「シュトラウスの初期の交響詩とオペラ、どちらが好き？」「正直、それぞれ違う理由で同じくらい好きだよ。」', tip:'『ツァラトゥストラはかく語りき』などの交響詩と、多数のオペラ両方で名声を得た。'},
+{cat:'リヒャルト・シュトラウス', en:'"The character of Octavian is written for a mezzo-soprano in a trouser role." "It adds such an interesting layer to the romance."', ja:'「オクタヴィアンの役はメゾソプラノによるズボン役として書かれているね。」「それがロマンスに興味深い層を加えている。」', tip:'ズボン役は女性歌手が男性の若者役を演じる伝統的なオペラの慣習。'},
+{cat:'リヒャルト・シュトラウス', en:'"Capriccio asks whether words or music matter more in opera." "It\'s Strauss reflecting on his own art form at the end of his career."', ja:'「『カプリッチョ』は言葉と音楽どちらがオペラにとってより重要かを問いかけているね。」「シュトラウスが自らの芸術形式について、キャリアの最後に省察しているんだ。」', tip:'1942年初演。シュトラウス最後のオペラ。「言葉か音楽か」という古典的論争を主題とする。'},
+{cat:'リヒャルト・シュトラウス', en:'"Strauss and Hofmannsthal made an extraordinary creative partnership." "Their collaboration produced some of the finest German operas."', ja:'「シュトラウスとホフマンスタールは、並外れた創造的パートナーシップを築いたね。」「二人の協力関係から、ドイツ語オペラの最高傑作のいくつかが生まれた。」', tip:'『エレクトラ』『ばらの騎士』など、1929年のホフマンスタール没まで続いた協働関係。'},
+{cat:'プッチーニ', en:'"Puccini really knew how to break your heart in three acts." "La Bohème gets me every single time."', ja:'「プッチーニは3幕で人の心を打ち砕く術を本当に心得ているね。」「『ラ・ボエーム』はいつも僕を泣かせるよ。」', tip:'1896年初演。若き芸術家たちの恋と別れを描いた、最も上演される作品の一つ。'},
+{cat:'プッチーニ', en:'"Mimì\'s death scene still makes the whole audience weep." "Puccini\'s orchestration underscores every emotional beat."', ja:'「ミミの死の場面は今でも観客全員を泣かせるね。」「プッチーニのオーケストレーションが、あらゆる感情の高まりを際立たせている。」', tip:'『ラ・ボエーム』終幕。静かに息を引き取るミミの場面は特に感動的とされる。'},
+{cat:'プッチーニ', en:'"I think Tosca has one of the most thrilling second acts in opera." "The confrontation with Scarpia is pure tension."', ja:'「『トスカ』はオペラの中でも最もスリリングな第2幕を持っていると思う。」「スカルピアとの対決はまさに緊張感の塊だね。」', tip:'1900年初演。第2幕のトスカとスカルピアの対決は、オペラ屈指の緊迫した場面。'},
+{cat:'プッチーニ', en:'"Madama Butterfly is emotionally devastating." "Cio-Cio-San\'s faith in Pinkerton makes the ending unbearable."', ja:'「『蝶々夫人』は感情的にひどく打ちのめされる作品だね。」「蝶々さんのピンカートンへの信頼が、あの結末を耐え難いものにしている。」', tip:'1904年初演。長崎を舞台にした悲劇。日本を題材とした西洋オペラの代表作。'},
+{cat:'プッチーニ', en:'"Do you think Turandot\'s ending feels rushed?" "A bit—remember, Puccini died before finishing it."', ja:'「『トゥーランドット』の結末は急いでいるように感じない？」「少しね。プッチーニは完成前に亡くなったことを忘れないで。」', tip:'1924年プッチーニ死去。弟子アルファーノによる補筆で1926年に完成・初演された。'},
+{cat:'プッチーニ', en:'"Nessun dorma always gives me chills, no matter how many times I hear it." "Puccini saved his most famous aria for his final opera."', ja:'「「誰も寝てはならぬ」は何度聴いても鳥肌が立つよ。」「プッチーニは最も有名なアリアを、最後のオペラのためにとっておいたんだね。」', tip:'『トゥーランドット』第3幕のアリア。1990年W杯でのパヴァロッティの歌唱で世界的に知られるようになった。'},
+{cat:'プッチーニ', en:'"La Bohème premiered in 1896, if I remember correctly." "Yes, and it\'s remained one of the most performed operas ever since."', ja:'「『ラ・ボエーム』は確か1896年初演だったよね？」「そう、それ以来ずっと最も上演されるオペラの一つであり続けている。」', tip:'トリノで初演。以来、世界中のレパートリーに定着し続けている作品。'},
+{cat:'プッチーニ', en:'"I love how Puccini uses recurring musical themes for each character." "It\'s subtler than Wagner\'s leitmotifs, but just as effective."', ja:'「プッチーニが各キャラクターに繰り返し使う音楽的主題が好きだな。」「ワーグナーのライトモティーフより繊細だけど、同じくらい効果的だね。」', tip:'プッチーニは登場人物ごとの主題を音楽全体に散りばめる手法を巧みに用いた。'},
+{cat:'プッチーニ', en:'"Who\'s your favorite Cio-Cio-San?" "I always come back to Renata Scotto\'s interpretation."', ja:'「お気に入りの蝶々さんは誰？」「僕はいつもレナータ・スコットの解釈に戻ってくるな。」', tip:'蝶々夫人はプッチーニ作品中でも特に情感の起伏が求められる大役。'},
+{cat:'プッチーニ', en:'"The humming chorus in Madama Butterfly is hauntingly beautiful." "It\'s such a quiet, devastating moment before the tragedy unfolds."', ja:'「『蝶々夫人』のハミング・コーラスは、忘れられないほど美しいね。」「悲劇が起こる前の、静かで胸を締め付ける場面だ。」', tip:'第2幕、蝶々さんがピンカートンの帰りを待つ夜の場面で歌われる合唱。'},
+{cat:'プッチーニ', en:'"Puccini\'s melodies are so immediate—you remember them after one hearing." "That\'s part of why his operas remain so popular with new audiences."', ja:'「プッチーニの旋律は本当に直接的で、一度聴いただけで覚えてしまうね。」「それも彼のオペラが新しい観客に今なお人気がある理由の一つだね。」', tip:'覚えやすく親しみやすい旋律が、プッチーニ作品の普遍的な人気を支えている。'},
+{cat:'プッチーニ', en:'"Tosca\'s aria \'Vissi d\'arte\' always stops the show." "It\'s a perfect distillation of her character\'s suffering."', ja:'「トスカのアリア「歌に生き、愛に生き」はいつも場内を静まり返らせるね。」「彼女の苦しみを完璧に凝縮した一曲だ。」', tip:'第2幕、スカルピアに迫られたトスカが神に問いかけるように歌う名アリア。'},
+{cat:'プッチーニ', en:'"I find Manon Lescaut underrated compared to his later works." "It was actually his first big success, back in 1893."', ja:'「『マノン・レスコー』は後期の作品に比べて過小評価されていると思うな。」「実は1893年の、彼の最初の大きな成功作だったんだよ。」', tip:'プッチーニの出世作となったオペラ。以後の成功への足がかりとなった。'},
+{cat:'プッチーニ', en:'"The final scene of Turandot, where Calaf melts her icy heart, is thrilling." "Even though Puccini didn\'t live to write it himself."', ja:'「『トゥーランドット』最後の、カラフが彼女の氷の心を溶かす場面は感動的だね。」「プッチーニ自身は生きてそれを書き上げられなかったけれど。」', tip:'プッチーニが実際に作曲したのは、リューの死の場面まで。それ以降は補筆による。'},
+{cat:'プッチーニ', en:'"Puccini\'s operas always feel so cinematic to me." "It\'s no surprise they\'ve influenced generations of film composers."', ja:'「プッチーニのオペラはいつもとても映画的に感じるよ。」「何世代もの映画音楽の作曲家に影響を与えてきたのも不思議じゃないね。」', tip:'劇的な場面転換と感情表現の直接性が、後の映画音楽に強い影響を与えたとされる。'},
+{cat:'ヴェルディ', en:'"Verdi\'s Rigoletto has one of opera\'s most shocking endings." "That final scene with the sack still gives me chills."', ja:'「ヴェルディの『リゴレット』は、オペラ史上最も衝撃的な結末の一つを持っているね。」「あの袋の場面は今でも鳥肌が立つよ。」', tip:'1851年初演。娘の遺体を発見する衝撃的な結末で知られる。'},
+{cat:'ヴェルディ', en:'"La donna è mobile is deceptively cheerful for such a dark opera." "Verdi uses that irony brilliantly to characterize the Duke."', ja:'「「女心の歌」は、あんなに暗いオペラにしては見せかけの陽気さがあるね。」「ヴェルディはその皮肉を、公爵の人物描写に見事に活かしている。」', tip:'『リゴレット』の有名なアリア。軽薄な公爵の性格を象徴する陽気な旋律。'},
+{cat:'ヴェルディ', en:'"I think La Traviata is Verdi\'s most emotionally direct opera." "Violetta\'s journey from joy to death is devastating."', ja:'「『椿姫』はヴェルディの中で最も感情的に直接訴えかけるオペラだと思う。」「ヴィオレッタの喜びから死へと至る旅路は、胸を打ち砕くね。」', tip:'1853年初演。パリの高級娼婦を主人公とする、当時としては大胆な題材。'},
+{cat:'ヴェルディ', en:'"Do you prefer Verdi\'s early operas or his later masterpieces?" "His late style, honestly—Otello and Falstaff show real depth."', ja:'「ヴェルディの初期のオペラと後期の傑作、どちらが好き？」「正直、後期の様式だな。『オテロ』や『ファルスタッフ』には本当の深みがある。」', tip:'晩年のヴェルディは、初期の直接的な作風から、より複雑な音楽語法へと発展した。'},
+{cat:'ヴェルディ', en:'"Aida was written for the opening of the Khedivial Opera House in Cairo." "Though it actually premiered a bit later than the house itself, in 1871."', ja:'「『アイーダ』はカイロのケディヴ歌劇場の開場のために書かれたんだよね。」「でも実際には劇場自体の開場より少し遅れて、1871年に初演されたんだ。」', tip:'古代エジプトを舞台にした壮大なオペラ。エジプト総督からの委嘱作品。'},
+{cat:'ヴェルディ', en:'"The Triumphal March in Aida is spectacular in a big production." "Some houses even bring live elephants onto the stage!"', ja:'「『アイーダ』の凱旋行進曲は、大きな公演だと壮観だね。」「劇場によっては本物の象を舞台に出すところもあるんだよ！」', tip:'第2幕の凱旋の場。豪華な演出が伝統的に施される名場面。'},
+{cat:'ヴェルディ', en:'"Otello is Verdi\'s Shakespeare opera, isn\'t it?" "Yes, based on Othello, with a masterful libretto by Boito."', ja:'「『オテロ』はヴェルディのシェイクスピア・オペラだよね？」「そう、『オセロ』に基づいていて、ボーイトによる見事な台本がついている。」', tip:'1887年初演、ヴェルディ73歳の作品。台本作家ボーイトとの傑出した共作。'},
+{cat:'ヴェルディ', en:'"I love how Verdi captures Iago\'s pure malice in his \'Credo\' aria." "It\'s chilling—he practically worships evil."', ja:'「ヴェルディが「クレド」のアリアでイアーゴの純粋な悪意を捉えているのが好きだな。」「ぞっとするよね、まるで悪そのものを崇拝しているようだ。」', tip:'『オテロ』第2幕。原作にはない、ボーイトが創作した虚無的な独白アリア。'},
+{cat:'ヴェルディ', en:'"Falstaff was Verdi\'s very last opera, composed when he was nearly eighty." "It\'s astonishing how youthful and witty the music still feels."', ja:'「『ファルスタッフ』はヴェルディ最後のオペラで、80歳近くで作曲されたんだね。」「あの音楽が今なお、あんなに若々しくウィットに富んでいるのは驚きだ。」', tip:'1893年初演。ヴェルディ生涯唯一の本格的喜劇の一つで、老年期の傑作とされる。'},
+{cat:'ヴェルディ', en:'"The Requiem is so operatic that some call it his greatest opera in disguise." "It was written in memory of the writer Manzoni, in 1874."', ja:'「『レクイエム』はあまりにオペラ的なので、変装した最高傑作のオペラだと言う人もいるね。」「作家マンゾーニを追悼して、1874年に書かれたんだ。」', tip:'劇的な表現力から「宗教服を着たオペラ」と評されることもある宗教曲。'},
+{cat:'ヴェルディ', en:'"Verdi\'s operas often carried political weight during Italian unification." "His very name became a rallying cry for nationalists."', ja:'「ヴェルディのオペラは、イタリア統一運動の時代にしばしば政治的重みを持っていたね。」「彼の名前そのものが、統一主義者たちの合言葉になったんだ。」', tip:'「VERDI」の頭文字がイタリア王ヴィットーリオ・エマヌエーレを指す標語として使われた逸話がある。'},
+{cat:'ヴェルディ', en:'"Un Ballo in Maschera had trouble with censors when it premiered." "Verdi had to move the setting from Sweden to colonial Boston."', ja:'「『仮面舞踏会』は初演時、検閲との間で問題があったんだよね。」「ヴェルディは舞台設定をスウェーデンから植民地時代のボストンに変更せざるを得なかった。」', tip:'国王暗殺という題材が検閲に触れ、設定変更を余儀なくされた1859年初演の作品。'},
+{cat:'ヴェルディ', en:'"I think \'Va, pensiero\' from Nabucco is basically Italy\'s second anthem." "It\'s often sung as an unofficial hymn of the nation."', ja:'「『ナブッコ』の「行け、我が想いよ」は、事実上イタリアの第二の国歌だと思うな。」「国の非公式な賛歌として、しばしば歌われるね。」', tip:'1842年初演の『ナブッコ』内の合唱曲。バビロン捕囚のユダヤ人の望郷の歌。'},
+{cat:'ヴェルディ', en:'"Which Verdi soprano role do you find the most demanding?" "Lady Macbeth, without question—it needs both power and darkness."', ja:'「ヴェルディのソプラノ役で一番大変だと思うのはどれ？」「間違いなくマクベス夫人だね。力強さと暗さの両方が必要とされる。」', tip:'『マクベス』のマクベス夫人役。美声より劇的表現力が求められる特異な役柄。'},
+{cat:'ヴェルディ', en:'"Il Trovatore has one of the most notoriously confusing plots in opera." "True, but the music more than makes up for it."', ja:'「『イル・トロヴァトーレ』は、オペラの中でも悪名高いほど筋書きが分かりにくいね。」「その通り。でも音楽がそれを十分に補って余りある。」', tip:'1853年初演。複雑な筋書きにもかかわらず、名旋律の宝庫として愛される。'},
+{cat:'ビゼー', en:'"Carmen might be the most performed opera in the entire world." "It\'s hard to argue—every opera house seems to program it constantly."', ja:'「『カルメン』は、世界で最も上演されているオペラかもしれないね。」「反論しにくいな。どの劇場も絶えずプログラムに入れているようだ。」', tip:'1875年初演。世界で最も頻繁に上演されるオペラの一つとされる。'},
+{cat:'ビゼー', en:'"The Habanera is deceptively simple but incredibly seductive." "Bizet based it on a Cuban dance rhythm, if I recall correctly."', ja:'「「ハバネラ」は見た目はシンプルなのに、信じられないほど官能的だね。」「確かビゼーはキューバの舞踊リズムをもとにしていたと思う。」', tip:'ハバネラはキューバ起源の舞曲。カルメン登場時に歌われる有名なアリア。'},
+{cat:'ビゼー', en:'"I always feel so much sympathy for Don José by the final act." "Bizet makes his descent into obsession completely believable."', ja:'「最終幕になると、いつもドン・ホセにとても同情してしまうよ。」「ビゼーは、彼が執着に堕ちていく様子を完全に説得力のあるものにしている。」', tip:'純朴な兵士だったドン・ホセが、嫉妬と執着から破滅へ向かう心理描写が見事。'},
+{cat:'ビゼー', en:'"Carmen premiered in 1875, and Bizet died just months later." "He never lived to see how beloved the opera would become."', ja:'「『カルメン』は1875年に初演され、ビゼーはその数か月後に亡くなったんだね。」「このオペラがどれほど愛されるようになるか、彼は見ることができなかった。」', tip:'ビゼーは初演の3か月後、36歳で急死。生前は不評だったことを知らずに逝った。'},
+{cat:'ビゼー', en:'"The Toreador Song is so catchy it\'s almost a cliché now." "Still, hearing it live in the opera house never loses its thrill."', ja:'「「闘牛士の歌」は覚えやすすぎて、今ではほとんど陳腐な感じすらするね。」「それでも、劇場で生で聴くとその興奮は少しも色あせないよ。」', tip:'エスカミーリョが歌う、『カルメン』屈指の有名な旋律。'},
+{cat:'ビゼー', en:'"Micaëla\'s aria always breaks up the tension so beautifully." "She represents such a gentle contrast to Carmen\'s fire."', ja:'「ミカエラのアリアはいつも緊張感を美しく和らげてくれるね。」「彼女はカルメンの情熱的な性格と対照的な優しさを体現している。」', tip:'ミカエラはドン・ホセの婚約者。純情な性格がカルメンと対比される。'},
+{cat:'ビゼー', en:'"Do you think Carmen is a feminist icon or a tragic victim?" "Honestly, I think she can be read as both, depending on the production."', ja:'「カルメンはフェミニストの象徴だと思う？　それとも悲劇の犠牲者？」「正直、演出次第でどちらとも解釈できると思うな。」', tip:'自由奔放なカルメン像の解釈は、演出によって時代とともに変化してきた。'},
+{cat:'ビゼー', en:'"The final confrontation between Carmen and Don José is pure operatic tragedy." "Bizet builds the tension relentlessly right up to the fatal moment."', ja:'「カルメンとドン・ホセの最後の対決は、まさにオペラ的悲劇そのものだね。」「ビゼーは、あの致命的な瞬間まで容赦なく緊張感を高めていく。」', tip:'闘牛場の外で起こる最終場面。合唱の歓声と対比される劇的な結末。'},
+{cat:'マスネ', en:'"Massenet\'s Manon has such gorgeous, sensuous music." "It\'s one of the most beloved French operas of the 19th century."', ja:'「マスネの『マノン』は本当に華麗で官能的な音楽だね。」「19世紀フランスオペラの中でも最も愛される作品の一つだ。」', tip:'1884年初演。フランス・リリックオペラの代表作の一つ。'},
+{cat:'マスネ', en:'"Werther is based on Goethe\'s novel, isn\'t it?" "Yes, and Massenet captures that Romantic melancholy perfectly."', ja:'「『ウェルテル』はゲーテの小説に基づいているよね？」「そう、マスネはあのロマン主義的な憂愁を完璧に捉えている。」', tip:'1892年初演。ゲーテ『若きウェルテルの悩み』を原作とする。'},
+{cat:'マスネ', en:'"I think Werther\'s final act is almost unbearably sad." "The letter aria \'Pourquoi me réveiller\' is heartbreaking."', ja:'「『ウェルテル』の最終幕は、ほとんど耐えられないくらい悲しいと思うな。」「「なぜ私を目覚めさせるのか」という手紙のアリアは胸が張り裂けるようだ。」', tip:'主人公ウェルテルが歌う名アリア。絶望的な恋の末路を描く。'},
+{cat:'マスネ', en:'"Massenet\'s Thaïs includes that famous orchestral \'Méditation.\'" "It\'s often performed on its own as a violin showpiece."', ja:'「マスネの『タイス』には、あの有名な「瞑想曲」が含まれているね。」「よくヴァイオリンの独立した名曲として演奏されるね。」', tip:'1894年初演。間奏曲「タイスの瞑想曲」は単独でも非常に人気が高い。'},
+{cat:'マスネ', en:'"Do you think Massenet gets overlooked next to Verdi and Puccini?" "A bit, unfairly—his sense of French lyricism is unique."', ja:'「マスネはヴェルディやプッチーニと並べると見過ごされがちだと思う？」「少しね、不当だと思うな。彼のフランス的な叙情性は独自のものだ。」', tip:'イタリア・オペラの巨匠たちと比べ、演奏機会は限られるが評価は高い。'},
+{cat:'マスネ', en:'"Manon premiered in Paris in 1884, if I remember correctly." "Yes, and it remains a favorite showcase for lyric sopranos."', ja:'「『マノン』は確かパリで1884年に初演されたよね？」「そう、今もリリック・ソプラノにとって人気の見せ場であり続けているね。」', tip:'オペラ・コミック座で初演。若く移り気なヒロインの成長を描く。'},
+{cat:'マスネ', en:'"I love how Massenet writes such vivid female characters." "Manon and Thaïs both have remarkable psychological depth."', ja:'「マスネがあれほど生き生きとした女性キャラクターを書くのが好きだな。」「マノンもタイスも、驚くほどの心理的深みを持っているね。」', tip:'マスネは女性主人公の心理描写に長けた作曲家として知られる。'},
+{cat:'マスネ', en:'"Cendrillon is Massenet\'s take on the Cinderella story." "It\'s charming, though far less performed than his major hits."', ja:'「『サンドリヨン』は、マスネによるシンデレラ物語だね。」「魅力的な作品だけど、彼の主要な人気作に比べるとずっと上演機会が少ないね。」', tip:'1899年初演。シャルル・ペローの童話に基づくファンタジー・オペラ。'},
+{cat:'マスネ', en:'"Don Quichotte was written near the end of Massenet\'s career." "It shows a gentler, more reflective side of his style."', ja:'「『ドン・キショット』はマスネのキャリア終盤に書かれたんだね。」「彼のより穏やかで内省的な作風の一面を示しているね。」', tip:'1910年初演。低音歌手シャリアピンのために書かれた晩年の作品。'},
+{cat:'マスネ', en:'"Massenet\'s melodies always feel so elegant and refined." "That\'s very much the hallmark of French Romantic opera."', ja:'「マスネの旋律はいつもとても優雅で洗練されているように感じるね。」「それこそまさにフランス・ロマン派オペラの特徴だ。」', tip:'繊細で流麗な旋律線は、フランス・リリックオペラの美学を体現している。'},
+{cat:'グノー', en:'"Gounod\'s Faust was once one of the most popular operas in the world." "It practically defined French Romantic opera in its day."', ja:'「グノーの『ファウスト』は、かつて世界で最も人気のあるオペラの一つだったね。」「当時のフランス・ロマン派オペラを、事実上定義するような存在だった。」', tip:'1859年初演。19世紀後半、世界で最も上演されたオペラの一つとされる。'},
+{cat:'グノー', en:'"The Jewel Song in Faust is such a dazzling showpiece for sopranos." "Marguerite\'s excitement really shines through the coloratura."', ja:'「『ファウスト』の「宝石の歌」は、ソプラノにとって本当に華やかな見せ場だね。」「マルグリートの興奮が、あのコロラトゥーラを通じて見事に表れている。」', tip:'第3幕、宝石箱を見つけたマルグリートが喜びを歌う有名なアリア。'},
+{cat:'グノー', en:'"Do you know that Faust is based on Goethe\'s play?" "Yes, though Gounod focuses mainly on the love story with Marguerite."', ja:'「『ファウスト』がゲーテの戯曲に基づいていることは知ってる？」「うん、でもグノーは主にマルグリートとの恋物語に焦点を当てているね。」', tip:'ゲーテの大作『ファウスト』のうち、恋愛悲劇の部分を中心に脚色している。'},
+{cat:'グノー', en:'"Gounod\'s Roméo et Juliette has some gorgeous love duets." "The balcony scene music is especially ravishing."', ja:'「グノーの『ロメオとジュリエット』には見事な愛の二重唱がいくつもあるね。」「バルコニーの場面の音楽は特に魅惑的だ。」', tip:'1867年初演。シェイクスピア原作、複数の愛の二重唱が特徴的なオペラ。'},
+{cat:'グノー', en:'"Faust premiered in Paris in 1859, correct?" "Yes, and it became a staple at the Metropolitan Opera\'s opening nights for decades."', ja:'「『ファウスト』はパリで1859年に初演されたんだよね？」「そう、そして何十年もの間、メトロポリタン歌劇場の開幕公演の定番になったんだ。」', tip:'メトロポリタン歌劇場では、長年にわたりシーズン開幕作品として選ばれた。'},
+{cat:'グノー', en:'"I love the Soldiers\' Chorus from Faust." "It\'s one of those tunes everyone recognizes, even outside the opera world."', ja:'「『ファウスト』の「兵士の合唱」が好きだな。」「オペラの世界を超えて、誰もが知っているような旋律の一つだね。」', tip:'第4幕、戦地から帰還する兵士たちが歌う勇壮な合唱曲。'},
+{cat:'グノー', en:'"Méphistophélès is such a fascinating character to watch onstage." "A great bass can steal the entire show in that role."', ja:'「メフィストフェレスは舞台で見ていてとても魅力的なキャラクターだね。」「優れたバス歌手なら、その役で舞台全体をさらってしまえるよ。」', tip:'悪魔メフィストフェレス役。低音歌手にとって重要な見せ場の一つ。'},
+{cat:'グノー', en:'"Gounod originally trained to be a priest before turning to music." "That religious sensibility shows in some of his sacred works too."', ja:'「グノーはもともと音楽に転じる前、聖職者を目指して学んでいたんだね。」「その宗教的な感性は、彼の宗教曲のいくつかにも表れているね。」', tip:'グノーは一時神学校で学んだ経歴を持ち、宗教音楽も多く手がけた。'},
+{cat:'グノー', en:'"I think Marguerite\'s mad scene in the final act is devastating." "Gounod balances tenderness and tragedy so beautifully there."', ja:'「最終幕のマルグリートの狂乱の場は、胸を打ち砕かれるように感じるな。」「グノーはそこで優しさと悲劇を実に美しく釣り合わせている。」', tip:'牢獄で正気を失いながらも赦しを乞う、マルグリート最後の名場面。'},
+{cat:'グノー', en:'"Even though Faust isn\'t performed as often today, it shaped French opera for generations." "It\'s a real cornerstone of the repertoire, historically speaking."', ja:'「『ファウスト』は今日ではそれほど頻繁に上演されないけれど、何世代にもわたってフランスオペラを形作ってきたね。」「歴史的に見て、レパートリーの本当の礎の一つだ。」', tip:'かつての絶大な人気に比べると上演機会は減ったが、その歴史的意義は揺るがない。'}
+];
+// カードごとのネイティブ音声再生
+let nativeAudioEl=new Audio();
+nativeAudioEl.preload='none';
+nativeAudioEl.preservesPitch=true;
+nativeAudioEl.mozPreservesPitch=true;
+nativeAudioEl.webkitPreservesPitch=true;
+function playNativeAudio(audioFile,onEnd,onError){
+  nativeAudioEl.pause();
+  nativeAudioEl.onended=null;
+  nativeAudioEl.onerror=null;
+  if(!audioFile){ if(onError)onError(); return; }
+  nativeAudioEl.src=audioFile;
+  nativeAudioEl.currentTime=0;
+  nativeAudioEl.playbackRate=speechRate;
+  nativeAudioEl.onended=()=>{ if(onEnd)onEnd(); };
+  const p=nativeAudioEl.play();
+  if(p&&p.catch){ p.catch(()=>{ if(onError)onError(); }); }
+}
+function stopNativeAudio(){ nativeAudioEl.pause(); nativeAudioEl.onended=null; }
+let currentIndex=0,isEnToJa=true,isRandom=false,isRepeating=false;
+let mastered=new Set(),activeCategory='all';
+const APP_ID='duo01';
+const PROFILES_KEY='duo_profiles';
+const CURRENT_PROFILE_KEY='duo_current_profile';
+function getProfiles(){try{const raw=localStorage.getItem(PROFILES_KEY);const arr=raw?JSON.parse(raw):[];return arr.length?arr:['本人'];}catch(e){return ['本人'];}}
+function saveProfiles(arr){try{localStorage.setItem(PROFILES_KEY,JSON.stringify(arr));}catch(e){}}
+function getCurrentProfile(){try{return localStorage.getItem(CURRENT_PROFILE_KEY)||getProfiles()[0];}catch(e){return '本人';}}
+function setCurrentProfile(name){try{localStorage.setItem(CURRENT_PROFILE_KEY,name);}catch(e){}}
+function masteredStorageKey(profile){return 'duo_mastered_'+APP_ID+'_'+profile;}
+function loadMastered(){const profile=getCurrentProfile();try{const raw=localStorage.getItem(masteredStorageKey(profile));mastered=new Set(raw?JSON.parse(raw):[]);}catch(e){mastered=new Set();}try{const rawR=localStorage.getItem(masteredStorageKey(profile)+'_review');masteredReview=rawR?JSON.parse(rawR):{};}catch(e){masteredReview={};}}
+function saveMastered(){const profile=getCurrentProfile();try{localStorage.setItem(masteredStorageKey(profile),JSON.stringify([...mastered]));localStorage.setItem(masteredStorageKey(profile)+'_review',JSON.stringify(masteredReview));}catch(e){}}
+function renderProfileSelect(){const sel=document.getElementById('profile-select');if(!sel)return;const profiles=getProfiles();const current=getCurrentProfile();sel.innerHTML=profiles.map(p=>'<option value="'+p+'"'+(p===current?' selected':'')+'>'+p+'</option>').join('')+'<option value="__new__">＋ 新しいユーザー…</option>';}
+function switchProfile(value){if(value==='__new__'){const name=prompt('新しいユーザー名を入力してください（例：妻、孫）');if(!name){renderProfileSelect();return;}const trimmed=name.trim();if(!trimmed){renderProfileSelect();return;}const profiles=getProfiles();if(!profiles.includes(trimmed)){profiles.push(trimmed);saveProfiles(profiles);}setCurrentProfile(trimmed);}else{setCurrentProfile(value);}loadMastered();currentIndex=0;renderProfileSelect();update();}
+
+let isAutoPlaying=false,autoStopped=false,autoTimeout=null,reviewMasteredMode=false,masteredReview={},reviewMode=false,reviewFilter='due',reviewSessionDone=new Set();
+let isSpeaking=false,keepAliveTimer=null,speechRate=1.0,voices=[];
+function reviewDueDate(days){const d=new Date();d.setHours(0,0,0,0);d.setDate(d.getDate()+days);return d.getTime();}
+function addDays(ms,days){const d=new Date(ms);d.setDate(d.getDate()+days);return d.getTime();}
+const REVIEW_INTERVALS=[1,3,7,14,30,60,90];
+function getActive(){return phrases.filter((p,i)=>{if(activeCategory!=='all'&&p.cat!==activeCategory)return false;if(reviewMode){if(!mastered.has(i))return false;if(reviewSessionDone.has(i))return false;const rd=masteredReview[i];const stage=rd?rd.stage:0;const due=rd?rd.due:0;if(reviewFilter==='all')return true;if(reviewFilter==='due')return Date.now()>=due;return stage===parseInt(reviewFilter.slice(1));}if(reviewMasteredMode)return mastered.has(i);if(mastered.has(i))return false;return true;});}
+function buildCatRows(){const wrap=document.getElementById('cat-rows');wrap.innerHTML='';Object.keys(CATS).forEach(cat=>{const total=phrases.filter(p=>p.cat===cat).length;const mc=phrases.filter((p,i)=>p.cat===cat&&mastered.has(i)).length;const row=document.createElement('div');row.className='cat-row'+(activeCategory===cat?' active':'');row.innerHTML=`<div class="cat-dot${mc===total?' done':''}"></div><div class="cat-row-name">${cat}</div><div class="cat-row-count">${mc}/${total}</div>`;row.onclick=()=>selectCategory(cat);wrap.appendChild(row);});}
+function selectCategory(cat){activeCategory=cat;currentIndex=0;document.getElementById('chip-all').className='chip-all'+(cat==='all'?' active':'');buildCatRows();updateFilterLabel();update();document.getElementById('filter-chips-wrap').classList.remove('open');document.getElementById('filter-toggle-icon').classList.remove('open');}
+function updateFilterLabel(){document.getElementById('filter-current-label').textContent=activeCategory==='all'?'すべて':activeCategory;}
+function toggleFilterPanel(){document.getElementById('filter-chips-wrap').classList.toggle('open');document.getElementById('filter-toggle-icon').classList.toggle('open');}
+function loadVoices(){const all=window.speechSynthesis.getVoices();const okNames=new Set(['Microsoft Ava Online (Natural) - English (United States)','Microsoft Andrew Online (Natural) - English (United States)','Microsoft Emma Online (Natural) - English (United States)','Microsoft Brian Online (Natural) - English (United States)','Microsoft Jenny Online (Natural) - English (United States)','Microsoft Guy Online (Natural) - English (United States)','Microsoft Aria Online (Natural) - English (United States)','Microsoft Ana Online (Natural) - English (United States)','Microsoft Christopher Online (Natural) - English (United States)','Microsoft Eric Online (Natural) - English (United States)','Microsoft Michelle Online (Natural) - English (United States)','Microsoft Steffan Online (Natural) - English (United States)','Microsoft Ava Multilingual Online (Natural) - English (United States)','Microsoft Andrew Multilingual Online (Natural) - English (United States)','Microsoft Emma Multilingual Online (Natural) - English (United States)','Microsoft Brian Multilingual Online (Natural) - English (United States)','Microsoft Hazel - English (United Kingdom)','Microsoft Susan - English (United Kingdom)','Microsoft George - English (United Kingdom)','Microsoft Libby Online (Natural) - English (United Kingdom)','Microsoft Maisie Online (Natural) - English (United Kingdom)','Microsoft Thomas Online (Natural) - English (United Kingdom)','Microsoft Sonia Online (Natural) - English (United Kingdom)','Microsoft Ryan Online (Natural) - English (United Kingdom)','Microsoft William Online (Natural) - English (Australia)','Microsoft Natasha Online (Natural) - English (Australia)','Microsoft Clara Online (Natural) - English (Canada)','Microsoft Liam Online (Natural) - English (Canada)','Microsoft Leah Online (Natural) - English (South Africa)','Microsoft Luke Online (Natural) - English (South Africa)','Microsoft Emily Online (Natural) - English (Ireland)','Microsoft Connor Online (Natural) - English (Ireland)','Microsoft Yan Online (Natural) - English (Hong Kong SAR)','Microsoft Sam Online (Natural) - English (Hong Kong SAR)','Microsoft Asilia Online (Natural) - English (Kenya)','Microsoft Chilemba Online (Natural) - English (Kenya)','Microsoft Ezinne Online (Natural) - English (Nigeria)','Microsoft Abeo Online (Natural) - English (Nigeria)','Microsoft Molly Online (Natural) - English (New Zealand)','Microsoft Luna Online (Natural) - English (Singapore)','Microsoft Imani Online (Natural) - English (Tanzania)','Microsoft Elimu Online (Natural) - English (Tanzania)','Microsoft James Online (Natural) - English (Philippines)','Microsoft Neerja Online (Natural) - English (India)','Microsoft Prabhat Online (Natural) - English (India)']);const wl=all.filter(v=>okNames.has(v.name));voices=wl.length?wl:all.filter(v=>v.lang.startsWith('en'));if(!voices.length)voices=all;voices=[...voices].sort((a,b)=>{const pref=['en-US','en-GB','en-AU','en-SG'];const ai=pref.findIndex(p=>a.lang.startsWith(p));const bi=pref.findIndex(p=>b.lang.startsWith(p));return(ai<0?99:ai)-(bi<0?99:bi);});}
+loadVoices();
+window.speechSynthesis.onvoiceschanged=loadVoices;
+function getVoice(){return voices[0]||null;}
+function updateRate(){speechRate=parseFloat(document.getElementById('rate-slider').value);if(!nativeAudioEl.paused){nativeAudioEl.playbackRate=speechRate;}}
+function startKeepAlive(){stopKeepAlive();keepAliveTimer=setInterval(()=>{if(window.speechSynthesis.speaking)window.speechSynthesis.pause(),window.speechSynthesis.resume();},10000);}
+function stopKeepAlive(){if(keepAliveTimer){clearInterval(keepAliveTimer);keepAliveTimer=null;}}
+function speakTTS(text,onEnd){const m=text.match(/^"([^"]*)"\s*"([^"]*)"$/);if(m){speakTTSOne(m[1],()=>{setTimeout(()=>{speakTTSOne(m[2],onEnd);},700);});}else{speakTTSOne(text,onEnd);}}
+function speakTTSOne(text,onEnd){window.speechSynthesis.cancel();isSpeaking=false;clearTimeout(speakOne._t);speakOne._t=setTimeout(()=>{const utt=new SpeechSynthesisUtterance(text);const v=getVoice();if(v){utt.voice=v;utt.lang=v.lang;}else{utt.lang='en-US';}utt.rate=speechRate;utt.onend=()=>{isSpeaking=false;stopKeepAlive();if(onEnd)onEnd();};utt.onerror=()=>{isSpeaking=false;stopKeepAlive();if(onEnd)onEnd();};isSpeaking=true;startKeepAlive();window.speechSynthesis.speak(utt);setTimeout(()=>{window.speechSynthesis.pause();window.speechSynthesis.resume();},30);},150);}
+speakOne._t=null;
+function speakOne(card,onEnd){
+  window.speechSynthesis.cancel();
+  stopNativeAudio();
+  if(card&&card.audio){
+    playNativeAudio(card.audio,onEnd,()=>{ speakTTS(card.en,onEnd); });
+  } else {
+    speakTTS(card.en,onEnd);
+  }
+}
+function speakP(){return new Promise(r=>{const a=getActive();if(!a.length){r();return;}speakOne(a[currentIndex],r);});}
+function speakCurrent(){const a=getActive();if(!a.length)return;speakOne(a[currentIndex]);}
+function speakRepeat(){if(!isRepeating||isAutoPlaying)return;const a=getActive();if(!a.length)return;speakOne(a[currentIndex],()=>{if(isRepeating&&!isAutoPlaying){clearTimeout(speakRepeat._t);speakRepeat._t=setTimeout(()=>speakRepeat(),300);}}); }
+speakRepeat._t=null;
+function toggleRepeat(){isRepeating=!isRepeating;const btn=document.getElementById('repeat-btn');btn.textContent=isRepeating?'🔁 繰り返し: ON':'🔁 繰り返し';btn.className=isRepeating?'btn btn-on':'btn btn-secondary';if(isRepeating){const a=getActive();if(a.length)speakRepeat();}else{window.speechSynthesis.cancel();stopNativeAudio();isSpeaking=false;stopKeepAlive();clearTimeout(speakRepeat._t);}}
+function update(){const active=getActive();const noEl=document.getElementById('no-active');if(!active.length){noEl.classList.add('show');const catMasteredCount=[...mastered].filter(idx=>activeCategory==='all'||phrases[idx].cat===activeCategory).length;let emptyMsg='🔁 対象のカードがありません';if(catMasteredCount===0){emptyMsg='🔁 マスター済みのカードがまだありません';}else if(reviewFilter==='due'){emptyMsg='🔁 今日復習が必要なカードはありません（また後でチェックしてください）';}else if(reviewFilter==='all'){emptyMsg='🔁 対象のカードがありません';}else{emptyMsg='🔁 このサイクルのカードは今ありません';}noEl.textContent=reviewMode?emptyMsg:'✅ このカテゴリをすべてマスターしました！';document.getElementById('main-card').style.display='none';document.getElementById('tap-hint').style.display='none';const rar0=document.getElementById('review-action-row');if(rar0)rar0.style.display='none';updateMasterBadge();buildCatRows();return;}noEl.classList.remove('show');document.getElementById('main-card').style.display='';document.getElementById('tap-hint').style.display='';const rar=document.getElementById('review-action-row');if(rar)rar.style.display=reviewMode?'':'none';if(currentIndex>=active.length)currentIndex=0;const item=active[currentIndex];const realIdx=phrases.indexOf(item);document.getElementById('card-num').textContent=String(realIdx+OFFSET).padStart(3,'0');document.getElementById('card-cat').textContent=item.cat;document.getElementById('cur-num').textContent=currentIndex+1;document.getElementById('tot-num').textContent=active.length;const pct=active.length>1?((currentIndex/(active.length-1))*100).toFixed(0):100;document.getElementById('progress-bar').style.width=pct+'%';function dialogueHTML(text){return text.replace(/"\s+"/g,'"<br>"').replace(/」「/g,'」<br>「');}
+if(isEnToJa){document.getElementById('main-text').innerHTML=dialogueHTML(item.en);document.getElementById('answer-ja').innerHTML=dialogueHTML(item.ja);}else{document.getElementById('main-text').innerHTML=dialogueHTML(item.ja);document.getElementById('answer-ja').innerHTML=dialogueHTML(item.en);}const tipEl=document.getElementById('answer-tip');if(item.tip){tipEl.textContent=item.tip;tipEl.style.display='';}else{tipEl.style.display='none';}document.getElementById('answer-wrap').classList.remove('show');document.getElementById('main-card').classList.remove('revealed');const cb=document.getElementById('master-cb');cb.checked=mastered.has(realIdx);if(mastered.has(realIdx))document.getElementById('mastered-badge').classList.add('show');else document.getElementById('mastered-badge').classList.remove('show');updateMasterBadge();buildCatRows();}
+function updateMasterBadge(){const cnt=mastered.size;document.getElementById('master-badge-top').textContent=`マスター: ${cnt} / ${phrases.length}`;const sumEl=document.getElementById('master-summary');if(cnt>0){sumEl.classList.add('show');sumEl.textContent=`✅ マスター済み: ${cnt}件 — タップしてリスト表示`;renderMasterList();}else sumEl.classList.remove('show');}
+function renderMasterList(){const listEl=document.getElementById('master-list');listEl.innerHTML='';[...mastered].sort((a,b)=>a-b).forEach(idx=>{const item=phrases[idx];const d=document.createElement('div');d.style.cssText='padding:8px 0;border-bottom:1px solid #f8fafc;font-size:12px;';d.innerHTML=`<span style="font-family:monospace;font-size:10px;color:#64748b;">${String(idx+OFFSET).padStart(3,'0')}</span> ${item.en.substring(0,55)}...`;listEl.appendChild(d);});}
+function toggleMasterList(){const w=document.getElementById('master-list-wrap');w.style.display=w.style.display==='none'?'':'none';}
+function clearAllMasterStep1(){const btn=document.getElementById('clear-all-btn');if(!btn)return;btn.textContent='本当に全解除？';btn.style.background='#e11d48';btn.style.color='#fff';btn.onclick=clearAllMasterStep2;setTimeout(()=>{if(btn.textContent==='本当に全解除？'){btn.textContent='全解除';btn.style.background='';btn.style.color='';btn.onclick=clearAllMasterStep1;}},3000);}
+function clearAllMasterStep2(){mastered.clear();masteredReview={};saveMastered();currentIndex=0;document.getElementById('master-list-wrap').style.display='none';const btn=document.getElementById('clear-all-btn');if(btn){btn.textContent='全解除';btn.style.background='';btn.style.color='';btn.onclick=clearAllMasterStep1;}update();}
+function handleTap(){if(isAutoPlaying)return;const wrap=document.getElementById('answer-wrap');if(!wrap.classList.contains('show')){wrap.classList.add('show');document.getElementById('main-card').classList.add('revealed');}}
+function toggleMaster(e){const active=getActive();if(!active.length)return;const item=active[currentIndex];const realIdx=phrases.indexOf(item);if(e.target.checked){mastered.add(realIdx);const origin=reviewDueDate(0);masteredReview[realIdx]={stage:0,origin:origin,due:addDays(origin,REVIEW_INTERVALS[0])};document.getElementById('mastered-badge').classList.add('show');setTimeout(()=>{if(currentIndex>=getActive().length)currentIndex=0;update();},400);}else{mastered.delete(realIdx);delete masteredReview[realIdx];document.getElementById('mastered-badge').classList.remove('show');}saveMastered();updateMasterBadge();buildCatRows();}
+function confirmReviewed(){const active=getActive();if(!active.length)return;const item=active[currentIndex];const realIdx=phrases.indexOf(item);if(reviewSessionDone.has(realIdx))return;reviewSessionDone.add(realIdx);const prev=masteredReview[realIdx];const origin=(prev&&prev.origin)?prev.origin:reviewDueDate(0);const prevStage=prev?prev.stage:-1;const newStage=Math.min(prevStage+1,REVIEW_INTERVALS.length-1);let due;if(prevStage<REVIEW_INTERVALS.length-1){due=addDays(origin,REVIEW_INTERVALS[newStage]);}else{due=reviewDueDate(REVIEW_INTERVALS[REVIEW_INTERVALS.length-1]);}masteredReview[realIdx]={stage:newStage,origin:origin,due:due};saveMastered();if(currentIndex>=getActive().length)currentIndex=0;update();}
+function toggleReviewMode(){reviewMode=!reviewMode;if(reviewMode)reviewSessionDone.clear();const btn=document.getElementById('review-toggle-btn');if(reviewMode){btn.textContent='🔁 復習モード: ON';btn.className='btn btn-on';}else{btn.textContent='🔁 復習モード: OFF';btn.className='btn btn-secondary';}currentIndex=0;update();}
+function changeReviewFilter(){reviewFilter=document.getElementById('review-filter-select').value;currentIndex=0;if(reviewMode)update();}
+function next(){const a=getActive();if(!a.length)return;if(isRandom)currentIndex=Math.floor(Math.random()*a.length);else currentIndex=(currentIndex+1)%a.length;update();if(isRepeating){clearTimeout(speakRepeat._t);speakRepeat();}}
+function prev(){const a=getActive();if(!a.length)return;currentIndex=(currentIndex-1+a.length)%a.length;update();if(isRepeating){clearTimeout(speakRepeat._t);speakRepeat();}}
+function toggleRandom(){isRandom=!isRandom;const btn=document.getElementById('random-btn');btn.textContent=isRandom?'🔀 ランダム: ON':'🔀 ランダム: OFF';btn.className=isRandom?'btn btn-on':'btn btn-secondary';}
+function switchMode(){if(isAutoPlaying)return;isEnToJa=!isEnToJa;update();}
+function delayP(ms){return new Promise(r=>{if(autoStopped){r();return;}autoTimeout=setTimeout(r,ms);});}
+function setAutoPanel(s,i,c){document.getElementById('auto-step-title').textContent=s;document.getElementById('auto-instruction').textContent=i;document.getElementById('auto-count').textContent=c;}
+function enterAutoUI(){reviewMode=false;reviewSessionDone.clear();const rb0=document.getElementById('review-toggle-btn');if(rb0){rb0.textContent='🔁 復習モード: OFF';rb0.className='btn btn-secondary';}const rar1=document.getElementById('review-action-row');if(rar1)rar1.style.display='none';isAutoPlaying=true;autoStopped=false;document.getElementById('normal-controls').style.display='none';document.getElementById('auto-controls').style.display='';document.getElementById('auto-panel').classList.add('show');document.getElementById('tap-hint').style.display='none';document.getElementById('master-wrap').classList.add('disabled');document.getElementById('main-card').classList.remove('tappable');document.getElementById('main-card').classList.add('no-tap');}
+function exitAutoUI(){autoStopped=true;isAutoPlaying=false;window.speechSynthesis.cancel();stopNativeAudio();isSpeaking=false;stopKeepAlive();clearTimeout(speakOne._t);if(autoTimeout){clearTimeout(autoTimeout);autoTimeout=null;}document.getElementById('normal-controls').style.display='';document.getElementById('auto-controls').style.display='none';document.getElementById('auto-panel').classList.remove('show');document.getElementById('tap-hint').style.display='';document.getElementById('master-wrap').classList.remove('disabled');document.getElementById('main-card').classList.add('tappable');document.getElementById('main-card').classList.remove('no-tap');}
+function stopAutoPlay(){exitAutoUI();reviewMasteredMode=false;update();}
+function showHidden(){document.getElementById('main-text').textContent='？？？';document.getElementById('answer-wrap').classList.remove('show');document.getElementById('main-card').classList.remove('revealed');}
+function showAll(){const a=getActive();if(!a.length)return;document.getElementById('main-text').innerHTML=a[currentIndex].en;document.getElementById('answer-wrap').classList.add('show');document.getElementById('main-card').classList.add('revealed');}
+async function runShadowing(){const active=getActive();if(!active.length){stopAutoPlay();return;}const si=currentIndex;for(let i=0;i<active.length;i++){if(autoStopped)break;currentIndex=(si+i)%active.length;update();const n=i+1,tot=active.length;showHidden();setAutoPanel(`カード ${n}/${tot} — STEP 1`,'👂 発話せずに2回聴いてください。','1/2回目…');await speakP();if(autoStopped)break;await delayP(350);if(autoStopped)break;setAutoPanel(`カード ${n}/${tot} — STEP 1`,'👂 発話せずに2回聴いてください。','2/2回目…');await speakP();if(autoStopped)break;await delayP(450);if(autoStopped)break;showHidden();setAutoPanel(`カード ${n}/${tot} — STEP 2`,'🗣️ 音声に合わせてシャドウイングしてください。','1/2回目…');await speakP();if(autoStopped)break;await delayP(350);if(autoStopped)break;setAutoPanel(`カード ${n}/${tot} — STEP 2`,'🗣️ 音声に合わせてシャドウイングしてください。','2/2回目…');await speakP();if(autoStopped)break;await delayP(450);if(autoStopped)break;showAll();setAutoPanel(`カード ${n}/${tot} — STEP 3`,'📖 英文・日本語訳を見ながら2回シャドウイング。','1/2回目…');await speakP();if(autoStopped)break;await delayP(350);if(autoStopped)break;setAutoPanel(`カード ${n}/${tot} — STEP 3`,'📖 英文・日本語訳を見ながら2回シャドウイング。','2/2回目…');await speakP();if(autoStopped)break;await delayP(450);if(autoStopped)break;showHidden();setAutoPanel(`カード ${n}/${tot} — STEP 4`,'🙈 何も見ずに2回シャドウイングしてください。','1/2回目…');await speakP();if(autoStopped)break;await delayP(350);if(autoStopped)break;setAutoPanel(`カード ${n}/${tot} — STEP 4`,'🙈 何も見ずに2回シャドウイングしてください。','2/2回目…');await speakP();if(autoStopped)break;await delayP(700);}if(!autoStopped){setAutoPanel('完了！','🎉 シャドウイング完了しました！','');await delayP(2000);stopAutoPlay();}}
+function startShadowing(){if(!getActive().length){alert('出題できるカードがありません。');return;}enterAutoUI();runShadowing();}
+async function runContinuous(){let lc=0;while(!autoStopped){const active=getActive();if(!active.length){stopAutoPlay();return;}lc++;const si=currentIndex;for(let i=0;i<active.length;i++){if(autoStopped)break;currentIndex=(si+i)%active.length;update();document.getElementById('answer-wrap').classList.add('show');document.getElementById('main-card').classList.add('revealed');setAutoPanel(`連続再生 ${i+1}/${active.length}（${lc}周目）`,'▶ 英語音声を再生中 — ⏹ 停止ボタンで終了','');await speakP();if(autoStopped)break;await delayP(500);}if(!autoStopped)currentIndex=0;}}
+function startContinuous(){if(!getActive().length){alert('出題できるカードがありません。');return;}enterAutoUI();runContinuous();}
+function startMasteredReview(){reviewMasteredMode=true;if(!getActive().length){reviewMasteredMode=false;alert('マスター済みのカードがありません。');return;}currentIndex=0;enterAutoUI();runContinuous();}
+loadMastered();renderProfileSelect();buildCatRows();updateFilterLabel();update();
+</script>
+<script>
+(function() {
+var startX = 0, startY = 0;
+document.addEventListener('touchstart', function(e) {
+startX = e.touches[0].clientX;
+startY = e.touches[0].clientY;
+}, { passive: true });
+document.addEventListener('touchend', function(e) {
+var dx = e.changedTouches[0].clientX - startX;
+var dy = e.changedTouches[0].clientY - startY;
+if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 50) {
+if (dx < 0) next();
+else prev();
+}
+}, { passive: true });
+})();
+</script>
+</body>
+</html>
