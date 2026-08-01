@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>会話の接着剤⑤ 会話の進行管理編 — No. 1〜50</title>
+<link rel="apple-touch-icon" href="data:image/png;base64,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">
+<meta name="apple-mobile-web-app-title" content="接着剤⑤">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+--bg:#fdf2f8;--surface:#ffffff;--primary:#be185d;--primary-light:#fce7f3;
+--accent:#c026d3;--green:#16a34a;--green-light:#dcfce7;--amber:#d97706;--amber-light:#fef3c7;
+--red:#e11d48;--text:#1e293b;--muted:#64748b;--border:#f9a8d4;
+--shadow:0 4px 24px rgba(190,24,93,0.10);--radius:18px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);min-height:100vh;padding:2px 12px 48px;color:var(--text);}
+.container{max-width:560px;margin:auto;}
+.header{text-align:center;margin-bottom:4px;}
+.header h2{font-size:18px;font-weight:900;color:var(--primary);}
+.header p{font-size:12px;color:var(--muted);margin-top:2px;}
+.badges{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-bottom:10px;}
+.badge{display:inline-flex;align-items:center;gap:4px;padding:4px 12px;border-radius:99px;font-size:11px;font-weight:700;background:var(--primary-light);color:var(--primary);border:1px solid var(--border);}
+.badge.green{background:var(--green-light);color:var(--green);border-color:#86efac;}
+.progress-wrap{background:#fbcfe8;border-radius:99px;height:6px;margin-bottom:4px;overflow:hidden;}
+.progress-bar{height:100%;background:var(--primary);border-radius:99px;transition:width 0.4s ease;}
+.progress-label{text-align:center;font-size:12px;color:var(--muted);margin-bottom:8px;}
+.tap-hint{font-size:11px;color:var(--muted);}
+.card{background:var(--surface);border-radius:var(--radius);padding:16px 20px 20px;box-shadow:var(--shadow);margin-bottom:12px;position:relative;border:2px solid var(--border);min-height:160px;cursor:pointer;user-select:none;transition:transform .1s,border-color .2s;}
+.card.tappable:active{transform:scale(0.985);}
+.card.revealed{border-color:var(--primary);}
+.card.no-tap{cursor:default;}
+.card-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;}
+.card-num{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);}
+.cat-label{font-size:11px;font-weight:700;letter-spacing:.06em;color:var(--primary);text-align:center;flex:1;}
+.master-wrap{display:flex;align-items:center;gap:4px;font-size:11px;color:var(--muted);}
+.master-wrap input[type=checkbox]{width:17px;height:17px;accent-color:var(--green);cursor:pointer;}
+.master-wrap.disabled{opacity:.3;pointer-events:none;}
+.main-text{font-size:clamp(14px,3.8vw,18px);font-weight:700;line-height:1.65;text-align:center;margin-bottom:14px;}
+.answer-wrap{opacity:0;transform:translateY(5px);transition:opacity .25s,transform .25s;pointer-events:none;}
+.answer-wrap.show{opacity:1;transform:translateY(0);pointer-events:auto;}
+.answer-ja{font-size:clamp(13px,3.5vw,15px);font-weight:700;color:var(--accent);text-align:center;line-height:1.6;background:#fdf4ff;border-radius:10px;padding:10px 14px;margin-bottom:8px;}
+.answer-tip{font-size:12px;font-weight:600;color:var(--green);text-align:left;padding:0 4px;line-height:1.6;}
+.answer-tip::before{content:'💡 ';}
+.master-badge{display:none;text-align:center;margin-top:8px;background:var(--green-light);color:var(--green);padding:2px 10px;border-radius:99px;font-size:10px;font-weight:700;}
+.master-badge.show{display:block;}
+.no-active{background:var(--amber-light);border-radius:12px;padding:16px;text-align:center;font-size:14px;color:var(--amber);font-weight:700;display:none;margin-bottom:12px;}
+.no-active.show{display:block;}
+.auto-panel{background:var(--surface);border-radius:var(--radius);padding:14px 18px;box-shadow:var(--shadow);margin-bottom:12px;display:none;border-left:4px solid var(--primary);}
+.auto-panel.show{display:block;}
+.auto-step-title{font-size:12px;font-weight:900;color:var(--primary);margin-bottom:4px;}
+.auto-instruction{font-size:14px;font-weight:700;color:var(--text);line-height:1.5;}
+.auto-count{font-family:'DM Mono',monospace;font-size:12px;color:var(--muted);margin-top:4px;}
+.filter-panel{background:var(--surface);border-radius:var(--radius);padding:6px 8px;border:1px solid var(--border);margin-bottom:5px;}
+.filter-header{display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none;}
+.filter-header-left{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;}
+.filter-current{font-size:12px;font-weight:700;color:var(--primary);background:var(--primary-light);padding:3px 10px;border-radius:99px;border:1px solid var(--border);max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.filter-toggle-icon{font-size:12px;color:var(--muted);transition:transform .2s;margin-left:6px;}
+.filter-toggle-icon.open{transform:rotate(180deg);}
+.filter-chips-wrap{display:none;margin-top:10px;}
+.filter-chips-wrap.open{display:block;}
+.chip-all{display:block;width:100%;padding:6px 12px;margin-bottom:6px;border-radius:10px;font-size:12px;font-weight:700;cursor:pointer;border:2px solid var(--border);background:#fff;color:var(--muted);text-align:left;font-family:'Noto Sans JP',sans-serif;transition:all .15s;}
+.chip-all.active{background:var(--primary-light);color:var(--primary);border-color:var(--primary);}
+.cat-row{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:10px;cursor:pointer;border:2px solid transparent;background:#fff;margin-bottom:4px;transition:all .15s;user-select:none;}
+.cat-row.active{background:var(--primary-light);border-color:var(--primary);}
+.cat-row-name{flex:1;font-size:13px;font-weight:700;color:var(--text);}
+.cat-row.active .cat-row-name{color:var(--primary);}
+.cat-row-count{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);background:#f1f5f9;padding:2px 8px;border-radius:99px;font-weight:600;}
+.cat-row.active .cat-row-count{background:#fff;color:var(--primary);}
+.cat-dot{width:8px;height:8px;border-radius:50%;background:#e2e8f0;flex-shrink:0;}
+.cat-dot.done{background:var(--green);}
+.panel{background:var(--surface);border-radius:var(--radius);padding:6px 8px;border:1px solid var(--border);margin-bottom:5px;}
+.panel-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.panel-row+.panel-row{margin-top:8px;}
+.panel label{font-size:12px;color:var(--muted);font-weight:700;white-space:nowrap;}
+.panel select{flex:1;font-size:12px;border:1px solid var(--border);border-radius:8px;padding:4px 8px;background:#fff;color:var(--text);font-family:'Noto Sans JP',sans-serif;}
+.panel input[type=range]{flex:1;min-width:80px;accent-color:var(--primary);}
+.speed-val{font-family:'DM Mono',monospace;font-size:13px;font-weight:600;color:var(--primary);min-width:32px;}
+.btn-row{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:10px;}
+.btn{border:none;border-radius:99px;padding:8px 14px;font-size:13px;font-weight:700;font-family:'Noto Sans JP',sans-serif;cursor:pointer;transition:opacity .15s,transform .1s;display:inline-flex;align-items:center;gap:5px;}
+.btn:active{transform:scale(0.94);opacity:.85;}
+.btn-primary{background:var(--primary);color:#fff;}
+.btn-secondary{background:#e2e8f0;color:var(--text);}
+.btn-red{background:var(--red);color:#fff;}
+.btn-amber{background:var(--amber);color:#fff;}
+.btn-blue{background:#2563eb;color:#fff;}
+.btn-on{background:var(--green);color:#fff;}
+.master-summary{background:var(--green-light);border-radius:12px;padding:7px 12px;font-size:12px;color:var(--green);font-weight:700;text-align:center;margin-bottom:8px;display:none;cursor:pointer;user-select:none;}
+.master-summary.show{display:block;}
+.help-btn{display:inline-flex;align-items:center;gap:5px;padding:5px 14px;border-radius:99px;border:1px solid var(--border);background:var(--primary-light);color:var(--primary);font-size:12px;font-weight:700;cursor:pointer;font-family:'Noto Sans JP',sans-serif;}
+.top-row{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:8px;}
+.audio-mini-label{font-size:10px;color:var(--muted);text-align:center;margin-bottom:4px;font-weight:700;}
+.audio-track-row{display:flex;align-items:center;justify-content:center;gap:11px;margin:0 0 16px;flex-wrap:wrap;}
+.audio-track-btn{border:1px solid #99f6e4;border-radius:99px;padding:4px 11px;font-size:11px;font-weight:700;cursor:pointer;background:#f0fdfa;color:#0891b2;font-family:'DM Mono',monospace;}
+.audio-track-btn.playing{background:#0891b2;color:#fff;border-color:#0891b2;}
+.audio-loop-all-btn{border:1px solid var(--border);border-radius:99px;padding:4px 11px;font-size:11px;font-weight:700;cursor:pointer;background:#e2e8f0;color:var(--text);}
+.audio-loop-all-btn.on{background:var(--green);color:#fff;border-color:var(--green);}
+.profile-select{font-family:'Noto Sans JP',sans-serif;font-size:11px;font-weight:700;color:var(--primary);background:var(--primary-light);border:1px solid var(--border);border-radius:99px;padding:5px 10px;cursor:pointer;max-width:120px;}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="header">
+<h2>💬 会話の接着剤⑤ 会話の進行管理編</h2>
+</div>
+
+<div class="top-row">
+<button class="help-btn" onclick="alert('👆カードタップで答え表示\n🔊音声再生（ネイティブ音声。ファイルがない場合のみ合成音声）\n🗣️シャドウイング4ステップ\n▶連続再生\n🔄英⇄日モード切替\nマスターチェックで次へ\n\n【復習モードの仕組み】\nマスター済みカードは 1日目→3日目→7日目→14日目→30日目→60日目→90日目 の順で自動的に間隔が伸びます\n「覚えていた」を押すたびに次のサイクルへ進みます\n「忘れていた」場合はマスターのチェックを外してください（次にマスターしたらまた1日目から）\nプルダウンで見たいサイクルを選べます（本日復習 / 1日 / 3日 / 7日 / 14日 / 30日 / 60日 / 90日 / すべて）')">❓ 使い方</button>
+<select class="profile-select" id="profile-select" onchange="switchProfile(this.value)"></select>
+
+<div class="badge green" id="master-badge-top">マスター: 0 / 50</div>
+</div>
+
+<div class="progress-wrap"><div class="progress-bar" id="progress-bar" style="width:2%"></div></div>
+<div class="progress-label">カード <span id="cur-num">1</span>/<span id="tot-num">50</span> <span id="tap-hint">・👆タップで訳を表示</span></div>
+<div class="no-active" id="no-active">✅ このカテゴリをすべてマスターしました！</div>
+<div class="auto-panel" id="auto-panel">
+<div class="auto-step-title" id="auto-step-title">STEP 1</div>
+<div class="auto-instruction" id="auto-instruction">音声を聴いてください。</div>
+<div class="auto-count" id="auto-count"></div>
+</div>
+<div class="card tappable" id="main-card" onclick="handleTap()">
+<div class="card-top">
+<div class="card-num" id="card-num">1</div>
+<div class="cat-label" id="card-cat"></div>
+<div class="master-wrap" id="master-wrap">
+<span>マスター</span>
+<input type="checkbox" id="master-cb" onchange="toggleMaster(event)" onclick="event.stopPropagation()">
+</div>
+</div>
+<div class="main-text" id="main-text">Loading...</div>
+<div class="answer-wrap" id="answer-wrap">
+<div class="answer-ja" id="answer-ja"></div>
+<div class="answer-tip" id="answer-tip" style="display:none"></div>
+</div>
+<div class="master-badge" id="mastered-badge">✔ マスター済</div>
+</div>
+<div class="btn-row" id="review-action-row" style="display:none;gap:8px;margin:-4px 0 10px;">
+<button class="btn btn-on" style="flex:1;font-size:12px;padding:8px;" onclick="confirmReviewed()">✅ 覚えていた（今日の日付で更新）</button>
+</div>
+<div class="master-summary" id="master-summary" onclick="toggleMasterList()"></div>
+<div id="master-list-wrap" style="display:none;margin-bottom:12px;">
+<div style="background:#fff;border-radius:16px;padding:14px 16px;box-shadow:var(--shadow);">
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+<span style="font-size:13px;font-weight:900;color:var(--green);">✅ マスター済みリスト</span>
+<button class="btn btn-secondary" id="clear-all-btn" style="padding:4px 12px;font-size:11px;" onclick="clearAllMasterStep1()">全解除</button>
+</div>
+<div id="master-list"></div>
+</div>
+</div>
+<div class="filter-panel">
+<div class="filter-header" onclick="toggleFilterPanel()">
+<div class="filter-header-left">📂 カテゴリを選ぶ</div>
+<div style="display:flex;align-items:center;gap:4px;">
+<div class="filter-current" id="filter-current-label">すべて</div>
+<span class="filter-toggle-icon" id="filter-toggle-icon">▼</span>
+</div>
+</div>
+<div class="filter-chips-wrap" id="filter-chips-wrap">
+<button class="chip-all active" id="chip-all" onclick="selectCategory('all')">🎯 すべて表示</button>
+<div id="cat-rows"></div>
+</div>
+</div>
+<div class="panel">
+<div class="panel-row">
+<label>速度</label>
+<select id="rate-slider" onchange="updateRate()" style="flex:1;font-size:12px;padding:6px 8px;border:1px solid var(--border);border-radius:8px;background:#fff;color:var(--text);font-family:'Noto Sans JP',sans-serif;">
+<option value="0.5">0.5×</option>
+<option value="0.6">0.6×</option>
+<option value="0.7">0.7×</option>
+<option value="0.8">0.8×</option>
+<option value="0.9">0.9×</option>
+<option value="1.0" selected>1.0×</option>
+<option value="1.1">1.1×</option>
+<option value="1.2">1.2×</option>
+<option value="1.3">1.3×</option>
+<option value="1.4">1.4×</option>
+<option value="1.5">1.5×</option>
+<option value="1.75">1.75×</option>
+<option value="2.0">2.0×</option>
+</select>
+<button class="btn btn-on" style="font-size:11px;padding:6px 10px;" onclick="startMasteredReview()">✅ マスター済み再生</button>
+</div>
+</div>
+<div id="normal-controls">
+<div class="btn-row">
+<button class="btn btn-secondary" onclick="prev()">← 戻る</button>
+<button class="btn btn-primary" onclick="speakCurrent()">🔊 音声</button>
+<button class="btn btn-secondary" onclick="next()">次へ →</button>
+<button class="btn btn-secondary" style="font-size:11px;padding:8px 6px;" onclick="switchMode()">🔄 英⇄日</button>
+</div>
+<div class="btn-row" style="gap:4px;">
+<button class="btn btn-secondary" style="font-size:11px;padding:7px 5px;" id="random-btn" onclick="toggleRandom()">🔀 ランダム</button>
+<button class="btn btn-secondary" style="font-size:11px;padding:7px 5px;" id="repeat-btn" onclick="toggleRepeat()">🔁 繰り返し</button>
+<button class="btn btn-blue" style="font-size:11px;padding:7px 5px;" onclick="startContinuous()">▶ 連続再生</button>
+<button class="btn btn-amber" style="font-size:11px;padding:7px 5px;" onclick="startShadowing()">🗣️ シャドウ</button>
+</div>
+<div class="btn-row" style="gap:4px;">
+<select id="review-filter-select" style="flex:1;font-size:11px;padding:6px;border:1px solid var(--border);border-radius:8px;background:#fff;color:var(--text);font-family:'Noto Sans JP',sans-serif;" onchange="changeReviewFilter()">
+<option value="due" selected>本日復習（出題対象のみ）</option>
+<option value="s0">1日サイクル</option>
+<option value="s1">3日サイクル</option>
+<option value="s2">7日サイクル</option>
+<option value="s3">14日サイクル</option>
+<option value="s4">30日サイクル</option>
+<option value="s5">60日サイクル</option>
+<option value="s6">90日サイクル</option>
+<option value="all">すべて</option>
+</select>
+<button class="btn btn-secondary" id="review-toggle-btn" style="font-size:11px;padding:7px 8px;flex:1;" onclick="toggleReviewMode()">🔁 復習モード: OFF</button>
+</div>
+</div>
+<div id="auto-controls" style="display:none;">
+<div class="btn-row"><button class="btn btn-red" onclick="stopAutoPlay()">⏹ 停止</button></div>
+</div>
+</div>
+<script>
+const OFFSET=1;
+const CATS={'話を遮る・割り込む':'#9b2226','聞き返す・確認する':'#2a6f6f','考える時間を稼ぐ':'#5c4a2e','会話を締めくくる':'#bb6b1a','相手の理解を確認する':'#7a5195'};
+const phrases=[
+{cat:'話を遮る・割り込む', en:'"So the meeting is scheduled for—" "Sorry to interrupt, but do we have the room booked?"', ja:'「それで、会議の予定は—」「割り込んでごめん、部屋はもう予約してある？」', tip:'Sorry to interrupt：相手の発言を遮る際の、最も基本的な丁寧表現。'},
+{cat:'話を遮る・割り込む', en:'"And then we realized the budget—" "Can I jump in here for a second?"', ja:'「それで、予算のことに気づいたんだけど—」「ちょっとここで割り込んでもいい？」', tip:'Can I jump in here?：会話に自然に加わりたい時に使うカジュアルな表現。'},
+{cat:'話を遮る・割り込む', en:'"As I mentioned earlier—" "Sorry to cut you off, but that reminds me of something important."', ja:'「先ほど申し上げた通り—」「話を遮ってごめんね、それで大事なことを思い出したんだ。」', tip:'Sorry to cut you off：割り込みを謝りつつ話す際の表現。'},
+{cat:'話を遮る・割り込む', en:'"We were thinking of launching in March." "If I can just add something, April might be safer."', ja:'「3月に発売しようと考えていたんだ。」「一つ付け加えてもいいなら、4月の方が安全かもね。」', tip:'If I can just add something：控えめに自分の意見を挟み込む表現。'},
+{cat:'話を遮る・割り込む', en:'"The client wants a full refund." "Can I say something here? We should check the contract first."', ja:'「クライアントは全額返金を求めているんだ。」「ここで一言いいかな？　まず契約書を確認すべきだよ。」', tip:'Can I say something here?：発言の機会を求める丁寧な表現。'},
+{cat:'話を遮る・割り込む', en:'"So I was talking to the vendor, and—" "Before you continue, did they confirm the price?"', ja:'「それで業者と話してたんだけど、—」「続ける前に、価格は確定したの？」', tip:'Before you continue：相手の話を止めて確認を挟む表現。'},
+{cat:'話を遮る・割り込む', en:'"That reminds me of a story from—" "Hold that thought, I need to answer this call first."', ja:'「それで思い出したんだけど、こんな話が—」「その話ちょっと待って、先にこの電話に出ないと。」', tip:'Hold that thought：相手の話を一旦保留してもらう表現。'},
+{cat:'話を遮る・割り込む', en:'"So basically, the whole system needs—" "Let me stop you there. Have you talked to IT about this?"', ja:'「つまり、システム全体を—」「ちょっとそこで止めさせて。この件でITには相談した？」', tip:'Let me stop you there：やや強めに、しかし礼儀正しく話を止める表現。'},
+{cat:'話を遮る・割り込む', en:'"I was going to explain the whole process." "Real quick, do we have time for that today?"', ja:'「その手順全体を説明するつもりだったんだ。」「ちょっと確認だけど、今日その時間ある？」', tip:'Real quick：手短な質問を挟みたい時の口語表現。'},
+{cat:'話を遮る・割り込む', en:'"So the next step is to finalize—" "Actually, can I back up a second? I missed the first part."', ja:'「それで次のステップは最終決定を—」「実は、ちょっと戻ってもいい？　最初の部分を聞き逃したんだ。」', tip:'Can I back up a second?：話を少し前に戻してもらいたい時の表現。'},
+{cat:'聞き返す・確認する', en:'"The deadline moved to the fifteenth." "Could you say that again? I didn\'t catch the date."', ja:'「締め切りが15日に変わったんだ。」「もう一度言ってもらえる？　日付を聞き逃したよ。」', tip:'Could you say that again?：聞き取れなかった際の基本的な聞き返し表現。'},
+{cat:'聞き返す・確認する', en:'"We need to recalibrate the whole system." "Sorry, I didn\'t quite catch that. Could you repeat it?"', ja:'「システム全体を再調整する必要があるんだ。」「ごめん、ちゃんと聞き取れなかった。もう一度言ってもらえる？」', tip:'I didn\'t quite catch that：聞き取れなかったことを丁寧に伝える表現。'},
+{cat:'聞き返す・確認する', en:'"This approach is more holistic." "What do you mean by that, exactly?"', ja:'「このアプローチはもっと包括的なんだ。」「それって具体的にはどういう意味？」', tip:'What do you mean by that?：相手の発言の意味を確認する表現。'},
+{cat:'聞き返す・確認する', en:'"The results were somewhat inconclusive." "Could you elaborate on that a bit?"', ja:'「結果はやや結論が出ない感じだったんだ。」「それについてもう少し詳しく説明してもらえる？」', tip:'Could you elaborate on that?：さらに詳しい説明を求める表現。'},
+{cat:'聞き返す・確認する', en:'"We\'ll need to pivot our strategy." "Sorry, come again? What do you mean by pivot?"', ja:'「戦略を転換する必要があるんだ。」「ごめん、もう一回言って？　転換ってどういうこと？」', tip:'Sorry, come again?：カジュアルに聞き返す際の表現。'},
+{cat:'聞き返す・確認する', en:'"The whole framework has shifted." "I\'m not following. Can you explain it more simply?"', ja:'「フレームワーク全体が変わったんだ。」「ついていけてないな。もっと簡単に説明してもらえる？」', tip:'I\'m not following：理解できていないことを正直に伝える表現。'},
+{cat:'聞き返す・確認する', en:'"So we need three approvals before moving forward." "Could you run that by me again?"', ja:'「進める前に3つの承認が必要なんだ。」「もう一度説明してもらえる？」', tip:'Could you run that by me again?：全体をもう一度説明してほしい時の表現。'},
+{cat:'聞き返す・確認する', en:'"...and that\'s why the numbers don\'t match." "Sorry, what was that last part again?"', ja:'「…だから数字が合わないんだ。」「ごめん、最後の部分もう一回言ってくれる？」', tip:'What was that last part?：発言の一部だけ聞き取れなかった時の表現。'},
+{cat:'聞き返す・確認する', en:'"It\'s a fairly complex regulatory issue." "Could you break that down for me?"', ja:'「それはかなり複雑な規制上の問題なんだ。」「もう少し分かりやすく分解して説明してもらえる？」', tip:'Could you break that down?：複雑な内容を簡単に説明してほしい時の表現。'},
+{cat:'聞き返す・確認する', en:'"So the merger affects both departments differently." "I\'m a bit lost. Can we go back to the beginning?"', ja:'「合併は両方の部署に違う形で影響するんだ。」「ちょっと迷子になってるかも。最初から戻ってもらえる？」', tip:'I\'m a bit lost：話についていけなくなったことを伝える表現。'},
+{cat:'考える時間を稼ぐ', en:'"What\'s your opinion on the merger?" "Let me think about that for a moment."', ja:'「合併についてどう思う？」「ちょっと考えさせてもらえるかな。」', tip:'Let me think about that：即答を避けて考える時間を取る表現。'},
+{cat:'考える時間を稼ぐ', en:'"Can you give me an answer right now?" "Give me a second, I want to think this through."', ja:'「今すぐ答えをもらえる？」「ちょっと待って、これはよく考えたいんだ。」', tip:'Give me a second：短い時間の猶予を求める表現。'},
+{cat:'考える時間を稼ぐ', en:'"Why do you think the project failed?" "That\'s a good question. There were several factors."', ja:'「なぜプロジェクトは失敗したと思う？」「いい質問だね。いくつか要因があったんだ。」', tip:'That\'s a good question：即答が難しい時に、考える間を作る定番表現。'},
+{cat:'考える時間を稼ぐ', en:'"Can you explain the concept simply?" "Let me put it this way: it\'s like a safety net."', ja:'「その概念を簡単に説明してくれる？」「こう言えばいいかな。安全網のようなものだよ。」', tip:'Let me put it this way：説明の仕方を工夫する際の前置き表現。'},
+{cat:'考える時間を稼ぐ', en:'"How would you describe the atmosphere there?" "How do I put this... it was tense, but productive."', ja:'「そこの雰囲気をどう表現する？」「どう言えばいいかな…張り詰めてたけど、生産的だったよ。」', tip:'How do I put this...：適切な言葉を探している間の時間稼ぎ表現。'},
+{cat:'考える時間を稼ぐ', en:'"So you\'re saying it\'s impossible?" "Let me rephrase that. It\'s difficult, not impossible."', ja:'「つまり、不可能だってこと？」「言い直させて。難しいけど、不可能じゃないんだ。」', tip:'Let me rephrase that：自分の発言を言い直す際の表現。'},
+{cat:'考える時間を稼ぐ', en:'"What\'s the word for that feeling?" "I\'m trying to think of the right word for it."', ja:'「その感情を表す言葉は何だっけ？」「ぴったりの言葉を今考えてるところなんだ。」', tip:'I\'m trying to think of the right word：適切な表現を探していることを伝える表現。'},
+{cat:'考える時間を稼ぐ', en:'"Can you summarize the whole plan?" "Bear with me, there are a lot of moving parts."', ja:'「計画全体を要約してくれる？」「ちょっと待ってて、動いている要素が多いから。」', tip:'Bear with me：相手に少し辛抱してもらいたい時の表現。'},
+{cat:'考える時間を稼ぐ', en:'"What do you think we should do next?" "Let me gather my thoughts before I answer."', ja:'「次に何をすべきだと思う？」「答える前に、ちょっと考えをまとめさせて。」', tip:'Let me gather my thoughts：考えを整理する時間を求める表現。'},
+{cat:'考える時間を稼ぐ', en:'"Is that your final answer?" "One moment, I want to make sure I\'m not missing anything."', ja:'「それが最終的な答え？」「ちょっと待って、見落としがないか確認したいんだ。」', tip:'One moment：短く時間をもらう際の丁寧な表現。'},
+{cat:'会話を締めくくる', en:'"It was great catching up." "Anyway, I should get going. I have another meeting."', ja:'「近況が聞けてよかったよ。」「じゃあ、そろそろ行かないと。別の会議があるんだ。」', tip:'Anyway, I should get going：会話を締めくくり、その場を離れる際の表現。'},
+{cat:'会話を締めくくる', en:'"I know you\'re probably busy." "I don\'t want to keep you, so I\'ll let you get back to work."', ja:'「あなたはきっと忙しいよね。」「引き止めたくないから、仕事に戻ってもらうね。」', tip:'I don\'t want to keep you：相手の時間を尊重して会話を切り上げる表現。'},
+{cat:'会話を締めくくる', en:'"There\'s so much more to talk about." "Let\'s pick this up later, okay?"', ja:'「もっと話すことがたくさんあるんだけどね。」「また後で続きを話そうか。」', tip:'Let\'s pick this up later：会話の続きを後回しにする際の表現。'},
+{cat:'会話を締めくくる', en:'"Thanks for explaining all that." "No problem. I\'ll let you go now."', ja:'「全部説明してくれてありがとう。」「どういたしまして。じゃあこれで失礼するね。」', tip:'I\'ll let you go：相手を解放する形で会話を終える表現。'},
+{cat:'会話を締めくくる', en:'"This has been a really long call." "We should wrap this up before it gets too late."', ja:'「本当に長い電話になったね。」「遅くなりすぎる前に、そろそろまとめようか。」', tip:'We should wrap this up：会話や会議を締めくくる際の定番表現。'},
+{cat:'会話を締めくくる', en:'"I think we\'ve covered everything." "Before I forget, can you send me that document?"', ja:'「全部話し終えたと思うよ。」「忘れないうちに、あの書類を送ってもらえる？」', tip:'Before I forget：会話を終える前に、思い出したことを付け加える表現。'},
+{cat:'会話を締めくくる', en:'"Is there anything else you wanted to say?" "Just one last thing—thanks again for your help."', ja:'「他に何か言いたいことある？」「最後に一つだけ—改めて助けてくれてありがとう。」', tip:'One last thing：会話の締めくくりに最後の一言を添える表現。'},
+{cat:'会話を締めくくる', en:'"Do you have more to add?" "I\'ll leave it there for now. We can discuss more later."', ja:'「他に付け加えることはある？」「今のところはこれで終わりにしておくよ。また後で話そう。」', tip:'I\'ll leave it there：それ以上は述べずに話を締めくくる表現。'},
+{cat:'会話を締めくくる', en:'"Anything else before we finish?" "That\'s about it from me. Thanks for listening."', ja:'「終わる前に他に何かある？」「私からは以上かな。聞いてくれてありがとう。」', tip:'That\'s about it from me：自分の発言を締めくくる際の表現。'},
+{cat:'会話を締めくくる', en:'"We covered a lot today." "Agreed. Let\'s call it a day."', ja:'「今日はたくさん話したね。」「そうだね。今日はこの辺で終わりにしようか。」', tip:'Let\'s call it a day：作業や会議を切り上げる際の慣用表現。'},
+{cat:'相手の理解を確認する', en:'"So we\'ll split the cost fifty-fifty." "Does that make sense to you?"', ja:'「じゃあ費用は半分ずつにしようね。」「それで納得できる？」', tip:'Does that make sense?：自分の説明が理解されたか確認する定番表現。'},
+{cat:'相手の理解を確認する', en:'"...and that\'s the second step in the process." "You with me so far?"', ja:'「…で、それが手順の2番目のステップなんだ。」「ここまでついてきてる？」', tip:'You with me so far?：カジュアルに理解度を確認する表現。'},
+{cat:'相手の理解を確認する', en:'"There are quite a few steps involved here." "Are you following, or should I slow down?"', ja:'「ここにはかなり多くの手順が関わってくるんだ。」「ついてきてる？　それともゆっくり話した方がいい？」', tip:'Are you following?：理解できているか丁寧に尋ねる表現。'},
+{cat:'相手の理解を確認する', en:'"Let me summarize what we agreed on." "Just to make sure we\'re on the same page, can you repeat it?"', ja:'「合意した内容をまとめさせて。」「認識が合っているか確認したいから、もう一度言ってもらえる？」', tip:'Just to make sure we\'re on the same page：認識のズレがないか確認する表現。'},
+{cat:'相手の理解を確認する', en:'"It\'s kind of like riding a bike." "You know what I mean?"', ja:'「それって自転車に乗るのに似てるんだ。」「言いたいこと分かる？」', tip:'You know what I mean?：比喩やニュアンスが伝わっているか確認する表現。'},
+{cat:'相手の理解を確認する', en:'"This isn\'t really about the money." "It\'s more about trust, right?"', ja:'「これは本当はお金の問題じゃないんだ。」「もっと信頼の問題ってことだよね？」', tip:'Right?：文末で使い、相手に同意・確認を促す表現。'},
+{cat:'相手の理解を確認する', en:'"So it\'s less about speed and more about accuracy." "See what I mean?"', ja:'「つまりスピードよりも正確さが大事ってことなんだ。」「言いたいこと伝わった？」', tip:'See what I mean?：自分の説明の意図が伝わったか確認する表現。'},
+{cat:'相手の理解を確認する', en:'"I hope that clears up your confusion." "I hope that answers your question."', ja:'「それで疑問が解消されるといいんだけど。」「それであなたの質問に答えられていればいいけど。」', tip:'I hope that answers your question：説明が十分だったか気にかける丁寧な表現。'},
+{cat:'相手の理解を確認する', en:'"That\'s basically how the system works." "Does that clear things up a bit?"', ja:'「基本的にはそれがシステムの仕組みなんだ。」「これで少しは分かりやすくなったかな？」', tip:'Does that clear things up?：説明後に理解度を確認する表現。'},
+{cat:'相手の理解を確認する', en:'"I know this is a lot of information." "Let me know if that\'s unclear at any point."', ja:'「これはかなり多い情報量だって分かってるよ。」「どこか分かりにくいところがあったら教えてね。」', tip:'Let me know if that\'s unclear：相手が遠慮なく聞き返せるよう促す表現。'}
+];
+// カードごとのネイティブ音声再生
+let nativeAudioEl=new Audio();
+nativeAudioEl.preload='none';
+nativeAudioEl.preservesPitch=true;
+nativeAudioEl.mozPreservesPitch=true;
+nativeAudioEl.webkitPreservesPitch=true;
+function playNativeAudio(audioFile,onEnd,onError){
+  nativeAudioEl.pause();
+  nativeAudioEl.onended=null;
+  nativeAudioEl.onerror=null;
+  if(!audioFile){ if(onError)onError(); return; }
+  nativeAudioEl.src=audioFile;
+  nativeAudioEl.currentTime=0;
+  nativeAudioEl.playbackRate=speechRate;
+  nativeAudioEl.onended=()=>{ if(onEnd)onEnd(); };
+  const p=nativeAudioEl.play();
+  if(p&&p.catch){ p.catch(()=>{ if(onError)onError(); }); }
+}
+function stopNativeAudio(){ nativeAudioEl.pause(); nativeAudioEl.onended=null; }
+let currentIndex=0,isEnToJa=true,isRandom=false,isRepeating=false;
+let mastered=new Set(),activeCategory='all';
+const APP_ID='duo01';
+const PROFILES_KEY='duo_profiles';
+const CURRENT_PROFILE_KEY='duo_current_profile';
+function getProfiles(){try{const raw=localStorage.getItem(PROFILES_KEY);const arr=raw?JSON.parse(raw):[];return arr.length?arr:['本人'];}catch(e){return ['本人'];}}
+function saveProfiles(arr){try{localStorage.setItem(PROFILES_KEY,JSON.stringify(arr));}catch(e){}}
+function getCurrentProfile(){try{return localStorage.getItem(CURRENT_PROFILE_KEY)||getProfiles()[0];}catch(e){return '本人';}}
+function setCurrentProfile(name){try{localStorage.setItem(CURRENT_PROFILE_KEY,name);}catch(e){}}
+function masteredStorageKey(profile){return 'duo_mastered_'+APP_ID+'_'+profile;}
+function loadMastered(){const profile=getCurrentProfile();try{const raw=localStorage.getItem(masteredStorageKey(profile));mastered=new Set(raw?JSON.parse(raw):[]);}catch(e){mastered=new Set();}try{const rawR=localStorage.getItem(masteredStorageKey(profile)+'_review');masteredReview=rawR?JSON.parse(rawR):{};}catch(e){masteredReview={};}}
+function saveMastered(){const profile=getCurrentProfile();try{localStorage.setItem(masteredStorageKey(profile),JSON.stringify([...mastered]));localStorage.setItem(masteredStorageKey(profile)+'_review',JSON.stringify(masteredReview));}catch(e){}}
+function renderProfileSelect(){const sel=document.getElementById('profile-select');if(!sel)return;const profiles=getProfiles();const current=getCurrentProfile();sel.innerHTML=profiles.map(p=>'<option value="'+p+'"'+(p===current?' selected':'')+'>'+p+'</option>').join('')+'<option value="__new__">＋ 新しいユーザー…</option>';}
+function switchProfile(value){if(value==='__new__'){const name=prompt('新しいユーザー名を入力してください（例：妻、孫）');if(!name){renderProfileSelect();return;}const trimmed=name.trim();if(!trimmed){renderProfileSelect();return;}const profiles=getProfiles();if(!profiles.includes(trimmed)){profiles.push(trimmed);saveProfiles(profiles);}setCurrentProfile(trimmed);}else{setCurrentProfile(value);}loadMastered();currentIndex=0;renderProfileSelect();update();}
+
+let isAutoPlaying=false,autoStopped=false,autoTimeout=null,reviewMasteredMode=false,masteredReview={},reviewMode=false,reviewFilter='due',reviewSessionDone=new Set();
+let isSpeaking=false,keepAliveTimer=null,speechRate=1.0,voices=[];
+function reviewDueDate(days){const d=new Date();d.setHours(0,0,0,0);d.setDate(d.getDate()+days);return d.getTime();}
+function addDays(ms,days){const d=new Date(ms);d.setDate(d.getDate()+days);return d.getTime();}
+const REVIEW_INTERVALS=[1,3,7,14,30,60,90];
+function getActive(){return phrases.filter((p,i)=>{if(activeCategory!=='all'&&p.cat!==activeCategory)return false;if(reviewMode){if(!mastered.has(i))return false;if(reviewSessionDone.has(i))return false;const rd=masteredReview[i];const stage=rd?rd.stage:0;const due=rd?rd.due:0;if(reviewFilter==='all')return true;if(reviewFilter==='due')return Date.now()>=due;return stage===parseInt(reviewFilter.slice(1));}if(reviewMasteredMode)return mastered.has(i);if(mastered.has(i))return false;return true;});}
+function buildCatRows(){const wrap=document.getElementById('cat-rows');wrap.innerHTML='';Object.keys(CATS).forEach(cat=>{const total=phrases.filter(p=>p.cat===cat).length;const mc=phrases.filter((p,i)=>p.cat===cat&&mastered.has(i)).length;const row=document.createElement('div');row.className='cat-row'+(activeCategory===cat?' active':'');row.innerHTML=`<div class="cat-dot${mc===total?' done':''}"></div><div class="cat-row-name">${cat}</div><div class="cat-row-count">${mc}/${total}</div>`;row.onclick=()=>selectCategory(cat);wrap.appendChild(row);});}
+function selectCategory(cat){activeCategory=cat;currentIndex=0;document.getElementById('chip-all').className='chip-all'+(cat==='all'?' active':'');buildCatRows();updateFilterLabel();update();document.getElementById('filter-chips-wrap').classList.remove('open');document.getElementById('filter-toggle-icon').classList.remove('open');}
+function updateFilterLabel(){document.getElementById('filter-current-label').textContent=activeCategory==='all'?'すべて':activeCategory;}
+function toggleFilterPanel(){document.getElementById('filter-chips-wrap').classList.toggle('open');document.getElementById('filter-toggle-icon').classList.toggle('open');}
+function loadVoices(){const all=window.speechSynthesis.getVoices();const okNames=new Set(['Microsoft Ava Online (Natural) - English (United States)','Microsoft Andrew Online (Natural) - English (United States)','Microsoft Emma Online (Natural) - English (United States)','Microsoft Brian Online (Natural) - English (United States)','Microsoft Jenny Online (Natural) - English (United States)','Microsoft Guy Online (Natural) - English (United States)','Microsoft Aria Online (Natural) - English (United States)','Microsoft Ana Online (Natural) - English (United States)','Microsoft Christopher Online (Natural) - English (United States)','Microsoft Eric Online (Natural) - English (United States)','Microsoft Michelle Online (Natural) - English (United States)','Microsoft Steffan Online (Natural) - English (United States)','Microsoft Ava Multilingual Online (Natural) - English (United States)','Microsoft Andrew Multilingual Online (Natural) - English (United States)','Microsoft Emma Multilingual Online (Natural) - English (United States)','Microsoft Brian Multilingual Online (Natural) - English (United States)','Microsoft Hazel - English (United Kingdom)','Microsoft Susan - English (United Kingdom)','Microsoft George - English (United Kingdom)','Microsoft Libby Online (Natural) - English (United Kingdom)','Microsoft Maisie Online (Natural) - English (United Kingdom)','Microsoft Thomas Online (Natural) - English (United Kingdom)','Microsoft Sonia Online (Natural) - English (United Kingdom)','Microsoft Ryan Online (Natural) - English (United Kingdom)','Microsoft William Online (Natural) - English (Australia)','Microsoft Natasha Online (Natural) - English (Australia)','Microsoft Clara Online (Natural) - English (Canada)','Microsoft Liam Online (Natural) - English (Canada)','Microsoft Leah Online (Natural) - English (South Africa)','Microsoft Luke Online (Natural) - English (South Africa)','Microsoft Emily Online (Natural) - English (Ireland)','Microsoft Connor Online (Natural) - English (Ireland)','Microsoft Yan Online (Natural) - English (Hong Kong SAR)','Microsoft Sam Online (Natural) - English (Hong Kong SAR)','Microsoft Asilia Online (Natural) - English (Kenya)','Microsoft Chilemba Online (Natural) - English (Kenya)','Microsoft Ezinne Online (Natural) - English (Nigeria)','Microsoft Abeo Online (Natural) - English (Nigeria)','Microsoft Molly Online (Natural) - English (New Zealand)','Microsoft Luna Online (Natural) - English (Singapore)','Microsoft Imani Online (Natural) - English (Tanzania)','Microsoft Elimu Online (Natural) - English (Tanzania)','Microsoft James Online (Natural) - English (Philippines)','Microsoft Neerja Online (Natural) - English (India)','Microsoft Prabhat Online (Natural) - English (India)']);const wl=all.filter(v=>okNames.has(v.name));voices=wl.length?wl:all.filter(v=>v.lang.startsWith('en'));if(!voices.length)voices=all;voices=[...voices].sort((a,b)=>{const pref=['en-US','en-GB','en-AU','en-SG'];const ai=pref.findIndex(p=>a.lang.startsWith(p));const bi=pref.findIndex(p=>b.lang.startsWith(p));return(ai<0?99:ai)-(bi<0?99:bi);});}
+loadVoices();
+window.speechSynthesis.onvoiceschanged=loadVoices;
+function getVoice(){return voices[0]||null;}
+function updateRate(){speechRate=parseFloat(document.getElementById('rate-slider').value);if(!nativeAudioEl.paused){nativeAudioEl.playbackRate=speechRate;}}
+function startKeepAlive(){stopKeepAlive();keepAliveTimer=setInterval(()=>{if(window.speechSynthesis.speaking)window.speechSynthesis.pause(),window.speechSynthesis.resume();},10000);}
+function stopKeepAlive(){if(keepAliveTimer){clearInterval(keepAliveTimer);keepAliveTimer=null;}}
+function speakTTS(text,onEnd){const m=text.match(/^"([^"]*)"\s*"([^"]*)"$/);if(m){speakTTSOne(m[1],()=>{setTimeout(()=>{speakTTSOne(m[2],onEnd);},700);});}else{speakTTSOne(text,onEnd);}}
+function speakTTSOne(text,onEnd){window.speechSynthesis.cancel();isSpeaking=false;clearTimeout(speakOne._t);speakOne._t=setTimeout(()=>{const utt=new SpeechSynthesisUtterance(text);const v=getVoice();if(v){utt.voice=v;utt.lang=v.lang;}else{utt.lang='en-US';}utt.rate=speechRate;utt.onend=()=>{isSpeaking=false;stopKeepAlive();if(onEnd)onEnd();};utt.onerror=()=>{isSpeaking=false;stopKeepAlive();if(onEnd)onEnd();};isSpeaking=true;startKeepAlive();window.speechSynthesis.speak(utt);setTimeout(()=>{window.speechSynthesis.pause();window.speechSynthesis.resume();},30);},150);}
+speakOne._t=null;
+function speakOne(card,onEnd){
+  window.speechSynthesis.cancel();
+  stopNativeAudio();
+  if(card&&card.audio){
+    playNativeAudio(card.audio,onEnd,()=>{ speakTTS(card.en,onEnd); });
+  } else {
+    speakTTS(card.en,onEnd);
+  }
+}
+function speakP(){return new Promise(r=>{const a=getActive();if(!a.length){r();return;}speakOne(a[currentIndex],r);});}
+function speakCurrent(){const a=getActive();if(!a.length)return;speakOne(a[currentIndex]);}
+function speakRepeat(){if(!isRepeating||isAutoPlaying)return;const a=getActive();if(!a.length)return;speakOne(a[currentIndex],()=>{if(isRepeating&&!isAutoPlaying){clearTimeout(speakRepeat._t);speakRepeat._t=setTimeout(()=>speakRepeat(),300);}}); }
+speakRepeat._t=null;
+function toggleRepeat(){isRepeating=!isRepeating;const btn=document.getElementById('repeat-btn');btn.textContent=isRepeating?'🔁 繰り返し: ON':'🔁 繰り返し';btn.className=isRepeating?'btn btn-on':'btn btn-secondary';if(isRepeating){const a=getActive();if(a.length)speakRepeat();}else{window.speechSynthesis.cancel();stopNativeAudio();isSpeaking=false;stopKeepAlive();clearTimeout(speakRepeat._t);}}
+function update(){const active=getActive();const noEl=document.getElementById('no-active');if(!active.length){noEl.classList.add('show');const catMasteredCount=[...mastered].filter(idx=>activeCategory==='all'||phrases[idx].cat===activeCategory).length;let emptyMsg='🔁 対象のカードがありません';if(catMasteredCount===0){emptyMsg='🔁 マスター済みのカードがまだありません';}else if(reviewFilter==='due'){emptyMsg='🔁 今日復習が必要なカードはありません（また後でチェックしてください）';}else if(reviewFilter==='all'){emptyMsg='🔁 対象のカードがありません';}else{emptyMsg='🔁 このサイクルのカードは今ありません';}noEl.textContent=reviewMode?emptyMsg:'✅ このカテゴリをすべてマスターしました！';document.getElementById('main-card').style.display='none';document.getElementById('tap-hint').style.display='none';const rar0=document.getElementById('review-action-row');if(rar0)rar0.style.display='none';updateMasterBadge();buildCatRows();return;}noEl.classList.remove('show');document.getElementById('main-card').style.display='';document.getElementById('tap-hint').style.display='';const rar=document.getElementById('review-action-row');if(rar)rar.style.display=reviewMode?'':'none';if(currentIndex>=active.length)currentIndex=0;const item=active[currentIndex];const realIdx=phrases.indexOf(item);document.getElementById('card-num').textContent=String(realIdx+OFFSET).padStart(3,'0');document.getElementById('card-cat').textContent=item.cat;document.getElementById('cur-num').textContent=currentIndex+1;document.getElementById('tot-num').textContent=active.length;const pct=active.length>1?((currentIndex/(active.length-1))*100).toFixed(0):100;document.getElementById('progress-bar').style.width=pct+'%';function dialogueHTML(text){return text.replace(/"\s+"/g,'"<br>"').replace(/」「/g,'」<br>「');}
+if(isEnToJa){document.getElementById('main-text').innerHTML=dialogueHTML(item.en);document.getElementById('answer-ja').innerHTML=dialogueHTML(item.ja);}else{document.getElementById('main-text').innerHTML=dialogueHTML(item.ja);document.getElementById('answer-ja').innerHTML=dialogueHTML(item.en);}const tipEl=document.getElementById('answer-tip');if(item.tip){tipEl.textContent=item.tip;tipEl.style.display='';}else{tipEl.style.display='none';}document.getElementById('answer-wrap').classList.remove('show');document.getElementById('main-card').classList.remove('revealed');const cb=document.getElementById('master-cb');cb.checked=mastered.has(realIdx);if(mastered.has(realIdx))document.getElementById('mastered-badge').classList.add('show');else document.getElementById('mastered-badge').classList.remove('show');updateMasterBadge();buildCatRows();}
+function updateMasterBadge(){const cnt=mastered.size;document.getElementById('master-badge-top').textContent=`マスター: ${cnt} / ${phrases.length}`;const sumEl=document.getElementById('master-summary');if(cnt>0){sumEl.classList.add('show');sumEl.textContent=`✅ マスター済み: ${cnt}件 — タップしてリスト表示`;renderMasterList();}else sumEl.classList.remove('show');}
+function renderMasterList(){const listEl=document.getElementById('master-list');listEl.innerHTML='';[...mastered].sort((a,b)=>a-b).forEach(idx=>{const item=phrases[idx];const d=document.createElement('div');d.style.cssText='padding:8px 0;border-bottom:1px solid #f8fafc;font-size:12px;';d.innerHTML=`<span style="font-family:monospace;font-size:10px;color:#64748b;">${String(idx+OFFSET).padStart(3,'0')}</span> ${item.en.substring(0,55)}...`;listEl.appendChild(d);});}
+function toggleMasterList(){const w=document.getElementById('master-list-wrap');w.style.display=w.style.display==='none'?'':'none';}
+function clearAllMasterStep1(){const btn=document.getElementById('clear-all-btn');if(!btn)return;btn.textContent='本当に全解除？';btn.style.background='#e11d48';btn.style.color='#fff';btn.onclick=clearAllMasterStep2;setTimeout(()=>{if(btn.textContent==='本当に全解除？'){btn.textContent='全解除';btn.style.background='';btn.style.color='';btn.onclick=clearAllMasterStep1;}},3000);}
+function clearAllMasterStep2(){mastered.clear();masteredReview={};saveMastered();currentIndex=0;document.getElementById('master-list-wrap').style.display='none';const btn=document.getElementById('clear-all-btn');if(btn){btn.textContent='全解除';btn.style.background='';btn.style.color='';btn.onclick=clearAllMasterStep1;}update();}
+function handleTap(){if(isAutoPlaying)return;const wrap=document.getElementById('answer-wrap');if(!wrap.classList.contains('show')){wrap.classList.add('show');document.getElementById('main-card').classList.add('revealed');}}
+function toggleMaster(e){const active=getActive();if(!active.length)return;const item=active[currentIndex];const realIdx=phrases.indexOf(item);if(e.target.checked){mastered.add(realIdx);const origin=reviewDueDate(0);masteredReview[realIdx]={stage:0,origin:origin,due:addDays(origin,REVIEW_INTERVALS[0])};document.getElementById('mastered-badge').classList.add('show');setTimeout(()=>{if(currentIndex>=getActive().length)currentIndex=0;update();},400);}else{mastered.delete(realIdx);delete masteredReview[realIdx];document.getElementById('mastered-badge').classList.remove('show');}saveMastered();updateMasterBadge();buildCatRows();}
+function confirmReviewed(){const active=getActive();if(!active.length)return;const item=active[currentIndex];const realIdx=phrases.indexOf(item);if(reviewSessionDone.has(realIdx))return;reviewSessionDone.add(realIdx);const prev=masteredReview[realIdx];const origin=(prev&&prev.origin)?prev.origin:reviewDueDate(0);const prevStage=prev?prev.stage:-1;const newStage=Math.min(prevStage+1,REVIEW_INTERVALS.length-1);let due;if(prevStage<REVIEW_INTERVALS.length-1){due=addDays(origin,REVIEW_INTERVALS[newStage]);}else{due=reviewDueDate(REVIEW_INTERVALS[REVIEW_INTERVALS.length-1]);}masteredReview[realIdx]={stage:newStage,origin:origin,due:due};saveMastered();if(currentIndex>=getActive().length)currentIndex=0;update();}
+function toggleReviewMode(){reviewMode=!reviewMode;if(reviewMode)reviewSessionDone.clear();const btn=document.getElementById('review-toggle-btn');if(reviewMode){btn.textContent='🔁 復習モード: ON';btn.className='btn btn-on';}else{btn.textContent='🔁 復習モード: OFF';btn.className='btn btn-secondary';}currentIndex=0;update();}
+function changeReviewFilter(){reviewFilter=document.getElementById('review-filter-select').value;currentIndex=0;if(reviewMode)update();}
+function next(){const a=getActive();if(!a.length)return;if(isRandom)currentIndex=Math.floor(Math.random()*a.length);else currentIndex=(currentIndex+1)%a.length;update();if(isRepeating){clearTimeout(speakRepeat._t);speakRepeat();}}
+function prev(){const a=getActive();if(!a.length)return;currentIndex=(currentIndex-1+a.length)%a.length;update();if(isRepeating){clearTimeout(speakRepeat._t);speakRepeat();}}
+function toggleRandom(){isRandom=!isRandom;const btn=document.getElementById('random-btn');btn.textContent=isRandom?'🔀 ランダム: ON':'🔀 ランダム: OFF';btn.className=isRandom?'btn btn-on':'btn btn-secondary';}
+function switchMode(){if(isAutoPlaying)return;isEnToJa=!isEnToJa;update();}
+function delayP(ms){return new Promise(r=>{if(autoStopped){r();return;}autoTimeout=setTimeout(r,ms);});}
+function setAutoPanel(s,i,c){document.getElementById('auto-step-title').textContent=s;document.getElementById('auto-instruction').textContent=i;document.getElementById('auto-count').textContent=c;}
+function enterAutoUI(){reviewMode=false;reviewSessionDone.clear();const rb0=document.getElementById('review-toggle-btn');if(rb0){rb0.textContent='🔁 復習モード: OFF';rb0.className='btn btn-secondary';}const rar1=document.getElementById('review-action-row');if(rar1)rar1.style.display='none';isAutoPlaying=true;autoStopped=false;document.getElementById('normal-controls').style.display='none';document.getElementById('auto-controls').style.display='';document.getElementById('auto-panel').classList.add('show');document.getElementById('tap-hint').style.display='none';document.getElementById('master-wrap').classList.add('disabled');document.getElementById('main-card').classList.remove('tappable');document.getElementById('main-card').classList.add('no-tap');}
+function exitAutoUI(){autoStopped=true;isAutoPlaying=false;window.speechSynthesis.cancel();stopNativeAudio();isSpeaking=false;stopKeepAlive();clearTimeout(speakOne._t);if(autoTimeout){clearTimeout(autoTimeout);autoTimeout=null;}document.getElementById('normal-controls').style.display='';document.getElementById('auto-controls').style.display='none';document.getElementById('auto-panel').classList.remove('show');document.getElementById('tap-hint').style.display='';document.getElementById('master-wrap').classList.remove('disabled');document.getElementById('main-card').classList.add('tappable');document.getElementById('main-card').classList.remove('no-tap');}
+function stopAutoPlay(){exitAutoUI();reviewMasteredMode=false;update();}
+function showHidden(){document.getElementById('main-text').textContent='？？？';document.getElementById('answer-wrap').classList.remove('show');document.getElementById('main-card').classList.remove('revealed');}
+function showAll(){const a=getActive();if(!a.length)return;document.getElementById('main-text').innerHTML=a[currentIndex].en;document.getElementById('answer-wrap').classList.add('show');document.getElementById('main-card').classList.add('revealed');}
+async function runShadowing(){const active=getActive();if(!active.length){stopAutoPlay();return;}const si=currentIndex;for(let i=0;i<active.length;i++){if(autoStopped)break;currentIndex=(si+i)%active.length;update();const n=i+1,tot=active.length;showHidden();setAutoPanel(`カード ${n}/${tot} — STEP 1`,'👂 発話せずに2回聴いてください。','1/2回目…');await speakP();if(autoStopped)break;await delayP(350);if(autoStopped)break;setAutoPanel(`カード ${n}/${tot} — STEP 1`,'👂 発話せずに2回聴いてください。','2/2回目…');await speakP();if(autoStopped)break;await delayP(450);if(autoStopped)break;showHidden();setAutoPanel(`カード ${n}/${tot} — STEP 2`,'🗣️ 音声に合わせてシャドウイングしてください。','1/2回目…');await speakP();if(autoStopped)break;await delayP(350);if(autoStopped)break;setAutoPanel(`カード ${n}/${tot} — STEP 2`,'🗣️ 音声に合わせてシャドウイングしてください。','2/2回目…');await speakP();if(autoStopped)break;await delayP(450);if(autoStopped)break;showAll();setAutoPanel(`カード ${n}/${tot} — STEP 3`,'📖 英文・日本語訳を見ながら2回シャドウイング。','1/2回目…');await speakP();if(autoStopped)break;await delayP(350);if(autoStopped)break;setAutoPanel(`カード ${n}/${tot} — STEP 3`,'📖 英文・日本語訳を見ながら2回シャドウイング。','2/2回目…');await speakP();if(autoStopped)break;await delayP(450);if(autoStopped)break;showHidden();setAutoPanel(`カード ${n}/${tot} — STEP 4`,'🙈 何も見ずに2回シャドウイングしてください。','1/2回目…');await speakP();if(autoStopped)break;await delayP(350);if(autoStopped)break;setAutoPanel(`カード ${n}/${tot} — STEP 4`,'🙈 何も見ずに2回シャドウイングしてください。','2/2回目…');await speakP();if(autoStopped)break;await delayP(700);}if(!autoStopped){setAutoPanel('完了！','🎉 シャドウイング完了しました！','');await delayP(2000);stopAutoPlay();}}
+function startShadowing(){if(!getActive().length){alert('出題できるカードがありません。');return;}enterAutoUI();runShadowing();}
+async function runContinuous(){let lc=0;while(!autoStopped){const active=getActive();if(!active.length){stopAutoPlay();return;}lc++;const si=currentIndex;for(let i=0;i<active.length;i++){if(autoStopped)break;currentIndex=(si+i)%active.length;update();document.getElementById('answer-wrap').classList.add('show');document.getElementById('main-card').classList.add('revealed');setAutoPanel(`連続再生 ${i+1}/${active.length}（${lc}周目）`,'▶ 英語音声を再生中 — ⏹ 停止ボタンで終了','');await speakP();if(autoStopped)break;await delayP(500);}if(!autoStopped)currentIndex=0;}}
+function startContinuous(){if(!getActive().length){alert('出題できるカードがありません。');return;}enterAutoUI();runContinuous();}
+function startMasteredReview(){reviewMasteredMode=true;if(!getActive().length){reviewMasteredMode=false;alert('マスター済みのカードがありません。');return;}currentIndex=0;enterAutoUI();runContinuous();}
+loadMastered();renderProfileSelect();buildCatRows();updateFilterLabel();update();
+</script>
+<script>
+(function() {
+var startX = 0, startY = 0;
+document.addEventListener('touchstart', function(e) {
+startX = e.touches[0].clientX;
+startY = e.touches[0].clientY;
+}, { passive: true });
+document.addEventListener('touchend', function(e) {
+var dx = e.changedTouches[0].clientX - startX;
+var dy = e.changedTouches[0].clientY - startY;
+if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 50) {
+if (dx < 0) next();
+else prev();
+}
+}, { passive: true });
+})();
+</script>
+</body>
+</html>
