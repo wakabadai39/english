@@ -488,6 +488,8 @@ body {
       <option value="s2">7日サイクル</option>
       <option value="s3">14日サイクル</option>
       <option value="s4">30日サイクル</option>
+      <option value="s5">60日サイクル</option>
+      <option value="s6">90日サイクル</option>
       <option value="all">すべて</option>
     </select>
     <button class="btn btn-secondary" id="review-toggle-btn" style="font-size:11px;padding:7px 8px;flex:1;" onclick="toggleReviewMode()">🔁 復習モード: OFF</button>
@@ -1057,6 +1059,8 @@ function selectCategory(cat) {
 
 // ── Helpers ───────────────────────────────────────────────────────
 function reviewDueDate(days) { const d = new Date(); d.setHours(0,0,0,0); d.setDate(d.getDate() + days); return d.getTime(); }
+function addDays(ms, days) { const d = new Date(ms); d.setDate(d.getDate() + days); return d.getTime(); }
+const REVIEW_INTERVALS = [1,3,7,14,30,60,90];
 
 function getActive() {
   return phrases
@@ -1188,7 +1192,7 @@ function toggleMaster(e) {
   const active = getActive(); if(!active.length) return;
   const item = active[currentIndex];
   if (e.target.checked) {
-    masterSet.add(item.globalIdx);masteredReview[item.globalIdx]={stage:0,due:reviewDueDate(1)};
+    masterSet.add(item.globalIdx);const origin=reviewDueDate(0);masteredReview[item.globalIdx]={stage:0,origin:origin,due:addDays(origin,REVIEW_INTERVALS[0])};
     saveMaster();
     updateMasterUI(); buildCatRows(); updateFilterLabel();
     document.getElementById('master-badge').textContent = `マスター: ${masterSet.size} / ${TOTAL}`;
@@ -1232,7 +1236,7 @@ function clearAllMasterStep1() {
   }, 3000);
 }
 function clearAllMasterStep2() {
-  masterSet.clear(); saveMaster();
+  masterSet.clear(); masteredReview = {}; saveMaster();
   document.getElementById('master-list-wrap').style.display = 'none';
   const btn = document.getElementById('clear-all-btn');
   if (btn) {
@@ -1472,10 +1476,17 @@ function confirmReviewed() {
   const realIdx = item.globalIdx;
   if (reviewSessionDone.has(realIdx)) return;
   reviewSessionDone.add(realIdx);
-  const intervals = [1,3,7,14,30];
   const prev = masteredReview[realIdx];
-  const stage = Math.min((prev ? prev.stage : -1) + 1, intervals.length - 1);
-  masteredReview[realIdx] = { stage: stage, due: reviewDueDate(intervals[stage]) };
+  const origin = (prev && prev.origin) ? prev.origin : reviewDueDate(0);
+  const prevStage = prev ? prev.stage : -1;
+  const newStage = Math.min(prevStage + 1, REVIEW_INTERVALS.length - 1);
+  let due;
+  if (prevStage < REVIEW_INTERVALS.length - 1) {
+    due = addDays(origin, REVIEW_INTERVALS[newStage]);
+  } else {
+    due = reviewDueDate(REVIEW_INTERVALS[REVIEW_INTERVALS.length - 1]);
+  }
+  masteredReview[realIdx] = { stage: newStage, origin: origin, due: due };
   saveMaster();
   if (currentIndex >= getActive().length) currentIndex = 0;
   update();
