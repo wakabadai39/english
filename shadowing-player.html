@@ -220,6 +220,7 @@ input[type=file]{display:none;}
 
     <div class="transport">
       <button class="side-btn" id="prevBtn" title="前の曲">⏮</button>
+      <button class="side-btn" id="back3Btn" title="3秒戻る">-3</button>
       <button class="play-btn" id="playBtn" title="再生/一時停止">▶</button>
       <button class="side-btn" id="nextBtn" title="次の曲">⏭</button>
     </div>
@@ -267,6 +268,7 @@ const durTimeEl = document.getElementById('durTime');
 const seekBar = document.getElementById('seekBar');
 const playBtn = document.getElementById('playBtn');
 const prevBtn = document.getElementById('prevBtn');
+const back3Btn = document.getElementById('back3Btn');
 const nextBtn = document.getElementById('nextBtn');
 const speedSelect = document.getElementById('speedSelect');
 const loopCb = document.getElementById('loopCb');
@@ -440,6 +442,11 @@ playBtn.addEventListener('click', () => {
 
 prevBtn.addEventListener('click', () => {
   if(currentIndex > 0) loadTrack(currentIndex - 1);
+});
+
+back3Btn.addEventListener('click', () => {
+  if(!audio.src) return;
+  audio.currentTime = Math.max(0, audio.currentTime - 3);
 });
 nextBtn.addEventListener('click', () => {
   if(currentIndex < files.length - 1) loadTrack(currentIndex + 1);
