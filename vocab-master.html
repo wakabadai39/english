@@ -1,0 +1,2271 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>単語帳（A1・A2・B1統合／全1,035語・完成）</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap');
+
+  :root{
+    --bg: #e9e9e6;
+    --bg-deep: #dcdcd8;
+    --ink: #2b2b2b;
+    --ink-soft: #6b6b68;
+    --line: #c7c7c2;
+    --card: #f4f3ef;
+    --accent: #b3422e;
+    --accent-soft: #d98f7e;
+    --done: #7c8a6e;
+  }
+
+  *{ box-sizing: border-box; }
+
+  body{
+    margin:0;
+    min-height:100vh;
+    background: var(--bg);
+    background-image:
+      radial-gradient(circle at 15% 20%, rgba(0,0,0,0.02) 0%, transparent 40%),
+      radial-gradient(circle at 85% 80%, rgba(0,0,0,0.02) 0%, transparent 40%);
+    color: var(--ink);
+    font-family: 'Inter', 'Noto Sans JP', sans-serif;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    padding: 28px 16px 60px;
+  }
+
+  .topbar{
+    width:100%;
+    max-width:480px;
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+    margin-bottom: 6px;
+  }
+
+  .title{
+    font-family:'Spectral', serif;
+    font-weight:600;
+    font-size: 1.5rem;
+    letter-spacing: 0.01em;
+  }
+  .title .accent{ color: var(--accent); font-style: italic; }
+
+  .progress-label{
+    font-size: 0.78rem;
+    color: var(--ink-soft);
+    font-variant-numeric: tabular-nums;
+    text-align:right;
+  }
+
+  .progress-track{
+    width:100%;
+    max-width:480px;
+    height: 3px;
+    background: var(--line);
+    border-radius: 2px;
+    margin: 10px 0 28px;
+    overflow:hidden;
+  }
+  .progress-fill{
+    height:100%;
+    background: var(--accent);
+    transition: width 0.4s ease;
+  }
+
+  .stage{
+    width:100%;
+    max-width:480px;
+    position:relative;
+    height: 340px;
+    perspective: 1200px;
+  }
+
+  .card{
+    position:absolute;
+    inset:0;
+    border-radius: 14px;
+    background: var(--card);
+    border: 1px solid var(--line);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 12px 28px -16px rgba(0,0,0,0.18);
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    padding: 28px 26px;
+    cursor:pointer;
+    transition: transform 0.45s cubic-bezier(.22,.61,.36,1), opacity 0.3s ease, box-shadow 0.3s;
+    backface-visibility:hidden;
+    user-select:none;
+  }
+
+  .card.behind{
+    transform: scale(0.96) translateY(10px);
+    box-shadow: none;
+    z-index: 0;
+    opacity: 0.6;
+  }
+
+  .card.front{ z-index: 1; }
+
+  .card.flipping{
+    transform: rotateY(90deg) scale(0.96);
+    opacity: 0;
+  }
+
+  .card.exit-left{
+    transform: translateX(-130%) rotate(-8deg);
+    opacity: 0;
+  }
+
+  .eyebrow{
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin-bottom: 18px;
+  }
+
+  .word{
+    font-family:'Spectral', serif;
+    font-weight: 600;
+    font-size: 1.7rem;
+    line-height: 1.15;
+    margin: 0 0 18px;
+    white-space: nowrap;
+    overflow: hidden;
+    max-width: 100%;
+  }
+
+  .speak-btn{
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    border: 1px solid var(--line);
+    background: #fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    transition: background 0.2s, transform 0.15s, border-color 0.2s;
+    flex-shrink:0;
+  }
+  .speak-btn:hover{ border-color: var(--accent-soft); }
+  .speak-btn:active{ transform: scale(0.92); }
+  .speak-btn svg{ width:20px; height:20px; fill: var(--accent); }
+  .speak-btn.speaking svg{ animation: pulse 0.6s ease infinite alternate; }
+  .speak-btn.looping{ background: var(--accent); border-color: var(--accent); }
+  .speak-btn.looping svg{ fill: #fff; animation: pulse 0.6s ease infinite alternate; }
+  @keyframes pulse{ from{ opacity:1; } to{ opacity:0.45; } }
+
+  .word-row{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap: 14px;
+    margin-bottom: 6px;
+  }
+
+  .tap-hint{
+    font-size: 0.78rem;
+    color: var(--ink-soft);
+    margin-top: 16px;
+  }
+
+  .hint-block{
+    width:100%;
+  }
+  .word-back-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    margin-bottom:16px;
+    padding-bottom:14px;
+    border-bottom:1px solid var(--line);
+  }
+  .word-back{
+    font-family:'Spectral', serif;
+    font-weight:600;
+    font-size:1.35rem;
+    line-height:1.2;
+  }
+  .hint-label{
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 10px;
+  }
+  .hint-text{
+    font-size: 1.15rem;
+    font-weight: 500;
+    margin-bottom: 22px;
+    line-height: 1.6;
+  }
+  .example-label{
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin-bottom: 8px;
+  }
+  .example-text{
+    font-family:'Spectral', serif;
+    font-style: italic;
+    font-size: 1.05rem;
+    line-height: 1.6;
+    color: var(--ink);
+  }
+
+  .controls{
+    width:100%;
+    max-width:480px;
+    display:flex;
+    gap: 12px;
+    margin-top: 26px;
+  }
+
+  .btn{
+    flex:1;
+    border: 1px solid var(--line);
+    background: var(--card);
+    color: var(--ink);
+    font-family:'Inter', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 500;
+    padding: 14px 16px;
+    border-radius: 10px;
+    cursor:pointer;
+    transition: background 0.2s, border-color 0.2s, transform 0.1s;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap: 8px;
+  }
+  .btn:active{ transform: scale(0.98); }
+  .btn.skip:hover{ border-color: var(--ink-soft); }
+
+  .btn.master{
+    background: var(--done);
+    color: #fff;
+    border-color: var(--done);
+  }
+  .btn.master:hover{ background: #6c7a5e; }
+
+  .controls-secondary{
+    width:100%;
+    max-width:480px;
+    display:flex;
+    gap: 12px;
+    margin-top: 10px;
+  }
+  .btn-small{
+    flex:1;
+    border: 1px solid var(--line);
+    background: transparent;
+    color: var(--ink-soft);
+    font-family:'Inter', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 500;
+    padding: 9px 12px;
+    border-radius: 8px;
+    cursor:pointer;
+    transition: background 0.2s, border-color 0.2s, color 0.2s, transform 0.1s;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap: 6px;
+  }
+  .btn-small:active{ transform: scale(0.98); }
+  .btn-small:hover{ border-color: var(--accent-soft); color: var(--accent); }
+  .btn-small:disabled{
+    opacity: 0.4;
+    cursor: default;
+  }
+  .btn-small:disabled:hover{ border-color: var(--line); color: var(--ink-soft); }
+
+  .position-label{
+    font-size: 0.78rem;
+    color: var(--ink-soft);
+    font-variant-numeric: tabular-nums;
+    text-align:center;
+    margin-top: 12px;
+  }
+
+  .empty-state{
+    width:100%;
+    max-width:480px;
+    height: 340px;
+    border-radius:14px;
+    border: 1px dashed var(--line);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding: 30px;
+    gap: 14px;
+  }
+  .empty-state .word{ font-size: 1.6rem; }
+  .empty-state p{
+    color: var(--ink-soft);
+    font-size: 0.92rem;
+    line-height: 1.7;
+    margin:0;
+  }
+
+  .footer-row{
+    width:100%;
+    max-width:480px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-top: 30px;
+    font-size: 0.78rem;
+    color: var(--ink-soft);
+  }
+
+  .reset-link{
+    color: var(--ink-soft);
+    text-decoration: underline;
+    text-decoration-color: var(--line);
+    cursor:pointer;
+    background:none;
+    border:none;
+    font-family:inherit;
+    font-size: inherit;
+    padding:0;
+  }
+  .reset-link:hover{ color: var(--accent); }
+
+  .checkmark-flash{
+    position:absolute;
+    top: 16px;
+    right: 16px;
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--done);
+    opacity:0;
+    transition: opacity 0.3s;
+  }
+  .checkmark-flash.show{ opacity:1; }
+
+  @media (max-width: 380px){
+    .word{ font-size: 1.4rem; }
+    .stage{ height: 320px; }
+  }
+
+  .card.flipped-card{
+    padding: 24px 24px;
+    overflow-y: auto;
+    align-items: stretch;
+    text-align: left;
+  }
+
+  .back-scroll{
+    width:100%;
+    overflow-y: auto;
+    max-height: 100%;
+    padding-right: 4px;
+  }
+
+  .general-block{
+    background: var(--bg-deep);
+    border-radius: 8px;
+    padding: 10px 12px;
+    margin-bottom: 16px;
+  }
+  .general-label{
+    font-size: 0.68rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin-bottom: 6px;
+  }
+  .general-text{
+    font-size: 0.92rem;
+    line-height: 1.6;
+    color: var(--ink);
+  }
+
+  .example-ja-text{
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: var(--ink-soft);
+    margin-top: 6px;
+  }
+
+  .note-block{
+    margin-top: 18px;
+    border-top: 1px dashed var(--line);
+    padding-top: 14px;
+  }
+  .note-label{
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 8px;
+  }
+  .note-text{
+    font-size: 0.9rem;
+    line-height: 1.7;
+    color: var(--ink);
+  }
+
+  .back-tap-hint{
+    text-align:center;
+    margin-top: 18px;
+  }
+
+  .panel-toggle{
+    width:100%;
+    max-width:480px;
+    display:flex;
+    justify-content:flex-end;
+    margin-top: 10px;
+  }
+  .mastered-panel{
+    width:100%;
+    max-width:480px;
+    margin-top: 14px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: var(--card);
+    padding: 16px;
+    display:none;
+  }
+  .mastered-panel.open{ display:block; }
+  .mastered-panel h3{
+    font-family:'Spectral', serif;
+    font-size: 1.05rem;
+    font-weight: 600;
+    margin: 0 0 12px;
+  }
+  .mastered-list{
+    list-style:none;
+    margin:0;
+    padding:0;
+    max-height: 280px;
+    overflow-y:auto;
+    display:flex;
+    flex-direction:column;
+    gap: 6px;
+  }
+  .mastered-list li{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap: 10px;
+    padding: 8px 10px;
+    background: var(--bg-deep);
+    border-radius: 8px;
+    font-size: 0.92rem;
+  }
+  .mastered-list li .m-word{
+    font-family:'Spectral', serif;
+    font-weight: 500;
+  }
+  .restore-btn{
+    border: 1px solid var(--line);
+    background: #fff;
+    color: var(--ink);
+    font-size: 0.78rem;
+    padding: 6px 10px;
+    border-radius: 8px;
+    cursor:pointer;
+    flex-shrink:0;
+    white-space: nowrap;
+  }
+  .restore-btn:hover{ border-color: var(--accent-soft); color: var(--accent); }
+  .mastered-empty{
+    color: var(--ink-soft);
+    font-size: 0.88rem;
+    text-align:center;
+    padding: 10px 0;
+  }
+
+  .stats-row{
+    width:100%;
+    max-width:480px;
+    display:flex;
+    justify-content:space-between;
+    font-size: 0.76rem;
+    color: var(--ink-soft);
+    margin-bottom: 10px;
+  }
+  .source-select-row{
+    width:100%;
+    max-width:480px;
+    margin-bottom: 16px;
+  }
+  #sourceFilter{
+    width:100%;
+    padding: 8px 10px;
+    border-radius: 8px;
+    border: 1px solid var(--line);
+    background: #fff;
+    color: var(--ink);
+    font-family:'Inter', sans-serif;
+    font-size: 0.85rem;
+  }
+  .source-tag{
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    background: var(--bg-deep);
+    padding: 3px 9px;
+    border-radius: 10px;
+    display:inline-block;
+    margin-bottom: 14px;
+  }
+  .box-badge{
+    position:absolute;
+    top: 16px;
+    left: 16px;
+    font-size: 0.68rem;
+    color: var(--ink-soft);
+    background: var(--bg-deep);
+    padding: 3px 8px;
+    border-radius: 8px;
+  }
+  .master-checkbox-row{
+    position:absolute;
+    top: 16px;
+    right: 16px;
+    display:flex;
+    align-items:center;
+    gap: 5px;
+    font-size: 0.7rem;
+    color: var(--ink-soft);
+    cursor:pointer;
+  }
+  .master-checkbox-row input[type=checkbox]{
+    width: 16px;
+    height: 16px;
+    accent-color: var(--done);
+    cursor:pointer;
+  }
+  .review-date{
+    font-size: 0.72rem;
+    color: var(--ink-soft);
+    white-space: nowrap;
+  }
+  .review-mode-row{
+    width:100%;
+    max-width:480px;
+    display:flex;
+    gap: 8px;
+    margin-top: 10px;
+    align-items:center;
+  }
+  .review-mode-row #reviewToggleBtn{ flex: 1; }
+  .review-mode-row #reviewFilterSelect{
+    flex: 1.2;
+    padding: 9px 10px;
+    border-radius: 8px;
+    border: 1px solid var(--line);
+    background: #fff;
+    color: var(--ink);
+    font-family:'Inter', sans-serif;
+    font-size: 0.8rem;
+  }
+  .btn-small.btn-on{
+    background: var(--done);
+    border-color: var(--done);
+    color: #fff;
+  }
+  .review-banner{
+    width:100%;
+    max-width:480px;
+    text-align:center;
+    font-size: 0.78rem;
+    color: var(--done);
+    background: #eef3ea;
+    border-radius: 8px;
+    padding: 6px 10px;
+    margin-top: 10px;
+    display:none;
+  }
+  .review-banner.show{ display:block; }
+  .example-en{ cursor: pointer; }
+  .master-checkbox-row.on-back{
+    top: 16px;
+    right: 16px;
+    background: var(--bg-deep);
+    padding: 4px 9px;
+    border-radius: 20px;
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="title">単語帳 <span class="accent">A1-A2-B1</span></div>
+  <div class="progress-label" id="progressLabel">0 / 0 習得</div>
+</div>
+
+<div class="progress-track">
+  <div class="progress-fill" id="progressFill" style="width:0%"></div>
+</div>
+
+<div class="stats-row" id="statsRow">
+  <span id="dueLabel">本日の新規・復習: 0語</span>
+  <span id="totalLabel">全カード: 0語</span>
+</div>
+
+<div class="source-select-row">
+  <select id="sourceFilter"></select>
+</div>
+
+<div class="stage" id="stage"></div>
+
+<div class="controls" id="controls">
+  <button class="btn skip" id="skipBtn">次へ (まだ)</button>
+  <button class="btn master" id="masterBtn">習得済み ✓</button>
+</div>
+
+<div class="controls-secondary" id="controlsSecondary">
+  <button class="btn-small" id="prevBtn">← 一つ前に戻る</button>
+  <button class="btn-small" id="restartBtn">⟲ 最初に戻る</button>
+</div>
+
+<div class="controls-secondary" id="randomRow" style="margin-top:8px;">
+  <button class="btn-small" id="randomToggleBtn">🔀 ランダム出題: OFF</button>
+</div>
+
+<div class="review-mode-row">
+  <button class="btn-small" id="reviewToggleBtn">🔁 これまでの単語を復習する</button>
+  <select id="reviewFilterSelect">
+    <option value="due" selected>本日復習（出題対象のみ）</option>
+    <option value="b1">1日サイクル</option>
+    <option value="b2">3日サイクル</option>
+    <option value="b3">7日サイクル</option>
+    <option value="b4">14日サイクル</option>
+    <option value="b5">30日サイクル</option>
+    <option value="b6">60日サイクル</option>
+    <option value="b7">90日サイクル</option>
+    <option value="all">すべて</option>
+  </select>
+</div>
+
+<div class="review-banner" id="reviewBanner">🔁 復習モード中：これまでに「習得済み ✓」にした単語をまとめて出題しています</div>
+
+<div class="position-label" id="positionLabel"></div>
+
+<div class="footer-row">
+  <span id="remainingLabel"></span>
+  <button class="reset-link" id="resetBtn">すべてリセット</button>
+</div>
+
+<script>
+const WORDS = [
+{"word":"abbreviation","general":"略語","example":"The report used 'ASAP' as an abbreviation for 'as soon as possible.'","example_ja":"その報告書は「as soon as possible」の略語として「ASAP」を使った。","source":"B1: 学校・言葉"},
+{"word":"ablest","general":"最も有能な（ableの最上級）","example":"She was seen as the ablest manager the company ever had.","example_ja":"彼女はその会社がこれまで持った中で最も有能な管理者だと見なされていた。","source":"B1: 仕事・社会"},
+{"word":"ably","general":"巧みに、上手に","example":"He ably answered every question the reporters asked.","example_ja":"彼は記者たちが尋ねるあらゆる質問に巧みに答えた。","source":"B1: 仕事・社会"},
+{"word":"accuse","general":"非難する、告発する","example":"She refused to accuse anyone without proof.","example_ja":"彼女は証拠なしに誰かを告発することを拒んだ。","source":"B1: 仕事・社会"},
+{"word":"acne","general":"ニキビ","example":"Stress can sometimes make acne worse.","example_ja":"ストレスがニキビを悪化させることがある。","source":"B1: 家庭・くらし"},
+{"word":"adorable","general":"とてもかわいい","example":"The kitten looked adorable asleep in the basket.","example_ja":"その子猫はかごの中で眠っていて、とてもかわいらしく見えた。","source":"B1: 動物・自然"},
+{"word":"advert","general":"広告（英）","example":"A catchy advert for the new phone played before the movie.","example_ja":"映画の前に、新しい携帯電話の耳に残る広告が流れた。","source":"B1: 仕事・社会"},
+{"word":"algebra","general":"代数","example":"He struggled with algebra at first.","example_ja":"彼は最初、代数に苦労していた。","source":"B1: 学校・言葉"},
+{"word":"annoyance","general":"いらだち","example":"To his annoyance, the meeting started late.","example_ja":"いらだたしいことに、会議は遅れて始まった。","source":"B1: 家庭・くらし"},
+{"word":"annoying","general":"イライラさせる","example":"That dripping faucet is really annoying at night.","example_ja":"あの水滴が落ちる蛇口は夜には本当にイライラさせる。","source":"B1: 家庭・くらし"},
+{"word":"apostrophe","general":"アポストロフィー（'）","example":"He forgot the apostrophe in 'it's' again.","example_ja":"彼はまた「it's」のアポストロフィーを忘れた。","source":"B1: 学校・言葉"},
+{"word":"apron","general":"エプロン","example":"She put on her apron before cooking.","example_ja":"彼女は料理をする前にエプロンをつけた。","source":"B1: 料理・食"},
+{"word":"archer","general":"射手、アーチェリー選手","example":"The archer released the arrow calmly.","example_ja":"その射手は落ち着いて矢を放った。","source":"B1: 仕事・社会"},
+{"word":"arithmetic","general":"算数","example":"Basic arithmetic is taught in early school years.","example_ja":"基本的な算数は学校の早い学年で教えられる。","source":"B1: 学校・言葉"},
+{"word":"asst","general":"assistant（アシスタント）の略記","example":"Please cc my asst. on future emails.","example_ja":"今後のメールは私のアシスタントにもccしてください。","source":"B1: 仕事・社会"},
+{"word":"astray","general":"道に迷って","example":"The confusing map led the hikers astray.","example_ja":"わかりにくい地図がそのハイカーたちを道に迷わせた。","source":"B1: 家庭・くらし"},
+{"word":"astrology","general":"占星術","example":"She reads her astrology forecast every morning.","example_ja":"彼女は毎朝、占星術の占いを読んでいる。","source":"B1: 家庭・くらし"},
+{"word":"asylum","general":"（政治的）亡命、保護","example":"The family sought asylum in a new country.","example_ja":"その家族は新しい国で亡命を求めた。","source":"B1: 仕事・社会"},
+{"word":"atheist","general":"無神論者","example":"He describes himself as an atheist.","example_ja":"彼は自分を無神論者だと表現している。","source":"B1: 仕事・社会"},
+{"word":"atlas","general":"地図帳","example":"The old atlas still showed countries that no longer exist.","example_ja":"その古い地図帳には、もう存在しない国々がまだ載っていた。","source":"B1: 学校・言葉"},
+{"word":"attendees","general":"出席者、来場者","example":"Over two hundred attendees came to the conference.","example_ja":"200人を超える出席者がその会議に来た。","source":"B1: 仕事・社会"},
+{"word":"attn","general":"attention（〜宛て）の略記","example":"The package was marked 'Attn: Sales Department.'","example_ja":"その荷物には「営業部宛て」と記されていた。","source":"B1: 仕事・社会"},
+{"word":"axle","general":"車軸","example":"A cracked axle forced the truck to stop.","example_ja":"ひび割れた車軸のせいで、そのトラックは停まらざるを得なかった。","source":"B1: 仕事・社会"},
+{"word":"badge","general":"バッジ、記章","example":"Employees must wear their badge at all times.","example_ja":"従業員は常にバッジを着用しなければならない。","source":"B1: 仕事・社会"},
+{"word":"barter","general":"物々交換する","example":"The villagers used to barter grain for tools.","example_ja":"村人たちはかつて穀物と道具を物々交換していた。","source":"B1: 仕事・社会"},
+{"word":"basil","general":"バジル","example":"She sprinkled fresh basil over the pasta.","example_ja":"彼女はパスタに新鮮なバジルを散らした。","source":"B1: 料理・食"},
+{"word":"bauble","general":"安っぽい飾り玉","example":"The tree was covered in shiny glass baubles.","example_ja":"その木は光沢のあるガラスの飾り玉で覆われていた。","source":"B1: 家庭・くらし"},
+{"word":"beak","general":"（鳥の）くちばし","example":"The bird picked up the seed with its beak.","example_ja":"その鳥はくちばしで種をつまみ上げた。","source":"B1: 動物・自然"},
+{"word":"bedspread","general":"ベッドカバー","example":"A faded quilt served as a bedspread.","example_ja":"色あせたキルトがベッドカバー代わりになっていた。","source":"B1: 家庭・くらし"},
+{"word":"beetroot","general":"ビーツ","example":"The salad was colored bright pink by beetroot.","example_ja":"そのサラダはビーツで鮮やかなピンク色に染まっていた。","source":"B1: 料理・食"},
+{"word":"beggar","general":"物乞い","example":"A beggar sat quietly outside the station.","example_ja":"物乞いが駅の外で静かに座っていた。","source":"B1: 家庭・くらし"},
+{"word":"beige","general":"ベージュ色の","example":"He painted the room a soft beige.","example_ja":"彼は部屋を柔らかいベージュ色に塗った。","source":"B1: 家庭・くらし"},
+{"word":"bid","general":"入札（する）","example":"Their company won the bid on the contract.","example_ja":"彼らの会社がその契約で落札した。","source":"B1: 仕事・社会"},
+{"word":"bikini","general":"ビキニ","example":"She packed a bikini for the beach trip.","example_ja":"彼女はビーチ旅行のためにビキニを荷物に入れた。","source":"B1: 家庭・くらし"},
+{"word":"bio","general":"経歴、プロフィール","example":"His bio said nothing about his early career.","example_ja":"彼の経歴には初期のキャリアについて何も書かれていなかった。","source":"B1: 仕事・社会"},
+{"word":"bishop","general":"（キリスト教の）司教","example":"The bishop gave a speech at the ceremony.","example_ja":"その司教は式典でスピーチをした。","source":"B1: 仕事・社会"},
+{"word":"bitten","general":"かまれた（biteの過去分詞）","example":"He'd been bitten by a mosquito.","example_ja":"彼は蚊に刺された。","source":"B1: 動物・自然"},
+{"word":"blackened","general":"黒く焦げた","example":"The toast came out completely blackened.","example_ja":"トーストはすっかり黒焦げになって出てきた。","source":"B1: 料理・食"},
+{"word":"blast","general":"突風、爆発","example":"A blast of cold air rushed through the door.","example_ja":"冷たい突風がドアから吹き込んできた。","source":"B1: 家庭・くらし"},
+{"word":"blaze","general":"（激しい）炎、火事","example":"Firefighters battled the blaze for hours.","example_ja":"消防士たちは何時間もその火事と戦った。","source":"B1: 家庭・くらし"},
+{"word":"bldg","general":"building（建物）の略記","example":"The new office bldg. opens next month.","example_ja":"新しいオフィスビルは来月開業する。","source":"B1: 仕事・社会"},
+{"word":"bled","general":"出血した（bleedの過去形）","example":"His knee bled after he fell.","example_ja":"転んだ後、彼の膝は出血した。","source":"B1: 家庭・くらし"},
+{"word":"bliss","general":"至福","example":"Lying on the beach all day felt like pure bliss.","example_ja":"一日中ビーチに寝そべっているのはまさに至福の時間だった。","source":"B1: 家庭・くらし"},
+{"word":"blouse","general":"ブラウス","example":"She ironed her white blouse before the interview.","example_ja":"彼女は面接の前に白いブラウスにアイロンをかけた。","source":"B1: 家庭・くらし"},
+{"word":"blown","general":"吹かれた（blowの過去分詞）","example":"Her umbrella was blown inside out by the wind.","example_ja":"彼女の傘は風で裏返しになった。","source":"B1: 家庭・くらし"},
+{"word":"blvd","general":"boulevard（大通り）の略記","example":"The store is located on Fifth Blvd.","example_ja":"その店は5番街にある。","source":"B1: 仕事・社会"},
+{"word":"bomber","general":"ボンバージャケット、爆撃機","example":"Grandpa kept his old bomber jacket in the closet.","example_ja":"祖父はクローゼットに古いボンバージャケットをしまっていた。","source":"B1: 家庭・くらし"},
+{"word":"bond","general":"絆、結びつき","example":"Years together strengthened their bond.","example_ja":"共に過ごした年月が彼らの絆を強めた。","source":"B1: 仕事・社会"},
+{"word":"booth","general":"小さなブース","example":"They rented a booth at the fair.","example_ja":"彼らはその見本市でブースを借りた。","source":"B1: 仕事・社会"},
+{"word":"booze","general":"酒（口語）","example":"There was plenty of booze at the party.","example_ja":"パーティーには酒がたっぷりあった。","source":"B1: 家庭・くらし"},
+{"word":"boredom","general":"退屈","example":"Boredom set in during the long flight.","example_ja":"長いフライトの間に退屈が始まった。","source":"B1: 家庭・くらし"},
+{"word":"bowler","general":"山高帽","example":"He wore an old bowler hat to the party.","example_ja":"彼はパーティーに古い山高帽をかぶって行った。","source":"B1: 家庭・くらし"},
+{"word":"brace","general":"覚悟する、支える","example":"Brace yourself, the news isn't good.","example_ja":"覚悟して、良い知らせではないから。","source":"B1: 仕事・社会"},
+{"word":"brake","general":"ブレーキ","example":"The mechanic replaced the worn brake pads.","example_ja":"整備士がすり減ったブレーキパッドを交換した。","source":"B1: 仕事・社会"},
+{"word":"breezy","general":"そよ風の吹く","example":"It was a breezy afternoon.","example_ja":"そよ風の吹く午後だった。","source":"B1: 家庭・くらし"},
+{"word":"brochure","general":"パンフレット","example":"She picked up a travel brochure at the hotel.","example_ja":"彼女はホテルで旅行パンフレットを手に取った。","source":"B1: 仕事・社会"},
+{"word":"broth","general":"（薄めの）スープ、だし汁","example":"He simmered the chicken broth for hours.","example_ja":"彼は何時間もかけて鶏のだし汁を煮込んだ。","source":"B1: 料理・食"},
+{"word":"brotherhood","general":"兄弟愛、友愛会","example":"The soldiers felt a strong sense of brotherhood.","example_ja":"兵士たちは強い兄弟愛を感じていた。","source":"B1: 仕事・社会"},
+{"word":"browse","general":"（店内などを）見て回る","example":"She likes to browse the shelves before buying anything.","example_ja":"彼女は何か買う前に棚を見て回るのが好きだ。","source":"B1: 家庭・くらし"},
+{"word":"bugle","general":"（軍隊などの）ラッパ","example":"A single bugle played at the memorial.","example_ja":"追悼式で一本のラッパが演奏された。","source":"B1: 家庭・くらし"},
+{"word":"bum","general":"浮浪者（口語、やや失礼）","example":"An old bum sat on the park bench.","example_ja":"年老いた浮浪者が公園のベンチに座っていた。","source":"B1: 家庭・くらし"},
+{"word":"busily","general":"忙しく","example":"She was busily typing when the phone rang.","example_ja":"彼女が忙しくタイプしているとき、電話が鳴った。","source":"B1: 学校・言葉"},
+{"word":"butt","general":"（物の）端、尻の部分","example":"He put out the cigarette butt in the ashtray.","example_ja":"彼は灰皿にたばこの吸い殻をもみ消した。","source":"B1: 家庭・くらし"},
+{"word":"buzzer","general":"ブザー","example":"The buzzer went off as class was ending.","example_ja":"授業が終わるときにブザーが鳴った。","source":"B1: 仕事・社会"},
+{"word":"cadet","general":"士官候補生、訓練生","example":"The young cadet stood at attention.","example_ja":"若い士官候補生は直立不動の姿勢で立っていた。","source":"B1: 仕事・社会"},
+{"word":"calf","general":"子牛（単数）","example":"The newborn calf could barely stand.","example_ja":"生まれたばかりの子牛はほとんど立てなかった。","source":"B1: 動物・自然"},
+{"word":"calves","general":"子牛たち、ふくらはぎ","example":"Her calves ached after the long run.","example_ja":"長い距離を走った後、彼女のふくらはぎが痛んだ。","source":"B1: 動物・自然"},
+{"word":"canary","general":"カナリア","example":"A yellow canary sang from its cage.","example_ja":"黄色いカナリアが鳥かごの中で歌っていた。","source":"B1: 動物・自然"},
+{"word":"canoe","general":"カヌー","example":"They paddled the canoe across the lake.","example_ja":"彼らは湖をカヌーで漕ぎ渡った。","source":"B1: 動物・自然"},
+{"word":"canteen","general":"（職場・学校の）食堂","example":"Workers had lunch at the office canteen.","example_ja":"従業員たちはオフィスの食堂で昼食をとった。","source":"B1: 料理・食"},
+{"word":"capsule","general":"カプセル","example":"She took the vitamin capsule with water.","example_ja":"彼女はビタミン剤のカプセルを水で飲んだ。","source":"B1: 料理・食"},
+{"word":"cashpoint","general":"ATM（英）","example":"He got some cash from the cashpoint.","example_ja":"彼はATMで現金を引き出した。","source":"B1: 仕事・社会"},
+{"word":"cater","general":"料理を提供する、ケータリングする","example":"The restaurant agreed to cater the wedding.","example_ja":"そのレストランは結婚式の料理提供を引き受けた。","source":"B1: 料理・食"},
+{"word":"cert","general":"certificate（証明書、資格証）の略記","example":"She keeps her first-aid cert. in her wallet.","example_ja":"彼女は救急処置の修了証を財布に入れて持ち歩いている。","source":"B1: 学校・言葉"},
+{"word":"checklist","general":"チェックリスト","example":"He went through the checklist before takeoff.","example_ja":"彼は離陸前にチェックリストを確認した。","source":"B1: 学校・言葉"},
+{"word":"cheddar","general":"チェダーチーズ","example":"The sandwich was filled with sharp cheddar.","example_ja":"そのサンドイッチには風味の強いチェダーチーズが挟まれていた。","source":"B1: 料理・食"},
+{"word":"chemist","general":"薬剤師、薬局（英）","example":"She picked up her medicine at the chemist.","example_ja":"彼女は薬局で薬を受け取った。","source":"B1: 家庭・くらし"},
+{"word":"chewy","general":"噛みごたえのある","example":"The bread had a nice chewy crust.","example_ja":"そのパンには良い噛みごたえのある皮があった。","source":"B1: 料理・食"},
+{"word":"chimpanzee","general":"チンパンジー","example":"The chimpanzee used a stick to reach the fruit.","example_ja":"そのチンパンジーは棒を使って果物に手を伸ばした。","source":"B1: 動物・自然"},
+{"word":"chirp","general":"（鳥が）さえずる","example":"Birds began to chirp before sunrise.","example_ja":"日の出の前に鳥たちがさえずり始めた。","source":"B1: 動物・自然"},
+{"word":"chloride","general":"塩化物","example":"Sodium chloride is the scientific name for table salt.","example_ja":"塩化ナトリウムは食卓塩の学名だ。","source":"B1: 学校・言葉"},
+{"word":"chow","general":"（ペットの）エサ、食べ物（口語）","example":"The dog ate its chow in seconds.","example_ja":"その犬は数秒でエサを食べてしまった。","source":"B1: 動物・自然"},
+{"word":"chum","general":"親友、仲間（口語）","example":"He met up with an old chum from college.","example_ja":"彼は大学時代の旧友と再会した。","source":"B1: 家庭・くらし"},
+{"word":"churn","general":"かき混ぜる、大量に生み出す","example":"The factory churns out thousands of bottles a day.","example_ja":"その工場は1日に何千本もの瓶を次々に生産している。","source":"B1: 料理・食"},
+{"word":"citrus","general":"柑橘類の","example":"She loves the smell of fresh citrus fruit.","example_ja":"彼女は新鮮な柑橘類の香りが大好きだ。","source":"B1: 料理・食"},
+{"word":"clam","general":"あさり、はまぐり","example":"They dug for clams along the shore.","example_ja":"彼らは岸辺であさりを掘った。","source":"B1: 料理・食"},
+{"word":"cleanliness","general":"清潔さ","example":"The kitchen was praised for its cleanliness.","example_ja":"その厨房は清潔さを称賛された。","source":"B1: 家庭・くらし"},
+{"word":"cleanse","general":"洗浄する、洗顔料","example":"She used a gentle cleanser on her face.","example_ja":"彼女は肌に優しい洗顔料を使った。","source":"B1: 家庭・くらし"},
+{"word":"cleverness","general":"賢さ、巧妙さ","example":"The trick relied on cleverness, not luck.","example_ja":"その手品は運ではなく巧妙さに頼っていた。","source":"B1: 家庭・くらし"},
+{"word":"clockwise","general":"時計回りに","example":"Turn the dial clockwise to increase the volume.","example_ja":"音量を上げるにはダイヤルを時計回りに回してください。","source":"B1: 学校・言葉"},
+{"word":"clog","general":"詰まらせる","example":"Grease can clog the kitchen drain.","example_ja":"油は台所の排水口を詰まらせることがある。","source":"B1: 家庭・くらし"},
+{"word":"clogged","general":"詰まった","example":"The gutter was clogged with dead leaves.","example_ja":"雨どいは枯れ葉で詰まっていた。","source":"B1: 家庭・くらし"},
+{"word":"coastal","general":"沿岸の","example":"The coastal town relies on tourism.","example_ja":"その沿岸の町は観光業に頼っている。","source":"B1: 動物・自然"},
+{"word":"cobra","general":"コブラ","example":"The snake charmer's cobra swayed to the music.","example_ja":"蛇使いのコブラは音楽に合わせて揺れた。","source":"B1: 動物・自然"},
+{"word":"coconut","general":"ココナッツ","example":"They drank fresh coconut water on the beach.","example_ja":"彼らはビーチで新鮮なココナッツウォーターを飲んだ。","source":"B1: 料理・食"},
+{"word":"cocoon","general":"（昆虫の）繭","example":"The caterpillar spun a cocoon on the branch.","example_ja":"その毛虫は枝の上に繭を作った。","source":"B1: 動物・自然"},
+{"word":"coed","general":"男女共学の（co-educationalの略）","example":"She attends a coed high school.","example_ja":"彼女は男女共学の高校に通っている。","source":"B1: 学校・言葉"},
+{"word":"coffin","general":"棺","example":"The coffin was carried through the church.","example_ja":"棺は教会を通って運ばれていった。","source":"B1: 家庭・くらし"},
+{"word":"colander","general":"（水切り用の）ざる","example":"She drained the pasta in a colander.","example_ja":"彼女は水切りざるでパスタの湯を切った。","source":"B1: 料理・食"},
+{"word":"coliseum","general":"円形闘技場、大競技場","example":"Tourists lined up to see the ancient coliseum.","example_ja":"観光客たちは古代の円形闘技場を見るために列を作った。","source":"B1: 学校・言葉"},
+{"word":"collage","general":"コラージュ（切り貼り作品）","example":"The students made a collage from old magazines.","example_ja":"生徒たちは古い雑誌でコラージュを作った。","source":"B1: 学校・言葉"},
+{"word":"collie","general":"コリー犬","example":"Their collie herded the sheep skillfully.","example_ja":"彼らのコリー犬は巧みに羊を追い集めた。","source":"B1: 動物・自然"},
+{"word":"cologne","general":"オーデコロン、男性用香水","example":"He put on some cologne before the date.","example_ja":"彼はデートの前にコロンをつけた。","source":"B1: 家庭・くらし"},
+{"word":"comedian","general":"コメディアン","example":"The comedian made everyone laugh.","example_ja":"そのコメディアンは皆を笑わせた。","source":"B1: 仕事・社会"},
+{"word":"commonplace","general":"ありふれた","example":"Remote work has become commonplace.","example_ja":"在宅勤務はありふれたものになった。","source":"B1: 仕事・社会"},
+{"word":"commotion","general":"騒動、混乱","example":"A commotion broke out near the entrance.","example_ja":"入り口の近くで騒動が起きた。","source":"B1: 家庭・くらし"},
+{"word":"communal","general":"共用の","example":"They shared a communal kitchen.","example_ja":"彼らは共用のキッチンを使っていた。","source":"B1: 家庭・くらし"},
+{"word":"competent","general":"有能な","example":"She's a competent and reliable manager.","example_ja":"彼女は有能で頼りになる管理者だ。","source":"B1: 仕事・社会"},
+{"word":"compliment","general":"賛辞、褒め言葉","example":"He blushed at the unexpected compliment.","example_ja":"彼は思いがけない褒め言葉に赤面した。","source":"B1: 家庭・くらし"},
+{"word":"component","general":"構成要素、部品","example":"Trust is a key component of any partnership.","example_ja":"信頼はどんなパートナーシップにも重要な構成要素だ。","source":"B1: 仕事・社会"},
+{"word":"compound","general":"化合物、混合物","example":"The lab tested a new chemical compound.","example_ja":"その研究室は新しい化学化合物を検査した。","source":"B1: 学校・言葉"},
+{"word":"comprise","general":"〜から構成される","example":"The committee comprises five members.","example_ja":"その委員会は5人のメンバーで構成されている。","source":"B1: 学校・言葉"},
+{"word":"compulsory","general":"必須の、強制的な","example":"Attendance at the meeting is compulsory.","example_ja":"その会議への出席は必須だ。","source":"B1: 学校・言葉"},
+{"word":"comrade","general":"仲間、同志","example":"He still calls his old army comrade every year.","example_ja":"彼は今も毎年、昔の軍隊仲間に電話をかける。","source":"B1: 仕事・社会"},
+{"word":"conditioner","general":"コンディショナー","example":"She applies conditioner after every shampoo.","example_ja":"彼女はシャンプーのたびにコンディショナーをつける。","source":"B1: 家庭・くらし"},
+{"word":"condom","general":"コンドーム","example":"The clinic hands out free condoms.","example_ja":"そのクリニックは無料でコンドームを配っている。","source":"B1: 家庭・くらし"},
+{"word":"condor","general":"コンドル","example":"A condor circled high above the canyon.","example_ja":"コンドルが峡谷の上空高く旋回していた。","source":"B1: 動物・自然"},
+{"word":"conflict","general":"対立、もめごと","example":"The two neighbors have been in conflict for years.","example_ja":"その2軒の隣人は何年も対立している。","source":"B1: 仕事・社会"},
+{"word":"congested","general":"混雑した","example":"The highway is always congested at rush hour.","example_ja":"その幹線道路はラッシュアワーにいつも渋滞している。","source":"B1: 仕事・社会"},
+{"word":"congestion","general":"（鼻などの）詰まり、混雑","example":"Traffic congestion is worst on Fridays.","example_ja":"交通渋滞は金曜日が最悪だ。","source":"B1: 家庭・くらし"},
+{"word":"conjunction","general":"接続詞、（in conjunction withで）〜と合わせて","example":"The word 'and' is a common conjunction.","example_ja":"「and」はよくある接続詞だ。","source":"B1: 学校・言葉"},
+{"word":"consecutive","general":"連続した","example":"It rained for five consecutive days.","example_ja":"5日連続で雨が降った。","source":"B1: 仕事・社会"},
+{"word":"conserve","general":"節約する、保護する","example":"They asked residents to conserve water.","example_ja":"彼らは住民に節水を求めた。","source":"B1: 仕事・社会"},
+{"word":"consideration","general":"考慮、検討","example":"After much consideration, she accepted the offer.","example_ja":"さんざん検討した末、彼女はその申し出を受け入れた。","source":"B1: 仕事・社会"},
+{"word":"considering","general":"〜を考慮すると","example":"Considering the weather, the trip went well.","example_ja":"天候を考慮すると、その旅行はうまくいった。","source":"B1: 仕事・社会"},
+{"word":"console","general":"慰める","example":"He tried to console his crying friend.","example_ja":"彼は泣いている友人を慰めようとした。","source":"B1: 家庭・くらし"},
+{"word":"consonant","general":"子音","example":"The letter 'b' is a consonant.","example_ja":"「b」という文字は子音だ。","source":"B1: 学校・言葉"},
+{"word":"constitutional","general":"憲法上の、規約上の","example":"Free speech is a constitutional right.","example_ja":"表現の自由は憲法上の権利だ。","source":"B1: 仕事・社会"},
+{"word":"constraint","general":"制約","example":"Budget constraints limited what they could build.","example_ja":"予算の制約が彼らの建設できる範囲を制限した。","source":"B1: 仕事・社会"},
+{"word":"contestant","general":"出場者、参加者","example":"Each contestant had sixty seconds to answer.","example_ja":"各出場者には答えるのに60秒が与えられた。","source":"B1: 仕事・社会"},
+{"word":"context","general":"文脈","example":"Try to guess the word's meaning from the context.","example_ja":"その単語の意味は文脈から推測してみてください。","source":"B1: 学校・言葉"},
+{"word":"contract","general":"契約","example":"She signed a contract to rent the apartment.","example_ja":"彼女はそのアパートを借りる契約にサインした。","source":"B1: 仕事・社会"},
+{"word":"cookery","general":"料理（法）","example":"He watches a cookery show every evening.","example_ja":"彼は毎晩、料理番組を見ている。","source":"B1: 料理・食"},
+{"word":"cordial","general":"心のこもった、愛想のよい","example":"The host gave us a cordial welcome.","example_ja":"主人役は私たちを心のこもった様子で迎えてくれた。","source":"B1: 家庭・くらし"},
+{"word":"coriander","general":"コリアンダー（パクチー）","example":"She added fresh coriander to the soup.","example_ja":"彼女はスープに新鮮なコリアンダーを加えた。","source":"B1: 料理・食"},
+{"word":"corkscrew","general":"コルク栓抜き","example":"He couldn't find the corkscrew anywhere.","example_ja":"彼はコルク栓抜きをどこにも見つけられなかった。","source":"B1: 家庭・くらし"},
+{"word":"corset","general":"コルセット","example":"The dress came with a tight corset underneath.","example_ja":"そのドレスには下にきついコルセットが付いていた。","source":"B1: 家庭・くらし"},
+{"word":"courgette","general":"ズッキーニ（英）","example":"She sliced the courgette thinly for the pan.","example_ja":"彼女はフライパン用にズッキーニを薄く切った。","source":"B1: 料理・食"},
+{"word":"cram","general":"無理やり詰め込む","example":"He crammed all his clothes into one bag.","example_ja":"彼はすべての服を1つのバッグに無理やり詰め込んだ。","source":"B1: 家庭・くらし"},
+{"word":"cramp","general":"けいれん","example":"A sudden cramp in her leg woke her up.","example_ja":"突然の足のけいれんで彼女は目が覚めた。","source":"B1: 家庭・くらし"},
+{"word":"crate","general":"木箱、荷箱","example":"They stacked the crate near the door.","example_ja":"彼らはその木箱をドアの近くに積んだ。","source":"B1: 仕事・社会"},
+{"word":"crave","general":"渇望する","example":"She began to crave something sweet.","example_ja":"彼女は甘いものが無性に食べたくなり始めた。","source":"B1: 家庭・くらし"},
+{"word":"crayfish","general":"ザリガニ","example":"They caught crayfish in the stream.","example_ja":"彼らは小川でザリガニを捕まえた。","source":"B1: 動物・自然"},
+{"word":"crease","general":"折り目、しわ","example":"He ironed the crease out of his shirt.","example_ja":"彼はシャツの折りじわをアイロンで伸ばした。","source":"B1: 家庭・くらし"},
+{"word":"creed","general":"信条、教義","example":"Every member had to follow the club's creed.","example_ja":"すべての会員はそのクラブの信条に従わなければならなかった。","source":"B1: 仕事・社会"},
+{"word":"crept","general":"忍び寄った（creepの過去形）","example":"The cat crept quietly across the yard.","example_ja":"猫は音もなく庭を忍び足で横切った。","source":"B1: 動物・自然"},
+{"word":"crescent","general":"三日月（形の）","example":"A thin crescent moon hung over the hills.","example_ja":"細い三日月が丘の上にかかっていた。","source":"B1: 動物・自然"},
+{"word":"crest","general":"（丘・山の）頂上","example":"They finally reached the crest of the hill.","example_ja":"彼らはついに丘の頂に到達した。","source":"B1: 動物・自然"},
+{"word":"crossroads","general":"交差点","example":"Turn left at the next crossroads.","example_ja":"次の交差点を左に曲がってください。","source":"B1: 仕事・社会"},
+{"word":"crosswalk","general":"横断歩道（米）","example":"Always use the crosswalk to cross the street.","example_ja":"道を渡るときは必ず横断歩道を使ってください。","source":"B1: 仕事・社会"},
+{"word":"crouch","general":"しゃがむ、かがむ","example":"He had to crouch to fit through the door.","example_ja":"彼はドアを通るためにしゃがまなければならなかった。","source":"B1: 家庭・くらし"},
+{"word":"crowded","general":"混雑した","example":"The train was crowded during rush hour.","example_ja":"電車はラッシュアワーに混雑していた。","source":"B1: 仕事・社会"},
+{"word":"crude","general":"下品な、粗雑な","example":"His joke was a bit crude.","example_ja":"彼の冗談は少し下品だった。","source":"B1: 家庭・くらし"},
+{"word":"crumb","general":"（パンなどの）くず、かけら","example":"Not a crumb of the cake was left.","example_ja":"ケーキはひとかけらのくずも残っていなかった。","source":"B1: 料理・食"},
+{"word":"crumble","general":"崩れる、崩す","example":"The old wall began to crumble.","example_ja":"古い壁は崩れ始めた。","source":"B1: 家庭・くらし"},
+{"word":"crumpled","general":"しわくちゃになった","example":"He found a crumpled note in his pocket.","example_ja":"彼はポケットの中にしわくちゃのメモを見つけた。","source":"B1: 家庭・くらし"},
+{"word":"crunch","general":"ザクザクという音","example":"She loved the crunch of fresh apples.","example_ja":"彼女は新鮮なリンゴのザクザクという音が大好きだった。","source":"B1: 料理・食"},
+{"word":"crunchy","general":"カリカリした","example":"The chips were fresh and crunchy.","example_ja":"そのポテトチップスは新鮮でカリカリしていた。","source":"B1: 料理・食"},
+{"word":"crust","general":"（パイなどの）皮","example":"The pie crust turned golden brown.","example_ja":"パイの皮はこんがりきつね色になった。","source":"B1: 料理・食"},
+{"word":"cub","general":"（クマなどの）子","example":"A bear cub wandered near the tent.","example_ja":"クマの子がテントの近くをうろついていた。","source":"B1: 動物・自然"},
+{"word":"culinary","general":"料理の","example":"The festival celebrated the region's culinary traditions.","example_ja":"その祭りはその地域の料理の伝統を祝うものだった。","source":"B1: 料理・食"},
+{"word":"cultural","general":"文化の","example":"The museum focuses on cultural history.","example_ja":"その博物館は文化史に焦点を当てている。","source":"B1: 学校・言葉"},
+{"word":"currant","general":"カラント（小粒の干しぶどう）","example":"The bread was studded with dried currants.","example_ja":"そのパンには乾燥カラントが散りばめられていた。","source":"B1: 料理・食"},
+{"word":"curry","general":"カレー","example":"They ordered chicken curry for dinner.","example_ja":"彼らは夕食にチキンカレーを注文した。","source":"B1: 料理・食"},
+{"word":"curse","general":"悪態、呪いの言葉","example":"He muttered a curse under his breath.","example_ja":"彼は小声で悪態をついた。","source":"B1: 家庭・くらし"},
+{"word":"cursor","general":"（画面の）カーソル","example":"The cursor froze right before he saved his work.","example_ja":"作業を保存する直前にカーソルが固まった。","source":"B1: 仕事・社会"},
+{"word":"curt","general":"そっけない","example":"Her curt reply surprised him.","example_ja":"彼女のそっけない返事に彼は驚いた。","source":"B1: 家庭・くらし"},
+{"word":"cutlery","general":"（ナイフ・フォークなどの）カトラリー","example":"She set the cutlery on the table.","example_ja":"彼女はテーブルにカトラリーを並べた。","source":"B1: 料理・食"},
+{"word":"daft","general":"ばかげた（英口語）","example":"It sounds daft, but it worked.","example_ja":"ばかげて聞こえるかもしれないが、それはうまくいった。","source":"B1: 家庭・くらし"},
+{"word":"dandelion","general":"タンポポ","example":"Yellow dandelions covered the field.","example_ja":"黄色いタンポポが野原一面に咲いていた。","source":"B1: 動物・自然"},
+{"word":"danish","general":"デニッシュ（ペストリーの一種）","example":"He bought a warm danish for breakfast.","example_ja":"彼は朝食に温かいデニッシュを買った。","source":"B1: 料理・食"},
+{"word":"dare","general":"あえて〜する、挑戦する","example":"Nobody dared to speak first.","example_ja":"誰もあえて最初に話そうとしなかった。","source":"B1: 家庭・くらし"},
+{"word":"dating","general":"デート、（アプリの）マッチング","example":"They met through a dating app.","example_ja":"彼らはマッチングアプリを通じて出会った。","source":"B1: 家庭・くらし"},
+{"word":"daze","general":"朦朧、放心状態","example":"He walked around in a daze after the news.","example_ja":"その知らせを聞いた後、彼は放心状態で歩き回った。","source":"B1: 家庭・くらし"},
+{"word":"dazed","general":"ぼんやりした","example":"She looked dazed after the fall.","example_ja":"転んだ後、彼女はぼんやりした様子だった。","source":"B1: 家庭・くらし"},
+{"word":"dealt","general":"対処した（dealの過去形）","example":"He dealt with the problem calmly.","example_ja":"彼はその問題に冷静に対処した。","source":"B1: 仕事・社会"},
+{"word":"dearer","general":"より高価な、より大切な（dearの比較級）","example":"Nothing was dearer to him than his family.","example_ja":"家族ほど彼にとって大切なものはなかった。","source":"B1: 家庭・くらし"},
+{"word":"debit","general":"引き落とし、デビット","example":"The payment was taken as a direct debit.","example_ja":"その支払いは口座引き落としで行われた。","source":"B1: 仕事・社会"},
+{"word":"decency","general":"礼儀正しさ","example":"He at least had the decency to apologize.","example_ja":"彼には少なくとも謝罪する礼儀があった。","source":"B1: 家庭・くらし"},
+{"word":"decibels","general":"デシベル","example":"The noise level reached over 90 decibels.","example_ja":"騒音レベルは90デシベルを超えた。","source":"B1: 学校・言葉"},
+{"word":"decimal","general":"小数の","example":"Round the number to two decimal places.","example_ja":"その数値を小数点第2位で四捨五入してください。","source":"B1: 学校・言葉"},
+{"word":"decoder","general":"デコーダー","example":"The old decoder no longer worked with the new signal.","example_ja":"その古いデコーダーは新しい信号には対応していなかった。","source":"B1: 仕事・社会"},
+{"word":"decoding","general":"解読すること","example":"Decoding the message took hours.","example_ja":"そのメッセージを解読するのに何時間もかかった。","source":"B1: 仕事・社会"},
+{"word":"decor","general":"内装、装飾","example":"The café had a cozy, rustic decor.","example_ja":"そのカフェは居心地のよい、素朴な内装だった。","source":"B1: 家庭・くらし"},
+{"word":"dedicate","general":"（時間などを）割く、捧げる","example":"She decided to dedicate her weekend to studying.","example_ja":"彼女は週末を勉強に充てることに決めた。","source":"B1: 仕事・社会"},
+{"word":"defect","general":"欠陥","example":"A small defect was found in the product.","example_ja":"その製品には小さな欠陥が見つかった。","source":"B1: 仕事・社会"},
+{"word":"defend","general":"守る、弁護する","example":"The lawyer agreed to defend her case.","example_ja":"その弁護士は彼女の弁護を引き受けた。","source":"B1: 仕事・社会"},
+{"word":"deficit","general":"赤字","example":"The company reported a budget deficit this year.","example_ja":"その会社は今年、予算の赤字を報告した。","source":"B1: 仕事・社会"},
+{"word":"define","general":"定義する","example":"Can you define what success means to you?","example_ja":"あなたにとって成功とは何か、定義できますか？","source":"B1: 学校・言葉"},
+{"word":"defy","general":"逆らう","example":"He chose to defy his parents' wishes.","example_ja":"彼は両親の望みに逆らうことを選んだ。","source":"B1: 家庭・くらし"},
+{"word":"degrading","general":"屈辱的な","example":"The treatment felt degrading to the workers.","example_ja":"その扱いは労働者たちにとって屈辱的に感じられた。","source":"B1: 仕事・社会"},
+{"word":"dehydrated","general":"脱水した","example":"The hikers were badly dehydrated by noon.","example_ja":"ハイカーたちは正午までにひどく脱水していた。","source":"B1: 家庭・くらし"},
+{"word":"dehydration","general":"脱水症状","example":"Dehydration can happen quickly in the heat.","example_ja":"暑さの中では脱水症状はすぐに起こり得る。","source":"B1: 家庭・くらし"},
+{"word":"delegate","general":"代表者","example":"Each country sent a delegate to the summit.","example_ja":"各国はそのサミットに代表者を送った。","source":"B1: 仕事・社会"},
+{"word":"delegation","general":"代表団","example":"A delegation from Japan visited the factory.","example_ja":"日本からの代表団がその工場を訪れた。","source":"B1: 仕事・社会"},
+{"word":"deletion","general":"削除","example":"The deletion of the file was permanent.","example_ja":"そのファイルの削除は取り消しできなかった。","source":"B1: 仕事・社会"},
+{"word":"deli","general":"デリ（惣菜店）","example":"He bought a sandwich from the deli.","example_ja":"彼はデリでサンドイッチを買った。","source":"B1: 料理・食"},
+{"word":"denser","general":"より濃い、より密な（denseの比較級）","example":"The fog grew denser as night fell.","example_ja":"夜になるにつれて霧はより濃くなった。","source":"B1: 家庭・くらし"},
+{"word":"dependable","general":"信頼できる","example":"He's known as a dependable friend.","example_ja":"彼は信頼できる友人として知られている。","source":"B1: 仕事・社会"},
+{"word":"depot","general":"車庫、倉庫","example":"The buses are parked at the depot overnight.","example_ja":"バスは夜間、車庫に停められている。","source":"B1: 仕事・社会"},
+{"word":"depress","general":"気を滅入らせる","example":"The gray weather can depress people's mood.","example_ja":"灰色の天気は人の気分を滅入らせることがある。","source":"B1: 家庭・くらし"},
+{"word":"depressed","general":"落ち込んだ","example":"She felt depressed after losing the game.","example_ja":"彼女はその試合に負けて落ち込んだ。","source":"B1: 家庭・くらし"},
+{"word":"depressing","general":"憂鬱にさせる","example":"The news was depressing to read.","example_ja":"その知らせは読んでいて憂鬱になるものだった。","source":"B1: 家庭・くらし"},
+{"word":"depression","general":"気分の落ち込み、（経済の）不況","example":"The country went through a severe economic depression.","example_ja":"その国はひどい経済不況を経験した。","source":"B1: 仕事・社会"},
+{"word":"depressive","general":"うつ傾向の","example":"He described a depressive episode last winter.","example_ja":"彼は去年の冬、気分が落ち込んだ時期があったと語った。","source":"B1: 家庭・くらし"},
+{"word":"deputy","general":"副〜","example":"The deputy manager took charge while the boss was away.","example_ja":"上司が不在の間、副支配人が指揮を執った。","source":"B1: 仕事・社会"},
+{"word":"derby","general":"ダービー（競走）","example":"Thousands watched the horse derby.","example_ja":"何千人もの人がその競馬のダービーを見物した。","source":"B1: 動物・自然"},
+{"word":"derive","general":"導き出す","example":"She tried to derive the answer from the clues.","example_ja":"彼女はヒントから答えを導き出そうとした。","source":"B1: 学校・言葉"},
+{"word":"descend","general":"下る","example":"The path descends steeply toward the river.","example_ja":"その道は川に向かって急に下っている。","source":"B1: 動物・自然"},
+{"word":"descent","general":"下り坂、降下","example":"The plane began its descent into the city.","example_ja":"飛行機はその街への降下を始めた。","source":"B1: 仕事・社会"},
+{"word":"deserve","general":"〜に値する","example":"She deserves credit for the idea.","example_ja":"そのアイデアについては彼女が評価されるべきだ。","source":"B1: 仕事・社会"},
+{"word":"designer","general":"デザイナーの、ブランドの","example":"He wore an expensive designer suit.","example_ja":"彼は高価なブランドのスーツを着ていた。","source":"B1: 家庭・くらし"},
+{"word":"destruction","general":"破壊","example":"The storm caused massive destruction.","example_ja":"その嵐は甚大な破壊をもたらした。","source":"B1: 仕事・社会"},
+{"word":"destructive","general":"破壊的な","example":"His temper could be quite destructive.","example_ja":"彼の癇癪はかなり破壊的になり得た。","source":"B1: 家庭・くらし"},
+{"word":"detach","general":"取り外す","example":"You can detach the strap from the bag.","example_ja":"そのバッグからストラップを取り外すことができる。","source":"B1: 仕事・社会"},
+{"word":"detachable","general":"取り外し可能な","example":"The camera has a detachable lens.","example_ja":"そのカメラには取り外し可能なレンズがついている。","source":"B1: 仕事・社会"},
+{"word":"detergent","general":"洗剤","example":"She poured detergent into the washing machine.","example_ja":"彼女は洗濯機に洗剤を入れた。","source":"B1: 家庭・くらし"},
+{"word":"determined","general":"決意した","example":"He was determined to finish the race.","example_ja":"彼はそのレースを完走すると決意していた。","source":"B1: 仕事・社会"},
+{"word":"detour","general":"回り道","example":"They took a detour to avoid the traffic.","example_ja":"彼らは渋滞を避けるために回り道をした。","source":"B1: 家庭・くらし"},
+{"word":"devon","general":"デヴォン（英南西部の地方）","example":"They spent the summer in Devon.","example_ja":"彼らはデヴォン地方で夏を過ごした。","source":"B1: 動物・自然"},
+{"word":"dextrose","general":"ブドウ糖","example":"The drink contains a small amount of dextrose.","example_ja":"その飲み物には少量のブドウ糖が含まれている。","source":"B1: 料理・食"},
+{"word":"diabetic","general":"糖尿病の","example":"She follows a strict diabetic diet.","example_ja":"彼女は厳格な糖尿病食を守っている。","source":"B1: 家庭・くらし"},
+{"word":"diagonal","general":"対角線の","example":"He drew a diagonal line across the page.","example_ja":"彼はページに対角線を引いた。","source":"B1: 学校・言葉"},
+{"word":"diagram","general":"図","example":"The teacher drew a diagram on the board.","example_ja":"先生は黒板に図を描いた。","source":"B1: 学校・言葉"},
+{"word":"diameter","general":"直径","example":"The circle has a diameter of ten centimeters.","example_ja":"その円の直径は10センチだ。","source":"B1: 学校・言葉"},
+{"word":"diarrhea","general":"下痢（米綴り）","example":"The medicine helped stop his diarrhea.","example_ja":"その薬は彼の下痢を止めるのに役立った。","source":"B1: 家庭・くらし"},
+{"word":"diarrhoea","general":"下痢（英綴り）","example":"The doctor asked about his diarrhoea symptoms.","example_ja":"医師は彼の下痢の症状について尋ねた。","source":"B1: 家庭・くらし"},
+{"word":"dietary","general":"食事の","example":"Please list any dietary restrictions.","example_ja":"食事制限があれば記載してください。","source":"B1: 料理・食"},
+{"word":"dieter","general":"ダイエット中の人","example":"As a dieter, she avoided sugary drinks.","example_ja":"ダイエット中の人として、彼女は甘い飲み物を避けていた。","source":"B1: 料理・食"},
+{"word":"diff","general":"差異（differenceの略）","example":"There's a small diff between the two versions.","example_ja":"その2つのバージョンには小さな差異がある。","source":"B1: 仕事・社会"},
+{"word":"digestive","general":"消化の","example":"Fiber is good for digestive health.","example_ja":"食物繊維は消化器の健康に良い。","source":"B1: 家庭・くらし"},
+{"word":"dill","general":"ディル（ハーブ）","example":"She sprinkled fresh dill over the fish.","example_ja":"彼女は魚に新鮮なディルを振りかけた。","source":"B1: 料理・食"},
+{"word":"dimension","general":"寸法、次元","example":"Please provide the exact dimensions of the room.","example_ja":"部屋の正確な寸法を教えてください。","source":"B1: 学校・言葉"},
+{"word":"dine","general":"食事をする","example":"They decided to dine at a quiet restaurant.","example_ja":"彼らは静かなレストランで食事をすることにした。","source":"B1: 料理・食"},
+{"word":"discard","general":"処分する","example":"He decided to discard the old newspapers.","example_ja":"彼は古い新聞を処分することにした。","source":"B1: 家庭・くらし"},
+{"word":"disclaimer","general":"免責事項","example":"The website included a legal disclaimer.","example_ja":"そのウェブサイトには法的な免責事項が記載されていた。","source":"B1: 仕事・社会"},
+{"word":"discrete","general":"個別の、独立した","example":"Each file is stored as a discrete record.","example_ja":"各ファイルは個別の記録として保存されている。","source":"B1: 仕事・社会"},
+{"word":"disguise","general":"変装させる、ごまかす","example":"He tried to disguise his voice on the phone.","example_ja":"彼は電話で自分の声をごまかそうとした。","source":"B1: 家庭・くらし"},
+{"word":"disinfectant","general":"消毒液","example":"She wiped the table with disinfectant.","example_ja":"彼女はテーブルを消毒液で拭いた。","source":"B1: 仕事・社会"},
+{"word":"disinfected","general":"消毒された","example":"The room was fully disinfected before use.","example_ja":"その部屋は使用前に完全に消毒された。","source":"B1: 仕事・社会"},
+{"word":"disinfection","general":"消毒","example":"Daily disinfection is required in the ward.","example_ja":"その病棟では毎日の消毒が義務付けられている。","source":"B1: 仕事・社会"},
+{"word":"distress","general":"苦悩、苦痛","example":"She called for help in obvious distress.","example_ja":"彼女は明らかに苦悩した様子で助けを求めた。","source":"B1: 家庭・くらし"},
+{"word":"distribute","general":"分配する、広める","example":"Volunteers helped distribute the food.","example_ja":"ボランティアたちが食料の配布を手伝った。","source":"B1: 仕事・社会"},
+{"word":"distrust","general":"不信感","example":"Years of lies led to deep distrust.","example_ja":"何年もの嘘が深い不信感につながった。","source":"B1: 家庭・くらし"},
+{"word":"disturbance","general":"騒動","example":"A loud disturbance woke the whole street.","example_ja":"大きな騒動が通り中の人々を目覚めさせた。","source":"B1: 家庭・くらし"},
+{"word":"ditch","general":"溝","example":"The car slid into a ditch beside the road.","example_ja":"車は道路脇の溝に滑り込んだ。","source":"B1: 動物・自然"},
+{"word":"ditto","general":"同上、同じこと","example":"\"Ditto,\" she said, agreeing completely.","example_ja":"「同感」と彼女は完全に同意して言った。","source":"B1: 家庭・くらし"},
+{"word":"divine","general":"神聖な","example":"They believed the king had a divine right to rule.","example_ja":"彼らは王には統治する神聖な権利があると信じていた。","source":"B1: 学校・言葉"},
+{"word":"dona","general":"ドーニャ（スペイン語圏の女性への敬称）","example":"The villagers called her Dona Maria out of respect.","example_ja":"村人たちは敬意を込めて彼女をドーニャ・マリアと呼んだ。","source":"B1: 家庭・くらし"},
+{"word":"doorway","general":"戸口","example":"He stood in the doorway, waiting.","example_ja":"彼は戸口に立って待っていた。","source":"B1: 家庭・くらし"},
+{"word":"doze","general":"うたた寝する","example":"He began to doze off during the meeting.","example_ja":"彼は会議中にうたた寝し始めた。","source":"B1: 家庭・くらし"},
+{"word":"drawn","general":"引き寄せられた","example":"She felt drawn to the quiet corner of the room.","example_ja":"彼女はその部屋の静かな片隅に引き寄せられるように感じた。","source":"B1: 家庭・くらし"},
+{"word":"dread","general":"恐れ、不安","example":"He felt a sense of dread before the exam.","example_ja":"彼は試験の前に不安を感じた。","source":"B1: 家庭・くらし"},
+{"word":"drift","general":"漂う","example":"The boat began to drift away from the shore.","example_ja":"そのボートは岸から漂い始めた。","source":"B1: 動物・自然"},
+{"word":"drown","general":"溺れる、水浸しにする","example":"Heavy rain nearly drowned the small garden.","example_ja":"激しい雨は小さな庭をほとんど水浸しにした。","source":"B1: 動物・自然"},
+{"word":"dryness","general":"乾燥","example":"The dryness of the air made her skin itch.","example_ja":"空気の乾燥で彼女の肌がかゆくなった。","source":"B1: 動物・自然"},
+{"word":"dude","general":"男（口語）","example":"A friendly dude waved from across the street.","example_ja":"気さくな男が通りの向こうから手を振った。","source":"B1: 家庭・くらし"},
+{"word":"dummy","general":"偽の、ダミーの","example":"It turned out to be a dummy alarm.","example_ja":"それは結局、偽の警報だとわかった。","source":"B1: 家庭・くらし"},
+{"word":"duo","general":"2つ組、デュオ","example":"The two singers performed as a duo.","example_ja":"その2人の歌手はデュオとして演奏した。","source":"B1: 家庭・くらし"},
+{"word":"duvet","general":"掛け布団","example":"She pulled the warm duvet over her shoulders.","example_ja":"彼女は温かい掛け布団を肩まで引き上げた。","source":"B1: 家庭・くらし"},
+{"word":"elastic","general":"ゴム紐、伸縮性のある","example":"The waistband was made of stretchy elastic.","example_ja":"そのウエストバンドは伸縮性のあるゴムでできていた。","source":"B1: 家庭・くらし"},
+{"word":"electrician","general":"電気技師","example":"An electrician came to fix the wiring.","example_ja":"電気技師が配線を直しに来た。","source":"B1: 仕事・社会"},
+{"word":"eliminate","general":"取り除く","example":"They worked hard to eliminate the problem.","example_ja":"彼らはその問題を取り除くために懸命に働いた。","source":"B1: 仕事・社会"},
+{"word":"embassy","general":"大使館","example":"She works at the Japanese embassy.","example_ja":"彼女は日本大使館で働いている。","source":"B1: 仕事・社会"},
+{"word":"enclose","general":"囲む","example":"They decided to enclose the garden with a fence.","example_ja":"彼らは庭をフェンスで囲むことにした。","source":"B1: 家庭・くらし"},
+{"word":"enquire","general":"問い合わせる（英）","example":"He wanted to enquire about the price.","example_ja":"彼はその値段について問い合わせたかった。","source":"B1: 仕事・社会"},
+{"word":"enquiry","general":"問い合わせ（英）","example":"She made an enquiry at the front desk.","example_ja":"彼女はフロントで問い合わせをした。","source":"B1: 仕事・社会"},
+{"word":"enrol","general":"登録する（英綴り）","example":"He decided to enrol in the class.","example_ja":"彼はそのクラスに登録することにした。","source":"B1: 学校・言葉"},
+{"word":"enroll","general":"登録する（米綴り）","example":"She wants to enroll her son in the school.","example_ja":"彼女は息子をその学校に入学させたいと思っている。","source":"B1: 学校・言葉"},
+{"word":"ensure","general":"確実にする","example":"Please ensure the door is locked.","example_ja":"ドアが施錠されていることを確認してください。","source":"B1: 仕事・社会"},
+{"word":"envious","general":"うらやましく思う","example":"She felt envious of her friend's new car.","example_ja":"彼女は友人の新しい車をうらやましく思った。","source":"B1: 家庭・くらし"},
+{"word":"errand","general":"用事、使い走り","example":"He ran a quick errand before lunch.","example_ja":"彼は昼食前にちょっとした用事を済ませた。","source":"B1: 家庭・くらし"},
+{"word":"ethnic","general":"民族の","example":"The festival celebrated the city's ethnic diversity.","example_ja":"その祭りは街の民族的多様性を祝うものだった。","source":"B1: 家庭・くらし"},
+{"word":"eve","general":"前夜","example":"They stayed up late on New Year's Eve.","example_ja":"彼らは大晦日の夜遅くまで起きていた。","source":"B1: 家庭・くらし"},
+{"word":"exclude","general":"除外する","example":"The list seemed to exclude several important names.","example_ja":"そのリストはいくつかの重要な名前を除外しているようだった。","source":"B1: 仕事・社会"},
+{"word":"exempt","general":"免除する","example":"Students are exempt from the fee.","example_ja":"学生はその料金を免除される。","source":"B1: 学校・言葉"},
+{"word":"exhale","general":"息を吐く","example":"She told him to exhale slowly.","example_ja":"彼女は彼にゆっくり息を吐くよう言った。","source":"B1: 家庭・くらし"},
+{"word":"expense","general":"出費","example":"He kept track of every expense.","example_ja":"彼はすべての出費を記録していた。","source":"B1: 仕事・社会"},
+{"word":"explode","general":"爆発する","example":"The old pipe finally exploded from the pressure.","example_ja":"その古い配管はついに圧力で爆発した。","source":"B1: 家庭・くらし"},
+{"word":"exploration","general":"探求、探検","example":"The book describes his exploration of the Amazon.","example_ja":"その本は彼のアマゾン探検について描いている。","source":"B1: 学校・言葉"},
+{"word":"extend","general":"延長する","example":"They agreed to extend the deadline.","example_ja":"彼らは締め切りを延長することに同意した。","source":"B1: 仕事・社会"},
+{"word":"extract","general":"引き出す、抽出する","example":"The dentist had to extract the tooth.","example_ja":"その歯科医は歯を抜かなければならなかった。","source":"B1: 家庭・くらし"},
+{"word":"extraction","general":"抽出","example":"The extraction of the tooth took only minutes.","example_ja":"その抜歯はわずか数分で終わった。","source":"B1: 仕事・社会"},
+{"word":"fad","general":"一時的流行","example":"The trend was just a passing fad.","example_ja":"その流行はただの一過性のものだった。","source":"B1: 家庭・くらし"},
+{"word":"fade","general":"薄れる、色あせる","example":"The color began to fade in the sun.","example_ja":"その色は日光で薄れ始めた。","source":"B1: 家庭・くらし"},
+{"word":"fame","general":"名声","example":"The singer found fame overnight.","example_ja":"その歌手は一夜にして名声を得た。","source":"B1: 仕事・社会"},
+{"word":"fare","general":"運賃","example":"The bus fare went up last month.","example_ja":"バスの運賃は先月値上がりした。","source":"B1: 仕事・社会"},
+{"word":"fatty","general":"脂っこい","example":"He avoided fatty foods after the diagnosis.","example_ja":"彼は診断後、脂っこい食べ物を避けた。","source":"B1: 料理・食"},
+{"word":"faulty","general":"欠陥のある","example":"They returned the faulty toaster.","example_ja":"彼らはその欠陥のあるトースターを返品した。","source":"B1: 家庭・くらし"},
+{"word":"feast","general":"ご馳走","example":"They prepared a huge feast for the holiday.","example_ja":"彼らは祝日のために大きなご馳走を用意した。","source":"B1: 料理・食"},
+{"word":"feline","general":"猫の、猫科の","example":"The vet specializes in feline health.","example_ja":"その獣医は猫の健康を専門にしている。","source":"B1: 動物・自然"},
+{"word":"fell","general":"眠りに落ちた（fall asleepなどの過去形）","example":"He fell asleep in front of the TV.","example_ja":"彼はテレビの前で眠りに落ちた。","source":"B1: 家庭・くらし"},
+{"word":"fibre","general":"繊維（英）","example":"She knitted with a soft wool fibre.","example_ja":"彼女は柔らかい羊毛の繊維で編み物をした。","source":"B1: 家庭・くらし"},
+{"word":"fingertips","general":"指先","example":"Her fingertips were cold from the wind.","example_ja":"彼女の指先は風で冷たくなっていた。","source":"B1: 家庭・くらし"},
+{"word":"fir","general":"モミの木","example":"They set up a fir tree for Christmas.","example_ja":"彼らはクリスマスのためにモミの木を飾った。","source":"B1: 動物・自然"},
+{"word":"flake","general":"薄片状に崩れる、フレーク","example":"The old paint began to flake off the wall.","example_ja":"古いペンキが壁から剥がれ始めた。","source":"B1: 家庭・くらし"},
+{"word":"flare","general":"（強い）輝き、フレア","example":"A sudden flare of light lit up the sky.","example_ja":"突然の強い輝きが空を照らした。","source":"B1: 家庭・くらし"},
+{"word":"flask","general":"水筒","example":"He filled his flask with hot coffee.","example_ja":"彼は水筒に温かいコーヒーを入れた。","source":"B1: 家庭・くらし"},
+{"word":"flatness","general":"平らさ","example":"The flatness of the land made farming easy.","example_ja":"その土地の平らさが農業をしやすくしていた。","source":"B1: 家庭・くらし"},
+{"word":"flatten","general":"平らにする","example":"She used a rolling pin to flatten the dough.","example_ja":"彼女は麺棒を使って生地を平らにした。","source":"B1: 料理・食"},
+{"word":"flawless","general":"完璧な、欠点のない","example":"Her performance was absolutely flawless.","example_ja":"彼女の演技はまさに完璧だった。","source":"B1: 仕事・社会"},
+{"word":"fled","general":"逃げた（fleeの過去形）","example":"The family fled the country during the war.","example_ja":"その家族は戦争中に国から逃げた。","source":"B1: 仕事・社会"},
+{"word":"flee","general":"逃げる","example":"Residents had to flee before the storm hit.","example_ja":"住民たちは嵐が来る前に逃げなければならなかった。","source":"B1: 仕事・社会"},
+{"word":"fleece","general":"羊毛","example":"The sheep's fleece was thick and soft.","example_ja":"その羊の毛は厚くて柔らかかった。","source":"B1: 動物・自然"},
+{"word":"flick","general":"すばやく動かす、はじく","example":"She flicked the switch to turn off the light.","example_ja":"彼女は明かりを消すためにスイッチをはじいた。","source":"B1: 家庭・くらし"},
+{"word":"flip","general":"ひっくり返す","example":"He flipped the pancake with ease.","example_ja":"彼はパンケーキを難なくひっくり返した。","source":"B1: 料理・食"},
+{"word":"flop","general":"ばたんと倒れる、大失敗する","example":"The movie was a total flop at the box office.","example_ja":"その映画は興行収入の面で完全に大失敗だった。","source":"B1: 仕事・社会"},
+{"word":"footage","general":"映像","example":"The camera captured footage of the storm.","example_ja":"そのカメラは嵐の映像を記録した。","source":"B1: 仕事・社会"},
+{"word":"foothills","general":"丘陵地帯","example":"They camped in the foothills of the mountain.","example_ja":"彼らはその山の丘陵地帯でキャンプした。","source":"B1: 動物・自然"},
+{"word":"footpath","general":"小道","example":"A narrow footpath led to the lake.","example_ja":"狭い小道が湖へと続いていた。","source":"B1: 動物・自然"},
+{"word":"fort","general":"砦","example":"The old fort overlooked the valley.","example_ja":"その古い砦は谷を見下ろしていた。","source":"B1: 動物・自然"},
+{"word":"fortieth","general":"40番目の","example":"They celebrated their fortieth wedding anniversary.","example_ja":"彼らは結婚40周年を祝った。","source":"B1: 家庭・くらし"},
+{"word":"fortnight","general":"2週間（英）","example":"She'll be away for a fortnight.","example_ja":"彼女は2週間、留守にする予定だ。","source":"B1: 家庭・くらし"},
+{"word":"fortress","general":"要塞","example":"The fortress was built centuries ago.","example_ja":"その要塞は何世紀も前に建てられた。","source":"B1: 動物・自然"},
+{"word":"fought","general":"戦った（fightの過去形）","example":"The two brothers fought over the toy.","example_ja":"その2人の兄弟はそのおもちゃを巡って争った。","source":"B1: 家庭・くらし"},
+{"word":"fume","general":"発煙、湯気を立てて怒る","example":"He sat there fuming after the argument.","example_ja":"彼はその口論の後、腹を立てながらそこに座っていた。","source":"B1: 家庭・くらし"},
+{"word":"furrow","general":"畝、深いしわ","example":"The tractor left a straight furrow in the field.","example_ja":"トラクターは畑にまっすぐな畝を残した。","source":"B1: 動物・自然"},
+{"word":"furthest","general":"最も遠い（farの最上級）","example":"That was the furthest he had ever traveled.","example_ja":"それは彼がこれまで旅した中で最も遠い場所だった。","source":"B1: 家庭・くらし"},
+{"word":"fury","general":"激しい怒り","example":"She could barely control her fury.","example_ja":"彼女は自分の激しい怒りをほとんど抑えられなかった。","source":"B1: 家庭・くらし"},
+{"word":"fuse","general":"ヒューズ、導火線","example":"The fuse blew during the storm.","example_ja":"その嵐の間にヒューズが飛んだ。","source":"B1: 家庭・くらし"},
+{"word":"garland","general":"花輪","example":"They hung a garland of flowers on the door.","example_ja":"彼らはドアに花の花輪を飾った。","source":"B1: 家庭・くらし"},
+{"word":"garment","general":"衣類","example":"Each garment was carefully folded.","example_ja":"各衣類は丁寧にたたまれていた。","source":"B1: 家庭・くらし"},
+{"word":"genie","general":"魔神（ランプの精）","example":"In the story, a genie grants three wishes.","example_ja":"その物語では、魔神が3つの願いを叶えてくれる。","source":"B1: 家庭・くらし"},
+{"word":"gent","general":"紳士（口語）","example":"He was quite a gent about it.","example_ja":"彼はその件について、なかなかの紳士的な態度だった。","source":"B1: 家庭・くらし"},
+{"word":"gentler","general":"より穏やかな（gentleの比較級）","example":"She used a gentler tone with the child.","example_ja":"彼女はその子供にはより穏やかな口調を使った。","source":"B1: 家庭・くらし"},
+{"word":"germ","general":"細菌","example":"Wash your hands to avoid spreading germs.","example_ja":"細菌を広げないよう、手を洗ってください。","source":"B1: 家庭・くらし"},
+{"word":"giddy","general":"めまいがする、浮かれた","example":"She felt giddy with excitement.","example_ja":"彼女は興奮でめまいがするような気分だった。","source":"B1: 家庭・くらし"},
+{"word":"gladly","general":"喜んで","example":"He gladly accepted the invitation.","example_ja":"彼は喜んでその招待を受け入れた。","source":"B1: 家庭・くらし"},
+{"word":"glide","general":"滑るように進む","example":"The swan seemed to glide across the water.","example_ja":"その白鳥は水面を滑るように進んでいるようだった。","source":"B1: 動物・自然"},
+{"word":"goddess","general":"女神","example":"The statue represented an ancient goddess.","example_ja":"その像は古代の女神を表していた。","source":"B1: 学校・言葉"},
+{"word":"grad","general":"卒業生（graduateの略、口語）","example":"He's a recent grad looking for a job.","example_ja":"彼は最近の卒業生で職を探している。","source":"B1: 学校・言葉"},
+{"word":"grader","general":"整地機、採点者","example":"The teacher was a tough grader.","example_ja":"その先生は厳しい採点者だった。","source":"B1: 仕事・社会"},
+{"word":"gran","general":"おばあちゃん（口語）","example":"Gran always keeps cookies in the jar.","example_ja":"おばあちゃんはいつも瓶にクッキーを入れている。","source":"B1: 家庭・くらし"},
+{"word":"grant","general":"与える、助成金","example":"The university offered her a research grant.","example_ja":"大学は彼女に研究助成金を提供した。","source":"B1: 仕事・社会"},
+{"word":"graph","general":"グラフ","example":"She drew a graph to show the results.","example_ja":"彼女は結果を示すためにグラフを描いた。","source":"B1: 学校・言葉"},
+{"word":"grasp","general":"しっかり握る、理解する","example":"He finally began to grasp the idea.","example_ja":"彼はついにそのアイデアを理解し始めた。","source":"B1: 学校・言葉"},
+{"word":"grate","general":"きしむ音、（神経に）障る","example":"His constant complaining began to grate on her.","example_ja":"彼の絶え間ない不満は彼女の神経に障り始めた。","source":"B1: 家庭・くらし"},
+{"word":"grater","general":"おろし金","example":"She used a grater to shred the cheese.","example_ja":"彼女はおろし金を使ってチーズをすりおろした。","source":"B1: 料理・食"},
+{"word":"gratitude","general":"感謝","example":"He expressed his gratitude with a simple gift.","example_ja":"彼はシンプルな贈り物で感謝を表した。","source":"B1: 家庭・くらし"},
+{"word":"gravel","general":"砂利","example":"The path was covered in gravel.","example_ja":"その小道は砂利で覆われていた。","source":"B1: 仕事・社会"},
+{"word":"graze","general":"草を食む、かすり傷を負う","example":"The cows grazed peacefully in the field.","example_ja":"牛たちは畑で静かに草を食んでいた。","source":"B1: 動物・自然"},
+{"word":"grease","general":"油、グリース","example":"The mechanic wiped grease from his hands.","example_ja":"整備士は手についた油をふき取った。","source":"B1: 家庭・くらし"},
+{"word":"greasy","general":"油でベタベタした","example":"The plate was still greasy after washing.","example_ja":"その皿は洗った後もまだ油でベタベタしていた。","source":"B1: 家庭・くらし"},
+{"word":"groom","general":"新郎、（馬などの）手入れをする","example":"The bride and groom smiled for the photo.","example_ja":"花嫁と新郎は写真のために微笑んだ。","source":"B1: 家庭・くらし"},
+{"word":"growl","general":"うなり声","example":"The dog let out a low growl.","example_ja":"その犬は低いうなり声をあげた。","source":"B1: 動物・自然"},
+{"word":"grumble","general":"ぶつぶつ文句を言う","example":"He tends to grumble about the weather.","example_ja":"彼は天気についてぶつぶつ文句を言いがちだ。","source":"B1: 家庭・くらし"},
+{"word":"grunt","general":"ブーブー鼻を鳴らす、うなる","example":"The pig gave a loud grunt.","example_ja":"その豚は大きくブーブーと鳴いた。","source":"B1: 動物・自然"},
+{"word":"guardian","general":"後見人、保護者","example":"Her aunt became her legal guardian.","example_ja":"彼女の叔母が彼女の法定後見人になった。","source":"B1: 家庭・くらし"},
+{"word":"guitarist","general":"ギタリスト","example":"He's been a guitarist for ten years.","example_ja":"彼は10年間ギタリストをしている。","source":"B1: 仕事・社会"},
+{"word":"gush","general":"ほとばしり、噴き出る","example":"Water began to gush from the broken pipe.","example_ja":"割れた配管から水が噴き出し始めた。","source":"B1: 家庭・くらし"},
+{"word":"gust","general":"突風","example":"A sudden gust of wind knocked over the sign.","example_ja":"突然の突風が看板を倒した。","source":"B1: 家庭・くらし"},
+{"word":"gut","general":"本能、根性、胃腸","example":"His gut told him something was wrong.","example_ja":"彼の勘は何かがおかしいと告げていた。","source":"B1: 家庭・くらし"},
+{"word":"guts","general":"度胸、勇気","example":"It took real guts to speak up.","example_ja":"声を上げるには本当の度胸が必要だった。","source":"B1: 家庭・くらし"},
+{"word":"hack","general":"（システムに）不正侵入する","example":"Someone tried to hack the company's system.","example_ja":"誰かがその会社のシステムに不正侵入しようとした。","source":"B1: 学校・言葉"},
+{"word":"hail","general":"雹（が降る）","example":"It began to hail during the picnic.","example_ja":"ピクニックの最中に雹が降り始めた。","source":"B1: 学校・言葉"},
+{"word":"halfway","general":"中間地点","example":"They stopped halfway through the hike.","example_ja":"彼らはハイキングの中間地点で立ち止まった。","source":"B1: 学校・言葉"},
+{"word":"hallway","general":"廊下","example":"The students lined up in the hallway.","example_ja":"生徒たちは廊下に並んだ。","source":"B1: 学校・言葉"},
+{"word":"handful","general":"一握り、少数","example":"Only a handful of people showed up.","example_ja":"わずか一握りの人しか現れなかった。","source":"B1: 学校・言葉"},
+{"word":"handlebar","general":"（自転車などの）ハンドル","example":"He gripped the handlebar tightly.","example_ja":"彼はハンドルをしっかり握った。","source":"B1: 学校・言葉"},
+{"word":"handout","general":"配布資料","example":"The teacher gave out a handout before class.","example_ja":"先生は授業の前に配布資料を配った。","source":"B1: 学校・言葉"},
+{"word":"handwriting","general":"手書き文字、筆跡","example":"His handwriting is hard to read.","example_ja":"彼の筆跡は読みにくい。","source":"B1: 学校・言葉"},
+{"word":"hare","general":"野ウサギ","example":"A hare darted across the field.","example_ja":"野ウサギが野原を駆け抜けた。","source":"B1: 動物・自然"},
+{"word":"harness","general":"馬具、安全ハーネス","example":"The climber checked his harness before the climb.","example_ja":"その登山者は登る前にハーネスを確認した。","source":"B1: 動物・自然"},
+{"word":"harsh","general":"厳しい、耳障りな","example":"The weather turned harsh overnight.","example_ja":"天候は一晩で厳しいものになった。","source":"B1: 動物・自然"},
+{"word":"haul","general":"（重い物を）運ぶ","example":"They had to haul the furniture upstairs.","example_ja":"彼らは家具を2階まで運ばなければならなかった。","source":"B1: 動物・自然"},
+{"word":"heal","general":"治す、治る","example":"The wound will heal in a few weeks.","example_ja":"その傷は数週間で治るだろう。","source":"B1: 仕事・社会"},
+{"word":"healer","general":"治療師","example":"The village healer used herbs and prayer.","example_ja":"村の治療師はハーブと祈りを用いていた。","source":"B1: 仕事・社会"},
+{"word":"healthcare","general":"医療","example":"Access to healthcare varies by country.","example_ja":"医療へのアクセスは国によって異なる。","source":"B1: 仕事・社会"},
+{"word":"hearer","general":"聞き手","example":"A good speaker always considers the hearer.","example_ja":"良い話し手は常に聞き手のことを考える。","source":"B1: 家庭・くらし"},
+{"word":"heartbeat","general":"鼓動","example":"Her heartbeat quickened with excitement.","example_ja":"彼女の鼓動は興奮で速まった。","source":"B1: 家庭・くらし"},
+{"word":"hearth","general":"炉、暖炉","example":"They sat by the warm hearth.","example_ja":"彼らは暖かい暖炉のそばに座った。","source":"B1: 家庭・くらし"},
+{"word":"heath","general":"荒野","example":"Wild flowers bloomed across the heath.","example_ja":"荒野一面に野生の花が咲いていた。","source":"B1: 動物・自然"},
+{"word":"heather","general":"ヘザー（低木の花）","example":"Purple heather covered the hillside.","example_ja":"紫色のヘザーが丘の斜面を覆っていた。","source":"B1: 動物・自然"},
+{"word":"heave","general":"力を込めて動かす","example":"They had to heave the boat onto the shore.","example_ja":"彼らはそのボートを力を込めて岸に引き上げなければならなかった。","source":"B1: 動物・自然"},
+{"word":"heaviness","general":"重さ","example":"He felt the heaviness of his backpack.","example_ja":"彼はリュックの重さを感じた。","source":"B1: 仕事・社会"},
+{"word":"heck","general":"なんてこった（口語）","example":"What the heck happened here?","example_ja":"ここで一体何が起きたんだ？","source":"B1: 仕事・社会"},
+{"word":"hectare","general":"ヘクタール","example":"The farm covers about ten hectares.","example_ja":"その農場は約10ヘクタールに及ぶ。","source":"B1: 仕事・社会"},
+{"word":"hectic","general":"慌ただしい","example":"It's been a hectic week at work.","example_ja":"職場では慌ただしい一週間だった。","source":"B1: 仕事・社会"},
+{"word":"hedgehog","general":"ハリネズミ","example":"A hedgehog curled up in the leaves.","example_ja":"ハリネズミが落ち葉の中で丸くなった。","source":"B1: 動物・自然"},
+{"word":"heed","general":"（忠告などを）聞き入れる","example":"He failed to heed the warning.","example_ja":"彼はその警告を聞き入れなかった。","source":"B1: 動物・自然"},
+{"word":"hefty","general":"ずっしり重い","example":"He carried a hefty box up the stairs.","example_ja":"彼はずっしり重い箱を階段の上まで運んだ。","source":"B1: 仕事・社会"},
+{"word":"heller","general":"ヘラー（旧貨幣単位）","example":"The coin was worth just a few heller.","example_ja":"その硬貨はわずか数ヘラーの価値しかなかった。","source":"B1: 仕事・社会"},
+{"word":"helm","general":"舵、（at the helm ofで）指揮を執って","example":"She took the helm of the struggling company.","example_ja":"彼女はその苦戦する会社の指揮を執った。","source":"B1: 仕事・社会"},
+{"word":"hem","general":"（衣服の）裾","example":"The tailor let out the hem of the skirt.","example_ja":"仕立て屋はそのスカートの裾を出した。","source":"B1: 家庭・くらし"},
+{"word":"hemp","general":"麻","example":"The rope was made of strong hemp.","example_ja":"そのロープは丈夫な麻でできていた。","source":"B1: 家庭・くらし"},
+{"word":"hence","general":"それゆえに","example":"The road was closed, hence the delay.","example_ja":"道路が閉鎖されていたため、遅れが生じた。","source":"B1: 家庭・くらし"},
+{"word":"herd","general":"群れ","example":"A herd of cattle crossed the road.","example_ja":"牛の群れが道路を横切った。","source":"B1: 動物・自然"},
+{"word":"herder","general":"牧夫","example":"The herder led the sheep to fresh pasture.","example_ja":"牧夫は羊たちを新しい牧草地へ導いた。","source":"B1: 動物・自然"},
+{"word":"heron","general":"サギ","example":"A heron stood still in the shallow water.","example_ja":"サギが浅瀬でじっと立っていた。","source":"B1: 動物・自然"},
+{"word":"hex","general":"呪い","example":"The old woman claimed to have put a hex on the house.","example_ja":"その老女はその家に呪いをかけたと主張した。","source":"B1: 動物・自然"},
+{"word":"hilly","general":"丘の多い","example":"The trail was steep and hilly.","example_ja":"その小道は急で丘の多いものだった。","source":"B1: 動物・自然"},
+{"word":"hitch","general":"（計画の）支障、トラブル","example":"There was a small hitch in the plan.","example_ja":"その計画には小さな支障があった。","source":"B1: 家庭・くらし"},
+{"word":"hive","general":"（ミツバチの）巣箱","example":"Bees buzzed around the hive.","example_ja":"ハチたちが巣箱の周りをブンブン飛んでいた。","source":"B1: 動物・自然"},
+{"word":"hog","general":"豚","example":"The hog rolled happily in the mud.","example_ja":"その豚は泥の中で楽しそうに転がっていた。","source":"B1: 動物・自然"},
+{"word":"hood","general":"フード","example":"She pulled up her hood in the rain.","example_ja":"彼女は雨の中でフードをかぶった。","source":"B1: 家庭・くらし"},
+{"word":"hoof","general":"ひづめ","example":"The horse's hoof was slightly cracked.","example_ja":"その馬のひづめは少しひび割れていた。","source":"B1: 動物・自然"},
+{"word":"hoop","general":"輪っか","example":"The dog jumped through the hoop.","example_ja":"その犬は輪っかをくぐって跳んだ。","source":"B1: 家庭・くらし"},
+{"word":"hose","general":"ホース","example":"He watered the plants with a hose.","example_ja":"彼はホースで植物に水をやった。","source":"B1: 家庭・くらし"},
+{"word":"humbly","general":"謙虚に","example":"He humbly accepted the award.","example_ja":"彼は謙虚にその賞を受け取った。","source":"B1: 家庭・くらし"},
+{"word":"hump","general":"隆起、こぶ","example":"The road had a small hump near the bridge.","example_ja":"その道路には橋の近くに小さな隆起があった。","source":"B1: 家庭・くらし"},
+{"word":"hunch","general":"予感","example":"She had a hunch something was wrong.","example_ja":"彼女は何かがおかしいという予感がした。","source":"B1: 家庭・くらし"},
+{"word":"hundredth","general":"100番目の","example":"This was his hundredth try.","example_ja":"これは彼の100回目の挑戦だった。","source":"B1: 学校・言葉"},
+{"word":"hurdle","general":"ハードル","example":"He cleared the last hurdle easily.","example_ja":"彼は最後のハードルを簡単に飛び越えた。","source":"B1: 学校・言葉"},
+{"word":"hurriedly","general":"慌ただしく","example":"She hurriedly packed her bag.","example_ja":"彼女は慌ただしくかばんに荷物を詰めた。","source":"B1: 家庭・くらし"},
+{"word":"hush","general":"静寂","example":"A hush fell over the room.","example_ja":"部屋に静寂が訪れた。","source":"B1: 家庭・くらし"},
+{"word":"husky","general":"ハスキー犬、しゃがれた","example":"The husky pulled the sled easily.","example_ja":"そのハスキー犬はそりを楽に引いた。","source":"B1: 動物・自然"},
+{"word":"hygiene","general":"衛生","example":"Good hygiene helps prevent illness.","example_ja":"良い衛生習慣は病気の予防に役立つ。","source":"B1: 家庭・くらし"},
+{"word":"hymn","general":"賛美歌","example":"The choir sang a familiar hymn.","example_ja":"聖歌隊はなじみのある賛美歌を歌った。","source":"B1: 家庭・くらし"},
+{"word":"hyphen","general":"ハイフン","example":"The word is spelled with a hyphen.","example_ja":"その単語はハイフンをつけて綴られる。","source":"B1: 学校・言葉"},
+{"word":"imaginary","general":"架空の","example":"The child had an imaginary friend.","example_ja":"その子供には架空の友達がいた。","source":"B1: 学校・言葉"},
+{"word":"immortal","general":"不死の","example":"In the myth, the gods are immortal.","example_ja":"その神話では、神々は不死とされている。","source":"B1: 学校・言葉"},
+{"word":"immune","general":"免疫のある","example":"She's immune to that particular virus.","example_ja":"彼女はその特定のウイルスに免疫がある。","source":"B1: 家庭・くらし"},
+{"word":"immunized","general":"予防接種を受けた","example":"All the children were immunized before school started.","example_ja":"学校が始まる前に、すべての子供が予防接種を受けた。","source":"B1: 家庭・くらし"},
+{"word":"importation","general":"輸入","example":"The importation of certain goods is restricted.","example_ja":"特定の商品の輸入は制限されている。","source":"B1: 仕事・社会"},
+{"word":"imprint","general":"刻印、跡","example":"The stamp left a clear imprint on the paper.","example_ja":"そのスタンプは紙にはっきりとした刻印を残した。","source":"B1: 仕事・社会"},
+{"word":"impure","general":"不純な","example":"The water looked impure and cloudy.","example_ja":"その水は不純で濁って見えた。","source":"B1: 家庭・くらし"},
+{"word":"inactive","general":"活動を停止した","example":"The old volcano has been inactive for centuries.","example_ja":"その古い火山は何世紀も活動を停止している。","source":"B1: 仕事・社会"},
+{"word":"incense","general":"お香","example":"The temple was filled with the smell of incense.","example_ja":"その寺はお香の匂いで満たされていた。","source":"B1: 家庭・くらし"},
+{"word":"incomplete","general":"未完成の","example":"The report was still incomplete.","example_ja":"その報告書はまだ未完成だった。","source":"B1: 仕事・社会"},
+{"word":"independence","general":"独立","example":"The country celebrated its independence.","example_ja":"その国は独立を祝った。","source":"B1: 仕事・社会"},
+{"word":"indies","general":"（西インド諸島などの）諸島","example":"They sailed through the indies for weeks.","example_ja":"彼らは何週間もその諸島を通って航海した。","source":"B1: 仕事・社会"},
+{"word":"indigestion","general":"消化不良","example":"Spicy food often gives him indigestion.","example_ja":"辛い食べ物はよく彼に消化不良を引き起こす。","source":"B1: 料理・食"},
+{"word":"indirect","general":"間接的な","example":"He made an indirect comment about the problem.","example_ja":"彼はその問題について間接的な発言をした。","source":"B1: 仕事・社会"},
+{"word":"inefficient","general":"非効率な","example":"The old system was slow and inefficient.","example_ja":"その古いシステムは遅くて非効率だった。","source":"B1: 仕事・社会"},
+{"word":"inert","general":"動かない、不活性の","example":"The chemical remained inert at room temperature.","example_ja":"その化学物質は室温では不活性のままだった。","source":"B1: 家庭・くらし"},
+{"word":"inertia","general":"慣性、惰性","example":"It took effort to overcome his own inertia.","example_ja":"彼自身の惰性を克服するには努力が必要だった。","source":"B1: 家庭・くらし"},
+{"word":"infect","general":"感染させる","example":"The wound could infect the whole hand.","example_ja":"その傷は手全体に感染する可能性があった。","source":"B1: 仕事・社会"},
+{"word":"infection","general":"感染","example":"The doctor treated the infection with antibiotics.","example_ja":"医師はその感染を抗生物質で治療した。","source":"B1: 仕事・社会"},
+{"word":"infer","general":"推測する","example":"It was hard to infer his mood from his face.","example_ja":"彼の表情から機嫌を推測するのは難しかった。","source":"B1: 家庭・くらし"},
+{"word":"inflatable","general":"空気で膨らむ","example":"The kids played on an inflatable pool toy.","example_ja":"子供たちは空気で膨らむプール用おもちゃで遊んだ。","source":"B1: 家庭・くらし"},
+{"word":"inflate","general":"膨らませる","example":"He began to inflate the tires.","example_ja":"彼はタイヤに空気を入れ始めた。","source":"B1: 家庭・くらし"},
+{"word":"inflow","general":"流入","example":"A steady inflow of tourists boosted the local economy.","example_ja":"観光客の絶え間ない流入が地元経済を押し上げた。","source":"B1: 料理・食"},
+{"word":"ingredient","general":"材料","example":"Flour is the main ingredient in bread.","example_ja":"小麦粉はパンの主な材料だ。","source":"B1: 料理・食"},
+{"word":"inhale","general":"息を吸う","example":"She told him to inhale deeply.","example_ja":"彼女は彼に深く息を吸うよう言った。","source":"B1: 家庭・くらし"},
+{"word":"inland","general":"内陸の","example":"The inland region has a drier climate.","example_ja":"内陸部はより乾燥した気候だ。","source":"B1: 仕事・社会"},
+{"word":"insecure","general":"不安な、不安定な","example":"He felt insecure about his new job.","example_ja":"彼は新しい仕事について不安を感じていた。","source":"B1: 家庭・くらし"},
+{"word":"insert","general":"差し込む","example":"Please insert your card into the machine.","example_ja":"機械にカードを挿入してください。","source":"B1: 仕事・社会"},
+{"word":"inset","general":"挿入図、はめ込み","example":"The map had a small inset showing the city center.","example_ja":"その地図には中心街を示す小さな挿入図があった。","source":"B1: 学校・言葉"},
+{"word":"insure","general":"保証する、保険をかける","example":"They decided to insure the new car.","example_ja":"彼らはその新車に保険をかけることにした。","source":"B1: 家庭・くらし"},
+{"word":"intention","general":"意図","example":"He had no intention of leaving early.","example_ja":"彼には早く帰るつもりはなかった。","source":"B1: 仕事・社会"},
+{"word":"interact","general":"交流する","example":"Children learn by interacting with each other.","example_ja":"子供たちは互いに交流することで学ぶ。","source":"B1: 仕事・社会"},
+{"word":"interaction","general":"やり取り","example":"Their interaction seemed a little awkward.","example_ja":"彼らのやり取りは少しぎこちなく見えた。","source":"B1: 仕事・社会"},
+{"word":"interface","general":"（操作）画面","example":"The new app has a simple interface.","example_ja":"その新しいアプリはシンプルな操作画面を持っている。","source":"B1: 仕事・社会"},
+{"word":"interfere","general":"妨害する","example":"Static kept interfering with the signal.","example_ja":"雑音が信号を妨害し続けた。","source":"B1: 仕事・社会"},
+{"word":"interlock","general":"互いにかみ合わせる","example":"The two pieces interlock perfectly.","example_ja":"その2つのパーツは完璧にかみ合う。","source":"B1: 仕事・社会"},
+{"word":"intolerant","general":"不寛容な","example":"He seemed intolerant of other opinions.","example_ja":"彼は他の意見に対して不寛容なようだった。","source":"B1: 家庭・くらし"},
+{"word":"intoxicated","general":"酔った","example":"He was clearly intoxicated by the end of the party.","example_ja":"パーティーの終わりまでに彼は明らかに酔っていた。","source":"B1: 家庭・くらし"},
+{"word":"intuition","general":"直感","example":"She trusted her intuition and turned back.","example_ja":"彼女は自分の直感を信じて引き返した。","source":"B1: 家庭・くらし"},
+{"word":"invent","general":"発明する","example":"She wanted to invent a simpler solution.","example_ja":"彼女はもっと簡単な解決策を考え出したかった。","source":"B1: 家庭・くらし"},
+{"word":"islander","general":"島民","example":"The islander welcomed us with a warm smile.","example_ja":"その島民は温かい笑顔で私たちを迎えてくれた。","source":"B1: 動物・自然"},
+{"word":"itinerary","general":"旅程","example":"The guide explained the week's itinerary.","example_ja":"ガイドはその週の旅程を説明した。","source":"B1: 仕事・社会"},
+{"word":"jar","general":"（ガラスの）瓶","example":"She sealed the jam in a glass jar.","example_ja":"彼女はジャムをガラス瓶に密閉した。","source":"B1: 家庭・くらし"},
+{"word":"jersey","general":"ジャージ、セーター","example":"He wore his favorite team's jersey.","example_ja":"彼はお気に入りのチームのジャージを着ていた。","source":"B1: 家庭・くらし"},
+{"word":"jumble","general":"ごちゃまぜ","example":"The papers were left in a jumble on the desk.","example_ja":"書類は机の上にごちゃまぜのまま置かれていた。","source":"B1: 家庭・くらし"},
+{"word":"kale","general":"ケール","example":"She added kale to the smoothie.","example_ja":"彼女はスムージーにケールを加えた。","source":"B1: 料理・食"},
+{"word":"keener","general":"より熱心な（keenの比較級）","example":"He seemed keener than the others to help.","example_ja":"彼は他の人たちよりも手伝うことに熱心なようだった。","source":"B1: 仕事・社会"},
+{"word":"kelvin","general":"ケルビン（温度単位）","example":"The temperature was measured in kelvin.","example_ja":"その気温はケルビンで測定された。","source":"B1: 学校・言葉"},
+{"word":"khaki","general":"カーキ色の","example":"He wore khaki pants to the picnic.","example_ja":"彼はピクニックにカーキ色のズボンをはいて行った。","source":"B1: 家庭・くらし"},
+{"word":"kidney","general":"腎臓","example":"The kidney filters waste from the blood.","example_ja":"腎臓は血液から老廃物をろ過する。","source":"B1: 仕事・社会"},
+{"word":"knelt","general":"ひざまずいた（kneelの過去形）","example":"He knelt down to tie his shoe.","example_ja":"彼は靴ひもを結ぶためにひざまずいた。","source":"B1: 仕事・社会"},
+{"word":"labourer","general":"労働者（英）","example":"The tired labourer went home after a long shift.","example_ja":"疲れた労働者は長い勤務の後に家に帰った。","source":"B1: 仕事・社会"},
+{"word":"ladle","general":"お玉","example":"She used a ladle to serve the soup.","example_ja":"彼女はお玉を使ってスープをよそった。","source":"B1: 料理・食"},
+{"word":"lain","general":"横たわっていた（lieの過去分詞）","example":"He had lain awake most of the night.","example_ja":"彼は夜のほとんどの間、眠れずに横になっていた。","source":"B1: 仕事・社会"},
+{"word":"lame","general":"お粗末な、説得力のない","example":"That was a pretty lame excuse.","example_ja":"それはかなりお粗末な言い訳だった。","source":"B1: 仕事・社会"},
+{"word":"leavers","general":"退職者、卒業生","example":"The leavers said goodbye on the last day.","example_ja":"退職者たちは最終日にお別れの挨拶をした。","source":"B1: 仕事・社会"},
+{"word":"ledger","general":"帳簿、台帳","example":"The accountant checked the old ledger.","example_ja":"会計士は古い帳簿を確認した。","source":"B1: 仕事・社会"},
+{"word":"leech","general":"ヒル","example":"A leech attached itself to his leg.","example_ja":"ヒルが彼の脚に吸い付いた。","source":"B1: 動物・自然"},
+{"word":"legging","general":"レギンス","example":"She wore black leggings to the gym.","example_ja":"彼女はジムに黒いレギンスをはいて行った。","source":"B1: 家庭・くらし"},
+{"word":"lentils","general":"レンズ豆","example":"The soup was made with red lentils.","example_ja":"そのスープは赤レンズ豆で作られていた。","source":"B1: 料理・食"},
+{"word":"leopard","general":"ヒョウ","example":"The leopard moved silently through the grass.","example_ja":"そのヒョウは草むらを静かに歩いた。","source":"B1: 動物・自然"},
+{"word":"letterhead","general":"（会社などの）便箋の印刷見本","example":"The company's letterhead had a blue logo.","example_ja":"その会社の便箋の印刷見本には青いロゴが入っていた。","source":"B1: 仕事・社会"},
+{"word":"lightness","general":"軽さ","example":"She admired the lightness of the fabric.","example_ja":"彼女はその生地の軽さに感心した。","source":"B1: 家庭・くらし"},
+{"word":"lime","general":"ライム","example":"He squeezed lime into his drink.","example_ja":"彼は飲み物にライムを絞った。","source":"B1: 料理・食"},
+{"word":"lister","general":"記録係","example":"The lister noted every item sold.","example_ja":"記録係は売れたすべての品目を書き留めた。","source":"B1: 仕事・社会"},
+{"word":"lite","general":"簡易版の（lightの略式綴り）","example":"They released a lite version of the app.","example_ja":"彼らはそのアプリの簡易版をリリースした。","source":"B1: 家庭・くらし"},
+{"word":"litre","general":"リットル（英綴り）","example":"The recipe called for one litre of milk.","example_ja":"そのレシピには牛乳1リットルが必要だった。","source":"B1: 料理・食"},
+{"word":"lizard","general":"トカゲ","example":"A lizard sunbathed on the warm rock.","example_ja":"トカゲが暖かい岩の上で日向ぼっこをしていた。","source":"B1: 動物・自然"},
+{"word":"loader","general":"積み込み作業員（機）","example":"The loader stacked the boxes onto the truck.","example_ja":"その積み込み機は箱をトラックに積み上げた。","source":"B1: 仕事・社会"},
+{"word":"loaf","general":"（パンの）1斤","example":"She bought a loaf of fresh bread.","example_ja":"彼女は焼きたてのパン1斤を買った。","source":"B1: 料理・食"},
+{"word":"loaves","general":"loafの複数形","example":"Several loaves were delivered that morning.","example_ja":"その朝、何本かのパンが配達された。","source":"B1: 料理・食"},
+{"word":"lorry","general":"トラック（英）","example":"The lorry delivered goods early in the morning.","example_ja":"そのトラックは早朝に商品を配達した。","source":"B1: 仕事・社会"},
+{"word":"lousy","general":"ひどい（口語）","example":"It was a lousy way to end the trip.","example_ja":"それは旅の締めくくりとしてはひどいものだった。","source":"B1: 動物・自然"},
+{"word":"lovable","general":"愛らしい","example":"The lovable puppy won everyone's heart.","example_ja":"その愛らしい子犬は皆の心をつかんだ。","source":"B1: 動物・自然"},
+{"word":"lump","general":"かたまり","example":"There was a lump of sugar in his tea.","example_ja":"彼の紅茶には角砂糖のかたまりが入っていた。","source":"B1: 動物・自然"},
+{"word":"lye","general":"苛性ソーダ、灰汁","example":"A drop of lye splashed near the sink.","example_ja":"苛性ソーダのしずくが流し台の近くに飛び散った。","source":"B1: 仕事・社会"},
+{"word":"macro","general":"マクロの","example":"He took a macro photo of the flower.","example_ja":"彼はその花のマクロ写真を撮った。","source":"B1: 仕事・社会"},
+{"word":"maggie","general":"（固有名詞）マギー","example":"Maggie waved to us from across the street.","example_ja":"マギーは通りの向こうから私たちに手を振った。","source":"B1: 家庭・くらし"},
+{"word":"magnetic","general":"磁石の、磁気の","example":"The toy has small magnetic pieces.","example_ja":"そのおもちゃには小さな磁石のパーツがある。","source":"B1: 仕事・社会"},
+{"word":"magpie","general":"カササギ","example":"A magpie perched on the fence.","example_ja":"カササギがフェンスにとまった。","source":"B1: 動物・自然"},
+{"word":"maize","general":"トウモロコシ（英）","example":"The field was full of tall maize.","example_ja":"その畑は背の高いトウモロコシでいっぱいだった。","source":"B1: 動物・自然"},
+{"word":"mandate","general":"義務化、命令","example":"The new mandate required masks indoors.","example_ja":"その新しい義務化により屋内でのマスク着用が求められた。","source":"B1: 動物・自然"},
+{"word":"mangle","general":"押しつぶす、ローラーでしぼる／めちゃくちゃにする","example":"The washing machine's roller nearly mangled the delicate blouse.","example_ja":"洗濯機のローラーが、その繊細なブラウスをほとんど押しつぶしてしまうところだった。","source":"B1: 家庭・くらし"},
+{"word":"mare","general":"雌馬","example":"The mare stood quietly beside her baby in the morning sun.","example_ja":"その雌馬は朝日の中で自分の赤ちゃんのそばに静かに立っていた。","source":"B1: 動物・自然"},
+{"word":"marsh","general":"湿地","example":"Herons often wade through the marsh at dawn.","example_ja":"夜明けにはサギがよく湿地を歩き回っている。","source":"B1: 動物・自然"},
+{"word":"mash","general":"すりつぶす、マッシュにする","example":"She mashed the bananas before adding them to the batter.","example_ja":"彼女は生地に加える前にバナナをつぶした。","source":"B1: 料理・食"},
+{"word":"medic","general":"衛生兵、救急隊員","example":"A medic rushed to treat the injured hiker.","example_ja":"衛生兵が負傷したハイカーを治療するため駆けつけた。","source":"B1: 仕事・社会"},
+{"word":"medicated","general":"薬用の、投薬された","example":"He applied a medicated cream to the rash.","example_ja":"彼は発疹に薬用クリームを塗った。","source":"B1: 家庭・くらし"},
+{"word":"mentor","general":"指導者、師","example":"Her mentor encouraged her to apply for the scholarship.","example_ja":"彼女の指導者は奨学金に応募するよう励ましてくれた。","source":"B1: 仕事・社会"},
+{"word":"merrily","general":"陽気に、楽しげに","example":"The children sang merrily as they walked home from school.","example_ja":"子供たちは学校から歩いて帰る間、陽気に歌っていた。","source":"B1: 家庭・くらし"},
+{"word":"meteor","general":"流れ星","example":"They stayed up late hoping to see a meteor streak across the sky.","example_ja":"彼らは空を流れる流星を見ようと夜更かしした。","source":"B1: 動物・自然"},
+{"word":"meteorite","general":"隕石","example":"A small meteorite was found buried in the field.","example_ja":"小さな隕石が畑に埋まっているのが見つかった。","source":"B1: 動物・自然"},
+{"word":"metric","general":"メートル法の","example":"Most countries use the metric system for measurements.","example_ja":"ほとんどの国は計測にメートル法を用いている。","source":"B1: 学校・言葉"},
+{"word":"midland","general":"内陸部の","example":"The midland region has a much drier climate than the coast.","example_ja":"内陸部は海岸に比べてずっと乾燥した気候だ。","source":"B1: 動物・自然"},
+{"word":"midway","general":"中間地点で","example":"They stopped for lunch midway through the hike.","example_ja":"彼らはハイキングの中間地点で昼食のために立ち止まった。","source":"B1: 家庭・くらし"},
+{"word":"milder","general":"より穏やかな","example":"This winter has been noticeably milder than last year's.","example_ja":"今年の冬は去年よりも明らかに穏やかだった。","source":"B1: 動物・自然"},
+{"word":"millet","general":"キビ、粟","example":"Millet is a staple grain in many parts of Africa.","example_ja":"キビはアフリカの多くの地域で主食となる穀物だ。","source":"B1: 料理・食"},
+{"word":"mimic","general":"まねる","example":"The parrot could mimic almost any sound it heard.","example_ja":"そのオウムは聞いた音をほとんど何でもまねすることができた。","source":"B1: 動物・自然"},
+{"word":"minced","general":"みじん切りにした","example":"Add the minced garlic once the oil is hot.","example_ja":"油が熱くなったら、みじん切りのニンニクを加えてください。","source":"B1: 料理・食"},
+{"word":"mitt","general":"ミット、（野球の）グローブ","example":"He couldn't find his baseball mitt anywhere in the garage.","example_ja":"彼はガレージのどこにも野球用のミットを見つけられなかった。","source":"B1: 家庭・くらし"},
+{"word":"monk","general":"修道士、僧","example":"A quiet monk tended the monastery garden every morning.","example_ja":"物静かな僧が毎朝、修道院の庭の手入れをしていた。","source":"B1: 仕事・社会"},
+{"word":"moose","general":"ヘラジカ","example":"A moose wandered onto the highway just after dawn.","example_ja":"夜明け直後、一頭のヘラジカが幹線道路に迷い込んできた。","source":"B1: 動物・自然"},
+{"word":"mosses","general":"コケ類","example":"Thick mosses covered the shaded side of the rocks.","example_ja":"岩の日陰側は厚いコケに覆われていた。","source":"B1: 動物・自然"},
+{"word":"mossy","general":"コケむした","example":"They found an old mossy well behind the cottage.","example_ja":"彼らはコテージの裏でコケむした古い井戸を見つけた。","source":"B1: 動物・自然"},
+{"word":"mucus","general":"粘液","example":"The doctor said the excess mucus was just a symptom of the cold.","example_ja":"医師は、余分な粘液は単なる風邪の症状だと言った。","source":"B1: 家庭・くらし"},
+{"word":"muddle","general":"混乱、ごちゃ混ぜにする","example":"The instructions were such a muddle that nobody could follow them.","example_ja":"その説明書はあまりにも支離滅裂で、誰も理解できなかった。","source":"B1: 仕事・社会"},
+{"word":"mulberry","general":"桑の実","example":"Purple mulberry stains covered the children's hands.","example_ja":"子供たちの手は紫色の桑の実の染みだらけだった。","source":"B1: 料理・食"},
+{"word":"mule","general":"ラバ","example":"A stubborn mule refused to cross the narrow bridge.","example_ja":"頑固なラバが狭い橋を渡ろうとしなかった。","source":"B1: 動物・自然"},
+{"word":"mumps","general":"おたふく風邪","example":"He missed a week of school after catching mumps.","example_ja":"彼はおたふく風邪にかかって学校を1週間休んだ。","source":"B1: 家庭・くらし"},
+{"word":"munch","general":"むしゃむしゃ食べる","example":"The rabbit sat quietly, munching on a carrot.","example_ja":"そのウサギは静かに座って、ニンジンをむしゃむしゃ食べていた。","source":"B1: 動物・自然"},
+{"word":"mural","general":"壁画","example":"A colorful mural now covers the entire side of the building.","example_ja":"今ではカラフルな壁画がその建物の側面全体を覆っている。","source":"B1: 仕事・社会"},
+{"word":"muscular","general":"筋肉質の","example":"Years of rowing gave him a muscular build.","example_ja":"何年もボートを漕いだ結果、彼はがっしりした筋肉質の体つきになった。","source":"B1: 家庭・くらし"},
+{"word":"muse","general":"芸術的刺激を与える人・もの","example":"The old lighthouse became a muse for many local painters.","example_ja":"その古い灯台は地元の多くの画家たちの創作のインスピレーション源となった。","source":"B1: 仕事・社会"},
+{"word":"muslin","general":"モスリン（薄手の綿織物）","example":"The dress was made of soft, lightweight muslin.","example_ja":"そのドレスは柔らかく軽いモスリン地で作られていた。","source":"B1: 家庭・くらし"},
+{"word":"mutual","general":"相互の","example":"They reached a decision based on mutual respect.","example_ja":"彼らは相互の敬意に基づいて結論に達した。","source":"B1: 仕事・社会"},
+{"word":"muzzle","general":"（動物の）口輪、鼻づら","example":"The vet gently placed a muzzle on the nervous dog.","example_ja":"獣医は神経質になっている犬にそっと口輪をつけた。","source":"B1: 動物・自然"},
+{"word":"navy","general":"海軍、濃紺","example":"He served in the navy for over twenty years.","example_ja":"彼は20年以上海軍に勤めた。","source":"B1: 仕事・社会"},
+{"word":"nazis","general":"ナチス（歴史的名称）","example":"The museum exhibit explains how the Nazis rose to power in the 1930s.","example_ja":"その博物館の展示は、1930年代にナチスがどのように権力を握ったかを説明している。","source":"B1: 学校・言葉"},
+{"word":"needlework","general":"針仕事、刺繍","example":"Her grandmother taught her needlework as a child.","example_ja":"彼女は子供の頃、祖母から針仕事を教わった。","source":"B1: 家庭・くらし"},
+{"word":"needy","general":"困窮した","example":"The charity provides winter coats to needy families.","example_ja":"その慈善団体は困窮している家庭に冬用コートを提供している。","source":"B1: 仕事・社会"},
+{"word":"nestled","general":"心地よく収まった","example":"The village was nestled quietly between two mountains.","example_ja":"その村は2つの山の間に静かに抱かれるように位置していた。","source":"B1: 動物・自然"},
+{"word":"newborn","general":"新生児の","example":"The newborn kittens couldn't open their eyes yet.","example_ja":"その生まれたばかりの子猫たちはまだ目を開けられなかった。","source":"B1: 家庭・くらし"},
+{"word":"ninth","general":"9番目の","example":"This is the ninth time he's called today.","example_ja":"彼が今日電話してきたのはこれで9回目だ。","source":"B1: 学校・言葉"},
+{"word":"node","general":"節、結節点","example":"Each node on the network represents a separate computer.","example_ja":"ネットワーク上の各ノードは、それぞれ独立したコンピューターを表している。","source":"B1: 学校・言葉"},
+{"word":"nomad","general":"遊牧民","example":"The nomad moved his herd to fresh pastures every season.","example_ja":"その遊牧民は季節ごとに家畜の群れを新しい牧草地へ移動させた。","source":"B1: 動物・自然"},
+{"word":"nomads","general":"遊牧民たち","example":"For centuries, nomads have crossed this vast desert.","example_ja":"何世紀にもわたって、遊牧民たちはこの広大な砂漠を横断してきた。","source":"B1: 動物・自然"},
+{"word":"nominal","general":"名目上の","example":"He paid only a nominal fee to join the club.","example_ja":"彼はそのクラブに入るのにわずかな名目上の料金しか払わなかった。","source":"B1: 仕事・社会"},
+{"word":"norm","general":"基準、標準","example":"Working from home has become the norm in many industries.","example_ja":"在宅勤務は多くの業界で当たり前のことになった。","source":"B1: 仕事・社会"},
+{"word":"noticeboard","general":"掲示板","example":"She pinned the flyer to the office noticeboard.","example_ja":"彼女はそのチラシをオフィスの掲示板に貼った。","source":"B1: 学校・言葉"},
+{"word":"novice","general":"初心者","example":"As a novice, he needed extra time to finish the course.","example_ja":"初心者として、彼はそのコースを終えるのに追加の時間が必要だった。","source":"B1: 学校・言葉"},
+{"word":"nuclei","general":"核（原子核・細胞核などの複数形）","example":"Under the microscope, the cell nuclei appeared as dark spots.","example_ja":"顕微鏡下では、細胞核は暗い斑点のように見えた。","source":"B1: 学校・言葉"},
+{"word":"numerator","general":"分子（分数の）","example":"In this fraction, three is the numerator.","example_ja":"この分数では、3が分子です。","source":"B1: 学校・言葉"},
+{"word":"nutrient","general":"栄養素","example":"Leafy greens are packed with essential nutrients.","example_ja":"葉物野菜には必須の栄養素がたっぷり含まれている。","source":"B1: 料理・食"},
+{"word":"nutshell","general":"（in a nutshellで）要するに","example":"In a nutshell, the plan failed because of poor timing.","example_ja":"要するに、その計画はタイミングが悪かったせいで失敗した。","source":"B1: 学校・言葉"},
+{"word":"occupant","general":"居住者、使用者","example":"The current occupant of the apartment has lived there for years.","example_ja":"そのアパートの現在の居住者は、何年もそこに住んでいる。","source":"B1: 仕事・社会"},
+{"word":"occupational","general":"職業上の","example":"He developed an occupational injury from years of heavy lifting.","example_ja":"彼は長年の重い荷物運びが原因で職業性の障害を発症した。","source":"B1: 仕事・社会"},
+{"word":"occupier","general":"占有者","example":"The building's previous occupier left behind old furniture.","example_ja":"その建物の以前の使用者は古い家具を残していった。","source":"B1: 仕事・社会"},
+{"word":"oceanic","general":"海洋の","example":"Oceanic currents affect weather patterns around the world.","example_ja":"海洋の海流は世界中の天候パターンに影響を与える。","source":"B1: 動物・自然"},
+{"word":"offend","general":"気分を害する","example":"He didn't mean to offend anyone with the joke.","example_ja":"彼はその冗談で誰かを不快にさせるつもりはなかった。","source":"B1: 家庭・くらし"},
+{"word":"offline","general":"オフラインの","example":"The website has been offline since this morning.","example_ja":"そのウェブサイトは今朝からオフラインの状態だ。","source":"B1: 仕事・社会"},
+{"word":"offset","general":"相殺する","example":"The extra income helped offset the rising cost of rent.","example_ja":"その追加収入は家賃の値上がり分を相殺するのに役立った。","source":"B1: 仕事・社会"},
+{"word":"oftener","general":"より頻繁に（古風なoftenの比較級）","example":"In the old days, letters were written far oftener than today.","example_ja":"昔は今よりもずっと頻繁に手紙が書かれていた。","source":"B1: 学校・言葉"},
+{"word":"ohm","general":"オーム（電気抵抗の単位）","example":"The resistor was rated at exactly 100 ohms.","example_ja":"その抵抗器はちょうど100オームの定格だった。","source":"B1: 学校・言葉"},
+{"word":"onward","general":"前方へ、以降","example":"From this point onward, the trail becomes much steeper.","example_ja":"ここから先、そのトレイルはずっと急になる。","source":"B1: 学校・言葉"},
+{"word":"onwards","general":"前方へ（英式綴り）","example":"Sales figures have improved steadily from March onwards.","example_ja":"売上高は3月以降、着実に改善している。","source":"B1: 学校・言葉"},
+{"word":"ooze","general":"にじみ出る","example":"Thick mud began to ooze between his toes.","example_ja":"濃い泥が彼の足の指の間からにじみ出てきた。","source":"B1: 動物・自然"},
+{"word":"opaque","general":"不透明な","example":"The bathroom window was made of opaque glass.","example_ja":"その浴室の窓はすりガラス（不透明なガラス）でできていた。","source":"B1: 家庭・くらし"},
+{"word":"ore","general":"鉱石","example":"The mine produces a large amount of iron ore each year.","example_ja":"その鉱山は毎年大量の鉄鉱石を産出する。","source":"B1: 動物・自然"},
+{"word":"otter","general":"カワウソ","example":"An otter slid gracefully down the muddy riverbank.","example_ja":"カワウソが泥だらけの川岸を優雅に滑り下りた。","source":"B1: 動物・自然"},
+{"word":"outfit","general":"服装一式","example":"She picked out a new outfit for the interview.","example_ja":"彼女は面接のために新しい服一式を選んだ。","source":"B1: 家庭・くらし"},
+{"word":"parachute","general":"パラシュート","example":"He checked his parachute twice before the jump.","example_ja":"彼はジャンプの前にパラシュートを2度確認した。","source":"B1: 家庭・くらし"},
+{"word":"parched","general":"からからに乾いた","example":"After the long hike, her throat felt completely parched.","example_ja":"長いハイキングの後、彼女の喉は完全にからからだった。","source":"B1: 動物・自然"},
+{"word":"pare","general":"皮をむく、削減する","example":"She pared the apple carefully with a small knife.","example_ja":"彼女は小さなナイフで丁寧にリンゴの皮をむいた。","source":"B1: 料理・食"},
+{"word":"parental","general":"親の","example":"The app requires parental consent for users under 13.","example_ja":"そのアプリは13歳未満のユーザーには保護者の同意が必要だ。","source":"B1: 家庭・くらし"},
+{"word":"parenthood","general":"親であること","example":"Nothing had prepared them for the exhaustion of parenthood.","example_ja":"何をもってしても、彼らは親になることの疲労に備えられていなかった。","source":"B1: 家庭・くらし"},
+{"word":"parish","general":"教区","example":"The old church still serves the same small parish.","example_ja":"その古い教会は今も同じ小さな教区に仕えている。","source":"B1: 仕事・社会"},
+{"word":"parmesan","general":"パルメザンチーズ","example":"She grated fresh parmesan over the pasta.","example_ja":"彼女はパスタに新鮮なパルメザンチーズをすりおろした。","source":"B1: 料理・食"},
+{"word":"parti","general":"（建築設計の）基本構想","example":"The architect explained the parti behind the museum's design.","example_ja":"その建築家は美術館のデザインの根底にある基本構想を説明した。","source":"B1: 学校・言葉"},
+{"word":"participant","general":"参加者","example":"Every participant received a certificate at the end of the workshop.","example_ja":"ワークショップの最後に、すべての参加者が修了証を受け取った。","source":"B1: 学校・言葉"},
+{"word":"passers","general":"通行人（passers-byの略式）","example":"A few passers stopped to watch the street performer.","example_ja":"何人かの通行人が大道芸人を見るために立ち止まった。","source":"B1: 仕事・社会"},
+{"word":"pastor","general":"牧師","example":"The pastor greeted everyone at the church door.","example_ja":"牧師は教会の入り口で皆に挨拶した。","source":"B1: 仕事・社会"},
+{"word":"pastry","general":"ペストリー","example":"She bought a warm pastry for breakfast.","example_ja":"彼女は朝食に温かいペストリーを買った。","source":"B1: 料理・食"},
+{"word":"pasture","general":"牧草地","example":"The cows grazed peacefully in the pasture.","example_ja":"牛たちは牧草地で静かに草を食んでいた。","source":"B1: 動物・自然"},
+{"word":"pate","general":"パテ","example":"He spread pate on the crackers.","example_ja":"彼はクラッカーにパテを塗った。","source":"B1: 料理・食"},
+{"word":"patent","general":"特許","example":"The company filed a patent for the new device.","example_ja":"その会社は新しい装置の特許を出願した。","source":"B1: 仕事・社会"},
+{"word":"paycheck","general":"給料の小切手","example":"She deposited her paycheck at the bank.","example_ja":"彼女は給料の小切手を銀行に預けた。","source":"B1: 仕事・社会"},
+{"word":"pearl","general":"真珠","example":"She wore a necklace of white pearls.","example_ja":"彼女は白い真珠のネックレスを身につけていた。","source":"B1: 家庭・くらし"},
+{"word":"pebble","general":"小石","example":"He skipped a pebble across the pond.","example_ja":"彼は小石を池の水面で跳ねさせた。","source":"B1: 動物・自然"},
+{"word":"pep","general":"元気、活気","example":"The coach gave the team a pep talk before the game.","example_ja":"コーチは試合前にチームに気合を入れる話をした。","source":"B1: 仕事・社会"},
+{"word":"perceive","general":"知覚する、認識する","example":"She began to perceive a change in his mood.","example_ja":"彼女は彼の気分の変化に気づき始めた。","source":"B1: 家庭・くらし"},
+{"word":"perfection","general":"完璧さ","example":"He aimed for perfection in every detail.","example_ja":"彼はあらゆる細部において完璧さを目指した。","source":"B1: 家庭・くらし"},
+{"word":"perm","general":"パーマ","example":"She got a perm at the salon.","example_ja":"彼女は美容室でパーマをかけた。","source":"B1: 家庭・くらし"},
+{"word":"petite","general":"小柄な","example":"The dress came in a petite size.","example_ja":"そのドレスは小柄な人向けのサイズもあった。","source":"B1: 家庭・くらし"},
+{"word":"pharaoh","general":"ファラオ","example":"The tomb belonged to an ancient pharaoh.","example_ja":"その墓は古代のファラオのものだった。","source":"B1: 学校・言葉"},
+{"word":"picky","general":"えり好みする","example":"He's quite picky about food.","example_ja":"彼は食べ物についてかなりえり好みする。","source":"B1: 家庭・くらし"},
+{"word":"pier","general":"桟橋","example":"They walked along the pier at sunset.","example_ja":"彼らは夕暮れ時に桟橋沿いを歩いた。","source":"B1: 動物・自然"},
+{"word":"ping","general":"ピンと鳴る音","example":"His phone gave a soft ping.","example_ja":"彼の電話が小さくピンと鳴った。","source":"B1: 仕事・社会"},
+{"word":"planetary","general":"惑星の","example":"The museum has a planetary exhibit.","example_ja":"その博物館には惑星に関する展示がある。","source":"B1: 学校・言葉"},
+{"word":"plank","general":"板","example":"He nailed a wooden plank across the gap.","example_ja":"彼はその隙間に木の板を釘で打ち付けた。","source":"B1: 家庭・くらし"},
+{"word":"plaster","general":"しっくい、絆創膏","example":"She put a plaster on the small cut.","example_ja":"彼女はその小さな切り傷に絆創膏を貼った。","source":"B1: 家庭・くらし"},
+{"word":"pleasing","general":"心地よい、好ましい","example":"The garden had a pleasing arrangement of flowers.","example_ja":"その庭には心地よい花の配置があった。","source":"B1: 家庭・くらし"},
+{"word":"pliers","general":"ペンチ","example":"He used pliers to bend the wire.","example_ja":"彼はペンチを使ってワイヤーを曲げた。","source":"B1: 家庭・くらし"},
+{"word":"plough","general":"犂（プラウ、英綴り）","example":"The farmer pulled the plough through the field.","example_ja":"農夫は畑を犂で耕した。","source":"B1: 動物・自然"},
+{"word":"plow","general":"犂（米綴り）","example":"He used a plow to clear the snow.","example_ja":"彼は雪をかくために除雪機を使った。","source":"B1: 動物・自然"},
+{"word":"pluck","general":"引き抜く","example":"She began to pluck the feathers from the chicken.","example_ja":"彼女は鶏の羽をむしり始めた。","source":"B1: 料理・食"},
+{"word":"plumber","general":"配管工","example":"They called a plumber to fix the leak.","example_ja":"彼らは水漏れを直すために配管工を呼んだ。","source":"B1: 仕事・社会"},
+{"word":"plump","general":"ふっくらした","example":"The bird had plump, soft feathers.","example_ja":"その鳥はふっくらした柔らかい羽毛を持っていた。","source":"B1: 動物・自然"},
+{"word":"plunger","general":"ラバーカップ","example":"He used a plunger to unclog the sink.","example_ja":"彼はラバーカップを使って流しの詰まりを取った。","source":"B1: 家庭・くらし"},
+{"word":"plush","general":"ふわふわした、豪華な","example":"The hotel room had plush carpets.","example_ja":"そのホテルの部屋にはふわふわの絨毯があった。","source":"B1: 家庭・くらし"},
+{"word":"pneumonia","general":"肺炎","example":"He was hospitalized with pneumonia.","example_ja":"彼は肺炎で入院した。","source":"B1: 家庭・くらし"},
+{"word":"pointe","general":"ポワント（バレエのつま先立ち）","example":"The dancer practiced her pointe technique.","example_ja":"そのダンサーはポワントの技術を練習した。","source":"B1: 学校・言葉"},
+{"word":"poll","general":"世論調査","example":"The poll showed a close race.","example_ja":"その世論調査は接戦を示していた。","source":"B1: 仕事・社会"},
+{"word":"pollard","general":"台切りされた木","example":"The old pollard tree stood at the edge of the field.","example_ja":"その古い台切り木は畑の端に立っていた。","source":"B1: 動物・自然"},
+{"word":"pollen","general":"花粉","example":"Bees carry pollen from flower to flower.","example_ja":"ハチは花から花へ花粉を運ぶ。","source":"B1: 動物・自然"},
+{"word":"pollute","general":"汚染する","example":"Factories can pollute nearby rivers.","example_ja":"工場は近くの川を汚染することがある。","source":"B1: 動物・自然"},
+{"word":"polluted","general":"汚染された","example":"The river was badly polluted.","example_ja":"その川はひどく汚染されていた。","source":"B1: 動物・自然"},
+{"word":"polluting","general":"汚染している","example":"The old factory was still polluting the air.","example_ja":"その古い工場はまだ空気を汚染していた。","source":"B1: 動物・自然"},
+{"word":"pope","general":"教皇","example":"The pope addressed the crowd from the balcony.","example_ja":"教皇はバルコニーから群衆に語りかけた。","source":"B1: 仕事・社会"},
+{"word":"porcupine","general":"ヤマアラシ","example":"A porcupine wandered near the campsite.","example_ja":"ヤマアラシがキャンプ場の近くをうろついていた。","source":"B1: 動物・自然"},
+{"word":"pore","general":"毛穴","example":"The lotion helps clean out pores.","example_ja":"そのローションは毛穴の汚れを落とすのに役立つ。","source":"B1: 家庭・くらし"},
+{"word":"porridge","general":"おかゆ、オートミール","example":"She made porridge for breakfast.","example_ja":"彼女は朝食にオートミールを作った。","source":"B1: 料理・食"},
+{"word":"porta","general":"（porta-pottyなどの）仮設","example":"They set up a porta toilet at the event.","example_ja":"彼らはそのイベントで仮設トイレを設置した。","source":"B1: 仕事・社会"},
+{"word":"portland","general":"ポートランド（地名）","example":"They moved to Portland last year.","example_ja":"彼らは去年ポートランドに引っ越した。","source":"B1: 動物・自然"},
+{"word":"poster","general":"ポスター","example":"He hung a poster on his bedroom wall.","example_ja":"彼は寝室の壁にポスターを貼った。","source":"B1: 家庭・くらし"},
+{"word":"pouch","general":"小袋","example":"She kept her coins in a small pouch.","example_ja":"彼女は小銭を小さな袋に入れていた。","source":"B1: 家庭・くらし"},
+{"word":"poultry","general":"家禽","example":"The farm raises poultry for eggs.","example_ja":"その農場は卵のために家禽を飼育している。","source":"B1: 料理・食"},
+{"word":"pox","general":"発疹性の病気","example":"He had chicken pox as a child.","example_ja":"彼は子供の頃、水疱瘡にかかった。","source":"B1: 家庭・くらし"},
+{"word":"prawns","general":"車エビ（英）","example":"They ordered grilled prawns.","example_ja":"彼らは焼き車エビを注文した。","source":"B1: 料理・食"},
+{"word":"prayer","general":"祈り","example":"She said a quiet prayer before dinner.","example_ja":"彼女は夕食の前に静かに祈りを捧げた。","source":"B1: 家庭・くらし"},
+{"word":"precious","general":"貴重な","example":"Her time with family is precious to her.","example_ja":"家族と過ごす時間は彼女にとって貴重だ。","source":"B1: 家庭・くらし"},
+{"word":"predator","general":"捕食者","example":"The lion is a skilled predator.","example_ja":"ライオンは巧みな捕食者だ。","source":"B1: 動物・自然"},
+{"word":"prefix","general":"接頭辞","example":"The prefix 'un-' means 'not'.","example_ja":"接頭辞「un-」は「〜でない」を意味する。","source":"B1: 学校・言葉"},
+{"word":"preheat","general":"（オーブンなどを）予熱する","example":"Preheat the oven before baking.","example_ja":"焼く前にオーブンを予熱してください。","source":"B1: 料理・食"},
+{"word":"preparation","general":"準備","example":"The trip required a lot of preparation.","example_ja":"その旅行には多くの準備が必要だった。","source":"B1: 学校・言葉"},
+{"word":"prescription","general":"処方箋","example":"She picked up her prescription at the pharmacy.","example_ja":"彼女は薬局で処方箋の薬を受け取った。","source":"B1: 家庭・くらし"},
+{"word":"preventable","general":"予防可能な","example":"Many accidents are preventable.","example_ja":"多くの事故は予防可能だ。","source":"B1: 仕事・社会"},
+{"word":"preventative","general":"予防的な","example":"They took preventative measures against the flu.","example_ja":"彼らはインフルエンザに対する予防措置を取った。","source":"B1: 仕事・社会"},
+{"word":"prey","general":"獲物","example":"The hawk spotted its prey from above.","example_ja":"タカは上空から獲物を見つけた。","source":"B1: 動物・自然"},
+{"word":"propane","general":"プロパンガス","example":"The camping stove runs on propane.","example_ja":"そのキャンプ用コンロはプロパンガスで動く。","source":"B1: 家庭・くらし"},
+{"word":"prosper","general":"繁栄する","example":"The business began to prosper after the move.","example_ja":"その事業は移転後に繁栄し始めた。","source":"B1: 仕事・社会"},
+{"word":"proven","general":"証明された","example":"It's a proven method for saving time.","example_ja":"それは時間を節約する実証済みの方法だ。","source":"B1: 仕事・社会"},
+{"word":"pulley","general":"滑車","example":"They used a pulley to lift the heavy box.","example_ja":"彼らはその重い箱を持ち上げるために滑車を使った。","source":"B1: 家庭・くらし"},
+{"word":"pulp","general":"果肉、パルプ","example":"The juice still had bits of pulp in it.","example_ja":"そのジュースにはまだ果肉のかけらが入っていた。","source":"B1: 料理・食"},
+{"word":"punctuation","general":"句読点","example":"She checked the essay for punctuation errors.","example_ja":"彼女はそのエッセイの句読点の誤りを確認した。","source":"B1: 学校・言葉"},
+{"word":"punk","general":"パンク（音楽・スタイル）","example":"He grew up listening to punk music.","example_ja":"彼はパンク音楽を聴いて育った。","source":"B1: 家庭・くらし"},
+{"word":"puppet","general":"人形、操り人形","example":"The children laughed at the puppet show.","example_ja":"子供たちは人形劇を見て笑った。","source":"B1: 家庭・くらし"},
+{"word":"purer","general":"より純粋な（pureの比較級）","example":"The mountain air felt purer than the city's.","example_ja":"山の空気は都会の空気よりも純粋に感じられた。","source":"B1: 家庭・くらし"},
+{"word":"purest","general":"最も純粋な（pureの最上級）","example":"This is said to be the purest form of gold.","example_ja":"これは最も純粋な形の金だと言われている。","source":"B1: 家庭・くらし"},
+{"word":"putty","general":"パテ","example":"He used putty to fill the crack in the wall.","example_ja":"彼は壁のひびを埋めるためにパテを使った。","source":"B1: 家庭・くらし"},
+{"word":"quake","general":"地震（earthquakeの略）","example":"The building survived the quake without damage.","example_ja":"その建物は損傷なく地震を乗り越えた。","source":"B1: 動物・自然"},
+{"word":"quarantine","general":"検疫、隔離","example":"The sick animals were put in quarantine.","example_ja":"その病気の動物たちは隔離された。","source":"B1: 家庭・くらし"},
+{"word":"quid","general":"ポンド（英口語）","example":"It cost him five quid for the ticket.","example_ja":"そのチケットに彼は5ポンド払った。","source":"B1: 仕事・社会"},
+{"word":"raccoon","general":"アライグマ","example":"A raccoon knocked over the trash can.","example_ja":"アライグマがゴミ箱を倒した。","source":"B1: 動物・自然"},
+{"word":"rack","general":"棚、ラック","example":"She hung her coat on the rack.","example_ja":"彼女はコートをラックにかけた。","source":"B1: 家庭・くらし"},
+{"word":"radar","general":"レーダー","example":"The plane appeared on the radar screen.","example_ja":"その飛行機はレーダー画面に現れた。","source":"B1: 仕事・社会"},
+{"word":"radiator","general":"ラジエーター","example":"The radiator kept the room warm.","example_ja":"ラジエーターは部屋を暖かく保った。","source":"B1: 家庭・くらし"},
+{"word":"rafter","general":"たる木（屋根の骨組み）","example":"Birds nested in the barn's rafters.","example_ja":"鳥たちは納屋のたる木に巣を作った。","source":"B1: 家庭・くらし"},
+{"word":"rafters","general":"rafterの複数形","example":"Old rafters supported the roof.","example_ja":"古いたる木が屋根を支えていた。","source":"B1: 家庭・くらし"},
+{"word":"railroad","general":"鉄道","example":"The railroad connected the two towns.","example_ja":"その鉄道は2つの町を結んでいた。","source":"B1: 仕事・社会"},
+{"word":"rake","general":"熊手","example":"He used a rake to gather the leaves.","example_ja":"彼は熊手を使って落ち葉を集めた。","source":"B1: 動物・自然"},
+{"word":"ram","general":"雄羊、突進する","example":"The ram charged toward the fence.","example_ja":"その雄羊はフェンスに向かって突進した。","source":"B1: 動物・自然"},
+{"word":"ramp","general":"傾斜路、スロープ","example":"They built a wheelchair ramp at the entrance.","example_ja":"彼らは入り口に車椅子用のスロープを作った。","source":"B1: 家庭・くらし"},
+{"word":"ranch","general":"牧場","example":"They spent the summer on a ranch.","example_ja":"彼らは牧場で夏を過ごした。","source":"B1: 動物・自然"},
+{"word":"rancho","general":"ランチョ（牧場、スペイン語由来）","example":"The old rancho was passed down through generations.","example_ja":"その古い牧場は代々受け継がれてきた。","source":"B1: 動物・自然"},
+{"word":"ranger","general":"レンジャー、監視員","example":"A park ranger guided the tour.","example_ja":"公園のレンジャーがツアーを案内した。","source":"B1: 動物・自然"},
+{"word":"rarer","general":"より珍しい（rareの比較級）","example":"This stamp is rarer than the others.","example_ja":"この切手は他のものより珍しい。","source":"B1: 家庭・くらし"},
+{"word":"rarest","general":"最も珍しい（rareの最上級）","example":"It's considered the rarest bird in the region.","example_ja":"それはその地域で最も珍しい鳥だと考えられている。","source":"B1: 動物・自然"},
+{"word":"ration","general":"配給、割り当て","example":"Each family received a ration of food.","example_ja":"各家庭は食料の配給を受け取った。","source":"B1: 仕事・社会"},
+{"word":"rattlesnake","general":"ガラガラヘビ","example":"They spotted a rattlesnake near the trail.","example_ja":"彼らは小道の近くでガラガラヘビを見つけた。","source":"B1: 動物・自然"},
+{"word":"reappear","general":"再び現れる","example":"The sun began to reappear after the storm.","example_ja":"嵐の後、太陽が再び現れ始めた。","source":"B1: 動物・自然"},
+{"word":"rebel","general":"反逆者、反抗する","example":"The teenager began to rebel against the rules.","example_ja":"その10代の子はルールに反抗し始めた。","source":"B1: 家庭・くらし"},
+{"word":"recognisable","general":"見分けがつく、識別できる（英）","example":"His voice was instantly recognisable.","example_ja":"彼の声はすぐに聞き分けられるものだった。","source":"B1: 家庭・くらし"},
+{"word":"rectangle","general":"長方形","example":"She drew a rectangle on the paper.","example_ja":"彼女は紙に長方形を描いた。","source":"B1: 学校・言葉"},
+{"word":"reddish","general":"赤みがかった","example":"The sky turned a reddish orange at sunset.","example_ja":"空は夕暮れに赤みがかったオレンジ色になった。","source":"B1: 動物・自然"},
+{"word":"redirect","general":"転送する、向け直す","example":"The website will redirect you to the new page.","example_ja":"そのウェブサイトは新しいページへ転送される。","source":"B1: 仕事・社会"},
+{"word":"reel","general":"リール、よろめく","example":"He wound the fishing line onto the reel.","example_ja":"彼は釣り糸をリールに巻いた。","source":"B1: 動物・自然"},
+{"word":"referee","general":"審判","example":"The referee blew the whistle.","example_ja":"審判は笛を吹いた。","source":"B1: 仕事・社会"},
+{"word":"reggae","general":"レゲエ","example":"They listened to reggae music on the beach.","example_ja":"彼らはビーチでレゲエ音楽を聴いた。","source":"B1: 家庭・くらし"},
+{"word":"registered","general":"登録された","example":"The car is registered under his name.","example_ja":"その車は彼の名義で登録されている。","source":"B1: 仕事・社会"},
+{"word":"registration","general":"登録","example":"Registration closes at the end of the month.","example_ja":"登録は月末で締め切られる。","source":"B1: 学校・言葉"},
+{"word":"regrettably","general":"残念ながら","example":"Regrettably, the event was cancelled.","example_ja":"残念ながら、そのイベントは中止になった。","source":"B1: 仕事・社会"},
+{"word":"reinforce","general":"補強する","example":"They added steel to reinforce the bridge.","example_ja":"彼らは橋を補強するために鋼鉄を追加した。","source":"B1: 仕事・社会"},
+{"word":"rejection","general":"拒絶","example":"He received a rejection letter from the school.","example_ja":"彼はその学校から不合格通知を受け取った。","source":"B1: 仕事・社会"},
+{"word":"relevant","general":"関連のある","example":"Please provide only relevant information.","example_ja":"関連する情報のみを提供してください。","source":"B1: 仕事・社会"},
+{"word":"relic","general":"遺物","example":"The museum displayed an ancient relic.","example_ja":"その博物館は古代の遺物を展示していた。","source":"B1: 学校・言葉"},
+{"word":"religious","general":"宗教の","example":"They followed strict religious customs.","example_ja":"彼らは厳格な宗教的慣習に従っていた。","source":"B1: 家庭・くらし"},
+{"word":"remaining","general":"残りの","example":"They finished the remaining tasks by noon.","example_ja":"彼らは正午までに残りの仕事を終えた。","source":"B1: 仕事・社会"},
+{"word":"renter","general":"賃借人","example":"The renter signed a one-year lease.","example_ja":"その賃借人は1年間の賃貸契約に署名した。","source":"B1: 仕事・社会"},
+{"word":"repaint","general":"塗り直す","example":"They decided to repaint the fence.","example_ja":"彼らはフェンスを塗り直すことにした。","source":"B1: 家庭・くらし"},
+{"word":"replicate","general":"複製する","example":"Scientists tried to replicate the results.","example_ja":"科学者たちはその結果を再現しようとした。","source":"B1: 学校・言葉"},
+{"word":"representation","general":"代表、表現","example":"The chart is a visual representation of the data.","example_ja":"その図はデータの視覚的な表現だ。","source":"B1: 学校・言葉"},
+{"word":"representative","general":"代表者","example":"A representative from the company attended the meeting.","example_ja":"その会社の代表者が会議に出席した。","source":"B1: 仕事・社会"},
+{"word":"reread","general":"読み直す","example":"She decided to reread the letter.","example_ja":"彼女はその手紙を読み直すことにした。","source":"B1: 学校・言葉"},
+{"word":"resent","general":"恨む、憤慨する","example":"He began to resent the extra workload.","example_ja":"彼は追加の仕事量に憤慨し始めた。","source":"B1: 家庭・くらし"},
+{"word":"resign","general":"辞職する","example":"She decided to resign from her position.","example_ja":"彼女はその職を辞職することにした。","source":"B1: 仕事・社会"},
+{"word":"resist","general":"抵抗する","example":"He couldn't resist the smell of fresh bread.","example_ja":"彼は焼きたてのパンの匂いに抵抗できなかった。","source":"B1: 家庭・くらし"},
+{"word":"restore","general":"修復する","example":"They worked to restore the old painting.","example_ja":"彼らはその古い絵画を修復するために取り組んだ。","source":"B1: 家庭・くらし"},
+{"word":"retain","general":"保持する","example":"The company wants to retain its best employees.","example_ja":"その会社は優秀な従業員を維持したいと考えている。","source":"B1: 仕事・社会"},
+{"word":"retiree","general":"退職者","example":"The retiree spends his mornings gardening.","example_ja":"その退職者は毎朝ガーデニングをして過ごしている。","source":"B1: 家庭・くらし"},
+{"word":"reunion","general":"再会、同窓会","example":"They planned a family reunion for the summer.","example_ja":"彼らは夏に家族の再会を計画した。","source":"B1: 家庭・くらし"},
+{"word":"reunited","general":"再会した","example":"The family was finally reunited after years apart.","example_ja":"その家族は何年も離れ離れだった後、ついに再会した。","source":"B1: 家庭・くらし"},
+{"word":"revolver","general":"回転式拳銃","example":"The old revolver was kept in a locked drawer.","example_ja":"その古い回転式拳銃は鍵のかかった引き出しにしまわれていた。","source":"B1: 家庭・くらし"},
+{"word":"rhinoceros","general":"サイ","example":"A rhinoceros grazed near the watering hole.","example_ja":"サイが水飲み場の近くで草を食んでいた。","source":"B1: 動物・自然"},
+{"word":"ridden","general":"乗られた（rideの過去分詞）","example":"The horse had been ridden all morning.","example_ja":"その馬は午前中ずっと乗られていた。","source":"B1: 動物・自然"},
+{"word":"riddle","general":"なぞなぞ","example":"The children tried to solve the riddle.","example_ja":"子供たちはそのなぞなぞを解こうとした。","source":"B1: 学校・言葉"},
+{"word":"ridge","general":"尾根","example":"They hiked along the mountain ridge.","example_ja":"彼らは山の尾根沿いをハイキングした。","source":"B1: 動物・自然"},
+{"word":"rifle","general":"ライフル銃","example":"The hunter carried an old rifle.","example_ja":"その猟師は古いライフル銃を持っていた。","source":"B1: 動物・自然"},
+{"word":"rig","general":"装置、掘削機","example":"The oil rig stood far out at sea.","example_ja":"その石油掘削機は海のはるか沖に立っていた。","source":"B1: 仕事・社会"},
+{"word":"ringer","general":"よく似た人・物","example":"He's a dead ringer for his father.","example_ja":"彼は父親にそっくりだ。","source":"B1: 家庭・くらし"},
+{"word":"riser","general":"起床する人、（階段の）蹴上げ","example":"She's an early riser.","example_ja":"彼女は早起きだ。","source":"B1: 家庭・くらし"},
+{"word":"roach","general":"ゴキブリ","example":"A roach scurried under the fridge.","example_ja":"ゴキブリが冷蔵庫の下に走り込んだ。","source":"B1: 家庭・くらし"},
+{"word":"roam","general":"うろつく、歩き回る","example":"The dog likes to roam the yard.","example_ja":"その犬は庭をうろつくのが好きだ。","source":"B1: 動物・自然"},
+{"word":"rod","general":"棒、釣り竿","example":"He cast his fishing rod into the lake.","example_ja":"彼は釣り竿を湖に投げ入れた。","source":"B1: 動物・自然"},
+{"word":"rodent","general":"げっ歯類","example":"A small rodent scurried across the floor.","example_ja":"小さなげっ歯類が床を走り抜けた。","source":"B1: 動物・自然"},
+{"word":"rodeo","general":"ロデオ","example":"They watched the rodeo at the county fair.","example_ja":"彼らは郡の祭りでロデオを観戦した。","source":"B1: 動物・自然"},
+{"word":"roller","general":"ローラー","example":"He used a paint roller on the wall.","example_ja":"彼は壁にペイントローラーを使った。","source":"B1: 家庭・くらし"},
+{"word":"rosy","general":"バラ色の","example":"Her cheeks looked rosy in the cold.","example_ja":"彼女の頬は寒さでバラ色に見えた。","source":"B1: 家庭・くらし"},
+{"word":"rotate","general":"回転する","example":"The wheel began to rotate slowly.","example_ja":"その車輪はゆっくりと回転し始めた。","source":"B1: 学校・言葉"},
+{"word":"roundabout","general":"ラウンドアバウト（環状交差点、英）","example":"Turn left at the roundabout.","example_ja":"ラウンドアバウトを左に曲がってください。","source":"B1: 家庭・くらし"},
+{"word":"safest","general":"最も安全な","example":"This is the safest route home.","example_ja":"これが家までの最も安全なルートだ。","source":"B1: 家庭・くらし"},
+{"word":"sag","general":"たるむ、下がる","example":"The old shelf began to sag under the weight.","example_ja":"その古い棚は重さでたわみ始めた。","source":"B1: 家庭・くらし"},
+{"word":"saga","general":"長い物語","example":"The trilogy tells an epic saga.","example_ja":"その三部作は壮大な物語を語る。","source":"B1: 学校・言葉"},
+{"word":"sage","general":"セージ、賢明な","example":"She added sage to the stuffing.","example_ja":"彼女は詰め物にセージを加えた。","source":"B1: 料理・食"},
+{"word":"sane","general":"正気の","example":"He tried to stay sane during the chaos.","example_ja":"彼はその混乱の中で正気を保とうとした。","source":"B1: 家庭・くらし"},
+{"word":"sanity","general":"正気","example":"The quiet walk helped restore her sanity.","example_ja":"その静かな散歩は彼女の正気を取り戻すのに役立った。","source":"B1: 家庭・くらし"},
+{"word":"sap","general":"樹液","example":"Sap dripped slowly from the tree trunk.","example_ja":"樹液が木の幹からゆっくりと滴り落ちた。","source":"B1: 動物・自然"},
+{"word":"sauna","general":"サウナ","example":"They relaxed in the sauna after the gym.","example_ja":"彼らはジムの後、サウナでくつろいだ。","source":"B1: 家庭・くらし"},
+{"word":"savior","general":"救世主（米綴り）","example":"She saw him as her savior that day.","example_ja":"その日、彼女は彼を自分の救い主だと感じた。","source":"B1: 家庭・くらし"},
+{"word":"saviour","general":"救世主（英綴り）","example":"The team's saviour scored in the final minute.","example_ja":"チームの救世主は最後の1分で得点した。","source":"B1: 仕事・社会"},
+{"word":"scare","general":"怖がらせる","example":"The loud noise gave her a scare.","example_ja":"その大きな音は彼女を怖がらせた。","source":"B1: 家庭・くらし"},
+{"word":"scenario","general":"シナリオ、状況","example":"They discussed a worst-case scenario.","example_ja":"彼らは最悪のシナリオについて話し合った。","source":"B1: 仕事・社会"},
+{"word":"schoolmaster","general":"校長、教師（古風）","example":"The schoolmaster kept strict discipline.","example_ja":"その校長は厳格な規律を保っていた。","source":"B1: 学校・言葉"},
+{"word":"scots","general":"スコットランドの、スコットランド人","example":"The Scots celebrated their national holiday.","example_ja":"スコットランド人たちは自国の祝日を祝った。","source":"B1: 学校・言葉"},
+{"word":"scout","general":"偵察する、スカウト","example":"They sent someone to scout the area first.","example_ja":"彼らはまず誰かにその地域を偵察させた。","source":"B1: 動物・自然"},
+{"word":"scrape","general":"こすり落とす、擦り傷","example":"He scraped the mud off his boots.","example_ja":"彼はブーツについた泥をこすり落とした。","source":"B1: 家庭・くらし"},
+{"word":"scraper","general":"こすり落とす道具","example":"She used a scraper to remove the old paint.","example_ja":"彼女はスクレーパーを使って古いペンキを落とした。","source":"B1: 家庭・くらし"},
+{"word":"scribble","general":"走り書きする","example":"He scribbled a quick note before leaving.","example_ja":"彼は出かける前に急いでメモを走り書きした。","source":"B1: 学校・言葉"},
+{"word":"scrubber","general":"こすり洗いする道具","example":"She bought a new sponge scrubber for the pots.","example_ja":"彼女は鍋用に新しいスポンジたわしを買った。","source":"B1: 家庭・くらし"},
+{"word":"seam","general":"縫い目","example":"The seam on his jacket had come loose.","example_ja":"彼のジャケットの縫い目がほつれていた。","source":"B1: 家庭・くらし"},
+{"word":"seaway","general":"航路","example":"Ships travel through the seaway to reach the port.","example_ja":"船はその航路を通って港に到着する。","source":"B1: 仕事・社会"},
+{"word":"sedan","general":"セダン（車）","example":"They drove a comfortable sedan on the trip.","example_ja":"彼らはその旅行で快適なセダンを運転した。","source":"B1: 仕事・社会"},
+{"word":"semester","general":"学期","example":"The new semester starts in September.","example_ja":"新学期は9月に始まる。","source":"B1: 学校・言葉"},
+{"word":"sheriff","general":"保安官","example":"The sheriff arrived at the scene quickly.","example_ja":"保安官はすぐに現場に到着した。","source":"B1: 仕事・社会"},
+{"word":"shoplift","general":"万引きする","example":"The store installed cameras to prevent people from shoplifting.","example_ja":"その店は万引きを防ぐためにカメラを設置した。","source":"B1: 仕事・社会"},
+{"word":"shoplifter","general":"万引き犯","example":"The shoplifter was caught near the exit.","example_ja":"その万引き犯は出口付近で捕まった。","source":"B1: 仕事・社会"},
+{"word":"sibling","general":"きょうだい","example":"She has two siblings, a brother and a sister.","example_ja":"彼女には兄と姉の2人のきょうだいがいる。","source":"B1: 家庭・くらし"},
+{"word":"sickening","general":"むかつくような","example":"The smell from the trash was sickening.","example_ja":"ゴミからの臭いはむかつくようなものだった。","source":"B1: 家庭・くらし"},
+{"word":"sieve","general":"ふるい","example":"She passed the flour through a sieve.","example_ja":"彼女は小麦粉をふるいにかけた。","source":"B1: 料理・食"},
+{"word":"signpost","general":"道標","example":"A signpost pointed the way to the village.","example_ja":"道標がその村への道を示していた。","source":"B1: 動物・自然"},
+{"word":"silt","general":"沈泥","example":"Silt built up along the river bottom.","example_ja":"沈泥が川底に沿って積もった。","source":"B1: 動物・自然"},
+{"word":"spear","general":"槍","example":"The hunter carried a long spear.","example_ja":"その猟師は長い槍を持っていた。","source":"B1: 動物・自然"},
+{"word":"speeder","general":"スピード違反者","example":"The officer pulled over a speeder on the highway.","example_ja":"警官は幹線道路でスピード違反者を停車させた。","source":"B1: 仕事・社会"},
+{"word":"sphinx","general":"スフィンクス","example":"Tourists took photos of the ancient sphinx.","example_ja":"観光客たちは古代のスフィンクスの写真を撮った。","source":"B1: 学校・言葉"},
+{"word":"spinach","general":"ほうれん草","example":"She added spinach to the salad.","example_ja":"彼女はサラダにほうれん草を加えた。","source":"B1: 料理・食"},
+{"word":"spit","general":"つばを吐く","example":"He tried not to spit while talking.","example_ja":"彼は話している間、つばを飛ばさないように気をつけた。","source":"B1: 家庭・くらし"},
+{"word":"sprang","general":"跳んだ（springの過去形）","example":"The cat sprang onto the counter.","example_ja":"その猫はカウンターに飛び乗った。","source":"B1: 動物・自然"},
+{"word":"sprayer","general":"噴霧器","example":"She filled the sprayer with water for the plants.","example_ja":"彼女は植物用に噴霧器に水を入れた。","source":"B1: 家庭・くらし"},
+{"word":"spreader","general":"塗り広げる道具","example":"He used a spreader to apply the fertilizer.","example_ja":"彼は肥料をまくためにスプレッダーを使った。","source":"B1: 家庭・くらし"},
+{"word":"squash","general":"スカッシュ（スポーツ・野菜）、押しつぶす","example":"They played squash after work.","example_ja":"彼らは仕事の後にスカッシュをした。","source":"B1: 料理・食"},
+{"word":"squeeze","general":"絞る","example":"She began to squeeze the lemon over the fish.","example_ja":"彼女は魚にレモンを絞り始めた。","source":"B1: 料理・食"},
+{"word":"squid","general":"イカ","example":"They ordered grilled squid at the restaurant.","example_ja":"彼らはそのレストランで焼きイカを注文した。","source":"B1: 料理・食"},
+{"word":"squirrel","general":"リス","example":"A squirrel buried an acorn in the yard.","example_ja":"リスが庭にドングリを埋めた。","source":"B1: 動物・自然"},
+{"word":"stab","general":"刺す","example":"He tried to stab the meat with his fork.","example_ja":"彼はフォークで肉を刺そうとした。","source":"B1: 家庭・くらし"},
+{"word":"stag","general":"雄鹿","example":"A stag stood still at the edge of the forest.","example_ja":"雄鹿が森の端でじっと立っていた。","source":"B1: 動物・自然"},
+{"word":"stairway","general":"階段","example":"They climbed the narrow stairway to the attic.","example_ja":"彼らは屋根裏へ続く狭い階段を上った。","source":"B1: 家庭・くらし"},
+{"word":"stallion","general":"種馬","example":"The stallion galloped across the field.","example_ja":"その種馬は野原を疾走した。","source":"B1: 動物・自然"},
+{"word":"starch","general":"でんぷん","example":"Potatoes contain a lot of starch.","example_ja":"ジャガイモには多くのでんぷんが含まれている。","source":"B1: 料理・食"},
+{"word":"stark","general":"厳しい、鮮明な","example":"There was a stark difference between the two rooms.","example_ja":"その2つの部屋には歴然とした違いがあった。","source":"B1: 家庭・くらし"},
+{"word":"starry","general":"星の輝く","example":"They camped under a starry sky.","example_ja":"彼らは星の輝く空の下でキャンプした。","source":"B1: 動物・自然"},
+{"word":"starve","general":"飢える","example":"The stray dog looked like it was about to starve.","example_ja":"その野良犬は今にも餓死しそうに見えた。","source":"B1: 動物・自然"},
+{"word":"stat","general":"統計、即座に","example":"The nurse called for help stat.","example_ja":"看護師はすぐに助けを求めた。","source":"B1: 仕事・社会"},
+{"word":"statewide","general":"州全体の","example":"The new law applies statewide.","example_ja":"その新しい法律は州全体に適用される。","source":"B1: 仕事・社会"},
+{"word":"stationers","general":"文房具店","example":"She bought envelopes at the stationers.","example_ja":"彼女はその文房具店で封筒を買った。","source":"B1: 学校・言葉"},
+{"word":"stationery","general":"文房具","example":"He ordered new stationery for the office.","example_ja":"彼はオフィス用に新しい文房具を注文した。","source":"B1: 学校・言葉"},
+{"word":"steamboat","general":"蒸気船","example":"The steamboat sailed slowly down the river.","example_ja":"その蒸気船は川をゆっくりと下って行った。","source":"B1: 仕事・社会"},
+{"word":"steeper","general":"より急な（steepの比較級）","example":"This trail is much steeper than the last one.","example_ja":"この小道は前のものよりずっと急だ。","source":"B1: 動物・自然"},
+{"word":"steeple","general":"尖塔","example":"The church steeple could be seen from far away.","example_ja":"その教会の尖塔は遠くからでも見えた。","source":"B1: 家庭・くらし"},
+{"word":"steer","general":"操縦する","example":"He learned to steer the boat carefully.","example_ja":"彼は注意深くボートを操縦することを学んだ。","source":"B1: 仕事・社会"},
+{"word":"stencil","general":"型紙、ステンシル","example":"She used a stencil to paint the letters.","example_ja":"彼女は型紙を使ってその文字を描いた。","source":"B1: 学校・言葉"},
+{"word":"stew","general":"シチュー","example":"They ate warm stew on the cold night.","example_ja":"彼らは寒い夜に温かいシチューを食べた。","source":"B1: 料理・食"},
+{"word":"stiff","general":"硬い、こわばった","example":"His neck felt stiff after the long drive.","example_ja":"長時間の運転の後、彼の首はこわばっていた。","source":"B1: 家庭・くらし"},
+{"word":"stingy","general":"けちな","example":"He's known for being a bit stingy with money.","example_ja":"彼はお金に少しけちなことで知られている。","source":"B1: 家庭・くらし"},
+{"word":"stint","general":"一定期間の仕事","example":"She did a two-year stint abroad.","example_ja":"彼女は海外で2年間の仕事をした。","source":"B1: 仕事・社会"},
+{"word":"stoke","general":"（火を）くべる、あおる","example":"He stoked the fire before bed.","example_ja":"彼は寝る前に火をくべた。","source":"B1: 家庭・くらし"},
+{"word":"stony","general":"石だらけの","example":"The path was rough and stony.","example_ja":"その道は険しく石だらけだった。","source":"B1: 動物・自然"},
+{"word":"storey","general":"階（建物の、英綴り）","example":"The building has ten storeys.","example_ja":"その建物は10階建てだ。","source":"B1: 家庭・くらし"},
+{"word":"stormy","general":"嵐の","example":"The sea looked stormy that morning.","example_ja":"その朝、海は荒れているように見えた。","source":"B1: 動物・自然"},
+{"word":"stout","general":"がっしりした、頑丈な","example":"He built a stout wooden fence.","example_ja":"彼は頑丈な木製のフェンスを作った。","source":"B1: 家庭・くらし"},
+{"word":"strainer","general":"こし器","example":"She poured the tea through a strainer.","example_ja":"彼女はこし器を通してお茶を注いだ。","source":"B1: 料理・食"},
+{"word":"stray","general":"迷い込んだ、野良の","example":"A stray cat wandered into the yard.","example_ja":"野良猫が庭に迷い込んできた。","source":"B1: 動物・自然"},
+{"word":"stricter","general":"より厳しい（strictの比較級）","example":"The new rules are stricter than before.","example_ja":"新しい規則は以前よりも厳しい。","source":"B1: 学校・言葉"},
+{"word":"strive","general":"努力する","example":"She continues to strive for improvement.","example_ja":"彼女は改善に向けて努力し続けている。","source":"B1: 仕事・社会"},
+{"word":"stroll","general":"ぶらぶら歩く","example":"They took a stroll along the beach.","example_ja":"彼らはビーチをぶらぶら歩いた。","source":"B1: 家庭・くらし"},
+{"word":"struck","general":"打った（strikeの過去形）","example":"Lightning struck the old tree.","example_ja":"雷がその古い木に落ちた。","source":"B1: 動物・自然"},
+{"word":"strung","general":"張られた（stringの過去分詞）","example":"The lights were strung across the porch.","example_ja":"その明かりはポーチに沿って張られていた。","source":"B1: 家庭・くらし"},
+{"word":"stub","general":"半券、切り株","example":"She kept the ticket stub as a souvenir.","example_ja":"彼女はチケットの半券をお土産に取っておいた。","source":"B1: 仕事・社会"},
+{"word":"stud","general":"鋲、種馬","example":"The jacket had metal studs on the collar.","example_ja":"そのジャケットの襟には金属の鋲がついていた。","source":"B1: 動物・自然"},
+{"word":"stuffed","general":"詰め物をした","example":"The turkey was stuffed with herbs.","example_ja":"七面鳥はハーブで詰め物をされていた。","source":"B1: 料理・食"},
+{"word":"stuffy","general":"息苦しい、風通しの悪い","example":"The room felt stuffy without a window open.","example_ja":"窓を開けていないと部屋は息苦しく感じられた。","source":"B1: 家庭・くらし"},
+{"word":"stung","general":"刺された（stingの過去形）","example":"He was stung by a bee on his arm.","example_ja":"彼は腕をハチに刺された。","source":"B1: 動物・自然"},
+{"word":"stunned","general":"唖然とした","example":"She was stunned by the news.","example_ja":"彼女はその知らせに唖然とした。","source":"B1: 家庭・くらし"},
+{"word":"sturdy","general":"頑丈な","example":"They bought a sturdy table for the kitchen.","example_ja":"彼らはキッチン用に頑丈なテーブルを買った。","source":"B1: 家庭・くらし"},
+{"word":"subcontinent","general":"亜大陸","example":"India is often called a subcontinent.","example_ja":"インドはしばしば亜大陸と呼ばれる。","source":"B1: 学校・言葉"},
+{"word":"subgroup","general":"下位グループ","example":"The class was split into small subgroups.","example_ja":"そのクラスは小さな下位グループに分けられた。","source":"B1: 学校・言葉"},
+{"word":"subparagraph","general":"小段落","example":"The rule was listed in a subparagraph of the contract.","example_ja":"その規則は契約書の小段落に記載されていた。","source":"B1: 学校・言葉"},
+{"word":"subpart","general":"下位部分","example":"Each chapter was divided into subparts.","example_ja":"各章はいくつかの下位部分に分けられていた。","source":"B1: 学校・言葉"},
+{"word":"subscribe","general":"購読する","example":"She decided to subscribe to the magazine.","example_ja":"彼女はその雑誌を購読することにした。","source":"B1: 仕事・社会"},
+{"word":"subscriber","general":"購読者","example":"The channel has millions of subscribers.","example_ja":"そのチャンネルには何百万人もの登録者がいる。","source":"B1: 仕事・社会"},
+{"word":"subset","general":"部分集合","example":"This group is just a subset of the larger team.","example_ja":"このグループはより大きなチームの一部にすぎない。","source":"B1: 学校・言葉"},
+{"word":"subsonic","general":"亜音速の","example":"The plane flew at a subsonic speed.","example_ja":"その飛行機は亜音速で飛行した。","source":"B1: 学校・言葉"},
+{"word":"subtract","general":"引き算する","example":"Please subtract the discount from the total.","example_ja":"合計額から割引分を引いてください。","source":"B1: 学校・言葉"},
+{"word":"subtraction","general":"引き算","example":"The children practiced simple subtraction.","example_ja":"子供たちは簡単な引き算を練習した。","source":"B1: 学校・言葉"},
+{"word":"sucker","general":"だまされやすい人、吸盤","example":"He felt like a sucker after the deal fell through.","example_ja":"取引がだめになった後、彼は自分がだまされたように感じた。","source":"B1: 仕事・社会"},
+{"word":"sue","general":"訴える","example":"They decided to sue the company for damages.","example_ja":"彼らはその会社を損害賠償で訴えることにした。","source":"B1: 仕事・社会"},
+{"word":"sugarcane","general":"サトウキビ","example":"The farm grows sugarcane for export.","example_ja":"その農場は輸出用にサトウキビを栽培している。","source":"B1: 料理・食"},
+{"word":"suitably","general":"ふさわしく","example":"She dressed suitably for the occasion.","example_ja":"彼女はその場にふさわしい服装をした。","source":"B1: 家庭・くらし"},
+{"word":"sundown","general":"日没","example":"They arrived just before sundown.","example_ja":"彼らは日没の直前に到着した。","source":"B1: 動物・自然"},
+{"word":"sup","general":"夕食をとる（古風・口語）","example":"They will sup together at seven.","example_ja":"彼らは7時に一緒に夕食をとる予定だ。","source":"B1: 料理・食"},
+{"word":"superb","general":"素晴らしい","example":"The view from the hill was superb.","example_ja":"丘からの眺めは素晴らしかった。","source":"B1: 家庭・くらし"},
+{"word":"superficial","general":"表面的な","example":"His knowledge of the topic was only superficial.","example_ja":"彼のその話題についての知識は表面的なものにすぎなかった。","source":"B1: 学校・言葉"},
+{"word":"supposedly","general":"一応、うわさによると","example":"The house is supposedly haunted.","example_ja":"その家は一応、幽霊が出ると言われている。","source":"B1: 家庭・くらし"},
+{"word":"surge","general":"急増、殺到する","example":"There was a sudden surge in demand.","example_ja":"需要が突然急増した。","source":"B1: 仕事・社会"},
+{"word":"surgery","general":"手術","example":"He had surgery on his knee last month.","example_ja":"彼は先月、膝の手術を受けた。","source":"B1: 仕事・社会"},
+{"word":"swamp","general":"沼地","example":"They paddled a canoe through the swamp.","example_ja":"彼らはその沼地をカヌーで漕いだ。","source":"B1: 動物・自然"},
+{"word":"swampy","general":"沼地の","example":"The ground near the river was swampy.","example_ja":"川の近くの地面は沼地だった。","source":"B1: 動物・自然"},
+{"word":"swap","general":"交換する","example":"They agreed to swap seats on the train.","example_ja":"彼らは電車で席を交換することに同意した。","source":"B1: 家庭・くらし"},
+{"word":"swarm","general":"群れ","example":"A swarm of bees flew past the window.","example_ja":"ハチの群れが窓のそばを飛んで行った。","source":"B1: 動物・自然"},
+{"word":"sweetheart","general":"恋人、愛しい人","example":"He called his wife his sweetheart.","example_ja":"彼は妻を「スウィートハート」と呼んだ。","source":"B1: 家庭・くらし"},
+{"word":"sweetness","general":"甘さ","example":"The cake had just the right sweetness.","example_ja":"そのケーキはちょうどよい甘さだった。","source":"B1: 料理・食"},
+{"word":"swell","general":"膨らむ、腫れる","example":"His ankle began to swell after the fall.","example_ja":"転んだ後、彼の足首は腫れ始めた。","source":"B1: 家庭・くらし"},
+{"word":"swollen","general":"腫れた","example":"His swollen ankle made walking difficult.","example_ja":"腫れた足首のせいで彼は歩くのが困難だった。","source":"B1: 家庭・くらし"},
+{"word":"sworn","general":"誓った（swearの過去分詞）","example":"She was sworn in as the new mayor.","example_ja":"彼女は新しい市長として宣誓した。","source":"B1: 仕事・社会"},
+{"word":"swung","general":"振れた（swingの過去形）","example":"He swung the bat with all his strength.","example_ja":"彼は全力でバットを振った。","source":"B1: 家庭・くらし"},
+{"word":"syllable","general":"音節","example":"The word has three syllables.","example_ja":"その単語には3つの音節がある。","source":"B1: 学校・言葉"},
+{"word":"sync","general":"同期する","example":"Please sync your phone with the computer.","example_ja":"電話をコンピューターと同期させてください。","source":"B1: 仕事・社会"},
+{"word":"synonym","general":"同義語","example":"'Happy' and 'glad' are synonyms.","example_ja":"「happy」と「glad」は同義語だ。","source":"B1: 学校・言葉"},
+{"word":"synthetic","general":"合成の","example":"The jacket was made from synthetic material.","example_ja":"そのジャケットは合成素材で作られていた。","source":"B1: 家庭・くらし"},
+{"word":"tack","general":"画鋲、方針","example":"He pinned the note with a tack.","example_ja":"彼はそのメモを画鋲で留めた。","source":"B1: 家庭・くらし"},
+{"word":"tad","general":"少し","example":"Could you turn it up just a tad?","example_ja":"それを少しだけ上げてもらえますか？","source":"B1: 家庭・くらし"},
+{"word":"talented","general":"才能のある","example":"She's a talented young musician.","example_ja":"彼女は才能ある若い音楽家だ。","source":"B1: 仕事・社会"},
+{"word":"tangle","general":"もつれ","example":"The wires were in a tangle behind the desk.","example_ja":"そのコード類は机の後ろでもつれていた。","source":"B1: 家庭・くらし"},
+{"word":"tanner","general":"なめし革職人","example":"The tanner worked with animal hides.","example_ja":"なめし革職人は動物の皮を扱っていた。","source":"B1: 仕事・社会"},
+{"word":"tantrum","general":"かんしゃく","example":"The toddler threw a tantrum in the store.","example_ja":"その幼児は店でかんしゃくを起こした。","source":"B1: 家庭・くらし"},
+{"word":"tar","general":"タール","example":"Workers spread hot tar on the road.","example_ja":"作業員たちは道路に熱いタールを敷いた。","source":"B1: 仕事・社会"},
+{"word":"tart","general":"酸味のある、タルト","example":"She baked a lemon tart for dessert.","example_ja":"彼女はデザートにレモンタルトを焼いた。","source":"B1: 料理・食"},
+{"word":"tastebud","general":"味蕾","example":"Spicy food can overwhelm your tastebuds.","example_ja":"辛い食べ物は味蕾を圧倒することがある。","source":"B1: 料理・食"},
+{"word":"tavern","general":"居酒屋","example":"They had dinner at a cozy tavern.","example_ja":"彼らは居心地の良い居酒屋で夕食をとった。","source":"B1: 料理・食"},
+{"word":"tbsp","general":"大さじ（tablespoonの略）","example":"Add two tbsp of olive oil.","example_ja":"オリーブオイルを大さじ2杯加えてください。","source":"B1: 料理・食"},
+{"word":"teal","general":"ティール色（青緑）","example":"She painted the wall a soft teal.","example_ja":"彼女は壁を柔らかいティール色に塗った。","source":"B1: 家庭・くらし"},
+{"word":"tease","general":"からかう","example":"His friends began to tease him about the haircut.","example_ja":"友人たちは彼の髪型についてからかい始めた。","source":"B1: 家庭・くらし"},
+{"word":"televised","general":"テレビ放映された","example":"The match was televised live.","example_ja":"その試合は生中継でテレビ放映された。","source":"B1: 仕事・社会"},
+{"word":"temper","general":"気性、機嫌","example":"He has a quick temper.","example_ja":"彼はすぐにかっとなる気性だ。","source":"B1: 家庭・くらし"},
+{"word":"theft","general":"盗み","example":"The store reported a theft last night.","example_ja":"その店は昨夜、盗難を報告した。","source":"B1: 仕事・社会"},
+{"word":"thermal","general":"熱の","example":"She wore thermal socks in winter.","example_ja":"彼女は冬に保温性のある靴下を履いた。","source":"B1: 家庭・くらし"},
+{"word":"thickening","general":"濃くすること","example":"The sauce needed some thickening.","example_ja":"そのソースはもう少しとろみをつける必要があった。","source":"B1: 料理・食"},
+{"word":"thickness","general":"厚さ","example":"Check the thickness of the wood before cutting.","example_ja":"切る前に木材の厚さを確認してください。","source":"B1: 家庭・くらし"},
+{"word":"thigh","general":"太もも","example":"He pulled a muscle in his thigh.","example_ja":"彼は太ももの筋肉を痛めた。","source":"B1: 家庭・くらし"},
+{"word":"thinker","general":"思想家","example":"He was known as a deep thinker.","example_ja":"彼は深く物事を考える人として知られていた。","source":"B1: 学校・言葉"},
+{"word":"thorn","general":"とげ","example":"A thorn got stuck in her finger.","example_ja":"とげが彼女の指に刺さった。","source":"B1: 動物・自然"},
+{"word":"thorny","general":"とげのある","example":"The rose bush was thorny.","example_ja":"そのバラの茂みにはとげがあった。","source":"B1: 動物・自然"},
+{"word":"tickle","general":"くすぐる","example":"She tried to tickle the baby's feet.","example_ja":"彼女は赤ちゃんの足をくすぐろうとした。","source":"B1: 家庭・くらし"},
+{"word":"timber","general":"木材","example":"The house was built with local timber.","example_ja":"その家は地元の木材で建てられた。","source":"B1: 仕事・社会"},
+{"word":"tiptoe","general":"つま先立ちで歩く","example":"He tried to tiptoe past the sleeping dog.","example_ja":"彼は眠っている犬のそばをつま先立ちで通り過ぎようとした。","source":"B1: 家庭・くらし"},
+{"word":"tiredness","general":"疲労","example":"She felt a wave of tiredness after the trip.","example_ja":"彼女はその旅行の後、疲労の波を感じた。","source":"B1: 家庭・くらし"},
+{"word":"toad","general":"ヒキガエル","example":"A toad hopped across the garden path.","example_ja":"ヒキガエルが庭の小道を跳んで横切った。","source":"B1: 動物・自然"},
+{"word":"toenail","general":"足の爪","example":"He accidentally cut his toenail too short.","example_ja":"彼はうっかり足の爪を短く切りすぎた。","source":"B1: 家庭・くらし"},
+{"word":"tolerate","general":"我慢する","example":"She couldn't tolerate the loud noise anymore.","example_ja":"彼女はもうその大きな音に我慢できなかった。","source":"B1: 家庭・くらし"},
+{"word":"toll","general":"通行料、犠牲者数","example":"They paid the toll at the bridge.","example_ja":"彼らは橋の通行料を払った。","source":"B1: 仕事・社会"},
+{"word":"tortoise","general":"陸ガメ","example":"The tortoise moved slowly across the yard.","example_ja":"その陸ガメは庭をゆっくりと横切った。","source":"B1: 動物・自然"},
+{"word":"toxic","general":"有毒な","example":"The chemical is toxic if swallowed.","example_ja":"その化学物質は飲み込むと有毒だ。","source":"B1: 仕事・社会"},
+{"word":"tracker","general":"追跡装置、追跡者","example":"He installed a tracker on his bike.","example_ja":"彼は自転車に追跡装置を取り付けた。","source":"B1: 仕事・社会"},
+{"word":"trainee","general":"研修生","example":"The new trainee learned quickly.","example_ja":"その新しい研修生は早く学んだ。","source":"B1: 仕事・社会"},
+{"word":"trainmen","general":"鉄道員たち","example":"The trainmen worked in shifts.","example_ja":"鉄道員たちは交代制で働いた。","source":"B1: 仕事・社会"},
+{"word":"trait","general":"特性","example":"Patience is an important trait for a teacher.","example_ja":"忍耐力は教師にとって重要な特性だ。","source":"B1: 家庭・くらし"},
+{"word":"tram","general":"路面電車","example":"They took the tram downtown.","example_ja":"彼らは路面電車で街中へ行った。","source":"B1: 仕事・社会"},
+{"word":"tramway","general":"路面電車の路線","example":"The old tramway ran through the city center.","example_ja":"その古い路面電車の路線は市の中心部を通っていた。","source":"B1: 仕事・社会"},
+{"word":"transact","general":"取引する","example":"They agreed to transact the deal quickly.","example_ja":"彼らはその取引を速やかに行うことに同意した。","source":"B1: 仕事・社会"},
+{"word":"transcribed","general":"書き起こされた","example":"The interview was transcribed word for word.","example_ja":"そのインタビューは一言一句書き起こされた。","source":"B1: 仕事・社会"},
+{"word":"transcribing","general":"書き起こしている","example":"She spent hours transcribing the recording.","example_ja":"彼女はその録音を書き起こすのに何時間も費やした。","source":"B1: 仕事・社会"},
+{"word":"trapper","general":"わな猟師","example":"The old trapper knew the forest well.","example_ja":"その年老いたわな猟師は森をよく知っていた。","source":"B1: 動物・自然"},
+{"word":"tread","general":"踏む、足取り","example":"Please tread carefully on the ice.","example_ja":"氷の上では慎重に足を踏み出してください。","source":"B1: 家庭・くらし"},
+{"word":"treasurer","general":"会計係","example":"She was elected treasurer of the club.","example_ja":"彼女はそのクラブの会計係に選ばれた。","source":"B1: 仕事・社会"},
+{"word":"treble","general":"3倍、高音","example":"The sound engineer adjusted the treble.","example_ja":"音響技師は高音を調整した。","source":"B1: 学校・言葉"},
+{"word":"trek","general":"長い旅、トレッキング","example":"They went on a trek through the mountains.","example_ja":"彼らは山を通るトレッキングの旅に出た。","source":"B1: 動物・自然"},
+{"word":"triangular","general":"三角形の","example":"The sign had a triangular shape.","example_ja":"その標識は三角形をしていた。","source":"B1: 学校・言葉"},
+{"word":"trickle","general":"したたる、少しずつ流れる","example":"Water began to trickle down the wall.","example_ja":"水が壁を伝ってしたたり始めた。","source":"B1: 家庭・くらし"},
+{"word":"trier","general":"挑戦する人","example":"He's always been a trier, even after failing.","example_ja":"彼は失敗した後でも、いつも挑戦し続ける人だった。","source":"B1: 家庭・くらし"},
+{"word":"trifle","general":"つまらないもの、トライフル（菓子）","example":"She served trifle for dessert.","example_ja":"彼女はデザートにトライフルを出した。","source":"B1: 料理・食"},
+{"word":"tripod","general":"三脚","example":"He set up a tripod for the camera.","example_ja":"彼はカメラ用の三脚を設置した。","source":"B1: 仕事・社会"},
+{"word":"troll","general":"トロール（妖怪）、ネットで荒らす人","example":"The story featured a troll living under a bridge.","example_ja":"その物語には橋の下に住むトロールが登場した。","source":"B1: 学校・言葉"},
+{"word":"trooper","general":"州警察官、兵士","example":"A state trooper pulled the car over.","example_ja":"州警察官はその車を停止させた。","source":"B1: 仕事・社会"},
+{"word":"trophy","general":"トロフィー","example":"The team proudly displayed the trophy.","example_ja":"チームは誇らしげにトロフィーを飾った。","source":"B1: 家庭・くらし"},
+{"word":"trot","general":"小走りする","example":"The horse began to trot along the path.","example_ja":"その馬は小道を小走りし始めた。","source":"B1: 動物・自然"},
+{"word":"trout","general":"マス","example":"They caught trout in the mountain stream.","example_ja":"彼らは山の小川でマスを釣った。","source":"B1: 動物・自然"},
+{"word":"tuber","general":"塊茎","example":"Potatoes are a type of tuber.","example_ja":"ジャガイモは塊茎の一種だ。","source":"B1: 料理・食"},
+{"word":"tumble","general":"転がり落ちる","example":"He watched the rocks tumble down the hill.","example_ja":"彼は岩が丘を転がり落ちるのを見た。","source":"B1: 動物・自然"},
+{"word":"tumbler","general":"タンブラー（コップ）","example":"She poured juice into a tumbler.","example_ja":"彼女はタンブラーにジュースを注いだ。","source":"B1: 料理・食"},
+{"word":"turf","general":"芝生","example":"They laid new turf in the backyard.","example_ja":"彼らは裏庭に新しい芝生を敷いた。","source":"B1: 家庭・くらし"},
+{"word":"tutorial","general":"チュートリアル、指導","example":"She watched a tutorial to learn the software.","example_ja":"彼女はそのソフトを学ぶためにチュートリアル動画を見た。","source":"B1: 学校・言葉"},
+{"word":"twig","general":"小枝","example":"A bird carried a twig to build its nest.","example_ja":"鳥が巣を作るために小枝を運んでいた。","source":"B1: 動物・自然"},
+{"word":"tyres","general":"タイヤ（英複数形）","example":"He checked the tyres before the trip.","example_ja":"彼は旅行前にタイヤを確認した。","source":"B1: 仕事・社会"},
+{"word":"unbeatable","general":"無敵の","example":"Their team seemed unbeatable this season.","example_ja":"彼らのチームは今シーズン、無敵に見えた。","source":"B1: 仕事・社会"},
+{"word":"unchanged","general":"変わっていない","example":"The prices have remained unchanged for years.","example_ja":"価格は何年も変わっていない。","source":"B1: 仕事・社会"},
+{"word":"unchanging","general":"不変の","example":"The routine felt unchanging day after day.","example_ja":"その日課は毎日変わらないように感じられた。","source":"B1: 家庭・くらし"},
+{"word":"undated","general":"日付のない","example":"The letter was undated and unsigned.","example_ja":"その手紙には日付も署名もなかった。","source":"B1: 仕事・社会"},
+{"word":"underage","general":"未成年の","example":"It's illegal to sell alcohol to underage customers.","example_ja":"未成年の客に酒を売ることは違法だ。","source":"B1: 家庭・くらし"},
+{"word":"unfold","general":"広げる、展開する","example":"She began to unfold the map on the table.","example_ja":"彼女はテーブルの上で地図を広げ始めた。","source":"B1: 家庭・くらし"},
+{"word":"unheard","general":"聞かれたことのない","example":"Her complaint went unheard for weeks.","example_ja":"彼女の苦情は何週間も聞き入れられなかった。","source":"B1: 家庭・くらし"},
+{"word":"unholy","general":"神聖でない、けしからん","example":"They made an unholy mess of the kitchen.","example_ja":"彼らは台所をひどく散らかしてしまった。","source":"B1: 家庭・くらし"},
+{"word":"uninsured","general":"保険に入っていない","example":"Driving uninsured is against the law.","example_ja":"保険なしで運転することは法律違反だ。","source":"B1: 仕事・社会"},
+{"word":"unleashed","general":"解き放たれた","example":"The dog's energy was finally unleashed at the park.","example_ja":"その犬のエネルギーは公園でついに解き放たれた。","source":"B1: 動物・自然"},
+{"word":"unload","general":"荷を下ろす","example":"They began to unload the truck.","example_ja":"彼らはトラックの荷を下ろし始めた。","source":"B1: 仕事・社会"},
+{"word":"unmanned","general":"無人の","example":"The unmanned drone flew over the field.","example_ja":"その無人ドローンは畑の上を飛んだ。","source":"B1: 仕事・社会"},
+{"word":"unmet","general":"満たされていない","example":"Several needs in the community remain unmet.","example_ja":"その地域の複数のニーズはまだ満たされていない。","source":"B1: 仕事・社会"},
+{"word":"unseen","general":"見られていない","example":"The photo captured an unseen side of the city.","example_ja":"その写真は街の見られたことのない一面を捉えていた。","source":"B1: 学校・言葉"},
+{"word":"unsigned","general":"署名されていない","example":"The contract was still unsigned.","example_ja":"その契約書はまだ署名されていなかった。","source":"B1: 仕事・社会"},
+{"word":"unsold","general":"売れ残った","example":"Several tickets remained unsold.","example_ja":"いくつかのチケットが売れ残った。","source":"B1: 仕事・社会"},
+{"word":"unsupervised","general":"監督されていない","example":"The children played unsupervised in the yard.","example_ja":"子供たちは監督されずに庭で遊んだ。","source":"B1: 家庭・くらし"},
+{"word":"unused","general":"使われていない","example":"The room had been unused for years.","example_ja":"その部屋は何年も使われていなかった。","source":"B1: 家庭・くらし"},
+{"word":"uphill","general":"上り坂の","example":"The last mile of the race was uphill.","example_ja":"そのレースの最後の1マイルは上り坂だった。","source":"B1: 家庭・くらし"},
+{"word":"upside","general":"良い面、上側","example":"The upside of the delay was extra rest.","example_ja":"その遅れの良い面は追加の休息だった。","source":"B1: 仕事・社会"},
+{"word":"upstate","general":"州の北部・内陸部","example":"They own a cabin upstate.","example_ja":"彼らは州の内陸部にコテージを所有している。","source":"B1: 家庭・くらし"},
+{"word":"upward","general":"上向きの","example":"Sales showed an upward trend.","example_ja":"売上は上昇傾向を示した。","source":"B1: 仕事・社会"},
+{"word":"urge","general":"強い衝動","example":"She felt an urge to laugh.","example_ja":"彼女は笑いたい衝動に駆られた。","source":"B1: 家庭・くらし"},
+{"word":"urine","general":"尿","example":"The doctor asked for a urine sample.","example_ja":"医師は尿サンプルを求めた。","source":"B1: 家庭・くらし"},
+{"word":"utensil","general":"器具","example":"This kitchen utensil is used for peeling fruit.","example_ja":"この台所用具は果物の皮をむくのに使われる。","source":"B1: 料理・食"},
+{"word":"utensils","general":"器具（複数形）","example":"She washed all the cooking utensils.","example_ja":"彼女はすべての調理器具を洗った。","source":"B1: 料理・食"},
+{"word":"vacate","general":"明け渡す","example":"Guests must vacate the room by noon.","example_ja":"宿泊客は正午までに部屋を明け渡さなければならない。","source":"B1: 家庭・くらし"},
+{"word":"vaccinated","general":"予防接種を受けた","example":"All the pets were vaccinated last month.","example_ja":"すべてのペットは先月、予防接種を受けた。","source":"B1: 家庭・くらし"},
+{"word":"vandal","general":"破壊者","example":"A vandal spray-painted the wall overnight.","example_ja":"破壊者が一晩で壁にスプレー塗料を吹きかけた。","source":"B1: 仕事・社会"},
+{"word":"varied","general":"多様な","example":"The menu offers a varied selection.","example_ja":"そのメニューは多様な選択肢を提供している。","source":"B1: 料理・食"},
+{"word":"vary","general":"異なる","example":"Prices vary depending on the season.","example_ja":"価格は季節によって異なる。","source":"B1: 仕事・社会"},
+{"word":"veal","general":"子牛肉","example":"The restaurant served a veal dish.","example_ja":"そのレストランは子牛肉の料理を出した。","source":"B1: 料理・食"},
+{"word":"vegetation","general":"植生","example":"Thick vegetation covered the hillside.","example_ja":"濃い植生が丘の斜面を覆っていた。","source":"B1: 動物・自然"},
+{"word":"veil","general":"ベール","example":"The bride wore a long white veil.","example_ja":"花嫁は長い白いベールをつけていた。","source":"B1: 家庭・くらし"},
+{"word":"venison","general":"鹿肉","example":"They cooked venison for the holiday dinner.","example_ja":"彼らは祝日の夕食に鹿肉を調理した。","source":"B1: 料理・食"},
+{"word":"venue","general":"会場","example":"They booked a venue for the wedding.","example_ja":"彼らは結婚式のために会場を予約した。","source":"B1: 仕事・社会"},
+{"word":"verbal","general":"口頭の","example":"They reached a verbal agreement.","example_ja":"彼らは口頭での合意に達した。","source":"B1: 仕事・社会"},
+{"word":"verify","general":"確認する","example":"Please verify your email address.","example_ja":"メールアドレスを確認してください。","source":"B1: 仕事・社会"},
+{"word":"verse","general":"詩の一節","example":"She memorized a verse from the poem.","example_ja":"彼女はその詩の一節を暗記した。","source":"B1: 学校・言葉"},
+{"word":"villager","general":"村人","example":"A villager offered them fresh bread.","example_ja":"村人が彼らに焼きたてのパンを差し出した。","source":"B1: 家庭・くらし"},
+{"word":"villagers","general":"村人たち","example":"The villagers gathered for the festival.","example_ja":"村人たちはその祭りのために集まった。","source":"B1: 家庭・くらし"},
+{"word":"vodka","general":"ウォッカ","example":"He mixed vodka with orange juice.","example_ja":"彼はウォッカをオレンジジュースと混ぜた。","source":"B1: 家庭・くらし"},
+{"word":"vomit","general":"嘔吐する","example":"The child began to vomit after the ride.","example_ja":"その子供は乗り物の後に吐き始めた。","source":"B1: 家庭・くらし"},
+{"word":"wales","general":"ウェールズ（地名）","example":"They spent their holiday in Wales.","example_ja":"彼らはウェールズで休暇を過ごした。","source":"B1: 動物・自然"},
+{"word":"walkway","general":"歩道","example":"A wooden walkway led to the beach.","example_ja":"木製の歩道がビーチへと続いていた。","source":"B1: 家庭・くらし"},
+{"word":"wand","general":"杖、魔法の杖","example":"In the story, she waved a magic wand.","example_ja":"その物語では、彼女は魔法の杖を振った。","source":"B1: 家庭・くらし"},
+{"word":"warn","general":"警告する","example":"The sign warned drivers of the sharp turn.","example_ja":"その標識は運転手に急カーブを警告していた。","source":"B1: 仕事・社会"},
+{"word":"warrior","general":"戦士","example":"The statue depicted an ancient warrior.","example_ja":"その像は古代の戦士を描いていた。","source":"B1: 学校・言葉"},
+{"word":"warsaw","general":"ワルシャワ（地名）","example":"They visited Warsaw last spring.","example_ja":"彼らは去年の春、ワルシャワを訪れた。","source":"B1: 動物・自然"},
+{"word":"wartime","general":"戦時中の","example":"Wartime shortages affected everyone.","example_ja":"戦時中の物資不足はすべての人に影響を与えた。","source":"B1: 仕事・社会"},
+{"word":"washtub","general":"洗濯だらい","example":"The old washtub sat in the corner of the yard.","example_ja":"古い洗濯だらいが庭の隅に置かれていた。","source":"B1: 家庭・くらし"},
+{"word":"wasp","general":"スズメバチ","example":"A wasp landed on the picnic table.","example_ja":"スズメバチがピクニックテーブルにとまった。","source":"B1: 動物・自然"},
+{"word":"watercolor","general":"水彩画","example":"She painted a watercolor of the harbor.","example_ja":"彼女は港の水彩画を描いた。","source":"B1: 家庭・くらし"},
+{"word":"waterloo","general":"ワーテルロー（地名、決定的敗北の意味も）","example":"The project became his Waterloo.","example_ja":"そのプロジェクトは彼にとっての決定的な敗北となった。","source":"B1: 学校・言葉"},
+{"word":"waterproof","general":"防水の","example":"He bought a waterproof jacket for the hike.","example_ja":"彼はハイキング用に防水ジャケットを買った。","source":"B1: 家庭・くらし"},
+{"word":"wavy","general":"波打った","example":"She has long, wavy hair.","example_ja":"彼女は長くウェーブのかかった髪をしている。","source":"B1: 家庭・くらし"},
+{"word":"weasel","general":"イタチ","example":"A weasel darted through the grass.","example_ja":"イタチが草むらを駆け抜けた。","source":"B1: 動物・自然"},
+{"word":"weave","general":"織る","example":"She learned to weave baskets from grass.","example_ja":"彼女は草でかごを編むことを学んだ。","source":"B1: 家庭・くらし"},
+{"word":"webcam","general":"ウェブカメラ","example":"He set up a webcam for the meeting.","example_ja":"彼はその会議用にウェブカメラを設置した。","source":"B1: 仕事・社会"},
+{"word":"weed","general":"雑草","example":"She pulled weeds from the garden.","example_ja":"彼女は庭から雑草を抜いた。","source":"B1: 動物・自然"},
+{"word":"weird","general":"奇妙な","example":"That was a weird dream.","example_ja":"それは奇妙な夢だった。","source":"B1: 家庭・くらし"},
+{"word":"wellington","general":"長靴（ウェリントンブーツ）","example":"He put on his wellingtons before the walk.","example_ja":"彼は散歩の前に長靴を履いた。","source":"B1: 家庭・くらし"},
+{"word":"welsh","general":"ウェールズの","example":"They learned a few Welsh words.","example_ja":"彼らはウェールズ語の単語をいくつか学んだ。","source":"B1: 学校・言葉"},
+{"word":"westerly","general":"西からの","example":"A westerly wind blew across the field.","example_ja":"西からの風が野原を吹き抜けた。","source":"B1: 動物・自然"},
+{"word":"wheat","general":"小麦","example":"The field was full of golden wheat.","example_ja":"その畑は金色の小麦でいっぱいだった。","source":"B1: 料理・食"},
+{"word":"whip","general":"むち","example":"He cracked the whip in the air.","example_ja":"彼は空中でむちを鳴らした。","source":"B1: 家庭・くらし"},
+{"word":"whiskers","general":"ひげ（動物の）","example":"The cat's whiskers twitched.","example_ja":"その猫のひげがぴくぴく動いた。","source":"B1: 動物・自然"},
+{"word":"whitefish","general":"白身魚","example":"They grilled whitefish for dinner.","example_ja":"彼らは夕食に白身魚を焼いた。","source":"B1: 料理・食"},
+{"word":"wicked","general":"意地悪な、邪悪な","example":"The story featured a wicked witch.","example_ja":"その物語には意地悪な魔女が登場した。","source":"B1: 学校・言葉"},
+{"word":"willow","general":"柳","example":"A willow tree grew beside the pond.","example_ja":"池のそばに柳の木が生えていた。","source":"B1: 動物・自然"},
+{"word":"windmill","general":"風車","example":"The old windmill still turned slowly.","example_ja":"その古い風車は今もゆっくりと回っていた。","source":"B1: 動物・自然"},
+{"word":"witchcraft","general":"魔法、魔術","example":"The village had old stories about witchcraft.","example_ja":"その村には魔術についての古い話があった。","source":"B1: 学校・言葉"},
+{"word":"worktable","general":"作業台","example":"He kept his tools on the worktable.","example_ja":"彼は道具を作業台に置いていた。","source":"B1: 仕事・社会"},
+{"word":"workweek","general":"労働週","example":"The standard workweek is forty hours.","example_ja":"標準的な労働週は40時間だ。","source":"B1: 仕事・社会"},
+{"word":"worm","general":"虫、ミミズ","example":"The bird pulled a worm from the ground.","example_ja":"鳥が地面からミミズを引っ張り出した。","source":"B1: 動物・自然"},
+{"word":"wren","general":"ミソサザイ","example":"A small wren sang from the branch.","example_ja":"小さなミソサザイが枝から歌っていた。","source":"B1: 動物・自然"},
+{"word":"yarn","general":"毛糸","example":"She bought yarn to knit a scarf.","example_ja":"彼女はマフラーを編むために毛糸を買った。","source":"B1: 家庭・くらし"},
+{"word":"yeast","general":"酵母","example":"The recipe calls for a packet of yeast.","example_ja":"そのレシピには酵母1パックが必要だ。","source":"B1: 料理・食"},
+{"word":"yellowish","general":"黄色みがかった","example":"The old paper had turned yellowish.","example_ja":"その古い紙は黄色みを帯びていた。","source":"B1: 家庭・くらし"},
+{"word":"zodiac","general":"十二宮、星座","example":"She checked her zodiac sign in the magazine.","example_ja":"彼女は雑誌で自分の星座を確認した。","source":"B1: 学校・言葉"},
+{"word":"aha","general":"ああ、なるほど","example":"Aha! I found my keys.","example_ja":"あっ、鍵が見つかった！","source":"A1-A2: 家庭・くらし"},
+{"word":"hoodie","general":"フード付きパーカー","example":"He wore a blue hoodie.","example_ja":"彼は青いパーカーを着ていた。","source":"A1-A2: 家庭・くらし"},
+{"word":"pea","general":"エンドウ豆","example":"She ate a pea from her plate.","example_ja":"彼女は皿からエンドウ豆をひとつ食べた。","source":"A1-A2: 料理・食"},
+{"word":"rang","general":"鳴った（ringの過去形）","example":"The phone rang loudly.","example_ja":"電話が大きな音で鳴った。","source":"A1-A2: 家庭・くらし"},
+{"word":"scarves","general":"マフラー（複数形）","example":"They wore warm scarves.","example_ja":"彼らは暖かいマフラーをしていた。","source":"A1-A2: 家庭・くらし"},
+{"word":"sis","general":"妹・姉（口語）","example":"My sis is younger than me.","example_ja":"私の妹は私より年下だ。","source":"A1-A2: 家庭・くらし"},
+{"word":"smiley","general":"にっこりマーク、にこにこした","example":"She drew a smiley face.","example_ja":"彼女はにっこりマークを描いた。","source":"A1-A2: 家庭・くらし"},
+{"word":"stapler","general":"ホッチキス","example":"He used a stapler for the papers.","example_ja":"彼は書類にホッチキスを使った。","source":"A1-A2: 学校・言葉"},
+{"word":"tube","general":"チューブ、管","example":"She squeezed the tube of toothpaste.","example_ja":"彼女は歯磨き粉のチューブを絞った。","source":"A1-A2: 家庭・くらし"},
+{"word":"video","general":"動画","example":"They watched a funny video.","example_ja":"彼らは面白い動画を見た。","source":"A1-A2: 家庭・くらし"},
+{"word":"backache","general":"背中の痛み","example":"He had a backache after work.","example_ja":"彼は仕事の後、背中が痛かった。","source":"A1-A2: 家庭・くらし"},
+{"word":"brush","general":"ブラシ","example":"She brushed her hair before bed.","example_ja":"彼女は寝る前に髪をブラシでとかした。","source":"A1-A2: 家庭・くらし"},
+{"word":"bucket","general":"バケツ","example":"He filled the bucket with water.","example_ja":"彼はバケツに水を満たした。","source":"A1-A2: 家庭・くらし"},
+{"word":"claw","general":"（動物の）爪","example":"The cat scratched with its claw.","example_ja":"猫は爪でひっかいた。","source":"A1-A2: 動物・自然"},
+{"word":"cork","general":"コルク栓","example":"He pulled the cork out of the bottle.","example_ja":"彼は瓶からコルク栓を抜いた。","source":"A1-A2: 料理・食"},
+{"word":"cuff","general":"（袖・ズボンの）折り返し","example":"He rolled up his cuff.","example_ja":"彼は袖口をまくり上げた。","source":"A1-A2: 家庭・くらし"},
+{"word":"deodorant","general":"制汗剤","example":"He put on deodorant in the morning.","example_ja":"彼は朝、制汗剤をつけた。","source":"A1-A2: 家庭・くらし"},
+{"word":"ding","general":"チンという音","example":"The microwave gave a ding.","example_ja":"電子レンジがチンと鳴った。","source":"A1-A2: 家庭・くらし"},
+{"word":"dough","general":"（パンなどの）生地","example":"She kneaded the dough.","example_ja":"彼女は生地をこねた。","source":"A1-A2: 料理・食"},
+{"word":"drier","general":"乾燥機","example":"She took the towels out of the drier.","example_ja":"彼女は乾燥機からタオルを取り出した。","source":"A1-A2: 家庭・くらし"},
+{"word":"earbud","general":"（耳栓型の）イヤホン","example":"He lost one earbud on the train.","example_ja":"彼は電車でイヤホンを片方なくした。","source":"A1-A2: 家庭・くらし"},
+{"word":"eleventh","general":"11番目の","example":"Today is the eleventh of May.","example_ja":"今日は5月11日だ。","source":"A1-A2: 学校・言葉"},
+{"word":"eyelashes","general":"まつ毛","example":"Her eyelashes were long.","example_ja":"彼女のまつ毛は長かった。","source":"A1-A2: 家庭・くらし"},
+{"word":"foul","general":"卑劣な、（スポーツの）ファウル","example":"The referee called a foul.","example_ja":"審判はファウルを宣告した。","source":"A1-A2: 学校・言葉"},
+{"word":"granny","general":"おばあちゃん","example":"Granny made us cookies.","example_ja":"おばあちゃんは私たちにクッキーを作ってくれた。","source":"A1-A2: 家庭・くらし"},
+{"word":"grayish","general":"灰色がかった（米）","example":"The sky looked grayish before the storm.","example_ja":"嵐の前、空は灰色がかって見えた。","source":"A1-A2: 家庭・くらし"},
+{"word":"greyish","general":"灰色がかった（英）","example":"Her coat was a greyish blue.","example_ja":"彼女のコートは灰色がかった青だった。","source":"A1-A2: 家庭・くらし"},
+{"word":"imp","general":"小悪魔、いたずらっ子","example":"The little boy acted like an imp.","example_ja":"その小さな男の子は小悪魔のように振る舞った。","source":"A1-A2: 家庭・くらし"},
+{"word":"lasagna","general":"ラザニア","example":"They ate lasagna for dinner.","example_ja":"彼らは夕食にラザニアを食べた。","source":"A1-A2: 料理・食"},
+{"word":"mane","general":"（馬・ライオンの）たてがみ","example":"The lion had a thick mane.","example_ja":"そのライオンは太いたてがみを持っていた。","source":"A1-A2: 動物・自然"},
+{"word":"petal","general":"花びら","example":"A petal fell from the rose.","example_ja":"バラから花びらが一枚落ちた。","source":"A1-A2: 動物・自然"},
+{"word":"prep","general":"予習、準備","example":"She finished her prep before class.","example_ja":"彼女は授業の前に予習を終えた。","source":"A1-A2: 学校・言葉"},
+{"word":"pupil","general":"生徒、瞳孔","example":"The pupil raised her hand.","example_ja":"その生徒は手を挙げた。","source":"A1-A2: 学校・言葉"},
+{"word":"pyjamas","general":"パジャマ","example":"He put on his pyjamas before bed.","example_ja":"彼は寝る前にパジャマを着た。","source":"A1-A2: 家庭・くらし"},
+{"word":"refill","general":"おかわり、詰め替え","example":"Can I get a refill of coffee?","example_ja":"コーヒーのおかわりをもらえますか？","source":"A1-A2: 料理・食"},
+{"word":"reindeer","general":"トナカイ","example":"The reindeer pulled the sled.","example_ja":"トナカイがそりを引いた。","source":"A1-A2: 動物・自然"},
+{"word":"reptile","general":"爬虫類","example":"A lizard is a type of reptile.","example_ja":"トカゲは爬虫類の一種だ。","source":"A1-A2: 動物・自然"},
+{"word":"rib","general":"肋骨","example":"He hurt his rib playing sports.","example_ja":"彼はスポーツをして肋骨を痛めた。","source":"A1-A2: 家庭・くらし"},
+{"word":"rider","general":"（馬・バイクなどの）乗り手","example":"The rider guided the horse gently.","example_ja":"その乗り手は優しく馬を導いた。","source":"A1-A2: 動物・自然"},
+{"word":"rubles","general":"ルーブル（ロシアの通貨単位、複数形）","example":"The souvenir cost fifty rubles.","example_ja":"そのお土産は50ルーブルだった。","source":"A1-A2: 仕事・社会"},
+{"word":"rugby","general":"ラグビー","example":"They watched a rugby match.","example_ja":"彼らはラグビーの試合を見た。","source":"A1-A2: 学校・言葉"},
+{"word":"scrub","general":"ごしごし洗う","example":"She scrubbed the pots after dinner.","example_ja":"彼女は夕食後に鍋をごしごし洗った。","source":"A1-A2: 家庭・くらし"},
+{"word":"spam","general":"迷惑メール","example":"He deleted the spam emails.","example_ja":"彼は迷惑メールを削除した。","source":"A1-A2: 仕事・社会"},
+{"word":"stable","general":"馬小屋、安定した","example":"The horse stayed in the stable.","example_ja":"その馬は馬小屋にいた。","source":"A1-A2: 動物・自然"},
+{"word":"stitch","general":"ひと針、縫い目","example":"She sewed a stitch into the shirt.","example_ja":"彼女はシャツにひと針縫った。","source":"A1-A2: 家庭・くらし"},
+{"word":"stolen","general":"盗まれた","example":"The bike was stolen last week.","example_ja":"その自転車は先週盗まれた。","source":"A1-A2: 家庭・くらし"},
+{"word":"stool","general":"（背もたれのない）丸椅子","example":"He sat on a small stool.","example_ja":"彼は小さな丸椅子に座った。","source":"A1-A2: 家庭・くらし"},
+{"word":"string","general":"紐、糸","example":"She tied the box with string.","example_ja":"彼女は箱を紐で結んだ。","source":"A1-A2: 家庭・くらし"},
+{"word":"strip","general":"細長い一片","example":"He cut a strip of paper.","example_ja":"彼は紙を細長く切った。","source":"A1-A2: 家庭・くらし"},
+{"word":"stripe","general":"しま模様","example":"The shirt had a blue stripe.","example_ja":"そのシャツには青いしま模様があった。","source":"A1-A2: 家庭・くらし"},
+{"word":"subclass","general":"下位区分","example":"This is a subclass of the main group.","example_ja":"これは主要グループの下位区分だ。","source":"A1-A2: 学校・言葉"},
+{"word":"sweaty","general":"汗ばんだ","example":"His shirt was sweaty after the run.","example_ja":"走った後、彼のシャツは汗ばんでいた。","source":"A1-A2: 家庭・くらし"},
+{"word":"syrup","general":"シロップ","example":"She poured syrup on the pancakes.","example_ja":"彼女はパンケーキにシロップをかけた。","source":"A1-A2: 料理・食"},
+{"word":"tab","general":"（画面の）タブ","example":"He opened a new tab on his browser.","example_ja":"彼はブラウザで新しいタブを開いた。","source":"A1-A2: 仕事・社会"},
+{"word":"tablet","general":"タブレット端末","example":"She reads books on her tablet.","example_ja":"彼女はタブレットで本を読む。","source":"A1-A2: 家庭・くらし"},
+{"word":"tame","general":"人に慣れた","example":"The tame rabbit let us pet it.","example_ja":"その人に慣れたウサギは私たちに触らせてくれた。","source":"A1-A2: 動物・自然"},
+{"word":"tan","general":"茶褐色、日焼け","example":"He got a tan on vacation.","example_ja":"彼は休暇中に日焼けした。","source":"A1-A2: 家庭・くらし"},
+{"word":"thieves","general":"泥棒たち","example":"The thieves ran away quickly.","example_ja":"泥棒たちは素早く逃げた。","source":"A1-A2: 仕事・社会"},
+{"word":"thrown","general":"投げられた","example":"The ball was thrown across the field.","example_ja":"そのボールは野原の向こうへ投げられた。","source":"A1-A2: 学校・言葉"},
+{"word":"thru","general":"〜を通って（throughの略式表記）","example":"Drive thru the tunnel.","example_ja":"トンネルを通って運転してください。","source":"A1-A2: 仕事・社会"},
+{"word":"thump","general":"ドスンという音","example":"She heard a thump upstairs.","example_ja":"彼女は2階でドスンという音を聞いた。","source":"A1-A2: 家庭・くらし"},
+{"word":"tick","general":"チェック印をつける","example":"He ticked the box on the form.","example_ja":"彼はその用紙のチェック欄に印をつけた。","source":"A1-A2: 学校・言葉"},
+{"word":"torn","general":"破れた","example":"His jacket was torn at the sleeve.","example_ja":"彼のジャケットは袖が破れていた。","source":"A1-A2: 家庭・くらし"},
+{"word":"ups","general":"上昇、好調な事","example":"Life has its ups and downs.","example_ja":"人生には浮き沈みがある。","source":"A1-A2: 仕事・社会"},
+{"word":"wristwatch","general":"腕時計","example":"He checked his wristwatch.","example_ja":"彼は腕時計を確認した。","source":"A1-A2: 家庭・くらし"}
+];
+const STORAGE_KEY = 'vocab-master-progress';
+WORDS.forEach((w, i) => { w.idx = i; });
+
+const BOX_INTERVALS_DAYS = [1, 3, 7, 14, 30, 60, 90];
+const MAX_BOX = 7;
+
+function todayStr(){
+  const d = new Date();
+  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+}
+function addDays(dateStr, days){
+  const d = new Date(dateStr + 'T00:00:00');
+  d.setDate(d.getDate() + days);
+  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+}
+
+let progress = {};
+try{
+  progress = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+}catch(e){ progress = {}; }
+
+let currentSource = 'ALL';
+let isRandom = false;
+function shuffleArray(arr){
+  for(let i = arr.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+let reviewMode = false;
+let reviewFilter = 'due';
+let reviewIndex = 0;
+let reviewConfirmed = new Set();
+let deck = [];
+let originalOrder = [];
+let history = [];
+let flipped = false;
+let loopingWord = null;
+
+function saveProgress(){
+  try{
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
+  }catch(e){}
+}
+
+function getState(idx){
+  return progress[idx] || { box: 0, nextReview: todayStr() };
+}
+
+function sourceFilteredWords(){
+  if(currentSource === 'ALL') return WORDS;
+  return WORDS.filter(w => w.source === currentSource);
+}
+
+function isDue(idx){
+  const st = getState(idx);
+  return st.box === 0 || st.nextReview <= todayStr();
+}
+
+function buildDeck(){
+  const pool = sourceFilteredWords();
+  if(reviewMode){
+    const learned = pool.filter(w => getState(w.idx).box >= 1);
+    let filtered;
+    if(reviewFilter === 'all'){
+      filtered = learned;
+    } else if(reviewFilter === 'due'){
+      filtered = learned.filter(w => isDue(w.idx));
+    } else {
+      const wantBox = parseInt(reviewFilter.slice(1), 10);
+      filtered = learned.filter(w => getState(w.idx).box === wantBox);
+    }
+    filtered.sort((a, b) => getState(a.idx).nextReview.localeCompare(getState(b.idx).nextReview));
+    deck = filtered;
+    if(isRandom) shuffleArray(deck);
+  } else {
+    deck = pool.filter(w => isDue(w.idx));
+    if(isRandom) shuffleArray(deck);
+  }
+  originalOrder = deck.slice();
+  history = [];
+}
+
+function renderSourceFilter(){
+  const sel = document.getElementById('sourceFilter');
+  const sources = Array.from(new Set(WORDS.map(w => w.source)));
+  sel.innerHTML = '';
+  const optAll = document.createElement('option');
+  optAll.value = 'ALL';
+  optAll.textContent = 'すべてのカテゴリ（' + WORDS.length + '語）';
+  sel.appendChild(optAll);
+  sources.forEach(s => {
+    const count = WORDS.filter(w => w.source === s).length;
+    const opt = document.createElement('option');
+    opt.value = s;
+    opt.textContent = s + '（' + count + '語）';
+    sel.appendChild(opt);
+  });
+  sel.addEventListener('change', () => {
+    currentSource = sel.value;
+    buildDeck();
+    render();
+  });
+}
+
+function speakOnce(word, onEnd){
+  const utter = new SpeechSynthesisUtterance(word);
+  utter.lang = 'en-US';
+  utter.rate = 0.85;
+  utter.onend = onEnd;
+  utter.onerror = onEnd;
+  window.speechSynthesis.speak(utter);
+}
+
+function startLoop(word){
+  if(!('speechSynthesis' in window)) return;
+  window.speechSynthesis.cancel();
+  loopingWord = word;
+  const btn = document.querySelector('.speak-btn');
+  if(btn) btn.classList.add('looping');
+
+  const playNext = () => {
+    if(loopingWord !== word) return;
+    speakOnce(word, () => {
+      if(loopingWord !== word) return;
+      setTimeout(() => {
+        if(loopingWord === word) playNext();
+      }, 500);
+    });
+  };
+  playNext();
+}
+
+function stopLoop(){
+  loopingWord = null;
+  window.speechSynthesis.cancel();
+  const btn = document.querySelector('.speak-btn');
+  if(btn) btn.classList.remove('looping');
+}
+
+function updateProgress(){
+  const total = WORDS.length;
+  const learnedAtLeastOnce = WORDS.filter(w => getState(w.idx).box >= 1).length;
+  const masteredCount = WORDS.filter(w => getState(w.idx).box >= MAX_BOX).length;
+  const pool = sourceFilteredWords();
+  const dueCount = pool.filter(w => isDue(w.idx)).length;
+
+  document.getElementById('progressLabel').textContent = `${masteredCount} / ${total} 定着`;
+  document.getElementById('progressFill').style.width = `${(learnedAtLeastOnce/total)*100}%`;
+  document.getElementById('dueLabel').textContent = reviewMode
+    ? `復習対象: ${deck.length}語`
+    : `本日の新規・復習: ${dueCount}語`;
+  document.getElementById('totalLabel').textContent = `全カード: ${total}語`;
+
+  const remaining = deck.length;
+  document.getElementById('remainingLabel').textContent = remaining > 0 ? `残り ${remaining} 語` : '';
+
+  const positionLabel = document.getElementById('positionLabel');
+  const prevBtn = document.getElementById('prevBtn');
+  const restartBtn = document.getElementById('restartBtn');
+  const curForLabel = reviewMode ? deck[reviewIndex] : deck[0];
+  if(remaining > 0 && originalOrder.length > 0 && curForLabel){
+    const posIdx = originalOrder.findIndex(w => w.idx === curForLabel.idx);
+    const displayIdx = posIdx >= 0 ? posIdx + 1 : '?';
+    positionLabel.textContent = `${displayIdx} / ${originalOrder.length} 枚目`;
+  } else {
+    positionLabel.textContent = '';
+  }
+  if(prevBtn) prevBtn.disabled = history.length === 0;
+  if(restartBtn) restartBtn.disabled = originalOrder.length === 0;
+}
+
+function speakerIcon(){
+  return `<svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.06c1.48-.74 2.5-2.26 2.5-4.03zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>`;
+}
+
+function boxLabel(idx){
+  const st = getState(idx);
+  if(st.box >= MAX_BOX) return '定着済み';
+  if(st.box === 0) return '新規';
+  return `Box ${st.box}`;
+}
+
+function fitWordFont(){
+  const wordEl = document.querySelector('#currentCard .word');
+  const row = document.querySelector('#currentCard .word-row');
+  if(!wordEl || !row) return;
+  const speakBtn = row.querySelector('.speak-btn');
+  const reserve = speakBtn ? speakBtn.offsetWidth + 18 : 0;
+  const available = row.clientWidth - reserve - 4;
+  let size = 30;
+  const minSize = 14;
+  wordEl.style.whiteSpace = 'nowrap';
+  wordEl.style.display = 'inline-block';
+  wordEl.style.fontSize = size + 'px';
+  while(wordEl.scrollWidth > available && size > minSize){
+    size -= 1;
+    wordEl.style.fontSize = size + 'px';
+  }
+}
+
+function frontHTML(current){
+  const st = getState(current.idx);
+  const isMastered = st.box >= 1;
+  return `
+    <span class="source-tag">${current.source}</span>
+    <div class="box-badge">${boxLabel(current.idx)}</div>
+    ${!reviewMode ? `
+    <label class="master-checkbox-row">
+      <input type="checkbox" id="masterCbFront" ${isMastered ? 'checked' : ''}>
+      <span>マスター</span>
+    </label>` : ''}
+    <div class="eyebrow">タップして意味を見る</div>
+    <div class="word-row">
+      <div class="word">${current.word}</div>
+      <button class="speak-btn" id="speakBtn" title="発音を聞く">${speakerIcon()}</button>
+    </div>
+    <div class="tap-hint">単語をタップ / クリック</div>
+  `;
+}
+
+function backHTML(current){
+  const st = getState(current.idx);
+  const isMastered = st.box >= 1;
+  return `
+    ${!reviewMode ? `
+    <label class="master-checkbox-row on-back">
+      <input type="checkbox" id="masterCbBack" ${isMastered ? 'checked' : ''}>
+      <span>マスター</span>
+    </label>` : ''}
+    <div class="back-scroll">
+      <div class="word-back-row">
+        <div class="word-back">${current.word}</div>
+        <button class="speak-btn" id="speakBtn" title="発音を聞く">${speakerIcon()}</button>
+      </div>
+      <div class="hint-block">
+        <div class="hint-label">意味</div>
+        <div class="hint-text">${current.general}</div>
+        <div class="general-block">
+          <div class="general-label">EXAMPLE（タップで読み上げ）</div>
+          <div class="general-text example-en" id="exampleSentence">${current.example}</div>
+          <div class="example-ja-text">${current.example_ja}</div>
+        </div>
+      </div>
+      <div class="back-tap-hint tap-hint">タップで単語に戻る</div>
+    </div>
+  `;
+}
+
+function attachSpeakHandler(current){
+  const speakBtn = document.getElementById('speakBtn');
+  if(speakBtn){
+    speakBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if(loopingWord === current.word){
+        stopLoop();
+      } else {
+        startLoop(current.word);
+      }
+    });
+  }
+  const exampleEl = document.getElementById('exampleSentence');
+  if(exampleEl){
+    exampleEl.addEventListener('click', (e) => {
+      e.stopPropagation();
+      speakOnce(current.example, () => {});
+    });
+  }
+  ['masterCbFront', 'masterCbBack'].forEach(id => {
+    const masterCb = document.getElementById(id);
+    if(masterCb){
+      masterCb.addEventListener('click', (e) => e.stopPropagation());
+      masterCb.addEventListener('change', (e) => {
+        if(reviewMode) return;
+        nextCard(e.target.checked);
+      });
+    }
+  });
+}
+
+function currentCard(){
+  if(reviewMode){
+    if(deck.length === 0) return null;
+    if(reviewIndex >= deck.length) reviewIndex = 0;
+    return deck[reviewIndex];
+  }
+  return deck[0] || null;
+}
+
+function render(){
+  stopLoop();
+  const stage = document.getElementById('stage');
+  const controls = document.getElementById('controls');
+  const skipBtn = document.getElementById('skipBtn');
+  const masterBtn = document.getElementById('masterBtn');
+  const controlsSecondary = document.getElementById('controlsSecondary');
+
+  if(reviewMode){
+    skipBtn.textContent = '次へ（スキップ）';
+    masterBtn.textContent = '✓ 覚えている（復習完了）';
+    masterBtn.style.display = '';
+    controlsSecondary.style.display = 'none';
+  } else {
+    skipBtn.textContent = '次へ（まだ）';
+    masterBtn.style.display = 'none';
+  }
+
+  const current = currentCard();
+
+  if(!current){
+    stage.innerHTML = `
+      <div class="empty-state">
+        <div class="word">${reviewMode ? '復習する単語がありません' : 'よくできました'}</div>
+        <p>${reviewMode
+          ? (reviewFilter === 'due'
+              ? '今日、復習日を迎えている単語は今のところありません。<br>上のプルダウンで「すべて」に切り替えると、日付に関係なくこれまでマスターした単語をまとめて確認できます。'
+              : reviewFilter === 'all'
+                ? 'まだ一度も「マスター」にチェックを入れた単語がありません。<br>通常モードで単語を学習すると、ここに復習対象として表示されます。'
+                : 'このサイクルに該当する単語は今のところありません。')
+          : '本日の新規学習・復習はこれで終わりです。<br>「🔁 これまでの単語を復習する」で、今までマスターした単語をまとめて確認できます。'}</p>
+      </div>
+    `;
+    controls.style.display = 'none';
+    controlsSecondary.style.display = 'none';
+    updateProgress();
+    return;
+  }
+
+  controls.style.display = 'flex';
+  if(!reviewMode) controlsSecondary.style.display = 'flex';
+  flipped = false;
+
+  const nextPeek = reviewMode ? null : deck[1];
+
+  stage.innerHTML = `
+    ${nextPeek ? `<div class="card behind"></div>` : ''}
+    <div class="card front" id="currentCard">
+      ${frontHTML(current)}
+    </div>
+  `;
+
+  document.getElementById('currentCard').addEventListener('click', (e) => {
+    if(e.target.closest('.speak-btn')) return;
+    if(e.target.closest('.master-checkbox-row')) return;
+    flipCard();
+  });
+
+  attachSpeakHandler(current);
+  requestAnimationFrame(fitWordFont);
+
+  updateProgress();
+}
+
+function flipCard(){
+  if(flipped) {
+    showFront();
+    return;
+  }
+  stopLoop();
+  const card = document.getElementById('currentCard');
+  const current = currentCard();
+  if(!current) return;
+  flipped = true;
+
+  card.classList.add('flipping');
+  setTimeout(() => {
+    card.classList.add('flipped-card');
+    card.innerHTML = backHTML(current);
+    attachSpeakHandler(current);
+    card.classList.remove('flipping');
+  }, 220);
+}
+
+function showFront(){
+  const card = document.getElementById('currentCard');
+  const current = currentCard();
+  if(!current) return;
+  flipped = false;
+  card.classList.add('flipping');
+  setTimeout(() => {
+    card.classList.remove('flipped-card');
+    card.innerHTML = frontHTML(current);
+    attachSpeakHandler(current);
+    requestAnimationFrame(fitWordFont);
+    card.classList.remove('flipping');
+  }, 220);
+}
+
+function nextCard(gotIt){
+  const card = document.getElementById('currentCard');
+  if(!card){ return; }
+
+  const current = deck[0];
+  const prevState = Object.assign({}, getState(current.idx));
+
+  history.push({
+    idx: current.idx,
+    gotIt: gotIt,
+    prevState: prevState
+  });
+
+  const st = getState(current.idx);
+  if(gotIt){
+    if(st.box === 0){ st.origin = todayStr(); }
+    const prevBox = st.box;
+    st.box = Math.min(MAX_BOX, st.box + 1);
+    if(prevBox < MAX_BOX){
+      st.nextReview = addDays(st.origin, BOX_INTERVALS_DAYS[st.box - 1]);
+    } else {
+      st.nextReview = addDays(todayStr(), BOX_INTERVALS_DAYS[BOX_INTERVALS_DAYS.length - 1]);
+    }
+  } else {
+    st.box = 0;
+    st.origin = null;
+    st.nextReview = todayStr();
+  }
+  progress[current.idx] = st;
+  saveProgress();
+
+  card.classList.add('exit-left');
+
+  setTimeout(() => {
+    deck.shift();
+    render();
+  }, 260);
+}
+
+function prevCard(){
+  if(history.length === 0) return;
+  const last = history.pop();
+
+  progress[last.idx] = last.prevState;
+  saveProgress();
+
+  const w = WORDS[last.idx];
+  if(w) deck.unshift(w);
+
+  render();
+}
+
+function reviewNext(){
+  if(deck.length === 0) return;
+  reviewIndex = (reviewIndex + 1) % deck.length;
+  render();
+}
+
+function reviewPrev(){
+  if(deck.length === 0) return;
+  reviewIndex = (reviewIndex - 1 + deck.length) % deck.length;
+  render();
+}
+
+function confirmReview(){
+  const current = currentCard();
+  if(!current) return;
+  if(reviewConfirmed.has(current.idx)) return;
+  reviewConfirmed.add(current.idx);
+  const st = getState(current.idx);
+  const prevBox = st.box;
+  st.box = Math.min(MAX_BOX, st.box + 1);
+  if(prevBox < MAX_BOX){
+    st.nextReview = addDays(st.origin || todayStr(), BOX_INTERVALS_DAYS[st.box - 1]);
+  } else {
+    st.nextReview = addDays(todayStr(), BOX_INTERVALS_DAYS[BOX_INTERVALS_DAYS.length - 1]);
+  }
+  progress[current.idx] = st;
+  saveProgress();
+  const card = document.getElementById('currentCard');
+  if(card) card.classList.add('confirmed-flash');
+  setTimeout(() => {
+    const pos = deck.findIndex(w => w.idx === current.idx);
+    if(pos !== -1) deck.splice(pos, 1);
+    if(reviewIndex >= deck.length) reviewIndex = 0;
+    reviewConfirmed.delete(current.idx);
+    render();
+  }, 260);
+}
+
+function restartDeck(){
+  buildDeck();
+  render();
+}
+
+document.getElementById('skipBtn').addEventListener('click', () => {
+  if(reviewMode) reviewNext(); else nextCard(false);
+});
+document.getElementById('masterBtn').addEventListener('click', () => {
+  if(reviewMode) confirmReview(); else nextCard(true);
+});
+document.getElementById('prevBtn').addEventListener('click', () => prevCard());
+document.getElementById('restartBtn').addEventListener('click', () => restartDeck());
+
+document.getElementById('randomToggleBtn').addEventListener('click', () => {
+  isRandom = !isRandom;
+  const btn = document.getElementById('randomToggleBtn');
+  btn.textContent = isRandom ? '🔀 ランダム出題: ON' : '🔀 ランダム出題: OFF';
+  btn.classList.toggle('btn-on', isRandom);
+  buildDeck();
+  render();
+});
+
+document.getElementById('resetBtn').addEventListener('click', () => {
+  const btn = document.getElementById('resetBtn');
+  if(btn.textContent === '本当にリセット？'){
+    progress = {};
+    saveProgress();
+    buildDeck();
+    render();
+    btn.textContent = 'すべてリセット';
+    btn.style.color = '';
+  } else {
+    btn.textContent = '本当にリセット？';
+    btn.style.color = '#e11d48';
+    setTimeout(() => {
+      if(btn.textContent === '本当にリセット？'){
+        btn.textContent = 'すべてリセット';
+        btn.style.color = '';
+      }
+    }, 3000);
+  }
+});
+
+document.getElementById('reviewToggleBtn').addEventListener('click', () => {
+  reviewMode = !reviewMode;
+  reviewIndex = 0;
+  reviewConfirmed.clear();
+  const btn = document.getElementById('reviewToggleBtn');
+  const banner = document.getElementById('reviewBanner');
+  btn.textContent = reviewMode ? '↩ 学習モードに戻る' : '🔁 これまでの単語を復習する';
+  btn.classList.toggle('btn-on', reviewMode);
+  banner.classList.toggle('show', reviewMode);
+  buildDeck();
+  render();
+});
+
+document.getElementById('reviewFilterSelect').addEventListener('change', (e) => {
+  reviewFilter = e.target.value;
+  reviewIndex = 0;
+  if(reviewMode){
+    buildDeck();
+    render();
+  }
+});
+
+document.addEventListener('keydown', (e) => {
+  if(e.code === 'Space'){
+    e.preventDefault();
+    flipCard();
+  } else if(e.code === 'ArrowRight'){
+    if(reviewMode) reviewNext(); else nextCard(false);
+  } else if(e.code === 'ArrowLeft'){
+    if(reviewMode) reviewPrev(); else prevCard();
+  } else if(e.code === 'Enter'){
+    if(reviewMode) confirmReview(); else nextCard(true);
+  }
+});
+
+window.addEventListener('resize', () => { if(!flipped) fitWordFont(); });
+
+renderSourceFilter();
+buildDeck();
+render();
+</script>
+
+</body>
+</html>
