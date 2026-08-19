@@ -611,6 +611,13 @@
   }
   .review-banner.show{ display:block; }
   .example-en{ cursor: pointer; }
+  .master-checkbox-row.on-back{
+    top: 16px;
+    right: 16px;
+    background: var(--bg-deep);
+    padding: 4px 9px;
+    border-radius: 20px;
+  }
 </style>
 </head>
 <body>
@@ -878,7 +885,7 @@ function frontHTML(current){
     <div class="box-badge">${boxLabel(current.idx)}</div>
     ${!reviewMode ? `
     <label class="master-checkbox-row">
-      <input type="checkbox" id="masterCb" ${isMastered ? 'checked' : ''}>
+      <input type="checkbox" id="masterCbFront" ${isMastered ? 'checked' : ''}>
       <span>マスター</span>
     </label>` : ''}
     <div class="eyebrow">タップして意味を見る</div>
@@ -891,7 +898,14 @@ function frontHTML(current){
 }
 
 function backHTML(current){
+  const st = getState(current.idx);
+  const isMastered = st.box >= 1;
   return `
+    ${!reviewMode ? `
+    <label class="master-checkbox-row on-back">
+      <input type="checkbox" id="masterCbBack" ${isMastered ? 'checked' : ''}>
+      <span>マスター</span>
+    </label>` : ''}
     <div class="back-scroll">
       <div class="word-back-row">
         <div class="word-back">${current.word}</div>
@@ -930,14 +944,16 @@ function attachSpeakHandler(current){
       speakOnce(current.example, () => {});
     });
   }
-  const masterCb = document.getElementById('masterCb');
-  if(masterCb){
-    masterCb.addEventListener('click', (e) => e.stopPropagation());
-    masterCb.addEventListener('change', (e) => {
-      if(reviewMode) return;
-      nextCard(e.target.checked);
-    });
-  }
+  ['masterCbFront', 'masterCbBack'].forEach(id => {
+    const masterCb = document.getElementById(id);
+    if(masterCb){
+      masterCb.addEventListener('click', (e) => e.stopPropagation());
+      masterCb.addEventListener('change', (e) => {
+        if(reviewMode) return;
+        nextCard(e.target.checked);
+      });
+    }
+  });
 }
 
 function currentCard(){
@@ -1007,6 +1023,7 @@ function render(){
 
   document.getElementById('currentCard').addEventListener('click', (e) => {
     if(e.target.closest('.speak-btn')) return;
+    if(e.target.closest('.master-checkbox-row')) return;
     flipCard();
   });
 
