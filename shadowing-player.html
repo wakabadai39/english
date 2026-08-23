@@ -395,9 +395,19 @@ function loadTrack(idx, autoplay = true){
 
 fileInput.addEventListener('change', async (e) => {
   const all = Array.from(e.target.files || []);
-  // Only exclude files we're SURE aren't audio (e.g. images/video).
-  // Files with an empty/unknown type (common via OneDrive) are kept.
-  const list = all.filter(f => !f.type || f.type.startsWith('audio/') || (!f.type.startsWith('image/') && !f.type.startsWith('video/') && !f.type.startsWith('text/')));
+  // Judge primarily by file extension (reliable), falling back to MIME type.
+  // MIME types assigned by the OS/cloud provider can be wrong for a specific
+  // file, which previously caused some valid audio files to be silently excluded.
+  const audioExt = /\.(mp3|wav|m4a|aac|ogg|oga|flac|wma|opus|mp4|m4b)$/i;
+  const excluded = [];
+  const list = all.filter(f => {
+    const ok = audioExt.test(f.name) || (f.type && f.type.startsWith('audio/'));
+    if(!ok) excluded.push(`${f.name}（${f.type || '不明'}）`);
+    return ok;
+  });
+  if(excluded.length){
+    alert('以下のファイルは音声として認識されず、除外されました:\n' + excluded.join('\n'));
+  }
   if(!list.length) return;
   files = list;
   loadTrack(0);
