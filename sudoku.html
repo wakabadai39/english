@@ -1,0 +1,1000 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>極限数独</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Shippori+Mincho:wght@500;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap">
+<style>
+/* Layout: one column. A ruled 9x9 grid on paper-grey is the hero; tools and number pad sit directly under it. */
+:root {
+  --bg: #e9edf2;
+  --surface: #f8f9fb;
+  --fg: #101624;
+  --muted: #566176;
+  --thin: #aab3c3;
+  --thick: #101624;
+  --cell: #fbfcfd;
+  --peer: #e4eaf3;
+  --sel: #b7cfff;
+  --same: #ffdf85;
+  --user: #1d4ed8;
+  --note: #5c6880;
+  --err: #cf2038;
+  --err-bg: #ffd7dc;
+  --active: #101624;
+  --on-active: #f8f9fb;
+  --line: #c3cad6;
+  --hl: #c9ecc8;
+  --hl2: #8fd08c;
+  --tg: #e0580c;
+  --font-display: "Shippori Mincho", "Hiragino Mincho ProN", "Yu Mincho", serif;
+  --font-body: "Zen Kaku Gothic New", "Hiragino Sans", "Yu Gothic", system-ui, sans-serif;
+  --font-mono: "DM Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0b0f17; --surface: #151b27; --fg: #e8ecf4; --muted: #94a1b6; --thin: #38425a; --thick: #c8d2e6;
+    --cell: #111723; --peer: #1a2333; --sel: #2a4a8c; --same: #6b5716; --user: #86abff; --note: #8d9ab2;
+    --err: #ff7285; --err-bg: #4d1b24; --active: #e8ecf4; --on-active: #0b0f17; --line: #2a3446; --hl: #1f4e35; --hl2: #2f7a50; --tg: #ff9a4d;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0b0f17; --surface: #151b27; --fg: #e8ecf4; --muted: #94a1b6; --thin: #38425a; --thick: #c8d2e6;
+  --cell: #111723; --peer: #1a2333; --sel: #2a4a8c; --same: #6b5716; --user: #86abff; --note: #8d9ab2;
+  --err: #ff7285; --err-bg: #4d1b24; --active: #e8ecf4; --on-active: #0b0f17; --line: #2a3446; --hl: #1f4e35; --hl2: #2f7a50; --tg: #ff9a4d;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--fg);
+  font-family: var(--font-body); font-size: 15px; line-height: 1.6;
+  padding-inline: 16px; padding-block: 20px 44px;
+}
+.app { max-width: 34rem; margin-inline: auto; display: flex; flex-direction: column; gap: 14px; }
+.head { display: flex; flex-direction: column; gap: 2px; }
+h1 { margin: 0; font-family: var(--font-display); font-weight: 700; font-size: clamp(1.9rem, 8vw, 2.5rem); line-height: 1.15; letter-spacing: .06em; }
+.sub { margin: 0; font-family: var(--font-mono); font-size: 11px; letter-spacing: .08em; color: var(--muted); text-transform: uppercase; }
+
+.seg { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; background: var(--surface); }
+.seg button { border: 0; border-right: 1px solid var(--line); background: transparent; color: var(--fg); font: inherit; font-size: 14px; font-weight: 500; padding: 8px 4px 7px; cursor: pointer; display: flex; flex-direction: column; align-items: center; min-width: 0; line-height: 1.35; }
+.seg button:last-child { border-right: 0; }
+.seg button small { font-family: var(--font-mono); font-size: 10px; color: var(--muted); }
+.seg button[aria-pressed="true"] { background: var(--active); color: var(--on-active); }
+.seg button[aria-pressed="true"] small { color: inherit; opacity: .75; }
+.btn:focus-visible, .seg button:focus-visible, .num:focus-visible { outline: 2px solid var(--user); outline-offset: 2px; }
+
+.info { margin: 0; font-size: 13px; color: var(--muted); min-height: 3.2em; }
+.info b { color: var(--fg); font-weight: 700; }
+.stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+.stat { display: flex; flex-direction: column; gap: 0; border-top: 2px solid var(--thick); padding-top: 4px; }
+.stat span { font-family: var(--font-body); font-size: 11px; color: var(--muted); letter-spacing: .04em; line-height: 1.3; }
+.stat b { font-size: 1.35rem; font-weight: 500; line-height: 1.2; }
+.msg { margin: 0; min-height: 1.7em; font-weight: 700; }
+.msg.win { color: var(--user); }
+
+.board { display: grid; grid-template-columns: repeat(9, minmax(0, 1fr)); width: 100%; aspect-ratio: 1; border: 2px solid var(--thick); background: var(--cell); touch-action: manipulation; }
+.c { position: relative; display: block; margin: 0; padding: 0; min-width: 0; border: 0; border-right: 1px solid var(--thin); border-bottom: 1px solid var(--thin); background: var(--cell); color: var(--user); cursor: pointer; font: inherit; -webkit-tap-highlight-color: transparent; }
+.c:nth-child(9n) { border-right: 0; }
+.c:nth-child(n+73) { border-bottom: 0; }
+.c:nth-child(9n+3), .c:nth-child(9n+6) { border-right: 2px solid var(--thick); }
+.c:nth-child(n+19):nth-child(-n+27), .c:nth-child(n+46):nth-child(-n+54) { border-bottom: 2px solid var(--thick); }
+.c.peer { background: var(--peer); }
+.c.same { background: var(--same); }
+.c.hl { background: var(--hl); }
+.c.sel { background: var(--sel); }
+.c:focus-visible { outline: 2px solid var(--user); outline-offset: -3px; z-index: 2; }
+.v { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-weight: 500; font-size: clamp(1.3rem, 6.4vw, 2.05rem); line-height: 1; }
+.c.given { color: var(--fg); }
+.c.given .v { font-weight: 700; }
+.c.err { background: var(--err-bg); color: var(--err); }
+.c.hl2 { background: var(--hl2); }
+.legend { margin: 0; display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: 12px; color: var(--muted); }
+.legend span { display: inline-flex; align-items: center; gap: 5px; }
+.legend i { width: 14px; height: 14px; border-radius: 3px; display: inline-block; flex: none; }
+.lg-hl { background: var(--hl); border: 1px solid var(--thin); }
+.lg-hl2 { background: var(--hl2); border: 1px solid var(--thin); }
+.lg-tg { box-shadow: inset 0 0 0 2px var(--tg); }
+.c.tg { box-shadow: inset 0 0 0 3px var(--tg); z-index: 1; }
+.nt { position: absolute; inset: 1px; display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(3, 1fr); font-family: var(--font-mono); font-size: clamp(7px, 2.3vw, 11px); line-height: 1; color: var(--note); pointer-events: none; }
+.nt i { font-style: normal; display: flex; align-items: center; justify-content: center; }
+.c.hasv .nt { display: none; }
+.c.ov .nt { color: var(--tg); font-weight: 700; }
+.c.ov .nt i.xd { text-decoration: line-through; opacity: .5; font-weight: 400; }
+
+.tools { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.btn { border: 1px solid var(--line); background: var(--surface); color: var(--fg); font: inherit; font-size: 14px; font-weight: 700; padding: 10px 4px; border-radius: 6px; cursor: pointer; min-width: 0; }
+.btn[aria-pressed="true"] { background: var(--active); color: var(--on-active); border-color: var(--active); }
+.btn:disabled { opacity: .4; cursor: default; }
+.btn.armed { border-color: var(--err); color: var(--err); }
+.pad { display: grid; grid-template-columns: repeat(9, minmax(0, 1fr)); gap: 5px; }
+.num { display: flex; flex-direction: column; align-items: center; gap: 0; padding: 6px 0 4px; border: 1px solid var(--line); background: var(--surface); color: var(--fg); border-radius: 6px; cursor: pointer; font: inherit; min-width: 0; }
+.num b { font-family: var(--font-display); font-weight: 700; font-size: clamp(1.25rem, 6vw, 1.7rem); line-height: 1.15; }
+.num small { font-family: var(--font-mono); font-size: 10px; color: var(--muted); line-height: 1.2; }
+.num.full { opacity: .35; }
+.opts { display: flex; flex-wrap: wrap; gap: 8px 18px; font-size: 13px; }
+.opts label { display: inline-flex; align-items: center; gap: 6px; cursor: pointer; }
+.opts input { accent-color: var(--user); width: 16px; height: 16px; margin: 0; }
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.note { margin: 0; font-size: 12px; color: var(--muted); }
+.hintbox { border: 1px solid var(--line); border-left: 4px solid var(--tg); background: var(--surface); border-radius: 6px; padding: 10px 12px; display: flex; flex-direction: column; gap: 8px; }
+.hintbox[hidden] { display: none; }
+.hb-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.hb-head b { font-size: 15px; }
+.hb-step { font-family: var(--font-mono); font-size: 12px; color: var(--muted); white-space: nowrap; }
+.hb-text { margin: 0; font-size: 14px; line-height: 1.7; white-space: pre-line; }
+.hb-btns { display: flex; gap: 8px; flex-wrap: wrap; }
+.hb-btns .btn { flex: 1 1 auto; padding: 8px 10px; }
+</style>
+
+<main class="app">
+  <header class="head">
+    <h1>極限数独</h1>
+    <p class="sub">unique solution · rated by technique</p>
+  </header>
+
+  <div class="seg" id="tierSeg">
+    <button type="button" data-tier="light" aria-pressed="false">軽め<small>山 2〜3回</small></button>
+    <button type="button" data-tier="std" aria-pressed="true">標準<small>山 3〜4回</small></button>
+    <button type="button" data-tier="heavy" aria-pressed="false">重め<small>山 5回〜</small></button>
+    <button type="button" data-tier="extreme" aria-pressed="false">極限<small>終盤に仮置き</small></button>
+  </div>
+
+  <p class="info" id="info"></p>
+
+  <div class="stats" aria-label="経過">
+    <div class="stat"><span>時間</span><b id="time">00:00</b></div>
+    <div class="stat"><span>ミス</span><b id="miss">0</b></div>
+    <div class="stat"><span>ヒント</span><b id="hint">0</b></div>
+  </div>
+
+  <p class="msg" id="msg" aria-live="polite"></p>
+  <div class="board" id="board" role="grid" aria-label="数独の盤面"></div>
+
+  <section class="hintbox" id="hintbox" hidden aria-live="polite">
+    <div class="hb-head"><b id="hbTitle"></b><span class="hb-step" id="hbStep"></span></div>
+    <p class="hb-text" id="hbText"></p>
+    <p class="legend" id="hbLegend"></p>
+    <div class="hb-btns">
+      <button type="button" class="btn" id="hbWhy">理由を見る</button>
+      <button type="button" class="btn primary" id="hbApply">この手を反映</button>
+      <button type="button" class="btn" id="hbClose">閉じる</button>
+    </div>
+  </section>
+
+  <div class="tools">
+    <button type="button" class="btn" id="noteBtn" aria-pressed="false">メモ</button>
+    <button type="button" class="btn" id="eraseBtn">消す</button>
+    <button type="button" class="btn" id="undoBtn">戻す</button>
+    <button type="button" class="btn" id="hintBtn">ヒント</button>
+  </div>
+  <div class="pad" id="pad"></div>
+
+  <div class="opts">
+    <label><input type="checkbox" id="optErr" checked>ミスを赤く表示</label>
+    <label><input type="checkbox" id="optClean" checked>入力した数字をメモから自動で消す</label>
+  </div>
+  <div class="row2">
+    <button type="button" class="btn" id="fillBtn">候補を自動入力</button>
+    <button type="button" class="btn" id="revealBtn">選んだマスの答え</button>
+    <button type="button" class="btn" id="newBtn">新しい問題</button>
+    <button type="button" class="btn" id="giveBtn">答えを表示</button>
+  </div>
+  <p class="note">ヒントは、盤面の数字だけから決まるマスを1つ探し、「注目するマス」→「理由」→「数字を入れる」の順に進みます。手順はできるだけ短いものを選びます。「山」は、普通のやり方で行き詰まって、ペアやXY-Wingなどが必要になる場面の回数です（軽め＝少ない、重め＝多い）。極限は、論理で盤面を埋めたあと、終盤で短い仮置き（矛盾の確認）が1〜2回だけ必要な問題です。問題は毎回、数字の入れ替えや行・列の並べ替えで形を変えて出題します（難しさは変わりません）。</p>
+</main>
+
+<script>
+function makeHinter() {
+  "use strict";
+  var ROW = [], COL = [], BOX = [], UNITS = [], PEERS = [], SEES = [], POP = new Uint8Array(512);
+  var i, j, r, c, b;
+  for (i = 0; i < 81; i++) { ROW[i] = Math.floor(i / 9); COL[i] = i % 9; BOX[i] = Math.floor(ROW[i] / 3) * 3 + Math.floor(COL[i] / 3); }
+  for (r = 0; r < 9; r++) { var u1 = []; for (c = 0; c < 9; c++) u1.push(r * 9 + c); UNITS.push(u1); }
+  for (c = 0; c < 9; c++) { var u2 = []; for (r = 0; r < 9; r++) u2.push(r * 9 + c); UNITS.push(u2); }
+  for (b = 0; b < 9; b++) {
+    var u3 = [], br = Math.floor(b / 3) * 3, bc = (b % 3) * 3;
+    for (r = 0; r < 3; r++) for (c = 0; c < 3; c++) u3.push((br + r) * 9 + bc + c);
+    UNITS.push(u3);
+  }
+  for (i = 0; i < 81; i++) {
+    SEES.push(new Uint8Array(81)); PEERS.push([]);
+    for (j = 0; j < 81; j++) if (i !== j && (ROW[i] === ROW[j] || COL[i] === COL[j] || BOX[i] === BOX[j])) { SEES[i][j] = 1; PEERS[i].push(j); }
+  }
+  for (var m = 1; m < 512; m++) POP[m] = POP[m >> 1] + (m & 1);
+
+  var BOXN = ["左上", "上", "右上", "左", "中央", "右", "左下", "下", "右下"];
+  function rc(i) { return (ROW[i] + 1) + "行" + (COL[i] + 1) + "列"; }
+  function cellsText(a) { return a.map(rc).join("、"); }
+  function unitName(u) { return u < 9 ? (u + 1) + "行目" : (u < 18 ? (u - 8) + "列目" : BOXN[u - 18] + "のブロック"); }
+  function dig(mask) { return 32 - Math.clz32(mask); }
+  function digs(mask) { var o = []; for (var d = 0; d < 9; d++) if (mask & (1 << d)) o.push(d + 1); return o.join("・"); }
+  function combos(arr, k, cb) {
+    var pick = [];
+    (function rec(start) {
+      if (pick.length === k) return cb(pick);
+      for (var i = start; i < arr.length; i++) {
+        pick.push(arr[i]);
+        if (rec(i + 1)) { pick.pop(); return true; }
+        pick.pop();
+      }
+      return false;
+    })(0);
+  }
+
+  var v, cand, std;
+  function init(vals, elims) {
+    v = new Int8Array(81); cand = new Int16Array(81); std = new Int16Array(81);
+    for (var i = 0; i < 81; i++) v[i] = vals[i];
+    for (i = 0; i < 81; i++) {
+      if (v[i]) continue;
+      var m = 511;
+      for (var p = 0; p < PEERS[i].length; p++) { var q = PEERS[i][p]; if (v[q]) m &= ~(1 << (v[q] - 1)); }
+      std[i] = m; cand[i] = m & ~(elims ? elims[i] : 0);
+    }
+  }
+  function place(i, d) {
+    v[i] = d; cand[i] = 0;
+    var bit = 1 << (d - 1);
+    for (var p = 0; p < PEERS[i].length; p++) cand[PEERS[i][p]] &= ~bit;
+  }
+  function elimList(cells, maskFor) {
+    var out = [];
+    for (var k = 0; k < cells.length; k++) {
+      var i = cells[k], mk = maskFor(i);
+      if (!v[i] && (cand[i] & mk)) out.push([i, cand[i] & mk]);
+    }
+    return out;
+  }
+
+  function whyNo(i, d) {
+    if (v[i]) return rc(i) + "は" + v[i] + "で埋まっている";
+    for (var p = 0; p < PEERS[i].length; p++) if (v[PEERS[i][p]] === d) return rc(i) + "は" + rc(PEERS[i][p]) + "に" + d + "があるので不可";
+    return rc(i) + "は前の手順で" + d + "が除外済み";
+  }
+  function whyList(cells, keep, d) {
+    var o = [];
+    for (var k = 0; k < cells.length; k++) if (keep.indexOf(cells[k]) < 0) o.push(whyNo(cells[k], d));
+    return o.length ? "\n【" + d + "が入れない理由】" + o.join("、") + "。" : "";
+  }
+  var nakedSingle_unused;
+  var OUT = null;
+  function emit(st) { if (OUT) { OUT.push(st); return null; } return st; }
+
+  // ---- technique steps (each returns the first applicable step or null) ----
+  function nakedSingle() {
+    for (var i = 0; i < 81; i++) if (!v[i] && POP[cand[i]] === 1) {
+      var d = dig(cand[i]);
+      { var _r = emit({ name: "ネイキッドシングル", rank: 1, pattern: [i], targets: [], elim: [], place: [i, d],
+        text: (std[i] === cand[i]
+          ? rc(i) + "は、同じ行・列・ブロックにすでにある数字を除くと、入れられる数字が" + d + "だけです。"
+          : rc(i) + "は、同じ行・列・ブロックにある数字だけを見ると候補は" + digs(std[i]) + "ですが、" + digs(std[i] & ~cand[i]) + "は前の手順（仮置きや候補の除外）で入らないと分かっています。そのため残るのは" + d + "だけです。") }); if (_r) return _r; }
+    }
+    return null;
+  }
+  function hiddenSingle() {
+    for (var u = 0; u < 27; u++) for (var d = 0; d < 9; d++) {
+      var bit = 1 << d, cnt = 0, at = -1;
+      for (var k = 0; k < 9; k++) { var i = UNITS[u][k]; if (!v[i] && (cand[i] & bit)) { cnt++; at = i; } }
+      if (cnt === 1) {
+        { var _r = emit({ name: "ヒドゥンシングル", rank: 2, pattern: [at], targets: [], elim: [], place: [at, d + 1],
+          text: unitName(u) + "の中で、数字" + (d + 1) + "を入れられるマスは" + rc(at) + "だけです。ほかのマスは、同じ行・列・ブロックにある" + (d + 1) + "で塞がれています。" + whyList(UNITS[u], [at], d + 1) + (function () {
+            var ex = []; for (var k2 = 0; k2 < 9; k2++) { var j = UNITS[u][k2]; if (!v[j] && j !== at && (std[j] & bit) && !(cand[j] & bit)) ex.push(j); }
+            return ex.length ? "（" + ex.map(rc).join("・") + "は、前の手順で" + (d + 1) + "が入らないと分かっています。）" : "";
+          })() }); if (_r) return _r; }
+      }
+    }
+    return null;
+  }
+  function locked() {
+    var b, d, k, cs, tg, el;
+    for (b = 0; b < 9; b++) for (d = 0; d < 9; d++) {
+      var bit = 1 << d, u = UNITS[18 + b];
+      cs = u.filter(function (i) { return !v[i] && (cand[i] & bit); });
+      if (cs.length < 2) continue;
+      if (cs.every(function (i) { return ROW[i] === ROW[cs[0]]; })) {
+        tg = UNITS[ROW[cs[0]]].filter(function (j) { return BOX[j] !== b; });
+        el = elimList(tg, function () { return bit; });
+        if (el.length) { var _r = emit({ name: "ロックト・キャンディデイツ", rank: 3, pattern: cs, targets: el.map(function (e) { return e[0]; }), elim: el, place: null,
+          text: unitName(18 + b) + "では、数字" + (d + 1) + "を入れられるのは" + cellsText(cs) + "だけで、すべて" + (ROW[cs[0]] + 1) + "行目にあります。このブロックの" + (d + 1) + "は必ず" + (ROW[cs[0]] + 1) + "行目に入るので、同じ行のブロック外のマス（" + cellsText(el.map(function (e) { return e[0]; })) + "）から" + (d + 1) + "を除外できます。" + whyList(u, cs, d + 1) }); if (_r) return _r; }
+      }
+      if (cs.every(function (i) { return COL[i] === COL[cs[0]]; })) {
+        tg = UNITS[9 + COL[cs[0]]].filter(function (j) { return BOX[j] !== b; });
+        el = elimList(tg, function () { return bit; });
+        if (el.length) { var _r = emit({ name: "ロックト・キャンディデイツ", rank: 3, pattern: cs, targets: el.map(function (e) { return e[0]; }), elim: el, place: null,
+          text: unitName(18 + b) + "では、数字" + (d + 1) + "を入れられるのは" + cellsText(cs) + "だけで、すべて" + (COL[cs[0]] + 1) + "列目にあります。このブロックの" + (d + 1) + "は必ず" + (COL[cs[0]] + 1) + "列目に入るので、同じ列のブロック外のマス（" + cellsText(el.map(function (e) { return e[0]; })) + "）から" + (d + 1) + "を除外できます。" + whyList(u, cs, d + 1) }); if (_r) return _r; }
+      }
+    }
+    for (var l = 0; l < 18; l++) for (d = 0; d < 9; d++) {
+      var bit2 = 1 << d, ul = UNITS[l];
+      cs = ul.filter(function (i) { return !v[i] && (cand[i] & bit2); });
+      if (cs.length < 2) continue;
+      if (cs.every(function (i) { return BOX[i] === BOX[cs[0]]; })) {
+        tg = UNITS[18 + BOX[cs[0]]].filter(function (j) { return ul.indexOf(j) < 0; });
+        el = elimList(tg, function () { return bit2; });
+        if (el.length) { var _r = emit({ name: "ロックト・キャンディデイツ", rank: 3, pattern: cs, targets: el.map(function (e) { return e[0]; }), elim: el, place: null,
+          text: unitName(l) + "では、数字" + (d + 1) + "を入れられるのは" + cellsText(cs) + "だけで、すべて" + unitName(18 + BOX[cs[0]]) + "の中にあります。この" + (d + 1) + "は必ずこのブロックに入るので、ブロック内の他の行・列のマス（" + cellsText(el.map(function (e) { return e[0]; })) + "）から" + (d + 1) + "を除外できます。" + whyList(UNITS[18 + BOX[cs[0]]], cs, d + 1) }); if (_r) return _r; }
+      }
+    }
+    return null;
+  }
+  var SUBN = { 2: "ペア", 3: "トリプル", 4: "クワッド" };
+  function nakedSubset(k, rank) {
+    for (var u = 0; u < 27; u++) {
+      var unit = UNITS[u];
+      var cells = unit.filter(function (i) { return !v[i] && POP[cand[i]] >= 2 && POP[cand[i]] <= k; });
+      if (cells.length < k) continue;
+      var found = null;
+      combos(cells, k, function (pick) {
+        var un = 0; for (var x = 0; x < pick.length; x++) un |= cand[pick[x]];
+        if (POP[un] !== k) return false;
+        var tg = unit.filter(function (j) { return pick.indexOf(j) < 0; });
+        var el = elimList(tg, function () { return un; });
+        if (!el.length) return false;
+        found = emit({ name: "ネイキッド" + SUBN[k], rank: rank, pattern: pick.slice(), targets: el.map(function (e) { return e[0]; }), elim: el, place: null,
+          text: unitName(u) + "で、" + cellsText(pick) + "の候補は" + digs(un) + "だけです。この" + k + "マスで" + digs(un) + "を使い切るので、同じ" + unitName(u) + "の他のマス（" + cellsText(el.map(function (e) { return e[0]; })) + "）から" + digs(un) + "を除外できます。" }); return !!found;
+      });
+      if (found) return found;
+    }
+    return null;
+  }
+  function hiddenSubset(k, rank) {
+    for (var u = 0; u < 27; u++) {
+      var unit = UNITS[u], ds = [];
+      for (var d = 0; d < 9; d++) {
+        var bit = 1 << d, cnt = 0;
+        for (var x = 0; x < 9; x++) if (!v[unit[x]] && (cand[unit[x]] & bit)) cnt++;
+        if (cnt >= 1 && cnt <= k) ds.push(d);
+      }
+      if (ds.length < k) continue;
+      var found = null;
+      combos(ds, k, function (pick) {
+        var dm = 0; for (var x = 0; x < pick.length; x++) dm |= 1 << pick[x];
+        var cells = unit.filter(function (i) { return !v[i] && (cand[i] & dm); });
+        if (cells.length !== k) return false;
+        for (var y = 0; y < pick.length; y++) if (!cells.some(function (i) { return cand[i] & (1 << pick[y]); })) return false;
+        var el = elimList(cells, function (i) { return 511 & ~dm; });
+        if (!el.length) return false;
+        found = emit({ name: "ヒドゥン" + SUBN[k], rank: rank, pattern: cells.slice(), targets: cells.slice(), elim: el, place: null,
+          text: unitName(u) + "で、数字" + digs(dm) + "は" + cellsText(cells) + "にしか入れられません。この" + k + "マスは" + digs(dm) + "で埋まるので、これらのマスから他の候補を除外できます。" }); return !!found;
+      });
+      if (found) return found;
+    }
+    return null;
+  }
+  var FISHN = { 2: "X-Wing", 3: "Swordfish", 4: "Jellyfish" };
+  function fish(n, rank) {
+    for (var d = 0; d < 9; d++) {
+      var bit = 1 << d;
+      for (var mode = 0; mode < 2; mode++) {
+        var bases = [], pos = [];
+        for (var a = 0; a < 9; a++) {
+          var mk = 0, cnt = 0;
+          for (var bb = 0; bb < 9; bb++) {
+            var i = mode === 0 ? a * 9 + bb : bb * 9 + a;
+            if (!v[i] && (cand[i] & bit)) { mk |= 1 << bb; cnt++; }
+          }
+          if (cnt >= 2 && cnt <= n) { bases.push(a); pos[a] = mk; }
+        }
+        if (bases.length < n) continue;
+        var found = null;
+        combos(bases, n, function (pick) {
+          var un = 0; for (var x = 0; x < pick.length; x++) un |= pos[pick[x]];
+          if (POP[un] !== n) return false;
+          var tg = [], pat = [];
+          for (var cc = 0; cc < 9; cc++) {
+            if (!(un & (1 << cc))) continue;
+            for (var aa = 0; aa < 9; aa++) {
+              var i2 = mode === 0 ? aa * 9 + cc : cc * 9 + aa;
+              if (pick.indexOf(aa) >= 0) { if (!v[i2] && (cand[i2] & bit)) pat.push(i2); }
+              else tg.push(i2);
+            }
+          }
+          var el = elimList(tg, function () { return bit; });
+          if (!el.length) return false;
+          var baseT = pick.map(function (x) { return (x + 1); }).join("・") + (mode === 0 ? "行目" : "列目");
+          var coverT = []; for (var q = 0; q < 9; q++) if (un & (1 << q)) coverT.push(q + 1);
+          coverT = coverT.join("・") + (mode === 0 ? "列目" : "行目");
+          found = emit({ name: FISHN[n], rank: rank, pattern: pat, targets: el.map(function (e) { return e[0]; }), elim: el, place: null,
+            text: "数字" + (d + 1) + "は、" + baseT + "のどの" + (mode === 0 ? "行" : "列") + "でも、" + coverT + "のどれかにしか入れられません。" + n + "つの" + (mode === 0 ? "行" : "列") + "がちょうど" + n + "つの" + (mode === 0 ? "列" : "行") + "を使い切るので、" + coverT + "の他のマス（" + cellsText(el.map(function (e) { return e[0]; })) + "）から" + (d + 1) + "を除外できます。" }); return !!found;
+        });
+        if (found) return found;
+      }
+    }
+    return null;
+  }
+  function xyWing() {
+    for (var p = 0; p < 81; p++) {
+      if (v[p] || POP[cand[p]] !== 2) continue;
+      var pm = cand[p];
+      var wings = PEERS[p].filter(function (i) { return !v[i] && POP[cand[i]] === 2 && POP[cand[i] & pm] === 1; });
+      for (var x = 0; x < wings.length; x++) for (var y = x + 1; y < wings.length; y++) {
+        var w1 = wings[x], w2 = wings[y];
+        if ((cand[w1] & pm) === (cand[w2] & pm)) continue;
+        var c1 = cand[w1] & ~pm, c2 = cand[w2] & ~pm;
+        if (c1 !== c2) continue;
+        var tg = [];
+        for (var j = 0; j < 81; j++) if (j !== p && j !== w1 && j !== w2 && SEES[j][w1] && SEES[j][w2]) tg.push(j);
+        var el = elimList(tg, function () { return c1; });
+        if (!el.length) continue;
+        var a = dig(cand[w1] & pm), bq = dig(cand[w2] & pm), cz = dig(c1);
+        { var _r = emit({ name: "XY-Wing", rank: 9, pattern: [p, w1, w2], targets: el.map(function (e) { return e[0]; }), elim: el, place: null,
+          text: "ピボット（要）は" + rc(p) + "で、候補は" + digs(pm) + "です。ウィングは" + rc(w1) + "（" + digs(cand[w1]) + "）と" + rc(w2) + "（" + digs(cand[w2]) + "）。\nピボットが" + a + "なら" + rc(w1) + "は" + cz + "、ピボットが" + bq + "なら" + rc(w2) + "は" + cz + "になります。どちらの場合も、2つのウィングのどちらかが" + cz + "になります。\nだから、両方のウィングから見えるマス（" + cellsText(el.map(function (e) { return e[0]; })) + "）から" + cz + "を除外できます。" }); if (_r) return _r; }
+      }
+    }
+    return null;
+  }
+  function xyzWing() {
+    for (var p = 0; p < 81; p++) {
+      if (v[p] || POP[cand[p]] !== 3) continue;
+      var pm = cand[p];
+      var wings = PEERS[p].filter(function (i) { return !v[i] && POP[cand[i]] === 2 && (cand[i] & ~pm) === 0; });
+      for (var x = 0; x < wings.length; x++) for (var y = x + 1; y < wings.length; y++) {
+        var w1 = wings[x], w2 = wings[y];
+        if ((cand[w1] | cand[w2]) !== pm) continue;
+        var z = cand[w1] & cand[w2];
+        if (POP[z] !== 1) continue;
+        var tg = [];
+        for (var j = 0; j < 81; j++) if (j !== p && j !== w1 && j !== w2 && SEES[j][p] && SEES[j][w1] && SEES[j][w2]) tg.push(j);
+        var el = elimList(tg, function () { return z; });
+        if (!el.length) continue;
+        { var _r = emit({ name: "XYZ-Wing", rank: 10, pattern: [p, w1, w2], targets: el.map(function (e) { return e[0]; }), elim: el, place: null,
+          text: "ピボットは" + rc(p) + "で、候補は" + digs(pm) + "です。ウィングは" + rc(w1) + "（" + digs(cand[w1]) + "）と" + rc(w2) + "（" + digs(cand[w2]) + "）。\nどの数字がピボットに入っても、ピボットか2つのウィングのどれかが" + dig(z) + "になります。\nだから、3つすべてから見えるマス（" + cellsText(el.map(function (e) { return e[0]; })) + "）から" + dig(z) + "を除外できます。" }); if (_r) return _r; }
+      }
+    }
+    return null;
+  }
+  var TECHS = [nakedSingle, hiddenSingle, locked,
+    function () { return nakedSubset(2, 4); }, function () { return hiddenSubset(2, 5); },
+    function () { return nakedSubset(3, 6); }, function () { return hiddenSubset(3, 7); },
+    function () { return fish(2, 8); }, xyWing, xyzWing,
+    function () { return fish(3, 11); }, function () { return nakedSubset(4, 12); },
+    function () { return hiddenSubset(4, 13); }, function () { return fish(4, 14); }];
+
+  // ---- trial (proof by contradiction) ----
+  function applyStep(st) {
+    if (st.place) place(st.place[0], st.place[1]);
+    else for (var k = 0; k < st.elim.length; k++) cand[st.elim[k][0]] &= ~st.elim[k][1];
+  }
+  function propagate(sv, sc, log, strong, maxT) {
+    function put(i, d) {
+      sv[i] = d; sc[i] = 0;
+      var bit = 1 << (d - 1);
+      for (var p = 0; p < PEERS[i].length; p++) sc[PEERS[i][p]] &= ~bit;
+    }
+    for (var guard = 0; guard < 400; guard++) {
+      var i, u, d, k;
+      for (i = 0; i < 81; i++) if (!sv[i] && sc[i] === 0) return rc(i) + "に入れられる数字がなくなってしまいました";
+      var prog = false;
+      for (i = 0; i < 81; i++) if (!sv[i] && POP[sc[i]] === 1) {
+        d = dig(sc[i]); put(i, d); log.push({ i: i, text: "他の数字がすべて塞がれているので、" + rc(i) + "は" + d + "になります。" }); prog = true; break;
+      }
+      if (prog) continue;
+      outer:
+      for (u = 0; u < 27; u++) for (d = 0; d < 9; d++) {
+        var bit = 1 << d, placed = false, cnt = 0, at = -1;
+        for (k = 0; k < 9; k++) {
+          var ci = UNITS[u][k];
+          if (sv[ci] === d + 1) { placed = true; break; }
+          if (!sv[ci] && (sc[ci] & bit)) { cnt++; at = ci; }
+        }
+        if (placed) continue;
+        if (cnt === 0) return unitName(u) + "で数字" + (d + 1) + "を入れる場所がなくなってしまいました";
+        if (cnt === 1) { put(at, d + 1); log.push({ i: at, text: unitName(u) + "で" + (d + 1) + "の入る場所がここだけになるので、" + rc(at) + "は" + (d + 1) + "になります。" }); prog = true; break outer; }
+      }
+      if (prog) continue;
+      if (!strong) return null;
+      var ov = v, oc = cand, st = null;
+      v = sv; cand = sc;
+      for (var t = 2; t <= maxT && !st; t++) st = TECHS[t]();
+      if (st) applyStep(st);
+      v = ov; cand = oc;
+      if (!st) return null;
+      var tg = st.targets.slice(0, 4);
+      log.push({ i: -1, text: st.name + "を使うと、" + cellsText(tg) + (st.targets.length > 4 ? "など" : "") + "の候補が減ります。" });
+    }
+    return null;
+  }
+  function trialStep() {
+    var order = [], i;
+    for (i = 0; i < 81; i++) if (!v[i]) order.push(i);
+    order.sort(function (a, b) { return POP[cand[a]] - POP[cand[b]]; });
+    for (var level = 0; level < 3; level++) {
+      var best = null;
+      for (var oi = 0; oi < order.length; oi++) {
+        i = order[oi];
+        if (best && POP[cand[i]] > 3 && level < 2) break;
+        for (var d = 0; d < 9; d++) {
+          if (!(cand[i] & (1 << d))) continue;
+          var sv = Int8Array.from(v), sc = Int16Array.from(cand), log = [];
+          sv[i] = d + 1; sc[i] = 0;
+          var bit = 1 << d;
+          for (var p = 0; p < PEERS[i].length; p++) sc[PEERS[i][p]] &= ~bit;
+          var why = propagate(sv, sc, log, level >= 1, level === 1 ? 9 : TECHS.length - 1);
+          if (why && (!best || log.length < best.log.length)) best = { i: i, d: d + 1, log: log, why: why };
+        }
+      }
+      if (best) return trialText(best);
+    }
+    return null;
+  }
+  function trialText(best) {
+    var lines = [rc(best.i) + "を" + best.d + "と仮定してみます。"];
+    var shown = best.log.slice(0, 14);
+    for (var s = 0; s < shown.length; s++) lines.push("・" + shown[s].text);
+    if (best.log.length > shown.length) lines.push("・（以下 " + (best.log.length - shown.length) + " 手は省略）");
+    lines.push("すると、" + best.why + "。");
+    lines.push("矛盾するので、" + rc(best.i) + "は" + best.d + "ではありません。");
+    var pat = [best.i];
+    for (var q = 0; q < best.log.length; q++) if (best.log[q].i >= 0) pat.push(best.log[q].i);
+    { var _r = emit({ name: "仮置き（矛盾を探す）", rank: 99, chain: best.log.length, pattern: pat.slice(0, 14), targets: [best.i], elim: [[best.i, 1 << (best.d - 1)]], place: null, text: lines.join("\n") }); if (_r) return _r; }
+  }
+
+  function annotate(st) {
+    var sn = {}, sl = [];
+    st.targets.concat(st.place ? [st.place[0]] : [], st.rank !== 99 && st.pattern.length <= 6 ? st.pattern : []).forEach(function (x) { if (!sn[x] && !v[x]) { sn[x] = 1; sl.push([x, cand[x]]); } });
+    st.snap = sl;
+    if (st.rank !== 99) {
+      var dl = [];
+      sl.forEach(function (x) {
+        var blk = 511 & ~std[x[0]], extra = std[x[0]] & ~x[1];
+        dl.push(rc(x[0]) + "：同じ行・列・ブロックに" + (blk ? digs(blk) : "（なし）") + "があるので、候補は" + digs(x[1]) + (extra ? "（さらに前の手順で" + digs(extra) + "を除外済み）" : "") + "。");
+      });
+      st.derive = dl.length ? "\n【候補の求め方】\n" + dl.join("\n") : "";
+    } else st.derive = "";
+  }
+
+  // ---- shortest-plan search: fewest steps from the visible board to one placed digit ----
+  function singleStep() { return nakedSingle() || hiddenSingle(); }
+  function elimSteps(cap, maxIdx) {
+    OUT = [];
+    for (var t = 2; t <= maxIdx; t++) TECHS[t]();
+    var all = OUT; OUT = null;
+    var seen = {}, res = [];
+    for (var k = 0; k < all.length; k++) {
+      var e = all[k]; if (!e.elim.length) continue;
+      var key = e.elim.map(function (x) { return x[0] + ":" + x[1]; }).join(",");
+      if (seen[key]) continue; seen[key] = 1;
+      e.cnt = 0; for (var q = 0; q < e.elim.length; q++) e.cnt += POP[e.elim[q][1]];
+      res.push(e);
+    }
+    res.sort(function (x, y) { return (x.rank - y.rank) || (y.cnt - x.cnt); });
+    return res.slice(0, cap);
+  }
+  function trialSteps(cap) {
+    var list = [], i, d;
+    for (i = 0; i < 81; i++) {
+      if (v[i]) continue;
+      for (d = 0; d < 9; d++) {
+        if (!(cand[i] & (1 << d))) continue;
+        var sv = Int8Array.from(v), sc = Int16Array.from(cand), log = [];
+        sv[i] = d + 1; sc[i] = 0;
+        var bit = 1 << d;
+        for (var p = 0; p < PEERS[i].length; p++) sc[PEERS[i][p]] &= ~bit;
+        var why = propagate(sv, sc, log, false, 0);
+        if (why) list.push({ i: i, d: d + 1, log: log, why: why });
+      }
+    }
+    list.sort(function (a, b) { return a.log.length - b.log.length; });
+    return list.slice(0, cap).map(trialText);
+  }
+  var CAPS = { 2: 60, 3: 12, 4: 8 };
+  function dfs(depth, allowTrial, trialsLeft, maxIdx) {
+    var s = singleStep(); if (s) return [s];
+    if (depth <= 1) return null;
+    var cs = elimSteps(CAPS[depth] || 8, maxIdx);
+    if (allowTrial && trialsLeft > 0) cs = cs.concat(trialSteps(4));
+    for (var k = 0; k < cs.length; k++) {
+      var c = cs[k], save = Int16Array.from(cand);
+      applyStep(c);
+      var r = dfs(depth - 1, allowTrial, trialsLeft - (c.rank === 99 ? 1 : 0), maxIdx);
+      cand.set(save);
+      if (r) return [c].concat(r);
+    }
+    return null;
+  }
+  function findPlan() {
+    var d, r;
+    for (d = 1; d <= 4; d++) if ((r = dfs(d, false, 0, 9))) return r;
+    for (d = 2; d <= 3; d++) if ((r = dfs(d, true, 2, 9))) return r;
+    return null;
+  }
+  function nextHint(vals, elims) {
+    init(vals, elims);
+    var plan = findPlan();
+    if (!plan) return greedyHint();
+    var steps = [];
+    for (var k = 0; k < plan.length; k++) { annotate(plan[k]); steps.push(plan[k]); applyStep(plan[k]); }
+    return { steps: steps, stuck: false, plan: true };
+  }
+  function greedyHint() {
+    var steps = [];
+    for (var guard = 0; guard < 60; guard++) {
+      var empty = 0, i;
+      for (i = 0; i < 81; i++) if (!v[i]) empty++;
+      if (!empty) return { steps: steps, stuck: false };
+      var st = null;
+      for (var t = 0; t < TECHS.length && !st; t++) st = TECHS[t]();
+      if (!st) st = trialStep();
+      if (!st) return { steps: steps, stuck: true };
+      annotate(st);
+      steps.push(st); applyStep(st);
+      if (st.place) return { steps: steps, stuck: false };
+    }
+    return { steps: steps, stuck: true };
+  }
+  return { nextHint: nextHint, rc: rc };
+}
+
+</script>
+<script>
+(function () {
+  var POOL = {"light":[{"p":".9.7.6...7.......5......26.....31.....96..15....9....351..........2.8..426...35..","s":"895726341726314895143895267482531976379642158651987423518469732937258614264173589","c":24,"w":2,"n":["XY-Wing"],"t":0},{"p":"9..8..7....1.24.5.58........3.4....2..72...892..............3.83.859........6...4","s":"923856741671924853584173926835419672467235189219687435156742398348591267792368514","c":25,"w":3,"n":["XY-Wing"],"t":0},{"p":".3...7..6..13......64....3........9..1.5..2.35.6......98...35.....8........2.54..","s":"839427156751368924264951738327184695418596273596732841982643517145879362673215489","c":23,"w":2,"n":["XY-Wing"],"t":0},{"p":"....4.78.....2..35.5...6........9.21.......4.....5...73.68.1...14.3.....9.......8","s":"291543786764928135853716294687439521512687943439152867326871459148395672975264318","c":23,"w":3,"n":["XY-Wing"],"t":0},{"p":".173.8....4...5..69.6.......9.78.5....8...7...6.....29.....7.5.......4.1..19...8.","s":"217368945843295176956471238192784563538629714764513829389147652675832491421956387","c":25,"w":3,"n":["XY-Wing"],"t":0},{"p":".27..........8..31.....3..5.4..3.6..6..2...975.....2....1.48.........3....697....","s":"327451869954682731168793425742539618683214597519867243271348956895126374436975182","c":23,"w":2,"n":["X-Wing","XY-Wing"],"t":0},{"p":"68.....29......4..5.329....3.2.57..1.19....7......6...9..17.......4.82...3.......","s":"684731529291685437573294168362857941819342675745916382926173854157468293438529716","c":25,"w":3,"n":["XY-Wing"],"t":0},{"p":".31.5.8....4..1..7.......4...3......89....5...7..8.2....8.2.35.....4....16.3.9...","s":"631754892254891637987632145513267984892413576476985213748126359329548761165379428","c":24,"w":2,"n":["XYZ-Wing","X-Wing","XY-Wing"],"t":0},{"p":"...3.........8......6..4.15..8...7..91.....3.....372.....54...95.9.......3..1.6.4","s":"154376982293185467786294315328951746917462538465837291671543829549628173832719654","c":23,"w":3,"n":["XY-Wing"],"t":0},{"p":"...8..3..7.5....1.........2......7.48....1.....6..3.9...32.....6.43....85.9.4...1","s":"912856347735924816468137952391562784857491623246783195183275469624319578579648231","c":23,"w":2,"n":["X-Wing","XY-Wing"],"t":0},{"p":"...3....6......9...97...5.88....246........8..3..5.....16.....9...5....2.84.697..","s":"428395176165827934397641528859732461742916385631458297516273849973584612284169753","c":24,"w":2,"n":["XY-Wing"],"t":0},{"p":".9...1.....2.....76...............2.874....95...43....7..5....6.8.6..9..43.7.9...","s":"397251684142896537658347219563978421874162395921435768719523846285614973436789152","c":23,"w":2,"n":["ヒドゥントリプル","XY-Wing"],"t":0},{"p":".23.....98..........46.....1....9..39.67.1..45.....7..2..9...5.........6.6745....","s":"623175849819234675754698132178549263936721584542386791281963457495817326367452918","c":24,"w":3,"n":["XYZ-Wing"],"t":0},{"p":".8....75.94..6..2.....3....5..1..2....3...8....9.42.....19......3.......7..2.8...","s":"386429751947561328152837946574186239623795814819342675461973582238654197795218463","c":22,"w":2,"n":["XY-Wing"],"t":0},{"p":".45......67...53...3..6.9.7..425.7.9..1...4..........52..4.3...5...96.3.........1","s":"945732816678915342132864957364251789751689423829347165216473598587196234493528671","c":26,"w":2,"n":["XYZ-Wing"],"t":0},{"p":"16....8.2....5........31.........45...3..61.9..9.7.6..6..91.7...2.5.....9...4....","s":"165794832342658917798231546276189453583426179419375628634912785821567394957843261","c":24,"w":3,"n":["XY-Wing"],"t":0}],"std":[{"p":"..58......9.4.6.......9...6..7....92.6........843.91......5..492...8..5....24..1.","s":"615872934798436521423195876137568492962714385584329167871653249246981753359247618","c":25,"w":4,"n":["XY-Wing"],"t":0},{"p":"1.2.....8.6..31.72.........8...........764.5...5.92..........87..3.7..1...7.4.5.9","s":"132957648568431972794286135876315294219764853345892761451629387923578416687143529","c":25,"w":4,"n":["XY-Wing"],"t":0},{"p":"4.6.....9.1.7.3....5..2............78....4.5..2..86......9..3.......524..8..3..1.","s":"436851729219763584758429163645192837891374652327586491162948375973615248584237916","c":23,"w":4,"n":["XY-Wing"],"t":0},{"p":"....6.5......2.64195.......7.4.......2.957....1.3..2..1....6...........8.83...1..","s":"241768593837529641956143782794612835328957416615384279172836954569471328483295167","c":23,"w":3,"n":["X-Wing","XYZ-Wing"],"t":0},{"p":"..43........2....93.8...1....2.7...5.....53.16.1...2.84...6.....2..976..1........","s":"264319857715286439398754126832671945947825361651943278489562713523197684176438592","c":24,"w":4,"n":["XYZ-Wing"],"t":0},{"p":"..6..8.1..1.....2..4....7.53.72....69.....37......1..96.......1.58..........59.4.","s":"296578413715943628843126795387294156921865374564731289679482531458317962132659847","c":24,"w":3,"n":["X-Wing","XY-Wing"],"t":0},{"p":".7.839.....8...1..6........9..5....3..37..94.1..9..8.6.15...7..4......5.....2..91","s":"571839624298654137634271589947586213863712945152943876315498762429167358786325491","c":26,"w":3,"n":["X-Wing","XYZ-Wing","XY-Wing"],"t":0},{"p":"..7...83...86.5....94.....5....9.6272....8.......1...3..5.3.........6.....18..7.2","s":"527941836138625479694783215813594627279368541456217983765432198982176354341859762","c":24,"w":4,"n":["XY-Wing"],"t":0},{"p":".....5.....21...898......1.29.8.4....8......4..3.51...........79....6438...57.69.","s":"179385246562147389834629715295864173681732954743951862316498527957216438428573691","c":26,"w":4,"n":["XY-Wing"],"t":0},{"p":"..4....8..819.......64.2......85...4.98..1.5.6.....7...4....2......19...7.......6","s":"974165382281937465356482179137856924498721653625394718549678231863219547712543896","c":23,"w":4,"n":["XYZ-Wing","X-Wing"],"t":0},{"p":"..28..3......4.98.9.......67..4...3.....16...........9..35..6..4..3.....18....47.","s":"652897314317645982948123756761459238839216547524738169273584691496371825185962473","c":23,"w":4,"n":["XY-Wing"],"t":0},{"p":"...34.29......7..35......8..9...175.......12...1.......2...69..75.....3...3..24..","s":"168345297249687513537129684392461758485793126671258349824536971756914832913872465","c":24,"w":4,"n":["XY-Wing"],"t":0},{"p":"..6..8.1..1.....2.......7.53.72....69.....37......1..96.......1.58..........59.47","s":"296578413715943628843126795387294156921865374564731289679482531458317962132659847","c":24,"w":3,"n":["X-Wing","XY-Wing"],"t":0},{"p":"..6..8.1..1.....28......7.53.72....69.....37......1..96.......1.58.......3..59.4.","s":"296578413715943628843126795387294156921865374564731289679482531458317962132659847","c":25,"w":3,"n":["X-Wing","XY-Wing"],"t":0},{"p":"1.2.....8.6..31.72.........8...........764.5...5.92........9..7..3....1..87.4.5.9","s":"132957648568431972794286135876315294219764853345892761451629387923578416687143529","c":25,"w":4,"n":["XY-Wing"],"t":0},{"p":"3...4.7.5.....763.5.2........1.5.2..9...7..........14.128..9..3......8...9.3.8...","s":"386942715419587632572136984831654297964271358257893146128469573643715829795328461","c":25,"w":4,"n":["XY-Wing"],"t":0}],"heavy":[{"p":".9831.......4.....7...6...4..4.8..72......5....3..1....5.2..19.38..........8...25","s":"498312756261457983735968214914583672826749531573621849657234198382195467149876325","c":24,"w":6,"n":["XY-Wing","XYZ-Wing"],"t":0},{"p":"9.3.6..4.2........61...95...4.25...8..8.9.......3..95..2......3...........6.8547.","s":"953762841287541369614839527149256738538497216762318954825674193471923685396185472","c":25,"w":5,"n":["ネイキッドトリプル","XY-Wing"],"t":0},{"p":"........85.6....9.4.1.9.......97....8.9.....2.....1.5..3...52.......78.5.2..1...4","s":"392756148586124397471398526653972481819543762247681953138465279964237815725819634","c":23,"w":7,"n":["X-Wing","XYZ-Wing"],"t":0},{"p":"...86..4..........7.4.....52....4.1..6...53..8...3.52.3..2.6..9.9......1.....9652","s":"529867143136452798784193265253684917961725384847931526315246879692578431478319652","c":26,"w":6,"n":["X-Wing","XY-Wing"],"t":0},{"p":"...8...4932..9.1....7.4.....5......76..7.......2..15.......23.8.7....9...6.9..2..","s":"516823749324697185987145623451236897638759412792481536149562378275318964863974251","c":24,"w":5,"n":["ネイキッドトリプル","XY-Wing"],"t":0},{"p":"..52.4..9......4.........13.7.34.....6...7.92......6..42.15......67.....73....1.8","s":"185234769693871425247695813972346581864517392351928647428153976516789234739462158","c":25,"w":5,"n":["XY-Wing","ネイキッドトリプル","X-Wing"],"t":0},{"p":"...1..3..3......7...15.2...9.8....1..67..4..2.5....9.4....9....48.7........6.82..","s":"894167325325489176671532489948326517167954832253871964516293748482715693739648251","c":24,"w":5,"n":["ヒドゥントリプル","XY-Wing"],"t":0},{"p":"1..56.9..5.2...4.1....8...64...7....9....3....26....1.......29......8.75.9..56..8","s":"187564932562739481349182756435671829971823564826945317658417293214398675793256148","c":26,"w":5,"n":["ヒドゥントリプル","XY-Wing"],"t":0},{"p":".8.......3.67.8..5.95..37......2.9.8.......53.3.........8..6.2.4..8...76.1...7...","s":"784259361326718495195463782567324918849671253231985647978136524453892176612547839","c":25,"w":5,"n":["X-Wing","XYZ-Wing"],"t":0},{"p":"8...62..4..5.........13.5.2........6.8.....217....6..9....5....6.8..7.4.9.34..6..","s":"831562974295874163467139582549281736386795421712346859174653298628917345953428617","c":25,"w":5,"n":["X-Wing","XY-Wing"],"t":0},{"p":".596.......4...23.....7.5...2....9..3..1.7.4.5............6..5.4.359..82.....4..1","s":"259613478174859236638472519821345967396127845547986123912768354463591782785234691","c":25,"w":5,"n":["XY-Wing","XYZ-Wing"],"t":0},{"p":".......9..6.38...57....6....9.7..4.....2.1....248..1....6....1.....2.84.5...1..3.","s":"438572691169384725752196384891763452375241968624859173286437519913625847547918236","c":24,"w":13,"n":["XYZ-Wing","XY-Wing"],"t":0},{"p":"2..6..13..........9...85....4....5.3...7.24.......68..6.93....7........5.3.4.7..1","s":"275694138184273956963185724742819563856732419391546872619358247427961385538427691","c":24,"w":5,"n":["X-Wing","ネイキッドトリプル"],"t":0},{"p":".......9..6.38...57....6......7..4.....2.1....24..91....6....1..1..2.84.5...1..3.","s":"438572691169384725752196384891763452375241968624859173286437519913625847547918236","c":24,"w":9,"n":["XYZ-Wing","XY-Wing"],"t":0},{"p":"42........5.9.8..7....3.8..69.....25............2916.....51......6.4....74...6.8.","s":"428175396153968247967432851694783125312654978875291634289517463536849712741326589","c":24,"w":5,"n":["X-Wing","ネイキッドトリプル","XY-Wing","ヒドゥントリプル"],"t":0},{"p":"73....6.....2.....95.....2.....76..4.1..2.......4.8..3.....3.1.2.86..5......8.7..","s":"732854691861239475954761328389176254416325987527498163675943812248617539193582746","c":23,"w":5,"n":["ネイキッドトリプル","XY-Wing"],"t":0}],"extreme":[{"p":"..7....42.5..89...4.1.......8..7......5...72..3..4.16....3...8...8..2.516........","s":"897165342253489617461723895986271534145936728732548169524317986378692451619854273","c":24,"w":4,"n":[],"t":2},{"p":"..7....4...98.132.2..............6.1.6....73....9.8..2...3....6...4...7.81...7...","s":"187236945649851327235794168492573681568142739371968452754389216926415873813627594","c":23,"w":4,"n":["XYZ-Wing"],"t":1},{"p":"...2.9...5.....7...41..8..6.....1493.3.....2...8.......12..........276...8.3...1.","s":"873269541526413789941758236267581493139674825458932167612895374394127658785346912","c":23,"w":6,"n":[],"t":1},{"p":"7...986.3...7..........192..19...7..2...4..9..37.1.......42917......53......7....","s":"751298643692734815843561927419852736286347591537916284365429178974185362128673459","c":26,"w":4,"n":[],"t":1},{"p":".5...86.3...7...1.......92..19...7..2...4.....3791.......42917..7...53...........","s":"751298643692734815843561927419852736286347591537916284365429178974185362128673459","c":25,"w":4,"n":[],"t":1},{"p":"75...8.4....7.........6.92...9...7..2...4...1.3791.......4291...7...53...........","s":"751298643692734815843561927419852736286347591537916284365429178974185362128673459","c":24,"w":4,"n":[],"t":1},{"p":"75...86.....7...1..4....92...9...7..2...4.....3791.......4291.......536.....7....","s":"751298643692734815843561927419852736286347591537916284365429178974185362128673459","c":25,"w":6,"n":[],"t":1},{"p":".41..........8.5....3..914..37..26....4.16..2.........5..1....9.2..3........6.8..","s":"841653297792481563653279148137892654984516372265347981576128439428935716319764825","c":23,"w":3,"n":["XY-Wing"],"t":1},{"p":".5...8......7...1.......927.19...7..2...4.....3791.......4291.......536.....7....","s":"751298643692734815843561927419852736286347591537916284365429178974185362128673459","c":24,"w":3,"n":[],"t":1},{"p":"7...986.3...7...1.......92..19...7..2...4...1.3791.......429.7......53......7....","s":"751298643692734815843561927419852736286347591537916284365429178974185362128673459","c":26,"w":5,"n":[],"t":1},{"p":".5...86.3...7...1.......92..19......2...47....3791.......4291...7...53...........","s":"751298643692734815843561927419852736286347591537916284365429178974185362128673459","c":24,"w":4,"n":[],"t":1},{"p":"........85.6....9..71.9.......97....8.9.....2.....1.5..3.4.52.......78.5.2..1...4","s":"392756148586124397471398526653972481819543762247681953138465279964237815725819634","c":24,"w":4,"n":["X-Wing"],"t":1},{"p":"13......98..62.3.4...9..........2.....3....8.69..4.2...6.7.......8..1...4.2....6.","s":"136458729859627314724913658581392476243176985697845231365784192978261543412539867","c":23,"w":4,"n":["XY-Wing"],"t":1},{"p":"..7....4...98.132.2..............6.1.6....73....9.84.....3....6...4...7.81...7...","s":"187236945649851327235794168492573681568142739371968452754389216926415873813627594","c":23,"w":4,"n":["XYZ-Wing"],"t":1},{"p":"75...8......7...1.......92..19...7..2...4.....3791........291.......536....67....","s":"751298643692734815843561927419852736286347591537916284365429178974185362128673459","c":24,"w":3,"n":[],"t":1},{"p":"7...986.3...7...1.......92..19...7..2...4.....3791.......42917......53......7....","s":"751298643692734815843561927419852736286347591537916284365429178974185362128673459","c":26,"w":4,"n":[],"t":1}]};
+  var $ = function (id) { return document.getElementById(id); };
+  var tier = "std";
+  var sol = [], giv = [], v = [], nt = [], sel = -1, noteMode = false;
+  var mistakes = 0, hintsUsed = 0, done = false, started = false, secs = 0, timerId = null, hist = [];
+  var showErr = true, autoClean = true, last = { light: -1, std: -1, heavy: -1, extreme: -1 }, meta = null;
+  var armed = null, armTimer = null;
+  var HT = makeHinter(), hintElims = new Int16Array(81), hintS = null, ovl = new Int16Array(81).fill(-1), ovx = new Int16Array(81), hlSet = new Uint8Array(81), tgSet = new Uint8Array(81);
+
+  var boardEl = $("board"), cells = [], vals = [], ntEls = [], ntCache = [];
+  for (var i = 0; i < 81; i++) {
+    var b = document.createElement("button");
+    b.type = "button"; b.className = "c"; b.dataset.i = i;
+    b.setAttribute("aria-label", (Math.floor(i / 9) + 1) + "行" + (i % 9 + 1) + "列");
+    var s = document.createElement("span"); s.className = "v";
+    var n = document.createElement("span"); n.className = "nt";
+    var ds = [];
+    for (var d = 0; d < 9; d++) { var e = document.createElement("i"); n.appendChild(e); ds.push(e); }
+    b.appendChild(n); b.appendChild(s);
+    boardEl.appendChild(b); cells.push(b); vals.push(s); ntEls.push(ds); ntCache.push(0);
+  }
+  boardEl.addEventListener("click", function (ev) {
+    var t = ev.target.closest(".c");
+    if (t) { sel = +t.dataset.i; render(); }
+  });
+
+  var padEl = $("pad");
+  for (var k = 1; k <= 9; k++) {
+    (function (k) {
+      var nb = document.createElement("button");
+      nb.type = "button"; nb.className = "num"; nb.id = "num" + k;
+      nb.innerHTML = "<b>" + k + "</b><small id='rem" + k + "'>9</small>";
+      nb.addEventListener("click", function () { enter(k); });
+      padEl.appendChild(nb);
+    })(k);
+  }
+
+  function shuffle(a) { for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+  function fmt(t) { var m = Math.floor(t / 60), s = t % 60; return (m < 10 ? "0" : "") + m + ":" + (s < 10 ? "0" : "") + s; }
+  function sees(a, b) { return Math.floor(a / 9) === Math.floor(b / 9) || a % 9 === b % 9 || (Math.floor(a / 27) === Math.floor(b / 27) && Math.floor((a % 9) / 3) === Math.floor((b % 9) / 3)); }
+
+  function transform(ps, ss) {
+    var perm = shuffle([1, 2, 3, 4, 5, 6, 7, 8, 9]);
+    var rows = [], cols = [];
+    shuffle([0, 1, 2]).forEach(function (bd) { shuffle([0, 1, 2]).forEach(function (r) { rows.push(bd * 3 + r); }); });
+    shuffle([0, 1, 2]).forEach(function (bd) { shuffle([0, 1, 2]).forEach(function (r) { cols.push(bd * 3 + r); }); });
+    var tr = Math.random() < 0.5, p = [], s = [];
+    for (var r = 0; r < 9; r++) for (var c = 0; c < 9; c++) {
+      var sr = rows[r], sc = cols[c];
+      if (tr) { var t = sr; sr = sc; sc = t; }
+      var src = sr * 9 + sc, a = ps.charAt(src), bch = ss.charAt(src);
+      p.push(a >= "1" && a <= "9" ? perm[+a - 1] : 0);
+      s.push(perm[+bch - 1]);
+    }
+    return { p: p, s: s };
+  }
+
+  function loadPuzzle() {
+    var list = POOL[tier], idx;
+    do { idx = Math.floor(Math.random() * list.length); } while (list.length > 1 && idx === last[tier]);
+    last[tier] = idx;
+    var e = list[idx];
+    meta = e;
+    var t;
+    if (e.fixed) {
+      t = { p: [], s: [] };
+      for (var i = 0; i < 81; i++) { var a = e.p.charAt(i); t.p.push(a >= "1" && a <= "9" ? +a : 0); t.s.push(+e.s.charAt(i)); }
+    } else t = transform(e.p, e.s);
+    giv = t.p; sol = t.s; v = giv.slice(); nt = []; for (var j = 0; j < 81; j++) nt.push(0);
+    sel = -1; noteMode = false; mistakes = 0; hintsUsed = 0; done = false; started = false; secs = 0; hist = [];
+    hintElims.fill(0); hintS = null; updateHintUI();
+    revSnap = null; $("giveBtn").textContent = "答えを表示";
+    if (timerId) { clearInterval(timerId); timerId = null; }
+    $("noteBtn").setAttribute("aria-pressed", "false");
+    $("msg").textContent = ""; $("msg").className = "msg";
+    var info;
+    var ns = (e.n && e.n.length) ? e.n.join("、") : "なし";
+    if (tier === "extreme") info = "手がかり <b>" + e.c + "マス</b> ・ 途中までは論理だけで進み、終盤に短い仮置き（矛盾の確認）が <b>" + e.t + "回</b>必要です。行き詰まる場面は <b>" + e.w + "回</b>。";
+    else info = "手がかり <b>" + e.c + "マス</b> ・ 途中で行き詰まる場面が <b>" + e.w + "回</b>。必要な高度な技法：<b>" + ns + "</b>。";
+    info += "ヒントは最短の手順を示します。";
+    $("info").innerHTML = info;
+    render();
+  }
+
+  function startTimer() {
+    if (started) return;
+    started = true;
+    timerId = setInterval(function () { secs++; $("time").textContent = fmt(secs); }, 1000);
+  }
+  function push() { hist.push({ v: v.slice(), nt: nt.slice() }); if (hist.length > 400) hist.shift(); }
+
+  function cleanPeers(i, d) {
+    var bit = 1 << (d - 1);
+    for (var j = 0; j < 81; j++) if (j !== i && sees(i, j)) nt[j] &= ~bit;
+  }
+  function checkWin() {
+    for (var i = 0; i < 81; i++) if (v[i] !== sol[i]) return;
+    done = true;
+    if (timerId) { clearInterval(timerId); timerId = null; }
+    var m = $("msg"); m.className = "msg win";
+    m.textContent = "完成です。時間 " + fmt(secs) + " ・ ミス " + mistakes + " ・ ヒント " + hintsUsed;
+  }
+  function enter(d) {
+    if (done || sel < 0 || giv[sel]) return;
+    if (!noteMode) closeHint();
+    if (noteMode) {
+      if (v[sel]) return;
+      push(); nt[sel] ^= 1 << (d - 1); startTimer();
+    } else {
+      push(); startTimer();
+      if (v[sel] === d) v[sel] = 0;
+      else {
+        v[sel] = d; nt[sel] = 0;
+        if (d !== sol[sel]) mistakes++;
+        if (autoClean) cleanPeers(sel, d);
+        checkWin();
+      }
+    }
+    render();
+  }
+  function erase() {
+    if (done || sel < 0 || giv[sel] || (!v[sel] && !nt[sel])) return;
+    closeHint();
+    push(); v[sel] = 0; nt[sel] = 0; render();
+  }
+  function undo() {
+    if (done || !hist.length) return;
+    closeHint();
+    var h = hist.pop(); v = h.v; nt = h.nt; render();
+  }
+  function revealCell() {
+    if (done) return;
+    if (sel < 0 || giv[sel] || v[sel] === sol[sel]) { $("msg").className = "msg"; $("msg").textContent = "空きマスか、間違っているマスを選んでください。"; return; }
+    closeHint();
+    push(); startTimer();
+    v[sel] = sol[sel]; nt[sel] = 0; hintsUsed++;
+    if (autoClean) cleanPeers(sel, v[sel]);
+    $("msg").textContent = "";
+    checkWin(); render();
+  }
+  function candCount(i) {
+    var m = 511, c = 0;
+    for (var j = 0; j < 81; j++) if (v[j] && sees(i, j)) m &= ~(1 << (v[j] - 1));
+    m &= ~hintElims[i];
+    for (var d = 0; d < 9; d++) if (m & (1 << d)) c++;
+    return c;
+  }
+  function fallbackCell() {
+    if (sel >= 0 && !giv[sel] && v[sel] !== sol[sel]) return sel;
+    var best = -1, bc = 99;
+    for (var i = 0; i < 81; i++) if (v[i] !== sol[i]) { var c = candCount(i); if (c < bc) { bc = c; best = i; } }
+    return best;
+  }
+  function openHint() {
+    if (done) return;
+    $("msg").textContent = "";
+    var wrong = [];
+    for (var i = 0; i < 81; i++) if (v[i] && v[i] !== sol[i]) wrong.push(i);
+    hintsUsed++;
+    if (wrong.length) hintS = { error: true, wrong: wrong, steps: [], idx: 0, stage: 1 };
+    else {
+      // One hint = one digit, derived only from the digits visible on the board (no hidden state).
+      var res = HT.nextHint(v, null), steps = res.steps.slice();
+      if (res.stuck || !steps.length) steps = [{ name: "ここから先は理由を示せません", pattern: [], targets: [], elim: [], place: null, fallback: true, snap: [],
+        text: "この局面は、この解析では論理的な理由を示せません。いちばん候補の少ないマス（選択中のマスがあればそのマス）の答えを1つ入れて、先に進みます。" }];
+      var last = steps[steps.length - 1];
+      hintS = { steps: steps, idx: 0, stage: 0, goal: last.place ? last.place[0] : -1, goalName: last.name };
+    }
+    updateHintUI(); render();
+  }
+  function closeHint() { if (hintS) { hintS = null; updateHintUI(); } }
+  function updateHintUI() {
+    var box = $("hintbox");
+    hlSet.fill(0); tgSet.fill(0); ovl.fill(-1); ovx.fill(0);
+    if (!hintS) { box.hidden = true; return; }
+    box.hidden = false;
+    var title, text, step = "";
+    var why = $("hbWhy"), ap = $("hbApply");
+    if (hintS.error) {
+      for (var w = 0; w < hintS.wrong.length; w++) tgSet[hintS.wrong[w]] = 1;
+      title = "間違っているマスがあります";
+      text = "赤い枠のマスの数字が正しくありません。先にそのマスを直してから、もう一度ヒントを押してください。";
+      why.hidden = true; ap.hidden = true;
+    } else if (hintS.stage === 0) {
+      var g = hintS.goal;
+      if (g >= 0) tgSet[g] = 1;
+      else { var fc0 = fallbackCell(); if (fc0 >= 0) tgSet[fc0] = 1; }
+      title = g >= 0 ? "注目するマス：" + HT.rc(g) : "ここから先は理由を示せません";
+      text = g >= 0 ? "オレンジの枠のマスに入る数字は、盤面の数字だけから論理で決まります。理由を見るときは「理由を見る」を押してください。（手順は全部で " + hintS.steps.length + " つです）" : "論理での説明は、ここまでです。";
+      why.hidden = g < 0; ap.hidden = g >= 0;
+      why.textContent = "理由を見る"; ap.textContent = "答えを1マス入れる";
+    } else {
+      var st = hintS.steps[hintS.idx], lastStep = hintS.idx === hintS.steps.length - 1;
+      step = "手順 " + (hintS.idx + 1) + " / " + hintS.steps.length;
+      title = st.name;
+      for (var p = 0; p < st.pattern.length; p++) hlSet[st.pattern[p]] = 1;
+      var pivot = (st.name === "XY-Wing" || st.name === "XYZ-Wing") && st.pattern.length ? st.pattern[0] : -1;
+      if (pivot >= 0) hlSet[pivot] = 2;
+      for (var t = 0; t < st.targets.length; t++) tgSet[st.targets[t]] = 1;
+      if (st.place) tgSet[st.place[0]] = 1;
+      if (st.fallback) { var fc = fallbackCell(); if (fc >= 0) tgSet[fc] = 1; }
+      for (var q = 0; q < (st.snap || []).length; q++) ovl[st.snap[q][0]] = st.snap[q][1];
+      for (var q2 = 0; q2 < (st.elim || []).length; q2++) if (ovl[st.elim[q2][0]] >= 0) ovx[st.elim[q2][0]] |= st.elim[q2][1];
+      text = st.text + (st.derive || "") + (st.snap && st.snap.length ? "\n（この手順に関係するマスの候補だけを、盤面にオレンジ色で仮表示しています。取り消し線の数字は、この手順で消せる候補です）" : "");
+      why.hidden = lastStep; ap.hidden = !lastStep;
+      why.textContent = "次の手順へ";
+      ap.textContent = st.place ? "この数字を入れる" : "答えを1マス入れる";
+    }
+    $("hbTitle").textContent = title; $("hbText").textContent = text; $("hbStep").textContent = step;
+    var lg = "";
+    if (!hintS.error) {
+      if (hintS.stage === 0) lg = '<span><i class="lg-tg"></i>オレンジの枠＝ここに入る数字が決まります</span>';
+      else {
+        var cur = hintS.steps[hintS.idx];
+        if (cur.pattern.length) lg += '<span><i class="lg-hl"></i>緑＝推理に使うマス</span>';
+        if (cur.name === "XY-Wing" || cur.name === "XYZ-Wing") lg += '<span><i class="lg-hl2"></i>濃い緑＝中心のマス</span>';
+        if (cur.place) lg += '<span><i class="lg-tg"></i>オレンジの枠＝ここに数字が入る</span>';
+        else if (cur.targets.length) lg += '<span><i class="lg-tg"></i>オレンジの枠＝候補が消えるマス</span>';
+        if (cur.snap && cur.snap.length) lg += '<span style="color:var(--tg);font-weight:700">橙の小さい数字＝仮表示した候補</span>';
+        if (cur.snap && cur.snap.length && cur.elim && cur.elim.length) lg += '<span><s style="opacity:.55">2</s>＝この手順で消せる候補</span>';
+      }
+    }
+    $("hbLegend").innerHTML = lg;
+  }
+  function hintNext() {
+    if (!hintS || hintS.error) return;
+    if (hintS.stage === 0) hintS.stage = 1;
+    else if (hintS.idx < hintS.steps.length - 1) hintS.idx++;
+    updateHintUI(); render();
+  }
+  function applyHint() {
+    if (!hintS || hintS.error || done) return;
+    var st = hintS.steps[hintS.stage === 0 ? 0 : hintS.idx];
+    push(); startTimer();
+    if (st.fallback || !st.place) {
+      var c = fallbackCell();
+      if (c >= 0) { v[c] = sol[c]; nt[c] = 0; if (autoClean) cleanPeers(c, v[c]); }
+    } else {
+      var i = st.place[0]; v[i] = st.place[1]; nt[i] = 0;
+      if (autoClean) cleanPeers(i, v[i]);
+    }
+    hintS = null;
+    updateHintUI(); checkWin(); render();
+  }
+  function toggleHint() { if (hintS) { closeHint(); render(); } else openHint(); }
+
+  function fillNotes() {
+    if (done) return;
+    push();
+    for (var i = 0; i < 81; i++) {
+      if (v[i]) { nt[i] = 0; continue; }
+      var m = 511;
+      for (var j = 0; j < 81; j++) if (v[j] && sees(i, j)) m &= ~(1 << (v[j] - 1));
+      nt[i] = m;
+    }
+    startTimer(); render();
+  }
+  var revSnap = null;
+  function reveal() {
+    if (revSnap) { // pressed again: put the board back as it was
+      v = revSnap.v; nt = revSnap.nt; done = false;
+      if (revSnap.started && !timerId) timerId = setInterval(function () { secs++; $("time").textContent = fmt(secs); }, 1000);
+      revSnap = null;
+      $("giveBtn").textContent = "答えを表示";
+      $("msg").className = "msg"; $("msg").textContent = "元の盤面に戻しました。";
+      render();
+      return;
+    }
+    if (done) return;
+    closeHint();
+    revSnap = { v: v.slice(), nt: nt.slice(), started: started };
+    done = true;
+    if (timerId) { clearInterval(timerId); timerId = null; }
+    for (var i = 0; i < 81; i++) { v[i] = sol[i]; nt[i] = 0; }
+    $("giveBtn").textContent = "答えを隠して元に戻す";
+    $("msg").className = "msg"; $("msg").textContent = "答えを表示しました。もう一度押すと、元の盤面に戻ります。";
+    render();
+  }
+
+  function arm(btn, text, fn) {
+    if (!started || done) { fn(); return; }
+    if (armed === btn) { clearTimeout(armTimer); disarm(); fn(); return; }
+    disarm();
+    armed = btn; btn.dataset.label = btn.innerHTML; btn.innerHTML = "もう一度押すと実行"; btn.classList.add("armed");
+    armTimer = setTimeout(disarm, 3000);
+  }
+  function disarm() {
+    if (armed) { armed.innerHTML = armed.dataset.label; armed.classList.remove("armed"); armed = null; }
+  }
+
+  function render() {
+    var sd = sel >= 0 ? v[sel] : 0, cnt = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+    for (var i = 0; i < 81; i++) {
+      var val = v[i], el = cells[i];
+      el.classList.toggle("given", giv[i] > 0);
+      el.classList.toggle("hasv", val > 0);
+      el.classList.toggle("sel", i === sel);
+      el.classList.toggle("peer", sel >= 0 && i !== sel && sees(sel, i));
+      el.classList.toggle("same", sd > 0 && val === sd && i !== sel);
+      el.classList.toggle("err", showErr && val > 0 && !giv[i] && val !== sol[i]);
+      el.classList.toggle("hl", hlSet[i] >= 1);
+      el.classList.toggle("hl2", hlSet[i] === 2);
+      el.classList.toggle("tg", tgSet[i] === 1);
+      var txt = val ? String(val) : "";
+      if (vals[i].textContent !== txt) vals[i].textContent = txt;
+      if (val && val === sol[i]) cnt[val]++;
+      var nm = ovl[i] >= 0 && !val ? ovl[i] + 1024 : nt[i];
+      el.classList.toggle("ov", nm >= 1024);
+      var key = nm + (nm >= 1024 ? ovx[i] * 4096 : 0);
+      if (ntCache[i] !== key) {
+        for (var d = 0; d < 9; d++) { ntEls[i][d].textContent = (nm & (1 << d)) ? String(d + 1) : ""; ntEls[i][d].classList.toggle("xd", nm >= 1024 && !!(ovx[i] & (1 << d))); }
+        ntCache[i] = key;
+      }
+    }
+    for (var k = 1; k <= 9; k++) {
+      $("rem" + k).textContent = Math.max(0, 9 - cnt[k]);
+      $("num" + k).classList.toggle("full", cnt[k] >= 9);
+    }
+    $("miss").textContent = mistakes; $("hint").textContent = hintsUsed; $("time").textContent = fmt(secs);
+    $("undoBtn").disabled = done || !hist.length;
+  }
+
+  // controls
+  $("noteBtn").addEventListener("click", function () { noteMode = !noteMode; this.setAttribute("aria-pressed", noteMode ? "true" : "false"); });
+  $("eraseBtn").addEventListener("click", erase);
+  $("undoBtn").addEventListener("click", undo);
+  $("hintBtn").addEventListener("click", toggleHint);
+  $("revealBtn").addEventListener("click", revealCell);
+  $("hbWhy").addEventListener("click", hintNext);
+  $("hbApply").addEventListener("click", applyHint);
+  $("hbClose").addEventListener("click", function () { closeHint(); render(); });
+  $("fillBtn").addEventListener("click", fillNotes);
+  $("newBtn").addEventListener("click", function () { arm(this, "", loadPuzzle); });
+  $("giveBtn").addEventListener("click", function () { if (revSnap) reveal(); else arm(this, "", reveal); });
+  $("optErr").addEventListener("change", function () { showErr = this.checked; render(); });
+  $("optClean").addEventListener("change", function () { autoClean = this.checked; });
+  Array.prototype.forEach.call($("tierSeg").children, function (b) {
+    b.addEventListener("click", function () {
+      var t = b.dataset.tier;
+      if (t === tier) return;
+      arm(b, "", function () {
+        tier = t;
+        Array.prototype.forEach.call($("tierSeg").children, function (x) { x.setAttribute("aria-pressed", x.dataset.tier === tier ? "true" : "false"); });
+        loadPuzzle();
+      });
+    });
+  });
+  document.addEventListener("keydown", function (ev) {
+    if (ev.target && ev.target.tagName === "INPUT") return;
+    var key = ev.key;
+    if (key >= "1" && key <= "9") { enter(+key); ev.preventDefault(); }
+    else if (key === "0" || key === "Backspace" || key === "Delete") { erase(); ev.preventDefault(); }
+    else if (key === "n" || key === "N") { $("noteBtn").click(); }
+    else if ((key === "z" || key === "Z") && (ev.ctrlKey || ev.metaKey)) { undo(); ev.preventDefault(); }
+    else if (key.indexOf("Arrow") === 0) {
+      if (sel < 0) sel = 40;
+      else {
+        var r = Math.floor(sel / 9), c = sel % 9;
+        if (key === "ArrowUp") r = (r + 8) % 9; else if (key === "ArrowDown") r = (r + 1) % 9;
+        else if (key === "ArrowLeft") c = (c + 8) % 9; else c = (c + 1) % 9;
+        sel = r * 9 + c;
+      }
+      render(); ev.preventDefault();
+    }
+  });
+
+  loadPuzzle();
+})();
+</script>
+
+</body></html>
