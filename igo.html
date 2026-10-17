@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="ja"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>九路盤 囲碁</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@500;700&display=swap">
+<style>
+:root{--bg:#e8ecef;--fg:#1b2630;--mut:#566673;--panel:#f6f8f9;--line:#c3ccd3;--acc:#2f5d62;--accfg:#fff;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#131b22;--fg:#e4eaee;--mut:#8fa1ae;--panel:#1c2630;--line:#2f3d49;--acc:#6fa6a8;--accfg:#10191f;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#131b22;--fg:#e4eaee;--mut:#8fa1ae;--panel:#1c2630;--line:#2f3d49;--acc:#6fa6a8;--accfg:#10191f;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:"Zen Old Mincho","Hiragino Mincho ProN","Yu Mincho",serif;display:flex;flex-direction:column;align-items:center;padding:14px 10px 24px;min-height:100vh}
+h1{font-size:1.5rem;margin:4px 0 2px;letter-spacing:.12em}
+.sub{color:var(--mut);font-size:.8rem;margin-bottom:10px}
+canvas{touch-action:manipulation;border-radius:3px;box-shadow:0 6px 22px rgba(0,0,0,.28);max-width:100%}
+#st{margin:12px 0 2px;font-size:1.05rem;font-weight:700;min-height:1.6em;text-align:center}
+#info{color:var(--mut);font-size:.85rem;min-height:1.3em;text-align:center}
+.bar{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:12px;max-width:600px}
+button,select{font:inherit;font-size:.9rem;padding:8px 14px;border-radius:6px;border:1px solid var(--line);background:var(--panel);color:var(--fg);cursor:pointer}
+button.p{background:var(--acc);color:var(--accfg);border-color:var(--acc);font-weight:700}
+button:focus-visible,select:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+button:disabled{opacity:.45;cursor:default}
+.note{max-width:560px;color:var(--mut);font-size:.75rem;margin-top:16px;line-height:1.7;text-align:center}
+</style></head><body>
+<h1>九路盤</h1>
+<div class="sub">9×9 囲碁／中国ルール（地＋石）・コミ7目</div>
+<canvas id="cv"></canvas>
+<div id="st"></div><div id="info"></div>
+<div class="bar">
+<select id="mode"><option value="pc">対PC</option><option value="hh">対人（2人）</option></select>
+<select id="side"><option value="1">あなたは黒（先手）</option><option value="2">あなたは白（後手）</option></select>
+<select id="lv"><option value="400">強さ：入門</option><option value="2500" selected>強さ：普通</option><option value="8000">強さ：強い</option></select>
+</div>
+<div class="bar">
+<button class="p" id="new">新規対局</button><button id="pass">パス</button><button id="undo">一手戻す</button>
+</div>
+<div class="note">終局：両者が続けてパスすると、死石を自動推定します。石をクリックすると死活を切り替えられます。コウは直前の一手のみ判定します（スーパーコウは未実装）。</div>
+<script>
+const N=9,S=11,KOMI=7,D=[1,-1,S,-S],DD=[S+1,S-1,1-S,-S-1];
+const idx=(x,y)=>(y+1)*S+x+1;
+const stk=new Int16Array(128),gst=new Int16Array(128),pts=new Int16Array(128),mk=new Uint32Array(S*S),vis=new Uint8Array(S*S),own=new Uint8Array(S*S),pb=new Uint8Array(S*S);
+let stamp=0,gcnt=0,glib=0,ko=0,aB=0,aW=0;
+function newBoard(){const b=new Uint8Array(S*S).fill(3);for(let y=0;y<N;y++)for(let x=0;x<N;x++)b[idx(x,y)]=0;return b}
+function grp(b,p){const c=b[p];stamp++;mk[p]=stamp;let n=0,sp=0,l=0;stk[sp++]=p;
+ while(sp){const q=stk[--sp];gst[n++]=q;for(let i=0;i<4;i++){const r=q+D[i];if(mk[r]===stamp)continue;const v=b[r];if(v===0){mk[r]=stamp;l++;glib=r}else if(v===c){mk[r]=stamp;stk[sp++]=r}}}
+ gcnt=n;return l}
+function play(b,p,c){if(b[p]!==0||p===ko)return -1;const o=3-c;b[p]=c;let cap=0,lc=0;
+ for(let i=0;i<4;i++){const r=p+D[i];if(b[r]===o&&grp(b,r)===0){for(let k=0;k<gcnt;k++)b[gst[k]]=0;cap+=gcnt;lc=gst[0]}}
+ const l=grp(b,p);if(l===0){b[p]=0;return -1}
+ ko=(cap===1&&gcnt===1&&l===1)?lc:0;return cap}
+function eye(b,p,c){for(let i=0;i<4;i++){const v=b[p+D[i]];if(v!==c&&v!==3)return false}
+ let bad=0,edge=0;for(let i=0;i<4;i++){const v=b[p+DD[i]];if(v===3)edge=1;else if(v!==c)bad++}
+ return edge?bad===0:bad<=1}
+function area(b){vis.fill(0);own.fill(0);aB=0;aW=0;
+ for(let y=0;y<N;y++)for(let x=0;x<N;x++){const p=idx(x,y),v=b[p];
+  if(v===1)aB++;else if(v===2)aW++;else if(!vis[p]){let sp=0,n=0,f=0;stk[sp++]=p;vis[p]=1;
+   while(sp){const q=stk[--sp];pts[n++]=q;for(let i=0;i<4;i++){const r=q+D[i],u=b[r];if(u===0){if(!vis[r]){vis[r]=1;stk[sp++]=r}}else if(u<3)f|=u}}
+   if(f===1||f===2){for(let k=0;k<n;k++)own[pts[k]]=f;if(f===1)aB+=n;else aW+=n}}}
+ return aB-aW}
+function heur(c,last){const o=3-c;for(let i=0;i<4;i++){const r=last+D[i],v=pb[r];
+  if((v===1||v===2)&&grp(pb,r)===1){const lib=glib;if(play(pb,lib,c)>=0)return lib}}return -1}
+const emp=new Int16Array(81);
+function rnd(c){let n=0;for(let y=0;y<N;y++)for(let x=0;x<N;x++){const p=idx(x,y);if(pb[p]===0)emp[n++]=p}
+ while(n){const i=Math.random()*n|0,p=emp[i];emp[i]=emp[--n];if(eye(pb,p,c))continue;if(play(pb,p,c)>=0)return p}return -1}
+function playout(c,ps,last,n){while(ps<2&&n<170){let m=-1;if(last>0&&Math.random()<.75)m=heur(c,last);if(m<0)m=rnd(c);
+  if(m<0){ps++;ko=0;last=0}else{ps=0;last=m}c=3-c;n++}return area(pb)>KOMI?1:2}
+const PRI=new Uint8Array(S*S);for(let y=0;y<N;y++)for(let x=0;x<N;x++)PRI[idx(x,y)]=Math.min(x,y,8-x,8-y)===0?0:1;
+function cands(c){const a=[];for(let y=0;y<N;y++)for(let x=0;x<N;x++){const p=idx(x,y);if(pb[p]===0&&!eye(pb,p,c))a.push(p)}
+ for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}
+ return a.sort((p,q)=>PRI[p]-PRI[q])}
+class Nd{constructor(m,par,pl){this.m=m;this.par=par;this.pl=pl;this.ch=[];this.w=0;this.n=0;this.un=null;this.sv=0;this.cap=0}}
+function iter(s){pb.set(s.b);ko=s.ko;let c=s.c,ps=s.ps,last=s.last,nd=s.root;const path=[nd];
+ for(;;){if(ps>=2)break;
+  if(!nd.un){nd.un=cands(c);if(nd===s.root&&(s.ps>0||s.n>=20))nd.un.push(-1)}
+  let m,mc=0;while(nd.un.length){const q=nd.un.pop();const r0=q<0?0:play(pb,q,c);if(r0>=0){m=q;mc=r0;break}}
+  if(m===undefined&&!nd.ch.length)m=-1;
+  if(m!==undefined){if(m<0){ps++;ko=0;last=0}else{ps=0;last=m}const ch=new Nd(m,nd,c);ch.cap=mc;nd.ch.push(ch);nd=ch;path.push(nd);c=3-c;break}
+  let best=null,bv=-1;const ln=Math.log(nd.n+1);
+  for(const ch of nd.ch){const v=ch.w/ch.n+.42*Math.sqrt(ln/ch.n);if(v>bv){bv=v;best=ch}}
+  if(best.m<0){ps++;ko=0;last=0}else{play(pb,best.m,c);ps=0;last=best.m}
+  nd=best;path.push(nd);c=3-c}
+ const w=playout(c,ps,last,path.length);
+ for(const q of path){q.n++;if(q.pl===w)q.w++}
+ const f=path[1];if(f&&f.m>0&&pb[f.m]===f.pl)f.sv++}
+let R=null;
+function search(ms,onInfo,done){const s={root:new Nd(-2,null,0),b:g.b.slice(),ko:g.ko,c:g.color,ps:g.passes,last:g.last,n:g.n,t0:performance.now()};R=s;
+ (function tick(){if(R!==s)return;const t=performance.now();while(performance.now()-t<30)for(let i=0;i<40;i++)iter(s);
+  const el=performance.now()-s.t0;let b=null;for(const ch of s.root.ch)if(!b||ch.n>b.n)b=ch;
+  if(el>ms&&b){R=null;const hl=x=>x.m>=0&&x.cap===0&&x.n>=30&&x.sv/x.n<.3;let ok=null;for(const ch of s.root.ch)if(ch.m>=0&&!hl(ch)&&(!ok||ch.n>ok.n))ok=ch;let pick=ok||b;if(ok&&b!==ok&&b.m>=0&&b.w/b.n>ok.w/ok.n+.08)pick=b;const pc=s.root.ch.find(x=>x.m<0);
+   if(pc&&pc.n>20&&pc.w/pc.n>=pick.w/pick.n-(s.ps>0?.03:.01))pick=pc;done(pick.m,pick.w/pick.n)}
+  else{if(b)onInfo(b.w/b.n,s.root.n);setTimeout(tick,0)}})()}
+function estDead(b,c){const T=400,cnt=new Float32Array(S*S);
+ for(let t=0;t<T;t++){pb.set(b);ko=0;playout(c,0,0,0);for(let y=0;y<N;y++)for(let x=0;x<N;x++){const p=idx(x,y);if(pb[p]===b[p])cnt[p]++}}
+ const d=new Set();for(let y=0;y<N;y++)for(let x=0;x<N;x++){const p=idx(x,y);if(b[p]&&cnt[p]/T<.35)d.add(p)}return d}
+/* ---------- game ---------- */
+let g,mode='pc',human=1,thinking=false;
+const $=id=>document.getElementById(id);
+function init(){R=null;thinking=false;mode=$('mode').value;human=+$('side').value;
+ g={b:newBoard(),ko:0,color:1,caps:[0,0,0],last:0,passes:0,hist:[],n:0,phase:'play',dead:new Set()};
+ $('side').style.display=$('lv').style.display=mode==='pc'?'':'none';ui();maybeAI()}
+function snap(){g.hist.push({b:g.b.slice(),ko:g.ko,color:g.color,caps:g.caps.slice(),last:g.last,passes:g.passes,n:g.n})}
+function next(){g.color=3-g.color;g.n++;ui();maybeAI()}
+function doMove(p){snap();ko=g.ko;const b=g.b.slice(),r=play(b,p,g.color);if(r<0){g.hist.pop();return false}
+ g.caps[g.color]+=r;g.b=b;g.ko=ko;g.last=p;g.passes=0;next();return true}
+function doPass(){snap();g.passes++;g.ko=0;g.last=0;
+ if(g.passes>=2){g.phase='score';g.dead=estDead(g.b,g.color);ui()}else next()}
+function maybeAI(){if(g.phase!=='play'||mode!=='pc'||g.color===human)return;thinking=true;ui();
+ search(+$('lv').value,(wr,n)=>{$('info').textContent=`PC勝率 ${Math.round(wr*100)}%（読み ${n} 回）`},
+  (m,wr)=>{thinking=false;$('info').textContent=`PC勝率 ${Math.round(wr*100)}%`;if(m<0)doPass();else doMove(m)})}
+function score(){const bd=g.b.slice();g.dead.forEach(p=>bd[p]=0);area(bd);const w=aW+KOMI,d=aB-w;
+ return `黒 ${aB}目　白 ${aW}目＋コミ${KOMI}＝${w}目　→　${d>0?'黒':'白'}の${Math.abs(d)}目勝ち`}
+function ui(){const nm=c=>c===1?'黒':'白';let t;
+ if(g.phase==='score'){t=score();$('info').textContent='死石は石をクリックで切り替え。「新規対局」で再戦。'}
+ else{t=thinking?'PCが考えています…':`${nm(g.color)}の番（${g.n+1}手目）`;if(!thinking&&!(mode==='pc'&&g.color!==human)&&g.passes===1)t+='　相手がパスしました';
+  if(!thinking&&g.phase==='play'&&!$('info').textContent.startsWith('PC'))$('info').textContent=`アゲハマ 黒${g.caps[1]}・白${g.caps[2]}`}
+ $('st').textContent=t;const mine=g.phase==='play'&&!thinking&&!(mode==='pc'&&g.color!==human);
+ $('pass').disabled=!mine;$('undo').disabled=!g.hist.length;draw()}
+$('new').onclick=init;$('mode').onchange=init;$('side').onchange=init;
+$('pass').onclick=()=>{if(g.phase==='play'&&!thinking)doPass()};
+$('undo').onclick=()=>{if(!g.hist.length)return;R=null;thinking=false;
+ do{Object.assign(g,g.hist.pop())}while(g.hist.length&&mode==='pc'&&g.color!==human);
+ g.phase='play';g.dead=new Set();$('info').textContent='';ui();maybeAI()};
+/* ---------- drawing ---------- */
+const cv=$('cv'),cx=cv.getContext('2d');let SZ,M,CL;
+function fit(){SZ=Math.min(innerWidth-20,580);const d=devicePixelRatio||1;cv.width=SZ*d;cv.height=SZ*d;cv.style.width=cv.style.height=SZ+'px';cx.setTransform(d,0,0,d,0,0);M=SZ*.09;CL=(SZ-2*M)/8;if(g)draw()}
+function stone(x,y,c,a){const X=M+x*CL,Y=M+y*CL,r=CL*.47;cx.globalAlpha=a;cx.save();cx.shadowColor='rgba(0,0,0,.4)';cx.shadowBlur=r*.35;cx.shadowOffsetY=r*.12;
+ const gr=cx.createRadialGradient(X-r*.35,Y-r*.35,r*.1,X,Y,r);
+ if(c===1){gr.addColorStop(0,'#5a5f63');gr.addColorStop(1,'#0b0c0d')}else{gr.addColorStop(0,'#ffffff');gr.addColorStop(1,'#cdd1d4')}
+ cx.fillStyle=gr;cx.beginPath();cx.arc(X,Y,r,0,7);cx.fill();cx.restore();cx.globalAlpha=1}
+function draw(){const b=g.b;cx.clearRect(0,0,SZ,SZ);
+ const bg=cx.createLinearGradient(0,0,SZ,SZ);bg.addColorStop(0,'#e3b66b');bg.addColorStop(1,'#d3a052');cx.fillStyle=bg;cx.fillRect(0,0,SZ,SZ);
+ cx.strokeStyle='#4a3512';cx.lineWidth=1;cx.beginPath();
+ for(let i=0;i<9;i++){cx.moveTo(M,M+i*CL);cx.lineTo(M+8*CL,M+i*CL);cx.moveTo(M+i*CL,M);cx.lineTo(M+i*CL,M+8*CL)}cx.stroke();
+ cx.fillStyle='#4a3512';for(const [x,y] of [[2,2],[6,2],[2,6],[6,6],[4,4]]){cx.beginPath();cx.arc(M+x*CL,M+y*CL,CL*.08,0,7);cx.fill()}
+ cx.font=`${CL*.3}px "Zen Old Mincho",serif`;cx.textAlign='center';cx.textBaseline='middle';cx.fillStyle='#5b4119';
+ for(let i=0;i<9;i++){cx.fillText('ABCDEFGHJ'[i],M+i*CL,M*.45);cx.fillText(9-i,M*.4,M+i*CL)}
+ let bd=null;if(g.phase==='score'){bd=b.slice();g.dead.forEach(p=>bd[p]=0);area(bd)}
+ for(let y=0;y<N;y++)for(let x=0;x<N;x++){const p=idx(x,y),v=b[p];
+  if(v){stone(x,y,v,g.dead.has(p)?.35:1)}
+  else if(bd&&own[p]){cx.fillStyle=own[p]===1?'#111':'#fff';const s=CL*.2;cx.fillRect(M+x*CL-s/2,M+y*CL-s/2,s,s)}
+  if(bd&&v&&g.dead.has(p)&&own[p]){cx.fillStyle=own[p]===1?'#111':'#fff';const s=CL*.2;cx.fillRect(M+x*CL-s/2,M+y*CL-s/2,s,s)}}
+ if(g.last>0){const x=(g.last%S)-1,y=((g.last/S)|0)-1;cx.strokeStyle=b[g.last]===1?'#fff':'#111';cx.lineWidth=2;cx.beginPath();cx.arc(M+x*CL,M+y*CL,CL*.22,0,7);cx.stroke()}
+ if(g.ko>0&&g.phase==='play'){const x=(g.ko%S)-1,y=((g.ko/S)|0)-1;cx.strokeStyle='#a32';cx.lineWidth=2;cx.strokeRect(M+x*CL-CL*.14,M+y*CL-CL*.14,CL*.28,CL*.28)}}
+cv.addEventListener('click',e=>{const r=cv.getBoundingClientRect(),px=(e.clientX-r.left)*SZ/r.width,py=(e.clientY-r.top)*SZ/r.height;
+ const x=Math.round((px-M)/CL),y=Math.round((py-M)/CL);if(x<0||y<0||x>8||y>8)return;const p=idx(x,y);
+ if(g.phase==='score'){if(g.b[p]){grp(g.b,p);const l=[...gst.slice(0,gcnt)],d=g.dead.has(p);l.forEach(q=>d?g.dead.delete(q):g.dead.add(q));ui()}return}
+ if(thinking||(mode==='pc'&&g.color!==human))return;
+ if(!doMove(p)){const o=$('info').textContent;$('info').textContent='そこには打てません（コウ・自殺手・既に石があります）'}});
+addEventListener('resize',fit);fit();init();
+</script></body></html>
