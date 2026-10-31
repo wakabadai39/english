@@ -398,5 +398,136 @@ else prev();
 }, { passive: true });
 })();
 </script>
+<script>
+/*
+ * bg-play.js — DUO アプリの連続再生・マスター済み再生・シャドウイングを
+ * iPhone の画面オフ／ポケット内でも続けるための追加処理。
+ *  1. カード間・ステップ間の待ち時間を、無音の音声の再生で埋める
+ *  2. 次のカードの mp3 を先読みする
+ *  3. Media Session API でロック画面／AirPods から操作できるようにする
+ */
+(function () {
+  'use strict';
+
+  if (typeof nativeAudioEl === 'undefined' || typeof speakOne !== 'function' || typeof delayP !== 'function') {
+    console.warn('bg-play.js: 想定の構造と異なるため無効化しました');
+    return;
+  }
+
+  /* ---------- 無音 WAV を生成 ---------- */
+  var silentCache = {};
+  function silentURL(ms) {
+    ms = Math.max(100, Math.round(ms / 50) * 50);
+    if (silentCache[ms]) return silentCache[ms];
+    var sr = 8000, n = Math.floor(sr * ms / 1000);
+    var buf = new ArrayBuffer(44 + n);
+    var v = new DataView(buf);
+    function w(o, s) { for (var i = 0; i < s.length; i++) v.setUint8(o + i, s.charCodeAt(i)); }
+    w(0, 'RIFF'); v.setUint32(4, 36 + n, true); w(8, 'WAVE'); w(12, 'fmt ');
+    v.setUint32(16, 16, true); v.setUint16(20, 1, true); v.setUint16(22, 1, true);
+    v.setUint32(24, sr, true); v.setUint32(28, sr, true); v.setUint16(32, 1, true); v.setUint16(34, 8, true);
+    w(36, 'data'); v.setUint32(40, n, true);
+    new Uint8Array(buf, 44).fill(128); // 8bit PCM の無音
+    silentCache[ms] = URL.createObjectURL(new Blob([buf], { type: 'audio/wav' }));
+    return silentCache[ms];
+  }
+
+  /* ---------- 先読み ---------- */
+  var blobCache = new Map(), inflight = new Set();
+  function prefetch(url) {
+    if (!url || blobCache.has(url) || inflight.has(url)) return;
+    inflight.add(url);
+    fetch(url)
+      .then(function (r) { return r.ok ? r.blob() : Promise.reject(); })
+      .then(function (b) { blobCache.set(url, URL.createObjectURL(new Blob([b], { type: 'audio/mpeg' }))); })
+      .catch(function () {})
+      .then(function () { inflight.delete(url); });
+  }
+  function prefetchNext() {
+    try {
+      var a = getActive();
+      if (!a.length) return;
+      for (var k = 1; k <= 5; k++) {
+        var c = a[(currentIndex + k) % a.length];
+        if (c) prefetch(c.audio);
+      }
+    } catch (e) {}
+  }
+
+  /* ---------- 待ち時間を無音再生で置き換え ---------- */
+  window.delayP = function (ms) {
+    return new Promise(function (resolve) {
+      if (autoStopped) { resolve(); return; }
+      var done = false;
+      function fin() { if (done) return; done = true; nativeAudioEl.onended = null; nativeAudioEl.onerror = null; resolve(); }
+      nativeAudioEl.onended = fin;
+      nativeAudioEl.onerror = function () { setTimeout(fin, ms); };
+      nativeAudioEl.src = silentURL(ms);
+      nativeAudioEl.defaultPlaybackRate = 1;
+      nativeAudioEl.playbackRate = 1;
+      var p = nativeAudioEl.play();
+      if (p && p.catch) p.catch(function () { setTimeout(fin, ms); });
+    });
+  };
+
+  /* ---------- mp3 再生（先読み済みなら blob を使用） ---------- */
+  window.playNativeAudio = function (audioFile, onEnd, onError) {
+    nativeAudioEl.onended = null;
+    nativeAudioEl.onerror = null;
+    if (!audioFile) { if (onError) onError(); return; }
+    var finished = false;
+    function ok() { if (finished) return; finished = true; nativeAudioEl.onended = null; nativeAudioEl.onerror = null; if (onEnd) onEnd(); }
+    function ng() { if (finished) return; finished = true; nativeAudioEl.onended = null; nativeAudioEl.onerror = null; if (onError) onError(); }
+    nativeAudioEl.onended = ok;
+    nativeAudioEl.onerror = ng;
+    nativeAudioEl.src = blobCache.get(audioFile) || audioFile;
+    nativeAudioEl.defaultPlaybackRate = speechRate;
+    nativeAudioEl.playbackRate = speechRate;
+    var p = nativeAudioEl.play();
+    if (p && p.catch) p.catch(ng);
+  };
+
+  /* ---------- Media Session ---------- */
+  function setMeta(card) {
+    if (!('mediaSession' in navigator) || typeof MediaMetadata === 'undefined') return;
+    try {
+      navigator.mediaSession.metadata = new MediaMetadata({
+        title: String(card.en).replace(/<[^>]*>/g, ''),
+        artist: 'DUO 3.0',
+        album: document.title
+      });
+    } catch (e) {}
+  }
+
+  window.speakOne = function (card, onEnd) {
+    try { window.speechSynthesis.cancel(); } catch (e) {}
+    clearTimeout(window.speakOne._t);
+    if (card && card.audio) {
+      setMeta(card);
+      prefetchNext();
+      window.playNativeAudio(card.audio, onEnd, function () { speakTTS(card.en, onEnd); });
+    } else {
+      speakTTS(card.en, onEnd);
+    }
+  };
+  window.speakOne._t = null;
+
+  if ('mediaSession' in navigator) {
+    var ms = navigator.mediaSession;
+    var set = function (action, fn) { try { ms.setActionHandler(action, fn); } catch (e) {} };
+    set('play', function () { nativeAudioEl.play(); });
+    set('pause', function () { nativeAudioEl.pause(); });
+    set('stop', function () { if (isAutoPlaying) stopAutoPlay(); else nativeAudioEl.pause(); });
+    set('nexttrack', function () {
+      if (!isAutoPlaying) return;
+      var h = nativeAudioEl.onended;
+      nativeAudioEl.pause();
+      if (h) h();
+    });
+    set('previoustrack', function () { nativeAudioEl.currentTime = 0; nativeAudioEl.play(); });
+  }
+})();
+
+</script>
 </body>
 </html>
